@@ -3,7 +3,6 @@ package com.twitter.util
 import scala.collection.mutable
 import org.specs.Specification
 import com.twitter.util.TimeConversions._
-import com.twitter.util.CountDownLatch.TimeoutException
 
 object PoolSpec extends Specification {
   "SimplePool" should {
@@ -33,12 +32,14 @@ object PoolSpec extends Specification {
       pool.reserve()() mustEqual 6
       pool.reserve()() mustEqual 8
       val promise = pool.reserve()
-      promise(1.millisecond) must throwA[TimeoutException]
+      promise(1.millisecond) mustEqual None
+      promise.getWithin(1.millisecond) must throwA[TimeoutException]
       pool.release(8)
       pool.release(6)
       promise() mustEqual 8
       pool.reserve()() mustEqual 6
-      pool.reserve()(1.millisecond) must throwA[TimeoutException]
+      pool.reserve()(1.millisecond) mustEqual None
+      pool.reserve().getWithin(1.millisecond) must throwA[TimeoutException]
     }
   }
 }

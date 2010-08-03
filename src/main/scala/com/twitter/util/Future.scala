@@ -10,21 +10,26 @@ object Future {
 }
 
 abstract class Future[+A] extends (() => A) {
-  private var result: Option[Any] = None
+  private var cachedResult: Option[Any] = None
 
   def respond(k: A => Unit)
 
-  def apply: A = apply(Math.MAX_LONG.millis)
-  def apply(timeout: Duration): A = result.synchronized {
-    result map(_.asInstanceOf[A]) getOrElse {
+  def apply: A = apply(Math.MAX_LONG.millis).get
+
+  def apply(timeout: Duration): Option[A] = cachedResult.synchronized {
+    cachedResult.map(_.asInstanceOf[A]) orElse {
       val latch = new CountDownLatch(1)
       respond { a =>
-        result = Some(a)
+        cachedResult = Some(a)
         latch.countDown()
       }
       latch.await(timeout)
-      result.get.asInstanceOf[A]
+      cachedResult.map(_.asInstanceOf[A])
     }
+  }
+
+  def getWithin(timeout: Duration): A = {
+    apply(timeout).getOrElse(throw new TimeoutException(timeout.toString))
   }
 
   def foreach(k: A => Unit) { respond(k) }
