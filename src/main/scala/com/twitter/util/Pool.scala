@@ -57,6 +57,10 @@ private class HealthyQueue[A](
   val self = new mutable.Queue[Future[A]]
   0.until(numItems) foreach { _ => self += makeItem() }
 
+  override def +=(item: Future[A]) = synchronized {
+    self += item
+  }
+
   override def dequeue() = {
     if (isEmpty) throw new Predef.NoSuchElementException
 
@@ -64,7 +68,10 @@ private class HealthyQueue[A](
       if (isHealthy(item)) {
         Future.constant(item)
       } else {
-        makeItem()
+        synchronized {
+          this += makeItem()
+          dequeue()
+        }
       }
     }
   }
