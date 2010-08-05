@@ -61,7 +61,7 @@ private class HealthyQueue[A](
     self += item
   }
 
-  override def dequeue() = {
+  override def dequeue() = synchronized {
     if (isEmpty) throw new Predef.NoSuchElementException
 
     self.dequeue() flatMap { item =>
