@@ -1,21 +1,22 @@
-/** Copyright 2009 Twitter, Inc. */
+/** Copyright 2010 Twitter, Inc. */
 package com.twitter.util
 
-import java.util.concurrent.{BlockingQueue, TimeUnit}
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.{BlockingQueue, Executors, TimeUnit}
 
 /**
  * Abstract class for handling scatter-gather processing across a fixed
- * number of threads, like a parser pool.
+ * number of threads.
  */
-abstract class ParallelProcessor[A,B] {
-  private val runningLatch = new CountDownLatch(1)
-  private lazy val doneLatch = new CountDownLatch(threadCount)
+abstract class ParallelProcessor[A, B] {
+  private val continue = new AtomicBoolean(true)
+  private val executor = Executors.newFixedThreadPool(threadCount)
 
   /**
    * Values to be processed should be placed in this queue.
    */
   def inputQueue: BlockingQueue[A]
-  
+
   /**
    * Values that have been processed are placed in this queue.
    */
@@ -38,13 +39,9 @@ abstract class ParallelProcessor[A,B] {
    */
   protected def process(input: A): Option[B]
 
-  def start(): Unit = this.synchronized {
-    if (runningLatch.count == 0)
-      throw new IllegalStateException("Already started!")
-    else {
-      for (i <- 0 until threadCount) {
-        new Thread(new Worker, "ParallelProcessor-" + i).start()
-      }
+  def start() {
+    for (i <- 0 until threadCount) {
+      executor.submit(new Worker)
     }
   }
 
@@ -52,27 +49,25 @@ abstract class ParallelProcessor[A,B] {
    * Stops all worker threads, optionally waiting until
    * all threads have stopped
    */
-  def stop(wait: Boolean): Unit = this.synchronized {
-    runningLatch.countDown()
-    if (wait) {
-      doneLatch.await()
-    }
+  def stop() {
+    continue.set(false)
+    executor.shutdown()
   }
 
   private class Worker extends Runnable {
     def run() {
-      while (runningLatch.count > 0) {
+      while (continue.get) {
         inputQueue.poll(pollTimeout, TimeUnit.MILLISECONDS) match {
           case null => // timeout?
-          case input =>
+          case input => {
             try {
               process(input).foreach(outputQueue offer _)
             } catch {
               case ex => println("error")
             }
+          }
         }
       }
-      doneLatch.countDown()
     }
   }
 }
