@@ -1,4 +1,4 @@
-package com.twitter.util.StateMachine
+package com.twitter.util
 
 object StateMachine {
   class InvalidStateTransition(message: String) extends Exception(message)
