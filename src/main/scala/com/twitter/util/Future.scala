@@ -77,8 +77,8 @@ class NotifyingFuture[A] extends Future[A] {
       case None =>
         synchronized {
           this.result = Some(result)
-          computations foreach(_(result))
         }
+        computations foreach(_(result))
         true
     }
   }
