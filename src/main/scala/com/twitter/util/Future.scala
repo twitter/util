@@ -16,7 +16,7 @@ abstract class Future[+A] extends (() => A) {
 
   def apply: A = apply(Math.MAX_LONG.millis).get
 
-  def apply(timeout: Duration): Option[A] = cachedResult.synchronized {
+  def apply(timeout: Duration): Option[A] = synchronized {
     cachedResult.map(_.asInstanceOf[A]) orElse {
       val latch = new CountDownLatch(1)
       respond { a =>
