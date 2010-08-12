@@ -14,11 +14,11 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
     queue
   }
 
-  private val requests = new mutable.Queue[NotifyingFuture[A]]
+  private val requests = new mutable.Queue[Promise[A]]
 
   def reserve() = synchronized {
     if (items.isEmpty) {
-      val future = new NotifyingFuture[A]
+      val future = new Promise[A]
       requests += future
       future
     } else {

@@ -74,7 +74,7 @@ abstract class Future[+A] extends (() => A) {
 class FutureList[+A](list: List[Future[A]]) extends Future[List[A]] {
   def isEmpty = list.isEmpty
   def head = list.head
-  def firstOption = list.headOption
+  def firstOption = list.firstOption
   def tail = new FutureList(list.tail)
 
   def respond(k: List[A] => Unit) {
@@ -104,12 +104,12 @@ class FutureList[+A](list: List[Future[A]]) extends Future[List[A]] {
 
 object FutureNil extends FutureList(Nil)
 
-object NotifyingFuture {
+object Promise {
   class ImmutableResult(message: String) extends Exception(message)
 }
 
-class NotifyingFuture[A] extends Future[A] {
-  import NotifyingFuture._
+class Promise[A] extends Future[A] {
+  import Promise._
 
   private var result: Option[A] = None
   private val computations = new ArrayBuffer[A => Unit]

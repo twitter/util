@@ -21,9 +21,9 @@ A bunch of idiomatic, small General Purpose tools. This is totally experimental 
 
 A Non-actor re-implementation of Scala Futures.
 
-    import com.twitter.util.{Future, NotifyingFuture]
+    import com.twitter.util.{Future, Promise]
 
-    val f = new NotifyingFuture[Int]
+    val f = new Promise[Int]
     val g = f map { result => result + 1 }
     f.setResult(1)
     g() // => This blocks for the futures result (and eventually returns 2)
