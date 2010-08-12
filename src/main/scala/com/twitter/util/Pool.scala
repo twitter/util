@@ -27,12 +27,14 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
   }
 
   def release(item: A) {
+    items += Future.constant(item)
     synchronized {
-      items += Future.constant(item)
-      if (!requests.isEmpty) {
-        val request = requests.dequeue()
-        items.dequeue() respond(request.setResult(_))
-      }
+      if (!requests.isEmpty && !items.isEmpty)
+        Some((requests.dequeue(), items.dequeue()))
+      else
+        None
+    } map { case (request, item) =>
+      item respond(request.setResult(_))
     }
   }
 }
@@ -57,9 +59,7 @@ private class HealthyQueue[A](
   val self = new mutable.Queue[Future[A]]
   0.until(numItems) foreach { _ => self += makeItem() }
 
-  override def +=(item: Future[A]) = synchronized {
-    self += item
-  }
+  override def +=(item: Future[A]) = synchronized { self += item }
 
   override def dequeue() = synchronized {
     if (isEmpty) throw new Predef.NoSuchElementException
@@ -68,8 +68,9 @@ private class HealthyQueue[A](
       if (isHealthy(item)) {
         Future.constant(item)
       } else {
+        val item = makeItem()
         synchronized {
-          this += makeItem()
+          this += item
           dequeue()
         }
       }

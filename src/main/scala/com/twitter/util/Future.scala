@@ -3,6 +3,8 @@ package com.twitter.util
 import com.twitter.util.TimeConversions._
 import scala.collection.mutable.ArrayBuffer
 
+private case class Cell[A](var value: A)
+
 object Future {
   def constant[A](a: A) = new Future[A] {
     def respond(k: A => Unit) { k(a) }
@@ -10,21 +12,21 @@ object Future {
 }
 
 abstract class Future[+A] extends (() => A) {
-  private var cachedResult: Option[Any] = None
+  private var cell = Cell[Option[Any]](None)
 
   def respond(k: A => Unit)
 
   def apply: A = apply(Math.MAX_LONG.millis).get
 
-  def apply(timeout: Duration): Option[A] = cachedResult.synchronized {
-    cachedResult.map(_.asInstanceOf[A]) orElse {
+  def apply(timeout: Duration): Option[A] = cell.synchronized {
+    cell.value.map(_.asInstanceOf[A]) orElse {
       val latch = new CountDownLatch(1)
       respond { a =>
-        cachedResult = Some(a)
+        cell.value = Some(a)
         latch.countDown()
       }
       latch.await(timeout)
-      cachedResult.map(_.asInstanceOf[A])
+      cell.value.map(_.asInstanceOf[A])
     }
   }
 
