@@ -70,25 +70,30 @@ class NotifyingFuture[A] extends Future[A] {
   }
 
   def setResultIfEmpty(result: A) = {
-    this.result match {
-      case Some(_) => false
-      case None =>
-        synchronized {
+    if (this.result.isDefined) false
+    else {
+      // don't want to execute callbacks in synchronized block
+      val res = synchronized {
+        // need to check again to avoid race-condition
+        if (this.result.isDefined) false
+        else {
           this.result = Some(result)
-          computations foreach(_(result))
+          true
         }
-        true
+      }
+      if (res) computations foreach(_(result))
+      res
     }
   }
 
   def respond(k: A => Unit) {
-    synchronized {
-      result match {
-        case Some(result) =>
-          k(result)
-        case None =>
-          computations += k
+    if (result.isDefined) k(result.get)
+    else {
+      // don't want to execute callbacks in synchronized block
+      val isDefined = synchronized {
+        result.isDefined || { computations += k; false }
       }
+      if (isDefined) k(result.get)
     }
   }
 }
