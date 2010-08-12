@@ -45,6 +45,9 @@ abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
 
   def reserve() = simplePool.reserve()
   def release(a: A) = simplePool.release(a)
+  def dispose(a: A) {
+    healthyQueue += makeItem()
+  }
 
   protected def makeItem(): Future[A]
   protected def isHealthy(a: A): Boolean

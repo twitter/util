@@ -27,19 +27,32 @@ object PoolSpec extends Specification {
         def makeItem() = { count += 1; Future.constant(count) }
         def isHealthy(i: Int) = i % 2 == 0
       }
-      pool.reserve()() mustEqual 2
-      pool.reserve()() mustEqual 4
-      pool.reserve()() mustEqual 6
-      pool.reserve()() mustEqual 8
-      val promise = pool.reserve()
-      promise(1.millisecond) mustEqual None
-      promise.getWithin(1.millisecond) must throwA[TimeoutException]
-      pool.release(8)
-      pool.release(6)
-      promise() mustEqual 8
-      pool.reserve()() mustEqual 6
-      pool.reserve()(1.millisecond) mustEqual None
-      pool.reserve().getWithin(1.millisecond) must throwA[TimeoutException]
+
+      "reserve & release" >> {
+        pool.reserve()() mustEqual 2
+        pool.reserve()() mustEqual 4
+        pool.reserve()() mustEqual 6
+        pool.reserve()() mustEqual 8
+        val promise = pool.reserve()
+        promise(1.millisecond) mustEqual None
+        promise.getWithin(1.millisecond) must throwA[TimeoutException]
+        pool.release(8)
+        pool.release(6)
+        promise() mustEqual 8
+        pool.reserve()() mustEqual 6
+        pool.reserve()(1.millisecond) mustEqual None
+        pool.reserve().getWithin(1.millisecond) must throwA[TimeoutException]
+      }
+
+      "reserve & dispose" >> {
+        pool.reserve()() mustEqual 2
+        pool.reserve()() mustEqual 4
+        pool.reserve()() mustEqual 6
+        pool.reserve()() mustEqual 8
+        pool.reserve()(1.millisecond) mustEqual None
+        pool.dispose(2)
+        pool.reserve()(1.millisecond) mustEqual Some(10)
+      }
     }
   }
 }
