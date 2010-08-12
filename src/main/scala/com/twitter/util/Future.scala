@@ -53,7 +53,56 @@ abstract class Future[+A] extends (() => A) {
       Future.this.respond(x => if (p(x)) k(x) else ())
     }
   }
+
+  def ++[B](right: Future[B]) = new Future[(A,B)] {
+    def respond(k: ((A,B)) => Unit) {
+      Future.this.respond { a =>
+        right.respond { b => k((a,b)) }
+      }
+    }
+
+    override def apply(timeout: Duration): Option[(A,B)] = {
+      val startTime = System.currentTimeMillis
+      Future.this.apply(timeout) flatMap { a =>
+        val remainingTimeout = timeout - new Duration(System.currentTimeMillis - startTime)
+        right.apply(remainingTimeout).map(b => (a, b))
+      }
+    }
+  }
 }
+
+class FutureList[+A](list: List[Future[A]]) extends Future[List[A]] {
+  def isEmpty = list.isEmpty
+  def head = list.head
+  def firstOption = list.headOption
+  def tail = new FutureList(list.tail)
+
+  def respond(k: List[A] => Unit) {
+    if (isEmpty) k(Nil)
+    else {
+      head.respond { a =>
+        tail.respond { b =>
+          k(a :: b)
+        }
+      }
+    }
+  }
+  
+  override def apply(timeout: Duration): Option[List[A]] = {
+    if (isEmpty) Some(Nil)
+    else {
+      val startTime = System.currentTimeMillis
+      head(timeout) flatMap { a =>
+        val remainingTimeout = timeout - new Duration(System.currentTimeMillis - startTime)
+        tail(remainingTimeout).map(b => a :: b)
+      }
+    }
+  }
+
+  def ::[B >: A](head: Future[B]) = new FutureList(head :: list)
+}
+
+object FutureNil extends FutureList(Nil)
 
 object NotifyingFuture {
   class ImmutableResult(message: String) extends Exception(message)
@@ -71,26 +120,28 @@ class NotifyingFuture[A] extends Future[A] {
     }
   }
 
-  def setResultIfEmpty(result: A) = {
-    this.result match {
-      case Some(_) => false
-      case None =>
-        synchronized {
-          this.result = Some(result)
+  def setResultIfEmpty(newResult: A) = {
+    if (result.isDefined) false else {
+      val didSetResult = synchronized {
+        if (result.isDefined) false else {
+          result = Some(newResult)
+          true
         }
-        computations foreach(_(result))
-        true
+      }
+      if (didSetResult) computations foreach(_(newResult))
+      didSetResult
     }
   }
 
   def respond(k: A => Unit) {
-    synchronized {
-      result match {
-        case Some(result) =>
-          k(result)
-        case None =>
+    result map(k) getOrElse {
+      val wasDefined = synchronized {
+        if (result.isDefined) true else {
           computations += k
+          false
+        }
       }
+      if (wasDefined) result map(k)
     }
   }
 }
