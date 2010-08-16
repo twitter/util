@@ -37,7 +37,7 @@ object RingBufferSpec extends Specification {
       buf.next mustEqual "c"
       buf.size mustEqual 0
     }
-    
+
     "handle overwrite/rollover" in {
       val buf = new RingBuffer[String](4)
       buf ++= List("a", "b", "c", "d", "e", "f")
@@ -45,7 +45,7 @@ object RingBufferSpec extends Specification {
       buf(0) mustEqual "c"
       buf.toList mustEqual List("c", "d", "e", "f")
     }
-    
+
     "removeWhere" in {
       val buf = new RingBuffer[Int](6)
       buf ++= (0 until 10)

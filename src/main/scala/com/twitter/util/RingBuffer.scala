@@ -22,7 +22,7 @@ class RingBuffer[A](val maxSize: Int) extends Seq[A] {
     if (i >= count) throw new IndexOutOfBoundsException(i.toString)
     else array((read + i) % maxSize)
   }
-  
+
   /**
    * Overwrites an element with a new value
    */
@@ -80,7 +80,7 @@ class RingBuffer[A](val maxSize: Int) extends Seq[A] {
     else read = (read + n) % maxSize
     this
   }
-  
+
   def removeWhere(fn: A=>Boolean): Int = {
     var rmCount = 0
     var j = 0
