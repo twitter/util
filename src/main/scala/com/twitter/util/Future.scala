@@ -36,6 +36,12 @@ abstract class Future[+A] extends (() => A) {
 
   def foreach(k: A => Unit) { respond(k) }
 
+  /**
+   * Takes a function and returns a new `Future` whose value is the function applied to the value represented
+   * by this Future. Note that `map` is *lazy*: it does not necessarily invoke the given function. The function
+   * will be invoked if you later call `respond` on the returned future. If the function given to map has
+   * side-effects, you probably want to call `respond` or `foreach` instead of `map`.
+   */
   def map[B](f: A => B) = new Future[B] {
     def respond(k: B => Unit) {
       Future.this.respond(x => k(f(x)))
