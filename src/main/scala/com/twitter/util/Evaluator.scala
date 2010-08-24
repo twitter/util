@@ -16,6 +16,9 @@ import scala.io.Source
  *
  *     package com.mycompany
  *
+ *     import com.twitter.util.Duration
+ *     import com.twitter.util.StorageUnit
+ *
  *     trait Config {
  *       def myValue: Int
  *       def myTimeout: Duration
@@ -56,6 +59,7 @@ import scala.io.Source
  * 
  * This implementation is inspired by
  * http://scala-programming-language.1934581.n4.nabble.com/Compiler-API-td1992165.html
+ *
  */
 object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
