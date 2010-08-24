@@ -88,3 +88,32 @@ Here is a pool of even-number generators. It stores 4 numbers at a time:
     }
 
 It checks the health when you successfully reserve an object (i.e., when the Future yields).
+
+# Eval
+
+Dynamically evaluates Scala strings and files.
+
+This is motivated by the desire to have a type-safe alternative to textual configuration formats such as
+YAML, JSON, or .properties files.  Its advantages over these text
+formats are
+
+*   Strong typing and compiler checking.  If it doesn't compile and
+    doesn't conform to the type you expect, you get an exception
+*   The full power of Scala in your config.  You don't have to use
+    it.  But you can.
+
+## in config/Development.scala
+
+    import com.xxx.MyConfig
+
+    new MyConfig {
+      val myValue = 1
+      val myTime = 2.seconds
+      val myStorage = 14.kilobytes
+    }
+
+## in Main.scala
+
+    import com.xxx.MyConfig
+
+    val config = Eval[MyConfig](new File("config/Development.scala"))
