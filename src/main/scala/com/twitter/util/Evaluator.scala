@@ -12,11 +12,46 @@ import scala.io.Source
  * It is intended to be used for application configuration (rather than Configgy, XML, YAML files, etc.)
  * and anything else.
  *
- * Eval takes a file or string and generates a new scala class that has an apply method that 
+ * Consider this example. You have the following configuration file in Config.scala:
+ *
+ *     package com.mycompany
+ *
+ *     trait Config {
+ *       def myValue: Int
+ *       def myTimeout: Duration
+ *       def myBufferSize: StorageUnit
+ *     }
+ *
+ * You have the following configuration file in config/Development.scala:
+ *
+ *     import com.mycompany.Config
+ *     import com.twitter.util.TimeConversions._
+ *     import com.twitter.util.StorageUnitConversions._
+ *
+ *     new Config {
+ *       val myValue = 1
+ *       val myTimeout = 2.seconds
+ *       val myBufferSize = 14.kilobytes
+ *     }
+ *
+ * And finally, in Main.scala:
+ *
+ *     package com.mycompany
+ *
+ *     object Main {
+ *       def main(args: Array[String]) {
+ *         val config = Eval[Config](new File(args(0)))
+ *         ...
+ *       }
+ *     }
+ *
+ * Note that in this example there is no need for any configuration format like Configgy, YAML, etc.
+ *
+ * So how does this work? Eval takes a file or string and generates a new scala class that has an apply method that 
  * evaluates that string. The newly generated file is then compiled. All generated .scala and .class
  * files are stored, by default, in System.getProperty("java.io.tmpdir").
  *
- * After compilation, the a new class loader is created with the temporary dir as the classPath.
+ * After compilation, a new class loader is created with the temporary dir as the classPath.
  * The generated class is loaded and then apply() is called.
  * 
  * This implementation is inspired by
