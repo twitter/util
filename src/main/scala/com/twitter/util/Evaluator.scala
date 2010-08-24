@@ -12,7 +12,7 @@ import scala.io.Source
  * It is intended to be used for application configuration (rather than Configgy, XML, YAML files, etc.)
  * and anything else.
  *
- * Consider this example. You have the following configuration file in Config.scala:
+ * Consider this example. You have the following configuration trait Config.scala.
  *
  *     package com.mycompany
  *
@@ -25,7 +25,7 @@ import scala.io.Source
  *       def myBufferSize: StorageUnit
  *     }
  *
- * You have the following configuration file in config/Development.scala:
+ * You have the following configuration file (specific values) in config/Development.scala:
  *
  *     import com.mycompany.Config
  *     import com.twitter.util.TimeConversions._
