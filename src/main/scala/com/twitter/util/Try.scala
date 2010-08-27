@@ -35,6 +35,11 @@ sealed abstract class Try[+E <: Throwable, +R] {
   def rescue[R2 >: R](handleException: PartialFunction[E, R2]): R2
 
   /**
+   * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
+   */
+  def handle[E2 >: E <: Throwable, R2 >: R](handleException: PartialFunction[E, Try[E2, R2]]): Try[E2, R2]
+
+  /**
    * Returns the value from this Return or throws the exception if this is a Throw
    */
   def apply(): R
@@ -70,6 +75,8 @@ final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] {
   def isReturn = false
   def rescue[R2 >: R](handleException: PartialFunction[E, R2]) =
     if (handleException.isDefinedAt(e)) handleException(e) else { throw e }
+  def handle[E2 >: E <: Throwable, R2 >: R](handleException: PartialFunction[E, Try[E2, R2]]) =
+    if (handleException.isDefinedAt(e)) handleException(e) else this
   def apply(): R = throw e
   def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = Throw[E2, R](e)
   def map[X](f: R => X) = Throw(e)
@@ -79,6 +86,7 @@ final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
   def isThrow = false
   def isReturn = true
   def rescue[R2 >: R](handleException: PartialFunction[E, R2]) = r
+  def handle[E2 >: E <: Throwable, R2 >: R](handleException: PartialFunction[E, Try[E2, R2]]) = Return(r)
   def apply() = r
   def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = f(r)
   def map[X](f: R => X) = Return[E, X](f(r))

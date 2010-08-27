@@ -25,6 +25,12 @@ object TrySpec extends Specification {
       }
     }
 
+    "handle" in {
+      Return(1) handle { case _ => Return(2) } mustEqual Return(1)
+      Throw(e) handle { case e: MyException => Return(2) } mustEqual Throw(e)
+      Throw(new MyException) handle { case e: MyException => Return(2) } mustEqual Return(2)
+    }
+
     "getOrElse" in {
       Return(1) getOrElse 2 mustEqual 1
       Throw(e) getOrElse 2 mustEqual 2
