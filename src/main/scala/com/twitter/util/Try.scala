@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import scala.reflect.Manifest
+
 /**
  * The Try type represents a computation that may either result in an exception
  * or return a value. It is analogous to the Either type but encodes common idioms
@@ -30,7 +32,7 @@ sealed abstract class Try[+E <: Throwable, +R] {
   /**
    * Calls the exceptionHandler with the exception if this is a Throw.
    */
-  def rescue[R2 >: R](handleException: E => R2): R2
+  def rescue[R2 >: R](handleException: PartialFunction[E, R2]): R2
 
   /**
    * Returns the value from this Return or throws the exception if this is a Throw
@@ -66,7 +68,8 @@ sealed abstract class Try[+E <: Throwable, +R] {
 final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] { 
   def isThrow = true
   def isReturn = false
-  def rescue[R2 >: R](handleException: E => R2) = handleException(e)
+  def rescue[R2 >: R](handleException: PartialFunction[E, R2]) =
+    if (handleException.isDefinedAt(e)) handleException(e) else { throw e }
   def apply(): R = throw e
   def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = Throw[E2, R](e)
   def map[X](f: R => X) = Throw(e)
@@ -75,8 +78,8 @@ final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] {
 final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
   def isThrow = false
   def isReturn = true
-  def rescue[R2 >: R](handleException: E => R2) = r
+  def rescue[R2 >: R](handleException: PartialFunction[E, R2]) = r
   def apply() = r
   def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = f(r)
-  def map[X](f: R => X) = Return(f(r))
+  def map[X](f: R => X) = Return[E, X](f(r))
 }

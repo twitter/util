@@ -3,6 +3,7 @@ package com.twitter.util
 import org.specs.Specification
 
 object TrySpec extends Specification {
+  class MyException extends Exception
   val e = new Exception
 
   "Try()" should {
@@ -14,8 +15,14 @@ object TrySpec extends Specification {
 
   "Try" should {
     "rescue" in {
-      Return(1) rescue { case _ => 2 } mustEqual 1
-      Throw(e) rescue { case _ => 2 } mustEqual 2
+      "when the exception is caught" in {
+        Return(1) rescue { case _ => 2 } mustEqual 1
+        Throw(e) rescue { case _ => 2 } mustEqual 2
+      }
+
+      "when the exception is uncaught" in {
+        Throw(e) rescue { case e: MyException => 2 } must throwA(e)
+      }
     }
 
     "getOrElse" in {
