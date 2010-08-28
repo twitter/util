@@ -19,16 +19,21 @@ abstract class Future[+A] extends (() => A) {
 
   final def apply: A = apply(Math.MAX_LONG.millis)
 
-  final def apply(timeout: Duration) = cell.synchronized {
+  final def apply(timeout: Duration) =
+    within(duration) { result => result } {
+      throw new TimeoutException(timeout.toString)
+    }
+
+  final def within[B](timeout: Duration)(f: A => B)(onTimeout: => B) = cell.synchronized {
     if (!cell.value.isDefined) {
       val latch = new CountDownLatch(1)
       respond { a =>
         cell.value = Some(a)
         latch.countDown()
       }
-      if (!latch.await(timeout)) throw new TimeoutException(timeout.toString)
+      if (!latch.await(timeout)) onTimeout
     }
-    cell.value.get.asInstanceOf[Try[Throwable, A]]()
+    f(cell.value.get.asInstanceOf[Try[Throwable, A]]())
   }
 
   final def foreach(k: A => Unit) { respond(_ foreach k) }
