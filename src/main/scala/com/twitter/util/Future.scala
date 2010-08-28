@@ -120,13 +120,13 @@ class Promise[A] extends Future[A] {
   private var result: Option[A] = None
   private val computations = new ArrayBuffer[A => Unit]
 
-  def setResult(result: A) {
-    setResultIfEmpty(result) || {
+  def update(result: A) {
+    updateIfEmpty(result) || {
       throw new ImmutableResult("Result set multiple times: " + result)
     }
   }
 
-  def setResultIfEmpty(newResult: A) = {
+  def updateIfEmpty(newResult: A) = {
     if (result.isDefined) false else {
       val didSetResult = synchronized {
         if (result.isDefined) false else {

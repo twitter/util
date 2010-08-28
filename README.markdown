@@ -25,7 +25,7 @@ A Non-actor re-implementation of Scala Futures.
 
     val f = new Promise[Int]
     val g = f map { result => result + 1 }
-    f.setResult(1)
+    f() = 1
     g() // => This blocks for the futures result (and eventually returns 2)
 
     // Another option:
