@@ -59,59 +59,10 @@ abstract class Future[+A] extends (() => A) {
       Future.this.respond(x => if (p(x)) k(x) else ())
     }
   }
-
-  def ++[B](right: Future[B]) = new Future[(A,B)] {
-    def respond(k: ((A,B)) => Unit) {
-      Future.this.respond { a =>
-        right.respond { b => k((a,b)) }
-      }
-    }
-
-    override def apply(timeout: Duration): Option[(A,B)] = {
-      val startTime = System.currentTimeMillis
-      Future.this.apply(timeout) flatMap { a =>
-        val remainingTimeout = timeout - new Duration(System.currentTimeMillis - startTime)
-        right.apply(remainingTimeout).map(b => (a, b))
-      }
-    }
-  }
 }
-
-class FutureList[+A](list: List[Future[A]]) extends Future[List[A]] {
-  def isEmpty = list.isEmpty
-  def head = list.head
-  def firstOption = list.firstOption
-  def tail = new FutureList(list.tail)
-
-  def respond(k: List[A] => Unit) {
-    if (isEmpty) k(Nil)
-    else {
-      head.respond { a =>
-        tail.respond { b =>
-          k(a :: b)
-        }
-      }
-    }
-  }
-  
-  override def apply(timeout: Duration): Option[List[A]] = {
-    if (isEmpty) Some(Nil)
-    else {
-      val startTime = System.currentTimeMillis
-      head(timeout) flatMap { a =>
-        val remainingTimeout = timeout - new Duration(System.currentTimeMillis - startTime)
-        tail(remainingTimeout).map(b => a :: b)
-      }
-    }
-  }
-
-  def ::[B >: A](head: Future[B]) = new FutureList(head :: list)
-}
-
-object FutureNil extends FutureList(Nil)
 
 object Promise {
-  class ImmutableResult(message: String) extends Exception(message)
+  case class ImmutableResult(message: String) extends Exception(message)
 }
 
 class Promise[A] extends Future[A] {
