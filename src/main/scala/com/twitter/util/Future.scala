@@ -6,35 +6,32 @@ import scala.collection.mutable.ArrayBuffer
 private case class Cell[A](var value: A)
 
 object Future {
-  def apply[A](a: A) = new Future[A] {
-    def respond(k: A => Unit) { k(a) }
+  def apply[A](a: => A) = new Future[A] {
+    val result = Try(a)
+    def respond(k: Try[Throwable, A] => Unit) { k(result) }
   }
 }
 
 abstract class Future[+A] extends (() => A) {
   private var cell = Cell[Option[Any]](None)
 
-  def respond(k: A => Unit)
+  def respond(k: Try[Throwable, A] => Unit)
 
-  def apply: A = apply(Math.MAX_LONG.millis).get
+  final def apply: A = apply(Math.MAX_LONG.millis)
 
-  def apply(timeout: Duration): Option[A] = cell.synchronized {
-    cell.value.map(_.asInstanceOf[A]) orElse {
+  final def apply(timeout: Duration) = cell.synchronized {
+    if (!cell.value.isDefined) {
       val latch = new CountDownLatch(1)
       respond { a =>
         cell.value = Some(a)
         latch.countDown()
       }
-      latch.await(timeout)
-      cell.value.map(_.asInstanceOf[A])
+      if (!latch.await(timeout)) throw new TimeoutException(timeout.toString)
     }
+    cell.value.get.asInstanceOf[Try[Throwable, A]]()
   }
 
-  def getWithin(timeout: Duration): A = {
-    apply(timeout).getOrElse(throw new TimeoutException(timeout.toString))
-  }
-
-  def foreach(k: A => Unit) { respond(k) }
+  final def foreach(k: A => Unit) { respond(_ foreach k) }
 
   /**
    * Takes a function and returns a new `Future` whose value is the function applied to the value represented
@@ -42,21 +39,27 @@ abstract class Future[+A] extends (() => A) {
    * will be invoked if you later call `respond` on the returned future. If the function given to map has
    * side-effects, you probably want to call `respond` or `foreach` instead of `map`.
    */
-  def map[B](f: A => B) = new Future[B] {
-    def respond(k: B => Unit) {
-      Future.this.respond(x => k(f(x)))
+  final def map[B](f: A => B) = new Future[B] {
+    def respond(k: Try[Throwable, B] => Unit) {
+      Future.this.respond { x =>
+        k(x map(f))
+      }
     }
   }
 
-  def flatMap[B](f: A => Future[B]) = new Future[B] {
-    def respond(k: B => Unit) {
-      Future.this.respond(x => f(x).respond(k))
+  final def flatMap[B](f: A => Future[B]) = new Future[B] {
+    def respond(k: Try[Throwable, B] => Unit) {
+      Future.this.respond { x =>
+        x map(f) foreach (_.respond(k))
+      }
     }
   }
 
-  def filter(p: A => Boolean) = new Future[A] {
-    def respond(k: A => Unit) {
-      Future.this.respond(x => if (p(x)) k(x) else ())
+  final def filter(p: A => Boolean) = new Future[A] {
+    def respond(k: Try[Throwable, A] => Unit) {
+      Future.this.respond { x =>
+        x filter(p) foreach k
+      }
     }
   }
 }
@@ -68,16 +71,16 @@ object Promise {
 class Promise[A] extends Future[A] {
   import Promise._
 
-  private var result: Option[A] = None
-  private val computations = new ArrayBuffer[A => Unit]
+  private var result: Option[Try[Throwable, A]] = None
+  private val computations = new ArrayBuffer[Try[Throwable, A] => Unit]
 
-  def update(result: A) {
+  def update(result: Try[Throwable, A]) {
     updateIfEmpty(result) || {
       throw new ImmutableResult("Result set multiple times: " + result)
     }
   }
 
-  def updateIfEmpty(newResult: A) = {
+  def updateIfEmpty(newResult: Try[Throwable, A]) = {
     if (result.isDefined) false else {
       val didSetResult = synchronized {
         if (result.isDefined) false else {
@@ -90,7 +93,7 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def respond(k: A => Unit) {
+  def respond(k: Try[Throwable, A] => Unit) {
     result map(k) getOrElse {
       val wasDefined = synchronized {
         if (result.isDefined) true else {
