@@ -34,8 +34,8 @@ A Non-actor re-implementation of Scala Futures.
     }
 
     // Using for expressions:
-    val xFuture = Future.constant(1)
-    val yFuture = Future.constant(2)
+    val xFuture = Future(1)
+    val yFuture = Future(2)
 
     for (
       x <- xFuture
@@ -83,7 +83,7 @@ Here is a pool of even-number generators. It stores 4 numbers at a time:
 
     val pool = new FactoryPool[Int](4) {
       var count = 0
-      def makeItem() = { count += 1; Future.constant(count) }
+      def makeItem() = { count += 1; Future(count) }
       def isHealthy(i: Int) = i % 2 == 0
     }
 

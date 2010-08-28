@@ -19,21 +19,21 @@ object CachingRepositorySpec extends Specification with Mockito {
 
     "finding by primary key" >> {
       "when the cache map has the item, it returns Some(item) without calling the backing repository" in {
-        map += id -> Future.constant(Some(item))
+        map += id -> Future(Some(item))
         repository(id)() mustEqual Some(item)
         backingRepository(id) was notCalled
       }
 
       "when the cache map does not have the item, it calls into the backing repository" in {
         "when the backing repository has the item, it returns Some(item) and caches the result" in {
-          backingRepository(id) returns Future.constant(Some(item))
+          backingRepository(id) returns Future(Some(item))
           repository(id)() mustEqual Some(item)
           backingRepository(id) was called.once
           map(id)() mustEqual Some(item)
         }
 
         "when the backing repository does not have the item, it returns None and caches the result" in {
-          backingRepository(id) returns Future.constant(None)
+          backingRepository(id) returns Future(None)
           repository(id)() mustEqual None
           backingRepository(id) was called.once
           map(id)() mustEqual None
@@ -43,7 +43,7 @@ object CachingRepositorySpec extends Specification with Mockito {
 
     "finding by a query / secondary index" >> {
       "when the cache is empty, it calls the backing repository and populates the cache" in {
-        backingRepository(query) returns Future.constant(Seq(item))
+        backingRepository(query) returns Future(Seq(item))
         repository(query)().toList mustEqual Seq(item).toList
         repository(query)().toList mustEqual Seq(item).toList
         backingRepository(query) was called.once

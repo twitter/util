@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 private case class Cell[A](var value: A)
 
 object Future {
-  def constant[A](a: A) = new Future[A] {
+  def apply[A](a: A) = new Future[A] {
     def respond(k: A => Unit) { k(a) }
   }
 }

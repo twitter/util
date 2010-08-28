@@ -10,7 +10,7 @@ trait Pool[A] {
 class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
   def this(items: Seq[A]) = this {
     val queue = new mutable.Queue[Future[A]]
-    queue ++= items map { item => Future.constant(item) }
+    queue ++= items map { item => Future(item) }
     queue
   }
 
@@ -27,7 +27,7 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
   }
 
   def release(item: A) {
-    items += Future.constant(item)
+    items += Future(item)
     synchronized {
       if (!requests.isEmpty && !items.isEmpty)
         Some((requests.dequeue(), items.dequeue()))
@@ -69,7 +69,7 @@ private class HealthyQueue[A](
 
     self.dequeue() flatMap { item =>
       if (isHealthy(item)) {
-        Future.constant(item)
+        Future(item)
       } else {
         val item = makeItem()
         synchronized {

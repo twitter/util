@@ -24,7 +24,7 @@ object PoolSpec extends Specification {
     "with an object factory and a health check" >> {
       val pool = new FactoryPool[Int](4) {
         var count = 0
-        def makeItem() = { count += 1; Future.constant(count) }
+        def makeItem() = { count += 1; Future(count) }
         def isHealthy(i: Int) = i % 2 == 0
       }
 
