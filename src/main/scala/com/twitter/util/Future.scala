@@ -20,7 +20,7 @@ abstract class Future[+A] extends (() => A) {
   final def apply: A = apply(Math.MAX_LONG.millis)
 
   final def apply(timeout: Duration) =
-    within(duration) { result => result } {
+    within(timeout) { result => result } {
       throw new TimeoutException(timeout.toString)
     }
 
