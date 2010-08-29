@@ -16,14 +16,14 @@ object MapMaker {
     private var mapMaker = new GoogleMapMaker[K, V]
     private var valueOperation: Option[K => V] = None
 
-    def weakKeys = mapMaker.weakKeys
-    def weakValues = mapMaker.weakValues
-    def softKeys = mapMaker.softKeys
-    def softValues = mapMaker.softValues
-    def concurrencyLevel(level: Int) = mapMaker.concurrencyLevel(level)
-    def initialCapacity(capacity: Int) = mapMaker.initialCapacity(capacity)
-    def expiration(expiration: Duration) = mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS)
-    def compute(_valueOperation: K => V) { valueOperation = Some(_valueOperation) }
+    def weakKeys = mapMaker.weakKeys; this
+    def weakValues = mapMaker.weakValues; this
+    def softKeys = mapMaker.softKeys; this
+    def softValues = mapMaker.softValues; this
+    def concurrencyLevel(level: Int) = mapMaker.concurrencyLevel(level); this
+    def initialCapacity(capacity: Int) = mapMaker.initialCapacity(capacity); this
+    def expiration(expiration: Duration) = mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this
+    def compute(_valueOperation: K => V) = valueOperation = Some(_valueOperation); this
 
     def apply() = {
       val javaMap = valueOperation map { valueOperation =>

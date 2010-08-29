@@ -13,6 +13,10 @@ object FutureSpec extends Specification {
       "flatMap" in {
         val f = Future(1) flatMap { x => Future(x + 1) }
         f() mustEqual 2
+
+        val e = new Exception
+        val g = Future[Exception, Int](throw e) flatMap { x => Future(x + 1) }
+        g() must throwA(e)
       }
 
       "foreach" in {

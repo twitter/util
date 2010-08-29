@@ -1,7 +1,7 @@
 package com.twitter.util
 
 object StateMachine {
-  class InvalidStateTransition(message: String) extends Exception(message)
+  class InvalidStateTransition(fromState: String) extends Exception(fromState)
 }
 
 trait StateMachine {

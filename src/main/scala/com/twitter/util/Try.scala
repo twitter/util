@@ -18,8 +18,6 @@ object Try {
 }
 
 trait Try[+E <: Throwable, +R] {
-  import Try.PredicateDoesNotObtain
-
   /**
    * Returns true if the Try is a Throw, false otherwise.
    */
@@ -53,7 +51,7 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw
    */
-  def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]): Try[E2, R2]
+  def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]): Try[E2, R2]
 
   /**
    * Maps the given function to the value from this Return or returns this if this is a Throw
@@ -63,7 +61,7 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Returns None if this is a Throw or the given predicate does not obtain. Returns some(this) otherwise.
    */
-  def filter(p: R => Boolean) = if (isReturn && p(apply())) this else Throw(new PredicateDoesNotObtain)
+  def filter(p: R => Boolean): Try[Throwable, R]
 
   /**
    * Returns None if this is a Throw or a Some containing the value if this is a Return
@@ -77,8 +75,9 @@ final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] {
   def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]) =
     if (rescueException.isDefinedAt(e)) rescueException(e) else this
   def apply(): R = throw e
-  def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = Throw[E2, R](e)
+  def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = Throw[E2, R2](e)
   def map[X](f: R => X) = Throw(e)
+  def filter(p: R => Boolean) = this
 }
 
 final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
@@ -86,6 +85,7 @@ final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
   def isReturn = true
   def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]) = Return(r)
   def apply() = r
-  def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = f(r)
+  def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = f(r)
   def map[X](f: R => X) = Return[E, X](f(r))
+  def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
 }
