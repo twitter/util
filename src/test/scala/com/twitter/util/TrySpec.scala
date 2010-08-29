@@ -15,20 +15,9 @@ object TrySpec extends Specification {
 
   "Try" should {
     "rescue" in {
-      "when the exception is caught" in {
-        Return(1) rescue { case _ => 2 } mustEqual 1
-        Throw(e) rescue { case _ => 2 } mustEqual 2
-      }
-
-      "when the exception is uncaught" in {
-        Throw(e) rescue { case e: MyException => 2 } must throwA(e)
-      }
-    }
-
-    "handle" in {
-      Return(1) handle { case _ => Return(2) } mustEqual Return(1)
-      Throw(e) handle { case e: MyException => Return(2) } mustEqual Throw(e)
-      Throw(new MyException) handle { case e: MyException => Return(2) } mustEqual Return(2)
+      Return(1) rescue { case _ => Return(2) } mustEqual Return(1)
+      Throw(e) rescue { case e: MyException => Return(2) } mustEqual Throw(e)
+      Throw(new MyException) rescue { case e: MyException => Return(2) } mustEqual Return(2)
     }
 
     "getOrElse" in {

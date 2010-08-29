@@ -8,12 +8,16 @@ import scala.reflect.Manifest
  * for handling exceptional cases.
  */
 object Try {
+  case class PredicateDoesNotObtain() extends Exception()
+
   def apply[R](r: => R) = {
     try { Return(r) } catch { case e => Throw(e) }
   }
 }
 
-sealed abstract class Try[+E <: Throwable, +R] {
+trait Try[+E <: Throwable, +R] {
+  import Try.PredicateDoesNotObtain
+
   /**
    * Returns true if the Try is a Throw, false otherwise.
    */
@@ -30,14 +34,9 @@ sealed abstract class Try[+E <: Throwable, +R] {
   def getOrElse[R2 >: R](default: => R2) = if (isReturn) apply() else default
 
   /**
-   * Calls the exceptionHandler with the exception if this is a Throw.
-   */
-  def rescue[R2 >: R](handleException: PartialFunction[E, R2]): R2
-
-  /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
    */
-  def handle[E2 >: E <: Throwable, R2 >: R](handleException: PartialFunction[E, Try[E2, R2]]): Try[E2, R2]
+  def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]): Try[E2, R2]
 
   /**
    * Returns the value from this Return or throws the exception if this is a Throw
@@ -62,7 +61,7 @@ sealed abstract class Try[+E <: Throwable, +R] {
   /**
    * Returns None if this is a Throw or the given predicate does not obtain. Returns some(this) otherwise.
    */
-  def filter(p: R => Boolean) = if (isReturn && p(apply())) Some(this) else None
+  def filter(p: R => Boolean) = if (isReturn && p(apply())) this else Throw(new PredicateDoesNotObtain)
 
   /**
    * Returns None if this is a Throw or a Some containing the value if this is a Return
@@ -73,10 +72,8 @@ sealed abstract class Try[+E <: Throwable, +R] {
 final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] { 
   def isThrow = true
   def isReturn = false
-  def rescue[R2 >: R](handleException: PartialFunction[E, R2]) =
-    if (handleException.isDefinedAt(e)) handleException(e) else { throw e }
-  def handle[E2 >: E <: Throwable, R2 >: R](handleException: PartialFunction[E, Try[E2, R2]]) =
-    if (handleException.isDefinedAt(e)) handleException(e) else this
+  def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]) =
+    if (rescueException.isDefinedAt(e)) rescueException(e) else this
   def apply(): R = throw e
   def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = Throw[E2, R](e)
   def map[X](f: R => X) = Throw(e)
@@ -85,8 +82,7 @@ final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] {
 final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
   def isThrow = false
   def isReturn = true
-  def rescue[R2 >: R](handleException: PartialFunction[E, R2]) = r
-  def handle[E2 >: E <: Throwable, R2 >: R](handleException: PartialFunction[E, Try[E2, R2]]) = Return(r)
+  def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]) = Return(r)
   def apply() = r
   def flatMap[E2 >: E <: Throwable, R2 >: R](f: R => Try[E2, R2]) = f(r)
   def map[X](f: R => X) = Return[E, X](f(r))

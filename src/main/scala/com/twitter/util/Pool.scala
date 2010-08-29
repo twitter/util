@@ -3,22 +3,22 @@ package com.twitter.util
 import scala.collection.mutable
 
 trait Pool[A] {
-  def reserve(): Future[A]
+  def reserve(): Future[Throwable, A]
   def release(a: A)
 }
 
-class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
+class SimplePool[A](items: mutable.Queue[Future[Throwable, A]]) extends Pool[A] {
   def this(items: Seq[A]) = this {
-    val queue = new mutable.Queue[Future[A]]
+    val queue = new mutable.Queue[Future[Throwable, A]]
     queue ++= items map { item => Future(item) }
     queue
   }
 
-  private val requests = new mutable.Queue[Promise[A]]
+  private val requests = new mutable.Queue[Promise[Throwable, A]]
 
   def reserve() = synchronized {
     if (items.isEmpty) {
-      val future = new Promise[A]
+      val future = new Promise[Throwable, A]
       requests += future
       future
     } else {
@@ -49,20 +49,20 @@ abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
     healthyQueue += makeItem()
   }
 
-  protected def makeItem(): Future[A]
+  protected def makeItem(): Future[Throwable, A]
   protected def isHealthy(a: A): Boolean
 }
 
 private class HealthyQueue[A](
-  makeItem: () => Future[A],
+  makeItem: () => Future[Throwable, A],
   numItems: Int,
   isHealthy: A => Boolean)
-  extends mutable.QueueProxy[Future[A]]
+  extends mutable.QueueProxy[Future[Throwable, A]]
 {
-  val self = new mutable.Queue[Future[A]]
+  val self = new mutable.Queue[Future[Throwable, A]]
   0.until(numItems) foreach { _ => self += makeItem() }
 
-  override def +=(item: Future[A]) = synchronized { self += item }
+  override def +=(item: Future[Throwable, A]) = synchronized { self += item }
 
   override def dequeue() = synchronized {
     if (isEmpty) throw new Predef.NoSuchElementException

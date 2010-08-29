@@ -48,7 +48,7 @@ object FutureSpec extends Specification {
   "Promise" should {
     "buffer computations until the result is set" in {
       var wasCalledWith: Option[Int] = None
-      val f = new Promise[Int]
+      val f = new Promise[Throwable, Int]
       f foreach { i =>
         wasCalledWith = Some(i)
       }

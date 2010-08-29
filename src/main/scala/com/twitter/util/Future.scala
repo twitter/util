@@ -6,37 +6,43 @@ import scala.collection.mutable.ArrayBuffer
 private case class Cell[A](var value: A)
 
 object Future {
-  def apply[A](a: => A) = new Future[A] {
-    val result = Try(a)
-    def respond(k: Try[Throwable, A] => Unit) { k(result) }
+  val DEFAULT_TIMEOUT = Math.MAX_LONG.millis
+
+  def apply[A](a: => A) = {
+    new Future[Throwable, A] {
+      val result = Try(a)
+      def respond(k: Try[Throwable, A] => Unit) { k(result) }
+    }
   }
 }
 
-abstract class Future[+A] extends (() => A) {
-  private var cell = Cell[Option[Any]](None)
+abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
+  import Future.DEFAULT_TIMEOUT
 
-  def respond(k: Try[Throwable, A] => Unit)
+  def respond(k: Try[E, A] => Unit)
 
-  final def apply: A = apply(Math.MAX_LONG.millis)
+  override def apply = apply(DEFAULT_TIMEOUT)
 
-  final def apply(timeout: Duration) =
-    within(timeout) { result => result } {
-      throw new TimeoutException(timeout.toString)
+  def apply(timeout: Duration) = within(timeout)()
+
+  def isReturn = within(DEFAULT_TIMEOUT) isReturn
+
+  def isThrow = within(DEFAULT_TIMEOUT) isThrow
+
+  def within(timeout: Duration) = {
+    val latch = new CountDownLatch(1)
+    var result: Try[Throwable, A] = null
+    respond { a =>
+      result = a
+      latch.countDown()
     }
-
-  final def within[B](timeout: Duration)(f: A => B)(onTimeout: => B) = cell.synchronized {
-    if (!cell.value.isDefined) {
-      val latch = new CountDownLatch(1)
-      respond { a =>
-        cell.value = Some(a)
-        latch.countDown()
-      }
-      if (!latch.await(timeout)) onTimeout
+    if (!latch.await(timeout)) {
+      result = Throw(new TimeoutException(timeout.toString))
     }
-    f(cell.value.get.asInstanceOf[Try[Throwable, A]]())
+    result
   }
 
-  final def foreach(k: A => Unit) { respond(_ foreach k) }
+  override def foreach(k: A => Unit) { respond(_ foreach k) }
 
   /**
    * Takes a function and returns a new `Future` whose value is the function applied to the value represented
@@ -44,48 +50,57 @@ abstract class Future[+A] extends (() => A) {
    * will be invoked if you later call `respond` on the returned future. If the function given to map has
    * side-effects, you probably want to call `respond` or `foreach` instead of `map`.
    */
-  final def map[B](f: A => B) = new Future[B] {
-    def respond(k: Try[Throwable, B] => Unit) {
+  override def map[B](f: A => B) = new Future[E, B] {
+    def respond(k: Try[E, B] => Unit) {
       Future.this.respond { x =>
         k(x map(f))
       }
     }
   }
 
-  final def flatMap[B](f: A => Future[B]) = new Future[B] {
-    def respond(k: Try[Throwable, B] => Unit) {
+  override def flatMap[E2 >: E <: Throwable, B >: A](f: A => Try[E2, B]) = new Future[E2, B] {
+    def respond(k: Try[E2, B] => Unit) {
       Future.this.respond { x =>
-        x map(f) foreach (_.respond(k))
+        k(x flatMap(f))
       }
     }
   }
 
-  final def filter(p: A => Boolean) = new Future[A] {
+  override def filter(p: A => Boolean) = new Future[Throwable, A] {
     def respond(k: Try[Throwable, A] => Unit) {
       Future.this.respond { x =>
-        x filter(p) foreach k
+        k(x filter(p))
       }
     }
   }
+
+  def rescue[E2 >: E <: Throwable, B >: A](rescueException: PartialFunction[E, Try[E2, B]]) =
+    new Future[E2, B] {
+      def respond(k: Try[E2, B] => Unit) {
+        Future.this.respond { x =>
+          k(x rescue(rescueException))
+        }
+      }
+    }
 }
 
 object Promise {
   case class ImmutableResult(message: String) extends Exception(message)
 }
 
-class Promise[A] extends Future[A] {
+class Promise[E <: Throwable, A] extends Future[E, A] {
   import Promise._
 
-  private var result: Option[Try[Throwable, A]] = None
-  private val computations = new ArrayBuffer[Try[Throwable, A] => Unit]
+  private var result: Option[Try[E, A]] = None
+  private val computations = new ArrayBuffer[Try[E, A] => Unit]
 
-  def update(result: Try[Throwable, A]) {
+  def update(result: Try[E, A]) {
     updateIfEmpty(result) || {
       throw new ImmutableResult("Result set multiple times: " + result)
     }
   }
 
-  def updateIfEmpty(newResult: Try[Throwable, A]) = {
+  def updateIfEmpty(newResult: Try[E, A]) = {
     if (result.isDefined) false else {
       val didSetResult = synchronized {
         if (result.isDefined) false else {
@@ -98,7 +113,7 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def respond(k: Try[Throwable, A] => Unit) {
+  def respond(k: Try[E, A] => Unit) {
     result map(k) getOrElse {
       val wasDefined = synchronized {
         if (result.isDefined) true else {
