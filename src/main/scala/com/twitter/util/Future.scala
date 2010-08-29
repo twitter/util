@@ -8,10 +8,10 @@ private case class Cell[A](var value: A)
 object Future {
   val DEFAULT_TIMEOUT = Math.MAX_LONG.millis
 
-  def apply[A](a: => A) = {
-    new Future[Throwable, A] {
-      val result = Try(a)
-      def respond(k: Try[Throwable, A] => Unit) { k(result) }
+  def apply[E <: Throwable, A](a: => A) = {
+    new Future[E, A] {
+      val result = Try[E, A](a)
+      def respond(k: Try[E, A] => Unit) { k(result) }
     }
   }
 }

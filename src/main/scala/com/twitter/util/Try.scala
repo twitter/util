@@ -10,8 +10,10 @@ import scala.reflect.Manifest
 object Try {
   case class PredicateDoesNotObtain() extends Exception()
 
-  def apply[R](r: => R) = {
-    try { Return(r) } catch { case e => Throw(e) }
+  def apply[E <: Throwable, R](r: => R): Try[E, R] = {
+    try { Return(r) } catch {
+      case e: E => Throw(e)
+    }
   }
 }
 

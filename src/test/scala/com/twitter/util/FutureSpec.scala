@@ -39,7 +39,7 @@ object FutureSpec extends Specification {
       val e = new Exception
 
       "Future() handles exceptions" in {
-        val f = Future[Int] { throw e }
+        val f = Future[Exception, Int] { throw e }
         f() must throwA(e)
       }
     }
