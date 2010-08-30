@@ -43,7 +43,7 @@ abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
   def flatMap[E2 >: E <: Throwable, B](f: A => Try[E2, B]): Future[E2, B]
   def map[X](f: A => X): Future[E, X]
   def filter(p: A => Boolean): Future[Throwable, A]
-  def rescue[E2 >: E <: Throwable, B >: A](rescueException: PartialFunction[E, Try[E2, B]]): Future[E2, B]
+  def rescue[E2 <: Throwable, B >: A](rescueException: E => Try[E2, B]): Future[E2, B]
 }
 
 object Promise {
@@ -105,7 +105,7 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  def rescue[E2 >: E <: Throwable, B >: A](rescueException: PartialFunction[E, Try[E2, B]]) =
+  def rescue[E2 <: Throwable, B >: A](rescueException: E => Try[E2, B]) =
     new Promise[E2, B] {
       Promise.this.respond { x =>
         update(x rescue(rescueException))

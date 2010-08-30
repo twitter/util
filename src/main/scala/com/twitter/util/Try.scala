@@ -36,7 +36,7 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
    */
-  def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]): Try[E2, R2]
+  def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]): Try[E2, R2]
 
   /**
    * Returns the value from this Return or throws the exception if this is a Throw
@@ -72,8 +72,7 @@ trait Try[+E <: Throwable, +R] {
 final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] { 
   def isThrow = true
   def isReturn = false
-  def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]) =
-    if (rescueException.isDefinedAt(e)) rescueException(e) else this
+  def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]) = rescueException(e)
   def apply(): R = throw e
   def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = Throw[E2, R2](e)
   def map[X](f: R => X) = Throw(e)
@@ -83,7 +82,7 @@ final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] {
 final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
   def isThrow = false
   def isReturn = true
-  def rescue[E2 >: E <: Throwable, R2 >: R](rescueException: PartialFunction[E, Try[E2, R2]]) = Return(r)
+  def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]) = Return(r)
   def apply() = r
   def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = f(r)
   def map[X](f: R => X) = Return[E, X](f(r))

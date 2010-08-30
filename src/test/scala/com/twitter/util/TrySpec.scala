@@ -15,9 +15,10 @@ object TrySpec extends Specification {
 
   "Try" should {
     "rescue" in {
+      val myException = new MyException
       Return(1) rescue { case _ => Return(2) } mustEqual Return(1)
-      Throw(e) rescue { case e: MyException => Return(2) } mustEqual Throw(e)
-      Throw(new MyException) rescue { case e: MyException => Return(2) } mustEqual Return(2)
+      Throw(e) rescue { case _ => Return(2) } mustEqual Return(2)
+      Throw(e) rescue { case _ => Throw(e) } mustEqual Throw(e)
     }
 
     "getOrElse" in {
