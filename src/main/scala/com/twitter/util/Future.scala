@@ -95,7 +95,15 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
 
   override def flatMap[E2 >: E <: Throwable, B](f: A => Try[E2, B]) = new Promise[E2, B] {
     Promise.this.respond { x =>
-      update(x flatMap f)
+      x rescue {
+        case e => update(Throw(e)); Throw(e)
+      } foreach { x =>
+        f(x) rescue {
+          case e => update(Throw(e)); Throw(e)
+        } foreach { y =>
+          update(Return(y))
+        }
+      }
     }
   }
 

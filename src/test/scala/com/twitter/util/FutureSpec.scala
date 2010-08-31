@@ -60,5 +60,15 @@ object FutureSpec extends Specification {
       f()= Return(1)
       wasCalledWith mustEqual Some(1)
     }
+
+    "flatMap" in {
+      val p1 = new Promise[Throwable, Int]
+      val p2 = new Promise[Throwable, Int]
+      val p3 = p1 flatMap { x => p2 }
+      p3 respond { x =>
+        println(x)
+      }
+      p1() = Return(1)
+    }
   }
 }
