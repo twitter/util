@@ -67,6 +67,11 @@ trait Try[+E <: Throwable, +R] {
    * Returns None if this is a Throw or a Some containing the value if this is a Return
    */
   def toOption = if (isReturn) Some(apply()) else None
+
+  /**
+   * Returns this object. This is overridden by subclasses.
+   */
+  def respond(k: Try[E, R] => Unit) = k(this)
 }
 
 final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] { 

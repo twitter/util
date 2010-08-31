@@ -1,34 +1,101 @@
 package com.twitter.util
 
 import org.specs.Specification
+import com.twitter.util.TimeConversions._
 
 object FutureSpec extends Specification {
-  "Future" should {
-    "normal values" >> {
-      "map" in {
-        val f = Future(1) map { x => x + 1 }
-        f() mustEqual 2
+  "Promise" should {
+    "map" in {
+      val f = Future(1) map { x => x + 1 }
+      f() mustEqual 2
+    }
+
+    "flatMap" in {
+      "successes" in {
+        val f = Future(1) flatMap { x => Future(x + 1) }
+
+        "apply" in {
+          f() mustEqual 2
+        }
+
+        "respond" in {
+          val latch = new CountDownLatch(1)
+          f respond { response =>
+            response mustEqual Return(2)
+            latch.countDown()
+          }
+          latch.within(1.second)
+        }
       }
 
-      "flatMap" in {
-        val f = Future(1) flatMap { x => Future(x + 1) }
-        f() mustEqual 2
-
+      "failures" in {
         val e = new Exception
         val g = Future[Exception, Int](throw e) flatMap { x => Future(x + 1) }
-        g() must throwA(e)
-      }
 
-      "foreach" in {
-        var wasCalledWith: Option[Int] = None
-        val f = Future(1)
-        f foreach { i =>
-          wasCalledWith = Some(i)
+        "apply" in {
+          g() must throwA(e)
         }
-        wasCalledWith mustEqual Some(1)
+
+        "respond" in {
+          val latch = new CountDownLatch(1)
+          g respond { response =>
+            response mustEqual Throw(e)
+            latch.countDown()
+          }
+          latch.within(1.second)
+        }
+      }
+    }
+
+    "rescue" in {
+      val e = new Exception
+
+      "successes" in {
+        val f = Future(1) rescue { case e => Future(2) }
+
+        "apply" in {
+          f() mustEqual 1
+        }
+
+        "respond" in {
+          val latch = new CountDownLatch(1)
+          f respond { response =>
+            response mustEqual Return(1)
+            latch.countDown()
+          }
+          latch.within(1.second)
+        }
       }
 
-      "respond" in {
+      "failures" in {
+        val g = Future[Exception, Int](throw e) rescue { case e => Future(2) }
+
+        "apply" in {
+          g() mustEqual 2 //must throwA(e)
+        }
+
+        "respond" in {
+          val latch = new CountDownLatch(1)
+          g respond { response =>
+            response mustEqual Return(2)
+            latch.countDown()
+          }
+          latch.within(1.second)
+        }
+      }
+    }
+
+    "foreach" in {
+      var wasCalledWith: Option[Int] = None
+      val f = Future(1)
+      f foreach { i =>
+        wasCalledWith = Some(i)
+      }
+      wasCalledWith mustEqual Some(1)
+    }
+
+    "respond" in {
+      "when the result has arrived" in {
         var wasCalledWith: Option[Int] = None
         val f = Future(1)
         f respond {
@@ -37,38 +104,23 @@ object FutureSpec extends Specification {
         }
         wasCalledWith mustEqual Some(1)
       }
+
+      "when the result has not yet arrived it buffers computations" in {
+        var wasCalledWith: Option[Int] = None
+        val f = new Promise[Throwable, Int]
+        f foreach { i =>
+          wasCalledWith = Some(i)
+        }
+        wasCalledWith mustEqual None
+        f()= Return(1)
+        wasCalledWith mustEqual Some(1)
+      }
     }
 
-    "exceptional values" in {
+    "Future() handles exceptions" in {
       val e = new Exception
-
-      "Future() handles exceptions" in {
-        val f = Future[Exception, Int] { throw e }
-        f() must throwA(e)
-      }
-    }
-  }
-
-  "Promise" should {
-    "buffer computations until the result is set" in {
-      var wasCalledWith: Option[Int] = None
-      val f = new Promise[Throwable, Int]
-      f foreach { i =>
-        wasCalledWith = Some(i)
-      }
-      wasCalledWith mustEqual None
-      f()= Return(1)
-      wasCalledWith mustEqual Some(1)
-    }
-
-    "flatMap" in {
-      val p1 = new Promise[Throwable, Int]
-      val p2 = new Promise[Throwable, Int]
-      val p3 = p1 flatMap { x => p2 }
-      p3 respond { x =>
-        println(x)
-      }
-      p1() = Return(1)
+      val f = Future[Exception, Int] { throw e }
+      f() must throwA(e)
     }
   }
 }

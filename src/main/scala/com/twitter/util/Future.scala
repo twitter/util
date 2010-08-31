@@ -75,7 +75,7 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  def respond(k: Try[E, A] => Unit) {
+  override def respond(k: Try[E, A] => Unit) {
     result map(k) getOrElse {
       val wasDefined = synchronized {
         if (result.isDefined) true else {
@@ -93,31 +93,26 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  // FIXME this needs a test to exhibit why the simpler implementation doesn't work
   override def flatMap[E2 >: E <: Throwable, B](f: A => Try[E2, B]) = new Promise[E2, B] {
     Promise.this.respond { x =>
-      x rescue {
-        case e => update(Throw(e)); Throw(e)
-      } foreach { x =>
-        f(x) rescue {
-          case e => update(Throw(e)); Throw(e)
-        } foreach { y =>
-          update(Return(y))
-        }
+      x flatMap(f) respond { result =>
+        update(result)
       }
-    }
-  }
-
-  override def filter(p: A => Boolean) = new Promise[Throwable, A] {
-    Promise.this.respond { x =>
-      update(x filter(p))
     }
   }
 
   def rescue[E2 <: Throwable, B >: A](rescueException: E => Try[E2, B]) =
     new Promise[E2, B] {
       Promise.this.respond { x =>
-        update(x rescue(rescueException))
+        x rescue(rescueException) respond { result =>
+          update(result)
+        }
       }
     }
+
+  override def filter(p: A => Boolean) = new Promise[Throwable, A] {
+    Promise.this.respond { x =>
+      update(x filter(p))
+    }
+  }
 }
