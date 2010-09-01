@@ -1,7 +1,8 @@
 package com.twitter.util
 
 object StateMachine {
-  class InvalidStateTransition(fromState: String) extends Exception(fromState)
+  class InvalidStateTransition(fromState: String, command: String) extends
+    Exception("Transitioning from " + fromState + " via command " + command)
 }
 
 trait StateMachine {
@@ -10,12 +11,11 @@ trait StateMachine {
   protected abstract class State
   protected var state: State = _
 
-  protected def transition[A](f: State => A) = {
-    try {
+  protected def transition[A](command: String)(f: PartialFunction[State, A]) = {
+    if (f.isDefinedAt(state)) {
       f(state)
-    } catch {
-      case e: MatchError =>
-        throw new InvalidStateTransition(state.toString)
+    } else {
+      throw new InvalidStateTransition(state.toString, command)
     }
   }
 }
