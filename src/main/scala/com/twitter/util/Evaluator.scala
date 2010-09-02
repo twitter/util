@@ -6,6 +6,7 @@ import scala.runtime._
 import java.io.{File, FileWriter}
 import java.net.{URL, URLClassLoader}
 import scala.io.Source
+import java.util.jar._
 
 /**
  * Eval is a utility function to evaluate a file and return its results.
@@ -104,6 +105,7 @@ object Eval {
     targetFile
   }
 
+  val JarFile = """\.jar$""".r
   /**
    * Compile a given file into the targetDir
    */
@@ -115,13 +117,24 @@ object Eval {
     // TODO: there are likely a ton of corner cases waiting here
     val configulousClassLoader = this.getClass.getClassLoader.asInstanceOf[URLClassLoader]
     val configulousClasspath = configulousClassLoader.getURLs.map { url =>
-        val urlStr = url.toString
-        urlStr.substring(5, urlStr.length)
+      val urlStr = url.toString
+      urlStr.substring(5, urlStr.length)
     }.toList
+
+    // It's not clear how many nested jars we should open.
+    val classPathAndClassPathsNestedInJars = configulousClasspath.flatMap { fileName =>
+      val nestedClassPath = if (JarFile.findFirstMatchIn(fileName).isDefined) {
+        val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
+        if (nestedClassPathAttribute != null) {
+          nestedClassPathAttribute.split(" ").toList
+        } else Nil
+      } else Nil
+      List(fileName) ::: nestedClassPath
+    }
     val bootClassPath = origBootclasspath.split(java.io.File.pathSeparator).toList
 
     // the classpath for compile is our app path + boot path + make sure we have compiler/lib there
-    val pathList = bootClassPath ::: (configulousClasspath ::: List(compilerPath, libPath))
+    val pathList = bootClassPath ::: (classPathAndClassPathsNestedInJars ::: List(compilerPath, libPath))
     val pathString = pathList.mkString(java.io.File.pathSeparator)
     settings.bootclasspath.value = pathString
     settings.classpath.value = pathString
@@ -132,7 +145,7 @@ object Eval {
     val reporter = new ConsoleReporter(settings) 
     val compiler = new Global(settings, reporter) 
     (new compiler.Run).compile(List(file.toString))
-    
+
     if (reporter.hasErrors || reporter.WARNING.count > 0) { 
       // TODO: throw ...
     }
@@ -149,7 +162,7 @@ object Eval {
     val newClassLoader = URLClassLoader.newInstance(Array(targetDir.toURL), scalaClassLoader)
     newClassLoader.loadClass(className)
   }
-  
+
   private def jarPathOfClass(className: String) = {
     val resource = className.split('.').mkString("/", "/", ".class")
     //println("resource for %s is %s".format(className, resource))
@@ -158,5 +171,4 @@ object Eval {
     val indexOfSeparator = path.lastIndexOf('!')
     path.substring(indexOfFile, indexOfSeparator)
   }
-
 }

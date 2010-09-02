@@ -4,6 +4,8 @@ class UtilProject(info: ProjectInfo) extends DefaultProject(info) {
   override def disableCrossPaths = true
   override def managedStyle = ManagedStyle.Maven
   val publishTo = Resolver.sftp("sftp:scala0.net", "scala0.net", "/var/www/scala0.net/public/repositories")
+  val scalaTools = "org.scala-lang" % "scala-compiler" % "2.7.7" % "compile"
+  override def filterScalaJars = false
 
   val lagRepo = "lag.net" at "http://www.lag.net/repo/"
   val lagNest = "lag.net/nest" at "http://www.lag.net/nest/"
