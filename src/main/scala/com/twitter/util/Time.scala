@@ -83,6 +83,9 @@ class Duration(val at: Long) {
   def fromNow = Time(Time.now + this)
   def ago = Time(Time.now - this)
 
+  def max(that: Duration) = if (this.at > that.at) this else that
+  def min(that: Duration) = if (this.at < that.at) this else that
+
   override def toString = inSeconds.toString
 
   override def equals(other: Any) = {
