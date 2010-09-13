@@ -79,6 +79,7 @@ class Duration(val at: Long) {
 
   def +(delta: Duration) = new Duration(at + delta.inMillis)
   def -(delta: Duration) = new Duration(at - delta.inMillis)
+  def *(x: Long) = new Duration(at * x)
 
   def fromNow = Time(Time.now + this)
   def ago = Time(Time.now - this)
