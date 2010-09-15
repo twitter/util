@@ -20,13 +20,13 @@ abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
 
   def respond(k: Try[E, A] => Unit)
 
-  override def apply = apply(DEFAULT_TIMEOUT)
-  def apply(timeout: Duration) = within(timeout)()
+  override def apply = apply(DEFAULT_TIMEOUT): A
+  def apply(timeout: Duration): A = within(timeout)()
 
   def isReturn = within(DEFAULT_TIMEOUT) isReturn
   def isThrow = within(DEFAULT_TIMEOUT) isThrow
 
-  def within(timeout: Duration) = {
+  def within(timeout: Duration): Try[Throwable, A] = {
     val latch = new CountDownLatch(1)
     var result: Try[Throwable, A] = null
     respond { a =>
