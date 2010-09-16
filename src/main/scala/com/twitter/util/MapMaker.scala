@@ -1,9 +1,10 @@
 package com.twitter.util
 
-import scala.collection.jcl.MapWrapper
+//import scala.collection.jcl.MapWrapper
 import java.util.concurrent.TimeUnit
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 import com.google.common.base.Function
+import collection.JavaConversions._
 
 object MapMaker {
   def apply[K, V](f: Config[K, V] => Unit) = {
@@ -13,7 +14,7 @@ object MapMaker {
   }
 
   class Config[K, V] {
-    private var mapMaker = new GoogleMapMaker[K, V]
+    private var mapMaker = new GoogleMapMaker//[K, V]
     private var valueOperation: Option[K => V] = None
 
     def weakKeys = mapMaker.weakKeys; this
@@ -25,15 +26,16 @@ object MapMaker {
     def expiration(expiration: Duration) = mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this
     def compute(_valueOperation: K => V) = valueOperation = Some(_valueOperation); this
 
-    def apply() = {
+    def apply(): collection.mutable.ConcurrentMap[K, V] = {
       val javaMap = valueOperation map { valueOperation =>
         mapMaker.makeComputingMap[K, V](new Function[K, V] {
           def apply(k: K) = valueOperation(k)
         })
       } getOrElse(mapMaker.makeMap())
-      new MapWrapper[K, V] {
-        val underlying = javaMap
-      }
+      javaMap
+      // new MapWrapper[K, V] {
+      //   val underlying = javaMap
+      // }
     }
   }
 }

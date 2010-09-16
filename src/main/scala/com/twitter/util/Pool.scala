@@ -17,6 +17,7 @@ class SimplePool[E <: Throwable, A](items: mutable.Queue[Future[E, A]]) extends 
   private val requests = new mutable.Queue[Promise[E, A]]
 
   def reserve() = synchronized {
+    println("reserve with items.size: " + items.size)
     if (items.isEmpty) {
       val future = new Promise[E, A]
       requests += future
@@ -61,11 +62,15 @@ private class HealthyQueue[E <: Throwable, A](
 {
   val self = new mutable.Queue[Future[E, A]]
   0.until(numItems) foreach { _ => self += makeItem() }
+  println("size: " + size)
 
-  override def +=(item: Future[E, A]) = synchronized { self += item }
+  override def +=(item: Future[E, A]) = {
+    synchronized { self += item }
+    this
+  }
 
   override def dequeue() = synchronized {
-    if (isEmpty) throw new Predef.NoSuchElementException
+    if (isEmpty) throw new NoSuchElementException("queue empty")
 
     self.dequeue() flatMap { item =>
       if (isHealthy(item)) {

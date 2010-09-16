@@ -1,25 +1,25 @@
 package com.twitter.util
 
-class RingBuffer[A](val maxSize: Int) extends Seq[A] {
+class RingBuffer[A: ClassManifest](val maxSize: Int) extends Seq[A] {
   private val array = new Array[A](maxSize)
   private var read = 0
   private var write = 0
-  private var count = 0
+  private var count_ = 0
 
-  def length = count
-  override def size = count
+  def length = count_
+  override def size = count_
 
   def clear() {
     read = 0
     write = 0
-    count = 0
+    count_ = 0
   }
 
   /**
    * Gets the element from the specified index in constant time.
    */
   def apply(i: Int): A = {
-    if (i >= count) throw new IndexOutOfBoundsException(i.toString)
+    if (i >= count_) throw new IndexOutOfBoundsException(i.toString)
     else array((read + i) % maxSize)
   }
 
@@ -27,7 +27,7 @@ class RingBuffer[A](val maxSize: Int) extends Seq[A] {
    * Overwrites an element with a new value
    */
   def update(i: Int, elem: A) {
-    if (i >= count) throw new IndexOutOfBoundsException(i.toString)
+    if (i >= count_) throw new IndexOutOfBoundsException(i.toString)
     else array((read + i) % maxSize) = elem
   }
 
@@ -38,8 +38,8 @@ class RingBuffer[A](val maxSize: Int) extends Seq[A] {
   def +=(elem: A) {
     array(write) = elem
     write = (write + 1) % maxSize
-    if (count == maxSize) read = (read + 1) % maxSize
-    else count += 1
+    if (count_ == maxSize) read = (read + 1) % maxSize
+    else count_ += 1
   }
 
   /**
@@ -60,14 +60,16 @@ class RingBuffer[A](val maxSize: Int) extends Seq[A] {
     else {
       val res = array(read)
       read = (read + 1) % maxSize
-      count -= 1
+      count_ -= 1
       res
     }
   }
 
-  def elements = new Iterator[A] {
+  override def iterator = elements
+
+  override def elements = new Iterator[A] {
     var idx = 0
-    def hasNext = idx != count
+    def hasNext = idx != count_
     def next = {
       val res = apply(idx)
       idx += 1
@@ -82,18 +84,18 @@ class RingBuffer[A](val maxSize: Int) extends Seq[A] {
   }
 
   def removeWhere(fn: A=>Boolean): Int = {
-    var rmCount = 0
+    var rmCount_ = 0
     var j = 0
-    for (i <- 0 until count) {
+    for (i <- 0 until count_) {
       val elem = apply(i)
-      if (fn(elem)) rmCount += 1
+      if (fn(elem)) rmCount_ += 1
       else {
         if (j < i) update(j, elem)
         j += 1
       }
     }
-    count -= rmCount
-    write = (read + count) % maxSize
-    rmCount
+    count_ -= rmCount_
+    write = (read + count_) % maxSize
+    rmCount_
   }
 }
