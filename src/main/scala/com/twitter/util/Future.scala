@@ -41,7 +41,7 @@ abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
 
   override def foreach(k: A => Unit) { respond(_ foreach k) }
   def flatMap[E2 >: E <: Throwable, B](f: A => Try[E2, B]): Future[E2, B]
-  def map[X](f: A => X): Future[E, X]
+  def map[X](f: A => X): Future[Throwable, X]
   def filter(p: A => Boolean): Future[Throwable, A]
   def rescue[E2 <: Throwable, B >: A](rescueException: E => Try[E2, B]): Future[E2, B]
 }
@@ -87,7 +87,7 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  override def map[B](f: A => B) = new Promise[E, B] {
+  override def map[B](f: A => B) = new Promise[Throwable, B] {
     Promise.this.respond { x =>
       update(x map(f))
     }

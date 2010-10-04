@@ -4,7 +4,7 @@ import org.specs.Specification
 
 object TrySpec extends Specification {
   class MyException extends Exception
-  val e = new Exception
+  val e = new Exception("this is an exception")
 
   "Try()" should {
     "catch exceptions and lift into the Try type" in {
@@ -32,8 +32,17 @@ object TrySpec extends Specification {
     }
 
     "map" in {
-      Return(1) map(1+) mustEqual Return(2)
-      Throw[Exception, Int](e) map(1+) mustEqual Throw(e)
+      "when there is no exception" in {
+        Return(1) map(1+) mustEqual Return(2)
+        Throw[Exception, Int](e) map(1+) mustEqual Throw(e)
+      }
+
+      "when there is an exception" in {
+        Return(1) map(_ => throw e) mustEqual Throw(e)
+
+        val e2 = new Exception
+        Throw[Exception, Int](e) map(_ => throw e2) mustEqual Throw(e)
+      }
     }
 
     "for" in {

@@ -56,7 +56,7 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Maps the given function to the value from this Return or returns this if this is a Throw
    */
-  def map[X](f: R => X): Try[E, X]
+  def map[X](f: R => X): Try[Throwable, X]
 
   /**
    * Returns None if this is a Throw or the given predicate does not obtain. Returns some(this) otherwise.
@@ -90,6 +90,6 @@ final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
   def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]) = Return(r)
   def apply() = r
   def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = f(r)
-  def map[X](f: R => X) = Return[E, X](f(r))
+  def map[X](f: R => X) = Try(f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
 }
