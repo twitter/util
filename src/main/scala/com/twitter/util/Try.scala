@@ -74,7 +74,7 @@ trait Try[+R] {
   def respond(k: Try[R] => Unit) = k(this)
 }
 
-final case class Throw[+R](e: Throwableq ) extends Try[R] { 
+final case class Throw[+R](e: Throwable) extends Try[R] { 
   def isThrow = true
   def isReturn = false
   def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = rescueException(e)
