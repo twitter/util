@@ -74,12 +74,12 @@ trait Try[+R] {
   def respond(k: Try[R] => Unit) = k(this)
 }
 
-final case class Throw[+E <: Throwable, +R](e: E) extends Try[R] { 
+final case class Throw[+R](e: Throwableq ) extends Try[R] { 
   def isThrow = true
   def isReturn = false
   def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = rescueException(e)
   def apply(): R = throw e
-  def flatMap[R2](f: R => Try[R2]) = Throw[E, R2](e)
+  def flatMap[R2](f: R => Try[R2]) = Throw[R2](e)
   def map[X](f: R => X) = Throw(e)
   def filter(p: R => Boolean) = this
 }
