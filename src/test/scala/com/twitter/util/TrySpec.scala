@@ -8,8 +8,8 @@ object TrySpec extends Specification {
 
   "Try()" should {
     "catch exceptions and lift into the Try type" in {
-      Try(1) mustEqual Return(1)
-      Try { throw e } mustEqual Throw(e)
+      Try[Int](1) mustEqual Return(1)
+      Try[Int] { throw e } mustEqual Throw(e)
     }
   }
 
@@ -42,6 +42,20 @@ object TrySpec extends Specification {
 
         val e2 = new Exception
         Throw[Exception, Int](e) map(_ => throw e2) mustEqual Throw(e)
+      }
+    }
+
+    "flatMap" in {
+      "when there is no exception" in {
+        Return(1) flatMap(x => Return(1 + x)) mustEqual Return(2)
+        Throw[Exception, Int](e) flatMap(x => Return(1 + x)) mustEqual Throw(e)
+      }
+
+      "when there is an exception" in {
+        Return(1) flatMap(_ => throw e) mustEqual Throw(e)
+
+        val e2 = new Exception
+        Throw[Exception, Int](e) flatMap(_ => throw e2) mustEqual Throw(e)
       }
     }
 

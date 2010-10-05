@@ -9,8 +9,8 @@ object CachingRepositorySpec extends Specification with Mockito {
   "CachingRepository" should {
     class Query
     class Item
-    val map = new mutable.HashMap[Long, Future[Throwable, Option[Item]]]
-    val index = new mutable.HashMap[Query, Future[Throwable, Seq[Item]]]
+    val map = new mutable.HashMap[Long, Future[Option[Item]]]
+    val index = new mutable.HashMap[Query, Future[Seq[Item]]]
     val backingRepository = mock[Repository[Query, Item]]
     val repository = new CachingRepository[Query, Item](map, index, backingRepository)
     val item = mock[Item]

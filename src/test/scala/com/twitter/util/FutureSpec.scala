@@ -30,7 +30,7 @@ object FutureSpec extends Specification {
 
       "failures" in {
         val e = new Exception
-        val g = Future[Exception, Int](throw e) flatMap { x => Future(x + 1) }
+        val g = Future[Int](throw e) flatMap { x => Future(x + 1) }
 
         "apply" in {
           g() must throwA(e)
@@ -44,6 +44,14 @@ object FutureSpec extends Specification {
           }
           latch.within(1.second)
         }
+      }
+
+      "when there is an exception" in {
+        val e = new Exception
+        val f = Future(1).flatMap[Int] { x =>
+          throw e
+        }
+        f() must throwA(e)
       }
     }
 
@@ -68,7 +76,7 @@ object FutureSpec extends Specification {
       }
 
       "failures" in {
-        val g = Future[Exception, Int](throw e) rescue { case e => Future(2) }
+        val g = Future[Int](throw e) rescue { case e => Future(2) }
 
         "apply" in {
           g() mustEqual 2 //must throwA(e)
@@ -107,7 +115,7 @@ object FutureSpec extends Specification {
 
       "when the result has not yet arrived it buffers computations" in {
         var wasCalledWith: Option[Int] = None
-        val f = new Promise[Throwable, Int]
+        val f = new Promise[Int]
         f foreach { i =>
           wasCalledWith = Some(i)
         }
@@ -119,7 +127,7 @@ object FutureSpec extends Specification {
 
     "Future() handles exceptions" in {
       val e = new Exception
-      val f = Future[Exception, Int] { throw e }
+      val f = Future[Int] { throw e }
       f() must throwA(e)
     }
   }
