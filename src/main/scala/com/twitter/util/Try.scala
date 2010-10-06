@@ -10,14 +10,14 @@ import scala.reflect.Manifest
 object Try {
   case class PredicateDoesNotObtain() extends Exception()
 
-  def apply[E <: Throwable, R](r: => R): Try[E, R] = {
+  def apply[R](r: => R): Try[R] = {
     try { Return(r) } catch {
-      case e: E => Throw(e)
+      case e => Throw(e)
     }
   }
 }
 
-trait Try[+E <: Throwable, +R] {
+trait Try[+R] {
   /**
    * Returns true if the Try is a Throw, false otherwise.
    */
@@ -36,7 +36,7 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
    */
-  def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]): Try[E2, R2]
+  def rescue[R2 >: R](rescueException: Throwable => Try[R2]): Try[R2]
 
   /**
    * Returns the value from this Return or throws the exception if this is a Throw
@@ -51,17 +51,17 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw
    */
-  def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]): Try[E2, R2]
+  def flatMap[R2](f: R => Try[R2]): Try[R2]
 
   /**
    * Maps the given function to the value from this Return or returns this if this is a Throw
    */
-  def map[X](f: R => X): Try[E, X]
+  def map[X](f: R => X): Try[X]
 
   /**
    * Returns None if this is a Throw or the given predicate does not obtain. Returns some(this) otherwise.
    */
-  def filter(p: R => Boolean): Try[Throwable, R]
+  def filter(p: R => Boolean): Try[R]
 
   /**
    * Returns None if this is a Throw or a Some containing the value if this is a Return
@@ -71,25 +71,31 @@ trait Try[+E <: Throwable, +R] {
   /**
    * Returns this object. This is overridden by subclasses.
    */
-  def respond(k: Try[E, R] => Unit) = k(this)
+  def respond(k: Try[R] => Unit) = k(this)
 }
 
-final case class Throw[+E <: Throwable, +R](e: E) extends Try[E, R] { 
+final case class Throw[+R](e: Throwable) extends Try[R] { 
   def isThrow = true
   def isReturn = false
-  def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]) = rescueException(e)
+  def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = rescueException(e)
   def apply(): R = throw e
-  def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = Throw[E2, R2](e)
+  def flatMap[R2](f: R => Try[R2]) = Throw[R2](e)
   def map[X](f: R => X) = Throw(e)
   def filter(p: R => Boolean) = this
 }
 
-final case class Return[+E <: Throwable, +R](r: R) extends Try[E, R] {
+final case class Return[+R](r: R) extends Try[R] {
   def isThrow = false
   def isReturn = true
-  def rescue[E2 <: Throwable, R2 >: R](rescueException: E => Try[E2, R2]) = Return(r)
+  def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = Return(r)
   def apply() = r
-  def flatMap[E2 >: E <: Throwable, R2](f: R => Try[E2, R2]) = f(r)
-  def map[X](f: R => X) = Return[E, X](f(r))
+  def flatMap[R2](f: R => Try[R2]) = {
+    try {
+      f(r)
+    } catch {
+      case e => Throw(e)
+    }
+  }  
+  def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
 }

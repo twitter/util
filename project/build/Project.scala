@@ -12,8 +12,10 @@ class UtilProject(info: ProjectInfo) extends DefaultProject(info) {
 
   val guava = "com.google.guava" % "guava" % "r06"
   val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
+
   val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test" withSources()
   val specs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
+  val junit = "junit" % "junit" % "3.8.2" % "test"
   val vscaladoc = "org.scala-tools" % "vscaladoc" % "1.1-md-3" % "provided"
 
   override def compileOptions = super.compileOptions ++ Seq(Unchecked) ++

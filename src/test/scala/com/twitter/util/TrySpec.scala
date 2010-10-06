@@ -4,12 +4,12 @@ import org.specs.Specification
 
 object TrySpec extends Specification {
   class MyException extends Exception
-  val e = new Exception
+  val e = new Exception("this is an exception")
 
   "Try()" should {
     "catch exceptions and lift into the Try type" in {
-      Try(1) mustEqual Return(1)
-      Try { throw e } mustEqual Throw(e)
+      Try[Int](1) mustEqual Return(1)
+      Try[Int] { throw e } mustEqual Throw(e)
     }
   }
 
@@ -28,12 +28,35 @@ object TrySpec extends Specification {
 
     "apply" in {
       Return(1)() mustEqual 1
-      Throw[Exception, Int](e)() must throwA(e)
+      Throw[Int](e)() must throwA(e)
     }
 
     "map" in {
-      Return(1) map(1+) mustEqual Return(2)
-      Throw[Exception, Int](e) map(1+) mustEqual Throw(e)
+      "when there is no exception" in {
+        Return(1) map(1+) mustEqual Return(2)
+        Throw[Int](e) map(1+) mustEqual Throw(e)
+      }
+
+      "when there is an exception" in {
+        Return(1) map(_ => throw e) mustEqual Throw(e)
+
+        val e2 = new Exception
+        Throw[Int](e) map(_ => throw e2) mustEqual Throw(e)
+      }
+    }
+
+    "flatMap" in {
+      "when there is no exception" in {
+        Return(1) flatMap(x => Return(1 + x)) mustEqual Return(2)
+        Throw[Int](e) flatMap(x => Return(1 + x)) mustEqual Throw(e)
+      }
+
+      "when there is an exception" in {
+        Return(1) flatMap(_ => throw e) mustEqual Throw(e)
+
+        val e2 = new Exception
+        Throw[Int](e) flatMap(_ => throw e2) mustEqual Throw(e)
+      }
     }
 
     "for" in {
@@ -48,7 +71,7 @@ object TrySpec extends Specification {
       "with Throw values" in {
         "throws before" in {
           val result = for {
-            i <- Throw[Exception, Int](e)
+            i <- Throw[Int](e)
             j <- Return(1)
           } yield (i + j)
           result mustEqual Throw(e)
@@ -57,7 +80,7 @@ object TrySpec extends Specification {
         "throws after" in {
           val result = for {
             i <- Return(1)
-            j <- Throw[Exception, Int](e)
+            j <- Throw[Int](e)
           } yield (i + j)
           result mustEqual Throw(e)
         }
@@ -65,8 +88,8 @@ object TrySpec extends Specification {
         "returns the FIRST Throw" in {
           val e2 = new Exception
           val result = for {
-            i <- Throw[Exception, Int](e)
-            j <- Throw[Exception, Int](e2)
+            i <- Throw[Int](e)
+            j <- Throw[Int](e2)
           } yield (i + j)
           result mustEqual Throw(e)
         }

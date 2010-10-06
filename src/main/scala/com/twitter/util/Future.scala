@@ -8,17 +8,17 @@ private case class Cell[A](var value: A)
 object Future {
   val DEFAULT_TIMEOUT = Math.MAX_LONG.millis
 
-  def apply[E <: Throwable, A](a: => A): Future[E, A] = {
-    new Promise[E, A] {
+  def apply[A](a: => A): Future[A] = {
+    new Promise[A] {
       update(Try(a))
     }
   }
 }
 
-abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
+abstract class Future[+A] extends Try[A] {
   import Future.DEFAULT_TIMEOUT
 
-  def respond(k: Try[E, A] => Unit)
+  def respond(k: Try[A] => Unit)
 
   override def apply = apply(DEFAULT_TIMEOUT): A
   def apply(timeout: Duration): A = within(timeout)()
@@ -26,9 +26,9 @@ abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
   def isReturn = within(DEFAULT_TIMEOUT) isReturn
   def isThrow = within(DEFAULT_TIMEOUT) isThrow
 
-  def within(timeout: Duration): Try[Throwable, A] = {
+  def within(timeout: Duration): Try[A] = {
     val latch = new CountDownLatch(1)
-    var result: Try[Throwable, A] = null
+    var result: Try[A] = null
     respond { a =>
       result = a
       latch.countDown()
@@ -40,29 +40,29 @@ abstract class Future[+E <: Throwable, +A] extends Try[E, A] {
   }
 
   override def foreach(k: A => Unit) { respond(_ foreach k) }
-  def flatMap[E2 >: E <: Throwable, B](f: A => Try[E2, B]): Future[E2, B]
-  def map[X](f: A => X): Future[E, X]
-  def filter(p: A => Boolean): Future[Throwable, A]
-  def rescue[E2 <: Throwable, B >: A](rescueException: E => Try[E2, B]): Future[E2, B]
+  def flatMap[B](f: A => Try[B]): Future[B]
+  def map[X](f: A => X): Future[X]
+  def filter(p: A => Boolean): Future[A]
+  def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
 }
 
 object Promise {
   case class ImmutableResult(message: String) extends Exception(message)
 }
 
-class Promise[E <: Throwable, A] extends Future[E, A] {
+class Promise[A] extends Future[A] {
   import Promise._
 
-  private[this] var result: Option[Try[E, A]] = None
-  private[this] val computations = new ArrayBuffer[Try[E, A] => Unit]
+  private[this] var result: Option[Try[A]] = None
+  private[this] val computations = new ArrayBuffer[Try[A] => Unit]
 
-  def update(result: Try[E, A]) {
+  def update(result: Try[A]) {
     updateIfEmpty(result) || {
       throw new ImmutableResult("Result set multiple times: " + result)
     }
   }
 
-  private def updateIfEmpty(newResult: Try[E, A]) = {
+  private def updateIfEmpty(newResult: Try[A]) = {
     if (result.isDefined) false else {
       val didSetResult = synchronized {
         if (result.isDefined) false else {
@@ -75,7 +75,7 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  override def respond(k: Try[E, A] => Unit) {
+  override def respond(k: Try[A] => Unit) {
     result map(k) getOrElse {
       val wasDefined = synchronized {
         if (result.isDefined) true else {
@@ -87,13 +87,13 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  override def map[B](f: A => B) = new Promise[E, B] {
+  override def map[B](f: A => B) = new Promise[B] {
     Promise.this.respond { x =>
       update(x map(f))
     }
   }
 
-  override def flatMap[E2 >: E <: Throwable, B](f: A => Try[E2, B]) = new Promise[E2, B] {
+  override def flatMap[B](f: A => Try[B]) = new Promise[B] {
     Promise.this.respond { x =>
       x flatMap(f) respond { result =>
         update(result)
@@ -101,8 +101,8 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
     }
   }
 
-  def rescue[E2 <: Throwable, B >: A](rescueException: E => Try[E2, B]) =
-    new Promise[E2, B] {
+  def rescue[B >: A](rescueException: Throwable => Try[B]) =
+    new Promise[B] {
       Promise.this.respond { x =>
         x rescue(rescueException) respond { result =>
           update(result)
@@ -110,7 +110,7 @@ class Promise[E <: Throwable, A] extends Future[E, A] {
       }
     }
 
-  override def filter(p: A => Boolean) = new Promise[Throwable, A] {
+  override def filter(p: A => Boolean) = new Promise[A] {
     Promise.this.respond { x =>
       update(x filter(p))
     }

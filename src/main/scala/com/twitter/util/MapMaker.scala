@@ -1,6 +1,5 @@
 package com.twitter.util
 
-//import scala.collection.jcl.MapWrapper
 import java.util.concurrent.TimeUnit
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 import com.google.common.base.Function
@@ -14,17 +13,17 @@ object MapMaker {
   }
 
   class Config[K, V] {
-    private var mapMaker = new GoogleMapMaker//[K, V]
+    private val mapMaker = new GoogleMapMaker
     private var valueOperation: Option[K => V] = None
 
-    def weakKeys = mapMaker.weakKeys; this
-    def weakValues = mapMaker.weakValues; this
-    def softKeys = mapMaker.softKeys; this
-    def softValues = mapMaker.softValues; this
-    def concurrencyLevel(level: Int) = mapMaker.concurrencyLevel(level); this
-    def initialCapacity(capacity: Int) = mapMaker.initialCapacity(capacity); this
-    def expiration(expiration: Duration) = mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this
-    def compute(_valueOperation: K => V) = valueOperation = Some(_valueOperation); this
+    def weakKeys = { mapMaker.weakKeys; this }
+    def weakValues = { mapMaker.weakValues; this }
+    def softKeys = { mapMaker.softKeys; this }
+    def softValues = { mapMaker.softValues; this }
+    def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
+    def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
+    def expiration(expiration: Duration) = { mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this }
+    def compute(_valueOperation: K => V) = { valueOperation = Some(_valueOperation); this }
 
     def apply(): collection.mutable.ConcurrentMap[K, V] = {
       val javaMap = valueOperation map { valueOperation =>
@@ -33,9 +32,6 @@ object MapMaker {
         })
       } getOrElse(mapMaker.makeMap())
       javaMap
-      // new MapWrapper[K, V] {
-      //   val underlying = javaMap
-      // }
     }
   }
 }
