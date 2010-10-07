@@ -3,7 +3,7 @@ package com.twitter.util
 import java.util.concurrent.TimeUnit
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 import com.google.common.base.Function
-import collection.JavaConversions._
+import collection.JavaConversions.JConcurrentMapWrapper
 
 object MapMaker {
   def apply[K, V](f: Config[K, V] => Unit) = {
@@ -31,7 +31,12 @@ object MapMaker {
           def apply(k: K) = valueOperation(k)
         })
       } getOrElse(mapMaker.makeMap())
-      javaMap
+      new JConcurrentMapWrapper(javaMap) {
+        // the default contains method (in 2.8) calls 'get' which fucks
+        // with the compute method, so we need to override contains
+        // to use containsKey
+        override def contains(k: K) = underlying.containsKey(k)
+      }
     }
   }
 }
