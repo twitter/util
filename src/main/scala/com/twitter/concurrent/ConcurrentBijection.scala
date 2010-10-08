@@ -3,9 +3,8 @@
 package com.twitter.concurrent
 
 import java.util.concurrent.ConcurrentHashMap
-
 import scala.collection.mutable.{Map => MMap}
-import scala.collection.jcl.MutableIterator
+import scala.collection.JavaConversions._
 
 // A bijection that may be modified and accessed simultaneously.  Note
 // that we can allow only one modification at a time. Updates need to
@@ -16,18 +15,28 @@ class ConcurrentBijection[A, B] extends MMap[A, B] {
 
   def toOpt[T](x: T) = if (x == null) None else Some(x)
 
-  def -=(key: A) = synchronized {
-    val value = forward.remove(key)
-    if (value != null)
-      reverse.remove(value)
+  def -=(key: A) = {
+    synchronized {
+      val value = forward.remove(key)
+      if (value != null)
+        reverse.remove(value)
+    }
+    this
   }
 
-  def update(key: A, value: B) = synchronized {
+  def +=(elem: (A, B)) = { 
+    elem match {
+      case (key, value) => update(key, value)
+    }
+    this
+  }
+
+  override def update(key: A, value: B) = synchronized {
     // We need to update:
     //
     //    a -> b
     //    b -> a
-    // 
+    //
     // There may be existing mappings:
     //
     //   a  -> b'
@@ -54,13 +63,10 @@ class ConcurrentBijection[A, B] extends MMap[A, B] {
     }
   }
 
-  def size = forward.size
+  override def size = forward.size
 
   def get(key: A) = toOpt(forward.get(key))
   def getReverse(value: B) = toOpt(reverse.get(value))
 
-  def elements = {
-    val iter = new MutableIterator.Wrapper(forward.entrySet.iterator)
-    iter.map(e => (e.getKey, e.getValue))
-  }
+  def iterator = forward.entrySet.iterator.map(e => (e.getKey, e.getValue))
 }

@@ -35,11 +35,11 @@ class ConcurrentPool[K, V] {
     doPut(k, v)
 
     // Queue repair. TODO: amortize these more?
-    var item: Tuple2[K, Queue] = deathQueue.poll()
+    var item = deathQueue.poll()
     while (item != null) {
       val (key, queue) = item
       if (!queue.isEmpty)
-        queue.toArray(new Array[V](0)).foreach(doPut(k, _))
+        queue.toArray().asInstanceOf[Array[V]].foreach(doPut(k, _))
 
       item = deathQueue.poll()
     }
