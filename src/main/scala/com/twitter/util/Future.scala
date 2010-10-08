@@ -62,7 +62,7 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  private def updateIfEmpty(newResult: Try[A]) = {
+  protected def updateIfEmpty(newResult: Try[A]) = {
     if (result.isDefined) false else {
       val didSetResult = synchronized {
         if (result.isDefined) false else {
