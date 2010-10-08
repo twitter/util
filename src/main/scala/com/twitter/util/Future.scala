@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 private case class Cell[A](var value: A)
 
 object Future {
-  val DEFAULT_TIMEOUT = Math.MAX_LONG.millis
+  val DEFAULT_TIMEOUT = Long.MaxValue.millis
 
   def apply[A](a: => A): Future[A] = {
     new Promise[A] {

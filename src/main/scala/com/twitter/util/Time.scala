@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.text.{ParsePosition, SimpleDateFormat}
+import java.util.Date
 
 object TimeConversions {
   class RichWholeNumber(wrapped: Long) {
@@ -107,4 +108,5 @@ class Duration(val at: Long) {
 class Time(at: Long) extends Duration(at) {
   override def +(delta: Duration) = new Time(at + delta.inMillis)
   override def -(delta: Duration) = new Time(at - delta.inMillis)
+  def toDate = new Date(inMillis)
 }

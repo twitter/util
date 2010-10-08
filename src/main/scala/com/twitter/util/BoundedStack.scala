@@ -4,24 +4,24 @@ package com.twitter.util
  * A "stack" with a bounded size.  If you push a new element on the top
  * when the stack is full, the oldest element gets dropped off the bottom.
  */
-class BoundedStack[A](val maxSize: Int) extends Seq[A] {
+class BoundedStack[A: ClassManifest](val maxSize: Int) extends Seq[A] {
   private val array = new Array[A](maxSize)
   private var top = 0
-  private var count = 0
+  private var count_ = 0
 
-  def length = count
-  override def size = count
+  def length = count_
+  override def size = count_
 
   def clear() {
     top = 0
-    count = 0
+    count_ = 0
   }
 
   /**
    * Gets the element from the specified index in constant time.
    */
   def apply(i: Int): A = {
-    if (i >= count) throw new IndexOutOfBoundsException(i.toString)
+    if (i >= count_) throw new IndexOutOfBoundsException(i.toString)
     else array((top + i) % maxSize)
   }
 
@@ -31,7 +31,7 @@ class BoundedStack[A](val maxSize: Int) extends Seq[A] {
   def +=(elem: A) {
     top = if (top == 0) maxSize - 1 else top - 1
     array(top) = elem
-    if (count < maxSize) count += 1
+    if (count_ < maxSize) count_ += 1
   }
 
   /**
@@ -41,10 +41,10 @@ class BoundedStack[A](val maxSize: Int) extends Seq[A] {
    */
   def insert(i: Int, elem: A) {
     if (i == 0) this += elem
-    else if (i > count) throw new IndexOutOfBoundsException(i.toString)
-    else if (i == count) {
+    else if (i > count_) throw new IndexOutOfBoundsException(i.toString)
+    else if (i == count_) {
       array((top + i) % maxSize) = elem
-      count += 1
+      count_ += 1
     } else {
       val swapped = this(i)
       this(i) = elem
@@ -73,18 +73,20 @@ class BoundedStack[A](val maxSize: Int) extends Seq[A] {
    * Removes the top element in the stack.
    */
   def pop: A = {
-    if (count == 0) throw new NoSuchElementException
+    if (count_ == 0) throw new NoSuchElementException
     else {
       val res = array(top)
       top = (top + 1) % maxSize
-      count -= 1
+      count_ -= 1
       res
     }
   }
 
-  def elements = new Iterator[A] {
+  override def iterator = elements
+
+  override def elements = new Iterator[A] {
     var idx = 0
-    def hasNext = idx != count
+    def hasNext = idx != count_
     def next = {
       val res = apply(idx)
       idx += 1
