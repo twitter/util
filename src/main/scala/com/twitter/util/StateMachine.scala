@@ -11,7 +11,7 @@ trait StateMachine {
   protected abstract class State
   protected var state: State = _
 
-  protected def transition[A](command: String)(f: PartialFunction[State, A]) = {
+  protected def transition[A](command: String)(f: PartialFunction[State, A]) = synchronized {
     if (f.isDefinedAt(state)) {
       f(state)
     } else {
