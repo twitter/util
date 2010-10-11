@@ -19,5 +19,10 @@ object MapMakerSpec extends Specification {
       r.gc()
       weakValueMap get(1) must beNone
     }
+
+    "calling contains does not trigger compute function" in {
+      val map = MapMaker[Int, Item](_.compute(_ => throw new Exception))
+      map.contains(3) must not(throwA[Exception])
+    }
   }
 }

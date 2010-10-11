@@ -39,7 +39,7 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
   }
 }
 
-abstract class FactoryPool[E <: Throwable, A](numItems: Int) extends Pool[A] {
+abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
   private val healthyQueue = new HealthyQueue[A](makeItem _, numItems, isHealthy(_))
   private val simplePool = new SimplePool[A](healthyQueue)
 
@@ -62,10 +62,13 @@ private class HealthyQueue[A](
   val self = new mutable.Queue[Future[A]]
   0.until(numItems) foreach { _ => self += makeItem() }
 
-  override def +=(item: Future[A]) = synchronized { self += item }
+  override def +=(item: Future[A]) = {
+    synchronized { self += item }
+    this
+  }
 
   override def dequeue() = synchronized {
-    if (isEmpty) throw new Predef.NoSuchElementException
+    if (isEmpty) throw new NoSuchElementException("queue empty")
 
     self.dequeue() flatMap { item =>
       if (isHealthy(item)) {
