@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import scala.tools.nsc.{Global, Settings} 
+import scala.tools.nsc.{Global, Settings}
 import scala.tools.nsc.reporters.ConsoleReporter
 import scala.runtime._
 import java.io.{File, FileWriter}
@@ -51,13 +51,13 @@ import java.util.jar._
  *
  * Note that in this example there is no need for any configuration format like Configgy, YAML, etc.
  *
- * So how does this work? Eval takes a file or string and generates a new scala class that has an apply method that 
+ * So how does this work? Eval takes a file or string and generates a new scala class that has an apply method that
  * evaluates that string. The newly generated file is then compiled. All generated .scala and .class
  * files are stored, by default, in System.getProperty("java.io.tmpdir").
  *
  * After compilation, a new class loader is created with the temporary dir as the classPath.
  * The generated class is loaded and then apply() is called.
- * 
+ *
  * This implementation is inspired by
  * http://scala-programming-language.1934581.n4.nabble.com/Compiler-API-td1992165.html
  *
@@ -124,10 +124,10 @@ object Eval {
     // It's not clear how many nested jars we should open.
     val classPathAndClassPathsNestedInJars = configulousClasspath.flatMap { fileName =>
       val nestedClassPath = if (JarFile.findFirstMatchIn(fileName).isDefined) {
-        val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
-        if (nestedClassPathAttribute != null) {
-          nestedClassPathAttribute.split(" ").toList
-        } else Nil
+	val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
+	if (nestedClassPathAttribute != null) {
+	  nestedClassPathAttribute.split(" ").toList
+	} else Nil
       } else Nil
       List(fileName) ::: nestedClassPath
     }
@@ -138,16 +138,18 @@ object Eval {
     val pathString = pathList.mkString(java.io.File.pathSeparator)
     settings.bootclasspath.value = pathString
     settings.classpath.value = pathString
-    settings.deprecation.value = true // enable detailed deprecation warnings 
-    settings.unchecked.value = true // enable detailed unchecked warnings 
+    settings.deprecation.value = true // enable detailed deprecation warnings
+    settings.unchecked.value = true // enable detailed unchecked warnings
     settings.outdir.value = targetDir.toString
 
-    val reporter = new ConsoleReporter(settings) 
-    val compiler = new Global(settings, reporter) 
+    val reporter = new ConsoleReporter(settings)
+    val compiler = new Global(settings, reporter)
     (new compiler.Run).compile(List(file.toString))
 
-    if (reporter.hasErrors || reporter.WARNING.count > 0) { 
-      // TODO: throw ...
+    if (reporter.hasErrors || reporter.WARNING.count > 0) {
+      // FIXME: use proper logging
+      System.err.println("reporter has warnings attempting to compile")
+      reporter.printSummary()
     }
   }
 
