@@ -20,8 +20,9 @@ object TimeConversions {
 
   implicit def intToTimeableNumber(i: Int) = new RichWholeNumber(i)
   implicit def longToTimeableNumber(l: Long) = new RichWholeNumber(l)
-}
 
+  implicit def durationToLong(duration: Duration) = duration.inMillis
+}
 
 /**
  * Use `Time.now` in your app instead of `System.currentTimeMillis`, and
@@ -55,7 +56,8 @@ object Time {
     fn = { () => new Time(System.currentTimeMillis) }
   }
 
-  def apply(at: Duration) = new Time(at.inMillis)
+  def apply(at: Long): Time = new Time(at)
+  def apply(at: Duration): Time = new Time(at.inMillis)
 
   def advance(delta: Duration) {
     now = now + delta
