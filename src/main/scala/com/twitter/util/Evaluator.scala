@@ -125,17 +125,22 @@ object Eval {
     val classPathAndClassPathsNestedInJars = configulousClasspath.flatMap { fileName =>
       val nestedClassPath = if (JarFile.findFirstMatchIn(fileName).isDefined) {
 	val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
+        // turns /usr/foo/bar/foo-1.0.jar into ["", "usr", "foo", "bar", "foo-1.0.jar"]
+        val rootDirPath = fileName.split(File.separator).toList
+        // and then into /usr/foo/bar
+        val rootDir = rootDirPath.slice(1, rootDirPath.length - 1).mkString(File.separator, File.separator, File.separator)
+
 	if (nestedClassPathAttribute != null) {
-	  nestedClassPathAttribute.split(" ").toList
+          nestedClassPathAttribute.split(" ").toList.map(rootDir + File.separator + _)
 	} else Nil
       } else Nil
       List(fileName) ::: nestedClassPath
     }
-    val bootClassPath = origBootclasspath.split(java.io.File.pathSeparator).toList
+    val bootClassPath = origBootclasspath.split(File.pathSeparator).toList
 
     // the classpath for compile is our app path + boot path + make sure we have compiler/lib there
     val pathList = bootClassPath ::: (classPathAndClassPathsNestedInJars ::: List(compilerPath, libPath))
-    val pathString = pathList.mkString(java.io.File.pathSeparator)
+    val pathString = pathList.mkString(File.pathSeparator)
     settings.bootclasspath.value = pathString
     settings.classpath.value = pathString
     settings.deprecation.value = true // enable detailed deprecation warnings
