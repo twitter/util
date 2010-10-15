@@ -1,12 +1,13 @@
 package com.twitter.util
 
-import scala.tools.nsc.{Global, Settings}
-import scala.tools.nsc.reporters.ConsoleReporter
-import scala.runtime._
 import java.io.{File, FileWriter}
 import java.net.{URL, URLClassLoader}
-import scala.io.Source
 import java.util.jar._
+import java.util.Random
+import scala.io.Source
+import scala.runtime._
+import scala.tools.nsc.reporters.ConsoleReporter
+import scala.tools.nsc.{Global, Settings}
 
 /**
  * Eval is a utility function to evaluate a file and return its results.
@@ -65,12 +66,13 @@ import java.util.jar._
 object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
+  private val random = new Random()
 
   /**
    * Eval[Int]("1 + 1") // => 2
    */
   def apply[T](stringToEval: String): T = {
-    val className = "Evaluator"
+    val className = "Evaluator" + random.nextInt().abs
     val targetDir = new File(System.getProperty("java.io.tmpdir"))
     val wrappedFile = wrapInClass(stringToEval, className, targetDir)
     compile(wrappedFile, targetDir)
