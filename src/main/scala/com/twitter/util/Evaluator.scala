@@ -100,7 +100,7 @@ object Eval {
     val writer = new FileWriter(targetFile)
     writer.write("class " + className + " extends (() => Any) {\n")
     writer.write("  def apply() = {\n")
-    writer.write(sourceCode)
+    writer.write("    " + sourceCode)
     writer.write("\n  }\n")
     writer.write("}\n")
     writer.close()
