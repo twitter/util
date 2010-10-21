@@ -111,4 +111,5 @@ class Time(at: Long) extends Duration(at) {
   override def +(delta: Duration) = new Time(at + delta.inMillis)
   override def -(delta: Duration) = new Time(at - delta.inMillis)
   def toDate = new Date(inMillis)
+  override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
 }
