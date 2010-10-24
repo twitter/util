@@ -68,7 +68,7 @@ import scala.tools.nsc.{Global, Settings}
 object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
-  private val random = new Random()
+  private val jvmId = Math.abs(new Random().nextInt())
   private val md = MessageDigest.getInstance("SHA")
 
   /**
@@ -79,11 +79,10 @@ object Eval {
     val digest = md.digest(stringToEval.getBytes())
     val sha = new BigInteger(digest).toString(16)
 
-    val className = "Evaluator" + sha
+    val className = "Evaluator" + sha + "_" + jvmId
     val targetDir = new File(System.getProperty("java.io.tmpdir"))
-    val targetFile = new File(targetDir, className + ".scala")
-    if (!targetFile.exists) {
-      wrapInClass(stringToEval, className, targetFile)
+    ifUncompiled(targetDir, className) { targetFile =>
+      wrapInClassAndOutput(stringToEval, className, targetFile)
       compile(targetFile, targetDir)
     }
     val clazz = loadClass(targetDir, className)
@@ -100,13 +99,25 @@ object Eval {
     apply(stringToEval)
   }
 
+  private def ifUncompiled(targetDir: File, className: String)(work: File => Unit) {
+    val targetFile = new File(targetDir, className + ".scala")
+    if (!targetFile.exists) {
+      val created = targetFile.createNewFile()
+      if (!created) {
+        // FIXME: this indicates that either another jvm randomly generated the same
+        // integer and compiled this file. Or, more likely, this method was called
+        // simultaneously from two threads.
+      }
+      targetFile.deleteOnExit()
+      work(targetFile)
+    }
+  }
+
   /**
    * Wrap sourceCode in a new class that has an apply method that evaluates that sourceCode.
    * Write generated (temporary) classes to targetDir
    */
-  private def wrapInClass(sourceCode: String, className: String, targetFile: File) {
-    targetFile.createNewFile()
-    targetFile.deleteOnExit()
+  private def wrapInClassAndOutput(sourceCode: String, className: String, targetFile: File) {
     val writer = new FileWriter(targetFile)
     writer.write("class " + className + " extends (() => Any) {\n")
     writer.write("  def apply() = {\n")
