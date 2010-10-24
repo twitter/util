@@ -1,7 +1,9 @@
 package com.twitter.util
 
 import java.io.{File, FileWriter}
+import java.math.BigInteger
 import java.net.{URL, URLClassLoader}
+import java.security.MessageDigest
 import java.util.jar._
 import java.util.Random
 import scala.io.Source
@@ -67,15 +69,23 @@ object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
   private val random = new Random()
+  private val md = MessageDigest.getInstance("SHA")
 
   /**
    * Eval[Int]("1 + 1") // => 2
    */
   def apply[T](stringToEval: String): T = {
-    val className = "Evaluator" + random.nextInt().abs
+    md.reset()
+    val digest = md.digest(stringToEval.getBytes())
+    val sha = new BigInteger(digest).toString(16)
+
+    val className = "Evaluator" + sha
     val targetDir = new File(System.getProperty("java.io.tmpdir"))
-    val wrappedFile = wrapInClass(stringToEval, className, targetDir)
-    compile(wrappedFile, targetDir)
+    val targetFile = new File(targetDir, className + ".scala")
+    if (!targetFile.exists) {
+      wrapInClass(stringToEval, className, targetFile)
+      compile(targetFile, targetDir)
+    }
     val clazz = loadClass(targetDir, className)
     val constructor = clazz.getConstructor()
     val evaluator = constructor.newInstance().asInstanceOf[() => Any]
@@ -94,8 +104,8 @@ object Eval {
    * Wrap sourceCode in a new class that has an apply method that evaluates that sourceCode.
    * Write generated (temporary) classes to targetDir
    */
-  private def wrapInClass(sourceCode: String, className: String, targetDir: File) = {
-    val targetFile = File.createTempFile(className, ".scala", targetDir)
+  private def wrapInClass(sourceCode: String, className: String, targetFile: File) {
+    targetFile.createNewFile()
     targetFile.deleteOnExit()
     val writer = new FileWriter(targetFile)
     writer.write("class " + className + " extends (() => Any) {\n")
@@ -104,7 +114,6 @@ object Eval {
     writer.write("\n  }\n")
     writer.write("}\n")
     writer.close()
-    targetFile
   }
 
   val JarFile = """\.jar$""".r
@@ -126,15 +135,15 @@ object Eval {
     // It's not clear how many nested jars we should open.
     val classPathAndClassPathsNestedInJars = configulousClasspath.flatMap { fileName =>
       val nestedClassPath = if (JarFile.findFirstMatchIn(fileName).isDefined) {
-	val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
+      val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
         // turns /usr/foo/bar/foo-1.0.jar into ["", "usr", "foo", "bar", "foo-1.0.jar"]
         val rootDirPath = fileName.split(File.separator).toList
         // and then into /usr/foo/bar
         val rootDir = rootDirPath.slice(1, rootDirPath.length - 1).mkString(File.separator, File.separator, File.separator)
 
-	if (nestedClassPathAttribute != null) {
+        if (nestedClassPathAttribute != null) {
           nestedClassPathAttribute.split(" ").toList.map(rootDir + File.separator + _)
-	} else Nil
+        } else Nil
       } else Nil
       List(fileName) ::: nestedClassPath
     }
