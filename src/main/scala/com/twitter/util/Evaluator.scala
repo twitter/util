@@ -68,7 +68,7 @@ import scala.tools.nsc.{Global, Settings}
 object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
-  private val jvmId = Math.abs(new Random().nextInt())
+  private val jvmId = java.lang.Math.abs(new Random().nextInt())
   private val md = MessageDigest.getInstance("SHA")
 
   /**
@@ -79,8 +79,9 @@ object Eval {
     val digest = md.digest(stringToEval.getBytes())
     val sha = new BigInteger(digest).toString(16)
 
-    val className = "Evaluator" + sha + "_" + jvmId
-    val targetDir = new File(System.getProperty("java.io.tmpdir"))
+    val uniqueId = sha + "_" + jvmId
+    val className = "Evaluator" + uniqueId
+    val targetDir = new File(System.getProperty("java.io.tmpdir") + "evaluator_" + uniqueId)
     ifUncompiled(targetDir, className) { targetFile =>
       wrapInClassAndOutput(stringToEval, className, targetFile)
       compile(targetFile, targetDir)
@@ -99,18 +100,22 @@ object Eval {
     apply(stringToEval)
   }
 
-  private def ifUncompiled(targetDir: File, className: String)(work: File => Unit) {
+  private def ifUncompiled(targetDir: File, className: String)(f: File => Unit) {
+    targetDir.mkdirs()
+    targetDir.deleteOnExit()
+
     val targetFile = new File(targetDir, className + ".scala")
     if (!targetFile.exists) {
       val created = targetFile.createNewFile()
       if (!created) {
-        // FIXME: this indicates that either another jvm randomly generated the same
+        // FIXME: this indicates that another jvm randomly generated the same
         // integer and compiled this file. Or, more likely, this method was called
         // simultaneously from two threads.
       }
-      targetFile.deleteOnExit()
-      work(targetFile)
+      f(targetFile)
     }
+
+    targetDir.listFiles().foreach { _.deleteOnExit() }
   }
 
   /**
