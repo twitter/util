@@ -77,7 +77,7 @@ object Eval {
   def apply[T](stringToEval: String): T = {
     md.reset()
     val digest = md.digest(stringToEval.getBytes())
-    val sha = new BigInteger(digest).toString(16)
+    val sha = new BigInteger(1, digest).toString(16)
 
     val uniqueId = sha + "_" + jvmId
     val className = "Evaluator" + uniqueId
