@@ -69,13 +69,12 @@ object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
-  private val md = MessageDigest.getInstance("SHA")
 
   /**
    * Eval[Int]("1 + 1") // => 2
    */
   def apply[T](stringToEval: String): T = {
-    md.reset()
+    val md = MessageDigest.getInstance("SHA")
     val digest = md.digest(stringToEval.getBytes())
     val sha = new BigInteger(1, digest).toString(16)
 
