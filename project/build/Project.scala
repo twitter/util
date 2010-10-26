@@ -3,11 +3,10 @@ import sbt._
 class UtilProject(info: ProjectInfo) extends DefaultProject(info) {
   override def managedStyle = ManagedStyle.Maven
 
+  val twitterRepo = "twitter.com" at "http://maven.twttr.com"
+
   val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.0" % "compile"
   override def filterScalaJars = false
-
-  val lagRepo = "lag.net" at "http://www.lag.net/repo/"
-  val lagNest = "lag.net/nest" at "http://www.lag.net/nest/"
 
   val guava = "com.google.guava" % "guava" % "r06"
   val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
