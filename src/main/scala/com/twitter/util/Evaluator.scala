@@ -81,7 +81,7 @@ object Eval {
 
     val uniqueId = sha + "_" + jvmId
     val className = "Evaluator" + uniqueId
-    val targetDir = new File(System.getProperty("java.io.tmpdir") + "evaluator_" + uniqueId)
+    val targetDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "evaluator_" + uniqueId)
     ifUncompiled(targetDir, className) { targetFile =>
       wrapInClassAndOutput(stringToEval, className, targetFile)
       compile(targetFile, targetDir)
