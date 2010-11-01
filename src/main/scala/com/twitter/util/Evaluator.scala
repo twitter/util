@@ -1,7 +1,9 @@
 package com.twitter.util
 
 import java.io.{File, FileWriter}
+import java.math.BigInteger
 import java.net.{URL, URLClassLoader}
+import java.security.MessageDigest
 import java.util.jar._
 import java.util.Random
 import scala.io.Source
@@ -66,16 +68,24 @@ import scala.tools.nsc.{Global, Settings}
 object Eval {
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
-  private val random = new Random()
+  private val jvmId = java.lang.Math.abs(new Random().nextInt())
+  private val md = MessageDigest.getInstance("SHA")
 
   /**
    * Eval[Int]("1 + 1") // => 2
    */
-  def apply[T](stringToEval: String): T = {
-    val className = "Evaluator" + random.nextInt().abs
-    val targetDir = new File(System.getProperty("java.io.tmpdir"))
-    val wrappedFile = wrapInClass(stringToEval, className, targetDir)
-    compile(wrappedFile, targetDir)
+  def apply[T](stringToEval: String): T = synchronized {
+    md.reset()
+    val digest = md.digest(stringToEval.getBytes())
+    val sha = new BigInteger(1, digest).toString(16)
+
+    val uniqueId = sha + "_" + jvmId
+    val className = "Evaluator" + uniqueId
+    val targetDir = new File(System.getProperty("java.io.tmpdir") + "evaluator_" + uniqueId)
+    ifUncompiled(targetDir, className) { targetFile =>
+      wrapInClassAndOutput(stringToEval, className, targetFile)
+      compile(targetFile, targetDir)
+    }
     val clazz = loadClass(targetDir, className)
     val constructor = clazz.getConstructor()
     val evaluator = constructor.newInstance().asInstanceOf[() => Any]
@@ -90,13 +100,29 @@ object Eval {
     apply(stringToEval)
   }
 
+  private def ifUncompiled(targetDir: File, className: String)(f: File => Unit) {
+    targetDir.mkdirs()
+    targetDir.deleteOnExit()
+
+    val targetFile = new File(targetDir, className + ".scala")
+    if (!targetFile.exists) {
+      val created = targetFile.createNewFile()
+      if (!created) {
+        // FIXME: this indicates that another jvm randomly generated the same
+        // integer and compiled this file. Or, more likely, this method was called
+        // simultaneously from two threads.
+      }
+      f(targetFile)
+    }
+
+    targetDir.listFiles().foreach { _.deleteOnExit() }
+  }
+
   /**
    * Wrap sourceCode in a new class that has an apply method that evaluates that sourceCode.
    * Write generated (temporary) classes to targetDir
    */
-  private def wrapInClass(sourceCode: String, className: String, targetDir: File) = {
-    val targetFile = File.createTempFile(className, ".scala", targetDir)
-    targetFile.deleteOnExit()
+  private def wrapInClassAndOutput(sourceCode: String, className: String, targetFile: File) {
     val writer = new FileWriter(targetFile)
     writer.write("class " + className + " extends (() => Any) {\n")
     writer.write("  def apply() = {\n")
@@ -104,7 +130,6 @@ object Eval {
     writer.write("\n  }\n")
     writer.write("}\n")
     writer.close()
-    targetFile
   }
 
   val JarFile = """\.jar$""".r
@@ -126,15 +151,15 @@ object Eval {
     // It's not clear how many nested jars we should open.
     val classPathAndClassPathsNestedInJars = configulousClasspath.flatMap { fileName =>
       val nestedClassPath = if (JarFile.findFirstMatchIn(fileName).isDefined) {
-	val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
+      val nestedClassPathAttribute = new JarFile(fileName).getManifest.getMainAttributes.getValue("Class-Path")
         // turns /usr/foo/bar/foo-1.0.jar into ["", "usr", "foo", "bar", "foo-1.0.jar"]
         val rootDirPath = fileName.split(File.separator).toList
         // and then into /usr/foo/bar
         val rootDir = rootDirPath.slice(1, rootDirPath.length - 1).mkString(File.separator, File.separator, File.separator)
 
-	if (nestedClassPathAttribute != null) {
+        if (nestedClassPathAttribute != null) {
           nestedClassPathAttribute.split(" ").toList.map(rootDir + File.separator + _)
-	} else Nil
+        } else Nil
       } else Nil
       List(fileName) ::: nestedClassPath
     }
