@@ -1,7 +1,7 @@
 import sbt._
 import com.twitter.sbt._
 
-class UtilProject(info: ProjectInfo) extends StandardProject(info) with SubversionPublisher {
+class UtilProject(info: ProjectInfo) extends DefaultProject(info) with SubversionPublisher {
   override def managedStyle = ManagedStyle.Maven
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
