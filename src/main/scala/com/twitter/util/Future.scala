@@ -117,3 +117,13 @@ class Promise[A] extends Future[A] {
     }
   }
 }
+
+class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
+  def run() {
+    update(Try(fn))
+  }
+}
+
+object FutureTask {
+  def apply[A](fn: => A) = new FutureTask[A](fn)
+}

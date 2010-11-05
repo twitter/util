@@ -34,34 +34,13 @@ object Time {
 
   private val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
 
-  private var fn: () => Time = null
-
-  reset()
-
-  /**
-   * Freeze the clock. Time will not pass until reset.
-   */
-  def freeze() {
-    Time.now = new Time(System.currentTimeMillis)
-  }
+  private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
   def now: Time = fn()
   def never: Time = Time(0.seconds)
 
-  def now_=(at: Time) {
-    fn = () => at
-  }
-
-  def reset() {
-    fn = { () => new Time(System.currentTimeMillis) }
-  }
-
   def apply(at: Long): Time = new Time(at)
   def apply(at: Duration): Time = new Time(at.inMillis)
-
-  def advance(delta: Duration) {
-    now = now + delta
-  }
 
   def at(datetime: String) = {
     val date = formatter.parse(datetime, new ParsePosition(0))
@@ -70,6 +49,30 @@ object Time {
     }
     new Time(date.getTime())
   }
+
+  def withTimeAt[A](time: Time)(body: TimeControl => A): A = {
+    val prevFn = Time.fn
+    try {
+      val timeControl = new TimeControl {
+        def advance(delta: Duration) {
+          val newTime = Time.now + delta
+          Time.fn = () => newTime
+        }
+      }
+      Time.fn = () => time
+      body(timeControl)
+    } finally {
+      Time.fn = prevFn
+    }
+  }
+
+  def withCurrentTimeFrozen[A](body: TimeControl => A): A = {
+    withTimeAt(Time.now)(body)
+  }
+}
+
+trait TimeControl {
+  def advance(delta: Duration)
 }
 
 class Duration(val at: Long) {

@@ -131,4 +131,18 @@ object FutureSpec extends Specification {
       f() must throwA(e)
     }
   }
+
+  "FutureTask" should {
+    "return result" in {
+      val task = new FutureTask("hello")
+      task.run()
+      task() mustEqual "hello"
+    }
+
+    "throw result" in {
+      val task = new FutureTask[String](throw new IllegalStateException)
+      task.run()
+      task() must throwA(new IllegalStateException)
+    }
+  }
 }
