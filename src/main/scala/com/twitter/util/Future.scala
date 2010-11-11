@@ -15,6 +15,12 @@ object Future {
   }
 }
 
+// This is an alternative interface for maximum Java friendlyness.
+trait FutureEventListener[T] {
+  def onSuccess(value: T): Unit
+  def onFailure(cause: Throwable): Unit
+}
+
 abstract class Future[+A] extends Try[A] {
   import Future.DEFAULT_TIMEOUT
 
@@ -44,6 +50,12 @@ abstract class Future[+A] extends Try[A] {
   def map[X](f: A => X): Future[X]
   def filter(p: A => Boolean): Future[A]
   def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
+
+  def addEventListener[U >: A](listener: FutureEventListener[U]) = respond {
+    case Throw(cause)  => listener.onFailure(cause)
+    case Return(value) => listener.onSuccess(value)
+  }
+
 }
 
 object Promise {
