@@ -2,6 +2,7 @@ package com.twitter.util
 
 import java.text.{ParsePosition, SimpleDateFormat}
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 object TimeConversions {
   class RichWholeNumber(wrapped: Long) {
@@ -9,6 +10,8 @@ object TimeConversions {
     def second = seconds
     def milliseconds = new Duration(wrapped)
     def millisecond = milliseconds
+    def microseconds = new Duration(wrapped * 1000)
+    def nanoseconds = new Duration(wrapped * 1000000)
     def millis = milliseconds
     def minutes = new Duration(wrapped * 1000 * 60)
     def minute = minutes
@@ -82,6 +85,7 @@ class Duration(val at: Long) {
   def inSeconds = (at / 1000L).toInt
   def inMillis = at
   def inMilliseconds = at
+  def inTimeUnit = (inMilliseconds, TimeUnit.MILLISECONDS)
 
   def +(delta: Duration) = new Duration(at + delta.inMillis)
   def -(delta: Duration) = new Duration(at - delta.inMillis)
@@ -108,6 +112,21 @@ class Duration(val at: Long) {
   def <(other: Duration) = at < other.at
   def >=(other: Duration) = at >= other.at
   def <=(other: Duration) = at <= other.at
+}
+
+object Duration {
+  import TimeConversions._
+
+  def fromTimeUnit(value: Long, unit: TimeUnit) =
+    unit match {
+      case TimeUnit.DAYS         => value.days
+      case TimeUnit.HOURS        => value.hours
+      case TimeUnit.MINUTES      => value.minutes
+      case TimeUnit.SECONDS      => value.seconds
+      case TimeUnit.MILLISECONDS => value.milliseconds
+      case TimeUnit.MICROSECONDS => value.microseconds
+      case TimeUnit.NANOSECONDS  => value.nanoseconds
+    }
 }
 
 class Time(at: Long) extends Duration(at) {
