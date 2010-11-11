@@ -3,6 +3,7 @@ import com.twitter.sbt._
 
 class UtilProject(info: ProjectInfo) extends DefaultProject(info) with SubversionPublisher {
   override def managedStyle = ManagedStyle.Maven
+  override def disableCrossPaths = true
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
