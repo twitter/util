@@ -78,7 +78,7 @@ trait TimeControl {
   def advance(delta: Duration)
 }
 
-class Duration(val at: Long) {
+class Duration(val at: Long) extends Ordered[Duration] {
   def inDays = (inHours / 24)
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
@@ -108,10 +108,7 @@ class Duration(val at: Long) {
     }
   }
 
-  def >(other: Duration) = at > other.at
-  def <(other: Duration) = at < other.at
-  def >=(other: Duration) = at >= other.at
-  def <=(other: Duration) = at <= other.at
+  def compare(other: Duration) = (at - other.at).toInt
 }
 
 object Duration {

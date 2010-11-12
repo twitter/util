@@ -53,4 +53,11 @@ object TimeSpec extends Specification {
       (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)
     }
   }
+
+  "Duration" should {
+    "compare" in {
+      10.seconds must be_<(11.seconds)
+      10.seconds must be_<(11000.milliseconds)
+    }
+  }
 }
