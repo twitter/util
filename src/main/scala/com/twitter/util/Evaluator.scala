@@ -95,8 +95,8 @@ object Eval {
   /**
    * Eval[Int](new File("..."))
    */
-  def apply[T](fileToEval: File): T = {
-    val stringToEval = scala.io.Source.fromFile(fileToEval).mkString
+  def apply[T](fileToEval: File*): T = {
+    val stringToEval = List(fileToEval: _*).map(scala.io.Source.fromFile(_).mkString).mkString
     apply(stringToEval)
   }
 
