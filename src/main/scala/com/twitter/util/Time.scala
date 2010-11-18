@@ -108,7 +108,13 @@ class Duration(val at: Long) extends Ordered[Duration] {
     }
   }
 
-  def compare(other: Duration) = (at - other.at).toInt
+  def compare(other: Duration) =
+     if (at < other.at)
+      -1
+    else if (at > other.at)
+      1
+    else
+      0
 }
 
 object Duration {
