@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.io.{File, FileWriter}
+import java.io.{File, FileWriter, InputStream}
 import java.math.BigInteger
 import java.net.{URL, URLClassLoader}
 import java.security.MessageDigest
@@ -99,6 +99,12 @@ object Eval {
     val stringToEval = List(fileToEval: _*).map(scala.io.Source.fromFile(_).mkString).mkString
     apply(stringToEval)
   }
+
+  /**
+   * Eval[Int](getClass.getResourceAsStream("/Foo.scala"))
+   */
+  def apply[T](stream: InputStream): T =
+    apply(scala.io.Source.fromInputStream(stream).mkString)
 
   private def ifUncompiled(targetDir: File, className: String)(f: File => Unit) {
     targetDir.mkdirs()
