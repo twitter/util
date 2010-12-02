@@ -32,6 +32,8 @@ abstract class Future[+A] extends Try[A] {
   def isReturn = within(DEFAULT_TIMEOUT) isReturn
   def isThrow = within(DEFAULT_TIMEOUT) isThrow
 
+  def isDefined: Boolean
+
   def within(timeout: Duration): Try[A] = {
     val latch = new CountDownLatch(1)
     var result: Try[A] = null
@@ -67,6 +69,8 @@ class Promise[A] extends Future[A] {
 
   private[this] var result: Option[Try[A]] = None
   private[this] val computations = new ArrayBuffer[Try[A] => Unit]
+
+  def isDefined = result.isDefined
 
   def update(result: Try[A]) {
     updateIfEmpty(result) || {
