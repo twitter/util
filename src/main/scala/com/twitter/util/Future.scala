@@ -3,8 +3,6 @@ package com.twitter.util
 import com.twitter.util.TimeConversions._
 import scala.collection.mutable.ArrayBuffer
 
-private case class Cell[A](var value: A)
-
 object Future {
   val DEFAULT_TIMEOUT = Long.MaxValue.millis
 
@@ -67,7 +65,7 @@ object Promise {
 class Promise[A] extends Future[A] {
   import Promise._
 
-  private[this] var result: Option[Try[A]] = None
+  @volatile private[this] var result: Option[Try[A]] = None
   private[this] val computations = new ArrayBuffer[Try[A] => Unit]
 
   def isDefined = result.isDefined
@@ -79,7 +77,6 @@ class Promise[A] extends Future[A] {
   }
 
   def updateIfEmpty(newResult: Try[A]) = {
-
     if (result.isDefined) false else {
       val didSetResult = synchronized {
         if (result.isDefined) false else {
