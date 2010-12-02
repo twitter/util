@@ -5,12 +5,12 @@ import scala.collection.mutable.ArrayBuffer
 
 object Future {
   val DEFAULT_TIMEOUT = Long.MaxValue.millis
+  val Done = apply(())
 
-  def apply[A](a: => A): Future[A] = {
+  def apply[A](a: => A): Future[A] =
     new Promise[A] {
       update(Try(a))
     }
-  }
 }
 
 // This is an alternative interface for maximum Java friendlyness.
@@ -50,6 +50,16 @@ abstract class Future[+A] extends Try[A] {
   def map[X](f: A => X): Future[X]
   def filter(p: A => Boolean): Future[A]
   def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
+
+  def onSuccess[B](f: A => B) = respond {
+    case Return(value) => f(value)
+    case _ =>
+  }
+
+  def onFailure[B](rescueException: Throwable => B) = respond {
+    case Throw(throwable) => rescueException(throwable)
+    case _ =>
+  }
 
   def addEventListener[U >: A](listener: FutureEventListener[U]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
