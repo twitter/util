@@ -2,17 +2,19 @@ package com.twitter.util
 
 object StorageUnitConversions {
   class RichWholeNumber(wrapped: Long) {
-    def byte = bytes
-    def bytes = new StorageUnit(wrapped)
-    def kilobyte = kilobytes
+    require(wrapped > 0, "Negative storage units are useful but unsupported")
+
+    def byte      = bytes
+    def bytes     = new StorageUnit(wrapped)
+    def kilobyte  = kilobytes
     def kilobytes = new StorageUnit(wrapped * 1024)
-    def megabyte = megabytes
+    def megabyte  = megabytes
     def megabytes = new StorageUnit(wrapped * 1024 * 1024)
-    def gigabyte = gigabytes
+    def gigabyte  = gigabytes
     def gigabytes = new StorageUnit(wrapped * 1024 * 1024 * 1024)
-    def terabyte = terabytes
+    def terabyte  = terabytes
     def terabytes = new StorageUnit(wrapped * 1024 * 1024 * 1024 * 1024)
-    def petabyte = petabytes
+    def petabyte  = petabytes
     def petabytes = new StorageUnit(wrapped * 1024 * 1024 * 1024 * 1024 * 1024)
   }
 
@@ -21,10 +23,12 @@ object StorageUnitConversions {
 }
 
 class StorageUnit(bytes: Long) {
+  require(bytes > 0, "Negative storage units are useful but unsupported")
+
   def inBytes = bytes
-  def inKilobytes = bytes / Math.pow(1024, 1)
-  def inMegabytes = bytes / Math.pow(1024, 2)
-  def inGigabytes = bytes / Math.pow(1024, 3)
-  def inTerabytes = bytes / Math.pow(1024, 4)
-  def inPetabytes = bytes / Math.pow(1024, 5)
+  def inKilobytes = bytes / (1024L)
+  def inMegabytes = bytes / (1024L * 1024)
+  def inGigabytes = bytes / (1024L * 1024 * 1024)
+  def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
+  def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
 }
