@@ -69,6 +69,7 @@ abstract class Future[+A] extends Try[A] {
 }
 
 object Promise {
+  // FIXME inline
   case class ImmutableResult(message: String) extends Exception(message)
 }
 
