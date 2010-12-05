@@ -26,13 +26,13 @@ object ChannelSpec extends Specification {
         val results = new ArrayBuffer[Int]
         topic send 1
         topic send 2
+        topic close()
         topic receive {
           case Value(i) =>
             results += i
           case End =>
             results += 0
         }
-        topic close()
         results.toList mustEqual List(1, 2, 0)
       }
     }

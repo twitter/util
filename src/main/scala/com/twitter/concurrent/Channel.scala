@@ -19,7 +19,7 @@ class Topic[A] extends Channel[A] with Serialized {
     serialized {
       require(open, "Channel is closed")
 
-      if (!subscriber.isDefined) queue offer a
+      if (!subscriber.isDefined) queue.offer(a)
       else subscriber.get(Value(a))
     }
   }
@@ -29,17 +29,16 @@ class Topic[A] extends Channel[A] with Serialized {
       require(open, "Channel closed twice")
       open = false
       subscriber foreach(_(End))
-      emptyQueue()
     }
   }
 
   def receive(listener: Message[A] => Unit) {
     serialized {
-      require(open, "Channel is closed")
       require(!subscriber.isDefined,
         "Only one subscriber to the topic is supported for now")
       subscriber = Some(listener)
       while (!queue.isEmpty) listener(Value(queue.poll()))
+      if (!open) listener(End)
     }
   }
 

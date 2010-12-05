@@ -50,6 +50,10 @@ abstract class Future[+A] extends Try[A] {
   def map[X](f: A => X): Future[X]
   def filter(p: A => Boolean): Future[A]
   def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
+  def handle[B >: A](rescueException: Throwable => B) =
+    rescue { throwable =>
+      Future(rescueException(throwable))
+    }
 
   def onSuccess[B](f: A => B) = respond {
     case Return(value) => f(value)
