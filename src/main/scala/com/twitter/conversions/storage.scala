@@ -36,6 +36,10 @@ object storage {
     def terabytes = new StorageUnit(wrapped * 1024 * 1024 * 1024 * 1024)
     def petabyte  = petabytes
     def petabytes = new StorageUnit(wrapped * 1024 * 1024 * 1024 * 1024 * 1024)
+
+    def thousand  = wrapped * 1000
+    def million   = wrapped * 1000 * 1000
+    def billion   = wrapped * 1000 * 1000 * 1000
   }
 
   implicit def intToStorageUnitableWholeNumber(i: Int) = new RichWholeNumber(i)
