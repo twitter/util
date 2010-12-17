@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.twitter.util
+package com.twitter
+package conversions
 
-class StorageUnit(bytes: Long) {
-  require(bytes > 0, "Negative storage units are useful but unsupported")
+import java.util.concurrent.Callable
 
-  def inBytes = bytes
-  def inKilobytes = bytes / (1024L)
-  def inMegabytes = bytes / (1024L * 1024)
-  def inGigabytes = bytes / (1024L * 1024 * 1024)
-  def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
-  def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
+/**
+ * Implicits for turning a block of code into a Runnable or Callable.
+ */
+object thread {
+  implicit def makeRunnable(f: => Unit): Runnable = new Runnable() { def run() = f }
+
+  implicit def makeCallable[T](f: => T): Callable[T] = new Callable[T]() { def call() = f }
 }
