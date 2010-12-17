@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Twitter Inc.
+ * Copyright 2010 Twitter, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.twitter.util
+package com.twitter
 
-class StorageUnit(bytes: Long) {
-  require(bytes > 0, "Negative storage units are useful but unsupported")
-
-  def inBytes = bytes
-  def inKilobytes = bytes / (1024L)
-  def inMegabytes = bytes / (1024L * 1024)
-  def inGigabytes = bytes / (1024L * 1024 * 1024)
-  def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
-  def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
+package object util {
+  // backward compat for people who imported "com.twitter.util.TimeConversions._"
+  val TimeConversions = com.twitter.conversions.time
+  val StorageUnitConversions = com.twitter.conversions.storage
 }
