@@ -53,4 +53,6 @@ trait TempFolder {
   }
 
   def folderName = { _folderName.get.getPath }
+
+  def canonicalFolderName = { _folderName.get.getCanonicalPath }
 }
