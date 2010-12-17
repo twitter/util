@@ -16,7 +16,11 @@
 
 package com.twitter.util
 
-class StorageUnit(bytes: Long) {
+object StorageUnit {
+  val infinite = new StorageUnit(Long.MaxValue)
+}
+
+class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   require(bytes > 0, "Negative storage units are useful but unsupported")
 
   def inBytes = bytes
@@ -25,4 +29,15 @@ class StorageUnit(bytes: Long) {
   def inGigabytes = bytes / (1024L * 1024 * 1024)
   def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
   def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
+
+  override def equals(other: Any) = {
+    other match {
+      case other: StorageUnit =>
+        inBytes == other.inBytes
+      case _ =>
+        false
+    }
+  }
+
+  def compare(other: StorageUnit) = if (bytes < other.bytes) -1 else (if (bytes > other.bytes) 1 else 0)
 }
