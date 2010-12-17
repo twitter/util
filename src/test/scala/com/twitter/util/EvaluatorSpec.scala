@@ -11,7 +11,7 @@ object EvaluatorSpec extends Specification {
 
     var byte = stream.read()
     while (byte != -1) {
-      fos.write(byte)        
+      fos.write(byte)
       byte = stream.read()
     }
 
@@ -24,7 +24,7 @@ object EvaluatorSpec extends Specification {
     }
 
     "apply(new File(...))" in {
-      Eval[Int](file("/OnePlusOne.scala")) mustEqual 2
+      Eval[Int](new File("src/test/resources/OnePlusOne.scala")) mustEqual 2
     }
 
     "apply(new File(...), new File(...))" in {
