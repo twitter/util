@@ -37,7 +37,6 @@ object Time {
   def never: Time = Time(0.seconds)
 
   def apply(at: Long): Time = new Time(at)
-  def apply(at: Duration): Time = new Time(at.inMillis)
 
   def at(datetime: String) = parse(datetime, defaultFormat)
 
@@ -79,7 +78,9 @@ trait TimeControl {
   def advance(delta: Duration)
 }
 
-class Duration(val at: Long) extends Ordered[Duration] {
+trait TimeLike[+This <: TimeLike[This]] {
+  val at: Long
+  protected def build(at: Long): This
   def inDays = (inHours / 24)
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
@@ -87,35 +88,30 @@ class Duration(val at: Long) extends Ordered[Duration] {
   def inMillis = at
   def inMilliseconds = at
   def inTimeUnit = (inMilliseconds, TimeUnit.MILLISECONDS)
+  def +(delta: Duration): This = build(at + delta.inMillis)
+  def -(delta: Duration): This = build(at - delta.inMillis)
+  def max[A <: TimeLike[_]](that: A): This = build(this.at max that.at)
+  def min[A <: TimeLike[_]](that: A): This = build(this.at min that.at)
+}
 
-  def +(delta: Duration) = new Duration(at + delta.inMillis)
-  def -(delta: Duration) = new Duration(at - delta.inMillis)
-  def *(x: Long) = new Duration(at * x)
+class Time(val at: Long) extends TimeLike[Time] with Ordered[Time] {
+  protected override def build(at: Long) = new Time(at)
 
-  def fromNow = Time(Time.now + this)
-  def ago = Time(Time.now - this)
+  override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
 
-  def max(that: Duration) = if (this.at > that.at) this else that
-  def min(that: Duration) = if (this.at < that.at) this else that
+  def compare(that: Time) = (this.at compare that.at)
 
-  override def toString = inSeconds.toString
-
-  override def equals(other: Any) = {
-    other match {
-      case other: Duration =>
-        inSeconds == other.inSeconds
-      case _ =>
-        false
-    }
+  override def equals(other: Any) = other match {
+    case that: Time => this.at == that.at
+    case _ => false
   }
 
-  def compare(other: Duration) =
-     if (at < other.at)
-      -1
-    else if (at > other.at)
-      1
-    else
-      0
+  /**
+   * Creates a duration between two times.
+   */
+  def -(that: Time): Time = build(this.at - that.at)
+
+  def toDate = new Date(inMillis)
 }
 
 object Duration {
@@ -133,9 +129,24 @@ object Duration {
     }
 }
 
-class Time(at: Long) extends Duration(at) {
-  override def +(delta: Duration) = new Time(at + delta.inMillis)
-  override def -(delta: Duration) = new Time(at - delta.inMillis)
-  def toDate = new Date(inMillis)
-  override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
+class Duration(val at: Long) extends TimeLike[Duration] with Ordered[Duration] {
+  protected def build(at: Long) = new Duration(at)
+
+  override def toString = {
+    if (at < 1000) inMillis + ".milliseconds"
+    else inSeconds + ".seconds"
+  }
+
+  override def equals(other: Any) = other match {
+    case that: Duration => this.at == that.at
+    case _ => false
+  }
+
+  def compare(that: Duration) = (this.at compare that.at)
+
+  def *(x: Long) = new Duration(at * x)
+  def fromNow = Time.now + this
+  def ago = Time.now - this
+  def afterEpoch = new Time(at)
+  def abs = if (at < 0) new Duration(-at) else this
 }
