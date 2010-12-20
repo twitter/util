@@ -58,6 +58,7 @@ object TimeSpec extends Specification {
     "compare" in {
       10.seconds must be_<(11.seconds)
       10.seconds must be_<(11000.milliseconds)
+      new Duration(Long.MaxValue) must be_>(0.seconds)
     }
   }
 }

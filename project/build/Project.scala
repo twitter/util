@@ -6,7 +6,7 @@ class UtilProject(info: ProjectInfo) extends StandardProject(info) with Subversi
 
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
 
-  val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.0" % "compile"
+  val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
   override def filterScalaJars = false
 
   val guava = "com.google.guava" % "guava" % "r06"

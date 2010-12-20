@@ -16,7 +16,7 @@
 
 package com.twitter.util
 
-import java.text.{ParsePosition, SimpleDateFormat}
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit
 object Time {
   import com.twitter.conversions.time._
 
-  private val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
-  private val rssFormatter = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z")
+  private val defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
+  private val rssFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z")
 
   private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
@@ -39,13 +39,7 @@ object Time {
   def apply(at: Long): Time = new Time(at)
   def apply(at: Duration): Time = new Time(at.inMillis)
 
-  def at(datetime: String) = {
-    val date = formatter.parse(datetime, new ParsePosition(0))
-    if (date == null) {
-      throw new Exception("Unable to parse date-time: " + datetime)
-    }
-    new Time(date.getTime())
-  }
+  def at(datetime: String) = parse(datetime, defaultFormat)
 
   def withTimeAt[A](time: Time)(body: TimeControl => A): A = {
     val prevFn = Time.fn
@@ -67,13 +61,17 @@ object Time {
     withTimeAt(Time.now)(body)
   }
 
-  def fromRss(rss: String) = {
-    // Wed, 15 Jun 2005 19:00:00 GMT
-    val date = rssFormatter.parse(rss, new ParsePosition(0))
+  // Wed, 15 Jun 2005 19:00:00 GMT
+  def fromRss(rss: String) = parse(rss, rssFormat)
+
+  private def parse(str: String, format: SimpleDateFormat): Time = {
+    // SimpleDateFormat is not thread-safe
+    val date = format.synchronized(format.parse(str))
     if (date == null) {
-      throw new Exception("Unable to parse date-time: " + rss)
+      throw new Exception("Unable to parse date-time: " + str)
+    } else {
+      new Time(date.getTime())
     }
-    new Time(date.getTime())
   }
 }
 
