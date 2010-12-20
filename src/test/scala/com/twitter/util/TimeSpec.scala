@@ -69,7 +69,7 @@ object TimeSpec extends Specification {
     }
 
     "- time" in {
-      10.seconds.afterEpoch - 5.seconds.afterEpoch mustEqual 5.seconds.afterEpoch
+      10.seconds.afterEpoch - 5.seconds.afterEpoch mustEqual 5.seconds
     }
 
     "max" in {

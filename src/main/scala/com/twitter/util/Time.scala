@@ -109,7 +109,7 @@ class Time(val at: Long) extends TimeLike[Time] with Ordered[Time] {
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time): Time = build(this.at - that.at)
+  def -(that: Time) = new Duration(this.at - that.at)
 
   def toDate = new Date(inMillis)
 }
