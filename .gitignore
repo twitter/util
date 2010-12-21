@@ -10,3 +10,5 @@ lib_managed/
 *.iml
 .idea/
 .DS_Store
+.ensime
+.ivyjars

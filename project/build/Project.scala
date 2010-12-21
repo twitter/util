@@ -1,14 +1,12 @@
 import sbt._
 import com.twitter.sbt._
 
-class UtilProject(info: ProjectInfo) extends DefaultProject(info) with SubversionPublisher {
-  override def managedStyle = ManagedStyle.Maven
-  override def disableCrossPaths = true
+class UtilProject(info: ProjectInfo) extends StandardProject(info) with SubversionPublisher {
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
 
-  val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.0" % "compile"
+  val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
   override def filterScalaJars = false
 
   val guava = "com.google.guava" % "guava" % "r06"

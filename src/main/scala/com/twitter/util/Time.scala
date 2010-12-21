@@ -1,31 +1,24 @@
+/*
+ * Copyright 2010 Twitter Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.twitter.util
 
-import java.text.{ParsePosition, SimpleDateFormat}
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
-
-object TimeConversions {
-  class RichWholeNumber(wrapped: Long) {
-    def seconds = new Duration(wrapped * 1000)
-    def second = seconds
-    def milliseconds = new Duration(wrapped)
-    def millisecond = milliseconds
-    def microseconds = new Duration(wrapped * 1000)
-    def nanoseconds = new Duration(wrapped * 1000000)
-    def millis = milliseconds
-    def minutes = new Duration(wrapped * 1000 * 60)
-    def minute = minutes
-    def hours = new Duration(wrapped * 1000 * 60 * 60)
-    def hour = hours
-    def days = new Duration(wrapped * 1000 * 60 * 60 * 24)
-    def day = days
-  }
-
-  implicit def intToTimeableNumber(i: Int) = new RichWholeNumber(i)
-  implicit def longToTimeableNumber(l: Long) = new RichWholeNumber(l)
-
-  implicit def durationToLong(duration: Duration) = duration.inMillis
-}
 
 /**
  * Use `Time.now` in your app instead of `System.currentTimeMillis`, and
@@ -33,9 +26,10 @@ object TimeConversions {
  * and other time-dependent behavior, without calling `sleep`.
  */
 object Time {
-  import TimeConversions._
+  import com.twitter.conversions.time._
 
-  private val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
+  private val defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
+  private val rssFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z")
 
   private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
@@ -45,13 +39,7 @@ object Time {
   def apply(at: Long): Time = new Time(at)
   def apply(at: Duration): Time = new Time(at.inMillis)
 
-  def at(datetime: String) = {
-    val date = formatter.parse(datetime, new ParsePosition(0))
-    if (date == null) {
-      throw new Exception("Unable to parse date-time: " + datetime)
-    }
-    new Time(date.getTime())
-  }
+  def at(datetime: String) = parse(datetime, defaultFormat)
 
   def withTimeAt[A](time: Time)(body: TimeControl => A): A = {
     val prevFn = Time.fn
@@ -78,6 +66,19 @@ object Time {
     val result = f
     val end = System.currentTimeMillis
     (end - start).millis
+  }
+
+  // Wed, 15 Jun 2005 19:00:00 GMT
+  def fromRss(rss: String) = parse(rss, rssFormat)
+
+  private def parse(str: String, format: SimpleDateFormat): Time = {
+    // SimpleDateFormat is not thread-safe
+    val date = format.synchronized(format.parse(str))
+    if (date == null) {
+      throw new Exception("Unable to parse date-time: " + str)
+    } else {
+      new Time(date.getTime())
+    }
   }
 }
 
@@ -125,7 +126,7 @@ class Duration(val at: Long) extends Ordered[Duration] {
 }
 
 object Duration {
-  import TimeConversions._
+  import com.twitter.conversions.time._
 
   def fromTimeUnit(value: Long, unit: TimeUnit) =
     unit match {
