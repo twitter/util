@@ -39,9 +39,26 @@ trait Try[+R] {
   def rescue[R2 >: R](rescueException: Throwable => Try[R2]): Try[R2]
 
   /**
+   * Invoked regardless of whether the computation completed successfully or unsuccessfully.
+   * Implemented in terms of `respond` so that subclasses control evaluation order. Returns `this`.
+   */
+  def ensure(f: => Unit) = {
+    respond { _ =>
+      f
+    }
+    this
+  }
+
+  /**
    * Returns the value from this Return or throws the exception if this is a Throw
    */
   def apply(): R
+
+  /**
+   * Returns the value from this Return or throws the exception if this is a Throw.
+   * Alias for apply()
+   */
+  def get() = apply()
 
   /**
    * Applies the given function f if this is a Result.
@@ -52,6 +69,12 @@ trait Try[+R] {
    * Returns the given function applied to the value from this Return or returns this if this is a Throw
    */
   def flatMap[R2](f: R => Try[R2]): Try[R2]
+
+  /**
+   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
+   * Alias for flatMap
+   */
+  def andThen[R2](f: R => Try[R2]) = flatMap(f)
 
   /**
    * Maps the given function to the value from this Return or returns this if this is a Throw
@@ -74,7 +97,7 @@ trait Try[+R] {
   def respond(k: Try[R] => Unit) = k(this)
 }
 
-final case class Throw[+R](e: Throwable) extends Try[R] { 
+final case class Throw[+R](e: Throwable) extends Try[R] {
   def isThrow = true
   def isReturn = false
   def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = rescueException(e)
@@ -95,7 +118,7 @@ final case class Return[+R](r: R) extends Try[R] {
     } catch {
       case e => Throw(e)
     }
-  }  
+  }
   def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
 }

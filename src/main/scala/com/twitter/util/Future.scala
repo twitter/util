@@ -7,18 +7,41 @@ object Future {
   val DEFAULT_TIMEOUT = Long.MaxValue.millis
   val Done = apply(())
 
+  /**
+   * A factory function to "lift" computations into the Future monad. It will catch
+   * exceptions and wrap them in the Throw[_] type. Non-exceptional values are wrapped
+   * in the Return[_] type.
+   */
   def apply[A](a: => A): Future[A] =
     new Promise[A] {
       update(Try(a))
     }
 }
 
-// This is an alternative interface for maximum Java friendlyness.
+/**
+ * An alternative interface for handling Future Events. This interface is designed
+ * to be friendly to Java users since it does not require closures.
+ */
 trait FutureEventListener[T] {
+  /**
+   * Invoked if the computation completes successfully
+   */
   def onSuccess(value: T): Unit
+
+  /**
+   * Invoked if the computation completes unsuccessfully
+   */
   def onFailure(cause: Throwable): Unit
 }
 
+/**
+ * A computation evaluated asynchronously. This implementation of Future does not
+ * assume any concrete implementation (in particular, it does not couple the user
+ * to a specific executor or event loop.
+ *
+ * Note that this class extends Try[_] indicating that the results of the computation
+ * may succeed or fail.
+ */
 abstract class Future[+A] extends Try[A] {
   import Future.DEFAULT_TIMEOUT
 
@@ -32,6 +55,11 @@ abstract class Future[+A] extends Try[A] {
 
   def isDefined: Boolean
 
+  /**
+   * Demands that the result of the future be available within `timeout`. The result
+   * is a Return[_] or Throw[_] depending upon whether the computation finished in
+   * time.
+   */
   def within(timeout: Duration): Try[A] = {
     val latch = new CountDownLatch(1)
     var result: Try[A] = null
@@ -46,10 +74,22 @@ abstract class Future[+A] extends Try[A] {
   }
 
   override def foreach(k: A => Unit) { respond(_ foreach k) }
+
+  override def ensure(f: => Unit) = {
+    respond { _ =>
+      f
+    }
+    this
+  }
+
   def flatMap[B](f: A => Try[B]): Future[B]
+
   def map[X](f: A => X): Future[X]
+
   def filter(p: A => Boolean): Future[A]
+
   def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
+
   def handle[B >: A](rescueException: Throwable => B) =
     rescue { throwable =>
       Future(rescueException(throwable))
@@ -73,10 +113,16 @@ abstract class Future[+A] extends Try[A] {
 }
 
 object Promise {
-  // FIXME inline
   case class ImmutableResult(message: String) extends Exception(message)
 }
 
+/**
+ * A concrete Future implementation that is updatable by some executor or event loop.
+ * A typical use of Promise is for a client to submit a request to some service.
+ * The client is given an object that inherits from Future[_]. The server stores a
+ * reference to this object as a Promise[_] and updates the value when the computation
+ * completes.
+ */
 class Promise[A] extends Future[A] {
   import Promise._
 

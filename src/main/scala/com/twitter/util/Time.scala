@@ -72,6 +72,13 @@ object Time {
   def withCurrentTimeFrozen[A](body: TimeControl => A): A = {
     withTimeAt(Time.now)(body)
   }
+
+  def measure(f: => Unit) = {
+    val start = System.currentTimeMillis
+    val result = f
+    val end = System.currentTimeMillis
+    (end - start).millis
+  }
 }
 
 trait TimeControl {
