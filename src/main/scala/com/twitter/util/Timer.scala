@@ -9,11 +9,13 @@ class Timer(isDaemon: Boolean) {
     javaTimer.schedule(toTask(f), when.toDate)
   }
 
-  def schedule(when: Time, period: Duration)(f: Unit) {
+  def schedule(when: Time, period: Duration)(f: => Unit) {
     javaTimer.schedule(toTask(f), when.toDate, period.inMillis)
   }
 
-  private def toTask(f: => Unit) = new java.util.TimerTask {
+  def stop() = javaTimer.cancel()
+
+  private[this] def toTask(f: => Unit) = new java.util.TimerTask {
     def run {
       f
     }
