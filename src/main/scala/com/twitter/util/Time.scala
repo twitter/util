@@ -61,6 +61,13 @@ object Time {
     withTimeAt(Time.now)(body)
   }
 
+  def measure(f: => Unit) = {
+    val start = System.currentTimeMillis
+    val result = f
+    val end = System.currentTimeMillis
+    (end - start).millis
+  }
+
   // Wed, 15 Jun 2005 19:00:00 GMT
   def fromRss(rss: String) = parse(rss, rssFormat)
 
