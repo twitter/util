@@ -114,6 +114,7 @@ case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
    * Creates a duration between two times.
    */
   def -(that: Time) = new Duration(this.inMillis - that.inMillis)
+  def since = Time.now - this
 
   /**
    * Gets the current time as Duration since epoch
