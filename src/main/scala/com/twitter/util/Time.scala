@@ -34,9 +34,7 @@ object Time {
   private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
   def now: Time = fn()
-  def never: Time = Time(0.seconds)
-
-  def apply(at: Long): Time = new Time(at)
+  val epoch = Time(0)
 
   def at(datetime: String) = parse(datetime, defaultFormat)
 
@@ -86,37 +84,41 @@ trait TimeControl {
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
-  val at: Long
-  protected def build(at: Long): This
+  def inMillis: Long
+  protected def build(inMillis: Long): This
   def inDays = (inHours / 24)
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
-  def inSeconds = (at / 1000L).toInt
-  def inMillis = at
-  def inMilliseconds = at
-  def inTimeUnit = (inMilliseconds, TimeUnit.MILLISECONDS)
-  def +(delta: Duration): This = build(at + delta.inMillis)
-  def -(delta: Duration): This = build(at - delta.inMillis)
-  def max[A <: TimeLike[_]](that: A): This = build(this.at max that.at)
-  def min[A <: TimeLike[_]](that: A): This = build(this.at min that.at)
+  def inSeconds = (inMillis / 1000L).toInt
+  def inMilliseconds = inMillis
+  def inTimeUnit = (inMillis, TimeUnit.MILLISECONDS)
+  def +(delta: Duration): This = build(inMillis + delta.inMillis)
+  def -(delta: Duration): This = build(inMillis - delta.inMillis)
+  def max[A <: TimeLike[_]](that: A): This = build(this.inMillis max that.inMillis)
+  def min[A <: TimeLike[_]](that: A): This = build(this.inMillis min that.inMillis)
 }
 
-class Time(val at: Long) extends TimeLike[Time] with Ordered[Time] {
-  protected override def build(at: Long) = new Time(at)
+case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
+  protected override def build(inMillis: Long) = Time(inMillis)
 
   override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
 
-  def compare(that: Time) = (this.at compare that.at)
+  def compare(that: Time) = (this.inMillis compare that.inMillis)
 
-  override def equals(other: Any) = other match {
-    case that: Time => this.at == that.at
-    case _ => false
-  }
+  /**
+   * Equality within a delta.
+   */
+  def moreOrLessEquals(other: Time, maxDelta: Duration) = (this - other).abs <= maxDelta
 
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = new Duration(this.at - that.at)
+  def -(that: Time) = new Duration(this.inMillis - that.inMillis)
+
+  /**
+   * Gets the current time as Duration since epoch
+   */
+  def fromEpoch = this - Time.epoch
 
   def toDate = new Date(inMillis)
 }
@@ -136,24 +138,24 @@ object Duration {
     }
 }
 
-class Duration(val at: Long) extends TimeLike[Duration] with Ordered[Duration] {
-  protected def build(at: Long) = new Duration(at)
+case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Duration] {
+  protected def build(inMillis: Long) = Duration(inMillis)
 
   override def toString = {
-    if (at < 1000) inMillis + ".milliseconds"
+    if (inMillis < 1000) inMillis + ".milliseconds"
     else inSeconds + ".seconds"
   }
 
-  override def equals(other: Any) = other match {
-    case that: Duration => this.at == that.at
-    case _ => false
-  }
+  /**
+   * Equality within a delta.
+   */
+  def moreOrLessEquals(other: Duration, maxDelta: Duration) = (this - other).abs <= maxDelta
 
-  def compare(that: Duration) = (this.at compare that.at)
+  def compare(that: Duration) = (this.inMillis compare that.inMillis)
 
-  def *(x: Long) = new Duration(at * x)
+  def *(x: Long) = new Duration(inMillis * x)
   def fromNow = Time.now + this
   def ago = Time.now - this
-  def afterEpoch = new Time(at)
-  def abs = if (at < 0) new Duration(-at) else this
+  def afterEpoch = Time.epoch + this
+  def abs = if (inMillis < 0) Duration(-inMillis) else this
 }
