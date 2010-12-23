@@ -17,7 +17,7 @@
 package com.twitter
 package conversions
 
-import com.twitter.util.{Duration, Time}
+import com.twitter.util.{Duration, TimeLike}
 
 object time {
   class RichWholeNumber(wrapped: Long) {
@@ -39,5 +39,5 @@ object time {
   implicit def intToTimeableNumber(i: Int) = new RichWholeNumber(i)
   implicit def longToTimeableNumber(l: Long) = new RichWholeNumber(l)
 
-  implicit def durationToLong(duration: Duration) = duration.inMillis
+  implicit def timelikeToLong(time: TimeLike[_]) = time.inMillis
 }
