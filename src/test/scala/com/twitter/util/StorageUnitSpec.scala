@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import org.specs.Specification
-import com.twitter.util.StorageUnitConversions._
+import com.twitter.conversions.storage._
 
 object StorageUnitSpec extends Specification {
   "StorageUnit" should {
