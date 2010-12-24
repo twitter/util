@@ -34,7 +34,6 @@ import scala.tools.nsc.util.{BatchSourceFile, Position}
  * Evaluate a file or string and return the result.
  */
 object Eval {
-  // do not look at the man behind the curtain!
   private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
   private val libPath = jarPathOfClass("scala.ScalaObject")
 
@@ -161,7 +160,6 @@ object Eval {
       }
 
       override def reset {
-        // grumpy comment about these side-effect methods not taking parens.
         super.reset
         messages.clear()
       }
@@ -176,7 +174,6 @@ object Eval {
     val classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
 
     def reset() {
-      // grumpy comment about these side-effect methods not taking parens.
       virtualDirectory.clear
       reporter.reset
     }
@@ -211,5 +208,6 @@ object Eval {
     }
   }
 
-  class CompilerException(val messages: List[List[String]]) extends Exception("Compiler exception")
+  class CompilerException(val messages: List[List[String]]) extends Exception(
+    "Compiler exception " + messages.map(_.mkString("\n")).mkString("\n"))
 }

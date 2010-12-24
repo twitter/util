@@ -21,8 +21,7 @@ import com.twitter.util.StorageUnit
 
 object storage {
   class RichWholeNumber(wrapped: Long) {
-    // FIXME what is gained by stating a value judgement about negative storage units?
-    require(wrapped > 0, "Negative storage units are useful but unsupported")
+    require(wrapped > 0, "Negative storage units are unsupported")
 
     def byte      = bytes
     def bytes     = new StorageUnit(wrapped)
