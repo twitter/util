@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import com.twitter.util.TimeConversions._
+import com.twitter.conversions.time._
 import scala.collection.mutable.ArrayBuffer
 
 object Future {

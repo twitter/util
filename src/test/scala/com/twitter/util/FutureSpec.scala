@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import org.specs.Specification
-import com.twitter.util.TimeConversions._
+import com.twitter.conversions.time._
 
 object FutureSpec extends Specification {
   "Promise" should {

@@ -1,13 +1,34 @@
 package com.twitter.util
 
 import org.specs.Specification
-import com.twitter.util.TimeConversions._
+import com.twitter.conversions.time._
 
 object DurationSpec extends Specification {
   "Duration" should {
     "*" in {
       1.second * 2 mustEqual 2.seconds
       500.milliseconds * 4 mustEqual 2.seconds
+    }
+
+    "/" in {
+      10.seconds / 2 mustEqual 5.seconds
+    }
+
+    "%" in {
+      10.seconds % 3.seconds mustEqual 1.second
+      1.second % 300.millis mustEqual 100.millis
+    }
+
+    "floor" in {
+      60.seconds.floor(1.minute) mustEqual 1.minute
+      100.seconds.floor(1.minute) mustEqual 1.minute
+      119.seconds.floor(1.minute) mustEqual 1.minute
+      120.seconds.floor(1.minute) mustEqual 2.minutes
+    }
+
+    "abs" in {
+      10.seconds.abs mustEqual 10.seconds
+      (-10).seconds.abs mustEqual 10.seconds
     }
 
     "afterEpoch" in {
@@ -29,6 +50,10 @@ object DurationSpec extends Specification {
     "compare" in {
       10.seconds must be_<(11.seconds)
       10.seconds must be_<(11000.milliseconds)
+      11.seconds must be_>(10.seconds)
+      11000.milliseconds must be_>(10.seconds)
+      10.seconds must be_>=(10.seconds)
+      10.seconds must be_<=(10.seconds)
       new Duration(Long.MaxValue) must be_>(0.seconds)
     }
 
@@ -48,11 +73,6 @@ object DurationSpec extends Specification {
     "min" in {
       10.seconds min 5.seconds mustEqual 5.seconds
       5.seconds min 10.seconds mustEqual 5.seconds
-    }
-
-    "abs" in {
-      10.seconds.abs mustEqual 10.seconds
-      (-10).seconds.abs mustEqual 10.seconds
     }
 
     "moreOrLessEquals" in {

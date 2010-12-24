@@ -28,15 +28,17 @@ import java.util.concurrent.TimeUnit
 object Time {
   import com.twitter.conversions.time._
 
-  private val defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
-  private val rssFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z")
+  private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
+  private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
   private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
   def now: Time = fn()
   val epoch = Time(0)
 
-  def at(datetime: String) = parse(datetime, defaultFormat)
+  def apply(date: Date): Time = Time(date.getTime)
+
+  def at(datetime: String) = defaultFormat.parse(datetime)
 
   def withTimeAt[A](time: Time)(body: TimeControl => A): A = {
     val prevFn = Time.fn
@@ -58,29 +60,40 @@ object Time {
     withTimeAt(Time.now)(body)
   }
 
-  def measure(f: => Unit) = {
-    val start = System.currentTimeMillis
+  def measure(f: => Unit): Duration = {
+    val start = now
     val result = f
-    val end = System.currentTimeMillis
-    (end - start).millis
+    val end = now
+    end - start
   }
 
   // Wed, 15 Jun 2005 19:00:00 GMT
-  def fromRss(rss: String) = parse(rss, rssFormat)
+  def fromRss(rss: String) = rssFormat.parse(rss)
+}
 
-  private def parse(str: String, format: SimpleDateFormat): Time = {
+trait TimeControl {
+  def advance(delta: Duration)
+}
+
+/**
+ * A thread-safe wrapper around a SimpleDateFormat object.
+ */
+class TimeFormat(pattern: String) {
+  private val format = new SimpleDateFormat(pattern)
+
+  def parse(str: String): Time = {
     // SimpleDateFormat is not thread-safe
     val date = format.synchronized(format.parse(str))
     if (date == null) {
       throw new Exception("Unable to parse date-time: " + str)
     } else {
-      new Time(date.getTime())
+      Time(date.getTime())
     }
   }
-}
 
-trait TimeControl {
-  def advance(delta: Duration)
+  def format(time: Time): String = {
+    format.synchronized(format.format(time.toDate))
+  }
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
@@ -96,12 +109,28 @@ trait TimeLike[+This <: TimeLike[This]] {
   def -(delta: Duration): This = build(inMillis - delta.inMillis)
   def max[A <: TimeLike[_]](that: A): This = build(this.inMillis max that.inMillis)
   def min[A <: TimeLike[_]](that: A): This = build(this.inMillis min that.inMillis)
+
+  /**
+   * Rounds down to the nearest multiple of the given duration.  For example:
+   * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a 
+   * Time object with duration greater than 1.hour can have unexpected
+   * results because of timezones.
+   */
+  def floor(x: Duration) = build((inMillis / x.inMillis) * x.inMillis)
 }
 
 case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
   protected override def build(inMillis: Long) = Time(inMillis)
 
-  override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
+  /**
+   * Renders this time using the default format.
+   */
+  override def toString = Time.defaultFormat.format(this)
+
+  /**
+   * Formats this Time according to the given SimpleDateFormat pattern.
+   */
+  def format(pattern: String) = new TimeFormat(pattern).format(this)
 
   def compare(that: Time) = (this.inMillis compare that.inMillis)
 
@@ -153,9 +182,16 @@ case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Dura
 
   def compare(that: Duration) = (this.inMillis compare that.inMillis)
 
-  def *(x: Long) = new Duration(inMillis * x)
+  def *(x: Long) = Duration(inMillis * x)
+  def /(x: Long) = Duration(inMillis / x)
+  def %(x: Duration) = Duration(inMillis % x.inMillis)
+
+  /**
+   * Converts negative durations to positive durations.
+   */
+  def abs = if (inMillis < 0) Duration(-inMillis) else this
+
   def fromNow = Time.now + this
   def ago = Time.now - this
   def afterEpoch = Time.epoch + this
-  def abs = if (inMillis < 0) Duration(-inMillis) else this
 }

@@ -4,7 +4,7 @@ A bunch of idiomatic, small General Purpose tools. This is totally experimental 
 
 ## Time
 
-    import com.twitter.util.TimeConversions._
+    import com.twitter.conversions.time._
 
     val duration1 = 1.second
     val duration2 = 2.minutes
