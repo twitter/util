@@ -100,5 +100,43 @@ object TimeSpec extends Specification {
       t0.floor(1.minute) mustEqual format.parse("2010-12-24 11:04:00.000")
       t0.floor(1.hour) mustEqual format.parse("2010-12-24 11:00:00.000")
     }
+
+    "since" in {
+      val t0 = Time.now
+      val t1 = t0 + 10.seconds
+      t1.since(t0) mustEqual 10.seconds
+      t0.since(t1) mustEqual (-10).seconds
+    }
+
+    "sinceEpoch" in {
+      val t0 = Time.epoch + 100.hours
+      t0.sinceEpoch mustEqual 100.hours
+    }
+
+    "sinceNow" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val t0 = Time.now + 100.hours
+        t0.sinceNow mustEqual 100.hours
+      }
+    }
+
+    "until" in {
+      val t0 = Time.now
+      val t1 = t0 + 10.seconds
+      t0.until(t1) mustEqual 10.seconds
+      t1.until(t0) mustEqual (-10).seconds
+    }
+
+    "untilEpoch" in {
+      val t0 = Time.epoch - 100.hours
+      t0.untilEpoch mustEqual 100.hours
+    }
+
+    "untilNow" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val t0 = Time.now - 100.hours
+        t0.untilNow mustEqual 100.hours
+      }
+    }
   }
 }

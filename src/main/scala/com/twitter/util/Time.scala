@@ -34,6 +34,10 @@ object Time {
   private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
   def now: Time = fn()
+
+  /**
+   * The unix epoch.  Times are measured relative to this.
+   */
   val epoch = Time(0)
 
   def apply(date: Date): Time = Time(date.getTime)
@@ -112,7 +116,7 @@ trait TimeLike[+This <: TimeLike[This]] {
 
   /**
    * Rounds down to the nearest multiple of the given duration.  For example:
-   * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a 
+   * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
    * Time object with duration greater than 1.hour can have unexpected
    * results because of timezones.
    */
@@ -145,10 +149,44 @@ case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
   def -(that: Time) = new Duration(this.inMillis - that.inMillis)
 
   /**
-   * Gets the current time as Duration since epoch
+   * Duration that has passed between the given time and the current time.
    */
+  def since(that: Time) = this - that
+
+  /**
+   * Duration that has passed between the epoch and the current time.
+   */
+  def sinceEpoch = since(Time.epoch)
+
+  /**
+   * Gets the current time as Duration since now
+   */
+  def sinceNow = since(Time.now)
+
+  /**
+   * Duration that has passed between the epoch and the current time.
+   */
+  @deprecated("use sinceEpoch")
   def fromEpoch = this - Time.epoch
 
+  /**
+   * Duration between current time and the givne time.
+   */
+  def until(that: Time) = that - this
+
+  /**
+   * Gets the duration between this time and the epoch.
+   */
+  def untilEpoch = until(Time.epoch)
+
+  /**
+   * Gets the duration between this time and now.
+   */
+  def untilNow = until(Time.now)
+
+  /**
+   * Converts this Time object to a java.util.Date
+   */
   def toDate = new Date(inMillis)
 }
 
