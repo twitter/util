@@ -7,6 +7,9 @@ object Future {
   val DEFAULT_TIMEOUT = Long.MaxValue.millis
   val Done = apply(())
 
+  def value[A](a: A) = Future(a)
+  def exception[A](e: Throwable) = Future { throw e }
+
   /**
    * A factory function to "lift" computations into the Future monad. It will catch
    * exceptions and wrap them in the Throw[_] type. Non-exceptional values are wrapped
