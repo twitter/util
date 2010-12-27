@@ -203,6 +203,8 @@ object Duration {
       case TimeUnit.MICROSECONDS => value.microseconds
       case TimeUnit.NANOSECONDS  => value.nanoseconds
     }
+
+  def since(time: Time) = Time.now.since(time)
 }
 
 case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Duration] {
