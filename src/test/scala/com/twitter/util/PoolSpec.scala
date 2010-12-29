@@ -2,7 +2,7 @@ package com.twitter.util
 
 import scala.collection.mutable
 import org.specs.Specification
-import com.twitter.util.TimeConversions._
+import com.twitter.conversions.time._
 
 object PoolSpec extends Specification {
   "SimplePool" should {

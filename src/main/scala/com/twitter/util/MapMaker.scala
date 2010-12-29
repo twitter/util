@@ -2,7 +2,6 @@ package com.twitter.util
 
 import java.util.concurrent.TimeUnit
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
-import com.google.common.base.Function
 import collection.JavaConversions.JConcurrentMapWrapper
 
 object MapMaker {
@@ -27,7 +26,7 @@ object MapMaker {
 
     def apply(): collection.mutable.ConcurrentMap[K, V] = {
       val javaMap = valueOperation map { valueOperation =>
-        mapMaker.makeComputingMap[K, V](new Function[K, V] {
+        mapMaker.makeComputingMap[K, V](new com.google.common.base.Function[K, V] {
           def apply(k: K) = valueOperation(k)
         })
       } getOrElse(mapMaker.makeMap())
