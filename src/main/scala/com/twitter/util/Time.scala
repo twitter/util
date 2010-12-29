@@ -136,7 +136,7 @@ trait TimeLike[+This <: TimeLike[This]] {
    * Time object with duration greater than 1.hour can have unexpected
    * results because of timezones.
    */
-  def floor(x: Duration) = build((inMillis / x.inMillis) * x.inMillis)
+  def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
 }
 
 class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
@@ -289,7 +289,7 @@ class Duration protected(protected val nanos: Long) extends TimeLike[Duration] w
   /**
    * Converts negative durations to positive durations.
    */
-  def abs = if (nanos < 0) Duration(-nanos) else this
+  def abs = if (nanos < 0) new Duration(-nanos) else this
 
   def fromNow = Time.now + this
   def ago = Time.now - this
