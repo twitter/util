@@ -4,7 +4,7 @@ import util.Random
 
 import org.specs.Specification
 
-object U64Spec extends Specification {
+class U64Spec extends Specification {
   import U64._
 
   "comparable" in {
@@ -93,7 +93,7 @@ object U64Spec extends Specification {
   "ids" should {
     "survive conversions" in {
       val rng = new Random
-      
+
       (0 until 10000).foreach { _ =>
         val id = rng.nextLong
         id must be equalTo(id.toU64ByteArray.toU64Long)

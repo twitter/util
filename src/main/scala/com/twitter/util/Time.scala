@@ -28,15 +28,23 @@ import java.util.concurrent.TimeUnit
 object Time {
   import com.twitter.conversions.time._
 
-  private val defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z")
-  private val rssFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z")
+  private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
+  private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
   private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
 
+  def apply(millis: Long) = new Time(millis)
+
   def now: Time = fn()
+
+  /**
+   * The unix epoch.  Times are measured relative to this.
+   */
   val epoch = Time(0)
 
-  def at(datetime: String) = parse(datetime, defaultFormat)
+  def apply(date: Date): Time = Time(date.getTime)
+
+  def at(datetime: String) = defaultFormat.parse(datetime)
 
   def withTimeAt[A](time: Time)(body: TimeControl => A): A = {
     val prevFn = Time.fn
@@ -58,31 +66,40 @@ object Time {
     withTimeAt(Time.now)(body)
   }
 
-  def measure(f: => Unit) = {
-    val start = System.currentTimeMillis
+  def measure(f: => Unit): Duration = {
+    val start = now
     val result = f
-    val end = System.currentTimeMillis
-    (end - start).millis
+    val end = now
+    end - start
   }
 
   // Wed, 15 Jun 2005 19:00:00 GMT
-  def fromRss(rss: String) = parse(rss, rssFormat)
+  def fromRss(rss: String) = rssFormat.parse(rss)
+}
 
-  private def parse(str: String, format: SimpleDateFormat): Time = {
+trait TimeControl {
+  def advance(delta: Duration)
+}
+
+/**
+ * A thread-safe wrapper around a SimpleDateFormat object.
+ */
+class TimeFormat(pattern: String) {
+  private val format = new SimpleDateFormat(pattern)
+
+  def parse(str: String): Time = {
     // SimpleDateFormat is not thread-safe
     val date = format.synchronized(format.parse(str))
     if (date == null) {
       throw new Exception("Unable to parse date-time: " + str)
     } else {
-      new Time(date.getTime())
+      Time(date.getTime())
     }
   }
 
-  def apply(millis: Long) = new Time(millis)
-}
-
-trait TimeControl {
-  def advance(delta: Duration)
+  def format(time: Time): String = {
+    format.synchronized(format.format(time.toDate))
+  }
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
@@ -95,7 +112,7 @@ trait TimeLike[+This <: TimeLike[This]] {
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
   def inSeconds = (inMilliseconds / 1000L).toInt
-  def inTimeUnit = (inMilliseconds, TimeUnit.MILLISECONDS)
+  def inTimeUnit = (inNanoseconds, TimeUnit.NANOSECONDS)
   def +(delta: Duration): This = build(inNanoseconds + delta.inNanoseconds)
   def -(delta: Duration): This = build(inNanoseconds - delta.inNanoseconds)
   def max[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds max that.inNanoseconds)
@@ -112,6 +129,14 @@ trait TimeLike[+This <: TimeLike[This]] {
         false
     }
   }
+
+  /**
+   * Rounds down to the nearest multiple of the given duration.  For example:
+   * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
+   * Time object with duration greater than 1.hour can have unexpected
+   * results because of timezones.
+   */
+  def floor(x: Duration) = build((inMillis / x.inMillis) * x.inMillis)
 }
 
 class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
@@ -119,7 +144,15 @@ class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
 
   def inMilliseconds = millis
 
-  override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
+  /**
+   * Renders this time using the default format.
+   */
+  override def toString = Time.defaultFormat.format(this)
+
+  /**
+   * Formats this Time according to the given SimpleDateFormat pattern.
+   */
+  def format(pattern: String) = new TimeFormat(pattern).format(this)
 
   def compare(that: Time) = (this.inMilliseconds compare that.inMilliseconds)
 
@@ -133,13 +166,45 @@ class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
    */
   def -(that: Time) = new Duration(this.inNanoseconds - that.inNanoseconds)
 
-  def since = Time.now - this
+  /**
+   * Duration that has passed between the given time and the current time.
+   */
+  def since(that: Time) = this - that
 
   /**
-   * Gets the current time as Duration since epoch
+   * Duration that has passed between the epoch and the current time.
    */
+  def sinceEpoch = since(Time.epoch)
+
+  /**
+   * Gets the current time as Duration since now
+   */
+  def sinceNow = since(Time.now)
+
+  /**
+   * Duration that has passed between the epoch and the current time.
+   */
+  @deprecated("use sinceEpoch")
   def fromEpoch = this - Time.epoch
 
+  /**
+   * Duration between current time and the givne time.
+   */
+  def until(that: Time) = that - this
+
+  /**
+   * Gets the duration between this time and the epoch.
+   */
+  def untilEpoch = until(Time.epoch)
+
+  /**
+   * Gets the duration between this time and now.
+   */
+  def untilNow = until(Time.now)
+
+  /**
+   * Converts this Time object to a java.util.Date
+   */
   def toDate = new Date(inMillis)
 }
 
@@ -156,6 +221,8 @@ object Duration {
       case TimeUnit.MICROSECONDS => value.microseconds
       case TimeUnit.NANOSECONDS  => value.nanoseconds
     }
+
+  def since(time: Time) = Time.now.since(time)
 
 
 
@@ -216,8 +283,15 @@ class Duration protected(protected val nanos: Long) extends TimeLike[Duration] w
   def compare(that: Duration) = (this.nanos compare that.nanos)
 
   def *(x: Long) = new Duration(nanos * x)
+  def /(x: Long) = new Duration(nanos / x)
+  def %(x: Duration) = new Duration(nanos % x.nanos)
+
+  /**
+   * Converts negative durations to positive durations.
+   */
+  def abs = if (nanos < 0) Duration(-nanos) else this
+
   def fromNow = Time.now + this
   def ago = Time.now - this
   def afterEpoch = Time.epoch + this
-  def abs = if (nanos < 0) new Duration(-nanos) else this
 }

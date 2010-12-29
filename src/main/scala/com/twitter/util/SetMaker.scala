@@ -4,7 +4,6 @@ import scala.collection.mutable.{Map, Set}
 import java.util.concurrent.TimeUnit
 import collection.JavaConversions.JConcurrentMapWrapper
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
-import com.google.common.base.Function
 
 object SetMaker {
   def apply[A](f: Config[A] => Any): Set[A] = {

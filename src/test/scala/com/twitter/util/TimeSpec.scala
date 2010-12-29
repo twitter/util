@@ -89,5 +89,54 @@ object TimeSpec extends Specification {
       now.moreOrLessEquals(now + 2.seconds, 1.second) must beFalse
       now.moreOrLessEquals(now - 2.seconds, 1.second) must beFalse
     }
+
+    "floor" in {
+      val format = new TimeFormat("yyyy-MM-dd HH:mm:ss.SSS")
+      val t0 = format.parse("2010-12-24 11:04:07.567")
+      t0.floor(1.millisecond) mustEqual t0
+      t0.floor(10.milliseconds) mustEqual format.parse("2010-12-24 11:04:07.560")
+      t0.floor(1.second) mustEqual format.parse("2010-12-24 11:04:07.000")
+      t0.floor(5.second) mustEqual format.parse("2010-12-24 11:04:05.000")
+      t0.floor(1.minute) mustEqual format.parse("2010-12-24 11:04:00.000")
+      t0.floor(1.hour) mustEqual format.parse("2010-12-24 11:00:00.000")
+    }
+
+    "since" in {
+      val t0 = Time.now
+      val t1 = t0 + 10.seconds
+      t1.since(t0) mustEqual 10.seconds
+      t0.since(t1) mustEqual (-10).seconds
+    }
+
+    "sinceEpoch" in {
+      val t0 = Time.epoch + 100.hours
+      t0.sinceEpoch mustEqual 100.hours
+    }
+
+    "sinceNow" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val t0 = Time.now + 100.hours
+        t0.sinceNow mustEqual 100.hours
+      }
+    }
+
+    "until" in {
+      val t0 = Time.now
+      val t1 = t0 + 10.seconds
+      t0.until(t1) mustEqual 10.seconds
+      t1.until(t0) mustEqual (-10).seconds
+    }
+
+    "untilEpoch" in {
+      val t0 = Time.epoch - 100.hours
+      t0.untilEpoch mustEqual 100.hours
+    }
+
+    "untilNow" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val t0 = Time.now - 100.hours
+        t0.untilNow mustEqual 100.hours
+      }
+    }
   }
 }
