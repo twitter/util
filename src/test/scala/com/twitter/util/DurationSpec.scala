@@ -114,5 +114,15 @@ object DurationSpec extends Specification {
       rv mustEqual "Faunts"
       duration must be_>=(10.milliseconds)
     }
+
+    "time nanoseconds" in {
+      val (rv, duration) = Duration.inNanoseconds {
+        // or 10 grace hoppers, as i prefer to call them. :)
+        Thread.sleep(0, 10)
+        "M4 (part II)"
+      }
+      rv mustEqual "M4 (part II)"
+      duration must be_>=(10.nanoseconds)
+    }
   }
 }

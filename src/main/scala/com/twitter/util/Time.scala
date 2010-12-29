@@ -33,6 +33,7 @@ object Time {
 
   private[Time] var fn: () => Time = () => Time(System.currentTimeMillis)
 
+  // FIXME: should probably be called "fromMilliseconds" or something.
   def apply(millis: Long) = {
     val nanos = millis * 1000000L
     // let Long.MaxValue pass thru unchanged
