@@ -77,6 +77,8 @@ object Time {
       new Time(date.getTime())
     }
   }
+
+  def apply(millis: Long) = new Time(millis)
 }
 
 trait TimeControl {
@@ -84,26 +86,42 @@ trait TimeControl {
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
-  def inMillis: Long
-  protected def build(inMillis: Long): This
+  def inMilliseconds: Long
+
+  def inNanoseconds: Long = inMilliseconds * 1000000L
+  def inMicroseconds: Long = inNanoseconds / 1000L
+  protected def build(nanos: Long): This
   def inDays = (inHours / 24)
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
-  def inSeconds = (inMillis / 1000L).toInt
-  def inMilliseconds = inMillis
-  def inTimeUnit = (inMillis, TimeUnit.MILLISECONDS)
-  def +(delta: Duration): This = build(inMillis + delta.inMillis)
-  def -(delta: Duration): This = build(inMillis - delta.inMillis)
-  def max[A <: TimeLike[_]](that: A): This = build(this.inMillis max that.inMillis)
-  def min[A <: TimeLike[_]](that: A): This = build(this.inMillis min that.inMillis)
+  def inSeconds = (inMilliseconds / 1000L).toInt
+  def inTimeUnit = (inMilliseconds, TimeUnit.MILLISECONDS)
+  def +(delta: Duration): This = build(inNanoseconds + delta.inNanoseconds)
+  def -(delta: Duration): This = build(inNanoseconds - delta.inNanoseconds)
+  def max[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds max that.inNanoseconds)
+  def min[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds min that.inNanoseconds)
+
+  // backward compat:
+  def inMillis = inMilliseconds
+
+  override def equals(other: Any) = {
+    other match {
+      case x: TimeLike[_] =>
+        inNanoseconds == x.inNanoseconds
+      case x =>
+        false
+    }
+  }
 }
 
-case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
-  protected override def build(inMillis: Long) = Time(inMillis)
+class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
+  protected override def build(nanos: Long) = Time(nanos / 1000000L)
+
+  def inMilliseconds = millis
 
   override def toString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(toDate)
 
-  def compare(that: Time) = (this.inMillis compare that.inMillis)
+  def compare(that: Time) = (this.inMilliseconds compare that.inMilliseconds)
 
   /**
    * Equality within a delta.
@@ -113,7 +131,8 @@ case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = new Duration(this.inMillis - that.inMillis)
+  def -(that: Time) = new Duration(this.inNanoseconds - that.inNanoseconds)
+
   def since = Time.now - this
 
   /**
@@ -137,14 +156,56 @@ object Duration {
       case TimeUnit.MICROSECONDS => value.microseconds
       case TimeUnit.NANOSECONDS  => value.nanoseconds
     }
+
+
+
+
+
+
+    /**
+     * Returns how long it took, in milliseconds, to run the function f.
+     *
+    def duration[T](f: => T): (T, Long) = {
+      val start = Time.now
+      val rv = f
+      val duration = Time.now - start
+      (rv, duration.inMilliseconds)
+    }
+
+    **
+     * Returns how long it took, in microseconds, to run the function f.
+     *
+    def durationMicros[T](f: => T): (T, Long) = {
+      val (rv, duration) = durationNanos(f)
+      (rv, duration / 1000)
+    }
+
+    **
+     * Returns how long it took, in nanoseconds, to run the function f.
+     *
+    def durationNanos[T](f: => T): (T, Long) = {
+      val start = System.nanoTime
+      val rv = f
+      val duration = System.nanoTime - start
+      (rv, duration)
+    }
+    */
 }
 
-case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Duration] {
-  protected def build(inMillis: Long) = Duration(inMillis)
+class Duration protected(protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
+  override def inNanoseconds = nanos
+  def inMilliseconds = nanos / 1000000L
+
+  override def build(nanos: Long) = new Duration(nanos)
 
   override def toString = {
-    if (inMillis < 1000) inMillis + ".milliseconds"
-    else inSeconds + ".seconds"
+    if (inNanoseconds < 1000000) {
+      inNanoseconds + ".nanoseconds"
+    } else if (inMilliseconds < 1000) {
+      inMilliseconds + ".milliseconds"
+    } else {
+      inSeconds + ".seconds"
+    }
   }
 
   /**
@@ -152,11 +213,11 @@ case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Dura
    */
   def moreOrLessEquals(other: Duration, maxDelta: Duration) = (this - other).abs <= maxDelta
 
-  def compare(that: Duration) = (this.inMillis compare that.inMillis)
+  def compare(that: Duration) = (this.nanos compare that.nanos)
 
-  def *(x: Long) = new Duration(inMillis * x)
+  def *(x: Long) = new Duration(nanos * x)
   def fromNow = Time.now + this
   def ago = Time.now - this
   def afterEpoch = Time.epoch + this
-  def abs = if (inMillis < 0) Duration(-inMillis) else this
+  def abs = if (nanos < 0) new Duration(-nanos) else this
 }
