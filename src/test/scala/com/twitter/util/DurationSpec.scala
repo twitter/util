@@ -1,5 +1,22 @@
+/*
+ * Copyright 2010 Twitter Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.twitter.util
 
+import java.util.concurrent.TimeUnit
 import org.specs.Specification
 import com.twitter.conversions.time._
 
@@ -80,6 +97,22 @@ object DurationSpec extends Specification {
       10.seconds.moreOrLessEquals(11.seconds, 1.second) must beTrue
       10.seconds.moreOrLessEquals(8.seconds, 1.second) must beFalse
       10.seconds.moreOrLessEquals(12.seconds, 1.second) must beFalse
+    }
+
+    "inTimeUnit" in {
+      23.nanoseconds.inTimeUnit mustEqual ((23, TimeUnit.NANOSECONDS))
+      23.microseconds.inTimeUnit mustEqual ((23000, TimeUnit.NANOSECONDS))
+      23.milliseconds.inTimeUnit mustEqual ((23, TimeUnit.MILLISECONDS))
+      23.seconds.inTimeUnit mustEqual ((23, TimeUnit.SECONDS))
+    }
+
+    "time milliseconds" in {
+      val (rv, duration) = Duration.inMilliseconds {
+        Thread.sleep(10)
+        "Faunts"
+      }
+      rv mustEqual "Faunts"
+      duration must be_>=(10.milliseconds)
     }
   }
 }

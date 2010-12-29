@@ -31,9 +31,17 @@ object Time {
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
-  private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
+  private[Time] var fn: () => Time = () => Time(System.currentTimeMillis)
 
-  def apply(millis: Long) = new Time(millis)
+  def apply(millis: Long) = {
+    val nanos = millis * 1000000L
+    // let Long.MaxValue pass thru unchanged
+    if (nanos < 0 && millis > 0) {
+      new Time(Long.MaxValue)
+    } else {
+      new Time(nanos)
+    }
+  }
 
   def now: Time = fn()
 
@@ -103,16 +111,30 @@ class TimeFormat(pattern: String) {
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
-  def inMilliseconds: Long
-
-  def inNanoseconds: Long = inMilliseconds * 1000000L
-  def inMicroseconds: Long = inNanoseconds / 1000L
+  def inNanoseconds: Long
   protected def build(nanos: Long): This
+
+  final private val MILLION = 1000L * 1000L
+  final private val BILLION = 1000L * 1000L * 1000L
+
+  def inMicroseconds: Long = inNanoseconds / 1000L
+  def inMilliseconds: Long = inNanoseconds / MILLION
   def inDays = (inHours / 24)
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
-  def inSeconds = (inMilliseconds / 1000L).toInt
-  def inTimeUnit = (inNanoseconds, TimeUnit.NANOSECONDS)
+  def inSeconds = (inNanoseconds / BILLION).toInt
+
+  def inTimeUnit = {
+    // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
+    if (inNanoseconds % BILLION == 0) {
+      (inSeconds, TimeUnit.SECONDS)
+    } else if (inNanoseconds % MILLION == 0) {
+      (inMilliseconds, TimeUnit.MILLISECONDS)
+    } else {
+      (inNanoseconds, TimeUnit.NANOSECONDS)
+    }
+  }
+
   def +(delta: Duration): This = build(inNanoseconds + delta.inNanoseconds)
   def -(delta: Duration): This = build(inNanoseconds - delta.inNanoseconds)
   def max[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds max that.inNanoseconds)
@@ -139,10 +161,10 @@ trait TimeLike[+This <: TimeLike[This]] {
   def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
 }
 
-class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
+class Time protected(protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] {
   protected override def build(nanos: Long) = Time(nanos / 1000000L)
 
-  def inMilliseconds = millis
+  def inNanoseconds = nanos
 
   /**
    * Renders this time using the default format.
@@ -154,7 +176,7 @@ class Time(millis: Long) extends TimeLike[Time] with Ordered[Time] {
    */
   def format(pattern: String) = new TimeFormat(pattern).format(this)
 
-  def compare(that: Time) = (this.inMilliseconds compare that.inMilliseconds)
+  def compare(that: Time) = (this.nanos compare that.nanos)
 
   /**
    * Equality within a delta.
@@ -224,46 +246,31 @@ object Duration {
 
   def since(time: Time) = Time.now.since(time)
 
+  /**
+   * Returns how long it took, in millisecond granularity, to run the function f.
+   */
+  def inMilliseconds[T](f: => T): (T, Duration) = {
+    val start = Time.now
+    val rv = f
+    val duration = Time.now - start
+    (rv, duration)
+  }
 
-
-
-
-
-    /**
-     * Returns how long it took, in milliseconds, to run the function f.
-     *
-    def duration[T](f: => T): (T, Long) = {
-      val start = Time.now
-      val rv = f
-      val duration = Time.now - start
-      (rv, duration.inMilliseconds)
-    }
-
-    **
-     * Returns how long it took, in microseconds, to run the function f.
-     *
-    def durationMicros[T](f: => T): (T, Long) = {
-      val (rv, duration) = durationNanos(f)
-      (rv, duration / 1000)
-    }
-
-    **
-     * Returns how long it took, in nanoseconds, to run the function f.
-     *
-    def durationNanos[T](f: => T): (T, Long) = {
-      val start = System.nanoTime
-      val rv = f
-      val duration = System.nanoTime - start
-      (rv, duration)
-    }
-    */
+  /**
+   * Returns how long it took, in nanosecond granularity, to run the function f.
+   */
+  def inNanoseconds[T](f: => T): (T, Duration) = {
+    val start = System.nanoTime
+    val rv = f
+    val duration = new Duration(System.nanoTime - start)
+    (rv, duration)
+  }
 }
 
 class Duration protected(protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
-  override def inNanoseconds = nanos
-  def inMilliseconds = nanos / 1000000L
+  def inNanoseconds = nanos
 
-  override def build(nanos: Long) = new Duration(nanos)
+  def build(nanos: Long) = new Duration(nanos)
 
   override def toString = {
     if (inNanoseconds < 1000000) {
