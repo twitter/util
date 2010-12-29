@@ -134,6 +134,9 @@ class Promise[A] extends Future[A] {
 
   def isDefined = result.isDefined
 
+  def setValue(result: A) = update(Return(result))
+  def setException(throwable: Throwable) = update(Throw(throwable))
+
   def update(result: Try[A]) {
     updateIfEmpty(result) || {
       throw new ImmutableResult("Result set multiple times: " + result)
