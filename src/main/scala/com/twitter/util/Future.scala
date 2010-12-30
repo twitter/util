@@ -8,7 +8,7 @@ object Future {
   val Done = apply(())
 
   def value[A](a: A) = Future(a)
-  def exception[A](e: Throwable) = Future { throw e }
+  def exception[A](e: Throwable) = Future[A] { throw e }
 
   /**
    * A factory function to "lift" computations into the Future monad. It will catch

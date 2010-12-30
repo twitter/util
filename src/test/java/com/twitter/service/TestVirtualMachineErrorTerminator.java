@@ -9,7 +9,7 @@ public class TestVirtualMachineErrorTerminator extends TestCase
 {
     private static boolean exitInvoked;
     private static final Object lock = new Object();
-    
+
     static {
         VirtualMachineErrorTerminator.setExitInvoker(new Runnable() {
             public void run() {
@@ -20,11 +20,11 @@ public class TestVirtualMachineErrorTerminator extends TestCase
             }
         });
     }
-    
+
     public void testNotTerminatingWhenNew() {
         assertNotTerminating();
     }
-    
+
     private static void assertNotTerminating() {
         try {
             VirtualMachineErrorTerminator.checkTerminating();
@@ -65,7 +65,7 @@ public class TestVirtualMachineErrorTerminator extends TestCase
         catch(IllegalArgumentException e) {
         }
     }
-    
+
     public void testSecondTerminateIneffective() throws Exception {
         OutOfMemoryError oome1 = new OutOfMemoryError();
         OutOfMemoryError oome2 = new OutOfMemoryError();
