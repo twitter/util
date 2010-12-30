@@ -40,4 +40,6 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   }
 
   def compare(other: StorageUnit) = if (bytes < other.bytes) -1 else (if (bytes > other.bytes) 1 else 0)
+
+  override def toString() = inBytes + ".bytes"
 }
