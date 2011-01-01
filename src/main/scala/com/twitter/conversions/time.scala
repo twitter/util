@@ -20,19 +20,20 @@ package conversions
 import com.twitter.util.{Duration, TimeLike}
 
 object time {
+  final private val BILLION = 1000L * 1000L * 1000L
   class RichWholeNumber(wrapped: Long) {
-    def seconds = new Duration(wrapped * 1000)
+    def seconds = new Duration(wrapped * BILLION)
     def second = seconds
-    def milliseconds = new Duration(wrapped)
+    def milliseconds = new Duration(wrapped * 1000 * 1000)
     def millisecond = milliseconds
-    def microseconds = new Duration(wrapped / 1000)
-    def nanoseconds = new Duration(wrapped / 1000000)
+    def microseconds = new Duration(wrapped * 1000)
+    def nanoseconds = new Duration(wrapped)
     def millis = milliseconds
-    def minutes = new Duration(wrapped * 1000 * 60)
+    def minutes = new Duration(wrapped * BILLION * 60)
     def minute = minutes
-    def hours = new Duration(wrapped * 1000 * 60 * 60)
+    def hours = new Duration(wrapped * BILLION * 60 * 60)
     def hour = hours
-    def days = new Duration(wrapped * 1000 * 60 * 60 * 24)
+    def days = new Duration(wrapped * BILLION * 60 * 60 * 24)
     def day = days
   }
 

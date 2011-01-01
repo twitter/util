@@ -31,7 +31,18 @@ object Time {
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
-  private[Time] var fn: () => Time = () => new Time(System.currentTimeMillis)
+  private[Time] var fn: () => Time = () => Time(System.currentTimeMillis)
+
+  // FIXME: should probably be called "fromMilliseconds" or something.
+  def apply(millis: Long) = {
+    val nanos = millis * 1000000L
+    // let Long.MaxValue pass thru unchanged
+    if (nanos < 0 && millis > 0) {
+      new Time(Long.MaxValue)
+    } else {
+      new Time(nanos)
+    }
+  }
 
   def now: Time = fn()
 
@@ -101,18 +112,46 @@ class TimeFormat(pattern: String) {
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
-  def inMillis: Long
-  protected def build(inMillis: Long): This
+  def inNanoseconds: Long
+  protected def build(nanos: Long): This
+
+  final private val MILLION = 1000L * 1000L
+  final private val BILLION = 1000L * 1000L * 1000L
+
+  def inMicroseconds: Long = inNanoseconds / 1000L
+  def inMilliseconds: Long = inNanoseconds / MILLION
   def inDays = (inHours / 24)
   def inHours = (inMinutes / 60)
   def inMinutes = (inSeconds / 60)
-  def inSeconds = (inMillis / 1000L).toInt
-  def inMilliseconds = inMillis
-  def inTimeUnit = (inMillis, TimeUnit.MILLISECONDS)
-  def +(delta: Duration): This = build(inMillis + delta.inMillis)
-  def -(delta: Duration): This = build(inMillis - delta.inMillis)
-  def max[A <: TimeLike[_]](that: A): This = build(this.inMillis max that.inMillis)
-  def min[A <: TimeLike[_]](that: A): This = build(this.inMillis min that.inMillis)
+  def inSeconds = (inNanoseconds / BILLION).toInt
+
+  def inTimeUnit = {
+    // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
+    if (inNanoseconds % BILLION == 0) {
+      (inSeconds, TimeUnit.SECONDS)
+    } else if (inNanoseconds % MILLION == 0) {
+      (inMilliseconds, TimeUnit.MILLISECONDS)
+    } else {
+      (inNanoseconds, TimeUnit.NANOSECONDS)
+    }
+  }
+
+  def +(delta: Duration): This = build(inNanoseconds + delta.inNanoseconds)
+  def -(delta: Duration): This = build(inNanoseconds - delta.inNanoseconds)
+  def max[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds max that.inNanoseconds)
+  def min[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds min that.inNanoseconds)
+
+  // backward compat:
+  def inMillis = inMilliseconds
+
+  override def equals(other: Any) = {
+    other match {
+      case x: TimeLike[_] =>
+        inNanoseconds == x.inNanoseconds
+      case x =>
+        false
+    }
+  }
 
   /**
    * Rounds down to the nearest multiple of the given duration.  For example:
@@ -120,11 +159,13 @@ trait TimeLike[+This <: TimeLike[This]] {
    * Time object with duration greater than 1.hour can have unexpected
    * results because of timezones.
    */
-  def floor(x: Duration) = build((inMillis / x.inMillis) * x.inMillis)
+  def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
 }
 
-case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
-  protected override def build(inMillis: Long) = Time(inMillis)
+class Time protected(protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] {
+  protected override def build(nanos: Long) = Time(nanos / 1000000L)
+
+  def inNanoseconds = nanos
 
   /**
    * Renders this time using the default format.
@@ -136,7 +177,7 @@ case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
    */
   def format(pattern: String) = new TimeFormat(pattern).format(this)
 
-  def compare(that: Time) = (this.inMillis compare that.inMillis)
+  def compare(that: Time) = (this.nanos compare that.nanos)
 
   /**
    * Equality within a delta.
@@ -146,7 +187,7 @@ case class Time(inMillis: Long) extends TimeLike[Time] with Ordered[Time] {
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = new Duration(this.inMillis - that.inMillis)
+  def -(that: Time) = new Duration(this.inNanoseconds - that.inNanoseconds)
 
   /**
    * Duration that has passed between the given time and the current time.
@@ -205,14 +246,41 @@ object Duration {
     }
 
   def since(time: Time) = Time.now.since(time)
+
+  /**
+   * Returns how long it took, in millisecond granularity, to run the function f.
+   */
+  def inMilliseconds[T](f: => T): (T, Duration) = {
+    val start = Time.now
+    val rv = f
+    val duration = Time.now - start
+    (rv, duration)
+  }
+
+  /**
+   * Returns how long it took, in nanosecond granularity, to run the function f.
+   */
+  def inNanoseconds[T](f: => T): (T, Duration) = {
+    val start = System.nanoTime
+    val rv = f
+    val duration = new Duration(System.nanoTime - start)
+    (rv, duration)
+  }
 }
 
-case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Duration] {
-  protected def build(inMillis: Long) = Duration(inMillis)
+class Duration protected(protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
+  def inNanoseconds = nanos
+
+  def build(nanos: Long) = new Duration(nanos)
 
   override def toString = {
-    if (inMillis < 1000) inMillis + ".milliseconds"
-    else inSeconds + ".seconds"
+    if (inNanoseconds < 1000000) {
+      inNanoseconds + ".nanoseconds"
+    } else if (inMilliseconds < 1000) {
+      inMilliseconds + ".milliseconds"
+    } else {
+      inSeconds + ".seconds"
+    }
   }
 
   /**
@@ -220,16 +288,16 @@ case class Duration(inMillis: Long) extends TimeLike[Duration] with Ordered[Dura
    */
   def moreOrLessEquals(other: Duration, maxDelta: Duration) = (this - other).abs <= maxDelta
 
-  def compare(that: Duration) = (this.inMillis compare that.inMillis)
+  def compare(that: Duration) = (this.nanos compare that.nanos)
 
-  def *(x: Long) = Duration(inMillis * x)
-  def /(x: Long) = Duration(inMillis / x)
-  def %(x: Duration) = Duration(inMillis % x.inMillis)
+  def *(x: Long) = new Duration(nanos * x)
+  def /(x: Long) = new Duration(nanos / x)
+  def %(x: Duration) = new Duration(nanos % x.nanos)
 
   /**
    * Converts negative durations to positive durations.
    */
-  def abs = if (inMillis < 0) Duration(-inMillis) else this
+  def abs = if (nanos < 0) new Duration(-nanos) else this
 
   def fromNow = Time.now + this
   def ago = Time.now - this
