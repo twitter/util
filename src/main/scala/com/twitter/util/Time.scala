@@ -125,7 +125,7 @@ trait TimeLike[+This <: TimeLike[This]] {
   def inMinutes = (inSeconds / 60)
   def inSeconds = (inNanoseconds / BILLION).toInt
 
-  def inTimeUnit = {
+  def inTimeUnit: (Long, TimeUnit) = {
     // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
     if (inNanoseconds % BILLION == 0) {
       (inSeconds, TimeUnit.SECONDS)
