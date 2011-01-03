@@ -4,7 +4,7 @@ import com.twitter.conversions.time._
 import scala.collection.mutable.ArrayBuffer
 
 object Future {
-  val DEFAULT_TIMEOUT = Long.MaxValue.millis
+  val DEFAULT_TIMEOUT = Duration.MaxValue
   val Done = apply(())
 
   def value[A](a: A) = Future(a)

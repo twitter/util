@@ -247,6 +247,11 @@ object Duration {
 
   def since(time: Time) = Time.now.since(time)
 
+  val MaxValue = Long.MaxValue.nanoseconds
+  val MinValue = 0.nanoseconds
+  val forever = MaxValue
+  val eternity = MaxValue
+
   /**
    * Returns how long it took, in millisecond granularity, to run the function f.
    */
