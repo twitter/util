@@ -186,7 +186,7 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = new Duration(this.inNanoseconds - that.inNanoseconds)
+  def -(that: Time) = new Duration(TimeMath.sub(this.inNanoseconds, that.inNanoseconds))
 
   /**
    * Duration that has passed between the given time and the current time.
@@ -252,7 +252,7 @@ object Duration {
       case TimeUnit.MICROSECONDS => NanosPerMicrosecond
       case TimeUnit.NANOSECONDS  => 1L
     }
-    new Duration(value * factor)
+    new Duration(TimeMath.mul(value, factor))
   }
 
   @deprecated("use time.untilNow")
@@ -347,16 +347,11 @@ object TimeMath {
   def mul(a: Long, b: Long) = {
     // there must be a more clever way to do this that is less expensive,
     // but I can't figure out what it is
-    if (a == 0 || b == 0) 0
-    else {
-      val overflow =
-        if ((a ^ b) >= 0)
-          a.abs > (Long.MaxValue / b).abs || b.abs > (Long.MaxValue / a)
-        else
-          a < Long.MaxValue / b || b < Long.MaxValue / a
-      if (overflow) throw new TimeOverflowException(a + " * " + b)
-      else a * b
-    }
+    val bigC = BigInt(a) * BigInt(b)
+    if (bigC > BigInt.MaxLong || bigC < BigInt.MinLong)
+      throw new TimeOverflowException(a + " * " + b)
+    else
+      bigC.toLong
   }
 }
 

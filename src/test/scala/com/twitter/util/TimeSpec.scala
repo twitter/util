@@ -143,7 +143,15 @@ object TimeSpec extends Specification {
   }
 
   "TimeMath" should {
-    val rand = new Random
+    val random = new Random
+    val maxSqrt = 3037000499L
+    
+    def randLong = {
+      if (random.nextInt > 0)
+        random.nextLong % maxSqrt
+      else
+        random.nextLong
+    }
 
     "add" in {
       def test(a: Long, b: Long) {
@@ -155,7 +163,7 @@ object TimeSpec extends Specification {
       }
 
       for (i <- 0 until 1000) {
-        test(rand.nextLong, rand.nextLong)
+        test(randLong, randLong)
       }
     }
 
@@ -169,7 +177,7 @@ object TimeSpec extends Specification {
       }
 
       for (i <- 0 until 1000) {
-        test(rand.nextLong, rand.nextLong)
+        test(randLong, randLong)
       }
     }
 
@@ -183,7 +191,7 @@ object TimeSpec extends Specification {
       }
 
       for (i <- 0 until 1000) {
-        test(rand.nextLong, rand.nextLong)
+        test(randLong, randLong)
       }
     }
   }
