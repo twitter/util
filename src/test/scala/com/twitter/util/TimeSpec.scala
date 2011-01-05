@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import scala.math.BigInt
+import scala.util.Random
 import org.specs.Specification
 import TimeConversions._
 
@@ -136,6 +138,60 @@ object TimeSpec extends Specification {
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now - 100.hours
         t0.untilNow mustEqual 100.hours
+      }
+    }
+  }
+
+  "TimeMath" should {
+    val random = new Random
+    val maxSqrt = 3037000499L
+    
+    def randLong = {
+      if (random.nextInt > 0)
+        random.nextLong % maxSqrt
+      else
+        random.nextLong
+    }
+
+    "add" in {
+      def test(a: Long, b: Long) {
+        val bigC = BigInt(a) + BigInt(b)
+        if (bigC.abs > BigInt.MaxLong)
+          TimeMath.add(a, b) must throwA[TimeOverflowException]
+        else
+          TimeMath.add(a, b) mustEqual bigC.toLong
+      }
+
+      for (i <- 0 until 1000) {
+        test(randLong, randLong)
+      }
+    }
+
+    "sub" in {
+      def test(a: Long, b: Long) {
+        val bigC = BigInt(a) - BigInt(b)
+        if (bigC.abs > BigInt.MaxLong)
+          TimeMath.sub(a, b) must throwA[TimeOverflowException]
+        else
+          TimeMath.sub(a, b) mustEqual bigC.toLong
+      }
+
+      for (i <- 0 until 1000) {
+        test(randLong, randLong)
+      }
+    }
+
+    "mull" in {
+      def test(a: Long, b: Long) {
+        val bigC = BigInt(a) * BigInt(b)
+        if (bigC.abs > BigInt.MaxLong)
+          TimeMath.mul(a, b) must throwA[TimeOverflowException]
+        else
+          TimeMath.mul(a, b) mustEqual bigC.toLong
+      }
+
+      for (i <- 0 until 1000) {
+        test(randLong, randLong)
       }
     }
   }

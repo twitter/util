@@ -18,22 +18,22 @@ package com.twitter
 package conversions
 
 import com.twitter.util.{Duration, TimeLike}
+import java.util.concurrent.TimeUnit
 
 object time {
-  final private val BILLION = 1000L * 1000L * 1000L
   class RichWholeNumber(wrapped: Long) {
-    def seconds = new Duration(wrapped * BILLION)
-    def second = seconds
-    def milliseconds = new Duration(wrapped * 1000 * 1000)
+    def nanoseconds = Duration(wrapped, TimeUnit.NANOSECONDS)
+    def microseconds = Duration(wrapped, TimeUnit.MICROSECONDS)
+    def milliseconds = Duration(wrapped, TimeUnit.MILLISECONDS)
     def millisecond = milliseconds
-    def microseconds = new Duration(wrapped * 1000)
-    def nanoseconds = new Duration(wrapped)
     def millis = milliseconds
-    def minutes = new Duration(wrapped * BILLION * 60)
+    def seconds = Duration(wrapped, TimeUnit.SECONDS)
+    def second = seconds
+    def minutes = Duration(wrapped, TimeUnit.MINUTES)
     def minute = minutes
-    def hours = new Duration(wrapped * BILLION * 60 * 60)
+    def hours = Duration(wrapped, TimeUnit.HOURS)
     def hour = hours
-    def days = new Duration(wrapped * BILLION * 60 * 60 * 24)
+    def days = Duration(wrapped, TimeUnit.DAYS)
     def day = days
   }
 
