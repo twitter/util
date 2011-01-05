@@ -49,7 +49,7 @@ object DurationSpec extends Specification {
     }
 
     "afterEpoch" in {
-      10.seconds.afterEpoch mustEqual Time(10000)
+      10.seconds.afterEpoch mustEqual Time.fromMilliseconds(10000)
     }
 
     "fromNow" in {

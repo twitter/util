@@ -59,7 +59,7 @@ object TimeSpec extends Specification {
       10.seconds.afterEpoch must be_<(11.seconds.afterEpoch)
       10.seconds.afterEpoch must be_==(10.seconds.afterEpoch)
       11.seconds.afterEpoch must be_>(10.seconds.afterEpoch)
-      Time(Long.MaxValue) must be_>(Time.now)
+      Time.fromMilliseconds(Long.MaxValue) must be_>(Time.now)
     }
 
     "+ delta" in {
