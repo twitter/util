@@ -35,7 +35,7 @@ object Time {
 
   // FIXME: should probably be called "fromMilliseconds" or something.
   def apply(millis: Long) = {
-    val nanos = millis * 1000000L
+    val nanos = millis * Duration.NanosPerMillisecond
     // let Long.MaxValue pass thru unchanged
     if (nanos < 0 && millis > 0) {
       new Time(Long.MaxValue)
@@ -112,32 +112,31 @@ class TimeFormat(pattern: String) {
 }
 
 trait TimeLike[+This <: TimeLike[This]] {
+  import Duration._
+
   def inNanoseconds: Long
   protected def build(nanos: Long): This
 
-  final private val MILLION = 1000L * 1000L
-  final private val BILLION = 1000L * 1000L * 1000L
-
-  def inMicroseconds: Long = inNanoseconds / 1000L
-  def inMilliseconds: Long = inNanoseconds / MILLION
-  def inDays = (inHours / 24)
-  def inHours = (inMinutes / 60)
-  def inMinutes = (inSeconds / 60)
-  def inSeconds = (inNanoseconds / BILLION).toInt
+  def inMicroseconds: Long = inNanoseconds / NanosPerMicrosecond
+  def inMilliseconds: Long = inNanoseconds / NanosPerMillisecond
+  def inSeconds: Int = (inNanoseconds / NanosPerSecond).toInt
+  def inMinutes: Int = (inNanoseconds / NanosPerMinute).toInt
+  def inHours: Int = (inNanoseconds / NanosPerHour).toInt
+  def inDays: Int = (inNanoseconds / NanosPerDay).toInt
 
   def inTimeUnit: (Long, TimeUnit) = {
     // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
-    if (inNanoseconds % BILLION == 0) {
+    if (inNanoseconds % NanosPerSecond == 0) {
       (inSeconds, TimeUnit.SECONDS)
-    } else if (inNanoseconds % MILLION == 0) {
+    } else if (inNanoseconds % NanosPerMillisecond == 0) {
       (inMilliseconds, TimeUnit.MILLISECONDS)
     } else {
       (inNanoseconds, TimeUnit.NANOSECONDS)
     }
   }
 
-  def +(delta: Duration): This = build(inNanoseconds + delta.inNanoseconds)
-  def -(delta: Duration): This = build(inNanoseconds - delta.inNanoseconds)
+  def +(delta: Duration): This = build(TimeMath.add(inNanoseconds, delta.inNanoseconds))
+  def -(delta: Duration): This = build(TimeMath.sub(inNanoseconds, delta.inNanoseconds))
   def max[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds max that.inNanoseconds)
   def min[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds min that.inNanoseconds)
 
@@ -162,8 +161,8 @@ trait TimeLike[+This <: TimeLike[This]] {
   def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
 }
 
-class Time protected(protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] {
-  protected override def build(nanos: Long) = Time(nanos / 1000000L)
+class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] {
+  protected override def build(nanos: Long) = new Time(nanos)
 
   def inNanoseconds = nanos
 
@@ -187,7 +186,7 @@ class Time protected(protected val nanos: Long) extends TimeLike[Time] with Orde
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = new Duration(this.inNanoseconds - that.inNanoseconds)
+  def -(that: Time) = new Duration(TimeMath.sub(this.inNanoseconds, that.inNanoseconds))
 
   /**
    * Duration that has passed between the given time and the current time.
@@ -234,21 +233,34 @@ class Time protected(protected val nanos: Long) extends TimeLike[Time] with Orde
 object Duration {
   import com.twitter.conversions.time._
 
-  def fromTimeUnit(value: Long, unit: TimeUnit) =
-    unit match {
-      case TimeUnit.DAYS         => value.days
-      case TimeUnit.HOURS        => value.hours
-      case TimeUnit.MINUTES      => value.minutes
-      case TimeUnit.SECONDS      => value.seconds
-      case TimeUnit.MILLISECONDS => value.milliseconds
-      case TimeUnit.MICROSECONDS => value.microseconds
-      case TimeUnit.NANOSECONDS  => value.nanoseconds
-    }
+  val NanosPerMicrosecond = 1000L
+  val NanosPerMillisecond = NanosPerMicrosecond * 1000L
+  val NanosPerSecond = NanosPerMillisecond * 1000L
+  val NanosPerMinute = NanosPerSecond * 60
+  val NanosPerHour = NanosPerMinute * 60
+  val NanosPerDay = NanosPerHour * 24
 
+  def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
+
+  def apply(value: Long, unit: TimeUnit) = {
+    val factor = unit match {
+      case TimeUnit.DAYS         => NanosPerDay
+      case TimeUnit.HOURS        => NanosPerHour
+      case TimeUnit.MINUTES      => NanosPerMinute
+      case TimeUnit.SECONDS      => NanosPerSecond
+      case TimeUnit.MILLISECONDS => NanosPerMillisecond
+      case TimeUnit.MICROSECONDS => NanosPerMicrosecond
+      case TimeUnit.NANOSECONDS  => 1L
+    }
+    new Duration(TimeMath.mul(value, factor))
+  }
+
+  @deprecated("use time.untilNow")
   def since(time: Time) = Time.now.since(time)
 
   val MaxValue = Long.MaxValue.nanoseconds
   val MinValue = 0.nanoseconds
+  val zero = MinValue
   val forever = MaxValue
   val eternity = MaxValue
 
@@ -273,19 +285,22 @@ object Duration {
   }
 }
 
-class Duration protected(protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
+class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
+  import Duration._
+
   def inNanoseconds = nanos
 
   def build(nanos: Long) = new Duration(nanos)
 
   override def toString = {
-    if (inNanoseconds < 1000000) {
-      inNanoseconds + ".nanoseconds"
-    } else if (inMilliseconds < 1000) {
-      inMilliseconds + ".milliseconds"
-    } else {
+    if (inNanoseconds % NanosPerMinute == 0)
+      inMinutes + ".minutes"
+    else if (inNanoseconds % NanosPerSecond == 0)
       inSeconds + ".seconds"
-    }
+    else if (inNanoseconds % NanosPerMillisecond == 0)
+      inMilliseconds + ".milliseconds"
+    else
+      inNanoseconds + ".nanoseconds"
   }
 
   /**
@@ -295,7 +310,7 @@ class Duration protected(protected val nanos: Long) extends TimeLike[Duration] w
 
   def compare(that: Duration) = (this.nanos compare that.nanos)
 
-  def *(x: Long) = new Duration(nanos * x)
+  def *(x: Long) = new Duration(TimeMath.mul(nanos, x))
   def /(x: Long) = new Duration(nanos / x)
   def %(x: Duration) = new Duration(nanos % x.nanos)
 
@@ -308,3 +323,36 @@ class Duration protected(protected val nanos: Long) extends TimeLike[Duration] w
   def ago = Time.now - this
   def afterEpoch = Time.epoch + this
 }
+
+/**
+ * Checks for overflow
+ */
+object TimeMath {
+  def add(a: Long, b: Long) = {
+    val c = a + b
+    if (((a ^ c) & (b ^ c)) < 0)
+      throw new TimeOverflowException(a + " + " + b)
+    else
+      c
+  }
+
+  def sub(a: Long, b: Long) = {
+    val c = a - b
+    if (((a ^ c) & (-b ^ c)) < 0)
+      throw new TimeOverflowException(a + " - " + b)
+    else
+      c
+  }
+
+  def mul(a: Long, b: Long) = {
+    // there must be a more clever way to do this that is less expensive,
+    // but I can't figure out what it is
+    val bigC = BigInt(a) * BigInt(b)
+    if (bigC > BigInt.MaxLong || bigC < BigInt.MinLong)
+      throw new TimeOverflowException(a + " * " + b)
+    else
+      bigC.toLong
+  }
+}
+
+class TimeOverflowException(msg: String) extends Exception(msg)
