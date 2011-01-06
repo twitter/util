@@ -31,10 +31,13 @@ object Time {
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
-  private[Time] var fn: () => Time = () => Time(System.currentTimeMillis)
+  private[Time] var fn: () => Time = () => Time.fromMilliseconds(System.currentTimeMillis)
 
   // FIXME: should probably be called "fromMilliseconds" or something.
-  def apply(millis: Long) = {
+  @deprecated("use Time.fromMilliseconds(...) instead")
+  def apply(millis: Long) = fromMilliseconds(millis)
+
+  def fromMilliseconds(millis: Long) = {
     val nanos = millis * Duration.NanosPerMillisecond
     // let Long.MaxValue pass thru unchanged
     if (nanos < 0 && millis > 0) {
@@ -49,9 +52,9 @@ object Time {
   /**
    * The unix epoch.  Times are measured relative to this.
    */
-  val epoch = Time(0)
+  val epoch = Time.fromMilliseconds(0)
 
-  def apply(date: Date): Time = Time(date.getTime)
+  def apply(date: Date): Time = Time.fromMilliseconds(date.getTime)
 
   def at(datetime: String) = defaultFormat.parse(datetime)
 
@@ -102,7 +105,7 @@ class TimeFormat(pattern: String) {
     if (date == null) {
       throw new Exception("Unable to parse date-time: " + str)
     } else {
-      Time(date.getTime())
+      Time.fromMilliseconds(date.getTime())
     }
   }
 
