@@ -33,7 +33,6 @@ object Time {
 
   private[Time] var fn: () => Time = () => Time.fromMilliseconds(System.currentTimeMillis)
 
-  // FIXME: should probably be called "fromMilliseconds" or something.
   @deprecated("use Time.fromMilliseconds(...) instead")
   def apply(millis: Long) = fromMilliseconds(millis)
 
@@ -50,7 +49,7 @@ object Time {
   def now: Time = fn()
 
   /**
-   * The unix epoch.  Times are measured relative to this.
+   * The unix epoch. Times are measured relative to this.
    */
   val epoch = Time.fromMilliseconds(0)
 
