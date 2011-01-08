@@ -145,4 +145,23 @@ object FutureSpec extends Specification {
       task() must throwA(new IllegalStateException)
     }
   }
+
+  "Future.select()" should {
+    val p0 = new Promise[Int]
+    val p1 = new Promise[Int]
+    val f = Future.select(p0, p1)
+    f.isDefined must beFalse
+
+    "select the first [result] to complete" in {
+      p0() = Return(1)
+      p1() = Return(2)
+      f() must be_==(1)
+    }
+
+    "select the first [exception] to complete" in {
+      p0() = Throw(new Exception)
+      p1() = Return(2)
+      f() must throwA(new Exception)
+    }
+  }
 }

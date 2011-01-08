@@ -19,6 +19,15 @@ object Future {
     new Promise[A] {
       update(Try(a))
     }
+
+  def select[A](fs: Future[A]*) = {
+    val future = new Promise[A]
+    fs foreach { f =>
+      f respond future.updateIfEmpty
+    }
+    
+    future
+  }
 }
 
 /**
@@ -106,13 +115,12 @@ abstract class Future[+A] extends Try[A] {
   def onFailure[B](rescueException: Throwable => B) = respond {
     case Throw(throwable) => rescueException(throwable)
     case _ =>
-  }
+ }
 
   def addEventListener[U >: A](listener: FutureEventListener[U]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
   }
-
 }
 
 object Promise {
