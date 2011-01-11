@@ -47,6 +47,8 @@ object Time {
     }
   }
 
+  def fromSeconds(seconds: Int) = fromMilliseconds(1000L * seconds)
+
   def now: Time = fn()
 
   /**
