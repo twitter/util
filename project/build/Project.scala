@@ -1,7 +1,7 @@
 import sbt._
 import com.twitter.sbt._
 
-class UtilProject(info: ProjectInfo) extends StandardProject(info) with SubversionPublisher {
+class Project(info: ProjectInfo) extends StandardProject(info) with SubversionPublisher {
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
