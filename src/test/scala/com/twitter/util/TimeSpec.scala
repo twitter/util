@@ -140,12 +140,20 @@ object TimeSpec extends Specification {
         t0.untilNow mustEqual 100.hours
       }
     }
+
+    "preserve MaxValue" in {
+      Long.MaxValue.nanoseconds.inSeconds mustEqual Int.MaxValue
+      Long.MaxValue.seconds.inMicroseconds mustEqual Long.MaxValue
+      Time.fromMilliseconds(Long.MaxValue).inSeconds mustEqual Int.MaxValue
+      Time.fromMilliseconds(Long.MaxValue).inMilliseconds mustEqual Long.MaxValue
+      Time.fromMilliseconds(Long.MaxValue).inNanoseconds mustEqual Long.MaxValue
+    }
   }
 
   "TimeMath" should {
     val random = new Random
     val maxSqrt = 3037000499L
-    
+
     def randLong = {
       if (random.nextInt > 0)
         random.nextLong % maxSqrt

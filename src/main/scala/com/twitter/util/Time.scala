@@ -37,7 +37,7 @@ object Time {
   def apply(millis: Long) = fromMilliseconds(millis)
 
   def fromMilliseconds(millis: Long) = {
-    val nanos = millis * Duration.NanosPerMillisecond
+    val nanos = TimeMath.mul(millis, Duration.NanosPerMillisecond)
     // let Long.MaxValue pass thru unchanged
     if (nanos < 0 && millis > 0) {
       new Time(Long.MaxValue)
@@ -45,6 +45,8 @@ object Time {
       new Time(nanos)
     }
   }
+
+  def fromSeconds(seconds: Int) = fromMilliseconds(1000L * seconds)
 
   def now: Time = fn()
 
@@ -119,12 +121,12 @@ trait TimeLike[+This <: TimeLike[This]] {
   def inNanoseconds: Long
   protected def build(nanos: Long): This
 
-  def inMicroseconds: Long = inNanoseconds / NanosPerMicrosecond
-  def inMilliseconds: Long = inNanoseconds / NanosPerMillisecond
-  def inSeconds: Int = (inNanoseconds / NanosPerSecond).toInt
-  def inMinutes: Int = (inNanoseconds / NanosPerMinute).toInt
-  def inHours: Int = (inNanoseconds / NanosPerHour).toInt
-  def inDays: Int = (inNanoseconds / NanosPerDay).toInt
+  def inMicroseconds: Long = TimeMath.div(inNanoseconds, NanosPerMicrosecond)
+  def inMilliseconds: Long = TimeMath.div(inNanoseconds, NanosPerMillisecond)
+  def inSeconds: Int = TimeMath.divInt(inNanoseconds, NanosPerSecond).toInt
+  def inMinutes: Int = TimeMath.divInt(inNanoseconds, NanosPerMinute).toInt
+  def inHours: Int = TimeMath.divInt(inNanoseconds, NanosPerHour).toInt
+  def inDays: Int = TimeMath.divInt(inNanoseconds, NanosPerDay).toInt
 
   def inTimeUnit: (Long, TimeUnit) = {
     // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
@@ -347,13 +349,33 @@ object TimeMath {
   }
 
   def mul(a: Long, b: Long) = {
-    // there must be a more clever way to do this that is less expensive,
-    // but I can't figure out what it is
-    val bigC = BigInt(a) * BigInt(b)
-    if (bigC > BigInt.MaxLong || bigC < BigInt.MinLong)
-      throw new TimeOverflowException(a + " * " + b)
-    else
-      bigC.toLong
+    if (a == Long.MaxValue) {
+      a
+    } else {
+      // there must be a more clever way to do this that is less expensive,
+      // but I can't figure out what it is
+      val bigC = BigInt(a) * BigInt(b)
+      if (bigC > BigInt.MaxLong || bigC < BigInt.MinLong)
+        throw new TimeOverflowException(a + " * " + b)
+      else
+        bigC.toLong
+    }
+  }
+
+  def div(a: Long, b: Long) = {
+    if (a == Long.MaxValue) {
+      Long.MaxValue
+    } else {
+      a / b
+    }
+  }
+
+  def divInt(a: Long, b: Long) = {
+    if (a == Long.MaxValue) {
+      Int.MaxValue
+    } else {
+      a / b
+    }
   }
 }
 
