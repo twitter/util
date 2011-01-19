@@ -12,7 +12,7 @@ A bunch of idiomatic, small General Purpose tools. This is totally experimental 
 
 ## Space
 
-    import com.twitter.util.StorageUnitConversions._
+    import com.twitter.conversions.storage._
     val amount = 8.megabytes
     amount.inBytes // => 8192L
     amount.inGigabytes // => 0.0078125
@@ -21,12 +21,12 @@ A bunch of idiomatic, small General Purpose tools. This is totally experimental 
 
 A Non-actor re-implementation of Scala Futures.
 
-    import com.twitter.util.{Future, Promise]
+    import com.twitter.util.{Future, Promise}
 
     val f = new Promise[Int]
     val g = f map { result => result + 1 }
-    f() = 1
-    g() // => This blocks for the futures result (and eventually returns 2)
+    f.setValue(1
+    g.get(1.second) // => This blocks for the futures result (and eventually returns 2)
 
     // Another option:
     g respond { result =>
@@ -77,7 +77,7 @@ The pool order is FIFO
         println(item) // prints "2"
       }
 
-## A pool of dynamically created objects 
+## A pool of dynamically created objects
 
 Here is a pool of even-number generators. It stores 4 numbers at a time:
 

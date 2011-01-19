@@ -25,7 +25,7 @@ object Future {
     fs foreach { f =>
       f respond future.updateIfEmpty
     }
-    
+
     future
   }
 }
@@ -59,11 +59,11 @@ abstract class Future[+A] extends Try[A] {
 
   def respond(k: Try[A] => Unit)
 
-  override def apply = apply(DEFAULT_TIMEOUT): A
-  def apply(timeout: Duration): A = within(timeout)()
+  override def apply: A = apply(DEFAULT_TIMEOUT)
+  def apply(timeout: Duration): A = get(timeout)()
 
-  def isReturn = within(DEFAULT_TIMEOUT) isReturn
-  def isThrow = within(DEFAULT_TIMEOUT) isThrow
+  def isReturn = get(DEFAULT_TIMEOUT) isReturn
+  def isThrow = get(DEFAULT_TIMEOUT) isThrow
 
   def isDefined: Boolean
 
@@ -72,7 +72,7 @@ abstract class Future[+A] extends Try[A] {
    * is a Return[_] or Throw[_] depending upon whether the computation finished in
    * time.
    */
-  def within(timeout: Duration): Try[A] = {
+  def get(timeout: Duration): Try[A] = {
     val latch = new CountDownLatch(1)
     var result: Try[A] = null
     respond { a =>
@@ -83,6 +83,21 @@ abstract class Future[+A] extends Try[A] {
       result = Throw(new TimeoutException(timeout.toString))
     }
     result
+  }
+
+  def within(timeout: Duration)(implicit timer: Timer): Future[A] =
+    within(timer, timeout)
+
+  def within(timer: Timer, timeout: Duration): Future[A] = {
+    val promise = new Promise[A]
+    val task = timer.schedule(timeout.fromNow) {
+      promise.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
+    }
+    respond { r =>
+      task.cancel()
+      promise.updateIfEmpty(r)
+    }
+    promise
   }
 
   override def foreach(k: A => Unit) { respond(_ foreach k) }

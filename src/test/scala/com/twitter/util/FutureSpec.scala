@@ -132,6 +132,23 @@ object FutureSpec extends Specification {
     }
   }
 
+  "within" in {
+    "when we run out of time" in {
+      implicit val timer = new JavaTimer
+      val p = new Promise[Int]
+      p.within(50.milliseconds).get() must throwA[TimeoutException]
+      timer.stop()
+    }
+
+    "when everything is chill" in {
+      implicit val timer = new JavaTimer
+      val p = new Promise[Int]
+      p.setValue(1)
+      p.within(50.milliseconds).get() mustBe 1
+      timer.stop()
+    }
+  }
+
   "FutureTask" should {
     "return result" in {
       val task = new FutureTask("hello")
