@@ -3,8 +3,6 @@ package com.twitter.util
 import com.twitter.conversions.time._
 import scala.collection.mutable.ArrayBuffer
 
-class FutureUnit {}
-
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
   val Done = apply(())
@@ -12,7 +10,7 @@ object Future {
   def value[A](a: A) = Future(a)
   def exception[A](e: Throwable) = Future[A] { throw e }
 
-  def unit(): Future[FutureUnit] = Future.value(new FutureUnit)
+  def void() = Future[Void] { null }
 
   /**
    * A factory function to "lift" computations into the Future monad. It will catch
