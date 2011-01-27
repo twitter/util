@@ -10,6 +10,8 @@ object Future {
   def value[A](a: A) = Future(a)
   def exception[A](e: Throwable) = Future[A] { throw e }
 
+  def void() = Future[Void] { null }
+
   /**
    * A factory function to "lift" computations into the Future monad. It will catch
    * exceptions and wrap them in the Throw[_] type. Non-exceptional values are wrapped
