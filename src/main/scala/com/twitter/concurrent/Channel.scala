@@ -1,9 +1,19 @@
 package com.twitter.concurrent
 
 import java.util.concurrent.ConcurrentLinkedQueue
+import com.twitter.util.CountDownLatch
 
 trait Channel[+A] {
   def receive(k: Message[A] => Unit)
+  def foreach(f: A => Unit) {
+    receive {
+      case Value(a) => f(a)
+      case End =>
+    }
+  }
+  def join()
+  def close()
+  def isOpen: Boolean
 }
 
 sealed abstract class Message[+A]
@@ -12,37 +22,51 @@ case object End extends Message[Nothing]
 
 class Topic[A] extends Channel[A] with Serialized {
   private[this] var open = true
-  private[this] val queue = new ConcurrentLinkedQueue[A]
   private[this] var subscriber: Option[Message[A] => Unit] = None
+  private[this] val latch = new CountDownLatch(1)
+  private[this] var onReceive: Option[() => Unit] = None
+
+  def isOpen = open
+  def hasSubscriber = subscriber.isDefined
 
   def send(a: A) {
-    serialized {
-      require(open, "Channel is closed")
+    require(open, "Channel is closed")
 
-      if (!subscriber.isDefined) queue.offer(a)
-      else subscriber.get(Value(a))
+    if (open && subscriber.isDefined) subscriber.foreach(_.apply(Value(a)))
+  }
+
+  def onReceive(f: => Unit) {
+    require(!onReceive.isDefined)
+    serialized {
+      if (!onReceive.isDefined) {
+        onReceive = Some(() => f)
+      }
     }
   }
 
   def close() {
     serialized {
-      require(open, "Channel closed twice")
-      open = false
-      subscriber foreach(_(End))
+      if (open) {
+        open = false
+        subscriber foreach(_(End))
+        latch.countDown()
+      }
     }
   }
 
   def receive(listener: Message[A] => Unit) {
+    require(!subscriber.isDefined,
+      "Only one subscriber to the topic is supported for now")
     serialized {
-      require(!subscriber.isDefined,
-        "Only one subscriber to the topic is supported for now")
-      subscriber = Some(listener)
-      while (!queue.isEmpty) listener(Value(queue.poll()))
-      if (!open) listener(End)
+      if (!subscriber.isDefined) {
+        subscriber = Some(listener)
+        if (!open) listener(End)
+        else onReceive.foreach(_.apply)
+      }
     }
   }
 
-  private[this] def emptyQueue() {
-    while (!queue.isEmpty) queue.poll()
+  def join() {
+    latch.await()
   }
 }

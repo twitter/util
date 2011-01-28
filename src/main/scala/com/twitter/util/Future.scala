@@ -10,6 +10,8 @@ object Future {
   def value[A](a: A) = Future(a)
   def exception[A](e: Throwable) = Future[A] { throw e }
 
+  def void() = Future[Void] { null }
+
   /**
    * A factory function to "lift" computations into the Future monad. It will catch
    * exceptions and wrap them in the Throw[_] type. Non-exceptional values are wrapped
@@ -19,15 +21,6 @@ object Future {
     new Promise[A] {
       update(Try(a))
     }
-
-  def select[A](fs: Future[A]*) = {
-    val future = new Promise[A]
-    fs foreach { f =>
-      f respond future.updateIfEmpty
-    }
-    
-    future
-  }
 }
 
 /**
@@ -59,11 +52,11 @@ abstract class Future[+A] extends Try[A] {
 
   def respond(k: Try[A] => Unit)
 
-  override def apply = apply(DEFAULT_TIMEOUT): A
-  def apply(timeout: Duration): A = within(timeout)()
+  override def apply: A = apply(DEFAULT_TIMEOUT)
+  def apply(timeout: Duration): A = get(timeout)()
 
-  def isReturn = within(DEFAULT_TIMEOUT) isReturn
-  def isThrow = within(DEFAULT_TIMEOUT) isThrow
+  def isReturn = get(DEFAULT_TIMEOUT) isReturn
+  def isThrow = get(DEFAULT_TIMEOUT) isThrow
 
   def isDefined: Boolean
 
@@ -72,7 +65,7 @@ abstract class Future[+A] extends Try[A] {
    * is a Return[_] or Throw[_] depending upon whether the computation finished in
    * time.
    */
-  def within(timeout: Duration): Try[A] = {
+  def get(timeout: Duration): Try[A] = {
     val latch = new CountDownLatch(1)
     var result: Try[A] = null
     respond { a =>
@@ -83,6 +76,21 @@ abstract class Future[+A] extends Try[A] {
       result = Throw(new TimeoutException(timeout.toString))
     }
     result
+  }
+
+  def within(timeout: Duration)(implicit timer: Timer): Future[A] =
+    within(timer, timeout)
+
+  def within(timer: Timer, timeout: Duration): Future[A] = {
+    val promise = new Promise[A]
+    val task = timer.schedule(timeout.fromNow) {
+      promise.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
+    }
+    respond { r =>
+      task.cancel()
+      promise.updateIfEmpty(r)
+    }
+    promise
   }
 
   override def foreach(k: A => Unit) { respond(_ foreach k) }
@@ -120,6 +128,28 @@ abstract class Future[+A] extends Try[A] {
   def addEventListener[U >: A](listener: FutureEventListener[U]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
+  }
+
+  def select[U >: A](other: Future[U]): Future[U] = {
+    val promise = new Promise[U]
+    other respond { promise.updateIfEmpty(_) }
+    this  respond { promise.updateIfEmpty(_) }
+    promise
+  }
+
+  def join[B](other: Future[B]): Future[(A, B)] = {
+    val promise = new Promise[(A, B)]
+    this respond {
+      case Return(a) =>
+        other respond {
+          case Return(b) => promise() = Return((a, b))
+          case Throw(t)  => promise() = Throw(t)
+        }
+      case Throw(t) =>
+        promise() = Throw(t)
+    }
+
+    promise
   }
 }
 

@@ -13,3 +13,5 @@ abstract class Function[-T1, R] extends (T1 => R) {
   override def compose[A](g: A => T1): A => R = super.compose(g)
   override def andThen[A](g: R => A): T1 => A = super.andThen(g)
 }
+
+abstract class Function2[-T1, -T2, R] extends ((T1, T2) => R)
