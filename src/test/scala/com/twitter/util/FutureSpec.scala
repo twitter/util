@@ -166,7 +166,7 @@ object FutureSpec extends Specification {
   "Future.select()" should {
     val p0 = new Promise[Int]
     val p1 = new Promise[Int]
-    val f = Future.select(p0, p1)
+    val f = p0 select p1
     f.isDefined must beFalse
 
     "select the first [result] to complete" in {
@@ -178,7 +178,33 @@ object FutureSpec extends Specification {
     "select the first [exception] to complete" in {
       p0() = Throw(new Exception)
       p1() = Return(2)
-      f() must throwA(new Exception)
+      f() must throwA[Exception]
+    }
+  }
+
+  "Future.join()" should {
+    val p0 = new Promise[Int]
+    val p1 = new Promise[Int]
+    val f = p0 join p1
+    f.isDefined must beFalse
+
+    "only return when both futures complete" in {
+      p0() = Return(1)
+      f.isDefined must beFalse
+      p1() = Return(2)
+      f() must be_==(1, 2)
+    }
+
+    "return with exception if the first future throws" in {
+      p0() = Throw(new Exception)
+      f() must throwA[Exception]
+    }
+
+    "return with exception if the second future throws" in {
+      p0() = Return(1)
+      f.isDefined must beFalse
+      p1() = Throw(new Exception)
+      f() must throwA[Exception]
     }
   }
 }
