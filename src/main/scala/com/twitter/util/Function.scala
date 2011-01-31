@@ -15,3 +15,12 @@ abstract class Function[-T1, R] extends (T1 => R) {
 }
 
 abstract class Function2[-T1, -T2, R] extends ((T1, T2) => R)
+
+abstract class Command[-T1] extends (T1 => Unit) {
+  /**
+   * These overrides do nothing but delegate to super. They are necessary for Java
+   * compatibility.
+   */
+  override def andThen[A](g: (Unit) => A) = super.andThen(g)
+  override def compose[A](g: (A) => T1) = super.compose(g)
+}
