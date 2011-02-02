@@ -52,7 +52,7 @@ trait Channel[+A] {
    * Pipe the output of this channel to another Channel.
    */
   def pipe[B >: A](source: ChannelSource[B]) {
-    respond(source) { a =>
+    val observer = respond(source) { a =>
       source.send(a)
     }
   }
@@ -133,11 +133,31 @@ class ChannelSource[A] extends Channel[A] with Serialized {
   private[this] var open = true
   private[this] val subscribers = MapMaker[Any, ObserverSource[A]](_.weakKeys)
 
-  // private as read-write
-  private[this] lazy val _responds = new ChannelSource[Observer]
-  private[this] lazy val _pauses   = new ChannelSource[Observer]
-  private[this] lazy val _resumes  = new ChannelSource[Observer]
-  private[this] lazy val _disposes = new ChannelSource[Observer]
+  // private as read-write.
+  // note that lazy-vals are volatile and thus publish the XisDefined booleans.
+  private[this] var respondsIsDefined = false
+  private[this] lazy val _responds = {
+    respondsIsDefined = true
+    new ChannelSource[Observer]
+  }
+
+  private[this] var pausesIsDefined   = false
+  private[this] lazy val _pauses   = {
+    pausesIsDefined = true
+    new ChannelSource[Observer]
+  }
+
+  private[this] var resumesIsDefined  = false
+  private[this] lazy val _resumes  = {
+    resumesIsDefined = true
+    new ChannelSource[Observer]
+  }
+
+  private[this] var disposesIsDefined = false
+  private[this] lazy val _disposes = {
+    disposesIsDefined = true
+    new ChannelSource[Observer]
+  }
   private[this]      val _closes   = new Promise[Unit]
 
   // public as read-only
@@ -145,25 +165,25 @@ class ChannelSource[A] extends Channel[A] with Serialized {
    * A Channel of receive events. When a receiver is added to the Channel,
    * a message is sent.
    */
-  lazy val responds: Channel[Observer] = _responds
+  def responds: Channel[Observer] = _responds
 
   /**
    * A Channel of subscriber pause-events. When a subscriber pauses, a
    * message is sent. This is useful for backpressure policies.
    */
-  lazy val pauses:   Channel[Observer] = _pauses
+  def pauses:   Channel[Observer] = _pauses
 
   /**
    * A Channel of subscriber resume-events. When a subscriber pauses, a
    * message is sent.
    */
-  lazy val resumes:   Channel[Observer] = _resumes
+  def resumes:   Channel[Observer] = _resumes
 
   /**
    * A Channel of subscriber dispose-events. When a subscriber unsubscribes,
    * a message is sent.
    */
-  lazy val disposes: Channel[Observer] = _disposes
+  def disposes: Channel[Observer] = _disposes
 
   val closes:   Future[Unit]      = _closes
 
@@ -198,9 +218,9 @@ class ChannelSource[A] extends Channel[A] with Serialized {
         open = false
         subscribers.clear()
         _closes.setValue(())
-        _responds.close()
-        _pauses.close()
-        _disposes.close()
+        if (respondsIsDefined) _responds.close()
+        if (pausesIsDefined) _pauses.close()
+        if (disposesIsDefined) _disposes.close()
       }
     }
   }

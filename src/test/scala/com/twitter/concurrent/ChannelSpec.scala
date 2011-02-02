@@ -2,8 +2,7 @@ package com.twitter.concurrent
 
 import org.specs.Specification
 import com.twitter.conversions.time._
-import com.twitter.util.MapMaker
-import collection.mutable.{Queue, ArrayBuffer}
+import collection.mutable.ArrayBuffer
 
 object ChannelSpec extends Specification {
   "ChannelSource" should {
@@ -18,6 +17,12 @@ object ChannelSpec extends Specification {
         source send 1
         source send 2
         results.toList mustEqual List(1, 2)
+      }
+
+      "close" in {
+        source.isOpen must beTrue
+        source.close()
+        source.isOpen must beFalse
       }
 
       "receive is triggered when there is a subscriber" in {
