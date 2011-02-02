@@ -51,10 +51,11 @@ trait Channel[+A] {
   /**
    * Pipe the output of this channel to another Channel.
    */
-  def pipe[B >: A](source: ChannelSource[B]) {
+  def pipe[B >: A](source: ChannelSource[B]) = {
     val observer = respond(source) { a =>
       source.send(a)
     }
+    observer
   }
 
   /**
