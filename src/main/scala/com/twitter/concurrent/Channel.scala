@@ -240,7 +240,7 @@ class ChannelSource[A] extends Channel[A] with Serialized {
     if (!open) throw new IllegalStateException("Channel is closed")
   }
 
-  class ConcreteObserver[A](reference: AnyRef, listener: A => Unit) extends ObserverSource[A] {
+  class ConcreteObserver[A](reference: AnyRef, listener: A => Unit) extends ObserverSource[A] with Serialized {
     def apply(a: A) { listener(a) }
 
     @volatile private[this] var _isPaused = false
@@ -252,13 +252,21 @@ class ChannelSource[A] extends Channel[A] with Serialized {
     }
 
     def pause() {
-      _isPaused = true
-      _pauses.send(this)
+      serialized {
+        if (!_isPaused) {
+          _isPaused = true
+          _pauses.send(this)
+        }
+      }
     }
 
     def resume() {
-      _isPaused = false
-      _resumes.send(this)
+      serialized {
+        if (_isPaused) {
+          _isPaused = false
+          _resumes.send(this)
+        }
+      }
     }
   }
 }
