@@ -130,6 +130,51 @@ object FutureSpec extends Specification {
       val f = Future[Int] { throw e }
       f() must throwA(e)
     }
+
+    "propagate locals" in {
+      val local = new Local[Int]
+      val promise0 = new Promise[Unit]
+      val promise1 = new Promise[Unit]
+
+      local() = 1010
+
+      val both = promise0 flatMap { _ =>
+        val local0 = local()
+        promise1 map { _ =>
+          val local1 = local()
+          (local0, local1)
+        }
+      }
+
+      local() = 123
+      promise0() = Return(())
+      local() = 321
+      promise1() = Return(())
+
+      both.isDefined must beTrue
+      both() must be_==((Some(1010), Some(1010)))
+    }
+
+    "propagate locals across threads" in {
+      val local = new Local[Int]
+      val promise = new Promise[Option[Int]]
+
+      local() = 123
+      val done = promise map { otherValue => (otherValue, local()) }
+
+      val t = new Thread {
+        override def run() {
+          local() = 1010
+          promise() = Return(local())
+        }
+      }
+
+      t.run()
+      t.join()
+
+      done.isDefined must beTrue
+      done() must be_==((Some(1010), Some(123)))
+    }
   }
 
   "within" in {

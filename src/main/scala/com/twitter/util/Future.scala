@@ -168,7 +168,7 @@ class Promise[A] extends Future[A] {
   import Promise._
 
   @volatile private[this] var result: Option[Try[A]] = None
-  private[this] val computations = new ArrayBuffer[Try[A] => Unit]
+  private[this] val computations = new ArrayBuffer[(Try[A] => Unit, SavedLocals)]
 
   def isDefined = result.isDefined
 
@@ -189,7 +189,17 @@ class Promise[A] extends Future[A] {
           true
         }
       }
-      if (didSetResult) computations foreach(_(newResult))
+      if (didSetResult) {
+        val initialState = Locals.save()
+        try {
+          computations foreach { case (k, locals) =>
+            locals.restore()
+            k(newResult)
+          }
+        } finally {
+          initialState.restore()
+        }
+      }
       didSetResult
     }
   }
@@ -198,7 +208,7 @@ class Promise[A] extends Future[A] {
     result map(k) getOrElse {
       val wasDefined = synchronized {
         if (result.isDefined) true else {
-          computations += k
+          computations += ((k, Locals.save()))
           false
         }
       }
