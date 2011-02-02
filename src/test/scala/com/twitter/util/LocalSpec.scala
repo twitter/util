@@ -43,5 +43,15 @@ object LocalSpec extends Specification {
       local() must beSome(123)
       threadValue must beSome(333)
     }
+
+    "unset undefined variables when restoring" in {
+      val local = new Local[Int]
+
+      val saved = Locals.save()
+      local() = 123
+      saved.restore()
+      
+      local() must beNone
+    }
   }
 }
