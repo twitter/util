@@ -36,16 +36,14 @@ trait Try[+R] {
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
    */
-  def rescue[R2 >: R](rescueException: Throwable => Try[R2]): Try[R2]
+  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]): Try[R2]
 
   /**
    * Invoked regardless of whether the computation completed successfully or unsuccessfully.
    * Implemented in terms of `respond` so that subclasses control evaluation order. Returns `this`.
    */
   def ensure(f: => Unit) = {
-    respond { _ =>
-      f
-    }
+    respond { _ => f }
     this
   }
 
@@ -100,7 +98,13 @@ trait Try[+R] {
 final case class Throw[+R](e: Throwable) extends Try[R] {
   def isThrow = true
   def isReturn = false
-  def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = rescueException(e)
+  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = {
+    try {
+      if (rescueException.isDefinedAt(e)) rescueException(e) else this
+    } catch {
+      case e2 => Throw(e2)
+    }
+  }
   def apply(): R = throw e
   def flatMap[R2](f: R => Try[R2]) = Throw[R2](e)
   def map[X](f: R => X) = Throw(e)
@@ -110,15 +114,9 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
 final case class Return[+R](r: R) extends Try[R] {
   def isThrow = false
   def isReturn = true
-  def rescue[R2 >: R](rescueException: Throwable => Try[R2]) = Return(r)
+  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = Return(r)
   def apply() = r
-  def flatMap[R2](f: R => Try[R2]) = {
-    try {
-      f(r)
-    } catch {
-      case e => Throw(e)
-    }
-  }
+  def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case e => Throw(e) }
   def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
 }

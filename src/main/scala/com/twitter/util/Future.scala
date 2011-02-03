@@ -96,9 +96,7 @@ abstract class Future[+A] extends Try[A] {
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
   override def ensure(f: => Unit) = {
-    respond { _ =>
-      f
-    }
+    respond { _ => f }
     this
   }
 
@@ -108,11 +106,11 @@ abstract class Future[+A] extends Try[A] {
 
   def filter(p: A => Boolean): Future[A]
 
-  def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]): Future[B]
 
   def handle[B >: A](rescueException: Throwable => B) =
-    rescue { throwable =>
-      Future(rescueException(throwable))
+    rescue { 
+      case throwable => Future(rescueException(throwable))
     }
 
   def onSuccess[B](f: A => B) = respond {
@@ -230,10 +228,11 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def rescue[B >: A](rescueException: Throwable => Try[B]) =
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]) =
     new Promise[B] {
       Promise.this.respond { x =>
-        x rescue(rescueException) respond { result =>
+        x rescue(rescueException) respond { 
+          result =>
           update(result)
         }
       }
