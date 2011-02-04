@@ -5,13 +5,15 @@ package com.twitter.util
  * can now take a Function[A, B]. Because Function1 is a trait, it is very difficult
  * to instantiate directly in Java.
  */
-abstract class Function[-T1, R] extends (T1 => R) {
+abstract class Function[-T1, R] extends PartialFunction[T1, R] {
   /**
    * These overrides do nothing but delegate to super. They are necessary for Java
    * compatibility.
    */
   override def compose[A](g: A => T1): A => R = super.compose(g)
-  override def andThen[A](g: R => A): T1 => A = super.andThen(g)
+  override def andThen[A](g: R => A): PartialFunction[T1, A] = super.andThen(g)
+
+  def isDefinedAt(x: T1) = true
 }
 
 abstract class Function2[-T1, -T2, R] extends ((T1, T2) => R)
