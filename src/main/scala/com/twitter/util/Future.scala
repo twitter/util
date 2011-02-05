@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import com.twitter.conversions.time._
 import scala.collection.mutable.ArrayBuffer
 
@@ -21,6 +23,27 @@ object Future {
     new Promise[A] {
       update(Try(a))
     }
+
+  def join(fs: Seq[Future[_]]): Future[Unit] = {
+    if (fs.isEmpty)
+      return value(())
+
+    val count = new AtomicInteger(fs.size)
+    val promise = new Promise[Unit]
+
+    fs foreach { f =>
+      f respond {
+        case Throw(cause) =>
+          promise.updateIfEmpty(Throw(cause))
+
+        case Return(_) =>
+          if (count.decrementAndGet() == 0)
+            promise() = Return(())
+      }
+    }
+
+    promise
+  }
 }
 
 /**
