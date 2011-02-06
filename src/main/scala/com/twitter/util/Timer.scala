@@ -15,6 +15,35 @@ trait Timer {
   def stop()
 }
 
+class ReferenceCountedTimer(factory: () => Timer) extends Timer {
+  private[this] var refcount = 0
+  private[this] var underlying: Timer = null
+
+  def acquire() = synchronized {
+    refcount += 1
+    if (refcount == 1) {
+      require(underlying == null)
+      underlying = factory()
+    }
+  }
+
+  def stop() = synchronized {
+    refcount -= 1
+    if (refcount == 0) {
+      underlying.stop()
+      underlying = null
+    }
+  }
+
+  // Just dispatch to the underlying timer. It's the responsibility of
+  // the API consumer to not call into the timer once it has been
+  // stopped.
+  def schedule(when: Time)(f: => Unit) =
+    underlying.schedule(when)(f)
+  def schedule(when: Time, period: Duration)(f: => Unit) =
+    underlying.schedule(when, period)(f)
+}
+
 class JavaTimer(isDaemon: Boolean) extends Timer {
   def this() = this(false)
 
