@@ -34,10 +34,10 @@ trait Channel[+A] {
   def merge[B >: A](that: Channel[B]): Channel[B] = {
     val source = new ChannelSource[B]
     this.respond(source) { a =>
-      source.send(a).join.unit
+      Future.join(source.send(a))
     }
     that.respond(source) { a =>
-      source.send(a).join.unit
+      Future.join(source.send(a))
     }
     for {
       _ <- this.closes
@@ -53,7 +53,7 @@ trait Channel[+A] {
    */
   def pipe[B >: A](source: ChannelSource[B]) = {
     val observer = respond(source) { a =>
-      source.send(a).join.unit
+      Future.join(source.send(a))
     }
     observer
   }
@@ -65,7 +65,7 @@ trait Channel[+A] {
   def collect[B](f: PartialFunction[A, B]): Channel[B] = {
     val source = new ChannelSource[B]
     respond(source) { a =>
-      if (f.isDefinedAt(a)) source.send(f(a)).join.unit
+      if (f.isDefinedAt(a)) Future.join(source.send(f(a)))
       else Future.Unit
     }
     this.closes.foreach { _ =>

@@ -3,6 +3,7 @@ package com.twitter.concurrent
 import org.specs.Specification
 import com.twitter.conversions.time._
 import collection.mutable.ArrayBuffer
+import com.twitter.util.{Future, Promise}
 
 object ChannelSpec extends Specification {
   "ChannelSource" should {
@@ -12,7 +13,7 @@ object ChannelSpec extends Specification {
 
       "respond before any sent messages" in {
         source.respond(this) { i =>
-          results += i
+          Future { results += i }
         }
         source send 1
         source send 2
@@ -31,7 +32,7 @@ object ChannelSpec extends Specification {
           source.send(2)
         }
         source.respond(this) { i =>
-          results += i
+          Future { results += i }
         }
         results.toList mustEqual List(1, 2)
       }
@@ -40,7 +41,7 @@ object ChannelSpec extends Specification {
         val channel = source map(_.toString)
         var result = ""
         channel.respond(this) { i =>
-          result += i
+          Future { result += i }
         }
         source send(1)
         source send(2)
@@ -50,7 +51,7 @@ object ChannelSpec extends Specification {
       "filter" in {
         val channel = source filter(_ % 2 == 0)
         channel.respond(this) { i =>
-          results += i
+          Future { results += i }
         }
         source send(1)
         source send(2)
@@ -63,7 +64,7 @@ object ChannelSpec extends Specification {
         val source2 = new ChannelSource[Int]
         val channel = source merge source2
         channel.respond(this) { i =>
-          results += i
+          Future { results += i }
         }
         source send(1)
         source2 send(2)
@@ -74,7 +75,7 @@ object ChannelSpec extends Specification {
         val source2 = new ChannelSource[Int]
         source pipe(source2)
         source2.respond(this) { i =>
-          results += i
+          Future { results += i }
         }
         source send(1)
         source send(2)
@@ -90,40 +91,16 @@ object ChannelSpec extends Specification {
       }
 
       "backpressure" in {
-        "listen for pauses" in {
-          source.resumes.respond(this) { i =>
-            source.send(1)
-            source.send(2)
-          }
-          val observer = source.respond(this) { i =>
-            results += i
-          }
-          observer.pause()
-          results.toList mustEqual Nil
-          observer.resume()
-          results.toList mustEqual List(1, 2)
+        val promise = new Promise[Unit]
+        val observer = source.respond(this) { i =>
+          promise
         }
-
-        "discard messages to paused observers" in {
-          val o1out = new ArrayBuffer[Int]
-          val o2out = new ArrayBuffer[Int]
-          val source = new ChannelSource[Int] {
-            override protected def deliver(a: Int, f: ObserverSource[Int]) {
-              if (!f.isPaused) f(a)
-            }
-          }
-          val o1 = source.respond(this) { i =>
-            o1out += i
-          }
-          val o2 = source.respond(this) { i =>
-            o2out += i
-          }
-          o1.pause()
-          source.send(1)
-          source.send(2)
-          o1out.toList mustEqual Nil
-          o2out.toList mustEqual List(1, 2)
+        Future.join(source.send(1)) respond { _ =>
+          results += 1
         }
+        results.toList mustEqual Nil
+        promise.setValue(())
+        results.toList mustEqual List(1)
       }
     }
   }

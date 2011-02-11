@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import com.twitter.conversions.time._
 import scala.collection.mutable.ArrayBuffer
 
@@ -23,13 +25,25 @@ object Future {
       update(Try(a))
     }
 
-  implicit def futureSeqToRichFutureSeq[A](futureSeq: Seq[Future[A]]) = new {
-    def join = futureSeq.foldLeft(Future.value(Seq.empty[A])) { (acc, future) =>
-      for {
-        i1 <- acc
-        i2 <- future
-      } yield i1 ++ Seq(i2)
+  def join(fs: Seq[Future[_]]): Future[Unit] = {
+    if (fs.isEmpty)
+      return value(())
+
+    val count = new AtomicInteger(fs.size)
+    val promise = new Promise[Unit]
+
+    fs foreach { f =>
+      f respond {
+        case Throw(cause) =>
+          promise.updateIfEmpty(Throw(cause))
+
+        case Return(_) =>
+          if (count.decrementAndGet() == 0)
+            promise() = Return(())
+      }
     }
+
+    promise
   }
 }
 
@@ -106,9 +120,7 @@ abstract class Future[+A] extends Try[A] {
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
   override def ensure(f: => Unit) = {
-    respond { _ =>
-      f
-    }
+    respond { _ => f }
     this
   }
 
@@ -118,11 +130,11 @@ abstract class Future[+A] extends Try[A] {
 
   def filter(p: A => Boolean): Future[A]
 
-  def rescue[B >: A](rescueException: Throwable => Try[B]): Future[B]
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]): Future[B]
 
   def handle[B >: A](rescueException: Throwable => B) =
-    rescue { throwable =>
-      Future(rescueException(throwable))
+    rescue {
+      case throwable => Future(rescueException(throwable))
     }
 
   def onSuccess[B](f: A => B) = respond {
@@ -245,10 +257,11 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def rescue[B >: A](rescueException: Throwable => Try[B]) =
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]) =
     new Promise[B] {
       Promise.this.respond { x =>
-        x rescue(rescueException) respond { result =>
+        x rescue(rescueException) respond {
+          result =>
           update(result)
         }
       }
