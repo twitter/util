@@ -25,7 +25,7 @@ trait Channel[+A] {
    * weak keys.
    * @return an observer object representing the subscription.
    */
-  def respond(reference: AnyRef)(k: A => Unit): Observer
+  def respond(reference: AnyRef)(k: A => Future[Unit]): Observer
 
   /**
    * Combine two Channels together to produce a new Channel with
@@ -34,10 +34,10 @@ trait Channel[+A] {
   def merge[B >: A](that: Channel[B]): Channel[B] = {
     val source = new ChannelSource[B]
     this.respond(source) { a =>
-      source.send(a)
+      source.send(a).join.unit
     }
     that.respond(source) { a =>
-      source.send(a)
+      source.send(a).join.unit
     }
     for {
       _ <- this.closes
@@ -53,7 +53,7 @@ trait Channel[+A] {
    */
   def pipe[B >: A](source: ChannelSource[B]) = {
     val observer = respond(source) { a =>
-      source.send(a)
+      source.send(a).join.unit
     }
     observer
   }
@@ -65,7 +65,8 @@ trait Channel[+A] {
   def collect[B](f: PartialFunction[A, B]): Channel[B] = {
     val source = new ChannelSource[B]
     respond(source) { a =>
-      if (f.isDefinedAt(a)) source.send(f(a))
+      if (f.isDefinedAt(a)) source.send(f(a)).join.unit
+      else Future.Unit
     }
     this.closes.foreach { _ =>
       source.close()
@@ -98,7 +99,7 @@ trait Channel[+A] {
     val observer = respond(promise) { a =>
       // avoid race condition with idempotent update and
       // reference the observer outside.
-      promise.updateIfEmpty(Return(a))
+      Future { promise.updateIfEmpty(Return(a)) }
     }
     promise foreach { _ =>
       observer.dispose()
@@ -142,18 +143,6 @@ class ChannelSource[A] extends Channel[A] with Serialized {
     new ChannelSource[Observer]
   }
 
-  private[this] var pausesIsDefined   = false
-  private[this] lazy val _pauses   = {
-    pausesIsDefined = true
-    new ChannelSource[Observer]
-  }
-
-  private[this] var resumesIsDefined  = false
-  private[this] lazy val _resumes  = {
-    resumesIsDefined = true
-    new ChannelSource[Observer]
-  }
-
   private[this] var disposesIsDefined = false
   private[this] lazy val _disposes = {
     disposesIsDefined = true
@@ -169,18 +158,6 @@ class ChannelSource[A] extends Channel[A] with Serialized {
   def responds: Channel[Observer] = _responds
 
   /**
-   * A Channel of subscriber pause-events. When a subscriber pauses, a
-   * message is sent. This is useful for backpressure policies.
-   */
-  def pauses:   Channel[Observer] = _pauses
-
-  /**
-   * A Channel of subscriber resume-events. When a subscriber pauses, a
-   * message is sent.
-   */
-  def resumes:   Channel[Observer] = _resumes
-
-  /**
    * A Channel of subscriber dispose-events. When a subscriber unsubscribes,
    * a message is sent.
    */
@@ -190,43 +167,34 @@ class ChannelSource[A] extends Channel[A] with Serialized {
 
   def isOpen = open
 
-  def send(a: A) {
+  def send(a: A): Seq[Future[Unit]] = {
     assertOpen()
 
     /**
-     * create a snapshot of the observers in case it is modified during
+     * Create a snapshot of the observers in case it is modified during
      * delivery.
      */
     val values = new ArrayBuffer[ObserverSource[A]]
     subscribers.values.copyToBuffer(values)
 
-    values.foreach { observer =>
-      deliver(a, observer)
+    values.map { observer =>
+      observer(a)
     }
-  }
-
-  /**
-   * Override this method to implement backpressure strategies. The default
-   * implementation ignores backpressure indications.
-   */
-  protected def deliver(a: A, f: ObserverSource[A]) {
-    f(a)
   }
 
   def close() {
     serialized {
       if (open) {
         open = false
-        subscribers.clear()
         _closes.setValue(())
+        subscribers.clear()
         if (respondsIsDefined) _responds.close()
-        if (pausesIsDefined) _pauses.close()
         if (disposesIsDefined) _disposes.close()
       }
     }
   }
 
-  def respond(reference: AnyRef)(listener: (A) => Unit): Observer = {
+  def respond(reference: AnyRef)(listener: A => Future[Unit]): Observer = {
     val observer = new ConcreteObserver(reference, listener)
     serialized {
       if (open) {
@@ -241,33 +209,11 @@ class ChannelSource[A] extends Channel[A] with Serialized {
     if (!open) throw new IllegalStateException("Channel is closed")
   }
 
-  class ConcreteObserver[A](reference: AnyRef, listener: A => Unit) extends ObserverSource[A] with Serialized {
-    def apply(a: A) { listener(a) }
-
-    @volatile private[this] var _isPaused = false
-
-    def isPaused = _isPaused
+  class ConcreteObserver[A](reference: AnyRef, listener: A => Future[Unit]) extends ObserverSource[A] with Serialized {
+    def apply(a: A) = { listener(a) }
 
     def dispose() {
       subscribers.remove(reference)
-    }
-
-    def pause() {
-      serialized {
-        if (!_isPaused) {
-          _isPaused = true
-          _pauses.send(this)
-        }
-      }
-    }
-
-    def resume() {
-      serialized {
-        if (_isPaused) {
-          _isPaused = false
-          _resumes.send(this)
-        }
-      }
     }
   }
 }
@@ -283,23 +229,8 @@ trait Observer {
    * messages.
    */
   def dispose()
-
-  /**
-   * Indicate that the Observer is overwhelmed. Exhibits backpressure.
-   */
-  def pause()
-
-  /**
-   * Indicate that the Observer is no longer overwhelmed. Moar.
-   */
-  def resume()
 }
 
 trait ObserverSource[A] extends Observer {
-  /**
-   * Indicates that the Observer is paused
-   */
-  def isPaused: Boolean
-
-  def apply(a: A)
+  def apply(a: A): Future[Unit]
 }

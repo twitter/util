@@ -5,7 +5,8 @@ import scala.collection.mutable.ArrayBuffer
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
-  val Done = apply(())
+  val Unit = apply(())
+  val Done = Unit
 
   def value[A](a: A) = Future(a)
   def exception[A](e: Throwable) = Future[A] { throw e }
@@ -21,6 +22,15 @@ object Future {
     new Promise[A] {
       update(Try(a))
     }
+
+  implicit def futureSeqToRichFutureSeq[A](futureSeq: Seq[Future[A]]) = new {
+    def join = futureSeq.foldLeft(Future.value(Seq.empty[A])) { (acc, future) =>
+      for {
+        i1 <- acc
+        i2 <- future
+      } yield i1 ++ Seq(i2)
+    }
+  }
 }
 
 /**
@@ -151,6 +161,11 @@ abstract class Future[+A] extends Try[A] {
 
     promise
   }
+
+  /**
+   * Convert this Future[A] to a Future[Unit] by discarding the result.
+   */
+  def unit: Future[Unit] = map(_ => ())
 }
 
 object Promise {
