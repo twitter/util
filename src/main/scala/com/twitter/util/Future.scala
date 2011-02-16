@@ -65,7 +65,7 @@ trait FutureEventListener[T] {
 
 /**
  * A computation evaluated asynchronously. This implementation of Future does not
- * assume any concrete implementation. In particular, it does not couple the user
+ * assume any concrete implementation; in particular, it does not couple the user
  * to a specific executor or event loop.
  *
  * Note that this class extends Try[_] indicating that the results of the computation
