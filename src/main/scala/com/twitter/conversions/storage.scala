@@ -21,7 +21,7 @@ import com.twitter.util.StorageUnit
 
 object storage {
   class RichWholeNumber(wrapped: Long) {
-    require(wrapped > 0, "Negative storage units are unsupported")
+    require(wrapped >= 0, "Negative storage units are unsupported")
 
     def byte      = bytes
     def bytes     = new StorageUnit(wrapped)

@@ -21,7 +21,7 @@ object StorageUnit {
 }
 
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
-  require(bytes > 0, "Negative storage units are useful[Citation Needed] but unsupported")
+  require(bytes >= 0, "Negative storage units are useful[Citation Needed] but unsupported")
 
   def inBytes = bytes
   def inKilobytes = bytes / (1024L)
