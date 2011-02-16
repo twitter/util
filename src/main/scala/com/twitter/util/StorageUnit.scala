@@ -21,7 +21,7 @@ object StorageUnit {
 }
 
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
-  require(bytes > 0, "Negative storage units are useful but unsupported")
+  require(bytes > 0, "Negative storage units are useful[Citation Needed] but unsupported")
 
   def inBytes = bytes
   def inKilobytes = bytes / (1024L)
@@ -29,6 +29,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def inGigabytes = bytes / (1024L * 1024 * 1024)
   def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
   def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
+  def inExabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
 
   override def equals(other: Any) = {
     other match {
@@ -42,4 +43,19 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def compare(other: StorageUnit) = if (bytes < other.bytes) -1 else (if (bytes > other.bytes) 1 else 0)
 
   override def toString() = inBytes + ".bytes"
+
+  def toHuman(): String = {
+    val prefix = "KMGTPE"
+    var prefixIndex = -1
+    var display = bytes.toDouble
+    while (display > 1126.0) {
+      prefixIndex += 1
+      display /= 1024.0
+    }
+    if (prefixIndex < 0) {
+      "%d B".format(bytes)
+    } else {
+      "%.1f %ciB".format(display, prefix.charAt(prefixIndex))
+    }
+  }
 }
