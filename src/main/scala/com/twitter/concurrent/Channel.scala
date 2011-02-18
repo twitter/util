@@ -97,7 +97,7 @@ trait Channel[+A] {
   def first: Future[A] = {
     val promise = new Promise[A]
     val observer = respond(promise) { a =>
-      // avoid race condition with idempotent update and
+      // This avoids a race condition by means of an idempotent update and
       // reference the observer outside.
       Future { promise.updateIfEmpty(Return(a)) }
     }
@@ -167,7 +167,7 @@ class ChannelSource[A] extends Channel[A] with Serialized {
 
   def isOpen = open
 
-  def send(a: A): Seq[Future[Unit]] = {
+  def send(a: A): Seq[Future[Observer]] = {
     assertOpen()
 
     /**
