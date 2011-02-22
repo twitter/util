@@ -10,7 +10,14 @@ object Future {
   val Unit = apply(())
   val Done = Unit
 
+  /**
+   * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
+   */
   def value[A](a: A) = Future(a)
+
+  /**
+   * Make a Future with an error. E.g., Future.exception(new Exception("boo"))
+   */
   def exception[A](e: Throwable) = Future[A] { throw e }
 
   def void() = Future[Void] { null }
@@ -25,6 +32,12 @@ object Future {
       update(Try(a))
     }
 
+  /**
+   * Take a sequence of Futures, wait till they all complete.
+   *
+   * @param fs a sequence of Futures
+   * @return a Future[Unit] whose value is populated when all of the fs return.
+   */
   def join(fs: Seq[Future[_]]): Future[Unit] = {
     if (fs.isEmpty)
       return value(())
@@ -76,12 +89,22 @@ abstract class Future[+A] extends Try[A] {
 
   def respond(k: Try[A] => Unit)
 
-  override def apply: A = apply(DEFAULT_TIMEOUT)
+  /**
+   * Block indefinitely, wait for the result of the Future to be available.
+   */
+  override def apply(): A = apply(DEFAULT_TIMEOUT)
+
+  /**
+   * Block, but only as long as the given Timeout.
+   */
   def apply(timeout: Duration): A = get(timeout)()
 
   def isReturn = get(DEFAULT_TIMEOUT) isReturn
   def isThrow = get(DEFAULT_TIMEOUT) isThrow
 
+  /**
+   * Is the result of the Future available yet?
+   */
   def isDefined: Boolean
 
   /**
@@ -102,9 +125,17 @@ abstract class Future[+A] extends Try[A] {
     result
   }
 
+  /**
+   * Same as the other within, but with an implict timer. Sometimes this is more convenient.
+   */
   def within(timeout: Duration)(implicit timer: Timer): Future[A] =
     within(timer, timeout)
 
+  /**
+   * Returns a new Future that will error if this Future does not return in time.
+   *
+   * @param timeout indicates how long you are willing to wait for the result to be available.
+   */
   def within(timer: Timer, timeout: Duration): Future[A] = {
     val promise = new Promise[A]
     val task = timer.schedule(timeout.fromNow) {
@@ -117,8 +148,15 @@ abstract class Future[+A] extends Try[A] {
     promise
   }
 
+  /**
+   * Invoke the callback only if the Future returns sucessfully. Useful for Scala for comprehensions.
+   * Use onSuccess instead of this method for more readable code.
+   */
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
+  /**
+   * Invoke the given Function whenever the Future returns, whether it is a success or a failure.
+   */
   override def ensure(f: => Unit) = {
     respond { _ => f }
     this
@@ -130,28 +168,67 @@ abstract class Future[+A] extends Try[A] {
 
   def filter(p: A => Boolean): Future[A]
 
+  /**
+   * Invoke the given function if the computation was unsuccessful. The function returns
+   * a Try[B] so this is like `flatMap` but for the error case. Compare the similar but
+   * less general `handle`. Both `rescue` and `handle` differ from `onFailure` in that
+   * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
+   */
   def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]): Future[B]
 
+  /**
+   * Invoke the given function if the computation was unsuccesful. The function returns
+   * any value so this is like `map` but for the error case. Compare the similar but
+   * more general `rescue`. Both `rescue` and `handle` differ from `onFailure` in that
+   * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
+   */
   def handle[B >: A](rescueException: Throwable => B) =
     rescue {
       case throwable => Future(rescueException(throwable))
     }
 
-  def onSuccess[B](f: A => B) = respond {
-    case Return(value) => f(value)
-    case _ =>
+  /**
+   * Invoke the function on the result, if the computation was successful. Returns
+   * `this` to allow for a fluent API. This function is like foreach but it returns
+   * `this`. See `map` and `flatMap` for a less imperative API.
+   *
+   * @return this
+   */
+  def onSuccess(f: A => Unit): Future[A] = {
+    respond {
+      case Return(value) => f(value)
+      case _ =>
+    }
+    this
   }
 
-  def onFailure[B](rescueException: Throwable => B) = respond {
-    case Throw(throwable) => rescueException(throwable)
-    case _ =>
- }
+  /**
+   * Invoke the funciton on the error, if the computation was unsuccessful. Returns
+   * `this` to allow for a fluent API. This function is like `foreach` but for the error
+   * case. It also differs from `foreach` in that it returns `this`.
+   * See `rescue` and `handle` for a less imperative API.
+   *
+   * @return this
+   */
+  def onFailure(rescueException: Throwable => Unit): Future[A] = {
+    respond {
+      case Throw(throwable) => rescueException(throwable)
+      case _ =>
+    }
+    this
+  }
 
   def addEventListener[U >: A](listener: FutureEventListener[U]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
   }
 
+  /**
+   * Choose the first future to succeed.
+   *
+   * @param other another future
+   * @return a new Future whose result is that of the first of this and other to return
+   */
   def select[U >: A](other: Future[U]): Future[U] = {
     val promise = new Promise[U]
     other respond { promise.updateIfEmpty(_) }
@@ -159,6 +236,9 @@ abstract class Future[+A] extends Try[A] {
     promise
   }
 
+  /**
+   * Combines two Futures into one Future of the Tuple of the two results.
+   */
   def join[B](other: Future[B]): Future[(A, B)] = {
     val promise = new Promise[(A, B)]
     this respond {
@@ -199,15 +279,40 @@ class Promise[A] extends Future[A] {
 
   def isDefined = result.isDefined
 
+  /**
+   * Populate the Promise with the given result.
+   *
+   * @throw ImmutableResult if the Promise is already populated
+   */
   def setValue(result: A) = update(Return(result))
+
+  /**
+   * Populate the Promise with the given exception.
+   *
+   * @throw ImmutableResult if the Promise is already populated
+   */
   def setException(throwable: Throwable) = update(Throw(throwable))
 
+  /**
+   * Populate the Promise with the given Try. The try can either be a value
+   * or an exception. setValue and setException are generally more readable
+   * methods to use.
+   *
+   * @throw ImmutableResult if the Promise is already populated
+   */
   def update(result: Try[A]) {
     updateIfEmpty(result) || {
       throw new ImmutableResult("Result set multiple times: " + result)
     }
   }
 
+  /**
+   * Populate the Promise with the given Try. The try can either be a value
+   * or an exception. setValue and setException are generally more readable
+   * methods to use.
+   *
+   * @return true or false depending on whether the result was available.
+   */
   def updateIfEmpty(newResult: Try[A]) = {
     if (result.isDefined) false else {
       val didSetResult = synchronized {

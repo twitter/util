@@ -178,7 +178,7 @@ class ChannelSource[A] extends Channel[A] with Serialized {
     subscribers.values.copyToBuffer(values)
 
     values.map { observer =>
-      observer(a)
+      observer(a) map { _ => observer}
     }
   }
 
