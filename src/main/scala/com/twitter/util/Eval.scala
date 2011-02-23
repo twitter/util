@@ -85,12 +85,14 @@ object Eval {
   /*
    * For a given FQ classname, trick the resource finder into telling us the containing jar.
    */
-  private def jarPathOfClass(className: String) = {
+  private def jarPathOfClass(className: String) = try {
     val resource = className.split('.').mkString("/", "/", ".class")
     val path = getClass.getResource(resource).getPath
     val indexOfFile = path.indexOf("file:") + 5
     val indexOfSeparator = path.lastIndexOf('!')
-    path.substring(indexOfFile, indexOfSeparator)
+    List(path.substring(indexOfFile, indexOfSeparator))
+  } catch {
+    case e: NullPointerException => List.empty[String] // Couldn't find the resource.
   }
 
   /*
@@ -130,7 +132,7 @@ object Eval {
     settings.unchecked.value = true // enable detailed unchecked warnings
     settings.outputDirs.setSingleOutput(virtualDirectory)
 
-    val pathList = List(compilerPath, libPath)
+    val pathList = compilerPath ::: libPath
     settings.bootclasspath.value = pathList.mkString(File.pathSeparator)
     settings.classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
 
