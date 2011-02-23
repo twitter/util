@@ -4,6 +4,7 @@ import org.specs.Specification
 import com.twitter.conversions.time._
 import collection.mutable.ArrayBuffer
 import com.twitter.util.{Future, Promise}
+import java.util.concurrent.ConcurrentLinkedQueue
 
 object ChannelSpec extends Specification {
   "ChannelSource" should {
@@ -101,6 +102,27 @@ object ChannelSpec extends Specification {
         results.toList mustEqual Nil
         promise.setValue(())
         results.toList mustEqual List(1)
+      }
+
+      "numObservers" in {
+        val numObservers = new ConcurrentLinkedQueue[Int]
+        source.numObservers.respond(this) { i =>
+          numObservers add(i)
+          Future.Done
+        }
+        val o1 = source.respond(this) { i =>
+          Future.Done
+        }
+        val o2 = source.respond(this) { i =>
+          Future.Done
+        }
+        o1.dispose()
+        val o3 = source.respond(this) { i =>
+          Future.Done
+        }
+        o3.dispose()
+        o2.dispose()
+        numObservers.toArray.toList mustEqual List(1, 2, 1, 2, 1, 0)
       }
     }
   }

@@ -258,6 +258,13 @@ abstract class Future[+A] extends Try[A] {
    * Convert this Future[A] to a Future[Unit] by discarding the result.
    */
   def unit: Future[Unit] = map(_ => ())
+
+  /**
+   * Send updates from this Future to the other.
+   */
+  def proxyTo[B >: A](other: Promise[B]) {
+    respond(other.update(_))
+  }
 }
 
 object Promise {
