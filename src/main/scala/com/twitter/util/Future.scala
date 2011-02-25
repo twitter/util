@@ -221,9 +221,9 @@ abstract class Future[+A] extends Try[A] {
   }
 
   /**
-   * Choose the first future to succeed.
+   * Choose the first Future to succeed.
    *
-   * @param other another future
+   * @param other another Future
    * @return a new Future whose result is that of the first of this and other to return
    */
   def select[U >: A](other: Future[U]): Future[U] = {
@@ -232,6 +232,11 @@ abstract class Future[+A] extends Try[A] {
     this  respond { promise.updateIfEmpty(_) }
     promise
   }
+
+  /**
+   * A synonym for select(): Choose the first Future to succeed.
+   */
+  def or[U >: A](other: Future[U]): Future[U] = select(other)
 
   /**
    * Combines two Futures into one Future of the Tuple of the two results.

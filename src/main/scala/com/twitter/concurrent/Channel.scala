@@ -61,12 +61,24 @@ trait Channel[+A] extends Serialized {
   }
 
   /**
-   * Pipe the output of this channel to another Channel.
+   * Pipe the output of this channel to another Channel. If either Channel
+   * closes midway through, stop operations.
    */
-  def pipe[B >: A](source: ChannelSource[B]) = {
-    respond { a =>
-      Future.join(source.send(a))
+  def pipe[B >: A](to: ChannelSource[B]) = {
+    val from = this
+    var observer: Observer = null
+    from.serialized {
+      to.serialized {
+        observer = from.respond { a =>
+          Future.join(to.send(a))
+        }
+        to.closes.respond { _ =>
+          observer.dispose()
+        }
+      }
     }
+
+    observer
   }
 
   /**
