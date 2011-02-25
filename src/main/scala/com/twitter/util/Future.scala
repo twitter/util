@@ -39,20 +39,17 @@ object Future {
    * @return a Future[Unit] whose value is populated when all of the fs return.
    */
   def join(fs: Seq[Future[_]]): Future[Unit] = {
-    if (fs.isEmpty)
-      return value(())
+    if (fs.isEmpty) return value(())
 
     val count = new AtomicInteger(fs.size)
     val promise = new Promise[Unit]
 
     fs foreach { f =>
-      f respond {
-        case Throw(cause) =>
-          promise.updateIfEmpty(Throw(cause))
-
-        case Return(_) =>
-          if (count.decrementAndGet() == 0)
-            promise() = Return(())
+      f onSuccess { _ =>
+        if (count.decrementAndGet() == 0)
+          promise() = Return(())
+      } onFailure { cause =>
+        promise.updateIfEmpty(Throw(cause))
       }
     }
 

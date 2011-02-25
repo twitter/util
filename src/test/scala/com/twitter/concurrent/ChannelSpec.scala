@@ -13,7 +13,7 @@ object ChannelSpec extends Specification {
       val results = new ArrayBuffer[Int]
 
       "respond before any sent messages" in {
-        source.respond(this) { i =>
+        source.respond { i =>
           Future { results += i }
         }
         source send 1
@@ -32,7 +32,7 @@ object ChannelSpec extends Specification {
           source.send(1)
           source.send(2)
         }
-        source.respond(this) { i =>
+        source.respond { i =>
           Future { results += i }
         }
         results.toList mustEqual List(1, 2)
@@ -41,7 +41,7 @@ object ChannelSpec extends Specification {
       "map" in {
         val channel = source map(_.toString)
         var result = ""
-        channel.respond(this) { i =>
+        channel.respond { i =>
           Future { result += i }
         }
         source send(1)
@@ -51,7 +51,7 @@ object ChannelSpec extends Specification {
 
       "filter" in {
         val channel = source filter(_ % 2 == 0)
-        channel.respond(this) { i =>
+        channel.respond { i =>
           Future { results += i }
         }
         source send(1)
@@ -64,7 +64,7 @@ object ChannelSpec extends Specification {
       "merge" in {
         val source2 = new ChannelSource[Int]
         val channel = source merge source2
-        channel.respond(this) { i =>
+        channel.respond { i =>
           Future { results += i }
         }
         source send(1)
@@ -75,7 +75,7 @@ object ChannelSpec extends Specification {
       "pipe" in {
         val source2 = new ChannelSource[Int]
         source pipe(source2)
-        source2.respond(this) { i =>
+        source2.respond { i =>
           Future { results += i }
         }
         source send(1)
@@ -93,7 +93,7 @@ object ChannelSpec extends Specification {
 
       "backpressure" in {
         val promise = new Promise[Unit]
-        val observer = source.respond(this) { i =>
+        val observer = source.respond { i =>
           promise
         }
         Future.join(source.send(1)) respond { _ =>
@@ -106,18 +106,18 @@ object ChannelSpec extends Specification {
 
       "numObservers" in {
         val numObservers = new ConcurrentLinkedQueue[Int]
-        source.numObservers.respond(this) { i =>
+        source.numObservers.respond { i =>
           numObservers add(i)
           Future.Done
         }
-        val o1 = source.respond(this) { i =>
+        val o1 = source.respond { i =>
           Future.Done
         }
-        val o2 = source.respond(this) { i =>
+        val o2 = source.respond { i =>
           Future.Done
         }
         o1.dispose()
-        val o3 = source.respond(this) { i =>
+        val o3 = source.respond { i =>
           Future.Done
         }
         o3.dispose()

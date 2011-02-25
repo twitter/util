@@ -1,7 +1,7 @@
 package com.twitter.concurrent
 
 import com.twitter.util._
-import collection.mutable.ArrayBuffer
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * A Channel is a unidirectional, read-only communication object. It
@@ -14,32 +14,31 @@ import collection.mutable.ArrayBuffer
  * and give it to a consumer, upcasted to a Channel. This is analogous
  * to the Future/Promise relationship.
  */
-trait Channel[+A] {
+trait Channel[+A] extends Serialized {
   /**
    * Subscribe to messages on this channel. If the channel is closed,
    * this method still returns an Observer. This is a trade-off to
    * avoid excessive lock-contention. Listen for close events if this
    * affects your use case.
    *
-   * ''Note'': all subclasses of Channel *should* ensure ordered,
+   * ''Note'': all subclasses of Channel *must* ensure ordered,
    * single-threaded delivery of messages. This means that the callback
-   * param k should NEVER be invoked by two threads at once. This also
-   * means that k can lead to lock contention or queue delays depending
-   * on implementation, so consider k to be a critical section and perform
-   * any long-running computation in another thread. See also `send`
-   * in ChannelSource[_] for a concrete implementation of this concurency
-   * requirement.
+   * param k should NEVER be invoked by two threads at once.
    *
-   * @param reference because publish-subscribe mechanism can easily
-   * cause memory leaks, the reference object is used in a Map with
-   * weak keys.
-   * @param k the function invoked when a message is delivered. Returns
-   * A Future[Unit] indicating that the message has been fully processed.
-   * This allows observers to process messages asynchronously and exhibit
-   * backpressure to the producer.
+   * Furthermore, respond() must publish all operations to shared variables
+   * to any Threads that will later invoke param k. Thus, any shared
+   * variables accessed only from within k needn't be synchronized or
+   * annotated volatile.
+   *
+   * ''Note'': hard references may be kept to callbacks added to a channel
+   * It is the callers responsibility to dispose() of the Observer to
+   * prevent memory leaks.
+   *
+   * @param k A function returning Future[Unit] indicating that the message
+   * has been fully processed.
    * @return an observer object representing the subscription.
    */
-  def respond(reference: AnyRef)(k: A => Future[Unit]): Observer
+  def respond(k: A => Future[Unit]): Observer
 
   /**
    * Combine two Channels together to produce a new Channel with
@@ -47,13 +46,17 @@ trait Channel[+A] {
    */
   def merge[B >: A](that: Channel[B]): Channel[B] = {
     val source = new ChannelSource[B]
-    this.respond(source) { a =>
-      Future.join(source.send(a))
+    this.serialized {
+      that.serialized {
+        this.respond { a =>
+          Future.join(source.send(a))
+        }
+        that.respond { b =>
+          Future.join(source.send(b))
+        }
+        (this.closes join that.closes) ensure source.close()
+      }
     }
-    that.respond(source) { a =>
-      Future.join(source.send(a))
-    }
-    (this.closes join that.closes) ensure source.close()
     source
   }
 
@@ -61,10 +64,9 @@ trait Channel[+A] {
    * Pipe the output of this channel to another Channel.
    */
   def pipe[B >: A](source: ChannelSource[B]) = {
-    val observer = respond(source) { a =>
+    respond { a =>
       Future.join(source.send(a))
     }
-    observer
   }
 
   /**
@@ -73,12 +75,14 @@ trait Channel[+A] {
    */
   def collect[B](f: PartialFunction[A, B]): Channel[B] = {
     val source = new ChannelSource[B]
-    respond(source) { a =>
-      if (f.isDefinedAt(a)) Future.join(source.send(f(a)))
-      else Future.Unit
-    }
-    this.closes.foreach { _ =>
-      source.close()
+    serialized {
+      respond { a =>
+        if (f.isDefinedAt(a)) Future.join(source.send(f(a)))
+        else Future.Unit
+      }
+      closes.foreach { _ =>
+        source.close()
+      }
     }
     source
   }
@@ -105,29 +109,24 @@ trait Channel[+A] {
    */
   def first: Future[A] = {
     val promise = new Promise[A]
-    val observer = respond(promise) { a =>
-      // Idempotent updateIfEmpty avoids a race where more than one message
-      // is sent before we register the dispose() callback on
-      // the promise (1)
-      Future { promise.updateIfEmpty(Return(a)) }
-    }
-    // (1) register dispose() as soon as the promise is satisfied
-    promise foreach { _ =>
-      observer.dispose()
-    }
-    closes.foreach { _ =>
-      promise.updateIfEmpty(Throw(new Exception("No element arrived")))
+    serialized {
+      val observer = respond { a =>
+        Future { promise.setValue(a) }
+      }
+      promise foreach { _ =>
+        observer.dispose()
+      }
+      closes.foreach { _ =>
+        promise.updateIfEmpty(Throw(new Exception("No element arrived")))
+      }
     }
     promise
   }
 
   /**
-   * Close the channel.
-   */
-  def close()
-
-  /**
-   * A Future[Unit] indicating when the Channel closed
+   * A Future[Unit] indicating when the Channel closed. New observers can no
+   * longer be added (calls to respond become no-ops), and no more messages
+   * will be delivered.
    */
   val closes: Future[Unit]
 
@@ -135,6 +134,20 @@ trait Channel[+A] {
    * Indicates whether the Channel is open.
    */
   def isOpen: Boolean
+
+  /**
+   * Ensures that events happen in order, one thread at a time. This prevents
+   * interleaving of message delivery (respond) and lifecycle (close) events.
+   *
+   * Furthermore, it can be used to atomically perform several operations to a
+   * Channel at once, without the side-effects of those operations being
+   * triggered until the whole "batch" of operations complete. For example,
+   * this can be used to attach several observers at once without the possibility
+   * of one of the observers being invoked before the others were attached. If
+   * two or more observers share mutable state, this would be used to eliminate
+   * race-conditions leading to data-integrity woes.
+   */
+  override def serialized[A](f: => A) = super.serialized(f)
 }
 
 /**
@@ -142,9 +155,9 @@ trait Channel[+A] {
  * Typically a producer constructs a ChannelSource and upcasts it to
  * a Channel before giving to a consumer
  */
-class ChannelSource[A] extends Channel[A] with Serialized {
-  private[this] var open = true
-  private[this] val observers = MapMaker[ObserverSource[A], Any](_.weakValues)
+class ChannelSource[A] extends Channel[A] {
+  @volatile private[this] var open = true
+  private[this] val _observers = collection.mutable.Set[ObserverSource[A]]()
 
   // private as read-write.
   // note that lazy-vals are volatile and thus publish the XisDefined booleans.
@@ -199,34 +212,39 @@ class ChannelSource[A] extends Channel[A] with Serialized {
    * and context-switching cannot interleave deliveries.
    */
   def send(a: A): Seq[Future[Observer]] = {
-    assertOpen()
-
     /**
      * Create a snapshot of the observers in case it is modified during
      * delivery.
      */
     val observersCopy = new ArrayBuffer[ObserverSource[A]]
-    observers.keys.copyToBuffer(observersCopy)
+    _observers.copyToBuffer(observersCopy)
 
     val result = observersCopy map { _ =>
       new Promise[Observer]
     }
 
     serialized {
-      observersCopy.zip(result) map { case (observer, promise) =>
+      _observers.zip(result) map { case (observer, promise) =>
         observer(a) map { _ => observer} proxyTo promise
       }
     }
-
     result
   }
 
+  /**
+   * Close the channel. Removes references to any observers and triggers
+   * the closes events. New observers can no longer be added, and further
+   * sends become no-ops.
+   *
+   * This method is serialized to ensure that close and send events do not
+   * interleave.
+   */
   def close() {
     serialized {
       if (open) {
         open = false
         _closes.setValue(())
-        observers.clear()
+        _observers.clear()
         if (respondsIsDefined)     _responds.close()
         if (disposesIsDefined)     _disposes.close()
         if (numObserversIsDefined) _numObservers.close()
@@ -234,31 +252,24 @@ class ChannelSource[A] extends Channel[A] with Serialized {
     }
   }
 
-  /**
-   * Listen for messages on the channel.
-   */
-  def respond(reference: AnyRef)(listener: A => Future[Unit]): Observer = {
+  def respond(listener: A => Future[Unit]): Observer = {
     val observer = new ConcreteObserver(listener)
     serialized {
       if (open) {
-        observers += observer -> reference
-        _numObservers.send(observers.size)
+        _observers += observer
+        _numObservers.send(_observers.size)
         _responds.send(observer)
       }
     }
     observer
   }
 
-  private[this] def assertOpen() {
-    if (!open) throw new IllegalStateException("Channel is closed")
-  }
-
-  private class ConcreteObserver(listener: A => Future[Unit]) extends ObserverSource[A] with Serialized {
+  private[this] class ConcreteObserver(listener: A => Future[Unit]) extends ObserverSource[A] with Serialized {
     def apply(a: A) = { listener(a) }
 
     def dispose() {
-      observers.remove(this)
-      _numObservers.send(observers.size)
+      _observers.remove(this)
+      _numObservers.send(_observers.size)
       _disposes.send(this)
     }
   }
