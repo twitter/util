@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.{ExecutorService, Callable}
+import java.util.concurrent.ExecutorService
 
 case class FuturePool(executor: ExecutorService) {
   def apply[T](f: => T): Future[T] = {
