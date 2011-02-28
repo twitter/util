@@ -34,8 +34,19 @@ import scala.tools.nsc.util.{BatchSourceFile, Position}
  * Evaluate a file or string and return the result.
  */
 object Eval {
-  private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
-  private val libPath = jarPathOfClass("scala.ScalaObject")
+  private val compilerPath = try {
+    jarPathOfClass("scala.tools.nsc.Interpreter")
+  } catch {
+    case e =>
+      throw new RuntimeException("Unable lo load scala interpreter from classpath (scala-compiler jar is missing?)", e)
+  }
+
+  private val libPath = try {
+    jarPathOfClass("scala.ScalaObject")
+  } catch {
+    case e =>
+      throw new RuntimeException("Unable to load scala base object from classpath (scala-library jar is missing?)", e)
+  }
 
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
 
