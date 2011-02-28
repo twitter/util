@@ -102,8 +102,6 @@ object Eval {
     val indexOfFile = path.indexOf("file:") + 5
     val indexOfSeparator = path.lastIndexOf('!')
     List(path.substring(indexOfFile, indexOfSeparator))
-  } catch {
-    case e: NullPointerException => List.empty[String] // Couldn't find the resource.
   }
 
   /*
