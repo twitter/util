@@ -11,10 +11,18 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
   // Projects
 
   // util-core: extensions with no external dependency requirements
-  val coreProject = project("util-core", "util", new CoreProject(_))
+  val coreProject = project(
+    "util-core", "util",
+    new CoreProject(_))
+
+  val collectionProject = project(
+    "util-collection", "util-collection",
+    new CollectionProject(_), coreProject)
 
   // util-reflect: runtime reflection and dynamic helpers
-  val reflectProject = project("util-reflect", "util-reflect", new ReflectProject(_), coreProject)
+  val reflectProject = project(
+    "util-reflect", "util-reflect",
+    new ReflectProject(_), coreProject)
 
 
   class CoreProject(info: ProjectInfo) extends StandardProject(info)
@@ -22,8 +30,12 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
   {
     val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
     override def filterScalaJars = false
+  }
 
-    val guava = "com.google.guava" % "guava" % "r06"
+  class CollectionProject(info: ProjectInfo) extends StandardProject(info)
+    with ProjectDefaults with SubversionPublisher
+  {
+    val guava              = "com.google.guava"    % "guava"               % "r06"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
   }
 
