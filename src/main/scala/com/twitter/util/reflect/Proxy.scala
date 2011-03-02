@@ -7,6 +7,8 @@ import net.sf.cglib.proxy.{MethodInterceptor => CGMethodInterceptor}
 import com.twitter.util.Future
 
 
+class NonexistentTargetException extends Exception("MethodCall was invoked without a valid target.")
+
 object Proxy {
   def apply[I <: AnyRef : Manifest](f: MethodCall[I] => AnyRef) = {
     new ProxyFactory[I](f).apply()
@@ -66,10 +68,10 @@ extends CGMethodInterceptor with Serializable {
   }
 }
 
-class MethodCall[T <: AnyRef](
-  var target: Option[T],
+final class MethodCall[T <: AnyRef](
+  val target: Option[T],
   val method: Method,
-  var args: Array[AnyRef],
+  val args: Array[AnyRef],
   methodProxy: MethodProxy)
 extends (() => AnyRef) {
 
@@ -84,6 +86,11 @@ extends (() => AnyRef) {
   }
   def returnsFuture  = classOf[Future[_]] isAssignableFrom method.getReturnType
 
-  def apply() = methodProxy.invoke(target.get, args)
+  def getTarget = target.getOrElse(throw new NonexistentTargetException)
 
+  def apply() = methodProxy.invoke(getTarget, args)
+
+  def apply(newTarget: T) = methodProxy.invoke(newTarget, args)
+  def apply(newArgs: Array[AnyRef]) = methodProxy.invoke(getTarget, newArgs)
+  def apply(newTarget: T, newArgs: Array[AnyRef]) = methodProxy.invoke(newTarget, newArgs)
 }
