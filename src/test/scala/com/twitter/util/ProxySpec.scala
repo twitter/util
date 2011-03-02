@@ -6,11 +6,13 @@ object ProxySpec extends Specification {
   trait TestInterface {
     def foo: String
     def bar(a: Int): Option[Long]
+    def whoops: Int
   }
 
   class TestImpl extends TestInterface {
     def foo = "foo"
     def bar(a: Int) = if (a % 2 == 0) Some(a.toLong) else None
+    def whoops = if (false) 2 else error("whoops")
   }
 
   class TestClass {
@@ -45,6 +47,13 @@ object ProxySpec extends Specification {
       proxied.slotb mustEqual 2.0
 
       called mustEqual 2
+    }
+
+    "must not throw UndeclaredThrowableException" in {
+      val pf = new ProxyFactory[TestImpl](_())
+      val proxied = pf(new TestImpl)
+
+      proxied.whoops must throwA(new RuntimeException("whoops"))
     }
 
 
@@ -90,7 +99,7 @@ object ProxySpec extends Specification {
     }
 
     "maintains invocation speed" in {
-      val repTimes = 1000000
+      val repTimes = 2000000
 
       val obj = new TestImpl
       val proxy1 = reflectConstructor()(obj)
