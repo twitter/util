@@ -5,7 +5,7 @@ import java.io.{File, FileOutputStream}
 
 object EvaluatorSpec extends Specification {
   def file(path: String) = {
-    new File("src/test/resources", path)
+    new File("util-eval/src/test/resources", path)
   }
 
   "Evaluator" should {
