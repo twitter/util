@@ -11,6 +11,7 @@ class Project(info: ProjectInfo) extends StandardProject(info) with SubversionPu
 
   val guava = "com.google.guava" % "guava" % "r06"
   val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
+  val cglib = "cglib" % "cglib" % "2.2"
 
   val specs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
   val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test" withSources()
