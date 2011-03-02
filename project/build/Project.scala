@@ -12,7 +12,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
 
   // util-core: extensions with no external dependency requirements
   val coreProject = project(
-    "util-core", "util",
+    "util-core", "util-core",
     new CoreProject(_))
 
   val evalProject = project(
