@@ -200,7 +200,7 @@ object ProxySpec extends Specification {
       // println(t2)
       // println(t3)
 
-      t2 must beLessThan(t3 * 3)
+      t2 must beLessThan((t3 * 4))
     }
   }
 
