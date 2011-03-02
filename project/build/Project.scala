@@ -9,8 +9,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
 
 
   // Projects
+
   // util-core: extensions with no external dependency requirements
   val coreProject = project("util-core", "util", new CoreProject(_))
+
+  // util-reflect: runtime reflection and dynamic helpers
+  val reflectProject = project("util-reflect", "util-reflect", new ReflectProject(_), coreProject)
+
 
   class CoreProject(info: ProjectInfo) extends StandardProject(info)
     with ProjectDefaults with SubversionPublisher
@@ -20,9 +25,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
 
     val guava = "com.google.guava" % "guava" % "r06"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
-    val cglib = "cglib" % "cglib" % "2.2"
   }
 
+  class ReflectProject(info: ProjectInfo) extends StandardProject(info)
+    with ProjectDefaults with SubversionPublisher
+  {
+    val cglib = "cglib" % "cglib" % "2.2"
+  }
 
   trait ProjectDefaults extends StandardProject {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
