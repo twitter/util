@@ -78,8 +78,12 @@ extends (() => AnyRef) {
   def className      = clazzName
   def parameterTypes = method.getParameterTypes
   def name           = method.getName
-  def returnsUnit    = method.getReturnType eq classOf[Unit]
-  def returnsFuture  = method.getReturnType eq classOf[Future[_]]
+  def returnsUnit    = {
+    val rt = method.getReturnType
+    (rt eq classOf[Unit]) || (rt eq classOf[Null]) || (rt eq java.lang.Void.TYPE)
+  }
+  def returnsFuture  = classOf[Future[_]] isAssignableFrom method.getReturnType
 
   def apply() = methodProxy.invoke(target.get, args)
+
 }

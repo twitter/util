@@ -1,24 +1,37 @@
 package com.twitter.util.reflect
 
 import org.specs.Specification
+import com.twitter.util.{Future,Promise}
+
 
 object ProxySpec extends Specification {
   trait TestInterface {
     def foo: String
     def bar(a: Int): Option[Long]
     def whoops: Int
+    def theVoid: Unit
+    def theJavaVoid: java.lang.Void
+    def aFuture: Future[Int]
+    def aPromise: Promise[Int]
   }
 
   class TestImpl extends TestInterface {
     def foo = "foo"
     def bar(a: Int) = if (a % 2 == 0) Some(a.toLong) else None
     def whoops = if (false) 2 else error("whoops")
+    def theVoid {}
+    def theJavaVoid = null
+    def aFuture = Future.value(2)
+    def aPromise = new Promise[Int] {
+      setValue(2)
+    }
   }
 
   class TestClass {
     val slota = "a"
     val slotb = 2.0
   }
+
 
   "ProxyFactory" should {
     "generate a factory for an interface" in {
@@ -50,10 +63,52 @@ object ProxySpec extends Specification {
     }
 
     "must not throw UndeclaredThrowableException" in {
-      val pf = new ProxyFactory[TestImpl](_())
+      val pf      = new ProxyFactory[TestImpl](_())
       val proxied = pf(new TestImpl)
 
       proxied.whoops must throwA(new RuntimeException("whoops"))
+    }
+
+    "MethodCall returnsUnit must be true for unit/void methods" in {
+      var unitsCalled = 0
+
+      val pf = new ProxyFactory[TestImpl]({ call =>
+        if (call.returnsUnit) unitsCalled += 1
+        val rv = call()
+        println(call.method.getReturnType)
+        println(rv)
+        rv
+      })
+
+      val proxied = pf(new TestImpl)
+      proxied.foo
+      unitsCalled mustEqual 0
+
+      proxied.theVoid
+      unitsCalled mustEqual 1
+
+      proxied.theJavaVoid
+      unitsCalled mustEqual 2
+    }
+
+    "MethodCall returnsFuture must be true for methods that return a future or subclass" in {
+      var futuresCalled = 0
+
+      val pf = new ProxyFactory[TestImpl]({ call =>
+        if (call.returnsFuture) futuresCalled += 1
+        call()
+      })
+
+      val proxied = pf(new TestImpl)
+
+      proxied.foo
+      futuresCalled mustEqual 0
+
+      proxied.aFuture
+      futuresCalled mustEqual 1
+
+      proxied.aPromise
+      futuresCalled mustEqual 2
     }
 
 
