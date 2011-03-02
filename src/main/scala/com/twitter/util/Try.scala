@@ -1,11 +1,10 @@
 package com.twitter.util
 
-import scala.reflect.Manifest
-
 /**
  * The Try type represents a computation that may either result in an exception
- * or return a value. It is analogous to the Either type but encodes common idioms
- * for handling exceptional cases.
+ * or return a success value. It is analogous to the Either type but encodes
+ * common idioms for handling exceptional cases (such as rescue/ensure which
+ * is analogous to try/finally).
  */
 object Try {
   case class PredicateDoesNotObtain() extends Exception()

@@ -34,8 +34,19 @@ import scala.tools.nsc.util.{BatchSourceFile, Position}
  * Evaluate a file or string and return the result.
  */
 object Eval {
-  private val compilerPath = jarPathOfClass("scala.tools.nsc.Interpreter")
-  private val libPath = jarPathOfClass("scala.ScalaObject")
+  private val compilerPath = try {
+    jarPathOfClass("scala.tools.nsc.Interpreter")
+  } catch {
+    case e =>
+      throw new RuntimeException("Unable lo load scala interpreter from classpath (scala-compiler jar is missing?)", e)
+  }
+
+  private val libPath = try {
+    jarPathOfClass("scala.ScalaObject")
+  } catch {
+    case e =>
+      throw new RuntimeException("Unable to load scala base object from classpath (scala-library jar is missing?)", e)
+  }
 
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
 
@@ -85,12 +96,12 @@ object Eval {
   /*
    * For a given FQ classname, trick the resource finder into telling us the containing jar.
    */
-  private def jarPathOfClass(className: String) = {
+  private def jarPathOfClass(className: String) = try {
     val resource = className.split('.').mkString("/", "/", ".class")
     val path = getClass.getResource(resource).getPath
     val indexOfFile = path.indexOf("file:") + 5
     val indexOfSeparator = path.lastIndexOf('!')
-    path.substring(indexOfFile, indexOfSeparator)
+    List(path.substring(indexOfFile, indexOfSeparator))
   }
 
   /*
@@ -130,7 +141,7 @@ object Eval {
     settings.unchecked.value = true // enable detailed unchecked warnings
     settings.outputDirs.setSingleOutput(virtualDirectory)
 
-    val pathList = List(compilerPath, libPath)
+    val pathList = compilerPath ::: libPath
     settings.bootclasspath.value = pathList.mkString(File.pathSeparator)
     settings.classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
 
