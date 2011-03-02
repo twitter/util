@@ -200,6 +200,10 @@ object ProxySpec extends Specification {
       // println(t2)
       // println(t3)
 
+      // faster than normal reflection
+      t2 must beLessThan(t1)
+
+      // less than 4x raw invocation
       t2 must beLessThan((t3 * 4))
     }
   }
