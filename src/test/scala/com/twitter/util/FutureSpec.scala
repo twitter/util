@@ -346,4 +346,30 @@ object FutureSpec extends Specification {
       f() must throwA[Exception]
     }
   }
+
+  "Future.collect()" should {
+    val p0 = new Promise[Int]
+    val p1 = new Promise[Int]
+    val f = Future.collect(Seq(p0, p1))
+    f.isDefined must beFalse
+
+    "only return when both futures complete" in {
+      p0() = Return(1)
+      f.isDefined must beFalse
+      p1() = Return(2)
+      f() must be_==(Seq(1, 2))
+    }
+
+    "return with exception if the first future throws" in {
+      p0() = Throw(new Exception)
+      f() must throwA[Exception]
+    }
+
+    "return with exception if the second future throws" in {
+      p0() = Return(1)
+      f.isDefined must beFalse
+      p1() = Throw(new Exception)
+      f() must throwA[Exception]
+    }
+  }
 }
