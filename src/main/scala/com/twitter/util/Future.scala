@@ -55,6 +55,43 @@ object Future {
 
     promise
   }
+
+  /**
+   * Repeat a computation that returns a Future some number of times, after each
+   * computation completes.
+   */
+  def times[A](n: Int)(f: => Future[A]): Future[Unit] = {
+    val count = new AtomicInteger(0)
+    whileDo(count.incrementAndGet() < n)(f)
+  }
+
+  /**
+   * Repeat a computation that returns a Future while some predicate obtains,
+   * after each computation completes.
+   */
+  def whileDo[A](p: => Boolean)(f: => Future[A]): Future[Unit] = {
+    val result = new Promise[Unit]
+    def iterate() {
+      if (p) {
+        f onSuccess { _ =>
+          iterate()
+        } onFailure { f =>
+          result.setException(f)
+        }
+      } else {
+        result.setValue(())
+      }
+
+    }
+    iterate()
+    result
+  }
+
+  def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
+    (0 until n) map { i =>
+      f
+    }
+  }
 }
 
 /**
@@ -84,6 +121,18 @@ trait FutureEventListener[T] {
 abstract class Future[+A] extends Try[A] {
   import Future.DEFAULT_TIMEOUT
 
+  /**
+   * When the computation completes, invoke the given callback function. Respond()
+   * yields a Try (either a Return or a Throw). This method is most useful for
+   * very generic code (like libraries). Otherwise, it is a best practice to use
+   * one of the alternatives (onSuccess(), onFailure(), etc.). Note that almost
+   * all methods on Future[_] are written in terms of respond(), so this is
+   * the essential template method for use in concrete subclasses.
+   *
+   * ''Note'': respond *should* enforce strong ordering. That is, calling respond(k)
+   * then respond(j) should guarantee that when the computation completes, k is
+   * called before j.
+   */
   def respond(k: Try[A] => Unit)
 
   /**

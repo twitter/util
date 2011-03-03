@@ -38,10 +38,8 @@ class ReferenceCountedTimer(factory: () => Timer) extends Timer {
   // Just dispatch to the underlying timer. It's the responsibility of
   // the API consumer to not call into the timer once it has been
   // stopped.
-  def schedule(when: Time)(f: => Unit) =
-    underlying.schedule(when)(f)
-  def schedule(when: Time, period: Duration)(f: => Unit) =
-    underlying.schedule(when, period)(f)
+  def schedule(when: Time)(f: => Unit) = underlying.schedule(when)(f)
+  def schedule(when: Time, period: Duration)(f: => Unit) = underlying.schedule(when, period)(f)
 }
 
 class JavaTimer(isDaemon: Boolean) extends Timer {
