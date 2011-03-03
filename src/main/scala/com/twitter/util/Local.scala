@@ -11,7 +11,7 @@ import collection.mutable.ArrayBuffer
 
 object Locals {
   private[this] val locals = new ArrayBuffer[Local[_]]
-  
+
   def +=(local: Local[_]) = synchronized {
     locals += local
   }
