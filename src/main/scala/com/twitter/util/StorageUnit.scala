@@ -23,13 +23,13 @@ object StorageUnit {
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   require(bytes >= 0, "Negative storage units are useful[Citation Needed] but unsupported")
 
-  def inBytes = bytes
+  def inBytes     = bytes
   def inKilobytes = bytes / (1024L)
   def inMegabytes = bytes / (1024L * 1024)
   def inGigabytes = bytes / (1024L * 1024 * 1024)
   def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
   def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
-  def inExabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
+  def inExabytes  = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
 
   override def equals(other: Any) = {
     other match {

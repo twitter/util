@@ -118,7 +118,7 @@ trait FutureEventListener[T] {
  * Note that this class extends Try[_] indicating that the results of the computation
  * may succeed or fail.
  */
-abstract class Future[+A] extends Try[A] {
+abstract class Future[+A] extends TryLike[A, Future] {
   import Future.DEFAULT_TIMEOUT
 
   /**
@@ -200,19 +200,6 @@ abstract class Future[+A] extends Try[A] {
    */
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
-  /**
-   * Invoke the given Function whenever the Future returns, whether it is a success or a failure.
-   */
-  override def ensure(f: => Unit) = {
-    respond { _ => f }
-    this
-  }
-
-  def flatMap[B](f: A => Try[B]): Future[B]
-
-  def map[X](f: A => X): Future[X]
-
-  def filter(p: A => Boolean): Future[A]
 
   /**
    * Invoke the given function if the computation was unsuccessful. The function returns
@@ -228,10 +215,7 @@ abstract class Future[+A] extends Try[A] {
    * more general `rescue`. Both `rescue` and `handle` differ from `onFailure` in that
    * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
    */
-  def handle[B >: A](rescueException: Throwable => B) =
-    rescue {
-      case throwable => Future(rescueException(throwable))
-    }
+  def handle[B >: A](rescueException: Throwable => B)
 
   /**
    * Invoke the function on the result, if the computation was successful. Returns
@@ -292,7 +276,7 @@ abstract class Future[+A] extends Try[A] {
    */
   def join[B](other: Future[B]): Future[(A, B)] = {
     val promise = new Promise[(A, B)]
-    this respond {
+    respond {
       case Return(a) =>
         other respond {
           case Return(b) => promise() = Return((a, b))
