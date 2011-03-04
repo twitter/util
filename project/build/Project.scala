@@ -28,6 +28,10 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     "util-reflect", "util-reflect",
     new ReflectProject(_), coreProject)
 
+  // util-logging: logging wrappers and configuration
+  val loggingProject = project(
+    "util-logging", "util-logging",
+    new LoggingProject(_), coreProject)
 
   class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
 
@@ -43,6 +47,9 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
 
   class ReflectProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
     val cglib = "cglib" % "cglib" % "2.2"
+  }
+
+  class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
   }
 
   trait ProjectDefaults extends StandardProject with SubversionPublisher {
