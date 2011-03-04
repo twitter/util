@@ -2,8 +2,102 @@ package com.twitter.util
 
 import org.specs.Specification
 import com.twitter.conversions.time._
+import java.util.concurrent.ConcurrentLinkedQueue
 
 object FutureSpec extends Specification {
+  "Future" should {
+    import Future._
+
+    "times" in {
+      val queue = new ConcurrentLinkedQueue[Promise[Unit]]
+      var complete = false
+      var failure = false
+      val iteration = times(3) {
+        val promise = new Promise[Unit]
+        queue add promise
+        promise
+      }
+      iteration onSuccess { _ =>
+        complete = true
+      } onFailure { f =>
+        failure = true
+      }
+      complete mustBe false
+      failure mustBe false
+
+      "when everything succeeds" in {
+        queue.poll().setValue(())
+        complete mustBe false
+        failure mustBe false
+
+        queue.poll().setValue(())
+        complete mustBe false
+        failure mustBe false
+
+        queue.poll().setValue(())
+        complete mustBe true
+        failure mustBe false
+      }
+
+      "when some succeed and some fail" in {
+        queue.poll().setValue(())
+        complete mustBe false
+        failure mustBe false
+
+        queue.poll().setException(new Exception(""))
+        complete mustBe false
+        failure mustBe true
+      }
+    }
+
+    "whileDo" in {
+      var i = 0
+      val queue = new ConcurrentLinkedQueue[Promise[Unit]]
+      var complete = false
+      var failure = false
+      val iteration = whileDo(i < 3) {
+        i += 1
+        val promise = new Promise[Unit]
+        queue add promise
+        promise
+      }
+
+      iteration onSuccess { _ =>
+        complete = true
+      } onFailure { f =>
+        failure = true
+      }
+      complete mustBe false
+      failure mustBe false
+
+      "when everything succeeds" in {
+        queue.poll().setValue(())
+        complete mustBe false
+        failure mustBe false
+
+        queue.poll().setValue(())
+        complete mustBe false
+        failure mustBe false
+
+        queue.poll().setValue(())
+        println(iteration.isDefined)
+
+        complete mustBe true
+        failure mustBe false
+      }
+
+      "when some succeed and some fail" in {
+        queue.poll().setValue(())
+        complete mustBe false
+        failure mustBe false
+
+        queue.poll().setException(new Exception(""))
+        complete mustBe false
+        failure mustBe true
+      }
+    }
+  }
+
   "Promise" should {
     "map" in {
       val f = Future(1) map { x => x + 1 }
@@ -238,6 +332,32 @@ object FutureSpec extends Specification {
       f.isDefined must beFalse
       p1() = Return(2)
       f() must be_==(1, 2)
+    }
+
+    "return with exception if the first future throws" in {
+      p0() = Throw(new Exception)
+      f() must throwA[Exception]
+    }
+
+    "return with exception if the second future throws" in {
+      p0() = Return(1)
+      f.isDefined must beFalse
+      p1() = Throw(new Exception)
+      f() must throwA[Exception]
+    }
+  }
+
+  "Future.collect()" should {
+    val p0 = new Promise[Int]
+    val p1 = new Promise[Int]
+    val f = Future.collect(Seq(p0, p1))
+    f.isDefined must beFalse
+
+    "only return when both futures complete" in {
+      p0() = Return(1)
+      f.isDefined must beFalse
+      p1() = Return(2)
+      f() must be_==(Seq(1, 2))
     }
 
     "return with exception if the first future throws" in {
