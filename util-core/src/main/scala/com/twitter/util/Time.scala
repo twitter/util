@@ -123,10 +123,10 @@ trait TimeLike[+This <: TimeLike[This]] {
 
   def inMicroseconds: Long = TimeMath.div(inNanoseconds, NanosPerMicrosecond)
   def inMilliseconds: Long = TimeMath.div(inNanoseconds, NanosPerMillisecond)
-  def inSeconds: Int = TimeMath.divInt(inNanoseconds, NanosPerSecond).toInt
-  def inMinutes: Int = TimeMath.divInt(inNanoseconds, NanosPerMinute).toInt
-  def inHours: Int = TimeMath.divInt(inNanoseconds, NanosPerHour).toInt
-  def inDays: Int = TimeMath.divInt(inNanoseconds, NanosPerDay).toInt
+  def inSeconds: Int       = TimeMath.divInt(inNanoseconds, NanosPerSecond).toInt
+  def inMinutes: Int       = TimeMath.divInt(inNanoseconds, NanosPerMinute).toInt
+  def inHours: Int         = TimeMath.divInt(inNanoseconds, NanosPerHour).toInt
+  def inDays: Int          = TimeMath.divInt(inNanoseconds, NanosPerDay).toInt
 
   def inTimeUnit: (Long, TimeUnit) = {
     // allow for APIs that may treat TimeUnit differently if measured in very tiny units.

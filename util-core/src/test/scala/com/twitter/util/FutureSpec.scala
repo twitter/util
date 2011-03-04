@@ -80,7 +80,6 @@ object FutureSpec extends Specification {
         failure mustBe false
 
         queue.poll().setValue(())
-        println(iteration.isDefined)
 
         complete mustBe true
         failure mustBe false
@@ -100,8 +99,19 @@ object FutureSpec extends Specification {
 
   "Promise" should {
     "map" in {
-      val f = Future(1) map { x => x + 1 }
-      f() mustEqual 2
+      "when it's all chill" in {
+        val f = Future(1) map { x => x + 1 }
+        f() mustEqual 2
+      }
+
+      "when there's a problem in the passed in function" in {
+        val e = new Exception
+        val f = Future(1) map { x =>
+          throw e
+          x + 1
+        }
+        f() must throwA(e)
+      }
     }
 
     "flatMap" in {
@@ -138,14 +148,14 @@ object FutureSpec extends Specification {
           }
           latch.within(1.second)
         }
-      }
 
-      "when there is an exception" in {
-        val e = new Exception
-        val f = Future(1).flatMap[Int] { x =>
-          throw e
+        "when there is an exception in the passed in function" in {
+          val e = new Exception
+          val f = Future(1).flatMap[Int] { x =>
+            throw e
+          }
+          f() must throwA(e)
         }
-        f() must throwA(e)
       }
     }
 
@@ -183,6 +193,11 @@ object FutureSpec extends Specification {
             latch.countDown()
           }
           latch.within(1.second)
+        }
+
+        "when the error handler errors" in {
+          val g = Future[Int](throw e) rescue { case e => throw e; Future(2) }
+          g() must throwA(e)
         }
       }
     }

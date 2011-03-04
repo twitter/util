@@ -38,7 +38,7 @@ object Future {
    * @param fs a sequence of Futures
    * @return a Future[Unit] whose value is populated when all of the fs return.
    */
-  def join(fs: Seq[Future[_]]): Future[Unit] = {
+  def join[A](fs: Seq[Future[A]]): Future[Unit] = {
     if (fs.isEmpty) return value(())
 
     val count = new AtomicInteger(fs.size)
@@ -131,7 +131,7 @@ trait FutureEventListener[T] {
  * Note that this class extends Try[_] indicating that the results of the computation
  * may succeed or fail.
  */
-abstract class Future[+A] extends Try[A] {
+abstract class Future[+A] extends TryLike[A, Future] {
   import Future.DEFAULT_TIMEOUT
 
   /**
@@ -213,19 +213,6 @@ abstract class Future[+A] extends Try[A] {
    */
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
-  /**
-   * Invoke the given Function whenever the Future returns, whether it is a success or a failure.
-   */
-  override def ensure(f: => Unit) = {
-    respond { _ => f }
-    this
-  }
-
-  def flatMap[B](f: A => Try[B]): Future[B]
-
-  def map[X](f: A => X): Future[X]
-
-  def filter(p: A => Boolean): Future[A]
 
   /**
    * Invoke the given function if the computation was unsuccessful. The function returns
@@ -233,7 +220,7 @@ abstract class Future[+A] extends Try[A] {
    * less general `handle`. Both `rescue` and `handle` differ from `onFailure` in that
    * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
    */
-  def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]): Future[B]
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]): Future[B]
 
   /**
    * Invoke the given function if the computation was unsuccesful. The function returns
@@ -241,10 +228,7 @@ abstract class Future[+A] extends Try[A] {
    * more general `rescue`. Both `rescue` and `handle` differ from `onFailure` in that
    * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
    */
-  def handle[B >: A](rescueException: Throwable => B) =
-    rescue {
-      case throwable => Future(rescueException(throwable))
-    }
+  def handle[B >: A](rescueException: PartialFunction[Throwable, B]): Future[B]
 
   /**
    * Invoke the function on the result, if the computation was successful. Returns
@@ -305,7 +289,7 @@ abstract class Future[+A] extends Try[A] {
    */
   def join[B](other: Future[B]): Future[(A, B)] = {
     val promise = new Promise[(A, B)]
-    this respond {
+    respond {
       case Return(a) =>
         other respond {
           case Return(b) => promise() = Return((a, b))
@@ -425,21 +409,29 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  override def flatMap[B](f: A => Try[B]) = new Promise[B] {
-    Promise.this.respond { x =>
-      x flatMap(f) respond { result =>
-        update(result)
-      }
+  override def flatMap[B](f: A => Future[B]) = new Promise[B] {
+    Promise.this.respond {
+      case Return(r) =>
+        try {
+          f(r) respond(update(_))
+        } catch {
+          case e => update(Throw(e))
+        }
+      case Throw(e) => update(Throw(e))
     }
   }
 
-  def rescue[B >: A](rescueException: PartialFunction[Throwable, Try[B]]) =
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]) =
     new Promise[B] {
-      Promise.this.respond { x =>
-        x rescue(rescueException) respond {
-          result =>
-          update(result)
-        }
+      Promise.this.respond {
+        case r: Return[A] => update(r)
+        case Throw(e) if rescueException.isDefinedAt(e) =>
+          try {
+            rescueException(e) respond(update(_))
+          } catch {
+            case e => update(Throw(e))
+          }
+        case Throw(e)                                   => update(Throw(e))
       }
     }
 
@@ -447,6 +439,10 @@ class Promise[A] extends Future[A] {
     Promise.this.respond { x =>
       update(x filter(p))
     }
+  }
+
+  def handle[B >: A](rescueException: PartialFunction[Throwable, B]) = rescue {
+    case e: Throwable => Future(rescueException(e))
   }
 }
 
