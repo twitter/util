@@ -185,6 +185,7 @@ object ProxySpec extends Specification {
     }
 
     "maintains invocation speed" in {
+      skip("Failing on some people's computers")
       val repTimes = 1500000
 
       val obj = new TestImpl
