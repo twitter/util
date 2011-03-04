@@ -39,7 +39,7 @@ class AbstractProxyFactory[I <: AnyRef : Manifest] {
 
   final val interface = implicitly[Manifest[I]].erasure
 
-  protected final lazy val proto = {
+  protected final val proto = {
     val e = new Enhancer
     e.setCallbackFilter(IgnoredMethodFilter)
     e.setCallbacks(Array(NoOpInterceptor, NoOp.INSTANCE))
@@ -63,17 +63,21 @@ class ProxyFactory[I <: AnyRef : Manifest](f: MethodCall[I] => AnyRef) extends A
 
 private[reflect] class MethodInterceptor[I <: AnyRef](target: Option[I], callback: MethodCall[I] => AnyRef)
 extends CGMethodInterceptor with Serializable {
+  val targetRef = target.getOrElse(null).asInstanceOf[I]
+
   final def intercept(p: AnyRef, m: Method, args: Array[AnyRef], methodProxy: MethodProxy) = {
-    callback(new MethodCall(target, m, args, methodProxy))
+    callback(new MethodCall(targetRef, m, args, methodProxy))
   }
 }
 
-final class MethodCall[T <: AnyRef](
-  val target: Option[T],
+final class MethodCall[T <: AnyRef] private[reflect] (
+  targetRef: T,
   val method: Method,
   val args: Array[AnyRef],
   methodProxy: MethodProxy)
 extends (() => AnyRef) {
+
+  lazy val target = if (targetRef ne null) Some(targetRef) else None
 
   def clazz          = method.getDeclaringClass
   def clazzName      = clazz.getName
@@ -86,7 +90,7 @@ extends (() => AnyRef) {
   }
   def returnsFuture  = classOf[Future[_]] isAssignableFrom method.getReturnType
 
-  def getTarget = target.getOrElse(throw new NonexistentTargetException)
+  private def getTarget = if (targetRef ne null) targetRef else throw new NonexistentTargetException
 
   def apply() = methodProxy.invoke(getTarget, args)
 
