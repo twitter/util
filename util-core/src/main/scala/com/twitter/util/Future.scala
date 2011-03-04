@@ -56,6 +56,19 @@ object Future {
     promise
   }
 
+  /** 
+   * Collect the results from the given futures into a new future of
+   * Seq[A].
+   *
+   * @param fs a sequence of Futures
+   * @return a Future[Seq[A]] containing the collected values from fs.
+   */
+  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
+    fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
+      a flatMap { aa => e map { _ :: aa } }
+    } map { _.reverse }
+  }
+
   /**
    * Repeat a computation that returns a Future some number of times, after each
    * computation completes.
