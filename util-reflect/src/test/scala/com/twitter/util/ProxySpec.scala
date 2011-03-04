@@ -142,30 +142,18 @@ object ProxySpec extends Specification {
     def time(f: => Unit) = { val s = System.currentTimeMillis; f; val e = System.currentTimeMillis; e - s }
     def benchmark(f: => Unit) = {
       // warm up
-      for (i <- 1 to 5) f
+      for (i <- 1 to 10) f
 
       // measure
-      val results = for (i <- 1 to 5) yield time(f)
+      val results = for (i <- 1 to 7) yield time(f)
+      //println(results)
 
       // drop the top and bottom then average
-      results.sortWith( (a,b) => a > b ).slice(1,4).sum / 3
+      results.sortWith( (a,b) => a > b ).slice(2,5).sum / 3
     }
 
     val reflectConstructor = {() => new ReferenceProxyFactory[TestInterface](_()) }
     val cglibConstructor   = {() => new ProxyFactory[TestInterface](_()) }
-
-    "maintains instantiation speed" in {
-      val repTimes = 40000
-
-      val t1 = benchmark { for (i <- 1 to repTimes) reflectConstructor() }
-      val t2 = benchmark { for (i <- 1 to repTimes) cglibConstructor() }
-
-      // println("instantiation")
-      // println(t1)
-      // println(t2)
-
-      t2 must beLessThan(50L)
-    }
 
     "maintains proxy creation speed" in {
       val repTimes = 40000
