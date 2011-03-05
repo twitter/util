@@ -19,7 +19,7 @@ package com.twitter.util
 import org.specs.Specification
 
 object ThriftSerializerSpec extends Specification {
-  val aString = "me gusta los tacos y los burritos"
+  val aString = "me gustan los tacos y los burritos"
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)
   val json = """{"aString":"%s","aNumber":%d}""".format(aString, aNumber)
