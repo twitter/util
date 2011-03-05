@@ -52,10 +52,10 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
   }
 
   class ThriftProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
-    val libthrift   = "thrift"        % "libthrift"     % "0.5.0"
-    val codecs      = "commons-codec" % "commons-codec" % "1.4"
-    val slf4j_jdk14 = "org.slf4j"     % "slf4j-jdk14"   % "1.5.2"
-    val slf4j_api   = "org.slf4j"     % "slf4j-api"     % "1.5.2"
+    override def compileOrder = CompileOrder.JavaThenScala
+    val thrift = "thrift"        % "libthrift"     % "0.5.0"
+    val codecs = "commons-codec" % "commons-codec" % "1.4"
+    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
   }
 
   trait ProjectDefaults extends StandardProject with SubversionPublisher {
