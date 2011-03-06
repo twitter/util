@@ -41,15 +41,13 @@ object ThriftSerializerSpec extends Specification with PendingUntilFixed {
     }
 
     "decode JSON" in {
-      pendingUntilFixed {
-        val serializer = new JsonThriftSerializer
-        val obj = new TestThriftStructure
-        serializer.fromString(obj, json)
-        obj.aString must notBeNull
-        obj.aString mustEqual aString
-        obj.aNumber mustEqual aNumber
-      }
-    }
+      val serializer = new JsonThriftSerializer
+      val obj = new TestThriftStructure
+      serializer.fromString(obj, json)
+      obj.aString must notBeNull
+      obj.aString mustEqual aString
+      obj.aNumber mustEqual aNumber
+    } pendingUntilFixed // XXX broken
 
     "encode and decode binary" in {
       testBinarySerializer(new BinaryThriftSerializer)
