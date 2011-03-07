@@ -34,7 +34,7 @@ Logger objects wrap everything useful from `java.util.logging.Logger`, as well
 as adding some convenience methods:
 
     // log a string with sprintf conversion:
-    log.info("Starting compaction on level %d...", level)
+    log.info("Starting compaction on zone %d...", zoneId)
 
     try {
       ...
@@ -99,7 +99,7 @@ filling in fields and calling the `apply` method. For example, to configure
 the root logger to filter at `INFO` level and write to a file:
 
     import com.twitter.logging.config._
-    
+
     val config = new LoggerConfig {
       node = ""
       level = INFO
@@ -109,6 +109,11 @@ the root logger to filter at `INFO` level and write to a file:
       }
     }
     config()
+
+As many `LoggerConfig`s can be configured as you want, so you can attach to
+several nodes if you like. To remove all previous configurations, use:
+
+    Logger.clearHandlers()
 
 The API docs for the config classes (in `LoggerConfig.scala`) are the
 definitive documentation for the various logging settings. The rest of this
@@ -124,7 +129,7 @@ README describes the bundled handlers and formatters.
 - `FileHandlerConfig`
 
   Logs to a file, with an optional file rotation policy. The policies are:
-  
+
   - `Policy.Never` - always use the same logfile (default)
   - `Policy.Hourly` - roll to a new logfile at the top of every hour
   - `Policy.Daily` - roll to a new logfile at midnight every night
@@ -148,7 +153,7 @@ README describes the bundled handlers and formatters.
   to backoff if the server seems to be offline.
 
 - `ThrottledHandlerConfig`
-  
+
   Wraps another handler, tracking (and squelching) duplicate messages. If you
   use a format string like `"Error %d at %s"`, the log messages will be
   de-duped based on the format string, even if they have different parameters.
@@ -164,7 +169,7 @@ generally just add a prefix containing the date, log level, and logger name.
   A standard log prefix like `"ERR [20080315-18:39:05.033] jobs: "`, which
   can be configured to truncate log lines to a certain length, limit the lines
   of an exception stack trace, and use a special time zone.
-  
+
   You can override the format string used to generate the prefix, also.
 
 - `BareFormatterConfig`
