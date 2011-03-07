@@ -34,6 +34,18 @@ trait ThriftSerializer extends StringEncoder {
 
 class JsonThriftSerializer extends ThriftSerializer {
   override def protocolFactory = new TSimpleJSONProtocol.Factory
+
+  /**
+   * Thrift does not properly deserialize the JSON it serializes ;/
+   */
+  override def fromString(obj: TBase[_, _], str: String): Unit =
+    throw new UnsupportedOperationException("Thrift does not properly deserialize the JSON")
+
+  /**
+   * Thrift does not properly deserialize the JSON it serializes ;/
+   */
+  override def fromBytes(obj: TBase[_, _], bytes: Array[Byte]): Unit =
+    throw new UnsupportedOperationException("Thrift does not properly deserialize the JSON")
 }
 
 class BinaryThriftSerializer extends ThriftSerializer {
