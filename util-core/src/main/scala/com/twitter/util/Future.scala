@@ -1,8 +1,6 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicInteger
-
-import com.twitter.conversions.time._
 import scala.collection.mutable.ArrayBuffer
 
 object Future {
@@ -56,7 +54,7 @@ object Future {
     promise
   }
 
-  /** 
+  /**
    * Collect the results from the given futures into a new future of
    * Seq[A].
    *
@@ -149,6 +147,22 @@ abstract class Future[+A] extends TryLike[A, Future] {
   def respond(k: Try[A] => Unit)
 
   /**
+   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
+   */
+  def flatMap[B](f: A => Future[B]): Future[B]
+
+  /**
+   * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
+   */
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]): Future[B]
+
+  /**
+   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
+   * Alias for flatMap
+   */
+  def andThen[B](f: A => Future[B]) = flatMap(f)
+
+  /**
    * Block indefinitely, wait for the result of the Future to be available.
    */
   override def apply(): A = apply(DEFAULT_TIMEOUT)
@@ -212,23 +226,6 @@ abstract class Future[+A] extends TryLike[A, Future] {
    * Use onSuccess instead of this method for more readable code.
    */
   override def foreach(k: A => Unit) { respond(_ foreach k) }
-
-
-  /**
-   * Invoke the given function if the computation was unsuccessful. The function returns
-   * a Try[B] so this is like `flatMap` but for the error case. Compare the similar but
-   * less general `handle`. Both `rescue` and `handle` differ from `onFailure` in that
-   * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
-   */
-  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]): Future[B]
-
-  /**
-   * Invoke the given function if the computation was unsuccesful. The function returns
-   * any value so this is like `map` but for the error case. Compare the similar but
-   * more general `rescue`. Both `rescue` and `handle` differ from `onFailure` in that
-   * `onFailure` is invoked purely for side-effects rather than mapping/transformation.
-   */
-  def handle[B >: A](rescueException: PartialFunction[Throwable, B]): Future[B]
 
   /**
    * Invoke the function on the result, if the computation was successful. Returns
@@ -409,7 +406,7 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  override def flatMap[B](f: A => Future[B]) = new Promise[B] {
+  def flatMap[B](f: A => Future[B]) = new Promise[B] {
     Promise.this.respond {
       case Return(r) =>
         try {
@@ -442,7 +439,8 @@ class Promise[A] extends Future[A] {
   }
 
   def handle[B >: A](rescueException: PartialFunction[Throwable, B]) = rescue {
-    case e: Throwable => Future(rescueException(e))
+    case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
+    case e: Throwable                                   => this
   }
 }
 
