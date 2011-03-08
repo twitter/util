@@ -1,7 +1,7 @@
 import sbt._
 import com.twitter.sbt._
 
-class Project(info: ProjectInfo) extends StandardParentProject(info) with SubversionPublisher {
+class Project(info: ProjectInfo) extends StandardParentProject(info) with SubversionPublisher with IdeaProject {
 
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
@@ -49,8 +49,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     val cglib = "cglib" % "cglib" % "2.2"
   }
 
-  class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
-  }
+  class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
 
   trait ProjectDefaults extends StandardProject with SubversionPublisher {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
