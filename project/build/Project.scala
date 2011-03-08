@@ -1,7 +1,7 @@
 import sbt._
 import com.twitter.sbt._
 
-class Project(info: ProjectInfo) extends StandardParentProject(info) with SubversionPublisher {
+class Project(info: ProjectInfo) extends StandardParentProject(info) with SubversionPublisher with IdeaProject {
 
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
@@ -28,6 +28,16 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     "util-reflect", "util-reflect",
     new ReflectProject(_), coreProject)
 
+  // util-logging: logging wrappers and configuration
+  val loggingProject = project(
+    "util-logging", "util-logging",
+    new LoggingProject(_), coreProject)
+
+  // util-thrift: thrift (serialization) utilities
+  val thriftProject = project(
+    "util-thrift", "util-thrift",
+    new ThriftProject(_), coreProject)
+
 
   class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
 
@@ -43,6 +53,15 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
 
   class ReflectProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
     val cglib = "cglib" % "cglib" % "2.2"
+  }
+
+  class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
+
+  class ThriftProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+    override def compileOrder = CompileOrder.JavaThenScala
+    val thrift = "thrift"        % "libthrift"     % "0.5.0"
+    val codecs = "commons-codec" % "commons-codec" % "1.4"
+    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
   }
 
   trait ProjectDefaults extends StandardProject with SubversionPublisher {
