@@ -73,7 +73,7 @@ object Future {
    */
   def times[A](n: Int)(f: => Future[A]): Future[Unit] = {
     val count = new AtomicInteger(0)
-    whileDo(count.incrementAndGet() < n)(f)
+    whileDo(count.getAndIncrement() < n)(f)
   }
 
   /**
