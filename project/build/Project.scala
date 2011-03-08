@@ -33,6 +33,12 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     "util-logging", "util-logging",
     new LoggingProject(_), coreProject)
 
+  // util-thrift: thrift (serialization) utilities
+  val thriftProject = project(
+    "util-thrift", "util-thrift",
+    new ThriftProject(_), coreProject)
+
+
   class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
 
   class EvalProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
@@ -50,6 +56,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
   }
 
   class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
+
+  class ThriftProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+    override def compileOrder = CompileOrder.JavaThenScala
+    val thrift = "thrift"        % "libthrift"     % "0.5.0"
+    val codecs = "commons-codec" % "commons-codec" % "1.4"
+    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
+  }
 
   trait ProjectDefaults extends StandardProject with SubversionPublisher {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()

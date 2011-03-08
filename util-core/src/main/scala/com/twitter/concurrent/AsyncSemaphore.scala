@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 /**
  * An AsyncSemaphore is a traditional semaphore but with asynchronous
- * execution. Grabbing a permit returns a Future[AsyncSemaphore#Permit]
+ * execution. Grabbing a permit returns a Future[Permit]
  */
 
 import collection.mutable.Queue

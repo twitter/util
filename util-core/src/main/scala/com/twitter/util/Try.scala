@@ -16,7 +16,16 @@ object Try {
   }
 }
 
-trait TryLike[+R, This[+R]] {
+/**
+ * This trait represents a computation that can succeed or fail. Its two current
+ * specializations are Try (a computation that has succeeded or failed) and Future
+ * (a computation that will succeed or fail).
+ *
+ * ''Note'': In order to preserve Java compatibility, the higher-kinded methods
+ * (e.g., flatMap() and rescue()) are NOT specified in this trait, but are
+ * DUPLICATED in the definition of Try and Future.
+ */
+trait TryLike[+R, This[+_]] {
   /**
    * Returns true if the Try is a Throw, false otherwise.
    */
@@ -49,15 +58,13 @@ trait TryLike[+R, This[+R]] {
   def foreach(f: R => Unit) { onSuccess(f) }
 
   /**
-   * Returns the given function applied to the value from this Return or returns this if this is a Throw
-   */
-  def flatMap[R2](f: R => This[R2]): This[R2]
-
-  /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw.
-   * Alias for flatMap
+   *
+   * ''Note'': This is disabled in TryLike for Java compatibility. This is documented here
+   * to express the intention of the code.
+   *
+   * def flatMap[R2](f: R => This[R2]): This[R2]
    */
-  def andThen[R2](f: R => This[R2]) = flatMap(f)
 
   /**
    * Maps the given function to the value from this Return or returns this if this is a Throw
@@ -71,8 +78,12 @@ trait TryLike[+R, This[+R]] {
 
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
+   *
+   * ''Note'': This is disabled in TryLike for Java compatibility. This is documented here
+   * to express the intention of the code.
+   *
+   * def rescue[R2 >: R](rescueException: PartialFunction[Throwable, This[R2]]): This[R2]
    */
-  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, This[R2]]): This[R2]
 
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like map for the exception.
@@ -110,6 +121,22 @@ trait TryLike[+R, This[+R]] {
 }
 
 sealed abstract class Try[+R] extends TryLike[R, Try] {
+  /**
+   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
+   */
+  def flatMap[R2](f: R => Try[R2]): Try[R2]
+
+  /**
+   * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
+   */
+  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]): Try[R2]
+
+  /**
+   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
+   * Alias for flatMap
+   */
+  def andThen[R2](f: R => Try[R2]) = flatMap(f)
+
   def respond(k: Try[R] => Unit) = k(this)
 }
 
