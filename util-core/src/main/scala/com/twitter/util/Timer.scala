@@ -1,5 +1,8 @@
 package com.twitter.util
 
+import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
+import com.twitter.conversions.time._
+
 trait TimerTask {
   def cancel()
 }
@@ -60,6 +63,37 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 
   def stop() = underlying.cancel()
+
+  private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
+    def run { f }
+  }
+
+  private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
+    def cancel() { task.cancel() }
+  }
+}
+
+class SchedulingTimer(poolSize: Int) extends Timer{
+
+  private[this] val underlying = new ScheduledThreadPoolExecutor(poolSize)
+
+  def schedule(when: Time)(f: => Unit): TimerTask = {
+    val task = toJavaTimerTask(f)
+    underlying.schedule(task, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
+    toTimerTask(task)
+  }
+
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+    schedule(when.sinceNow, period)(f)
+
+  def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
+    val task = toJavaTimerTask(f)
+    underlying.scheduleAtFixedRate(task,
+      wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
+    toTimerTask(task)
+  }
+
+  def stop() = underlying.shutdown()
 
   private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
     def run { f }
