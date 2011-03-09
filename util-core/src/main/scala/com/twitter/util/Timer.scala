@@ -73,7 +73,7 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 }
 
-class SchedulingTimer(poolSize: Int) extends Timer{
+class ScheduledPoolTimer(poolSize: Int) extends Timer{
 
   private[this] val underlying = new ScheduledThreadPoolExecutor(poolSize)
 
