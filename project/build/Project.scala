@@ -15,20 +15,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     "util-core", "util-core",
     new CoreProject(_))
 
-  // util-codecs: encoding & serialization utils (thrift, etc)
-  val codecsProject = project(
-    "util-codecs", "util-codecs",
-    new CodecsProject(_), coreProject)
-
-  // util-collections: ...
-  val collectionProject = project(
-    "util-collection", "util-collection",
-    new CollectionProject(_), coreProject)
-
-  // util-eval: evaluates scala
   val evalProject = project(
     "util-eval", "util-eval",
     new EvalProject(_), coreProject)
+
+  val collectionProject = project(
+    "util-collection", "util-collection",
+    new CollectionProject(_), coreProject)
 
   // util-reflect: runtime reflection and dynamic helpers
   val reflectProject = project(
@@ -40,14 +33,14 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     "util-logging", "util-logging",
     new LoggingProject(_), coreProject)
 
+  // util-thrift: thrift (serialization) utilities
+  val thriftProject = project(
+    "util-thrift", "util-thrift",
+    new ThriftProject(_), coreProject)
 
-  class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
 
-  class CodecsProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
-    override def compileOrder = CompileOrder.JavaThenScala
+  class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
     val codecs = "commons-codec" % "commons-codec" % "1.4"
-    val thrift = "thrift"        % "libthrift"     % "0.5.0"
-    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
   }
 
   class EvalProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
@@ -65,6 +58,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
   }
 
   class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
+
+  class ThriftProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+    override def compileOrder = CompileOrder.JavaThenScala
+    val thrift = "thrift"        % "libthrift"     % "0.5.0"
+    val codecs = "commons-codec" % "commons-codec" % "1.4"
+    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
+  }
 
   trait ProjectDefaults extends StandardProject with SubversionPublisher {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
