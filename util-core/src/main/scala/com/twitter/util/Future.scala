@@ -34,8 +34,9 @@ object Future {
    * @return a Future[Unit] whose value is populated when all of the fs return.
    */
   def join[A](fs: Seq[Future[A]]): Future[Unit] = {
-    if (fs.isEmpty) Unit
-    else {
+    if (fs.isEmpty) {
+      Unit
+    } else {
       val count = new AtomicInteger(fs.size)
       val promise = new Promise[Unit]
 
