@@ -1,6 +1,7 @@
 package com.twitter.util
 
-import org.apache.commons.codec.binary.Base64
+import sun.misc.{BASE64Decoder, BASE64Encoder}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 
 trait StringEncoder {
   def encode(bytes: Array[Byte]): String = new String(bytes)
@@ -8,6 +9,13 @@ trait StringEncoder {
 }
 
 trait Base64StringEncoder extends StringEncoder {
-  override def encode(bytes: Array[Byte]): String = super.encode(Base64.encodeBase64(bytes))
-  override def decode(str: String):   Array[Byte] = Base64.decodeBase64(super.decode(str))
+  private[this] lazy val encoder = new BASE64Encoder
+  private[this] lazy val decoder = new BASE64Decoder
+
+  override def encode(bytes: Array[Byte]): String =
+    encoder.encode(bytes)
+
+  override def decode(str: String): Array[Byte] =
+    decoder.decodeBuffer(str)
+
 }

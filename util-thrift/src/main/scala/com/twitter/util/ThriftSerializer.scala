@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
-import org.apache.commons.codec.binary.Base64
 import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory,
   TSimpleJSONProtocol}
