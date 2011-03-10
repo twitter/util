@@ -32,7 +32,7 @@ object TimerSpec extends Specification with Mockito {
     }
   }
 
-  "SchedulingTimer" should {
+  "ScheduledPoolTimer" should {
     "initialize and stop" in {
       val timer = new ScheduledPoolTimer(1)
       timer must notBeNull
