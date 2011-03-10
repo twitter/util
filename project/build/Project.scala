@@ -39,7 +39,9 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     new ThriftProject(_), coreProject)
 
 
-  class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
+  class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+    val codecs = "commons-codec" % "commons-codec" % "1.4"
+  }
 
   class EvalProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
     val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
