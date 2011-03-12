@@ -1,13 +1,12 @@
 package com.twitter.util
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
-import org.apache.commons.codec.binary.Base64
 import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory,
   TSimpleJSONProtocol}
 import org.apache.thrift.transport.TIOStreamTransport
 
-trait ThriftSerializer {
+trait ThriftSerializer extends StringEncoder {
   def protocolFactory: TProtocolFactory
 
   def toBytes(obj: TBase[_, _]): Array[Byte] = {
@@ -18,18 +17,14 @@ trait ThriftSerializer {
 
   def fromBytes(obj: TBase[_, _], bytes: Array[Byte]): Unit =
     obj.read(protocolFactory.getProtocol(new TIOStreamTransport(new ByteArrayInputStream(bytes))))
+
+  def toString(obj: TBase[_, _]): String = encode(toBytes(obj))
+
+  def fromString(obj: TBase[_, _], str: String): Unit = fromBytes(obj, decode(str))
 }
 
 class JsonThriftSerializer extends ThriftSerializer {
   override def protocolFactory = new TSimpleJSONProtocol.Factory
-
-  def toString(obj: TBase[_, _]): String = new String(toBytes(obj))
-
-  /**
-   * Thrift does not properly deserialize the JSON it serializes ;/
-   */
-  def fromString(obj: TBase[_, _], str: String): Unit =
-    throw new UnsupportedOperationException("Thrift does not properly deserialize the JSON")
 
   /**
    * Thrift does not properly deserialize the JSON it serializes ;/
@@ -38,10 +33,10 @@ class JsonThriftSerializer extends ThriftSerializer {
     throw new UnsupportedOperationException("Thrift does not properly deserialize the JSON")
 }
 
-class BinaryThriftSerializer extends ThriftSerializer {
+class BinaryThriftSerializer extends ThriftSerializer with Base64StringEncoder {
   override def protocolFactory = new TBinaryProtocol.Factory
 }
 
-class CompactThriftSerializer extends ThriftSerializer {
+class CompactThriftSerializer extends ThriftSerializer with Base64StringEncoder {
   override def protocolFactory = new TCompactProtocol.Factory
 }
