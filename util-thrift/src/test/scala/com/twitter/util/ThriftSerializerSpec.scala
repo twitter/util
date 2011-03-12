@@ -62,7 +62,6 @@ object ThriftSerializerSpec extends Specification with PendingUntilFixed {
 
     "encode and decode binary" in {
       testBinarySerializer(new BinaryThriftSerializer, encodedBinary)
-        
     }
 
     "encode and decode compact" in {
