@@ -24,13 +24,27 @@ object ThriftSerializerSpec extends Specification with PendingUntilFixed {
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)
   val json = """{"aString":"%s","aNumber":%d}""".format(aString, aNumber)
+  val encodedBinary  = Some("CwABAAAAIm1lIGd1c3RhbiBsb3MgdGFjb3MgeSBsb3MgYnVycml0b3MIAAIAAAAqAA==")
+  val encodedCompact = Some("GCJtZSBndXN0YW4gbG9zIHRhY29zIHkgbG9zIGJ1cnJpdG9zFVQA")
 
-  def testBinarySerializer(serializer: ThriftSerializer) = {
+  def testBinarySerializer(
+      serializer: ThriftSerializer,
+      encoded:    Option[String] = None) = {
     val bytes = serializer.toBytes(original)
-    val obj = new TestThriftStructure()
+    var obj = new TestThriftStructure()
     serializer.fromBytes(obj, bytes)
     obj.aString mustEqual original.aString
     obj.aNumber mustEqual original.aNumber
+
+    encoded match {
+      case None =>
+      case Some(str) =>
+        serializer.toString(original) mustEqual str
+        obj = new TestThriftStructure()
+        serializer.fromString(obj, str)
+        obj.aString mustEqual original.aString
+        obj.aNumber mustEqual original.aNumber
+      }
   }
 
 
@@ -47,11 +61,12 @@ object ThriftSerializerSpec extends Specification with PendingUntilFixed {
     }
 
     "encode and decode binary" in {
-      testBinarySerializer(new BinaryThriftSerializer)
+      testBinarySerializer(new BinaryThriftSerializer, encodedBinary)
+        
     }
 
     "encode and decode compact" in {
-      testBinarySerializer(new CompactThriftSerializer)
+      testBinarySerializer(new CompactThriftSerializer, encodedCompact)
     }
   }
 }
