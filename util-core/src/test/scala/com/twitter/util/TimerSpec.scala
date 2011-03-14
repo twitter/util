@@ -34,15 +34,15 @@ object TimerSpec extends Specification with Mockito {
     }
   }
 
-  "ScheduledPoolTimer" should {
+  "ScheduledThreadPoolTimer" should {
     "initialize and stop" in {
-      val timer = new ScheduledPoolTimer(1)
+      val timer = new ScheduledThreadPoolTimer(1)
       timer must notBeNull
       timer.stop()
     }
 
     "increment a counter" in {
-      val timer = new ScheduledPoolTimer(1)
+      val timer = new ScheduledThreadPoolTimer
       val counter = new AtomicInteger(0)
       timer.schedule(0.millis, 20.millis) {
         counter.incrementAndGet()

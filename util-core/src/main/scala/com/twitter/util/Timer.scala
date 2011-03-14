@@ -1,6 +1,8 @@
 package com.twitter.util
 
-import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
+import java.util.concurrent.{RejectedExecutionHandler, ScheduledThreadPoolExecutor, ThreadFactory,
+  TimeUnit}
+import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
 
 trait TimerTask {
@@ -73,9 +75,27 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 }
 
-class ScheduledPoolTimer(poolSize: Int) extends Timer{
+class ScheduledThreadPoolTimer(
+  poolSize: Int,
+  threadFactory: ThreadFactory,
+  rejectedExecutionHandler: Option[RejectedExecutionHandler])
+extends Timer {
+  def this(poolSize: Int, threadFactory: ThreadFactory) =
+    this(poolSize, threadFactory, None)
 
-  private[this] val underlying = new ScheduledThreadPoolExecutor(poolSize)
+  def this(poolSize: Int, threadFactory: ThreadFactory, handler: RejectedExecutionHandler) =
+    this(poolSize, threadFactory, Some(handler))
+
+  /** Construct a ScheduledThreadPoolTimer with a NamedPoolThreadFactory. */
+  def this(poolSize: Int = 2, name: String = "timer") =
+    this(poolSize, new NamedPoolThreadFactory(name), None)
+  
+  private[this] val underlying = rejectedExecutionHandler match {
+    case None =>
+      new ScheduledThreadPoolExecutor(poolSize, threadFactory)
+    case Some(h: RejectedExecutionHandler) =>
+      new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
+  }
 
   def schedule(when: Time)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(f)
