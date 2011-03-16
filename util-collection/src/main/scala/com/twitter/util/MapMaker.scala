@@ -31,7 +31,7 @@ object MapMaker {
         })
       } getOrElse(mapMaker.makeMap())
       new JConcurrentMapWrapper(javaMap) {
-        // the default contains method (in 2.8) calls 'get' which fucks
+        // the default contains method (in 2.8) calls 'get' which messes
         // with the compute method, so we need to override contains
         // to use containsKey
         override def contains(k: K) = underlying.containsKey(k)
