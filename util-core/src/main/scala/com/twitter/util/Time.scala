@@ -297,14 +297,17 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
   def build(nanos: Long) = new Duration(nanos)
 
   override def toString = {
-    if (inNanoseconds % NanosPerMinute == 0)
+    if (nanos == Long.MaxValue) {
+      "never"
+    } else if (inNanoseconds % NanosPerMinute == 0) {
       inMinutes + ".minutes"
-    else if (inNanoseconds % NanosPerSecond == 0)
+    } else if (inNanoseconds % NanosPerSecond == 0) {
       inSeconds + ".seconds"
-    else if (inNanoseconds % NanosPerMillisecond == 0)
+    } else if (inNanoseconds % NanosPerMillisecond == 0) {
       inMilliseconds + ".milliseconds"
-    else
+    } else {
       inNanoseconds + ".nanoseconds"
+    }
   }
 
   /**

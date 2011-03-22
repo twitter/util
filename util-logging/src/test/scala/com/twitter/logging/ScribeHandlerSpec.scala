@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package com.twitter.logging
+package com.twitter
+package logging
 
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
@@ -62,6 +63,22 @@ class ScribeHandlerSpec extends Specification {
         "05468697320697320616e6f74686572206d6573736167652e0a0000"
     }
 
+    "be able to log binary data" in {
+      val scribe = new ScribeHandlerConfig {
+        bufferTime = 100.milliseconds
+        maxMessagesToBuffer = 10000
+        formatter = new FormatterConfig { timezone = "UTC" }
+        category = "test"
+        level = Level.DEBUG
+      }.apply()
+
+      val bytes = Array[Byte](1,2,3,4,5)
+
+      scribe.publish(bytes)
+
+      scribe.queue.first mustEqual bytes
+    }
+
     "throw away log messages if scribe is too busy" in {
       val scribe = new ScribeHandlerConfig {
         bufferTime = 5.seconds
@@ -71,7 +88,7 @@ class ScribeHandlerSpec extends Specification {
       }.apply()
       scribe.publish(record1)
       scribe.publish(record2)
-      scribe.queue.toList mustEqual List("This is another message.\n")
+      scribe.queue.map(bytes=>new String(bytes)).toList mustEqual List("This is another message.\n")
     }
   }
 }

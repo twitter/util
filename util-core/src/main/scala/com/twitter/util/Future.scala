@@ -11,12 +11,12 @@ object Future {
   /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
    */
-  def value[A](a: A) = Future(a)
+  def value[A](a: A): Future[A] = new Promise[A](Return(a))
 
   /**
    * Make a Future with an error. E.g., Future.exception(new Exception("boo"))
    */
-  def exception[A](e: Throwable) = Future[A] { throw e }
+  def exception[A](e: Throwable): Future[A] = new Promise[A](Throw(e))
 
   def void() = Future[Void] { null }
 
@@ -25,10 +25,7 @@ object Future {
    * exceptions and wrap them in the Throw[_] type. Non-exceptional values are wrapped
    * in the Return[_] type.
    */
-  def apply[A](a: => A): Future[A] =
-    new Promise[A] {
-      update(Try(a))
-    }
+  def apply[A](a: => A): Future[A] = new Promise[A](Try(a))
 
   /**
    * Take a sequence of Futures, wait till they all complete.
@@ -37,21 +34,23 @@ object Future {
    * @return a Future[Unit] whose value is populated when all of the fs return.
    */
   def join[A](fs: Seq[Future[A]]): Future[Unit] = {
-    if (fs.isEmpty) return value(())
+    if (fs.isEmpty) {
+      Unit
+    } else {
+      val count = new AtomicInteger(fs.size)
+      val promise = new Promise[Unit]
 
-    val count = new AtomicInteger(fs.size)
-    val promise = new Promise[Unit]
-
-    fs foreach { f =>
-      f onSuccess { _ =>
-        if (count.decrementAndGet() == 0)
-          promise() = Return(())
-      } onFailure { cause =>
-        promise.updateIfEmpty(Throw(cause))
+      fs foreach { f =>
+        f onSuccess { _ =>
+          if (count.decrementAndGet() == 0)
+            promise() = Return(())
+        } onFailure { cause =>
+          promise.updateIfEmpty(Throw(cause))
+        }
       }
-    }
 
-    promise
+      promise
+    }
   }
 
   /**
@@ -92,16 +91,13 @@ object Future {
       } else {
         result.setValue(())
       }
-
     }
     iterate()
     result
   }
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
-    (0 until n) map { i =>
-      f
-    }
+    (0 until n) map { i => f }
   }
 }
 
@@ -328,6 +324,14 @@ class Promise[A] extends Future[A] {
 
   @volatile private[this] var result: Option[Try[A]] = None
   private[this] val computations = new ArrayBuffer[(Try[A] => Unit, SavedLocals)]
+
+  /**
+   * Secondary constructor where result can be provided immediately.
+   */
+  def this(result: Try[A]) {
+    this()
+    this.result = Some(result)
+  }
 
   def isDefined = result.isDefined
 
