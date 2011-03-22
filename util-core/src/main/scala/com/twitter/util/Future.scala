@@ -143,22 +143,6 @@ abstract class Future[+A] extends TryLike[A, Future] {
   def respond(k: Try[A] => Unit)
 
   /**
-   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
-   */
-  def flatMap[B](f: A => Future[B]): Future[B]
-
-  /**
-   * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
-   */
-  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]): Future[B]
-
-  /**
-   * Returns the given function applied to the value from this Return or returns this if this is a Throw.
-   * Alias for flatMap
-   */
-  def andThen[B](f: A => Future[B]) = flatMap(f)
-
-  /**
    * Block indefinitely, wait for the result of the Future to be available.
    */
   override def apply(): A = apply(DEFAULT_TIMEOUT)
@@ -410,7 +394,7 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def flatMap[B](f: A => Future[B]) = new Promise[B] {
+  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]) = new Promise[B] {
     Promise.this.respond {
       case Return(r) =>
         try {
@@ -422,7 +406,7 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]) =
+  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](rescueException: PartialFunction[Throwable, AlsoFuture[B]]) =
     new Promise[B] {
       Promise.this.respond {
         case r: Return[A] => update(r)

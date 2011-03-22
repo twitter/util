@@ -151,7 +151,7 @@ object FutureSpec extends Specification {
 
         "when there is an exception in the passed in function" in {
           val e = new Exception
-          val f = Future(1).flatMap[Int] { x =>
+          val f = Future(1).flatMap[Int, Future] { x =>
             throw e
           }
           f() must throwA(e)
