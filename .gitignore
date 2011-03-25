@@ -1,0 +1,6 @@
+project/
+.idea/
+.idea/*
+*.class
+*.scala
+*.jar
