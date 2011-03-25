@@ -1,4 +1,4 @@
-A bunch of idiomatic, small General Purpose tools. This is totally experimental and undocumented for now.
+A bunch of idiomatic, small General Purpose tools.
 
 # Units
 

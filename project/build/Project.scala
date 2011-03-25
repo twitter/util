@@ -1,7 +1,11 @@
 import sbt._
 import com.twitter.sbt._
 
-class Project(info: ProjectInfo) extends StandardParentProject(info) with SubversionPublisher with IdeaProject {
+class Project(info: ProjectInfo)
+  extends StandardParentProject(info)
+  with SubversionPublisher
+  with IdeaProject
+{
 
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
 
@@ -39,31 +43,58 @@ class Project(info: ProjectInfo) extends StandardParentProject(info) with Subver
     new ThriftProject(_), coreProject)
 
 
-  class CoreProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
+  class CoreProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with PublishSite
 
-  class EvalProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+
+  class EvalProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with PublishSite
+  {
     val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
     override def filterScalaJars = false
   }
 
-  class CollectionProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+  class CollectionProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with PublishSite
+  {
     val guava              = "com.google.guava"    % "guava"               % "r06"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
   }
 
-  class ReflectProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+  class ReflectProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with PublishSite
+  {
     val cglib = "cglib" % "cglib" % "2.2"
   }
 
-  class LoggingProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults
+  class LoggingProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with PublishSite
 
-  class ThriftProject(info: ProjectInfo) extends StandardProject(info) with ProjectDefaults {
+  class ThriftProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with PublishSite
+  {
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift = "thrift"        % "libthrift"     % "0.5.0"
     val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
   }
 
-  trait ProjectDefaults extends StandardProject with SubversionPublisher {
+  trait ProjectDefaults
+    extends StandardProject
+    with SubversionPublisher
+    with PublishSite
+  {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
     val mockito = "org.mockito"             % "mockito-all" % "1.8.5" % "test" withSources()
     val junit   = "junit"                   %       "junit" % "3.8.2" % "test"

@@ -322,14 +322,14 @@ class Promise[A] extends Future[A] {
   /**
    * Populate the Promise with the given result.
    *
-   * @throw ImmutableResult if the Promise is already populated
+   * @throws ImmutableResult if the Promise is already populated
    */
   def setValue(result: A) = update(Return(result))
 
   /**
    * Populate the Promise with the given exception.
    *
-   * @throw ImmutableResult if the Promise is already populated
+   * @throws ImmutableResult if the Promise is already populated
    */
   def setException(throwable: Throwable) = update(Throw(throwable))
 
@@ -338,7 +338,7 @@ class Promise[A] extends Future[A] {
    * or an exception. setValue and setException are generally more readable
    * methods to use.
    *
-   * @throw ImmutableResult if the Promise is already populated
+   * @throws ImmutableResult if the Promise is already populated
    */
   def update(result: Try[A]) {
     updateIfEmpty(result) || {
