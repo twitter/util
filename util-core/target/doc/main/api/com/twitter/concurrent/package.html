@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.twitter.concurrent</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value" onload="windowTitle();">
+
+      <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
+
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <h1>concurrent</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">concurrent</span>
+        
+        
+        
+      </span>
+      </h4>
+      <div class="fullcomment" id="comment"></div>
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in">Public</li><li class="all out">All</li></ol>
+            </div>
+          <div id="impl">
+              <span class="filtertype">Impl.</span>
+              <ol><li class="concrete in">Concrete</li><li class="abstract in">Abstract</li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.AsyncMutex">
+      <a id="AsyncMutex:AsyncMutex"></a>
+      <h4 class="signature"><a href="AsyncMutex.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">AsyncMutex</span>
+        
+        
+        <span class="result"> extends AsyncSemaphore</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.AsyncSemaphore">
+      <a id="AsyncSemaphore:AsyncSemaphore"></a>
+      <h4 class="signature"><a href="AsyncSemaphore.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">AsyncSemaphore</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.concurrent.Channel">
+      <a id="Channel:Channel[A]"></a>
+      <h4 class="signature"><a href="Channel.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Channel</span>
+        <span class="tparams">[<span name="A">+A</span>]</span>
+        
+        <span class="result"> extends Serialized</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A Channel is a unidirectional, read-only communication object.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.ChannelSource">
+      <a id="ChannelSource:ChannelSource[A]"></a>
+      <h4 class="signature"><a href="ChannelSource.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ChannelSource</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Channel[A]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A concrete Channel implementation that is both readable and writable.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.ConcurrentBijection">
+      <a id="ConcurrentBijection:ConcurrentBijection[A, B]"></a>
+      <h4 class="signature"><a href="ConcurrentBijection.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ConcurrentBijection</span>
+        <span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span>
+        
+        <span class="result"> extends Map[A, B]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.ConcurrentMultiMap">
+      <a id="ConcurrentMultiMap:ConcurrentMultiMap[K, V]"></a>
+      <h4 class="signature"><a href="ConcurrentMultiMap.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ConcurrentMultiMap</span>
+        <span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.ConcurrentPool">
+      <a id="ConcurrentPool:ConcurrentPool[K, V]"></a>
+      <h4 class="signature"><a href="ConcurrentPool.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ConcurrentPool</span>
+        <span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">The ConcurrentPool provides a concurrent object pool on top of the
+java.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.concurrent.NamedPoolThreadFactory">
+      <a id="NamedPoolThreadFactory:NamedPoolThreadFactory"></a>
+      <h4 class="signature"><a href="NamedPoolThreadFactory.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">NamedPoolThreadFactory</span>
+        
+        
+        <span class="result"> extends ThreadFactory</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A ThreadFactory which creates non-daemon threads with a name indicating which pool they came
+from.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.concurrent.Observer">
+      <a id="Observer:Observer"></a>
+      <h4 class="signature"><a href="Observer.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Observer</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">An object representing the lifecycle of subscribing to a Channel.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.concurrent.ObserverSource">
+      <a id="ObserverSource:ObserverSource[A]"></a>
+      <h4 class="signature"><a href="ObserverSource.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">ObserverSource</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Observer</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.concurrent.Permit">
+      <a id="Permit:Permit"></a>
+      <h4 class="signature"><a href="Permit.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Permit</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.concurrent.Serialized">
+      <a id="Serialized:Serialized"></a>
+      <h4 class="signature"><a href="Serialized.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Serialized</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A trait ensure ordered, non-interleaving operations.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>

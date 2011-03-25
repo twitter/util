@@ -1,0 +1,883 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.twitter.util</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value" onload="windowTitle();">
+
+      <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
+
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <h1>util</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">util</span>
+        
+        
+        
+      </span>
+      </h4>
+      <div class="fullcomment" id="comment"></div>
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in">Public</li><li class="all out">All</li></ol>
+            </div>
+          <div id="impl">
+              <span class="filtertype">Impl.</span>
+              <ol><li class="concrete in">Concrete</li><li class="abstract in">Abstract</li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" data-isabs="true" name="com.twitter.util.Base64StringEncoder">
+      <a id="Base64StringEncoder:Base64StringEncoder"></a>
+      <h4 class="signature"><a href="Base64StringEncoder.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Base64StringEncoder</span>
+        
+        
+        <span class="result"> extends StringEncoder</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.BoundedStack">
+      <a id="BoundedStack:BoundedStack[A]"></a>
+      <h4 class="signature"><a href="BoundedStack.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">BoundedStack</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Seq[A]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A &quot;stack&quot; with a bounded size.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Command">
+      <a id="Command:Command[T1]"></a>
+      <h4 class="signature"><a href="Command.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Command</span>
+        <span class="tparams">[<span name="T1">-T1</span>]</span>
+        
+        <span class="result"> extends (T1) ⇒ Unit</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: abstract 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Config">
+      <a id="Config:Config[T]"></a>
+      <h4 class="signature"><a href="Config.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Config</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends () ⇒ T</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A config object contains vars for configuring an object of type T, and an apply() method
+which turns this config into an object of type T.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.CountDownLatch">
+      <a id="CountDownLatch:CountDownLatch"></a>
+      <h4 class="signature"><a href="CountDownLatch.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">CountDownLatch</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Duration">
+      <a id="Duration:Duration"></a>
+      <h4 class="signature"><a href="Duration.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Duration</span>
+        
+        
+        <span class="result"> extends TimeLike[Duration] with Ordered[Duration]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.FactoryPool">
+      <a id="FactoryPool:FactoryPool[A]"></a>
+      <h4 class="signature"><a href="FactoryPool.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">FactoryPool</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Pool[A]</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: abstract 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Function">
+      <a id="Function:Function[T1, R]"></a>
+      <h4 class="signature"><a href="Function.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Function</span>
+        <span class="tparams">[<span name="T1">-T1</span>, <span name="R">R</span>]</span>
+        
+        <span class="result"> extends PartialFunction[T1, R]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">This class is for Java friendliness.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Function2">
+      <a id="Function2:Function2[T1, T2, R]"></a>
+      <h4 class="signature"><a href="Function2.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Function2</span>
+        <span class="tparams">[<span name="T1">-T1</span>, <span name="T2">-T2</span>, <span name="R">R</span>]</span>
+        
+        <span class="result"> extends (T1, T2) ⇒ R</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: abstract 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Future">
+      <a id="Future:Future[A]"></a>
+      <h4 class="signature"><a href="Future.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Future</span>
+        <span class="tparams">[<span name="A">+A</span>]</span>
+        
+        <span class="result"> extends TryLike[A, Future]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A computation evaluated asynchronously.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.FutureEventListener">
+      <a id="FutureEventListener:FutureEventListener[T]"></a>
+      <h4 class="signature"><a href="FutureEventListener.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">FutureEventListener</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">An alternative interface for handling Future Events.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.FuturePool">
+      <a id="FuturePool:FuturePool"></a>
+      <h4 class="signature"><a href="FuturePool.html">
+      <span class="kind">case class</span>
+      <span class="symbol">
+        <span class="name">FuturePool</span>
+        
+        <span class="params">(<span name="executor">executor: ExecutorService</span>)</span>
+        <span class="result"> extends Product</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.FutureTask">
+      <a id="FutureTask:FutureTask[A]"></a>
+      <h4 class="signature"><a href="FutureTask.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">FutureTask</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Promise[A] with Runnable</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.JavaTimer">
+      <a id="JavaTimer:JavaTimer"></a>
+      <h4 class="signature"><a href="JavaTimer.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">JavaTimer</span>
+        
+        
+        <span class="result"> extends Timer</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.LastWriteWinsQueue">
+      <a id="LastWriteWinsQueue:LastWriteWinsQueue[A]"></a>
+      <h4 class="signature"><a href="LastWriteWinsQueue.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">LastWriteWinsQueue</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Queue[A]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">An implementation of java.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Local">
+      <a id="Local:Local[T]"></a>
+      <h4 class="signature"><a href="Local.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Local</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Pool">
+      <a id="Pool:Pool[A]"></a>
+      <h4 class="signature"><a href="Pool.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Pool</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Promise">
+      <a id="Promise:Promise[A]"></a>
+      <h4 class="signature"><a href="Promise.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Promise</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Future[A]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A concrete Future implementation that is updatable by some executor or event loop.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.ReferenceCountedTimer">
+      <a id="ReferenceCountedTimer:ReferenceCountedTimer"></a>
+      <h4 class="signature"><a href="ReferenceCountedTimer.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ReferenceCountedTimer</span>
+        
+        
+        <span class="result"> extends Timer</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Return">
+      <a id="Return:Return[R]"></a>
+      <h4 class="signature"><a href="Return.html">
+      <span class="kind">case class</span>
+      <span class="symbol">
+        <span class="name">Return</span>
+        <span class="tparams">[<span name="R">+R</span>]</span>
+        <span class="params">(<span name="r">r: R</span>)</span>
+        <span class="result"> extends Try[R] with Product</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: final 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.RichU64ByteArray">
+      <a id="RichU64ByteArray:RichU64ByteArray"></a>
+      <h4 class="signature"><a href="RichU64ByteArray.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">RichU64ByteArray</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.RichU64Long">
+      <a id="RichU64Long:RichU64Long"></a>
+      <h4 class="signature"><a href="RichU64Long.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">RichU64Long</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.RichU64String">
+      <a id="RichU64String:RichU64String"></a>
+      <h4 class="signature"><a href="RichU64String.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">RichU64String</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.RingBuffer">
+      <a id="RingBuffer:RingBuffer[A]"></a>
+      <h4 class="signature"><a href="RingBuffer.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">RingBuffer</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Seq[A]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.SavedLocal">
+      <a id="SavedLocal:SavedLocal[T]"></a>
+      <h4 class="signature"><a href="SavedLocal.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">SavedLocal</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.SavedLocals">
+      <a id="SavedLocals:SavedLocals"></a>
+      <h4 class="signature"><a href="SavedLocals.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">SavedLocals</span>
+        
+        
+        <span class="result"> extends ArrayBuffer[com.twitter.util.SavedLocal[_]]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.ScheduledThreadPoolTimer">
+      <a id="ScheduledThreadPoolTimer:ScheduledThreadPoolTimer"></a>
+      <h4 class="signature"><a href="ScheduledThreadPoolTimer.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ScheduledThreadPoolTimer</span>
+        
+        
+        <span class="result"> extends Timer</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.SignalHandler">
+      <a id="SignalHandler:SignalHandler"></a>
+      <h4 class="signature"><a href="SignalHandler.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">SignalHandler</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.SimplePool">
+      <a id="SimplePool:SimplePool[A]"></a>
+      <h4 class="signature"><a href="SimplePool.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">SimplePool</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        
+        <span class="result"> extends Pool[A]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.StateMachine">
+      <a id="StateMachine:StateMachine"></a>
+      <h4 class="signature"><a href="StateMachine.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">StateMachine</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.StorageUnit">
+      <a id="StorageUnit:StorageUnit"></a>
+      <h4 class="signature"><a href="StorageUnit.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">StorageUnit</span>
+        
+        
+        <span class="result"> extends Ordered[StorageUnit]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.StringEncoder">
+      <a id="StringEncoder:StringEncoder"></a>
+      <h4 class="signature"><a href="StringEncoder.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">StringEncoder</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.SunSignalHandler">
+      <a id="SunSignalHandler:SunSignalHandler"></a>
+      <h4 class="signature"><a href="SunSignalHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">SunSignalHandler</span>
+        
+        
+        <span class="result"> extends SignalHandler</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.TempFolder">
+      <a id="TempFolder:TempFolder"></a>
+      <h4 class="signature"><a href="TempFolder.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">TempFolder</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Test mixin that creates a new folder for a block of code to execute in.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Throw">
+      <a id="Throw:Throw[R]"></a>
+      <h4 class="signature"><a href="Throw.html">
+      <span class="kind">case class</span>
+      <span class="symbol">
+        <span class="name">Throw</span>
+        <span class="tparams">[<span name="R">+R</span>]</span>
+        <span class="params">(<span name="e">e: Throwable</span>)</span>
+        <span class="result"> extends Try[R] with Product</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: final 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Time">
+      <a id="Time:Time"></a>
+      <h4 class="signature"><a href="Time.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Time</span>
+        
+        
+        <span class="result"> extends TimeLike[Time] with Ordered[Time]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.TimeControl">
+      <a id="TimeControl:TimeControl"></a>
+      <h4 class="signature"><a href="TimeControl.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">TimeControl</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.TimeFormat">
+      <a id="TimeFormat:TimeFormat"></a>
+      <h4 class="signature"><a href="TimeFormat.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">TimeFormat</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A thread-safe wrapper around a SimpleDateFormat object.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.TimeLike">
+      <a id="TimeLike:TimeLike[This]"></a>
+      <h4 class="signature"><a href="TimeLike.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">TimeLike</span>
+        <span class="tparams">[<span name="This">+This &lt;: TimeLike[This]</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.TimeOverflowException">
+      <a id="TimeOverflowException:TimeOverflowException"></a>
+      <h4 class="signature"><a href="TimeOverflowException.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">TimeOverflowException</span>
+        
+        
+        <span class="result"> extends Exception</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.TimeoutException">
+      <a id="TimeoutException:TimeoutException"></a>
+      <h4 class="signature"><a href="TimeoutException.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">TimeoutException</span>
+        
+        
+        <span class="result"> extends Exception</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Timer">
+      <a id="Timer:Timer"></a>
+      <h4 class="signature"><a href="Timer.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Timer</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.TimerTask">
+      <a id="TimerTask:TimerTask"></a>
+      <h4 class="signature"><a href="TimerTask.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">TimerTask</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.Try">
+      <a id="Try:Try[R]"></a>
+      <h4 class="signature"><a href="Try.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Try</span>
+        <span class="tparams">[<span name="R">+R</span>]</span>
+        
+        <span class="result"> extends TryLike[R, Try]</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: sealed abstract 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.util.TryLike">
+      <a id="TryLike:TryLike[R, This]"></a>
+      <h4 class="signature"><a href="TryLike.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">TryLike</span>
+        <span class="tparams">[<span name="R">+R</span>, <span name="This">This<span class="tparams">[<span name="R">+R</span>]</span> &lt;: TryLike[R, This]</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">This trait represents a computation that can succeed or fail.</p>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="com.twitter.util.Duration">
+      <a id="Duration:Duration"></a>
+      <h4 class="signature"><a href="Duration$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Duration</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Future">
+      <a id="Future:Future"></a>
+      <h4 class="signature"><a href="Future$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Future</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.FutureTask">
+      <a id="FutureTask:FutureTask"></a>
+      <h4 class="signature"><a href="FutureTask$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">FutureTask</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.HandleSignal">
+      <a id="HandleSignal:HandleSignal"></a>
+      <h4 class="signature"><a href="HandleSignal$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">HandleSignal</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Locals">
+      <a id="Locals:Locals"></a>
+      <h4 class="signature"><a href="Locals$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Locals</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Promise">
+      <a id="Promise:Promise"></a>
+      <h4 class="signature"><a href="Promise$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Promise</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.RandomSocket">
+      <a id="RandomSocket:RandomSocket"></a>
+      <h4 class="signature"><a href="RandomSocket$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">RandomSocket</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.SignalHandlerFactory">
+      <a id="SignalHandlerFactory:SignalHandlerFactory"></a>
+      <h4 class="signature"><a href="SignalHandlerFactory$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">SignalHandlerFactory</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.StateMachine">
+      <a id="StateMachine:StateMachine"></a>
+      <h4 class="signature"><a href="StateMachine$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">StateMachine</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.StorageUnit">
+      <a id="StorageUnit:StorageUnit"></a>
+      <h4 class="signature"><a href="StorageUnit$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">StorageUnit</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="_root_#StorageUnitConversions">
+      <a id="StorageUnitConversions:com.twitter.conversions.storage.type"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol">
+        <span class="name">StorageUnitConversions</span>
+        
+        
+        <span class="result">: com.twitter.conversions.storage.type</span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          definition classes: <a href="../../../package.html" class="extype" name="_root_">root</a>
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.StreamHelper">
+      <a id="StreamHelper:StreamHelper"></a>
+      <h4 class="signature"><a href="StreamHelper$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">StreamHelper</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.SunSignalHandler">
+      <a id="SunSignalHandler:SunSignalHandler"></a>
+      <h4 class="signature"><a href="SunSignalHandler$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">SunSignalHandler</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Time">
+      <a id="Time:Time"></a>
+      <h4 class="signature"><a href="Time$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Time</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Use <code>Time.now</code> in your app instead of <code>System.currentTimeMillis</code>, and
+unit tests will be able to adjust the current time to verify timeouts
+and other time-dependent behavior, without calling <code>sleep</code>.</p>
+    </li><li visbl="pub" data-isabs="false" name="_root_#TimeConversions">
+      <a id="TimeConversions:com.twitter.conversions.time.type"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol">
+        <span class="name">TimeConversions</span>
+        
+        
+        <span class="result">: com.twitter.conversions.time.type</span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          definition classes: <a href="../../../package.html" class="extype" name="_root_">root</a>
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.TimeMath">
+      <a id="TimeMath:TimeMath"></a>
+      <h4 class="signature"><a href="TimeMath$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">TimeMath</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Checks for overflow
+</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.Try">
+      <a id="Try:Try"></a>
+      <h4 class="signature"><a href="Try$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Try</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">The Try type represents a computation that may either result in an exception
+or return a success value.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.U64">
+      <a id="U64:U64"></a>
+      <h4 class="signature"><a href="U64$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">U64</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.util.repository">
+      <a id="repository:repository"></a>
+      <h4 class="signature"><a href="repository/package.html">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">repository</span>
+        
+        
+        
+      </span>
+      </a></h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>

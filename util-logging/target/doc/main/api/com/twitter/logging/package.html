@@ -1,0 +1,357 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.twitter.logging</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value" onload="windowTitle();">
+
+      <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
+
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <h1>logging</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">logging</span>
+        
+        
+        
+      </span>
+      </h4>
+      <div class="fullcomment" id="comment"></div>
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in">Public</li><li class="all out">All</li></ol>
+            </div>
+          <div id="impl">
+              <span class="filtertype">Impl.</span>
+              <ol><li class="concrete in">Concrete</li><li class="abstract in">Abstract</li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="com.twitter.logging.ConsoleHandler">
+      <a id="ConsoleHandler:ConsoleHandler"></a>
+      <h4 class="signature"><a href="ConsoleHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ConsoleHandler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Log things to the console.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.FileHandler">
+      <a id="FileHandler:FileHandler"></a>
+      <h4 class="signature"><a href="FileHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">FileHandler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A log handler that writes log entries into a file, and rolls this file
+at a requested interval (hourly, daily, or weekly).</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.Formatter">
+      <a id="Formatter:Formatter"></a>
+      <h4 class="signature"><a href="Formatter.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Formatter</span>
+        
+        
+        <span class="result"> extends Formatter</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A standard log formatter for scala.</p>
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.logging.Handler">
+      <a id="Handler:Handler"></a>
+      <h4 class="signature"><a href="Handler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Handler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A base log handler for scala.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.LazyLogRecord">
+      <a id="LazyLogRecord:LazyLogRecord"></a>
+      <h4 class="signature"><a href="LazyLogRecord.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">LazyLogRecord</span>
+        
+        
+        <span class="result"> extends LogRecord</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.logging.Level">
+      <a id="Level:Level"></a>
+      <h4 class="signature"><a href="Level.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Level</span>
+        
+        
+        <span class="result"> extends Level</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: sealed abstract 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.Logger">
+      <a id="Logger:Logger"></a>
+      <h4 class="signature"><a href="Logger.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Logger</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Scala wrapper for logging.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.LoggingException">
+      <a id="LoggingException:LoggingException"></a>
+      <h4 class="signature"><a href="LoggingException.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">LoggingException</span>
+        
+        
+        <span class="result"> extends Exception</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="com.twitter.logging.Policy">
+      <a id="Policy:Policy"></a>
+      <h4 class="signature"><a href="Policy.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Policy</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: sealed abstract 
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.ScribeHandler">
+      <a id="ScribeHandler:ScribeHandler"></a>
+      <h4 class="signature"><a href="ScribeHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ScribeHandler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.StringHandler">
+      <a id="StringHandler:StringHandler"></a>
+      <h4 class="signature"><a href="StringHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">StringHandler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Mostly useful for unit tests: logging goes directly into a string buffer.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.SyslogFormatter">
+      <a id="SyslogFormatter:SyslogFormatter"></a>
+      <h4 class="signature"><a href="SyslogFormatter.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">SyslogFormatter</span>
+        
+        
+        <span class="result"> extends Formatter</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.SyslogHandler">
+      <a id="SyslogHandler:SyslogHandler"></a>
+      <h4 class="signature"><a href="SyslogHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">SyslogHandler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.ThrottledHandler">
+      <a id="ThrottledHandler:ThrottledHandler"></a>
+      <h4 class="signature"><a href="ThrottledHandler.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ThrottledHandler</span>
+        
+        
+        <span class="result"> extends Handler</span>
+      </span>
+      </a></h4>
+      
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="com.twitter.logging.BareFormatter">
+      <a id="BareFormatter:BareFormatter"></a>
+      <h4 class="signature"><a href="BareFormatter$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">BareFormatter</span>
+        
+        
+        <span class="result"> extends Formatter</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Formatter that logs only the text of a log message, with no prefix (no date, etc).</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.BasicFormatter">
+      <a id="BasicFormatter:BasicFormatter"></a>
+      <h4 class="signature"><a href="BasicFormatter$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">BasicFormatter</span>
+        
+        
+        <span class="result"> extends Formatter</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Formatter that uses all the defaults.</p>
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.Level">
+      <a id="Level:Level"></a>
+      <h4 class="signature"><a href="Level$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Level</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.Logger">
+      <a id="Logger:Logger"></a>
+      <h4 class="signature"><a href="Logger$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Logger</span>
+        
+        
+        <span class="result"> extends Iterable[Logger]</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.Policy">
+      <a id="Policy:Policy"></a>
+      <h4 class="signature"><a href="Policy$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">Policy</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.ScribeHandler">
+      <a id="ScribeHandler:ScribeHandler"></a>
+      <h4 class="signature"><a href="ScribeHandler$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">ScribeHandler</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.SyslogFuture">
+      <a id="SyslogFuture:SyslogFuture"></a>
+      <h4 class="signature"><a href="SyslogFuture$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">SyslogFuture</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.SyslogHandler">
+      <a id="SyslogHandler:SyslogHandler"></a>
+      <h4 class="signature"><a href="SyslogHandler$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">SyslogHandler</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.twitter.logging.config">
+      <a id="config:config"></a>
+      <h4 class="signature"><a href="config/package.html">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">config</span>
+        
+        
+        
+      </span>
+      </a></h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>
