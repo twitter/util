@@ -182,11 +182,12 @@ object Eval {
      * Class loader for finding classes compiled by this StringCompiler.
      * After each reset, this class loader will not be able to find old compiled classes.
      */
-    val classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
+    var classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
 
     def reset() {
       virtualDirectory.clear
       reporter.reset
+      classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
     }
 
     /**
