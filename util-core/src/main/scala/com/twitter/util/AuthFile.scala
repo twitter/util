@@ -29,7 +29,7 @@ import scala.util.parsing.combinator.lexical._
  */
 object AuthFile {
   object parser extends RegexParsers {
-    override val whiteSpace = "(\\s+|#(.*?)\\n)+".r
+    override val whiteSpace = "(?:\\s+|#.*\\n)+".r
 
     val token = "[\\w-_]+".r
     def auth = (token <~ ":") ~ "[^\\n]+".r ^^ { case k ~ v => (k, v) }
@@ -38,8 +38,8 @@ object AuthFile {
     def apply(in: String): Map[String, String] = {
       parseAll(content, in) match {
         case Success(result, _) => result
-        case x @ Failure(msg, z) => throw new IOException(x.toString)
-        case x @ Error(msg, _) => throw new IOException(x.toString)
+        case x: Failure => throw new IOException(x.toString)
+        case x: Error => throw new IOException(x.toString)
       }
     }
   }
