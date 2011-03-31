@@ -4,7 +4,7 @@ import com.twitter.sbt._
 class Project(info: ProjectInfo)
   extends StandardParentProject(info)
   with SubversionPublisher
-  with IdeaProject
+  with ProjectDependencies
 {
 
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
@@ -46,13 +46,10 @@ class Project(info: ProjectInfo)
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-    with PublishSite
-
 
   class EvalProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-    with PublishSite
   {
     val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
     override def filterScalaJars = false
@@ -61,7 +58,6 @@ class Project(info: ProjectInfo)
   class CollectionProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-    with PublishSite
   {
     val guava              = "com.google.guava"    % "guava"               % "r06"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
@@ -70,7 +66,6 @@ class Project(info: ProjectInfo)
   class ReflectProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-    with PublishSite
   {
     val cglib = "cglib" % "cglib" % "2.2"
   }
@@ -78,12 +73,10 @@ class Project(info: ProjectInfo)
   class LoggingProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-    with PublishSite
 
   class ThriftProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-    with PublishSite
   {
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift = "thrift"        % "libthrift"     % "0.5.0"
@@ -94,6 +87,7 @@ class Project(info: ProjectInfo)
     extends StandardProject
     with SubversionPublisher
     with PublishSite
+    with ProjectDependencies
   {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
     val mockito = "org.mockito"             % "mockito-all" % "1.8.5" % "test" withSources()
