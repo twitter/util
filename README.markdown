@@ -119,4 +119,3 @@ formats are
     import com.xxx.MyConfig
 
     val config = Eval[MyConfig](new File("config/Development.scala"))
-
