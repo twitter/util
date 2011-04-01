@@ -44,7 +44,7 @@ object string {
      */
     def regexSub(re: Regex)(replace: (Regex.MatchData => String)): String = {
       var offset = 0
-      var out = new StringBuilder
+      val out = new StringBuilder()
 
       for (m <- re.findAllIn(wrapped).matchData) {
         if (m.start > offset) {

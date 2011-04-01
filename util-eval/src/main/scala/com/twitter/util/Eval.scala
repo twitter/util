@@ -55,10 +55,10 @@ object Eval {
   /**
    * Eval[Int]("1 + 1") // => 2
    */
-  def apply[T](code: String): T = {
+  def apply[T](code: String, resetState: Boolean = true): T = {
     val id = uniqueId(code)
     val className = "Evaluator__" + id
-    val cls = compiler(wrapCodeInClass(className, code), className, id)
+    val cls = compiler(wrapCodeInClass(className, code), className, id, resetState)
     cls.getConstructor().newInstance().asInstanceOf[() => Any].apply().asInstanceOf[T]
   }
 
@@ -74,6 +74,21 @@ object Eval {
    */
   def apply[T](stream: InputStream): T = {
     apply(scala.io.Source.fromInputStream(stream).mkString)
+  }
+
+  /**
+   * Compile an entire source file into the virtual classloader.
+   */
+  def compile(code: String) {
+    Eval.compiler(code)
+  }
+
+  /**
+   * Like `Eval()`, but doesn't reset the virtual classloader before evaluating. So if you've
+   * loaded classes with `compile`, they can be referenced/imported in code run by `inPlace`.
+   */
+  def inPlace[T](code: String) = {
+    apply[T](code, false)
   }
 
   private def uniqueId(code: String): String = {
@@ -204,18 +219,20 @@ object Eval {
     }
 
     /**
-     * Reset the compiler, compile a new class, load it, and return it. Thread-safe.
+     * Compile a new class, load it, and return it. Thread-safe.
      */
-    def apply(code: String, className: String, id: String): Class[_] = synchronized {
-      cache.get(id) match {
-        case Some(cls) =>
-          cls
-        case None =>
-          reset()
-          apply(code)
-          val cls = classLoader.loadClass(className)
-          cache(id) = cls
-          cls
+    def apply(code: String, className: String, id: String, resetState: Boolean = true): Class[_] = {
+      synchronized {
+        cache.get(id) match {
+          case Some(cls) =>
+            cls
+          case None =>
+            if (resetState) reset()
+            apply(code)
+            val cls = classLoader.loadClass(className)
+            cache(id) = cls
+            cls
+        }
       }
     }
   }
