@@ -10,8 +10,9 @@ object TempFile {
    * @param path the resource-relative path to make a temp file from
    * @return the temp File object
    */
-  def fromResourcePath(path: String): File = {
-    val stream = getClass.getResourceAsStream(path)
+  def fromResourcePath(path: String): File = fromResourcePath(getClass, path)
+  def fromResourcePath(klass: Class[_], path: String): File = {
+    val stream = klass.getResourceAsStream(path)
     val file = File.createTempFile("thrift", "scala")
     file.deleteOnExit()
     val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
