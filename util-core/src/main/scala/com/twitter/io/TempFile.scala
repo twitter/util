@@ -3,6 +3,7 @@ package com.twitter.io
 import java.io.{File, BufferedOutputStream, FileOutputStream}
 
 object TempFile {
+
   /**
    * Create a temporary file from the given (resource) path. The
    * tempfile is deleted on JVM exit.
