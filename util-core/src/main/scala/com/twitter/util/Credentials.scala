@@ -47,6 +47,10 @@ object Credentials {
   def apply(file: File): Map[String, String] = parser(Source.fromFile(file).mkString)
 
   def apply(data: String): Map[String, String] = parser(data)
+
+  def byName(name: String): Map[String, String] = {
+    apply(new File(System.getenv().asScala.getOrElse("KEY_FOLDER", "/etc/keys"), name))
+  }
 }
 
 /**
@@ -55,4 +59,5 @@ object Credentials {
 class Credentials {
   def read(data: String): java.util.Map[String, String] = Credentials(data).asJava
   def read(file: File): java.util.Map[String, String] = Credentials(file).asJava
+  def byName(name: String): java.util.Map[String, String] = Credentials.byName(name).asJava
 }
