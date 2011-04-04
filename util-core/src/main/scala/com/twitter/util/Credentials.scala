@@ -27,7 +27,7 @@ import scala.util.parsing.combinator.lexical._
  *
  * The file's format is assumed to be trivialized yaml, containing lines of the form ``key: value``.
  */
-object AuthFile {
+object Credentials {
   object parser extends RegexParsers {
     override val whiteSpace = "(?:\\s+|#.*\\n)+".r
 
@@ -50,9 +50,9 @@ object AuthFile {
 }
 
 /**
- * Java interface to AuthFile.
+ * Java interface to Credentials.
  */
-class AuthFile {
-  def read(data: String): java.util.Map[String, String] = AuthFile(data).asJava
-  def read(file: File): java.util.Map[String, String] = AuthFile(file).asJava
+class Credentials {
+  def read(data: String): java.util.Map[String, String] = Credentials(data).asJava
+  def read(file: File): java.util.Map[String, String] = Credentials(file).asJava
 }

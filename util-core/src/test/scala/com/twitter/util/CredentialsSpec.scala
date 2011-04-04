@@ -18,11 +18,11 @@ package com.twitter.util
 
 import org.specs.Specification
 
-object AuthFileSpec extends Specification {
-  "AuthFile" should {
+object CredentialsSpec extends Specification {
+  "Credentials" should {
     "parse a simple auth file" in {
       val content = "username: root\npassword: hellokitty\n"
-      AuthFile(content) mustEqual Map("username" -> "root", "password" -> "hellokitty")
+      Credentials(content) mustEqual Map("username" -> "root", "password" -> "hellokitty")
     }
 
     "parse a more complex auth file" in {
@@ -34,7 +34,7 @@ password  : last_0f-the/international:playboys
    moar :ok
 
         """
-      AuthFile(content) mustEqual Map(
+      Credentials(content) mustEqual Map(
         "username" -> "root",
         "password" -> "last_0f-the/international:playboys",
         "moar" -> "ok"
@@ -43,7 +43,7 @@ password  : last_0f-the/international:playboys
 
     "work for java peeps too" in {
       val content = "username: root\npassword: hellokitty\n"
-      val jmap = new AuthFile().read(content)
+      val jmap = new Credentials().read(content)
       jmap.size() mustEqual 2
       jmap.get("username") mustEqual "root"
       jmap.get("password") mustEqual "hellokitty"
