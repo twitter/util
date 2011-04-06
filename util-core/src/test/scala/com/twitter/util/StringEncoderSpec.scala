@@ -1,5 +1,5 @@
 /*
-* Copyright 2011 Twitter, Inc.
+ * Copyright 2011 Twitter, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -22,9 +22,15 @@ class TestBase64Encoder extends Base64StringEncoder {
 }
 
 class StringEncoderSpec extends Specification {
+  val longString = "A string that is really really really really really really long and has more than 76 characters"
+  val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
+  val testEncoder = new TestBase64Encoder()
+
   "strip new lines" in {
-    val longString = "A string that is really really really really really really long and has more than 76 characters"
-    val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
-    new TestBase64Encoder().encode(longString.getBytes) mustEqual result
+    testEncoder.encode(longString.getBytes) mustEqual result
+  }
+
+  "decode value with stripped new lines" in {
+    new String(testEncoder.decode(result)) mustEqual longString
   }
 }
