@@ -12,8 +12,10 @@ trait Base64StringEncoder extends StringEncoder {
   private[this] lazy val encoder = new BASE64Encoder
   private[this] lazy val decoder = new BASE64Decoder
 
-  override def encode(bytes: Array[Byte]): String =
-    encoder.encode(bytes)
+  override def encode(bytes: Array[Byte]): String = {
+    val encoded = encoder.encode(bytes)
+    encoded.replaceAll("\n", "")
+  }
 
   override def decode(str: String): Array[Byte] =
     decoder.decodeBuffer(str)
