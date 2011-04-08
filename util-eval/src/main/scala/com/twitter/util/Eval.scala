@@ -40,7 +40,7 @@ object Eval extends Eval {
 
 class Eval {
   import Eval.jvmId
-  
+
   private lazy val compilerPath = try {
     jarPathOfClass("scala.tools.nsc.Interpreter")
   } catch {
