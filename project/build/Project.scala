@@ -4,13 +4,12 @@ import com.twitter.sbt._
 class Project(info: ProjectInfo)
   extends StandardParentProject(info)
   with SubversionPublisher
-  with ProjectDependencies
+  with ParentProjectDependencies
+  with TartifactoryRepos
 {
-
+  override def proxyRepo = "open-source"
   override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
-
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
-
 
   // Projects
 
@@ -88,11 +87,13 @@ class Project(info: ProjectInfo)
     with SubversionPublisher
     with PublishSite
     with ProjectDependencies
+    with TartifactoryRepos
   {
     val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
     val mockito = "org.mockito"             % "mockito-all" % "1.8.5" % "test" withSources()
     val junit   = "junit"                   %       "junit" % "3.8.2" % "test"
 
+    override def proxyRepo = "open-source"
     override def compileOptions = super.compileOptions ++ Seq(Unchecked) ++
       compileOptions("-encoding", "utf8") ++
       compileOptions("-deprecation")

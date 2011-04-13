@@ -5,6 +5,7 @@ import com.twitter.conversions.time._
 import collection.mutable.ArrayBuffer
 import com.twitter.util.{Future, Promise}
 import java.util.concurrent.ConcurrentLinkedQueue
+import com.twitter.conversions.time._
 
 object ChannelSpec extends Specification {
   "ChannelSource" should {
@@ -50,7 +51,7 @@ object ChannelSpec extends Specification {
       }
 
       "filter" in {
-        val channel = source filter(_ % 2 == 0)
+        val channel = source filter(_ % 2 != 0)
         channel.respond { i =>
           Future { results += i }
         }
@@ -88,7 +89,7 @@ object ChannelSpec extends Specification {
         source.send(1)
         source.send(2)
         source.send(3)
-        first() mustEqual 1
+        first(1.second) mustEqual 1
       }
 
       "backpressure" in {
