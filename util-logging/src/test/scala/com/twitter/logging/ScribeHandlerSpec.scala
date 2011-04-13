@@ -49,6 +49,9 @@ class ScribeHandlerSpec extends Specification {
     "build a scribe RPC call" in {
       Time.withCurrentTimeFrozen { _ =>
         val scribe = new ScribeHandlerConfig {
+          // This is a huge hack to make sure that the buffer doesn't
+          // get flushed.
+          port = 50505
           bufferTime = 100.milliseconds
           maxMessagesToBuffer = 10000
           formatter = new FormatterConfig { timezone = "UTC" }
