@@ -26,13 +26,6 @@ import com.twitter.util.{Time, Duration}
 import config._
 
 class ScribeHandlerSpec extends Specification {
-  def config(time: Duration, max: Int, _formatter: FormatterConfig) = new ScribeHandlerConfig {
-    formatter = _formatter
-    category = "test"
-    bufferTime = time
-    maxMessagesToBuffer = max
-  }
-
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")
@@ -95,6 +88,9 @@ class ScribeHandlerSpec extends Specification {
 
     "throw away log messages if scribe is too busy" in {
       val scribe = new ScribeHandlerConfig {
+        // This is a huge hack to make sure that the buffer doesn't
+        // get flushed.
+        port = 50505
         bufferTime = 5.seconds
         maxMessagesToBuffer = 1
         formatter = BareFormatterConfig
