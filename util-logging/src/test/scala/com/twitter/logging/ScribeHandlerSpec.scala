@@ -56,6 +56,7 @@ class ScribeHandlerSpec extends Specification {
       }.apply()
       scribe.publish(record1)
       scribe.publish(record2)
+      scribe.queue must haveSize(2)
       scribe.makeBuffer(2).array.hexlify mustEqual "000000b080010001000000034c6f67000000000f0001" +
         "0c000000020b000100000004746573740b000200000036494e46205b32303038303332392d30353a35333a3" +
         "1362e3732325d2068656c6c6f3a20546869732069732061206d6573736167652e0a000b0001000000047465" +
