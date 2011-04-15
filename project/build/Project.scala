@@ -58,7 +58,7 @@ class Project(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-    val guava              = "com.google.guava"    % "guava"               % "r06"
+    val guava              = "com.google.guava"    % "guava"               % "r08"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
   }
 

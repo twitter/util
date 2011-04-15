@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.{MILLISECONDS => MS}
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 import collection.JavaConversions.JConcurrentMapWrapper
 
@@ -21,8 +21,11 @@ object MapMaker {
     def softValues = { mapMaker.softValues; this }
     def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
-    def expiration(expiration: Duration) = { mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this }
+    def expiration(expiration: Duration) = { mapMaker.expiration(expiration.inMillis, MS); this }
     def compute(_valueOperation: K => V) = { valueOperation = Some(_valueOperation); this }
+    def expireAfterAccess(ttl: Duration) = { mapMaker.expireAfterAccess(ttl.inMillis, MS); this }
+    def expireAfterWrite(ttl: Duration) = { mapMaker.expireAfterWrite(ttl.inMillis, MS); this }
+    def maximumSize(size: Int) = { mapMaker.maximumSize(size); this }
 
     def apply(): collection.mutable.ConcurrentMap[K, V] = {
       val javaMap = valueOperation map { valueOperation =>

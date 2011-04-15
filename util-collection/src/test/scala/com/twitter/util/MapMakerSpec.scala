@@ -24,5 +24,15 @@ object MapMakerSpec extends Specification {
       val map = MapMaker[Int, Item](_.compute(_ => throw new Exception))
       map.contains(3) must not(throwA[Exception])
     }
+
+    "max size is enforced" in {
+      val fixedMap = MapMaker[Int, Int](_.maximumSize(1))
+      fixedMap += 1 -> 10
+      fixedMap += 2 -> 20
+
+      fixedMap.size mustEqual 1
+      fixedMap.get(1) must beNone
+      fixedMap.get(2) must beSome(20)
+    }
   }
 }
