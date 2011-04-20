@@ -3,7 +3,7 @@ package com.twitter.io
 import scala.annotation.tailrec
 import java.io.{InputStream, OutputStream, ByteArrayOutputStream}
 
-object Stream {
+object StreamIO {
   /**
    * Copy an InputStream to an OutputStream in chunks of the given
    * buffer size (default = 1KB).
