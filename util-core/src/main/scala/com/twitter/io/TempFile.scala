@@ -13,16 +13,21 @@ object TempFile {
 
   def fromResourcePath(path: String): File = fromResourcePath(getClass, path)
   def fromResourcePath(klass: Class[_], path: String): File = {
+    val (basename, ext) = {
+      val last = path.split(File.separatorChar).last
+      last.split('.').reverse match {
+        case Array(basename) =>
+          (basename, "")
+        case Array(ext, base@_*) =>
+          (base.reverse.mkString("."), ext)
+      }
+    }
+
     val stream = klass.getResourceAsStream(path)
-    val file = File.createTempFile("thrift", "scala")
+    val file = File.createTempFile(basename, ext)
     file.deleteOnExit()
     val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
-
-    var byte = stream.read()
-    while (byte != -1) {
-      fos.write(byte)
-      byte = stream.read()
-    }
+    Stream.copy(stream, fos)
     fos.flush()
 
     file
