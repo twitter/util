@@ -5,7 +5,7 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 
 trait StringEncoder {
   def encode(bytes: Array[Byte]): String = new String(bytes)
-  def decode(str: String):   Array[Byte] = str.getBytes
+  def decode(str: String): Array[Byte] = str.getBytes
 }
 
 trait Base64StringEncoder extends StringEncoder {
@@ -19,3 +19,5 @@ trait Base64StringEncoder extends StringEncoder {
     decoder.decodeBuffer(str)
 
 }
+
+object Base64StringEncoder extends Base64StringEncoder
