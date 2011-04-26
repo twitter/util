@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.conversions.time._
 import org.specs.Specification
 
 object MapMakerSpec extends Specification {
@@ -33,6 +34,23 @@ object MapMakerSpec extends Specification {
       fixedMap.size mustEqual 1
       fixedMap.get(1) must beNone
       fixedMap.get(2) must beSome(20)
+    }
+
+    "EvictionListener is called upon eviction" in {
+      val wasEvicted = new CountDownLatch(2)
+
+      def onEviction(m: Int, n: Int) = wasEvicted.countDown()
+
+      val evictionMap = MapMaker[Int, Int](_.maximumSize(1).withEvictionListener(onEviction))
+
+      evictionMap += 1 -> 10
+      evictionMap += 2 -> 20
+      evictionMap += 3 -> 30
+
+      evictionMap.size mustEqual 1 // 2 elements were evicted
+
+      wasEvicted.await(100.milliseconds)
+      wasEvicted.isZero mustBe true
     }
   }
 }

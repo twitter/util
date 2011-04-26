@@ -1,8 +1,9 @@
 package com.twitter.util
 
 import java.util.concurrent.TimeUnit.{MILLISECONDS => MS}
-import com.google.common.collect.{MapMaker => GoogleMapMaker}
+import com.google.common.collect.{MapMaker => GoogleMapMaker, MapEvictionListener}
 import collection.JavaConversions.JConcurrentMapWrapper
+import collection.mutable.{Buffer, ListBuffer}
 
 object MapMaker {
   def apply[K, V](f: Config[K, V] => Unit) = {
@@ -14,6 +15,7 @@ object MapMaker {
   class Config[K, V] {
     private val mapMaker = new GoogleMapMaker
     private var valueOperation: Option[K => V] = None
+    private var evictionListener: Option[MapEvictionListener[K, V]] = None
 
     def weakKeys = { mapMaker.weakKeys; this }
     def weakValues = { mapMaker.weakValues; this }
@@ -27,12 +29,31 @@ object MapMaker {
     def expireAfterWrite(ttl: Duration) = { mapMaker.expireAfterWrite(ttl.inMillis, MS); this }
     def maximumSize(size: Int) = { mapMaker.maximumSize(size); this }
 
+    /**
+     * Sets this MapMaker's eviction listener. The eviction listener is called in
+     * the same thread as what caused the eviction.
+     */
+    def withEvictionListener(f: (K, V) => Unit): Config[K, V] = {
+      evictionListener = Some(
+        new MapEvictionListener[K, V] {
+          def onEviction(key: K, value: V) = f(key, value)
+        }
+      )
+      this
+    }
+
     def apply(): collection.mutable.ConcurrentMap[K, V] = {
+      val mapMakerWithListener = evictionListener match {
+        case Some(l) => mapMaker.evictionListener(l).asInstanceOf[GoogleMapMaker]
+        case None => mapMaker
+      }
+
       val javaMap = valueOperation map { valueOperation =>
-        mapMaker.makeComputingMap[K, V](new com.google.common.base.Function[K, V] {
+        mapMakerWithListener.makeComputingMap[K, V](new com.google.common.base.Function[K, V] {
           def apply(k: K) = valueOperation(k)
         })
-      } getOrElse(mapMaker.makeMap())
+      } getOrElse(mapMakerWithListener.makeMap())
+
       new JConcurrentMapWrapper(javaMap) {
         // the default contains method (in 2.8) calls 'get' which messes
         // with the compute method, so we need to override contains
