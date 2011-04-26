@@ -306,8 +306,11 @@ object Promise {
 class Promise[A] extends Future[A] {
   import Promise._
 
+  private[this] type Computation = (Try[A] => Unit, SavedLocals)
+  
   @volatile private[this] var result: Option[Try[A]] = None
-  private[this] val computations = new ArrayBuffer[(Try[A] => Unit, SavedLocals)]
+  private[this] var firstComputation: Computation = null
+  private[this] var nextComputations: ArrayBuffer[Computation] = null
 
   /**
    * Secondary constructor where result can be provided immediately.
@@ -364,9 +367,17 @@ class Promise[A] extends Future[A] {
       if (didSetResult) {
         val initialState = Locals.save()
         try {
-          computations foreach { case (k, locals) =>
+          if (firstComputation ne null) {
+            val (k, locals) = firstComputation
             locals.restore()
             k(newResult)
+
+            if (nextComputations ne null) {
+              nextComputations foreach { case (k, locals) =>
+                locals.restore()
+                k(newResult)
+              }
+            }
           }
         } finally {
           initialState.restore()
@@ -380,7 +391,17 @@ class Promise[A] extends Future[A] {
     result map(k) getOrElse {
       val wasDefined = synchronized {
         if (result.isDefined) true else {
-          computations += ((k, Locals.save()))
+          val computation = (k, Locals.save())
+          if (firstComputation eq null) {
+            firstComputation = computation
+          } else {
+            if (nextComputations eq null) {
+              // This initial size was picked somewhat arbitrarily.
+              nextComputations = new ArrayBuffer[Computation](4)
+            }
+            nextComputations += computation
+          }
+
           false
         }
       }
@@ -440,4 +461,39 @@ class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
 
 object FutureTask {
   def apply[A](fn: => A) = new FutureTask[A](fn)
+}
+
+private[util] object FutureBenchmark {
+  /**
+   * Admittedly, this is not very good microbenchmarking technique.
+   */
+
+  import com.twitter.conversions.storage._
+  private[this] val NumIters = 100.million
+
+  private[this] def bench[A](numIters: Long)(f: => A): Long = {
+    val begin = System.currentTimeMillis()    
+    (0L until numIters) foreach { _ => f }
+    System.currentTimeMillis() - begin
+  }
+  
+  def main(args: Array[String]) {
+    printf("Warming up.. ")
+    val warmupTime = bench(NumIters) {
+      val promise = new Promise[Unit]
+      promise respond { res => () }
+      promise() = Return(())
+    }
+    printf("%d ms\n", warmupTime)
+    
+    printf("Running .. ")
+    val runTime = bench(NumIters) {
+      val promise = new Promise[Unit]
+      promise respond { res => () }
+      promise() = Return(())
+    }
+    printf(
+      "%d ms, %d responds/sec\n",
+      runTime, 1000 * NumIters / runTime)
+  }
 }
