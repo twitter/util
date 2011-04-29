@@ -83,7 +83,7 @@ class ScribeHandlerSpec extends Specification {
 
       scribe.publish(bytes)
 
-      scribe.queue.first mustEqual bytes
+      scribe.queue.head mustEqual bytes
     }
 
     "throw away log messages if scribe is too busy" in {

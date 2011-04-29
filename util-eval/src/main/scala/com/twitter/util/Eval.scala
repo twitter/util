@@ -96,6 +96,34 @@ class Eval {
     apply[T](code, false)
   }
 
+  /**
+   * Check if code is Eval-able.
+   * @throw CompilerException if not Eval-able.
+   */
+  def check(code: String) {
+    val id = uniqueId(code)
+    val className = "Evaluator__" + id
+    val wrappedCode = wrapCodeInClass(className, code)
+    compile(wrappedCode) // may throw CompilerException
+  }
+
+  /**
+   * Check if files are Eval-able.
+   * @throw CompilerException if not Eval-able.
+   */
+  def check(files: File*) {
+    val code = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
+    check(code)
+  }
+
+  /**
+   * Check if stream is Eval-able.
+   * @throw CompilerException if not Eval-able.
+   */
+  def check(stream: InputStream) {
+    check(scala.io.Source.fromInputStream(stream).mkString)
+  }
+
   private def uniqueId(code: String): String = {
     val digest = MessageDigest.getInstance("SHA-1").digest(code.getBytes())
     val sha = new BigInteger(1, digest).toString(16)
