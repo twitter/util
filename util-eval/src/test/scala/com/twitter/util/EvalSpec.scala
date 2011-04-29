@@ -42,5 +42,18 @@ object EvalSpec extends Specification {
       (new Eval).check("23")      mustEqual ()
       (new Eval).check("invalid") must throwA[Eval.CompilerException]
     }
+
+    "#include" in {
+      val derived = Eval[() => String](
+        TempFile.fromResourcePath("/Base.scala"),
+        TempFile.fromResourcePath("/DerivedWithInclude.scala"))
+      derived() mustEqual "hello"
+      derived.toString mustEqual "hello, joe"
+    }
+
+    "throws a compilation error when Ruby is #included" in {
+      Eval[() => String](
+        TempFile.fromResourcePath("RubyInclude.scala")) must throwA[Throwable]
+    }
   }
 }

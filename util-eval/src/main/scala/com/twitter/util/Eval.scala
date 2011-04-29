@@ -16,7 +16,8 @@
 
 package com.twitter.util
 
-import java.io.{File, InputStream}
+import com.twitter.io.StreamIO
+import java.io.{File, InputStream, FileInputStream, FileNotFoundException}
 import java.math.BigInteger
 import java.net.URLClassLoader
 import java.security.MessageDigest
@@ -55,7 +56,21 @@ class Eval {
       throw new RuntimeException("Unable to load scala base object from classpath (scala-library jar is missing?)", e)
   }
 
-  private lazy val compiler = new StringCompiler(2)
+  /**
+   * Preprocessors to run the code through before it is passed to the Scala compiler
+   */
+  private lazy val preprocessors: Seq[Preprocessor] =
+    Seq(
+      new IncludePreprocessor(
+        Seq(
+          new ClassScopedResolver(getClass),
+          new FilesystemResolver(new File(".")),
+          new FilesystemResolver(new File("." + File.separator + "config"))
+        )
+      )
+    )
+
+  private lazy val compiler = new StringCompiler(2, preprocessors)
 
   /**
    * Eval[Int]("1 + 1") // => 2
@@ -175,11 +190,75 @@ class Eval {
     })
   }
 
+  trait Preprocessor {
+    def apply(code: String): String
+  }
+
+  trait Resolver {
+    def resolvable(path: String): Boolean
+    def get(path: String): InputStream
+  }
+
+  class FilesystemResolver(root: File) extends Resolver {
+    private[this] def file(path: String): File =
+      new File(root.getAbsolutePath + File.separator + path)
+
+
+    def resolvable(path: String): Boolean =
+      file(path).exists
+
+    def get(path: String): InputStream =
+      new FileInputStream(file(path))
+  }
+
+  class ClassScopedResolver(clazz: Class[_]) extends Resolver {
+    private[this] def quotePath(path: String) =
+      "/" + path
+
+    def resolvable(path: String): Boolean =
+      clazz.getResourceAsStream(quotePath(path)) != null
+
+    def get(path: String): InputStream =
+      clazz.getResourceAsStream(quotePath(path))
+  }
+
+  class ResolutionFailedException(message: String) extends Exception
+
+  /*
+   * This is a preprocesor that can include files by requesting them from the given classloader
+   *
+   * Thusly, if you put FS directories on your classpath (e.g. config/ under your app root,) you
+   * mix in configuration from the filesystem.
+   *
+   * @example #include file-name.scala
+   *
+   * This is the only directive supported by this preprocessor.
+   */
+  private class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
+    def apply(code: String): String =
+      code.lines map { line: String =>
+        val tokens = line.trim.split(' ')
+        if (tokens.length == 2 && tokens(0).equals("#include")) {
+          val path = tokens(1)
+          resolvers find { resolver: Resolver =>
+            resolver.resolvable(path)
+          } match {
+            case Some(r: Resolver) =>
+              StreamIO.buffer(r.get(path)).toString
+            case _ =>
+              throw new IllegalStateException("No resolver could find '%s'".format(path))
+          }
+        } else {
+          line
+        }
+      } mkString("\n")
+  }
+
   /**
    * Dynamic scala compiler. Lots of (slow) state is created, so it may be advantageous to keep
    * around one of these and reuse it.
    */
-  private class StringCompiler(lineOffset: Int) {
+  private class StringCompiler(lineOffset: Int, preprocessors: Seq[Preprocessor]) {
     val virtualDirectory = new VirtualDirectory("(memory)", None)
 
     val cache = new mutable.HashMap[String, Class[_]]()
@@ -238,12 +317,32 @@ class Eval {
       classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
     }
 
+    object Debug {
+      val enabled =
+        System.getProperty("eval.debug") != null
+
+      def printWithLineNumbers(code: String) {
+        printf("Code follows (%d bytes)\n", code.length)
+
+        var numLines = 0
+        code.lines foreach { line: String =>
+          numLines += 1
+          println(numLines.toString.padTo(5, ' ') + "| " + line)
+        }
+      }
+    }
+
     /**
      * Compile scala code. It can be found using the above class loader.
      */
     def apply(code: String) {
+      val processedCode = preprocessors.foldLeft(code) { case (c: String, p: Preprocessor) => p(c) }
+
+      if (Debug.enabled)
+        Debug.printWithLineNumbers(processedCode)
+
       val compiler = new global.Run
-      val sourceFiles = List(new BatchSourceFile("(inline)", code))
+      val sourceFiles = List(new BatchSourceFile("(inline)", processedCode))
       compiler.compileSources(sourceFiles)
 
       if (reporter.hasErrors || reporter.WARNING.count > 0) {
