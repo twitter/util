@@ -430,7 +430,7 @@ class Promise[A] extends Future[A] {
   def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](rescueException: PartialFunction[Throwable, AlsoFuture[B]]) =
     new Promise[B] {
       Promise.this.respond {
-        case r: Return[A] => update(r)
+        case r: Return[_] => update(r)
         case Throw(e) if rescueException.isDefinedAt(e) =>
           try {
             rescueException(e) respond(update(_))
