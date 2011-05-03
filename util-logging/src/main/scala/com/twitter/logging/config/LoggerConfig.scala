@@ -164,6 +164,20 @@ class ThrottledHandlerConfig extends HandlerConfig {
   def apply() = new ThrottledHandler(handler(), duration, maxToDisplay)
 }
 
+class QueuingHandlerConfig extends HandlerConfig {
+  def apply() = new QueueingHandler(handler(), maxQueueSize)
+
+  /**
+   * Maximum queue size.  Records are dropped when queue overflows.
+   */
+  var maxQueueSize: Int = Int.MaxValue
+
+  /**
+   * Wrapped handler.
+   */
+  var handler: HandlerConfig = null
+}
+
 class FileHandlerConfig extends HandlerConfig {
   /**
    * Filename to log to.
