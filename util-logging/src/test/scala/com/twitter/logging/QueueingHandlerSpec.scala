@@ -67,7 +67,8 @@ class QueueingHandlerSpec extends Specification {
       logger.warning("1")
       logger.warning("2")
       logger.warning("3")
-      (() => droppedCount)() must eventually(be_==(2))
+      Thread.sleep(100) // let thread log and block
+      droppedCount must be_>=(1) // either 1 or 2, depending on race
     }
 
     "flush" in {
