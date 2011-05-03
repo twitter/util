@@ -238,7 +238,7 @@ abstract class Future[+A] extends TryLike[A, Future] {
     this
   }
 
-  def addEventListener[U >: A](listener: FutureEventListener[U]) = respond {
+  def addEventListener(listener: FutureEventListener[_ >: A]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
   }
