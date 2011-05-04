@@ -100,5 +100,29 @@ class QueueingHandlerSpec extends Specification {
       queueHandler.close()
       wasClosed must beTrue
     }
+
+    "handle exceptions in the underlying handler" in {
+      val logger = freshLogger()
+      var shouldError = true
+      var didLog = false
+      val handler = new NullHandler {
+        override def publish(record: javalog.LogRecord) {
+          if (shouldError) {
+            shouldError = false
+            throw new Exception("Unable to log for whatever reason.")
+          } else {
+            didLog = true
+          }
+        }
+      }
+
+      val queueHandler = new QueueingHandler(handler)
+      logger.addHandler(queueHandler)
+
+      logger.info("fizz")
+      logger.info("buzz")
+      Thread.sleep(100) // let thread log
+      didLog must beTrue
+    }
   }
 }
