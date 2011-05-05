@@ -1,7 +1,8 @@
 package com.twitter.util
 
-import java.util.concurrent.{RejectedExecutionHandler, ScheduledThreadPoolExecutor, ThreadFactory,
-  TimeUnit}
+import java.util.concurrent.{
+  RejectedExecutionHandler, ScheduledThreadPoolExecutor,
+  ThreadFactory, TimeUnit, ExecutorService}
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
 
@@ -18,6 +19,17 @@ trait Timer {
   }
 
   def stop()
+}
+
+class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
+  def schedule(when: Time)(f: => Unit): TimerTask =
+    underlying.schedule(when)(f)
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+    underlying.schedule(when, period)(f)
+
+  def stop() {
+    executor.submit(new Runnable { def run() = underlying.stop() })
+  }
 }
 
 class ReferenceCountedTimer(factory: () => Timer) extends Timer {

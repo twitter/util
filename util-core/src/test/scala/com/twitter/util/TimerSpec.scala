@@ -1,11 +1,30 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.ExecutorService
 import com.twitter.conversions.time._
 import org.specs.Specification
 import org.specs.mock.Mockito
+import org.mockito.{Matchers, ArgumentCaptor}
 
 object TimerSpec extends Specification with Mockito {
+  "ThreadStoppingTimer" should {
+    "stop timers in a different thread" in {
+      // For some reason proper type inference fails here.
+      type R = org.specs.specification.Result[java.util.concurrent.Future[_]]
+      val executor = mock[ExecutorService]
+      val underlying = mock[Timer]
+      val timer = new ThreadStoppingTimer(underlying, executor)
+      there was no(executor).submit(any[Runnable]): R
+      timer.stop()
+      there was no(underlying).stop()
+      val runnableCaptor = ArgumentCaptor.forClass(classOf[Runnable])
+      there was one(executor).submit(runnableCaptor.capture()): R
+      runnableCaptor.getValue.run()
+      there was one(underlying).stop()
+    }
+  }
+  
   "ReferenceCountedTimer" should {
     val underlying = mock[Timer]
     val factory = mock[() => Timer]
