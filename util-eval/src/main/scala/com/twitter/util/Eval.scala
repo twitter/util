@@ -93,14 +93,14 @@ class Eval {
    * Eval[Int](getClass.getResourceAsStream("..."))
    */
   def apply[T](stream: InputStream): T = {
-    apply(scala.io.Source.fromInputStream(stream).mkString)
+    apply(Source.fromInputStream(stream).mkString)
   }
 
   /**
    * Compile an entire source file into the virtual classloader.
    */
   def compile(code: String) {
-    Eval.compiler(code)
+    compiler(code)
   }
 
   /**
@@ -137,6 +137,10 @@ class Eval {
    */
   def check(stream: InputStream) {
     check(scala.io.Source.fromInputStream(stream).mkString)
+  }
+  
+  def findClass(className: String): Class[_] = {
+    compiler.findClass(className).getOrElse { throw new ClassNotFoundException("no such class: " + className) }
   }
 
   private def uniqueId(code: String): String = {
@@ -331,6 +335,20 @@ class Eval {
         }
       }
     }
+       
+    def findClass(className: String): Option[Class[_]] = {
+      synchronized {
+        cache.get(className).orElse {
+          try {
+            val cls = classLoader.loadClass(className)
+            cache(className) = cls
+            Some(cls)
+          } catch {
+            case e: ClassNotFoundException => None
+          }
+        }
+      }
+    }
 
     /**
      * Compile scala code. It can be found using the above class loader.
@@ -355,15 +373,10 @@ class Eval {
      */
     def apply(code: String, className: String, id: String, resetState: Boolean = true): Class[_] = {
       synchronized {
-        cache.get(id) match {
-          case Some(cls) =>
-            cls
-          case None =>
-            if (resetState) reset()
-            apply(code)
-            val cls = classLoader.loadClass(className)
-            cache(id) = cls
-            cls
+        if (resetState) reset()
+        findClass(className).getOrElse {
+          apply(code)
+          findClass(className).get
         }
       }
     }
