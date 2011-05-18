@@ -41,6 +41,11 @@ class Project(info: ProjectInfo)
     "util-thrift", "util-thrift",
     new ThriftProject(_), coreProject)
 
+  // util-hashing: hashing and distribution utilities
+  val hashingProject = project(
+    "util-hashing", "util-hashing",
+    new HashingProject(_), coreProject)
+
 
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
@@ -81,6 +86,10 @@ class Project(info: ProjectInfo)
     val thrift = "thrift"        % "libthrift"     % "0.5.0"
     val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
   }
+
+  class HashingProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
 
   trait ProjectDefaults
     extends StandardProject
