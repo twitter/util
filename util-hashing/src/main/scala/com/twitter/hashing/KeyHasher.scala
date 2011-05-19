@@ -204,6 +204,23 @@ object KeyHasher {
     override def toString() = "Hsieh"
   }
 
+  val JENKINS = new KeyHasher {
+    private val MAX_VALUE = 0xFFFFFFFFL
+    override def hashKey(key: Array[Byte]): Long = {
+      var hash: Long = 0
+
+      for (i <- 0 until key.size) {
+        hash = (hash + key(i)) & MAX_VALUE
+        hash = (hash + (hash << 10)) & MAX_VALUE
+        hash = (hash + (hash >> 6)) & MAX_VALUE
+      }
+
+      hash = (hash + (hash << 3)) & MAX_VALUE
+      hash = (hash ^ (hash >> 11)) & MAX_VALUE
+      (hash + (hash << 15)) & MAX_VALUE
+    }
+  }
+
   /**
    * Return one of the key hashing algorithms by name. This is used to configure a memcache
    * client from a config file.

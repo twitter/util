@@ -39,6 +39,8 @@ class KetamaDistributor[A](nodes: Seq[KetamaNode[A]], numReps: Int, hasher: KeyH
     node.handle
   }
 
+  def nodeCount = nodes.size
+
   protected def computeHash(key: String, alignment: Int) = {
     val hasher = MessageDigest.getInstance("MD5")
     hasher.update(key.getBytes("utf-8"))
