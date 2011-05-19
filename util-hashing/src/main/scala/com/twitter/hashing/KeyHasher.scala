@@ -204,6 +204,11 @@ object KeyHasher {
     override def toString() = "Hsieh"
   }
 
+
+  /**
+  * Jenkins Hash Function
+  * http://en.wikipedia.org/wiki/Jenkins_hash_function
+  */
   val JENKINS = new KeyHasher {
     private val MAX_VALUE = 0xFFFFFFFFL
     override def hashKey(key: Array[Byte]): Long = {
