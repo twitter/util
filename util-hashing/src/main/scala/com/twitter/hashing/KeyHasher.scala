@@ -204,32 +204,22 @@ object KeyHasher {
     override def toString() = "Hsieh"
   }
 
-  private val hashes = new mutable.HashMap[String, KeyHasher] with mutable.SynchronizedMap[String, KeyHasher]
-  register("fnv", FNV1_32)
-  register("fnv1", FNV1_32)
-  register("fnv1-32", FNV1_32)
-  register("fnv1a-32", FNV1A_32)
-  register("fnv1-64", FNV1_64)
-  register("fnv1a-64", FNV1A_64)
-  register("ketama", KETAMA)
-  register("crc32-itu", CRC32_ITU)
-  register("hsieh", HSIEH)
-
-  /**
-   * Register a hash function by name. If used before creating a memcache client from a
-   * config file, this will let you create custom hash functions and specify them by name
-   * in the config file. (It is not necessary to register a hash function unless you want it
-   * to be identified in config files.)
-   */
-  def register(name: String, hasher: KeyHasher) = {
-    hashes += (name -> hasher)
-  }
-
   /**
    * Return one of the key hashing algorithms by name. This is used to configure a memcache
    * client from a config file.
    */
   def byName(name: String): KeyHasher = {
-    hashes.getOrElse(name, throw new IllegalArgumentException("unknown hash: " + name))
+    name match {
+      case "fnv" => FNV1_32
+      case "fnv1" => FNV1_32
+      case "fnv1-32" => FNV1_32
+      case "fnv1a-32" => FNV1A_32
+      case "fnv1-64" => FNV1_64
+      case "fnv1a-64" => FNV1A_64
+      case "ketama" => KETAMA
+      case "crc32-itu" => CRC32_ITU
+      case "hsieh" => HSIEH
+      case _ => throw new NoSuchElementException(name)
+    }
   }
 }
