@@ -29,14 +29,14 @@ object DiagnosticsSpec extends Specification with Mockito {
 
       val keys = (1 until 1000000).map(_.toString).toList
       // Comment this out unless you're running it results
-      hashFunctions foreach { case (s, h) =>
-        val distributor = new KetamaDistributor(nodes, 160, h)
-        val tester = new DistributionTester(distributor)
-        val start = Time.now
-        val dev = tester.distributionDeviation(keys)
-        val duration = (Time.now - start).inMilliseconds
-        println("%s\n  distribution: %.5f\n  duration: %dms\n".format(s, dev, duration))
-      }
+      // hashFunctions foreach { case (s, h) =>
+      //   val distributor = new KetamaDistributor(nodes, 160, h)
+      //   val tester = new DistributionTester(distributor)
+      //   val start = Time.now
+      //   val dev = tester.distributionDeviation(keys)
+      //   val duration = (Time.now - start).inMilliseconds
+      //   println("%s\n  distribution: %.5f\n  duration: %dms\n".format(s, dev, duration))
+      // }
     }
   }
 }
