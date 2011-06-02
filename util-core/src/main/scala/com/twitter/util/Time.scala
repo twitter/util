@@ -63,6 +63,9 @@ object Time {
     val prevFn = Time.fn
     try {
       val timeControl = new TimeControl {
+        def set(time: Time) {
+          Time.fn = () => time
+        }
         def advance(delta: Duration) {
           val newTime = Time.now + delta
           Time.fn = () => newTime
@@ -91,6 +94,7 @@ object Time {
 }
 
 trait TimeControl {
+  def set(time: Time)
   def advance(delta: Duration)
 }
 
