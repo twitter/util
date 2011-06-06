@@ -307,7 +307,7 @@ class Promise[A] extends Future[A] {
   import Promise._
 
   private[this] type Computation = (Try[A] => Unit, SavedLocals)
-  
+
   @volatile private[this] var result: Option[Try[A]] = None
   private[this] var firstComputation: Computation = null
   private[this] var nextComputations: ArrayBuffer[Computation] = null
@@ -472,11 +472,11 @@ private[util] object FutureBenchmark {
   private[this] val NumIters = 100.million
 
   private[this] def bench[A](numIters: Long)(f: => A): Long = {
-    val begin = System.currentTimeMillis()    
+    val begin = System.currentTimeMillis()
     (0L until numIters) foreach { _ => f }
     System.currentTimeMillis() - begin
   }
-  
+
   def main(args: Array[String]) {
     printf("Warming up.. ")
     val warmupTime = bench(NumIters) {
@@ -485,7 +485,7 @@ private[util] object FutureBenchmark {
       promise() = Return(())
     }
     printf("%d ms\n", warmupTime)
-    
+
     printf("Running .. ")
     val runTime = bench(NumIters) {
       val promise = new Promise[Unit]
