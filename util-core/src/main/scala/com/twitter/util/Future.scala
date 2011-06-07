@@ -28,7 +28,9 @@ object Future {
   def apply[A](a: => A): Future[A] = new Promise[A](Try(a))
 
   /**
-   * Take a sequence of Futures, wait till they all complete.
+   * Take a sequence of Futures, wait till they all complete
+   * succesfully.  The future fails immediately if any of the joined
+   * Futures do, mimicking the semantics of exceptions.
    *
    * @param fs a sequence of Futures
    * @return a Future[Unit] whose value is populated when all of the fs return.
