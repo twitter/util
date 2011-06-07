@@ -3,6 +3,7 @@ package com.twitter.util
 import org.specs.Specification
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
+import com.twitter.concurrent.SimpleSetter
 
 object FutureSpec extends Specification {
   "Future" should {
@@ -385,6 +386,76 @@ object FutureSpec extends Specification {
       f.isDefined must beFalse
       p1() = Throw(new Exception)
       f() must throwA[Exception]
+    }
+  }
+  
+  "Future.select()" should {
+    
+    "return the first result" in {
+      def tryBothForIndex(i: Int) = {
+        "success (%d)".format(i) in {
+          val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
+          val f = Future.select(fs)
+          f.isDefined must beFalse
+          fs(i)() = Return(1)
+          f.isDefined must beTrue
+          f() must beLike {
+            case (Return(1), rest) =>
+              rest must haveSize(9)
+              val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
+              rest must haveTheSameElementsAs(elems)
+              true
+          }
+        }
+        
+        "failure (%d)".format(i) in {
+          val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
+          val f = Future.select(fs)
+          f.isDefined must beFalse
+          val e = new Exception("sad panda")
+          fs(i)() = Throw(e)
+          f.isDefined must beTrue
+          f() must beLike {
+            case (Throw(e), rest) =>
+              rest must haveSize(9)
+              val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
+              rest must haveTheSameElementsAs(elems)
+              true
+          }
+        }
+      }
+      
+      // Ensure this works for all indices:
+      0 until 10 foreach { tryBothForIndex(_) }
+    }
+  
+    "fail if we attempt to select an empty future sequence" in {
+      val f = Future.select(Seq())
+      f.isDefined must beTrue
+      f() must throwA(new IllegalArgumentException("empty future list!"))
+    }
+  }
+  
+  "Future.toOffer" should {
+    "activate when future is satisfied (poll)" in {
+      val p = new Promise[Int]
+      val o = p.toOffer
+      o.poll() must beNone
+      p() = Return(123)
+      o.poll() must beLike {
+        case Some(f) =>
+          f() must be_==(Return(123))
+      }
+    }
+    
+    "activate when future is satisfied (enqueue)" in {
+      val p = new Promise[Int]
+      val o = p.toOffer
+      val s = new SimpleSetter[Try[Int]]
+      o.enqueue(s)
+      s.get must beNone
+      p() = Return(123)
+      s.get must beSome(Return(123))
     }
   }
 }

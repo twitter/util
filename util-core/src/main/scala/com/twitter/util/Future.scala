@@ -2,6 +2,10 @@ package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.collection.mutable.ArrayBuffer
+import scala.annotation.tailrec
+
+import com.twitter.concurrent.Offer
+import com.twitter.conversions.time._
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
@@ -66,6 +70,33 @@ object Future {
     fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
       a flatMap { aa => e map { _ :: aa } }
     } map { _.reverse }
+  }
+  
+  /**
+   * "Select" off the first future to be satisfied.  Return this as a
+   * result, with the remainder of the Futures as a sequence.
+   */
+  def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] = {
+    if (fs.isEmpty)
+      return Future.exception(new IllegalArgumentException("empty future list!"))
+  
+    val promise = new Promise[(Try[A], Seq[Future[A]])]
+    
+    @tailrec
+    def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
+      elem respond { res =>
+        promise.synchronized {
+          if (!promise.isDefined)
+            promise() = Return((res, heads ++ tail))
+        } 
+      }
+      
+      if (!tail.isEmpty)
+        stripe(heads ++ Seq(elem), tail.head, tail.tail)
+    }
+
+    stripe(Seq(), fs.head, fs.tail)
+    promise
   }
 
   /**
@@ -291,6 +322,22 @@ abstract class Future[+A] extends TryLike[A, Future] {
    */
   def proxyTo[B >: A](other: Promise[B]) {
     respond(other.update(_))
+  }
+
+  /**
+   * An offer for this future.  The offer is activated when the future
+   * is satisfied.
+   */
+  def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
+    def poll() = if (isDefined) Some(() => get(0.seconds)) else None
+    def enqueue(setter: Setter) = {
+      respond { v =>
+        setter() foreach { set => set(() => v) }
+      }
+      // we can't dequeue futures
+      () => ()
+    }
+    def objects = Seq()
   }
 }
 
