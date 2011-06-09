@@ -9,9 +9,9 @@ class DistributionTester[A](distributor: Distributor[A]) {
   * Returns a normalized standard deviation indicating how well the keys
   * are distributed between the nodes. The closer to 0 the better.
   */
-  def distributionDeviation(keys: Seq[String]): Double = {
+  def distributionDeviation(keys: Seq[Long]): Double = {
     val keysPerNode = mutable.Map[A, Int]()
-    keys map { distributor.nodeForKey(_) } foreach { key =>
+    keys map { distributor.nodeForHash(_) } foreach { key =>
       if (!keysPerNode.contains(key)) keysPerNode(key) = 0
       keysPerNode(key) += 1
     }

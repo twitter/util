@@ -7,13 +7,13 @@ import scala.collection.JavaConversions._
 
 case class KetamaNode[A](identifier: String, weight: Int, handle: A)
 
-class KetamaDistributor[A](nodes: Seq[KetamaNode[A]], numReps: Int, hasher: KeyHasher) extends Distributor[A] {
+class KetamaDistributor[A](_nodes: Seq[KetamaNode[A]], numReps: Int) extends Distributor[A] {
   private val continuum = {
     val continuum = new TreeMap[Long, KetamaNode[A]]()
-    val nodeCount = nodes.size
-    val totalWeight = nodes.foldLeft(0) { _ + _.weight }.toDouble
+    val nodeCount = _nodes.size
+    val totalWeight = _nodes.foldLeft(0) { _ + _.weight }.toDouble
 
-    nodes foreach { node =>
+    _nodes foreach { node =>
       val percent = node.weight.toDouble / totalWeight
       // the tiny fudge fraction is added to counteract float errors.
       val pointsOnRing = (percent * nodeCount * (numReps / 4) + 0.0000000001).toInt
@@ -31,15 +31,14 @@ class KetamaDistributor[A](nodes: Seq[KetamaNode[A]], numReps: Int, hasher: KeyH
     continuum
   }
 
+  def nodes = _nodes map { _.handle }
+  def nodeCount = _nodes.size
 
-  def nodeForKey(key: String) = {
-    val hash = hasher.hashKey(key.getBytes("utf-8"))
+  def nodeForHash(hash: Long) = {
     val entry = continuum.ceilingEntry(hash)
     val node = Option(entry).getOrElse(continuum.firstEntry).getValue
     node.handle
   }
-
-  def nodeCount = nodes.size
 
   protected def computeHash(key: String, alignment: Int) = {
     val hasher = MessageDigest.getInstance("MD5")

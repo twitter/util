@@ -39,12 +39,12 @@ object KetamaDistributorSpec extends Specification with Mockito {
       )
 
       // 160 is the hard coded value for libmemcached, which was this input data is from
-      val ketamaClient = new KetamaDistributor(nodes, 160, KeyHasher.KETAMA)
+      val ketamaClient = new KetamaDistributor(nodes, 160)
 
       // Test that ketamaClient.clientOf(key) == expected IP
       val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
       for (testcase <- expected) {
-        val handle = ketamaClient.nodeForKey(testcase(0))
+        val handle = ketamaClient.nodeForHash(KeyHasher.KETAMA.hashKey(testcase(0).getBytes))
         val resultIp = handleToIp(handle)
         testcase(3) must be_==(resultIp)
       }
