@@ -12,6 +12,9 @@ object Future {
   val Unit = apply(())
   val Done = Unit
 
+  class CancelledException private[Future]() extends Exception
+  private[util] object CancelledException extends CancelledException()
+
   /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
    */
@@ -47,6 +50,7 @@ object Future {
       val promise = new Promise[Unit]
 
       fs foreach { f =>
+        promise.linkTo(f)
         f onSuccess { _ =>
           if (count.decrementAndGet() == 0)
             promise() = Return(())
@@ -67,11 +71,18 @@ object Future {
    * @return a Future[Seq[A]] containing the collected values from fs.
    */
   def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
-    fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
+    val collected = fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
       a flatMap { aa => e map { _ :: aa } }
     } map { _.reverse }
+
+    // Cancellations don't get propagated in flatMap because the
+    // computation is short circuited.  Thus we link manually to get
+    // the expected behavior from collect().
+    fs foreach { f => collected.linkTo(f) }
+
+    collected
   }
-  
+
   /**
    * "Select" off the first future to be satisfied.  Return this as a
    * result, with the remainder of the Futures as a sequence.
@@ -79,18 +90,19 @@ object Future {
   def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] = {
     if (fs.isEmpty)
       return Future.exception(new IllegalArgumentException("empty future list!"))
-  
+
     val promise = new Promise[(Try[A], Seq[Future[A]])]
-    
+    fs foreach { promise.linkTo(_) }
+
     @tailrec
     def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
       elem respond { res =>
         promise.synchronized {
           if (!promise.isDefined)
             promise() = Return((res, heads ++ tail))
-        } 
+        }
       }
-      
+
       if (!tail.isEmpty)
         stripe(heads ++ Seq(elem), tail.head, tail.tail)
     }
@@ -116,10 +128,12 @@ object Future {
     val result = new Promise[Unit]
     def iterate() {
       if (p) {
-        f onSuccess { _ =>
+        val iteration = f
+        result.linkTo(iteration)
+        iteration onSuccess { _ =>
           iterate()
-        } onFailure { f =>
-          result.setException(f)
+        } onFailure { cause =>
+          result.setException(cause)
         }
       } else {
         result.setValue(())
@@ -176,6 +190,29 @@ abstract class Future[+A] extends TryLike[A, Future] {
   def respond(k: Try[A] => Unit)
 
   /**
+   * Cancel the computation.  This is a hint: the provider of the
+   * value may not be listening.  Thus, the semantics of cancellation
+   * are special.  Upon invoking cancel():
+   *
+   *  - if the Future is already satisfied, this is a no-op
+   *  - if the Future is still waiting, we throw a Future.CancelledException
+   *
+   * This implies the following invariants (still) hold:
+   *
+   *  - Futures are respond-at-most-once
+   *  - Futures are update-at-most-once
+   *
+   * This in turn means that semantics change in the face of
+   * cancellation only in the presence of extra-Future coordination
+   * that depends on Future update/respond semantics.  This style is
+   * discouraged anyway, and likely indicates that a different
+   * coordination mechanism is needed.  Thus authors of combinators
+   * generally need not consider cancellation-specific semantics.
+   * Such style is discouraged anyway.
+   */
+  def cancel(): Unit
+
+  /**
    * Block indefinitely, wait for the result of the Future to be available.
    */
   override def apply(): A = apply(DEFAULT_TIMEOUT)
@@ -224,6 +261,7 @@ abstract class Future[+A] extends TryLike[A, Future] {
    */
   def within(timer: Timer, timeout: Duration): Future[A] = {
     val promise = new Promise[A]
+    promise.linkTo(this)
     val task = timer.schedule(timeout.fromNow) {
       promise.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
     }
@@ -235,8 +273,9 @@ abstract class Future[+A] extends TryLike[A, Future] {
   }
 
   /**
-   * Invoke the callback only if the Future returns sucessfully. Useful for Scala for comprehensions.
-   * Use onSuccess instead of this method for more readable code.
+   * Invoke the callback only if the Future returns sucessfully.
+   * Useful for Scala for comprehensions.  Use onSuccess instead of
+   * this method for more readable code.
    */
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
@@ -271,6 +310,17 @@ abstract class Future[+A] extends TryLike[A, Future] {
     this
   }
 
+  /**
+   * Invoke the given closure upon cancellation.  This is only invoked
+   * if cancel() is issued before a value is set.
+   */
+  def onCancellation(k: => Unit) {
+    respond {
+      case Throw(Future.CancelledException) => k
+      case _ => ()
+    }
+  }
+
   def addEventListener(listener: FutureEventListener[_ >: A]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
@@ -284,6 +334,8 @@ abstract class Future[+A] extends TryLike[A, Future] {
    */
   def select[U >: A](other: Future[U]): Future[U] = {
     val promise = new Promise[U]
+    promise.linkTo(other)
+    promise.linkTo(this)
     other respond { promise.updateIfEmpty(_) }
     this  respond { promise.updateIfEmpty(_) }
     promise
@@ -299,6 +351,8 @@ abstract class Future[+A] extends TryLike[A, Future] {
    */
   def join[B](other: Future[B]): Future[(A, B)] = {
     val promise = new Promise[(A, B)]
+    promise.linkTo(other)
+    promise.linkTo(this)
     respond {
       case Return(a) =>
         other respond {
@@ -318,10 +372,17 @@ abstract class Future[+A] extends TryLike[A, Future] {
   def unit: Future[Unit] = map(_ => ())
 
   /**
-   * Send updates from this Future to the other.
+   * Send updates (and cancellations) from this Future to the other.
    */
   def proxyTo[B >: A](other: Promise[B]) {
     respond(other.update(_))
+  }
+
+  /**
+   * Link this future to `other' by proxying cancellations.
+   */
+  def linkTo(other: Future[_]) {
+    onCancellation { other.cancel() }
   }
 
   /**
@@ -343,33 +404,50 @@ abstract class Future[+A] extends TryLike[A, Future] {
 
 object Promise {
   case class ImmutableResult(message: String) extends Exception(message)
+
+
 }
 
 /**
- * A concrete Future implementation that is updatable by some executor or event loop.
- * A typical use of Promise is for a client to submit a request to some service.
- * The client is given an object that inherits from Future[_]. The server stores a
- * reference to this object as a Promise[_] and updates the value when the computation
+ * A concrete Future implementation that is updatable by some executor
+ * or event loop.  A typical use of Promise is for a client to submit
+ * a request to some service.  The client is given an object that
+ * inherits from Future[_].  The server stores a reference to this
+ * object as a Promise[_] and updates the value when the computation
  * completes.
  */
 class Promise[A] extends Future[A] {
   import Promise._
+  
+  private[this] sealed abstract class State
+  private[this] object Waiting extends State
+  private[this] case class Done(result: Try[A]) extends State
+  private[this] case class Cancelled(gotResult: Boolean) extends State
 
-  private[this] type Computation = (Try[A] => Unit, SavedLocals)
+  // Waiters wait for completion of the computation.
+  private[this] type Waiter = (Try[A] => Unit, SavedLocals)
+  private[this] var firstWaiter: Waiter = null
+  private[this] var nextWaiters: ArrayBuffer[Waiter] = null
 
-  @volatile private[this] var result: Option[Try[A]] = None
-  private[this] var firstComputation: Computation = null
-  private[this] var nextComputations: ArrayBuffer[Computation] = null
+  /*
+   * The only valid state transitions are:
+   *   Waiting -> Done(result)
+   *   Waiting -> Cancelled(false)
+   *   Cancelled(false) -> Cancelled(true)
+   *
+   * The state is only updated by `updateIfEmpty()` and `cancel()`.
+   */
+  @volatile private[this] var state: State = Waiting
 
   /**
    * Secondary constructor where result can be provided immediately.
    */
   def this(result: Try[A]) {
     this()
-    this.result = Some(result)
+    this.state = Done(result)
   }
 
-  def isDefined = result.isDefined
+  def isDefined = state ne Waiting
 
   /**
    * Populate the Promise with the given result.
@@ -399,76 +477,133 @@ class Promise[A] extends Future[A] {
   }
 
   /**
-   * Populate the Promise with the given Try. The try can either be a value
-   * or an exception. setValue and setException are generally more readable
-   * methods to use.
+   * Populate the Promise with the given Try.  The try can either be a
+   * value or an exception.  setValue and setException are generally
+   * more readable methods to use.  It is valid to set the value of a
+   * cancelled promise: however, the value will be dropped.
    *
-   * @return true or false depending on whether the result was available.
+   * @return true if this was the first update on this Promise (even
+   * if that promise was cancelled), false otherwise.
    */
-  def updateIfEmpty(newResult: Try[A]) = {
-    if (result.isDefined) false else {
-      val didSetResult = synchronized {
-        if (result.isDefined) false else {
-          result = Some(newResult)
-          true
+  def updateIfEmpty(newResult: Try[A]): Boolean = {
+    val isSet = state match {
+      case Done(_) => true
+      case Cancelled(isSet) => isSet
+      case _ => false
+    }
+    
+    if (isSet) false else {
+      val (beginState, endState) = synchronized {
+        val beginState = state
+        state = state match {
+          case Waiting => Done(newResult)
+          case Cancelled(false) => Cancelled(true)
+          case s => s
         }
+        (beginState, state)
       }
-      if (didSetResult) {
-        val initialState = Locals.save()
-        try {
-          if (firstComputation ne null) {
-            val (k, locals) = firstComputation
-            locals.restore()
-            k(newResult)
-
-            if (nextComputations ne null) {
-              nextComputations foreach { case (k, locals) =>
-                locals.restore()
-                k(newResult)
-              }
-            }
-          }
-        } finally {
-          initialState.restore()
-        }
+  
+      // Here we either:
+      //
+      //  - transitioned from Waiting -> Done
+      //  - transitioned from Cancelled(false) -> Cancelled(true)
+      //  - did nothing
+      //
+      // This means that at this point, we updated the result *only*
+      // when we performed a state transition and furthermore, we need
+      // to update waiters *only* when we transitioned from Waiting.
+      if (beginState eq Waiting) {
+        val Done(result) = endState
+        runWaiters(result)
       }
-      didSetResult
+  
+      beginState ne endState
     }
   }
 
-  override def respond(k: Try[A] => Unit) {
-    result map(k) getOrElse {
-      val wasDefined = synchronized {
-        if (result.isDefined) true else {
-          val computation = (k, Locals.save())
-          if (firstComputation eq null) {
-            firstComputation = computation
-          } else {
-            if (nextComputations eq null) {
-              // This initial size was picked somewhat arbitrarily.
-              nextComputations = new ArrayBuffer[Computation](4)
-            }
-            nextComputations += computation
-          }
+  def cancel() {
+    if (isDefined)
+      return
 
-          false
+    val didCancel = synchronized {
+      if (state ne Waiting) false else {
+        state = Cancelled(false)
+        true
+      }
+    }
+    
+    if (didCancel) 
+      runWaiters(Throw(Future.CancelledException))
+  }
+
+  override def respond(k: Try[A] => Unit) {
+    val endState = if (state ne Waiting) state else synchronized {
+      if (state eq Waiting) {
+        val waiter = (k, Locals.save())
+        if (firstWaiter eq null) {
+          firstWaiter = waiter
+        } else {
+          if (nextWaiters eq null) {
+            // This initial size was picked somewhat arbitrarily.
+            nextWaiters = new ArrayBuffer[Waiter](4)
+          }
+          nextWaiters += waiter
         }
       }
-      if (wasDefined) result map(k)
+
+      state
+    }
+
+    endState match {
+      case Waiting => ()
+      case Done(result) => k(result)
+      case Cancelled(_) => k(Throw(Future.CancelledException))
+    }
+  }
+
+  /**
+   * Runs all the waiters with the given result.
+   *
+   * The caller promises that:
+   *  - nobody else will invoke runWaiters
+   *  - firstWaiter and nextWaiter are not modified after calling
+   *  runWaiters()
+   */
+  private[this] def runWaiters(result: Try[A]) {
+    val savedLocals = Locals.save()
+    try {
+      if (firstWaiter ne null) {
+        val (k, locals) = firstWaiter
+        locals.restore()
+        k(result)
+
+        if (nextWaiters ne null) {
+          nextWaiters foreach { case (k, locals) =>
+            locals.restore()
+            k(result)
+          }
+        }
+      }
+    } finally {
+      savedLocals.restore()
     }
   }
 
   override def map[B](f: A => B) = new Promise[B] {
+    linkTo(Promise.this)
     Promise.this.respond { x =>
       update(x map(f))
     }
   }
 
   def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]) = new Promise[B] {
+    linkTo(Promise.this)  // propagate cancellation
     Promise.this.respond {
       case Return(r) =>
         try {
-          f(r) respond(update(_))
+          val next = f(r)
+          linkTo(next)
+          next respond(update(_))
         } catch {
           case e => update(Throw(e))
         }
@@ -476,21 +611,26 @@ class Promise[A] extends Future[A] {
     }
   }
 
-  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](rescueException: PartialFunction[Throwable, AlsoFuture[B]]) =
-    new Promise[B] {
-      Promise.this.respond {
-        case r: Return[_] => update(r)
-        case Throw(e) if rescueException.isDefinedAt(e) =>
-          try {
-            rescueException(e) respond(update(_))
-          } catch {
-            case e => update(Throw(e))
-          }
-        case Throw(e)                                   => update(Throw(e))
-      }
+  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
+    rescueException: PartialFunction[Throwable, AlsoFuture[B]]
+  ) = new Promise[B] {
+    linkTo(Promise.this)
+    Promise.this.respond {
+      case r: Return[_] => update(r)
+      case Throw(e) if rescueException.isDefinedAt(e) =>
+        try {
+          val next = rescueException(e)
+          linkTo(next)
+          next respond(update(_))
+        } catch {
+          case e => update(Throw(e))
+        }
+      case Throw(e) => update(Throw(e))
     }
+  }
 
   override def filter(p: A => Boolean) = new Promise[A] {
+    linkTo(Promise.this)
     Promise.this.respond { x =>
       update(x filter(p))
     }

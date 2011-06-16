@@ -13,6 +13,7 @@ object FutureSpec extends Specification {
       val queue = new ConcurrentLinkedQueue[Promise[Unit]]
       var complete = false
       var failure = false
+      var exception: Throwable = null
       val iteration = times(3) {
         val promise = new Promise[Unit]
         queue add promise
@@ -22,6 +23,7 @@ object FutureSpec extends Specification {
         complete = true
       } onFailure { f =>
         failure = true
+        exception = f
       }
       complete mustBe false
       failure mustBe false
@@ -49,6 +51,18 @@ object FutureSpec extends Specification {
         complete mustBe false
         failure mustBe true
       }
+
+      "when cancelled" in {
+        iteration.cancel()
+        0 until 3 foreach { _ =>
+          val f = queue.poll()
+          f.isDefined must beTrue
+          f() must throwA(Future.CancelledException)
+        }
+        complete mustBe true
+        failure mustBe true
+        exception must be_==(Future.CancelledException)
+      }
     }
 
     "whileDo" in {
@@ -56,6 +70,7 @@ object FutureSpec extends Specification {
       val queue = new ConcurrentLinkedQueue[Promise[Unit]]
       var complete = false
       var failure = false
+      var exception: Throwable = null
       val iteration = whileDo(i < 3) {
         i += 1
         val promise = new Promise[Unit]
@@ -67,6 +82,7 @@ object FutureSpec extends Specification {
         complete = true
       } onFailure { f =>
         failure = true
+        exception = f
       }
       complete mustBe false
       failure mustBe false
@@ -94,6 +110,17 @@ object FutureSpec extends Specification {
         queue.poll().setException(new Exception(""))
         complete mustBe false
         failure mustBe true
+      }
+
+      "when cancelled" in {
+        queue.poll().setValue(())
+        iteration.cancel()
+        val f = queue.poll()
+        f.isDefined must beTrue
+        f() must throwA(Future.CancelledException)
+        complete mustBe false
+        failure mustBe true
+        exception must be_==(Future.CancelledException)
       }
     }
   }
@@ -112,6 +139,17 @@ object FutureSpec extends Specification {
           x + 1
         }
         f() must throwA(e)
+      }
+
+      "when the cancellation reigns" in {
+        val p = new Promise[Int]
+        var didCompute = false
+        val f = p map { _ => didCompute = true; 111 }
+        f.isDefined must beFalse
+        f.cancel()
+        f.isDefined must beTrue
+        f() must throwA(Future.CancelledException)
+        didCompute must beFalse
       }
     }
 
@@ -158,6 +196,18 @@ object FutureSpec extends Specification {
           f() must throwA(e)
         }
       }
+
+      "cancellation" in {
+        "propagate" in {
+          val p = new Promise[String]
+          val f = Future[Int](1) flatMap { _ => p }
+          f.isDefined must beFalse
+          p.isDefined must beFalse
+          f.cancel()
+          p.isDefined must beTrue
+          p() must throwA(Future.CancelledException)
+        }
+      }
     }
 
     "rescue" in {
@@ -200,6 +250,17 @@ object FutureSpec extends Specification {
           val g = Future[Int](throw e) rescue { case e => throw e; Future(2) }
           g() must throwA(e)
         }
+      }
+
+      "cancellation" in {
+        val p = new Promise[Int]
+        val g = Future[Int](throw e) rescue { case e => p }
+        g.isDefined must beFalse
+        g.cancel()
+        g.isDefined must beTrue
+        g() must throwA(Future.CancelledException)
+        p.isDefined must beTrue
+        p() must throwA(Future.CancelledException)
       }
     }
 
@@ -302,6 +363,18 @@ object FutureSpec extends Specification {
       p.within(50.milliseconds).get() mustBe 1
       timer.stop()
     }
+
+    "when cancelled" in Time.withCurrentTimeFrozen { tc =>
+      implicit val timer = new MockTimer
+      val p = new Promise[Int]
+      val f = p.within(50.milliseconds)
+      f.cancel()
+      p.isDefined must beTrue
+      p() must throwA(Future.CancelledException)
+      tc.advance(1.second)
+      timer.tick()
+      // *crickets*
+    }
   }
 
   "FutureTask" should {
@@ -335,6 +408,16 @@ object FutureSpec extends Specification {
       p1() = Return(2)
       f() must throwA[Exception]
     }
+
+    "propagate cancellation" in {
+      p0.isDefined must beFalse
+      p1.isDefined must beFalse
+      f.cancel()
+      p0.isDefined must beTrue
+      p1.isDefined must beTrue
+      p0() must throwA(Future.CancelledException)
+      p1() must throwA(Future.CancelledException)
+    }
   }
 
   "Future.join()" should {
@@ -360,6 +443,14 @@ object FutureSpec extends Specification {
       f.isDefined must beFalse
       p1() = Throw(new Exception)
       f() must throwA[Exception]
+    }
+
+    "propagate cancellation" in {
+      f.cancel()
+      p0.isDefined must beTrue
+      p0() must throwA(Future.CancelledException)
+      p1.isDefined must beTrue
+      p1() must throwA(Future.CancelledException)
     }
   }
 
@@ -387,10 +478,17 @@ object FutureSpec extends Specification {
       p1() = Throw(new Exception)
       f() must throwA[Exception]
     }
+
+    "propagate cancellation" in {
+      f.cancel()
+      p0.isDefined must beTrue
+      p1.isDefined must beTrue
+      p0() must throwA(Future.CancelledException)
+      p1() must throwA(Future.CancelledException)
+    }
   }
-  
+
   "Future.select()" should {
-    
     "return the first result" in {
       def tryBothForIndex(i: Int) = {
         "success (%d)".format(i) in {
@@ -407,7 +505,7 @@ object FutureSpec extends Specification {
               true
           }
         }
-        
+
         "failure (%d)".format(i) in {
           val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
           val f = Future.select(fs)
@@ -424,18 +522,78 @@ object FutureSpec extends Specification {
           }
         }
       }
-      
+
       // Ensure this works for all indices:
       0 until 10 foreach { tryBothForIndex(_) }
     }
-  
+
     "fail if we attempt to select an empty future sequence" in {
       val f = Future.select(Seq())
       f.isDefined must beTrue
       f() must throwA(new IllegalArgumentException("empty future list!"))
     }
+
+    "propagate cancellation" in {
+      val fs = (0 until 10 map { _ => new Promise[Int] }) toArray;
+      Future.select(fs).cancel()
+      fs foreach { f =>
+        f.isDefined must beTrue
+        f() must throwA(Future.CancelledException)
+      }
+    }
   }
-  
+
+  "Promise.cancel" should {
+    "throw Future.CancelledException on cancellation" in {
+      "on respond" in {
+        val p = new Promise[Int]
+        var res: Try[Int] = null
+        p respond { res = _ }
+        p.cancel()
+        res must be_==(Throw(Future.CancelledException))
+      }
+
+      "on get()" in {
+        val p = new Promise[Int]
+        p.cancel()
+        p.isDefined must beTrue
+        p() must throwA(Future.CancelledException)
+      }
+    }
+
+    "invoke onCancellation upon cancellation" in {
+      val p = new Promise[Int]
+      var invoked0, invoked1 = false
+      p onCancellation { invoked0 = true }
+      invoked0 must beFalse
+      p.cancel()
+      invoked0 must beTrue
+      p onCancellation { invoked1 = true }
+      invoked1 must beTrue
+    }
+
+    "not cancel after a successful set" in {
+      val p = new Promise[Int]
+      p() = Return(1)
+      var res1: Try[Int] = null
+      var res2: Try[Int] = null
+      p respond { res1 = _ }
+      p.cancel()
+      p respond { res2 = _ }
+      p.isDefined must beTrue
+      p() must be_==(1)
+      res1 must be_==(Return(1))
+      res2 must be_==(Return(1))
+    }
+
+    "allow setting *once* after cancellation" in {
+      val p = new Promise[Int]
+      p.cancel()
+      p.updateIfEmpty(Return(1)) must beTrue
+      p.updateIfEmpty(Return(2)) must beFalse
+    }
+  }
+
   "Future.toOffer" should {
     "activate when future is satisfied (poll)" in {
       val p = new Promise[Int]
@@ -447,7 +605,7 @@ object FutureSpec extends Specification {
           f() must be_==(Return(123))
       }
     }
-    
+
     "activate when future is satisfied (enqueue)" in {
       val p = new Promise[Int]
       val o = p.toOffer
