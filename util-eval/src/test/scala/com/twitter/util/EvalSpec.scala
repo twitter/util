@@ -51,6 +51,12 @@ object EvalSpec extends Specification {
       derived.toString mustEqual "hello, joe"
     }
 
+    "toSource returns post-processed code" in {
+      val derived = Eval.toSource(TempFile.fromResourcePath("/DerivedWithInclude.scala"))
+      derived must include("hello, joe")
+      derived must include("new Base")
+    }
+
     "throws a compilation error when Ruby is #included" in {
       Eval[() => String](
         TempFile.fromResourcePath("RubyInclude.scala")) must throwA[Throwable]

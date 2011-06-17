@@ -96,6 +96,14 @@ class Eval {
     apply(Source.fromInputStream(stream).mkString)
   }
 
+  def toSource(file: File): String = {
+    toSource(scala.io.Source.fromFile(file).mkString)
+  }
+
+  def toSource(code: String): String = {
+    compiler.sourceForString(code)
+  }
+
   /**
    * Compile an entire source file into the virtual classloader.
    */
@@ -138,7 +146,7 @@ class Eval {
   def check(stream: InputStream) {
     check(scala.io.Source.fromInputStream(stream).mkString)
   }
-  
+
   def findClass(className: String): Class[_] = {
     compiler.findClass(className).getOrElse { throw new ClassNotFoundException("no such class: " + className) }
   }
@@ -335,7 +343,7 @@ class Eval {
         }
       }
     }
-       
+
     def findClass(className: String): Option[Class[_]] = {
       synchronized {
         cache.get(className).orElse {
@@ -354,7 +362,7 @@ class Eval {
      * Compile scala code. It can be found using the above class loader.
      */
     def apply(code: String) {
-      val processedCode = preprocessors.foldLeft(code) { case (c: String, p: Preprocessor) => p(c) }
+      val processedCode = sourceForString(code)
 
       if (Debug.enabled)
         Debug.printWithLineNumbers(processedCode)
@@ -366,6 +374,10 @@ class Eval {
       if (reporter.hasErrors || reporter.WARNING.count > 0) {
         throw new CompilerException(reporter.messages.toList)
       }
+    }
+
+    def sourceForString(code: String) = {
+      preprocessors.foldLeft(code) { case (c: String, p: Preprocessor) => p(c) }
     }
 
     /**
