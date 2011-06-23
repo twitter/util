@@ -129,30 +129,27 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
    * Delete files when "too many" have accumulated.
    * This duplicates logrotate's "rotate count" option.
    */
-  private def removeOldFiles() = {
-    val rotateCountPlusOne = rotateCount + 1  // Because the new file is already open.
-    if (rotateCountPlusOne >= 1) {
-      val filesInLogDir = new File(filename).getParentFile().list()
-      val filteredFilesInLogDir = filesInLogDir.filter(f => f.startsWith(new File(filename).getName()))
-      if (filteredFilesInLogDir.length > rotateCount) {
-        for (i <- rotateCount.until(filteredFilesInLogDir.length)) {
-          new File(filteredFilesInLogDir(i)).delete()
-        }
-      }
+  private def removeOldFiles(filenamePrefix: String) = {
+    if (rotateCount >= 0) {
+      val filesInLogDir = new File(filename).getParentFile().listFiles()
+      val rotatedFiles = filesInLogDir.filter(f => f.getName != filename &&
+        f.getName.startsWith(new File(filenamePrefix).getName)).sortBy(_.getName)
+
+      val toDeleteCount = math.max(0, rotatedFiles.size - rotateCount)
+      rotatedFiles.take(toDeleteCount).foreach(_.delete())
     }
   }
 
   def roll() = synchronized {
     stream.close()
     val n = filename.lastIndexOf('.')
-    val newFilename = if (n > 0) {
-      filename.substring(0, n) + "-" + timeSuffix(new Date(openTime)) + filename.substring(n)
-    } else {
-      filename + "-" + timeSuffix(new Date(openTime))
-    }
+    val (filenamePrefix, filenameSuffix) =
+      if (n > 0) (filename.substring(0, n), filename.substring(n)) else (filename, "")
+
+    val newFilename = filenamePrefix + "-" + timeSuffix(new Date(openTime)) + filenameSuffix
     new File(filename).renameTo(new File(newFilename))
     openLog()
-    removeOldFiles()
+    removeOldFiles(filenamePrefix)
   }
 
   def publish(record: javalog.LogRecord) = {
