@@ -367,8 +367,10 @@ class Eval {
       if (Debug.enabled)
         Debug.printWithLineNumbers(processedCode)
 
+      // if you're looking for the performance hit, it's 1/2 this line...
       val compiler = new global.Run
       val sourceFiles = List(new BatchSourceFile("(inline)", processedCode))
+      // ...and 1/2 this line:
       compiler.compileSources(sourceFiles)
 
       if (reporter.hasErrors || reporter.WARNING.count > 0) {
