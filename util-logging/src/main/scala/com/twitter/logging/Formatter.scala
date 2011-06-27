@@ -108,6 +108,8 @@ class Formatter(val timezone: Option[String], val truncateAt: Int, val truncateS
    */
   def formatText(record: javalog.LogRecord): String = {
     record match {
+      case null =>
+        ""
       case r: LazyLogRecord =>
         r.generate.toString
       case r: javalog.LogRecord =>
