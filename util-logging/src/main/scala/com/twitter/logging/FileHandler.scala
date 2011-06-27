@@ -19,7 +19,7 @@ package com.twitter.logging
 import java.io.{File, FileOutputStream, OutputStreamWriter, Writer}
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, logging => javalog}
-import com.twitter.util.{HandleSignal, StorageUnit}
+import com.twitter.util.{HandleSignal, StorageUnit, Time}
 import config._
 
 sealed abstract class Policy
@@ -77,8 +77,9 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
 
   private def openLog() = {
     stream = openWriter()
-    openTime = System.currentTimeMillis
-    nextRollTime = computeNextRollTime()
+    openTime = Time.now.inMilliseconds
+    nextRollTime = computeNextRollTime(openTime)
+    bytesWrittenToFile = 0
   }
 
   /**
@@ -108,11 +109,7 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
     next.set(Calendar.SECOND, 0)
     next.set(Calendar.MINUTE, 0)
     rollPolicy match {
-      case Policy.MaxSize(_) =>
-        next.add(Calendar.YEAR, 100)
-      case Policy.Never =>
-        next.add(Calendar.YEAR, 100)
-      case Policy.SigHup =>
+      case Policy.MaxSize(_) | Policy.Never | Policy.SigHup =>
         next.add(Calendar.YEAR, 100)
       case Policy.Hourly =>
         next.add(Calendar.HOUR_OF_DAY, 1)
@@ -127,8 +124,6 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
     }
     next.getTimeInMillis
   }
-
-  def computeNextRollTime(): Long = computeNextRollTime(System.currentTimeMillis)
 
   def maxFileSize: StorageUnit = rollPolicy match {
     case Policy.MaxSize(size) => size
@@ -167,7 +162,7 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
       val formattedLine = getFormatter.format(record)
       val lineSizeBytes = formattedLine.getBytes("UTF-8").length
       synchronized {
-        if (System.currentTimeMillis > nextRollTime) {
+        if (Time.now.inMilliseconds > nextRollTime) {
           roll
         }
         if (bytesWrittenToFile + lineSizeBytes > maxFileSize.bytes) {

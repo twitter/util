@@ -21,7 +21,8 @@ import java.util.{Calendar, Date}
 import java.util.{logging => javalog}
 import com.twitter.conversions.storage._
 import com.twitter.conversions.string._
-import com.twitter.util.TempFolder
+import com.twitter.conversions.time._
+import com.twitter.util.{TempFolder, Time}
 import org.specs.Specification
 import config._
 
@@ -131,18 +132,19 @@ class FileHandlerSpec extends Specification with TempFolder {
     // verify that at the proper time, the log file rolls and resets.
     "roll logs into new files" in {
       withTempFolder {
-        val handler = new FileHandler(folderName + "/test.log", Policy.Hourly, true, -1, BareFormatter, None) {
-          override def computeNextRollTime(): Long = System.currentTimeMillis + 100
+        val handler = new FileHandler(folderName + "/test.log", Policy.Hourly, true, -1, BareFormatter, None)
+        Time.withCurrentTimeFrozen { time =>
+          handler.publish(record1)
+          val date = new Date(Time.now.inMilliseconds)
+
+          time.advance(1.hour)
+
+          handler.publish(record2)
+          handler.close()
+
+          reader("test-" + handler.timeSuffix(date) + ".log").readLine mustEqual "first post!"
+          reader("test.log").readLine mustEqual "second post"
         }
-        handler.publish(record1)
-        val date = new Date()
-
-        Thread.sleep(150)
-        handler.publish(record2)
-        handler.close()
-
-        reader("test-" + handler.timeSuffix(date) + ".log").readLine mustEqual "first post!"
-        reader("test.log").readLine mustEqual "second post"
       }
     }
 
@@ -172,14 +174,28 @@ class FileHandlerSpec extends Specification with TempFolder {
 
         new File(folderName).list().length mustEqual 0
 
-        val handler = config("test.log", Policy.MaxSize(maxSize.bytes), true, 2, BareFormatterConfig)()
+        val handler = config("test.log", Policy.MaxSize(maxSize.bytes), true, -1, BareFormatterConfig)()
 
-        handler.publish(record1)
-        new File(folderName).list().length mustEqual 1
-        handler.publish(record1)
-        new File(folderName).list().length mustEqual 1
-        handler.publish(record1)
-        new File(folderName).list().length mustEqual 2
+        // move time forward so the rotated logfiles will have distinct names.
+        Time.withCurrentTimeFrozen { time =>
+          time.advance(1.second)
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 1
+          time.advance(1.second)
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 1
+
+          time.advance(1.second)
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 2
+          time.advance(1.second)
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 2
+
+          time.advance(1.second)
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 3
+        }
 
         handler.close()
       }
