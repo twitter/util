@@ -21,7 +21,7 @@ import java.util.{logging => javalog}
 
 /**
  * Proxy handler that queues log records and publishes them in another thread to
-   a nested handler. Useful for when a handler may block.
+ * a nested handler. Useful for when a handler may block.
  */
 class QueueingHandler(val handler: Handler, maxQueueSize: Int=Int.MaxValue)
     extends Handler(handler.formatter, handler.level) {
@@ -39,13 +39,13 @@ class QueueingHandler(val handler: Handler, maxQueueSize: Int=Int.MaxValue)
           try {
             handler.publish(record)
           } catch {
-            case e: InterruptedException => throw e // re-raise
+            case e: InterruptedException =>
+              throw e // re-raise
             case e =>
-              System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
+              e.printStackTrace()
           }
 
-          if (Thread.interrupted())
-            throw new InterruptedException
+          if (Thread.interrupted()) throw new InterruptedException
         }
       } catch {
         case _: InterruptedException => // done
