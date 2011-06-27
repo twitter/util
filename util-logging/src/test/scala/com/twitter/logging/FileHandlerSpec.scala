@@ -19,6 +19,7 @@ package com.twitter.logging
 import java.io._
 import java.util.{Calendar, Date}
 import java.util.{logging => javalog}
+import com.twitter.conversions.storage._
 import com.twitter.conversions.string._
 import com.twitter.util.TempFolder
 import org.specs.Specification
@@ -160,6 +161,26 @@ class FileHandlerSpec extends Specification with TempFolder {
 
         handler.publish(record1)
         new File(folderName).list().length mustEqual 2
+        handler.close()
+      }
+    }
+
+    "roll log files based on max size" in {
+      withTempFolder {
+        // roll the log on the 3rd write.
+        val maxSize = record1.getMessage.length * 3 - 1
+
+        new File(folderName).list().length mustEqual 0
+
+        val handler = config("test.log", Policy.MaxSize(maxSize.bytes), true, 2, BareFormatterConfig)()
+
+        handler.publish(record1)
+        new File(folderName).list().length mustEqual 1
+        handler.publish(record1)
+        new File(folderName).list().length mustEqual 1
+        handler.publish(record1)
+        new File(folderName).list().length mustEqual 2
+
         handler.close()
       }
     }

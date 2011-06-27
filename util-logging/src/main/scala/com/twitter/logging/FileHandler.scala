@@ -19,7 +19,7 @@ package com.twitter.logging
 import java.io.{File, FileOutputStream, OutputStreamWriter, Writer}
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, logging => javalog}
-import com.twitter.util.HandleSignal
+import com.twitter.util.{HandleSignal, StorageUnit}
 import config._
 
 sealed abstract class Policy
@@ -29,6 +29,7 @@ object Policy {
   case object Daily extends Policy
   case class Weekly(dayOfWeek: Int) extends Policy
   case object SigHup extends Policy
+  case class MaxSize(size: StorageUnit) extends Policy
 }
 
 /**
@@ -41,6 +42,7 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
   private var stream: Writer = null
   private var openTime: Long = 0
   private var nextRollTime: Long = 0
+  private var bytesWrittenToFile: Long = 0
 
   openLog()
 
@@ -89,6 +91,7 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
       case Policy.Hourly => new SimpleDateFormat("yyyyMMdd-HH")
       case Policy.Daily => new SimpleDateFormat("yyyyMMdd")
       case Policy.Weekly(_) => new SimpleDateFormat("yyyyMMdd")
+      case Policy.MaxSize(_) => new SimpleDateFormat("yyyyMMdd-HHmmss")
     }
     dateFormat.setCalendar(formatter.calendar)
     dateFormat.format(date)
@@ -105,6 +108,8 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
     next.set(Calendar.SECOND, 0)
     next.set(Calendar.MINUTE, 0)
     rollPolicy match {
+      case Policy.MaxSize(_) =>
+        next.add(Calendar.YEAR, 100)
       case Policy.Never =>
         next.add(Calendar.YEAR, 100)
       case Policy.SigHup =>
@@ -124,6 +129,11 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
   }
 
   def computeNextRollTime(): Long = computeNextRollTime(System.currentTimeMillis)
+
+  def maxFileSize: StorageUnit = rollPolicy match {
+    case Policy.MaxSize(size) => size
+    case _ => StorageUnit.infinite
+  }
 
   /**
    * Delete files when "too many" have accumulated.
@@ -155,12 +165,17 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
   def publish(record: javalog.LogRecord) = {
     try {
       val formattedLine = getFormatter.format(record)
+      val lineSizeBytes = formattedLine.getBytes("UTF-8").length
       synchronized {
         if (System.currentTimeMillis > nextRollTime) {
           roll
         }
+        if (bytesWrittenToFile + lineSizeBytes > maxFileSize.bytes) {
+          roll
+        }
         stream.write(formattedLine)
-        stream.flush
+        stream.flush()
+        bytesWrittenToFile += lineSizeBytes
       }
     } catch {
       case e =>
