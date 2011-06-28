@@ -35,6 +35,10 @@ object Config {
 
   class RequiredValuesMissing(names: Seq[String]) extends Exception(names.mkString(","))
 
+  class Computed[A](f: => A) {
+    lazy val value = f
+  }
+
   /**
    * Config classes that don't produce anything via an apply() method
    * can extends Config.Nothing, and still get access to the Required
@@ -46,7 +50,10 @@ object Config {
 
   implicit def toSpecified[A](value: A) = Specified(value)
   implicit def toSpecifiedOption[A](value: A) = Specified(Some(value))
+  implicit def toComputed[A](f: => A) = new Computed(f)
+  implicit def toSpecifiedComputed[A](f: => A) = Specified(new Computed(f))
   implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def fromRequiredComputed[A](req: Required[Computed[A]]) = req.value.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def fromOption[A](item: Option[A]): A = item.get
   implicit def intoList[A](item: A): List[A] = List(item)
@@ -66,12 +73,17 @@ object Config {
  *     }
  */
 trait Config[T] extends (() => T) {
-  import Config.{Required, Specified, Unspecified, RequiredValuesMissing}
+  import Config.{Computed, Required, Specified, Unspecified, RequiredValuesMissing}
 
   def required[A]: Required[A] = Unspecified
+  def computed[A](f: => A) = new Computed(f)
   implicit def toSpecified[A](value: A) = Specified(value)
   implicit def toSpecifiedOption[A](value: A) = Specified(Some(value))
+  implicit def toComputed[A](f: => A) = new Computed(f)
+  implicit def toSpecifiedComputed[A](f: => A) = Specified(new Computed(f))
   implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def fromComputed[A](com: Computed[A]) = com.value
+  implicit def fromRequiredComputed[A](req: Required[Computed[A]]) = req.value.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def fromOption[A](item: Option[A]): A = item.get
   implicit def intoList[A](item: A): List[A] = List(item)
