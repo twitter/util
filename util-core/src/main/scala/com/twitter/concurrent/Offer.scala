@@ -34,60 +34,70 @@ object Offer {
 
     def objects: Seq[AnyRef] = ofs flatMap { _.objects }
   }
-  
-  /*
+
+  /**
    * Convenience function to choose, then sync.
    */
   def select[T](ofs: Offer[T]*): Future[T] = choose(ofs:_*)()
-  
-  /*
-   * The constant offer: always available with the given value. 
+
+  /**
+   * The constant offer: always available with the given value.
    * Note: Computed by-name.
    */
   def const[T](t: =>T): Offer[T] = new Offer[T] {
     def poll() = Some(() => t)
-    def enqueue(setter: Setter) = 
+    def enqueue(setter: Setter) =
       throw new IllegalStateException("enqueue cannot be called after succesfull poll()!")
     def objects = Seq()
   }
-  
-  /*
+
+  /**
+   * An offer that is never available.
+   */
+  def never[T]: Offer[T] = new Offer[T] {
+    def poll() = None
+    def enqueue(setter: Setter) = () => ()
+    val objects = Seq()
+  }
+
+  /**
    * An offer that is available after the given time.
    */
   def timeout(timeout: Duration)(implicit timer: Timer) = new Offer[Unit] {
-    private[this] val promise = new Promise[Unit]
-    private[this] val task = timer.schedule(timeout.fromNow) { promise.updateIfEmpty(Return(())) }
+    private[this] val deadline = timeout.fromNow
 
-    def poll() = if (promise.isDefined) Some(() => ()) else None
+    def poll() = if (deadline <= Time.now) Some(() => ()) else None
     def enqueue(setter: Setter) = {
-      promise onSuccess { _ => setter() foreach { set => set(() => ()) } }
-      () => ()  // we don't have true dequeue for Futures
+      val task = timer.schedule(deadline) {
+        setter() foreach { set => set(() => ()) }
+      }
+      () => task.cancel()
     }
     val objects = Seq()
   }
-  
-  /*
+
+  /**
    *  Defines a total order over heap objects.  This is required
    *  because the identity hash code is not unique across objects.
    *  Thus, we keep a hash map that specifies the order(s) for given
    *  collisions.  We can do this because reference equality is well
    *  defined in Java.  See:
-   *  
+   *
    *    http://gafter.blogspot.com/2007/03/compact-object-comparator.html
-   *  
+   *
    *  For more information.
    */
   private[Offer] object ObjectOrder extends Ordering[AnyRef] {
     private[this] val order = new WeakHashMap[AnyRef, Long]
     private[this] var nextId = 0L
-    
+
     def compare(a: AnyRef, b: AnyRef): Int = {
       val ha = System.identityHashCode(a)
       val hb = System.identityHashCode(b)
       val d = ha - hb
       if (d != 0)
         return d
-      
+
       // Slow path:
       synchronized {
         val ia = order.getOrElseUpdate(a, { nextId += 1; nextId })
@@ -105,10 +115,10 @@ object Offer {
  * * _sends_ a value typically has type {{Unit}}.  An offer is
  * activated by synchronizing it.  Synchronization is done with the
  * apply() method.
- */ 
+ */
 trait Offer[+T] { self =>
   import Offer._
-  
+
   /**
    * A setter represents the atomic realization of an offer
    * synchronization.  One is given to the {{enqueue}} method when
@@ -122,9 +132,10 @@ trait Offer[+T] { self =>
    * and a function must be provided that yields the value to be set.
    * The execution of this function may be deferred.
    */
-  type Setter = () => Option[(() => T) => Unit]
+  type Thunk[+A] = () => A
+  type Setter = Thunk[Option[Thunk[T] => Unit]]
 
-  /* 
+  /*
    * The following methods (poll, enqueue, objects) are used in
    * synchronization and must be implemented by concrete offers.
    */
@@ -134,20 +145,22 @@ trait Offer[+T] { self =>
    * If the offer is ready, returns {{Some(..)}}.  At this point, the
    * offer is realized, and {{enqueue}} will not be called.
    */
-  def poll(): Option[() => T]
-  
+  def poll(): Option[Thunk[T]]
+
   /**
    * Enqueue the given {{Setter}} for notification of realization of
-   * the offer.  This is invoked only if {{poll}} fails.
+   * the offer.  This is invoked only if {{poll}} fails.  The return
+   * value is a cancellation that is called if the offer is not
+   * selected.
    */
-  def enqueue(setter: Setter): (() => Unit)
-  
+  def enqueue(setter: Setter): () => Unit
+
   /**
    * A sequence of objects needing synchronization before
    * synchronization begins.  This needs to be defined in order to
    * allow for atomic operations across all participants in an offer
    * (eg.  for {{Offer.choose}})
-   * 
+   *
    * The implementation guarantees that the monitor of any object
    * given here is locked (as in {{object.synchronized}}) before
    * invoking {{poll}} or {{enqueue}}.
@@ -166,9 +179,9 @@ trait Offer[+T] { self =>
         f()
     }
   }
-  
+
   /* Combinators */
-  
+
   /**
    * Map this offer of type {{T}} into one of type {{U}}.  The
    * translation (performed by {{f}}) is done when the offer has
@@ -176,19 +189,19 @@ trait Offer[+T] { self =>
    */
   def map[U](f: T => U): Offer[U] = new Offer[U] {
     def poll() = self.poll() map { t => () => f(t()) }
-    def enqueue(setter: Setter): (() => Unit) = {
-      val tsetter: Offer[T]#Setter = () => 
+    def enqueue(setter: Setter): () => Unit = {
+      val tsetter: Offer[T]#Setter = () =>
         setter() map { uset => { tget => uset { () => f(tget()) } } }
       self.enqueue(tsetter)
     }
     def objects: Seq[AnyRef] = self.objects
   }
-  
+
   /**
    * Like {{map}}, but a constant function.
    */
   def const[U](f: => U): Offer[U] = map { _ => f }
-  
+
   /**
    * An offer that, when synchronized, fails to synchronize {{this}}
    * immediately, synchronizes on {{other}} instead.  This is useful
@@ -203,7 +216,7 @@ trait Offer[+T] { self =>
     def enqueue(setter: Setter) = self.enqueue(setter)
     def objects = self.objects ++ other.objects
   }
-  
+
   /**
    * Synchronize on this offer indefinitely, invoking the given {{f}}
    * with each successfully synchronized value.  A receiver can use
@@ -215,18 +228,18 @@ trait Offer[+T] { self =>
       foreach(f)
     }
   }
-  
+
   /**
    * Enumerate this offer (ie.  synchronize while there are active
    * responders until the channel is closed) to the given
    * {{ChannelSource}}.  n.b.: this may buffer at most one value, and
    * on close, a buffered value may be dropped.
-   * 
+   *
    *  note: we could make this buffer free by introducing
    *  synchronization around the channel (this would require us to
    *  make generic the concept of synchronization, and would create
    *  far too much complexity for what would never be a use case)
-   * 
+   *
    *  todo: create version with backpressure (using =:= on T, with
    *  convention for acks)
    */
@@ -234,14 +247,14 @@ trait Offer[+T] { self =>
     // these are all protected by ch.serialized:
     var buf: Option[T] = None
     var active = false
-    
+
     def enumerate() {
       // enumerate() is always enter ch.serialized.
       buf foreach { v =>
         ch.send(v)
         buf = None
       }
-      
+
       this() foreach { v =>
         ch.serialized {
           if (active) {
@@ -253,12 +266,12 @@ trait Offer[+T] { self =>
         }
       }
     }
-    
+
     // Only dispatch messages when we have listeners.
     ch.numObservers respond { n =>
       ch.serialized {
         n match {
-          case 0 if active => 
+          case 0 if active =>
             active = false
           case 1 if !active =>
             active = true
@@ -267,21 +280,21 @@ trait Offer[+T] { self =>
         }
       }
     }
-    
+
     ch.closes foreach { _ =>
       active = false
     }
   }
-  
+
   /**
    * Create a channel, and enumerate this offer onto it.
    */
-  def toChannel: Channel[T] = {  
+  def toChannel: Channel[T] = {
     val ch = new ChannelSource[T]
     enumToChannel(ch)
     ch
   }
-  
+
   /**
    * Synchronize (discarding the value), and then invoke the given
    * closure.  Convenient for loops.
@@ -289,22 +302,22 @@ trait Offer[+T] { self =>
   def andThen(f: => Unit) {
     this() onSuccess { _ => f }
   }
-  
+
   /**
    * Synchronize this offer.  This activates this offer and attempts
    * to perform the communication specified.
-   * 
+   *
    * @returns A {{Future}} containing the communicated value.
    */
-  def apply(): Future[T] = {    
+  def apply(): Future[T] = {
     // We sort the objects here according to their identity.  In this
     // way we avoid deadlock conditions upon locking all the objects.
     // When they are locked in this order, one thread cannot attempt
     // to acquire a lock lower in the ordering than any lock it has
     // already acquired.  Thus there cannot be cycles.
     val objs = (objects toList) sorted(ObjectOrder)
-    
-    val action: () => Future[T] = lock(objs) { () =>
+
+    val action: Thunk[Future[T]] = lock(objs) { () =>
       // first, attempt to poll.  if there are any values immediately
       // available, then simply return this.  we assume the underlying
       // implementation is fair.
@@ -327,7 +340,7 @@ trait Offer[+T] { self =>
 
           () => {
             // activate the computation.
-            computation onSuccess { f => 
+            computation onSuccess { f =>
               promise() = Return(f())
             }
 

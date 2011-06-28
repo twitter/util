@@ -42,7 +42,7 @@ class SimpleSetter[T] extends Offer[T]#Setter {
       Some { f => v = Some(f()) }
     }
   }
-  
+
   def get = v
 }
 
@@ -51,7 +51,7 @@ object OfferSpec extends Specification with Mockito {
     // mockito can't spy on anonymous classes.
     val e = spy(new SimpleOffer[Int](Some(123)))
     val mapped = e map { i => (i - 100).toString }
-    
+
     "apply f in poll" in {
       mapped.poll() must beSome[() => String].which { _() == "23" }
       there was no(e).enqueue(any)
@@ -64,9 +64,9 @@ object OfferSpec extends Specification with Mockito {
      val eq = e.enqueues.head
      eq(200)  // do the set
      s.get must beSome("100") // trickles up
-   }  
+   }
   }
-  
+
   "Offer.choose" should {
     val es = Seq(
       spy(new SimpleOffer[Int]),
@@ -74,9 +74,9 @@ object OfferSpec extends Specification with Mockito {
       spy(new SimpleOffer[Int]))
     val e = Offer.choose(es:_*)
 
-    "select the first among unsatisfied events (poll)" in {        
+    "select the first among unsatisfied events (poll)" in {
       e.poll() must beNone
-      es foreach { e => 
+      es foreach { e =>
         e.enqueues must beEmpty
         there was one(e).poll()
       }
@@ -84,18 +84,18 @@ object OfferSpec extends Specification with Mockito {
       es(0).value = Some(333)
       e.poll() must beSome[() => Int].which { _() == 333 }
     }
-    
-    "select the first among unsatisfied events (enqueue)" in {        
+
+    "select the first among unsatisfied events (enqueue)" in {
       val s = new SimpleSetter[Int]
       e.enqueue(s)
-      es foreach { e => 
+      es foreach { e =>
         e.enqueues must haveSize(1)
         there was one(e).enqueue(any)
       }
-      
+
       s.get must beNone
       es(1).enqueues.head(111)
-      s.get must beSome(111)      
+      s.get must beSome(111)
     }
 
     "shuffle events" in Time.withTimeAt(Time.epoch) { tc =>
@@ -107,7 +107,7 @@ object OfferSpec extends Specification with Mockito {
       e.poll() must beSome[() => Int].which { _() == 0 }
     }
   }
-  
+
   "Offer.sync" should {
     // this appears to be impossible: "lock all involved objects in object-id order"
     "succeed immediately when poll is successful" in {
@@ -118,7 +118,7 @@ object OfferSpec extends Specification with Mockito {
       there was one(e).poll()
       there was no(e).enqueue(any)
     }
-    
+
     "enqueue when poll is unsuccesful" in {
       val e = spy(new SimpleOffer[Int]())
       val f = e()
@@ -133,40 +133,40 @@ object OfferSpec extends Specification with Mockito {
         f.isDefined must beTrue
         f() must be_==(123)
       }
-      
+
       "dequeue" in {
         eq.dequeued must beTrue
       }
     }
   }
-  
+
   "Offer.const" should {
     "always provide the same result" in {
       val e = Offer.const(123)
       e.poll() must beSome[() => Int].which { _() == 123 }
       e.poll() must beSome[() => Int].which { _() == 123 }
     }
-    
+
     "evaluate argument for each poll()" in {
       var i = 0
       val e = Offer.const { i = i + 1; i }
       e.poll() must beSome[() => Int].which { _() == 1 }
       e.poll() must beSome[() => Int].which { _() == 2 }
     }
-    
+
     "catch illegal use" in {
       val e = Offer.const(123)
       e.enqueue(new SimpleSetter[Int]) must throwA[IllegalStateException]
     }
   }
-  
+
   "Offer.orElse" should {
     "with const orElse" in {
       val e0 = spy(new SimpleOffer[Int])
       val e1 = mock[Offer[Int]]
       e1.poll() returns Some(() => 123)
       val e = e0 orElse e1
-      
+
       "poll orElse event when poll fails" in {
         e.poll() must beSome[() => Int].which { _() == 123 }
         there was one(e0).poll()
@@ -174,7 +174,7 @@ object OfferSpec extends Specification with Mockito {
         there was no(e0).enqueue(any)
         there was no(e1).enqueue(any)
       }
-      
+
       "not poll orElse event when poll succeed" in {
         e0.value = Some(999)
         e.poll() must beSome[() => Int].which { _() == 999 }
@@ -183,7 +183,7 @@ object OfferSpec extends Specification with Mockito {
         there was no(e0).enqueue(any)
         there was no(e1).enqueue(any)
       }
-      
+
       "not enqueue orElse event" in {
         e1.poll() returns None
         e.poll() must beNone
@@ -195,9 +195,9 @@ object OfferSpec extends Specification with Mockito {
         there was one(e0).enqueue(any)
         there was no(e1).enqueue(any)
       }
-    }    
-  }   
-  
+    }
+  }
+
   "Offer.foreach" should {
     "synchronize on offers forever" in {
       val b = new Broker[Int]
@@ -210,7 +210,7 @@ object OfferSpec extends Specification with Mockito {
       count must be_==(2)
     }
   }
-  
+
   "Offer.timeout" should {
     "be available after timeout (poll)" in Time.withTimeAt(Time.epoch) { tc =>
       implicit val timer = new MockTimer
@@ -223,7 +223,7 @@ object OfferSpec extends Specification with Mockito {
       timer.tick()
       e.poll() must beSomething
     }
-    
+
     "be available after timeout (enqueue)" in Time.withTimeAt(Time.epoch) { tc =>
       implicit val timer = new MockTimer
       val e = Offer.timeout(10.seconds)
@@ -237,8 +237,24 @@ object OfferSpec extends Specification with Mockito {
       timer.tick()
       s.get must beSomething
     }
+
+    "cancel timer task when cancelled" in Time.withTimeAt(Time.epoch) { tc =>
+      implicit val timer = new MockTimer
+      val e = Offer.timeout(10.seconds)
+      val s = new SimpleSetter[Unit]
+      val cancel = e.enqueue(s)
+      s.get must beNone
+      timer.tasks must haveSize(1)
+      val task = timer.tasks(0)
+      task.isCancelled must beFalse
+      cancel()
+      task.isCancelled must beTrue
+      tc.advance(10.seconds)
+      timer.tick()
+      s.get must beNone  // didn't fire. was cancelled.
+    }
   }
-  
+
   "Offer.enumToChannel" should {
     val ch = new ChannelSource[Int]
     val b = new Broker[Int]
@@ -261,7 +277,7 @@ object OfferSpec extends Specification with Mockito {
       f1.isDefined must beTrue
       buf.toSeq must be_==(Seq(123, 333, 999, 111))
     }
-    
+
     "stop synchronizing on close" in {
       ch respond { v => buf += v; Future.Done }
       b.send(123)().isDefined must beTrue
@@ -273,32 +289,32 @@ object OfferSpec extends Specification with Mockito {
       b.send(444)().isDefined must beFalse
     }
   }
-  
+
   "Integration" should {
     "select across multiple brokers" in {
       val b0 = new Broker[Int]
       val b1 = new Broker[String]
-      
+
       val o = Offer.choose(
         b0.send(123) const { "put!" },
         b1.recv
       )
-      
+
       val f = o()
       f.isDefined must beFalse
       b1.send("hey")().isDefined must beTrue
       f.isDefined must beTrue
       f() must be_==("hey")
-      
+
       val gf = b0.recv()
       gf.isDefined must beFalse
       val of = o()
       of.isDefined must beTrue
       of() must be_==("put!")
       gf.isDefined must beTrue
-      gf() must be_==(123)     
-      
-      // syncing again fails.      
+      gf() must be_==(123)
+
+      // syncing again fails.
       o().isDefined must beFalse
     }
   }

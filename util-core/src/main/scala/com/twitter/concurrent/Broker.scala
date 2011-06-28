@@ -18,18 +18,18 @@ object Broker {
   private[Broker] class WaitQ[T] {
     type Waiter = () => Option[T]
     private[this] val q = new Queue[Waiter]
-  
+
     def enqueue(waiter: => Option[T]): Waiter = synchronized {
       val w = { () => waiter }
       q += w
       w
     }
-    
+
     def remove(waiter: Waiter) = synchronized {
       // this could get expensive (linear)
       q.dequeueFirst { _ eq waiter }
     }
-    
+
     def dequeue(): Option[T] = synchronized {
       while (!q.isEmpty) {
         val waiter = q.dequeue()
@@ -37,19 +37,17 @@ object Broker {
           return Some(item)
         }
       }
-      
+
       None
     }
-  
+
     def size: Int = synchronized { q.size }
   }
 }
 
 // todo: provide buffered brokers
-// todo: close() semantics -- should we freak out on further
-// sends/receives rather than just dropping them, as now?
 class Broker[E] {
-  /* 
+  /*
    * We rely on the fact that `putq' and `getq' aren't simultaneously
    * nonempty.  The rest of the implementation follows easily from
    * this invariant.
@@ -61,7 +59,6 @@ class Broker[E] {
   private[this] type Putter = Getter => Unit
   private[this] val putq = new WaitQ[Putter]
   private[this] val getq = new WaitQ[Getter]
-  private[this] val closed = new Promise[Unit]
 
   /**
    * Create an offer to broker the sending of the value {{e}}.  Upon
@@ -70,7 +67,6 @@ class Broker[E] {
    */
   def send(e: => E) = new Offer[Unit] {
     def poll(): Option[() => Unit] = {
-      if (closed.isDefined) return None
       getq.dequeue() flatMap { getter =>
         getter(e)
         Some(() => ())
@@ -95,7 +91,6 @@ class Broker[E] {
    */
   def recv = new Offer[E] {
     def poll(): Option[() => E] = {
-      if (closed.isDefined) return None
       putq.dequeue() match {
         case Some(putter) =>
           var res: Option[() => E] = None
@@ -105,26 +100,14 @@ class Broker[E] {
           None
       }
     }
-    
+
     def enqueue(setter: Offer[E]#Setter) = {
       val waiter = getq.enqueue {
         setter() map { set => { e => set(() => e) } }
-      }      
+      }
       () => getq.remove(waiter)
-    }  
-    
+    }
+
     def objects = Seq(this)
   }
-
-  /**
-   * Close this broker. This activates the offer given by {{onClose}}.
-   */  
-  def close() {
-    closed.updateIfEmpty(Return(()))
-  }
-
-  /**
-   * An offer that is activated when this broker has been closed.
-   */
-  val onClose: Offer[Unit] = closed.toOffer const ()
 }
