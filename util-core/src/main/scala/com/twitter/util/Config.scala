@@ -53,6 +53,7 @@ object Config {
   implicit def toComputed[A](f: => A) = new Computed(f)
   implicit def toSpecifiedComputed[A](f: => A) = Specified(new Computed(f))
   implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def fromComputed[A](com: Computed[A]) = com.value
   implicit def fromRequiredComputed[A](req: Required[Computed[A]]) = req.value.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def fromOption[A](item: Option[A]): A = item.get
