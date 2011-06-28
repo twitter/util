@@ -85,23 +85,25 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
   def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]): This[R2]
 
   /**
-   * Invoked only if the computation was successful. Returns `this`
+   * Invoked only if the computation was successful.  Returns a
+   * chained `this` as in `respond`.
    */
   def onSuccess(f: R => Unit): This[R]
 
   /**
-   * Invoked only if the computation was successful. Returns `this`
+   * Invoked only if the computation was successful.  Returns a
+   * chained `this` as in `respond`.
    */
   def onFailure(rescueException: Throwable => Unit): This[R]
 
   /**
-   * Invoked regardless of whether the computation completed successfully or unsuccessfully.
-   * Implemented in terms of `respond` so that subclasses control evaluation order. Returns `this`.
+   * Invoked regardless of whether the computation completed
+   * successfully or unsuccessfully.  Implemented in terms of
+   * `respond` so that subclasses control evaluation order.  Returns a
+   * chained `this` as in `respond`.
    */
-  def ensure(f: => Unit): This[R] = {
+  def ensure(f: => Unit): This[R] =
     respond { _ => f }
-    this.asInstanceOf[This[R]]
-  }
 
   /**
    * Returns None if this is a Throw or a Some containing the value if this is a Return
@@ -109,9 +111,13 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
   def toOption = if (isReturn) Some(apply()) else None
 
   /**
-   * Returns this object. This is overridden by subclasses.
+   * Invokes the given closure when the value is available.  Returns
+   * another 'This[R]' that is guaranteed to be available only *after*
+   * 'k' has run.  This enables the enorcement of invocation ordering.
+   *
+   * This is overridden by subclasses.
    */
-  def respond(k: Try[R] => Unit)
+  def respond(k: Try[R] => Unit): This[R]
 
   /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw.
@@ -121,7 +127,7 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
 }
 
 sealed abstract class Try[+R] extends TryLike[R, Try] {
-  def respond(k: Try[R] => Unit) = k(this)
+  def respond(k: Try[R] => Unit) = { k(this); this }
 }
 
 final case class Throw[+R](e: Throwable) extends Try[R] {
