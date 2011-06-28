@@ -72,11 +72,24 @@ object Config {
  *       var botPort = required[Int]
  *       ....
  *     }
+ *
+ * Optional fields can be defined with:
+ *    var something = optional[Duration]
+ *
+ * Fields that are depdendent on other fields and have a default value computed
+ * from an expression should be marked as computed:
+ *
+ *    var level = required[Int]
+ *    var nextLevel = computed(level + 1)
+ *
+ * Making a field Computed means that the expression is lazily evaluated, allowing
+ * subclasses to set the value of the indepedent vars before computing the depdendent var.
  */
 trait Config[T] extends (() => T) {
   import Config.{Computed, Required, Specified, Unspecified, RequiredValuesMissing}
 
   def required[A]: Required[A] = Unspecified
+  def optional[A]: Option[A] = None
   def computed[A](f: => A) = new Computed(f)
   implicit def toSpecified[A](value: A) = Specified(value)
   implicit def toSpecifiedOption[A](value: A) = Specified(Some(value))
