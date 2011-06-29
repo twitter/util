@@ -35,6 +35,10 @@ object Config {
 
   class RequiredValuesMissing(names: Seq[String]) extends Exception(names.mkString(","))
 
+  class Computed[A](f: => A) {
+    lazy val value = f
+  }
+
   /**
    * Config classes that don't produce anything via an apply() method
    * can extends Config.Nothing, and still get access to the Required
@@ -46,7 +50,11 @@ object Config {
 
   implicit def toSpecified[A](value: A) = Specified(value)
   implicit def toSpecifiedOption[A](value: A) = Specified(Some(value))
+  implicit def toComputed[A](f: => A) = new Computed(f)
+  implicit def toSpecifiedComputed[A](f: => A) = Specified(new Computed(f))
   implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def fromComputed[A](com: Computed[A]) = com.value
+  implicit def fromRequiredComputed[A](req: Required[Computed[A]]) = req.value.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def fromOption[A](item: Option[A]): A = item.get
   implicit def intoList[A](item: A): List[A] = List(item)
@@ -64,14 +72,32 @@ object Config {
  *       var botPort = required[Int]
  *       ....
  *     }
+ *
+ * Optional fields can be defined with:
+ *    var something = optional[Duration]
+ *
+ * Fields that are depdendent on other fields and have a default value computed
+ * from an expression should be marked as computed:
+ *
+ *    var level = required[Int]
+ *    var nextLevel = computed(level + 1)
+ *
+ * Making a field Computed means that the expression is lazily evaluated, allowing
+ * subclasses to set the value of the indepedent vars before computing the depdendent var.
  */
 trait Config[T] extends (() => T) {
-  import Config.{Required, Specified, Unspecified, RequiredValuesMissing}
+  import Config.{Computed, Required, Specified, Unspecified, RequiredValuesMissing}
 
   def required[A]: Required[A] = Unspecified
+  def optional[A]: Option[A] = None
+  def computed[A](f: => A) = new Computed(f)
   implicit def toSpecified[A](value: A) = Specified(value)
   implicit def toSpecifiedOption[A](value: A) = Specified(Some(value))
+  implicit def toComputed[A](f: => A) = new Computed(f)
+  implicit def toSpecifiedComputed[A](f: => A) = Specified(new Computed(f))
   implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def fromComputed[A](com: Computed[A]) = com.value
+  implicit def fromRequiredComputed[A](req: Required[Computed[A]]) = req.value.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def fromOption[A](item: Option[A]): A = item.get
   implicit def intoList[A](item: A): List[A] = List(item)
