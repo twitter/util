@@ -25,12 +25,17 @@ import scala.collection.mutable.ListBuffer
 object Config {
   sealed trait Required[+A] {
     def value: A
+    def isSpecified: Boolean
+    def isEmpty = !isSpecified
   }
 
-  case class Specified[A](value: A) extends Required[A]
+  case class Specified[A](value: A) extends Required[A] {
+    def isSpecified = true
+  }
 
   case object Unspecified extends Required[scala.Nothing] {
     def value = throw new NoSuchElementException
+    def isSpecified = false
   }
 
   class RequiredValuesMissing(names: Seq[String]) extends Exception(names.mkString(","))
