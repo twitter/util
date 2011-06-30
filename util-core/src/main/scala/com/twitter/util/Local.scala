@@ -46,6 +46,7 @@ final class Local[T] {
     }
 
   def update(value: T) = threadLocal.set(Some(value))
+  def set(optValue: Option[T]) = threadLocal.set(optValue)
   def clear() = threadLocal.remove()
   def apply() = threadLocal.get()
   def save() = new SavedLocal[T](this)
