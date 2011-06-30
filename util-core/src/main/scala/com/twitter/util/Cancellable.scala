@@ -2,10 +2,8 @@ package com.twitter.util
 
 import scala.collection.mutable.ArrayBuffer
 
-import com.twitter.concurrent.IVar
-
 /**
- * Provides a mixin to make the underlying object *cancellable*.
+ * Defines a trait that makes the underlying object *cancellable*.
  * Cancellable objects may be linked to each other (one way) in order
  * to propagate cancellation.
  *
@@ -16,24 +14,26 @@ import com.twitter.concurrent.IVar
  */
 
 trait Cancellable {
-  private[this] val linked = new ArrayBuffer[Cancellable](0)
-  private[this] val cancelled = new IVar[Unit]
-
-  def isCancelled = cancelled.isDefined
+  def isCancelled: Boolean
 
   /**
    * Cancel the computation.  The cancellation is propagated to linked
    * cancellable objects.
    */
-  def cancel() {
-    cancelled.set(())
-  }
+  def cancel(): Unit
 
   /**
    * Link this cancellable computation to 'other'.  This means
    * cancellation of 'this' computation will propagate to 'other'.
    */
+  def linkTo(other: Cancellable): Unit
+}
+
+class CancellableSink(f: => Unit) extends Cancellable {
+  @volatile var wasCancelled = false
+  def isCancelled = wasCancelled
+  def cancel() { f; wasCancelled = true }
   def linkTo(other: Cancellable) {
-    cancelled.get { _ => other.cancel() }
+    throw new Exception("linking not supported in CancellableSink")
   }
 }

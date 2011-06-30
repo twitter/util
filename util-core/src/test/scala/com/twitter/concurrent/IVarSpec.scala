@@ -24,36 +24,23 @@ object IVarSpec extends Specification {
      iv() must be_==(123)
    }
 
-   "execute get blocks in order" in {
-     val order = new ArrayBuffer[Int]
-     iv.get { _ => order += 1 }
-     iv.get { _ => order += 2 }
+   "invoke multiple gets" in {
+     var count = 0
+     iv.get { _ => count += 1 }
+     iv.get { _ => count += 1 }
      iv.set(123)
-     iv.get { _ => order += 3 }
-     order.toSeq must be_==(Seq(1,2,3))
+     count must be_==(2)
+     iv.get { _ => count += 1 }
+     count must be_==(3)
    }
 
-   "execute blocks in order when gets are interleaved with a set" in {
-     val startGet, continueGet, finishGet = new CountDownLatch(1)
-     val dispatches = new ArrayBuffer[(Int, Long)] with SynchronizedBuffer[(Int, Long)]
-     Thread.currentThread.getId()
-
-     iv.get { _ => startGet.countDown(); continueGet.await(); dispatches += ((1, Thread.currentThread.getId())) }
-     iv.get { _ => finishGet.countDown(); dispatches += ((2, Thread.currentThread.getId())) }
-     val t = new Thread {
-       override def run() {
-         iv.set(123)
-       }
-     }
-
-     t.start()
-     startGet.await()
-     iv.get { _ => finishGet.await(); dispatches += ((3, Thread.currentThread.getId())) }
-     continueGet.countDown()
-     val id = t.getId
-     t.join()
-
-     dispatches.toSeq must be_==(Seq((1, id), (2, id), (3, id)))
+   "chain properly" in {
+     val order = new ArrayBuffer[Int]
+     iv.chained.chained.get { _ => order += 3 }
+     iv.chained.get { _ => order += 2 }
+     iv.get { _ => order += 1 }
+     iv.set(123)
+     order.toSeq must be_==(Seq(1, 2, 3))
    }
-  }
+ }
 }

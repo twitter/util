@@ -365,10 +365,16 @@ object Promise {
  * reference to this object as a Promise[_] and updates the value when the computation
  * completes.
  */
-class Promise[A] extends Future[A] {
+class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
+  extends Future[A]
+{
   import Promise._
 
-  private[this] val ivar = new IVar[Try[A]]
+  def this() = this(new IVar[Try[A]], new IVar[Unit])
+
+  def isCancelled = cancelled.isDefined
+  def cancel() = cancelled.set(())
+  def linkTo(other: Cancellable) = cancelled.get { _ => other.cancel() }
 
   /**
    * Secondary constructor where result can be provided immediately.
@@ -416,7 +422,8 @@ class Promise[A] extends Future[A] {
    */
   def updateIfEmpty(newResult: Try[A]) = ivar.set(newResult)
 
-  override def respond(k: Try[A] => Unit) = {
+  override def respond(k: Try[A] => Unit): Future[A] = {
+    val next = new Promise(ivar.chained, cancelled)
     val saved = Locals.save()
     ivar.get { result =>
       val current = Locals.save()
@@ -427,16 +434,16 @@ class Promise[A] extends Future[A] {
         current.restore()
     }
 
-    this
+
+    // Note that this we return a Future here, so clients can't set it.
+    next
   }
 
   /**
    * Invoke 'f' if this Future is cancelled.
    */
   def onCancellation(f: => Unit) {
-    linkTo(new Cancellable {
-      override def cancel() { f }
-    })
+    linkTo(new CancellableSink(f))
   }
 
   override def map[B](f: A => B) = new Promise[B] {

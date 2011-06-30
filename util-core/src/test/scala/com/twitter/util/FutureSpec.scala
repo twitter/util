@@ -1,11 +1,12 @@
 package com.twitter.util
 
 import org.specs.Specification
+import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.concurrent.SimpleSetter
 
-object FutureSpec extends Specification {
+object FutureSpec extends Specification with Mockito {
   "Future" should {
     import Future._
 
@@ -334,13 +335,32 @@ object FutureSpec extends Specification {
       done() must be_==((Some(1010), Some(123)))
     }
 
-    "dispatch onCancellation upon cancellation" in {
-      val p = new Promise[Int]
-      var wasRun = false
-      p onCancellation { wasRun = true }
-      wasRun must beFalse
-      p.cancel()
-      wasRun must beTrue
+    "cancellation" in {
+      val c = spy(new Promise[Int])
+      val c1 = spy(new Promise[Int])
+
+      "dispatch onCancellation upon cancellation" in {
+        val p = new Promise[Int]
+        var wasRun = false
+        p onCancellation { wasRun = true }
+        wasRun must beFalse
+        p.cancel()
+        wasRun must beTrue
+      }
+
+      "cancel a linked cancellable (after cancellation)" in {
+        c.cancel()
+        there was no(c1).cancel()
+        c.linkTo(c1)
+        there was one(c1).cancel()
+      }
+
+      "cancel a linked cancellable (before cancellation)" in {
+        c.linkTo(c1)
+        there was no(c1).cancel()
+        c.cancel()
+        there was one(c1).cancel()
+      }
     }
   }
 
