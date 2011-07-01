@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -20,7 +21,7 @@ trait Cancellable {
    * Cancel the computation.  The cancellation is propagated to linked
    * cancellable objects.
    */
-  def cancel(): Unit
+  def cancel()
 
   /**
    * Link this cancellable computation to 'other'.  This means
@@ -30,9 +31,9 @@ trait Cancellable {
 }
 
 class CancellableSink(f: => Unit) extends Cancellable {
-  @volatile var wasCancelled = false
-  def isCancelled = wasCancelled
-  def cancel() { f; wasCancelled = true }
+  private[this] val wasCancelled = new AtomicBoolean(false)
+  def isCancelled = wasCancelled.get
+  def cancel() { if (wasCancelled.compareAndSet(false, true)) f }
   def linkTo(other: Cancellable) {
     throw new Exception("linking not supported in CancellableSink")
   }

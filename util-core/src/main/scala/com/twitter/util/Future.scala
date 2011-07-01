@@ -435,7 +435,7 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
     }
 
 
-    // Note that this we return a Future here, so clients can't set it.
+    // Note that we return a Future here, so clients can't set it.
     next
   }
 
