@@ -84,7 +84,7 @@ class Project(info: ProjectInfo)
   {
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift = "thrift"        % "libthrift"     % "0.5.0"
-    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.2" % "provided"
+    val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.8" % "provided"
   }
 
   class HashingProject(info: ProjectInfo)
