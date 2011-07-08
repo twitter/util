@@ -16,7 +16,7 @@
 
 package com.twitter.util
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable
 
 /**
  * You can import Config._ if you want the auto-conversions in a class
@@ -114,24 +114,28 @@ trait Config[T] extends (() => T) {
    * the name is the dot-separated path down to that value.
    */
   def missingValues: Seq[String] = {
+    val alreadyVisited = mutable.Set[AnyRef]()
     val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]])
-    val buf = new ListBuffer[String]
+    val buf = new mutable.ListBuffer[String]
     def collect(prefix: String, config: Config[_]) {
-      val nullaryMethods = config.getClass.getMethods.toSeq filter { _.getParameterTypes.isEmpty }
-      for (method <- nullaryMethods) {
-        val name = method.getName
-        val rt = method.getReturnType
-        if (name != "required" &&
-            !name.endsWith("$outer") && // no loops!
-            interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
-          method.invoke(config) match {
-            case Unspecified =>
-              buf += (prefix + name)
-            case Specified(sub: Config[_]) =>
-              collect(prefix + name + ".", sub)
-            case sub: Config[_] =>
-              collect(prefix + name + ".", sub)
-            case _ =>
+      if (!alreadyVisited.contains(config)) {
+        alreadyVisited += config
+        val nullaryMethods = config.getClass.getMethods.toSeq filter { _.getParameterTypes.isEmpty }
+        for (method <- nullaryMethods) {
+          val name = method.getName
+          val rt = method.getReturnType
+          if (name != "required" &&
+              !name.endsWith("$outer") && // no loops!
+              interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
+            method.invoke(config) match {
+              case Unspecified =>
+                buf += (prefix + name)
+              case Specified(sub: Config[_]) =>
+                collect(prefix + name + ".", sub)
+              case sub: Config[_] =>
+                collect(prefix + name + ".", sub)
+              case _ =>
+            }
           }
         }
       }
