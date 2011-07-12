@@ -124,5 +124,14 @@ object DurationSpec extends Specification {
       rv mustEqual "M4 (part II)"
       duration must be_>=(10.nanoseconds)
     }
+
+    "be hashable" in {
+      val map = new java.util.concurrent.ConcurrentHashMap[Duration, Int]
+      map.put(23.millis, 23)
+      map.get(23.millis) mustEqual 23
+      map.put(44.millis, 44)
+      map.get(44.millis) mustEqual 44
+      map.get(233) mustEqual 0
+    }
   }
 }

@@ -300,6 +300,13 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
 
   def build(nanos: Long) = new Duration(nanos)
 
+  override def hashCode = nanos.hashCode
+
+  override def equals(that: Any) = that match {
+    case t: Duration => this.nanos == t.nanos
+    case _ => false
+  }
+
   override def toString = {
     if (nanos == Long.MaxValue) {
       "never"
