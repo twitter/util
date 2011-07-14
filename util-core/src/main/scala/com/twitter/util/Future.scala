@@ -250,35 +250,28 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   override def foreach(k: A => Unit) { respond(_ foreach k) }
 
   /**
-   * Invoke the function on the result, if the computation was successful. Returns
-   * `this` to allow for a fluent API. This function is like foreach but it returns
-   * `this`. See `map` and `flatMap` for a less imperative API.
+   * Invoke the function on the result, if the computation was
+   * successful.  Returns a chained Future as in `respond`.
    *
-   * @return this
+   * @return chained Future
    */
-  def onSuccess(f: A => Unit): Future[A] = {
+  def onSuccess(f: A => Unit): Future[A] =
     respond {
       case Return(value) => f(value)
       case _ =>
     }
-    this
-  }
 
   /**
-   * Invoke the funciton on the error, if the computation was unsuccessful. Returns
-   * `this` to allow for a fluent API. This function is like `foreach` but for the error
-   * case. It also differs from `foreach` in that it returns `this`.
-   * See `rescue` and `handle` for a less imperative API.
+   * Invoke the function on the error, if the computation was
+   * unsuccessful.  Returns a chained Future as in `respond`.
    *
-   * @return this
+   * @return chained Future
    */
-  def onFailure(rescueException: Throwable => Unit): Future[A] = {
+  def onFailure(rescueException: Throwable => Unit): Future[A] =
     respond {
       case Throw(throwable) => rescueException(throwable)
       case _ =>
     }
-    this
-  }
 
   def addEventListener(listener: FutureEventListener[_ >: A]) = respond {
     case Throw(cause)  => listener.onFailure(cause)
