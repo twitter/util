@@ -26,7 +26,7 @@ import com.twitter.util.TempFolder
 import org.specs.Specification
 import config._
 
-class LoggerSpec extends Specification with TempFolder {
+class LoggerSpec extends Specification with TempFolder with TestLogging {
   private var myHandler: Handler = null
   private var log: Logger = null
 
@@ -82,6 +82,12 @@ class LoggerSpec extends Specification with TempFolder {
       log1.name mustEqual "com.twitter.logging.LoggerSpec"
     }
 
+    "log & trace a message" in {
+      traceLogger(Level.INFO)
+      Logger.get("").info("angry duck")
+      mustLog("duck")
+    }
+    
     "log a message, with timestamp" in {
       Logger.clearHandlers()
       myHandler = timeFrozenHandler
