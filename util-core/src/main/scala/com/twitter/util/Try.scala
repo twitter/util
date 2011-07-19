@@ -113,7 +113,7 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
   /**
    * Invokes the given closure when the value is available.  Returns
    * another 'This[R]' that is guaranteed to be available only *after*
-   * 'k' has run.  This enables the enorcement of invocation ordering.
+   * 'k' has run.  This enables the enforcement of invocation ordering.
    *
    * This is overridden by subclasses.
    */
