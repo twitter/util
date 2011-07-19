@@ -16,6 +16,7 @@
 
 package com.twitter.logging
 
+import java.util.{logging => jlogging}
 import org.specs.Specification
 
 /**
@@ -25,12 +26,17 @@ trait TestLogging { self: Specification =>
   val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
   new SpecContext {
+    val logger = Logger.get("")
+    var oldLevel: jlogging.Level = _
+
     beforeSpec {
-      Logger.get("").setLevel(logLevel)
+      oldLevel = logger.getLevel()
+      logger.setLevel(logLevel)
     }
 
     afterSpec {
-      Logger.get("").clearHandlers()
+      logger.clearHandlers()
+      logger.setLevel(oldLevel)
     }
   }
 
