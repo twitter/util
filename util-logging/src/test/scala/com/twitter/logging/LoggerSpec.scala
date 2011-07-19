@@ -87,7 +87,7 @@ class LoggerSpec extends Specification with TempFolder with TestLogging {
       Logger.get("").info("angry duck")
       mustLog("duck")
     }
-    
+
     "log a message, with timestamp" in {
       Logger.clearHandlers()
       myHandler = timeFrozenHandler

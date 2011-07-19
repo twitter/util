@@ -31,7 +31,7 @@ trait TestLogging { self: Specification =>
   }
 
   private var traceHandler = new StringHandler(BareFormatter, None)
-  
+
   /**
    * Set up logging to record messages at the given level, and not send them to the console.
    *
@@ -40,11 +40,11 @@ trait TestLogging { self: Specification =>
   def traceLogger(level: Level) {
     traceLogger("", level)
   }
-  
+
   /**
    * Set up logging to record messages sent to the given logger at the given level, and not send
    * them to the console.
-   * 
+   *
    * This is meant to be used in a `doBefore` block.
    */
   def traceLogger(name: String, level: Level) {
@@ -54,7 +54,7 @@ trait TestLogging { self: Specification =>
     logger.clearHandlers()
     logger.addHandler(traceHandler)
   }
-  
+
   /**
    * Verify that the logger set up with `traceLogger` has received a log line with the given
    * substring somewhere inside it.
