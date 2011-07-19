@@ -1,0 +1,7 @@
+2011-07-18	1.10.2
+
+	* Maintain a map of already visited objects incase someone
+	creates a circular of config objects.  
+	* Make Duration hashable.  
+	* Promise.on{Success, Failure}: returned chained future.
+
