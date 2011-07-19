@@ -28,6 +28,10 @@ trait TestLogging { self: Specification =>
     beforeSpec {
       Logger.get("").setLevel(logLevel)
     }
+
+    afterSpec {
+      Logger.get("").clearHandlers()
+    }
   }
 
   private var traceHandler = new StringHandler(BareFormatter, None)
