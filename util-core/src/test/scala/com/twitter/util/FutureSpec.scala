@@ -6,7 +6,7 @@ import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.concurrent.SimpleSetter
 
-object FutureSpec extends Specification with Mockito {
+class FutureSpec extends Specification with Mockito {
   "Future" should {
     import Future._
 

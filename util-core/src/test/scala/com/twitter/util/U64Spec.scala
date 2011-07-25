@@ -90,8 +90,7 @@ class U64Spec extends Specification {
     0x8000000000000000L.u64_/(3) must be_==(0x2AAAAAAAAAAAAAAAL)
   }
 
-  "ids" should {
-    "survive conversions" in {
+  "ids should survive conversions" in {
       val rng = new Random
 
       (0 until 10000).foreach { _ =>
@@ -101,10 +100,10 @@ class U64Spec extends Specification {
       }
     }
 
-    "be serializable" in {
+    "ids should be serializable" in {
       0L.toU64HexString must be_==("0000000000000000")
       0x0102030405060700L.toU64HexString must be_==("0102030405060700")
       0xFFF1F2F3F4F5F6F7L.toU64HexString must be_==("fff1f2f3f4f5f6f7")
     }
-  }
+  
 }
