@@ -54,7 +54,7 @@ class Project(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-    val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
+    val scalaTools = "org.scala-lang" % "scala-compiler" % "2.9.0-1" % "compile"
     override def filterScalaJars = false
   }
 
