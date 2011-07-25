@@ -390,39 +390,39 @@ class FutureSpec extends Specification with Mockito {
     }
   }
 
-  "FutureTask" should {
-    "return result" in {
+  "FutureTask" in {
+    "should return result" in {
       val task = new FutureTask("hello")
       task.run()
       task() mustEqual "hello"
     }
 
-    "throw result" in {
+    "should throw result" in {
       val task = new FutureTask[String](throw new IllegalStateException)
       task.run()
       task() must throwA(new IllegalStateException)
     }
   }
 
-  "Future.select()" should {
+  "Future.select()" in {
     val p0 = new Promise[Int]
     val p1 = new Promise[Int]
     val f = p0 select p1
     f.isDefined must beFalse
 
-    "select the first [result] to complete" in {
+    "should select the first [result] to complete" in {
       p0() = Return(1)
       p1() = Return(2)
       f() must be_==(1)
     }
 
-    "select the first [exception] to complete" in {
+    "should select the first [exception] to complete" in {
       p0() = Throw(new Exception)
       p1() = Return(2)
       f() must throwA[Exception]
     }
 
-    "propagate cancellation" in {
+    "should propagate cancellation" in {
       p0.isCancelled must beFalse
       p1.isCancelled must beFalse
       f.cancel()
@@ -431,20 +431,20 @@ class FutureSpec extends Specification with Mockito {
     }
   }
 
-  "Future.join()" should {
+  "Future.join()" in {
     val p0 = new Promise[Int]
     val p1 = new Promise[Int]
     val f = p0 join p1
     f.isDefined must beFalse
 
-    "only return when both futures complete" in {
+    "should only return when both futures complete" in {
       p0() = Return(1)
       f.isDefined must beFalse
       p1() = Return(2)
       f() must be_==(1, 2)
     }
 
-    "return with exception if the first future throws" in {
+    "should return with exception if the first future throws" in {
       p0() = Throw(new Exception)
       f() must throwA[Exception]
     }
@@ -465,32 +465,32 @@ class FutureSpec extends Specification with Mockito {
     }
   }
 
-  "Future.collect()" should {
+  "Future.collect()" in {
     val p0 = new Promise[Int]
     val p1 = new Promise[Int]
     val f = Future.collect(Seq(p0, p1))
     f.isDefined must beFalse
 
-    "only return when both futures complete" in {
+    "should only return when both futures complete" in {
       p0() = Return(1)
       f.isDefined must beFalse
       p1() = Return(2)
       f() must be_==(Seq(1, 2))
     }
 
-    "return with exception if the first future throws" in {
+    "should return with exception if the first future throws" in {
       p0() = Throw(new Exception)
       f() must throwA[Exception]
     }
 
-    "return with exception if the second future throws" in {
+    "should return with exception if the second future throws" in {
       p0() = Return(1)
       f.isDefined must beFalse
       p1() = Throw(new Exception)
       f() must throwA[Exception]
     }
 
-    "propagate cancellation" in {
+    "should propagate cancellation" in {
       p0.isCancelled must beFalse
       p1.isCancelled must beFalse
       f.cancel()
@@ -499,9 +499,9 @@ class FutureSpec extends Specification with Mockito {
     }
   }
 
-  "Future.select()" should {
+  "Future.select()" in {
 
-    "return the first result" in {
+    "should return the first result" in {
       def tryBothForIndex(i: Int) = {
         "success (%d)".format(i) in {
           val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
@@ -518,7 +518,7 @@ class FutureSpec extends Specification with Mockito {
           }
         }
 
-        "failure (%d)".format(i) in {
+        "should failure (%d)".format(i) in {
           val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
           val f = Future.select(fs)
           f.isDefined must beFalse
@@ -539,13 +539,13 @@ class FutureSpec extends Specification with Mockito {
       0 until 10 foreach { tryBothForIndex(_) }
     }
 
-    "fail if we attempt to select an empty future sequence" in {
+    "should fail if we attempt to select an empty future sequence" in {
       val f = Future.select(Seq())
       f.isDefined must beTrue
       f() must throwA(new IllegalArgumentException("empty future list!"))
     }
 
-    "propagate cancellation" in {
+    "should propagate cancellation" in {
       val fs = (0 until 10 map { _ => new Promise[Int] }) toArray;
       Future.select(fs).cancel()
       fs foreach { f =>
@@ -554,8 +554,8 @@ class FutureSpec extends Specification with Mockito {
     }
   }
 
-  "Future.toOffer" should {
-    "activate when future is satisfied (poll)" in {
+  "Future.toOffer" in {
+    "should activate when future is satisfied (poll)" in {
       val p = new Promise[Int]
       val o = p.toOffer
       o.poll() must beNone
@@ -566,7 +566,7 @@ class FutureSpec extends Specification with Mockito {
       }
     }
 
-    "activate when future is satisfied (enqueue)" in {
+    "should activate when future is satisfied (enqueue)" in {
       val p = new Promise[Int]
       val o = p.toOffer
       val s = new SimpleSetter[Try[Int]]
