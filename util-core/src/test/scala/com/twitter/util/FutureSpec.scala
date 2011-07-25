@@ -356,10 +356,10 @@ class FutureSpec extends Specification with Mockito {
       }
 
       "cancel a linked cancellable (before cancellation)" in {
-        //c.linkTo(c1)
-        //there was no(c1).cancel()
-        //c.cancel()
-        //there was one(c1).cancel()
+        c.linkTo(c1)
+        there was no(c1).cancel()
+        c.cancel()
+        there was one(c1).cancel()
       }
     }
   }
