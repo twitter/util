@@ -1,3 +1,6 @@
+
+        * Added TestLogging specs helper to util-logging.
+
 1.10.3	2011-07-27
 
 	* add GZip string encoder
