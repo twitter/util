@@ -35,7 +35,7 @@ class IVar[A] {
   /**
    * Set the value - only the first call will be successful.
    *
-   * @return true if the value was set succesfully.
+   * @return true if the value was set successfully.
    */
   def set(value: A): Boolean = {
     val didSet = synchronized {

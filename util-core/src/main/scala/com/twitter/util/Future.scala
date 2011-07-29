@@ -33,7 +33,7 @@ object Future {
 
   /**
    * Take a sequence of Futures, wait till they all complete
-   * succesfully.  The future fails immediately if any of the joined
+   * successfully.  The future fails immediately if any of the joined
    * Futures do, mimicking the semantics of exceptions.
    *
    * @param fs a sequence of Futures
@@ -220,7 +220,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   }
 
   /**
-   * Same as the other within, but with an implict timer. Sometimes this is more convenient.
+   * Same as the other within, but with an implicit timer. Sometimes this is more convenient.
    */
   def within(timeout: Duration)(implicit timer: Timer): Future[A] =
     within(timer, timeout)
@@ -244,7 +244,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   }
 
   /**
-   * Invoke the callback only if the Future returns sucessfully. Useful for Scala for comprehensions.
+   * Invoke the callback only if the Future returns successfully. Useful for Scala for comprehensions.
    * Use onSuccess instead of this method for more readable code.
    */
   override def foreach(k: A => Unit) { respond(_ foreach k) }
