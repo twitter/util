@@ -76,6 +76,9 @@ class Project(info: ProjectInfo)
   class LoggingProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+  {
+    val compileWithSpecs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "provided"
+  }
 
   class ThriftProject(info: ProjectInfo)
     extends StandardProject(info)
