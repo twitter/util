@@ -1,5 +1,7 @@
+1.10.4	2011-07-29
 
         * Added TestLogging specs helper to util-logging.
+        * Spools: like scala streams, but with deferred tails.
 
 1.10.3	2011-07-27
 
