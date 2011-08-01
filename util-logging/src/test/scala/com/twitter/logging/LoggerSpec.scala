@@ -57,8 +57,10 @@ class LoggerSpec extends Specification with TempFolder {
     "provide level name and value maps" in {
       Logger.levels mustEqual Map(
         Level.ALL.value -> Level.ALL,
+        Level.FINEST.value -> Level.FINEST,
         Level.TRACE.value -> Level.TRACE,
         Level.DEBUG.value -> Level.DEBUG,
+        Level.CONFIG.value -> Level.CONFIG,
         Level.INFO.value -> Level.INFO,
         Level.WARNING.value -> Level.WARNING,
         Level.ERROR.value -> Level.ERROR,
@@ -67,8 +69,10 @@ class LoggerSpec extends Specification with TempFolder {
         Level.OFF.value -> Level.OFF)
       Logger.levelNames mustEqual Map(
         "ALL" -> Level.ALL,
+        "FINEST" -> Level.FINEST,
         "TRACE" -> Level.TRACE,
         "DEBUG" -> Level.DEBUG,
+        "CONFIG" -> Level.CONFIG,
         "INFO" -> Level.INFO,
         "WARNING" -> Level.WARNING,
         "ERROR" -> Level.ERROR,
