@@ -21,6 +21,10 @@ class Project(info: ProjectInfo)
     "util-eval", "util-eval",
     new EvalProject(_), coreProject)
 
+  val codecProject = project(
+    "util-codec", "util-codec",
+    new CodecProject(_), coreProject)
+
   val collectionProject = project(
     "util-collection", "util-collection",
     new CollectionProject(_), coreProject)
@@ -38,7 +42,7 @@ class Project(info: ProjectInfo)
   // util-thrift: thrift (serialization) utilities
   val thriftProject = project(
     "util-thrift", "util-thrift",
-    new ThriftProject(_), coreProject)
+    new ThriftProject(_), coreProject, codecProject)
 
   // util-hashing: hashing and distribution utilities
   val hashingProject = project(
@@ -56,6 +60,13 @@ class Project(info: ProjectInfo)
   {
     val scalaTools = "org.scala-lang" % "scala-compiler" % "2.8.1" % "compile"
     override def filterScalaJars = false
+  }
+
+  class CodecProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+  {
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.5"
   }
 
   class CollectionProject(info: ProjectInfo)
