@@ -1,3 +1,9 @@
+1.11.0	2011-08-2
+
+	* Introduce new util-codec module to contain various codecs.
+	Primarily so that it can depend on apache commons-codec 1.5
+	for base64 improvements over the sun one.
+
 1.10.4	2011-07-29
 
 	* Added TestLogging specs helper to util-logging.
