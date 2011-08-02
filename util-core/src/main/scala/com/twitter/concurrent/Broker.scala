@@ -84,7 +84,7 @@ class Broker[E] {
     def objects = Seq(this)
   }
 
-  /**
+ /**
    * Create an offer to receive a brokered value.  Upon
    * synchronization, the offer is realized exactly when there is a
    * sender.  Receives are in FIFO order of sends.
@@ -110,4 +110,27 @@ class Broker[E] {
 
     def objects = Seq(this)
   }
+
+  /* Scala actor style syntax. */
+
+  /**
+   * Send an item on the broker, returning a {{Future}} indicating
+   * completion.
+   */
+  def !(e: =>E): Future[Unit] = send(e)()
+
+  /**
+   * Like {!}, but block until the item has been sent.
+   */
+  def !!(e: => E): Unit = this.!(e)()
+
+  /**
+   * Retrieve an item from the broker, asynchronously.
+   */
+  def ? : Future[E] = recv()
+
+  /**
+   * Retrieve an item from the broker, blocking.
+   */
+  def ?? : E = this.?()
 }

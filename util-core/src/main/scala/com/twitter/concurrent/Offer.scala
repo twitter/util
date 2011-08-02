@@ -217,6 +217,9 @@ trait Offer[+T] { self =>
     def objects = self.objects ++ other.objects
   }
 
+  def or[U](other: Offer[U]): Offer[Either[T, U]] =
+    Offer.choose(this map { Left(_) }, other map { Right(_) })
+
   /**
    * Synchronize on this offer indefinitely, invoking the given {{f}}
    * with each successfully synchronized value.  A receiver can use
@@ -303,6 +306,8 @@ trait Offer[+T] { self =>
     this() onSuccess { _ => f }
   }
 
+  def apply[R](f: T => R): Offer[R] = map(f)
+
   /**
    * Synchronize this offer.  This activates this offer and attempts
    * to perform the communication specified.
@@ -360,4 +365,16 @@ trait Offer[+T] { self =>
 
     action()
   }
+
+  /* Scala actor-style syntax */
+
+  /**
+   * Alias for synchronize.
+   */
+  def ? = apply()
+
+  /**
+   * Synchronize, blocking for the result.
+   */
+  def ?? = ?()
 }
