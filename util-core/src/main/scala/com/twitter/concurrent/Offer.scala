@@ -213,7 +213,7 @@ trait Offer[+T] { self =>
    */
   def orElse[U >: T](other: Offer[U]): Offer[U] = new Offer[U] {
     def poll() = self.poll() orElse other.poll()
-    def enqueue(setter: Setter) = self.enqueue(setter)
+    def enqueue(setter: Setter) = other.enqueue(setter)
     def objects = self.objects ++ other.objects
   }
 
