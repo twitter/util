@@ -103,6 +103,9 @@ class Project(info: ProjectInfo)
   class HashingProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+  {
+      val commonsCodec = "commons-codec" % "commons-codec" % "1.5" % "test"
+  }
 
   trait ProjectDefaults
     extends StandardProject
