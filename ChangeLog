@@ -1,4 +1,15 @@
-1.11.0	2011-08-2
+1.11.1	2011-08-05
+
+	* offer/broker: fixes, simplifications - gets rid of thunked
+	values on sends.  removing the infrastructure required to
+	support this led to significant simplification.  lock the
+	correct objects for broker events.  don't try to resolve
+	identical objects in lock order.
+	* offer: java support
+	* hashing: actually return 64bit values from the 64bit hash
+	functions; tests
+
+1.11.0	2011-08-02
 
 	* Introduce new util-codec module to contain various codecs.
 	Primarily so that it can depend on apache commons-codec 1.5
