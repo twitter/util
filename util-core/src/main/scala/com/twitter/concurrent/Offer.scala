@@ -366,6 +366,19 @@ trait Offer[+T] { self =>
     action()
   }
 
+  /* Java friendly syntax */
+
+  /**
+   * Synchronize this offer. See {{apply()}}
+   */
+  def sync() = apply()
+
+  /**
+   * Synchronize this offer, blocking for the result. See {{apply()}}
+   * and {{com.twitter.util.Future.apply()}}
+   */
+  def syncWait() = sync()()
+
   /* Scala actor-style syntax */
 
   /**
