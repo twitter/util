@@ -338,7 +338,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
     def poll() = if (isDefined) Some(() => get(0.seconds)) else None
     def enqueue(setter: Setter) = {
       respond { v =>
-        setter() foreach { set => set(() => v) }
+        setter() foreach { _(v) }
       }
       // we can't dequeue futures
       () => ()
