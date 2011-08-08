@@ -16,24 +16,24 @@ object Offer {
    * The offer that chooses exactly one of the given offers, choosing
    * among immediately realizable offers at random.
    */
-  def choose[T](ofs: Offer[T]*): Offer[T] = new Offer[T] {
-    require(!ofs.isEmpty)
-    def poll() = {
-      val rng = new Random(Time.now.inMilliseconds)
-      val shuffled = rng.shuffle(ofs.toList)
-      shuffled.foldLeft(None: Option[() => T]) {
-        case (None, of) => of.poll()
-        case (some@Some(_), _) => some
+  def choose[T](ofs: Offer[T]*): Offer[T] =
+    if (ofs.isEmpty) never[T] else new Offer[T] {
+      def poll() = {
+        val rng = new Random(Time.now.inMilliseconds)
+        val shuffled = rng.shuffle(ofs.toList)
+        shuffled.foldLeft(None: Option[() => T]) {
+          case (None, of) => of.poll()
+          case (some@Some(_), _) => some
+        }
       }
-    }
 
-    def enqueue(setter: Setter) = {
-      val dqs = ofs map { _.enqueue(setter) }
-      () => dqs foreach { dq => dq() }
-    }
+      def enqueue(setter: Setter) = {
+        val dqs = ofs map { _.enqueue(setter) }
+        () => dqs foreach { dq => dq() }
+      }
 
-    def objects: Seq[AnyRef] = ofs flatMap { _.objects }
-  }
+      def objects: Seq[AnyRef] = ofs flatMap { _.objects }
+    }
 
   /**
    * Convenience function to choose, then sync.
