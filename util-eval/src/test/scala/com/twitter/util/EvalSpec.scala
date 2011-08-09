@@ -22,6 +22,40 @@ object EvalSpec extends Specification {
       derived() mustEqual "hello"
     }
 
+    "apply(new File(...) with target" in {
+      val f = File.createTempFile("eval", "target")
+      f.delete()
+      f.mkdir()
+      val e = new Eval(Some(f))
+      val sourceFile = TempFile.fromResourcePath("/OnePlusOne.scala")
+      val res: Int = e(sourceFile)
+      res mustEqual 2
+
+      // make sure it created a class file with the expected name
+      val targetFileName = f.getAbsolutePath() + File.separator + "Evaluator__" + sourceFile.getName + ".class"
+      val targetFile = new File(targetFileName)
+      targetFile.exists must be_==(true)
+      val targetMod = targetFile.lastModified
+
+      // eval again, make sure it works
+      val res2: Int = e(sourceFile)
+      // and make sure it didn't create a new file
+      f.listFiles.length mustEqual 1
+      // and make sure it didn't update the file
+      val targetFile2 = new File(targetFileName)
+      targetFile2.lastModified mustEqual targetMod
+
+      // touch source, ensure recompile
+      sourceFile.setLastModified(System.currentTimeMillis())
+      val res3: Int = e(sourceFile)
+      res3 mustEqual 2
+      // and make sure it didn't create a different file
+      f.listFiles.length mustEqual 1
+      // and make sure it updated the file
+      val targetFile3 = new File(targetFileName)
+      targetFile3.lastModified must be_>=(targetMod)
+    }
+
     "apply(InputStream)" in {
       (new Eval).apply[Int](getClass.getResourceAsStream("/OnePlusOne.scala")) mustEqual 2
     }
