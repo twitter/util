@@ -1,3 +1,10 @@
+1.11.2	2011-08-12
+
+	* offer: use Int.compare instead of subtraction to avoid
+	integer overflow in ObjectOrder
+	* offer: accept an empty offer list.  this is just Offer.never
+	* Eval: persistent compilation targets
+
 1.11.1	2011-08-05
 
 	* offer/broker: fixes, simplifications - gets rid of thunked
