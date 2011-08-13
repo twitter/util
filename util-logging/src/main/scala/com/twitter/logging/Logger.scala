@@ -37,8 +37,10 @@ object Level {
   case object ERROR extends Level("ERROR", 930)
   case object WARNING extends Level("WARNING", 900)
   case object INFO extends Level("INFO", 800)
+  case object CONFIG extends Level("CONFIG", 700)
   case object DEBUG extends Level("DEBUG", 500)
   case object TRACE extends Level("TRACE", 400)
+  case object FINEST extends Level("FINEST", 300)
   case object ALL extends Level("ALL", Int.MinValue)
 }
 
@@ -107,10 +109,14 @@ class Logger private(val name: String, private val wrapped: javalog.Logger) {
   def warning(thrown: Throwable, msg: String, items: Any*) = log(Level.WARNING, thrown, msg, items: _*)
   def info(msg: String, items: Any*) = log(Level.INFO, msg, items: _*)
   def info(thrown: Throwable, msg: String, items: Any*) = log(Level.INFO, thrown, msg, items: _*)
+  def config(msg: String, items: Any*) = log(Level.CONFIG, msg, items: _*)
+  def config(thrown: Throwable, msg: String, items: Any*) = log(Level.CONFIG, thrown, msg, items: _*)
   def debug(msg: String, items: Any*) = log(Level.DEBUG, msg, items: _*)
   def debug(thrown: Throwable, msg: String, items: Any*) = log(Level.DEBUG, thrown, msg, items: _*)
   def trace(msg: String, items: Any*) = log(Level.TRACE, msg, items: _*)
   def trace(thrown: Throwable, msg: String, items: Any*) = log(Level.TRACE, thrown, msg, items: _*)
+  def finest(msg: String, items: Any*) = log(Level.FINEST, msg, items: _*)
+  def finest(thrown: Throwable, msg: String, items: Any*) = log(Level.FINEST, thrown, msg, items: _*)
 
   /**
    * Log a message, with lazy (call-by-name) computation of the message,
@@ -145,10 +151,14 @@ class Logger private(val name: String, private val wrapped: javalog.Logger) {
   def ifWarning(thrown: Throwable, message: => AnyRef) = logLazy(Level.WARNING, thrown, message)
   def ifInfo(message: => AnyRef) = logLazy(Level.INFO, message)
   def ifInfo(thrown: Throwable, message: => AnyRef) = logLazy(Level.INFO, thrown, message)
+  def ifConfig(message: => AnyRef) = logLazy(Level.CONFIG, message)
+  def ifConfig(thrown: Throwable, message: => AnyRef) = logLazy(Level.CONFIG, thrown, message)
   def ifDebug(message: => AnyRef) = logLazy(Level.DEBUG, message)
   def ifDebug(thrown: Throwable, message: => AnyRef) = logLazy(Level.DEBUG, thrown, message)
   def ifTrace(message: => AnyRef) = logLazy(Level.TRACE, message)
   def ifTrace(thrown: Throwable, message: => AnyRef) = logLazy(Level.TRACE, thrown, message)
+  def ifFinest(message: => AnyRef) = logLazy(Level.FINEST, message)
+  def ifFinest(thrown: Throwable, message: => AnyRef) = logLazy(Level.FINEST, thrown, message)
 
   /**
    * Remove all existing log handlers.
@@ -206,6 +216,9 @@ object Logger extends Iterable[Logger] {
   /** Describes information about the normal, functioning state of the application. */
   def INFO = Level.INFO
 
+  /** Describes information useful with respect to the application configuration. */
+  def CONFIG = Level.CONFIG
+
   /** Describes information useful for general debugging, but probably not normal,
    *  day-to-day use.
    */
@@ -213,6 +226,9 @@ object Logger extends Iterable[Logger] {
 
   /** Describes information useful for intense debugging. */
   def TRACE = Level.TRACE
+
+  /** Information useful for super intense debugging. */
+  def FINEST = Level.FINEST
 
   /** ALL is used to log everything. */
   def ALL = Level.ALL
@@ -224,8 +240,10 @@ object Logger extends Iterable[Logger] {
   root.setLevel(ERROR)
   root.setLevel(WARNING)
   root.setLevel(INFO)
+  root.setLevel(CONFIG)
   root.setLevel(DEBUG)
   root.setLevel(TRACE)
+  root.setLevel(FINEST)
   root.setLevel(ALL)
   reset()
 
