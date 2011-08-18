@@ -1,7 +1,7 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicInteger
-import scala.collection.mutable.ArrayBuffer
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
+import scala.collection.mutable
 import scala.annotation.tailrec
 
 import com.twitter.concurrent.{Offer, IVar}
@@ -68,16 +68,33 @@ object Future {
    * @return a Future[Seq[A]] containing the collected values from fs.
    */
   def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
-    val collected = fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
-      a flatMap { aa => e map { _ :: aa } }
-    } map { _.reverse }
+    if (fs.isEmpty) {
+      Future(Seq[A]())
+    } else {
+      val results = new AtomicReferenceArray[A](fs.size)
+      val count = new AtomicInteger(fs.size)
+      val promise = new Promise[Seq[A]]
 
-    // Cancellations don't get propagated in flatMap because the
-    // computation is short circuited.  Thus we link manually to get
-    // the expected behavior from collect().
-    fs foreach { f => collected.linkTo(f) }
-
-    collected
+      for (i <- 0 until fs.size) {
+        val f = fs(i)
+        promise.linkTo(f)
+        f onSuccess { x =>
+          results.set(i, x)
+          if (count.decrementAndGet() == 0) {
+            val resultsArray = new mutable.ArrayBuffer[A](fs.size)
+            for (j <- 0 until fs.size) resultsArray += results.get(j)
+            promise.setValue(resultsArray)
+          }
+        } onFailure { cause =>
+          try {
+            promise.setException(cause)
+          } catch {
+            case _ => // some earlier exception was set
+          }
+        }
+      }
+      promise
+    }
   }
 
   /**
