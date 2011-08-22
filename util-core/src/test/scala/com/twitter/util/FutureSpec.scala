@@ -553,4 +553,58 @@ object FutureSpec extends Specification with Mockito {
       }
     }
   }
+
+  "Future.toJavaFuture" should {
+    "return the same thing as our Future when initialized" in {
+      val f = Future.value(1)
+      val jf = f.toJavaFuture
+      f.get() mustBe jf.get()
+      "must both be done" in {
+        f.isDefined must beTrue
+        jf.isDone must beTrue
+        f.isCancelled must beFalse
+        jf.isCancelled must beFalse
+      }
+    }
+
+    "return the same thing as our Future when set later" in {
+      val f = new Promise[Int]
+      val jf = f.toJavaFuture
+      f.setValue(1)
+      f.get() mustBe jf.get()
+      "must both be done" in {
+        f.isDefined must beTrue
+        jf.isDone must beTrue
+        f.isCancelled must beFalse
+        jf.isCancelled must beFalse
+      }
+    }
+
+    "cancel when the java future is cancelled" in {
+      val f = new Promise[Int]
+      val jf = f.toJavaFuture
+      f.isDefined mustBe false
+      jf.isDone mustBe false
+      jf.cancel(true) mustBe true
+      f.isCancelled mustBe true
+      jf.isCancelled mustBe true
+    }
+
+    "cancel when the twitter future is cancelled" in {
+      val f = new Promise[Int]
+      val jf = f.toJavaFuture
+      f.isDefined mustBe false
+      jf.isDone mustBe false
+      f.cancel()
+      f.isCancelled mustBe true
+      jf.isCancelled mustBe true
+    }
+
+    "java future should throw an exception" in {
+      val f = new Promise[Int]
+      val jf = f.toJavaFuture
+      f.setException(new RuntimeException())
+      jf.get() must throwA(new RuntimeException())
+    }
+  }
 }

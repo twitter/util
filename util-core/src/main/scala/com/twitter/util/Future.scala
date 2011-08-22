@@ -1,11 +1,11 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicInteger
-import scala.collection.mutable.ArrayBuffer
 import scala.annotation.tailrec
 
 import com.twitter.concurrent.{Offer, IVar}
 import com.twitter.conversions.time._
+import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
@@ -344,6 +344,52 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       () => ()
     }
     def objects = Seq()
+  }
+
+  /**
+   * Convert a Twitter Future to a Java native Future. This should match the semantics
+   * of a Java Future as closely as possible to avoid issues with the way another API might
+   * use them. See:
+   *
+   * http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
+   */
+  def toJavaFuture: JavaFuture[_ <: A] = {
+    val f = this
+    new JavaFuture[A] {
+      override def cancel(cancel: Boolean): Boolean = {
+        if (isDone || isCancelled) {
+          false
+        } else {
+          f.cancel()
+          true
+        }
+      }
+
+      override def isCancelled: Boolean = {
+        f.isCancelled
+      }
+
+      override def isDone: Boolean = {
+        f.isCancelled || f.isDefined
+      }
+
+      override def get(): A = {
+        if (isCancelled) {
+          throw new CancellationException()
+        }
+        f()
+      }
+
+      override def get(time: Long, timeUnit: TimeUnit): A = {
+        if (isCancelled) {
+          throw new CancellationException()
+        }
+        f.get(Duration.fromTimeUnit(time, timeUnit)) match {
+          case Return(r) => r
+          case Throw(e) => throw e
+        }
+      }
+    }
   }
 }
 
