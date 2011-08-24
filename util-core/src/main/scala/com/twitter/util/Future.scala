@@ -97,6 +97,26 @@ object Future {
     }
   }
 
+  /*
+   * original version:
+   *
+   * often, this version will not trigger even after all of the collected
+   * futures have triggered. some debugging is required.
+   *
+  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
+    val collected = fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
+      a flatMap { aa => e map { _ :: aa } }
+    } map { _.reverse }
+
+    // Cancellations don't get propagated in flatMap because the
+    // computation is short circuited.  Thus we link manually to get
+    // the expected behavior from collect().
+    fs foreach { f => collected.linkTo(f) }
+
+    collected
+  }
+  */
+
   /**
    * "Select" off the first future to be satisfied.  Return this as a
    * result, with the remainder of the Futures as a sequence.
