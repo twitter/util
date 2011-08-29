@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.io.{InputStream, ByteArrayInputStream, ByteArrayOutputStream}
 import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory,
   TSimpleJSONProtocol}
@@ -15,8 +15,11 @@ trait ThriftSerializer extends StringEncoder {
     baos.toByteArray
   }
 
+  def fromInputStream(obj: TBase[_, _], stream: InputStream): Unit =
+    obj.read(protocolFactory.getProtocol(new TIOStreamTransport(stream)))
+
   def fromBytes(obj: TBase[_, _], bytes: Array[Byte]): Unit =
-    obj.read(protocolFactory.getProtocol(new TIOStreamTransport(new ByteArrayInputStream(bytes))))
+    fromInputStream(obj, new ByteArrayInputStream(bytes))
 
   def toString(obj: TBase[_, _]): String = encode(toBytes(obj))
 
