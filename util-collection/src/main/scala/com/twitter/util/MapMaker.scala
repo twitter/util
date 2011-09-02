@@ -23,7 +23,7 @@ object MapMaker {
     def softValues = { mapMaker.softValues; this }
     def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
-    def expiration(expiration: Duration) = { mapMaker.expiration(expiration.inMillis, MS); this }
+    def expiration(expiration: Duration) = { mapMaker.expireAfterWrite(expiration.inMillis, MS); this }
     def compute(_valueOperation: K => V) = { valueOperation = Some(_valueOperation); this }
     def expireAfterAccess(ttl: Duration) = { mapMaker.expireAfterAccess(ttl.inMillis, MS); this }
     def expireAfterWrite(ttl: Duration) = { mapMaker.expireAfterWrite(ttl.inMillis, MS); this }
