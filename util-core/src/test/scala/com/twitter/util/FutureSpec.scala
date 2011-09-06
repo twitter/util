@@ -7,7 +7,18 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.concurrent.SimpleSetter
 
 object FutureSpec extends Specification with Mockito {
-  "Future" should {
+  implicit def futureMatcher[A](future: Future[A]) = new {
+    def mustProduce(expected: Try[A]) {
+      val latch = new CountDownLatch(1)
+      future.respond { response =>
+        response mustEqual expected
+        latch.countDown()
+      }
+      latch.within(1.second)
+    }
+  }
+
+  "object Future" should {
     import Future._
 
     "times" in {
@@ -115,6 +126,211 @@ object FutureSpec extends Specification with Mockito {
         }
       }
     }
+
+    "collect" in {
+      val p0 = new Promise[Int]
+      val p1 = new Promise[Int]
+      val f = Future.collect(Seq(p0, p1))
+      f.isDefined must beFalse
+
+      "only return when both futures complete" in {
+        p0() = Return(1)
+        f.isDefined must beFalse
+        p1() = Return(2)
+        f() must be_==(Seq(1, 2))
+      }
+
+      "return with exception if the first future throws" in {
+        p0() = Throw(new Exception)
+        f() must throwA[Exception]
+      }
+
+      "return with exception if the second future throws" in {
+        p0() = Return(1)
+        f.isDefined must beFalse
+        p1() = Throw(new Exception)
+        f() must throwA[Exception]
+      }
+
+      "propagate cancellation" in {
+        p0.isCancelled must beFalse
+        p1.isCancelled must beFalse
+        f.cancel()
+        p0.isCancelled must beTrue
+        p1.isCancelled must beTrue
+      }
+    }
+
+    "select" in {
+      "return the first result" in {
+        def tryBothForIndex(i: Int) = {
+          "success (%d)".format(i) in {
+            val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
+            val f = Future.select(fs)
+            f.isDefined must beFalse
+            fs(i)() = Return(1)
+            f.isDefined must beTrue
+            f() must beLike {
+              case (Return(1), rest) =>
+                rest must haveSize(9)
+                val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
+                rest must haveTheSameElementsAs(elems)
+                true
+            }
+          }
+
+          "failure (%d)".format(i) in {
+            val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
+            val f = Future.select(fs)
+            f.isDefined must beFalse
+            val e = new Exception("sad panda")
+            fs(i)() = Throw(e)
+            f.isDefined must beTrue
+            f() must beLike {
+              case (Throw(e), rest) =>
+                rest must haveSize(9)
+                val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
+                rest must haveTheSameElementsAs(elems)
+                true
+            }
+          }
+        }
+
+        // Ensure this works for all indices:
+        0 until 10 foreach { tryBothForIndex(_) }
+      }
+
+      "fail if we attempt to select an empty future sequence" in {
+        val f = Future.select(Seq())
+        f.isDefined must beTrue
+        f() must throwA(new IllegalArgumentException("empty future list!"))
+      }
+
+      "propagate cancellation" in {
+        val fs = (0 until 10 map { _ => new Promise[Int] }) toArray;
+        Future.select(fs).cancel()
+        fs foreach { f =>
+          f.isCancelled must beTrue
+        }
+      }
+    }
+  }
+
+  "Future" should {
+    "select" in {
+      val p0 = new Promise[Int]
+      val p1 = new Promise[Int]
+      val f = p0 select p1
+      f.isDefined must beFalse
+
+      "select the first [result] to complete" in {
+        p0() = Return(1)
+        p1() = Return(2)
+        f() must be_==(1)
+      }
+
+      "select the first [exception] to complete" in {
+        p0() = Throw(new Exception)
+        p1() = Return(2)
+        f() must throwA[Exception]
+      }
+
+      "propagate cancellation" in {
+        p0.isCancelled must beFalse
+        p1.isCancelled must beFalse
+        f.cancel()
+        p0.isCancelled must beTrue
+        p1.isCancelled must beTrue
+      }
+    }
+
+    "join" in {
+      val p0 = new Promise[Int]
+      val p1 = new Promise[Int]
+      val f = p0 join p1
+      f.isDefined must beFalse
+
+      "only return when both futures complete" in {
+        p0() = Return(1)
+        f.isDefined must beFalse
+        p1() = Return(2)
+        f() must be_==(1, 2)
+      }
+
+      "return with exception if the first future throws" in {
+        p0() = Throw(new Exception)
+        f() must throwA[Exception]
+      }
+
+      "return with exception if the second future throws" in {
+        p0() = Return(1)
+        f.isDefined must beFalse
+        p1() = Throw(new Exception)
+        f() must throwA[Exception]
+      }
+
+      "propagate cancellation" in {
+        p0.isCancelled must beFalse
+        p1.isCancelled must beFalse
+        f.cancel()
+        p0.isCancelled must beTrue
+        p1.isCancelled must beTrue
+      }
+    }
+
+    "toJavaFuture" in {
+      "return the same thing as our Future when initialized" in {
+        val f = Future.value(1)
+        val jf = f.toJavaFuture
+        f.get() mustBe jf.get()
+        "must both be done" in {
+          f.isDefined must beTrue
+          jf.isDone must beTrue
+          f.isCancelled must beFalse
+          jf.isCancelled must beFalse
+        }
+      }
+
+      "return the same thing as our Future when set later" in {
+        val f = new Promise[Int]
+        val jf = f.toJavaFuture
+        f.setValue(1)
+        f.get() mustBe jf.get()
+        "must both be done" in {
+          f.isDefined must beTrue
+          jf.isDone must beTrue
+          f.isCancelled must beFalse
+          jf.isCancelled must beFalse
+        }
+      }
+
+      "cancel when the java future is cancelled" in {
+        val f = new Promise[Int]
+        val jf = f.toJavaFuture
+        f.isDefined mustBe false
+        jf.isDone mustBe false
+        jf.cancel(true) mustBe true
+        f.isCancelled mustBe true
+        jf.isCancelled mustBe true
+      }
+
+      "cancel when the twitter future is cancelled" in {
+        val f = new Promise[Int]
+        val jf = f.toJavaFuture
+        f.isDefined mustBe false
+        jf.isDone mustBe false
+        f.cancel()
+        f.isCancelled mustBe true
+        jf.isCancelled mustBe true
+      }
+
+      "java future should throw an exception" in {
+        val f = new Promise[Int]
+        val jf = f.toJavaFuture
+        f.setException(new RuntimeException())
+        jf.get() must throwA(new RuntimeException())
+      }
+    }
   }
 
   "Promise" should {
@@ -151,12 +367,7 @@ object FutureSpec extends Specification with Mockito {
         }
 
         "respond" in {
-          val latch = new CountDownLatch(1)
-          f respond { response =>
-            response mustEqual Return(2)
-            latch.countDown()
-          }
-          latch.within(1.second)
+          f mustProduce Return(2)
         }
 
         "cancellation" in {
@@ -180,12 +391,7 @@ object FutureSpec extends Specification with Mockito {
         }
 
         "respond" in {
-          val latch = new CountDownLatch(1)
-          g respond { response =>
-            response mustEqual Throw(e)
-            latch.countDown()
-          }
-          latch.within(1.second)
+          g mustProduce Throw(e)
         }
 
         "when there is an exception in the passed in function" in {
@@ -195,6 +401,36 @@ object FutureSpec extends Specification with Mockito {
           }
           f() must throwA(e)
         }
+      }
+    }
+
+    "flatten" in {
+      "successes" in {
+        val f = Future(Future(1))
+        f.flatten mustProduce Return(1)
+      }
+
+      "shallow failures" in {
+        val e = new Exception
+        val f: Future[Future[Int]] = Future.exception(e)
+        f.flatten mustProduce Throw(e)
+      }
+
+      "deep failures" in {
+        val e = new Exception
+        val f: Future[Future[Int]] = Future(Future.exception(e))
+        f.flatten mustProduce Throw(e)
+      }
+
+      "cancellation" in {
+        val f1 = Future(1)
+        val f2 = Future(f1)
+        val f = f2.flatten
+        f1.isCancelled must beFalse
+        f2.isCancelled must beFalse
+        f.cancel()
+        f1.isCancelled must beTrue
+        f2.isCancelled must beTrue
       }
     }
 
@@ -209,12 +445,7 @@ object FutureSpec extends Specification with Mockito {
         }
 
         "respond" in {
-          val latch = new CountDownLatch(1)
-          f respond { response =>
-            response mustEqual Return(1)
-            latch.countDown()
-          }
-          latch.within(1.second)
+          f mustProduce Return(1)
         }
       }
 
@@ -226,12 +457,7 @@ object FutureSpec extends Specification with Mockito {
         }
 
         "respond" in {
-          val latch = new CountDownLatch(1)
-          g respond { response =>
-            response mustEqual Return(2)
-            latch.countDown()
-          }
-          latch.within(1.second)
+          g mustProduce Return(2)
         }
 
         "when the error handler errors" in {
@@ -401,210 +627,6 @@ object FutureSpec extends Specification with Mockito {
       val task = new FutureTask[String](throw new IllegalStateException)
       task.run()
       task() must throwA(new IllegalStateException)
-    }
-  }
-
-  "Future.select()" should {
-    val p0 = new Promise[Int]
-    val p1 = new Promise[Int]
-    val f = p0 select p1
-    f.isDefined must beFalse
-
-    "select the first [result] to complete" in {
-      p0() = Return(1)
-      p1() = Return(2)
-      f() must be_==(1)
-    }
-
-    "select the first [exception] to complete" in {
-      p0() = Throw(new Exception)
-      p1() = Return(2)
-      f() must throwA[Exception]
-    }
-
-    "propagate cancellation" in {
-      p0.isCancelled must beFalse
-      p1.isCancelled must beFalse
-      f.cancel()
-      p0.isCancelled must beTrue
-      p1.isCancelled must beTrue
-    }
-  }
-
-  "Future.join()" should {
-    val p0 = new Promise[Int]
-    val p1 = new Promise[Int]
-    val f = p0 join p1
-    f.isDefined must beFalse
-
-    "only return when both futures complete" in {
-      p0() = Return(1)
-      f.isDefined must beFalse
-      p1() = Return(2)
-      f() must be_==(1, 2)
-    }
-
-    "return with exception if the first future throws" in {
-      p0() = Throw(new Exception)
-      f() must throwA[Exception]
-    }
-
-    "return with exception if the second future throws" in {
-      p0() = Return(1)
-      f.isDefined must beFalse
-      p1() = Throw(new Exception)
-      f() must throwA[Exception]
-    }
-
-    "propagate cancellation" in {
-      p0.isCancelled must beFalse
-      p1.isCancelled must beFalse
-      f.cancel()
-      p0.isCancelled must beTrue
-      p1.isCancelled must beTrue
-    }
-  }
-
-  "Future.collect()" should {
-    val p0 = new Promise[Int]
-    val p1 = new Promise[Int]
-    val f = Future.collect(Seq(p0, p1))
-    f.isDefined must beFalse
-
-    "only return when both futures complete" in {
-      p0() = Return(1)
-      f.isDefined must beFalse
-      p1() = Return(2)
-      f() must be_==(Seq(1, 2))
-    }
-
-    "return with exception if the first future throws" in {
-      p0() = Throw(new Exception)
-      f() must throwA[Exception]
-    }
-
-    "return with exception if the second future throws" in {
-      p0() = Return(1)
-      f.isDefined must beFalse
-      p1() = Throw(new Exception)
-      f() must throwA[Exception]
-    }
-
-    "propagate cancellation" in {
-      p0.isCancelled must beFalse
-      p1.isCancelled must beFalse
-      f.cancel()
-      p0.isCancelled must beTrue
-      p1.isCancelled must beTrue
-    }
-  }
-
-  "Future.select()" should {
-
-    "return the first result" in {
-      def tryBothForIndex(i: Int) = {
-        "success (%d)".format(i) in {
-          val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
-          val f = Future.select(fs)
-          f.isDefined must beFalse
-          fs(i)() = Return(1)
-          f.isDefined must beTrue
-          f() must beLike {
-            case (Return(1), rest) =>
-              rest must haveSize(9)
-              val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
-              rest must haveTheSameElementsAs(elems)
-              true
-          }
-        }
-
-        "failure (%d)".format(i) in {
-          val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
-          val f = Future.select(fs)
-          f.isDefined must beFalse
-          val e = new Exception("sad panda")
-          fs(i)() = Throw(e)
-          f.isDefined must beTrue
-          f() must beLike {
-            case (Throw(e), rest) =>
-              rest must haveSize(9)
-              val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
-              rest must haveTheSameElementsAs(elems)
-              true
-          }
-        }
-      }
-
-      // Ensure this works for all indices:
-      0 until 10 foreach { tryBothForIndex(_) }
-    }
-
-    "fail if we attempt to select an empty future sequence" in {
-      val f = Future.select(Seq())
-      f.isDefined must beTrue
-      f() must throwA(new IllegalArgumentException("empty future list!"))
-    }
-
-    "propagate cancellation" in {
-      val fs = (0 until 10 map { _ => new Promise[Int] }) toArray;
-      Future.select(fs).cancel()
-      fs foreach { f =>
-        f.isCancelled must beTrue
-      }
-    }
-  }
-
-  "Future.toJavaFuture" should {
-    "return the same thing as our Future when initialized" in {
-      val f = Future.value(1)
-      val jf = f.toJavaFuture
-      f.get() mustBe jf.get()
-      "must both be done" in {
-        f.isDefined must beTrue
-        jf.isDone must beTrue
-        f.isCancelled must beFalse
-        jf.isCancelled must beFalse
-      }
-    }
-
-    "return the same thing as our Future when set later" in {
-      val f = new Promise[Int]
-      val jf = f.toJavaFuture
-      f.setValue(1)
-      f.get() mustBe jf.get()
-      "must both be done" in {
-        f.isDefined must beTrue
-        jf.isDone must beTrue
-        f.isCancelled must beFalse
-        jf.isCancelled must beFalse
-      }
-    }
-
-    "cancel when the java future is cancelled" in {
-      val f = new Promise[Int]
-      val jf = f.toJavaFuture
-      f.isDefined mustBe false
-      jf.isDone mustBe false
-      jf.cancel(true) mustBe true
-      f.isCancelled mustBe true
-      jf.isCancelled mustBe true
-    }
-
-    "cancel when the twitter future is cancelled" in {
-      val f = new Promise[Int]
-      val jf = f.toJavaFuture
-      f.isDefined mustBe false
-      jf.isDone mustBe false
-      f.cancel()
-      f.isCancelled mustBe true
-      jf.isCancelled mustBe true
-    }
-
-    "java future should throw an exception" in {
-      val f = new Promise[Int]
-      val jf = f.toJavaFuture
-      f.setException(new RuntimeException())
-      jf.get() must throwA(new RuntimeException())
     }
   }
 }

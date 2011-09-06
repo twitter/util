@@ -33,6 +33,11 @@ object Future {
   def apply[A](a: => A): Future[A] = new Promise[A](Try(a))
 
   /**
+   * Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
+   */
+  def flatten[A](ffa: Future[Future[A]]): Future[A] = ffa.flatten
+
+  /**
    * Take a sequence of Futures, wait till they all complete
    * successfully.  The future fails immediately if any of the joined
    * Futures do, mimicking the semantics of exceptions.
@@ -45,19 +50,17 @@ object Future {
       Unit
     } else {
       val count = new AtomicInteger(fs.size)
-      val promise = new Promise[Unit]
-
-      fs foreach { f =>
-        promise.linkTo(f)
-        f onSuccess { _ =>
-          if (count.decrementAndGet() == 0)
-            promise() = Return(())
-        } onFailure { cause =>
-          promise.updateIfEmpty(Throw(cause))
+      makePromise[Unit]() { promise =>
+        fs foreach { f =>
+          promise.linkTo(f)
+          f onSuccess { _ =>
+            if (count.decrementAndGet() == 0)
+              promise() = Return(())
+          } onFailure { cause =>
+            promise.updateIfEmpty(Throw(cause))
+          }
         }
       }
-
-      promise
     }
   }
 
@@ -74,27 +77,22 @@ object Future {
     } else {
       val results = new AtomicReferenceArray[A](fs.size)
       val count = new AtomicInteger(fs.size)
-      val promise = new Promise[Seq[A]]
-
-      for (i <- 0 until fs.size) {
-        val f = fs(i)
-        promise.linkTo(f)
-        f onSuccess { x =>
-          results.set(i, x)
-          if (count.decrementAndGet() == 0) {
-            val resultsArray = new mutable.ArrayBuffer[A](fs.size)
-            for (j <- 0 until fs.size) resultsArray += results.get(j)
-            promise.setValue(resultsArray)
-          }
-        } onFailure { cause =>
-          try {
-            promise.setException(cause)
-          } catch {
-            case _ => // some earlier exception was set
+      makePromise[Seq[A]]() { promise =>
+        for (i <- 0 until fs.size) {
+          val f = fs(i)
+          promise.linkTo(f)
+          f onSuccess { x =>
+            results.set(i, x)
+            if (count.decrementAndGet() == 0) {
+              val resultsArray = new mutable.ArrayBuffer[A](fs.size)
+              for (j <- 0 until fs.size) resultsArray += results.get(j)
+              promise.setValue(resultsArray)
+            }
+          } onFailure { cause =>
+            promise.updateIfEmpty(Throw(cause))
           }
         }
       }
-      promise
     }
   }
 
@@ -123,28 +121,25 @@ object Future {
    * result, with the remainder of the Futures as a sequence.
    */
   def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] = {
-    if (fs.isEmpty)
-      return Future.exception(new IllegalArgumentException("empty future list!"))
+    if (fs.isEmpty) {
+      Future.exception(new IllegalArgumentException("empty future list!"))
+    } else {
+      makePromise[(Try[A], Seq[Future[A]])](fs: _*) { promise =>
+        @tailrec
+        def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
+          elem respond { res =>
+            if (!promise.isDefined) {
+              promise.updateIfEmpty(Return((res, heads ++ tail)))
+            }
+          }
 
-    val promise = new Promise[(Try[A], Seq[Future[A]])]
-
-    fs foreach { promise.linkTo(_) }
-
-    @tailrec
-    def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
-      elem respond { res =>
-        promise.synchronized {
-          if (!promise.isDefined)
-            promise() = Return((res, heads ++ tail))
+          if (!tail.isEmpty)
+            stripe(heads ++ Seq(elem), tail.head, tail.tail)
         }
+
+        stripe(Seq(), fs.head, fs.tail)
       }
-
-      if (!tail.isEmpty)
-        stripe(heads ++ Seq(elem), tail.head, tail.tail)
     }
-
-    stripe(Seq(), fs.head, fs.tail)
-    promise
   }
 
   /**
@@ -182,6 +177,13 @@ object Future {
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
     (0 until n) map { i => f }
   }
+
+  private[util] def makePromise[A](links: Cancellable*)(f: Promise[A] => Unit): Promise[A] = {
+    val promise = new Promise[A]
+    links foreach { promise.linkTo(_) }
+    f(promise)
+    promise
+  }
 }
 
 /**
@@ -209,7 +211,7 @@ trait FutureEventListener[T] {
  * may succeed or fail.
  */
 abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
-  import Future.DEFAULT_TIMEOUT
+  import Future.{DEFAULT_TIMEOUT, makePromise}
 
   /**
    * When the computation completes, invoke the given callback function. Respond()
@@ -269,16 +271,15 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * @param timeout indicates how long you are willing to wait for the result to be available.
    */
   def within(timer: Timer, timeout: Duration): Future[A] = {
-    val promise = new Promise[A]
-    promise.linkTo(this)
-    val task = timer.schedule(timeout.fromNow) {
-      promise.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
+    makePromise[A](this) { promise =>
+      val task = timer.schedule(timeout.fromNow) {
+        promise.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
+      }
+      respond { r =>
+        task.cancel()
+        promise.updateIfEmpty(r)
+      }
     }
-    respond { r =>
-      task.cancel()
-      promise.updateIfEmpty(r)
-    }
-    promise
   }
 
   /**
@@ -323,12 +324,10 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * @return a new Future whose result is that of the first of this and other to return
    */
   def select[U >: A](other: Future[U]): Future[U] = {
-    val promise = new Promise[U]
-    promise.linkTo(other)
-    promise.linkTo(this)
-    other respond { promise.updateIfEmpty(_) }
-    this  respond { promise.updateIfEmpty(_) }
-    promise
+    makePromise[U](other, this) { promise =>
+      other respond { promise.updateIfEmpty(_) }
+      this  respond { promise.updateIfEmpty(_) }
+    }
   }
 
   /**
@@ -340,20 +339,15 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Combines two Futures into one Future of the Tuple of the two results.
    */
   def join[B](other: Future[B]): Future[(A, B)] = {
-    val promise = new Promise[(A, B)]
-    promise.linkTo(other)
-    promise.linkTo(this)
-    respond {
-      case Return(a) =>
-        other respond {
+    makePromise[(A, B)](this, other) { promise =>
+      respond {
+        case Throw(t) => promise() = Throw(t)
+        case Return(a) => other respond {
+          case Throw(t) => promise() = Throw(t)
           case Return(b) => promise() = Return((a, b))
-          case Throw(t)  => promise() = Throw(t)
         }
-      case Throw(t) =>
-        promise() = Throw(t)
+      }
     }
-
-    promise
   }
 
   /**
@@ -365,7 +359,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Send updates from this Future to the other.
    */
   def proxyTo[B >: A](other: Promise[B]) {
-    respond(other.update(_))
+    respond { other() = _ }
   }
 
   /**
@@ -429,6 +423,11 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       }
     }
   }
+
+  /**
+   * Converts a Future[Future[B]] into a Future[B]
+   */
+  def flatten[B](implicit ev: A <:< Future[B]): Future[B]
 }
 
 object Promise {
@@ -445,6 +444,7 @@ object Promise {
 class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
   extends Future[A]
 {
+  import Future.makePromise
   import Promise._
 
   def this() = this(new IVar[Try[A]], new IVar[Unit])
@@ -495,7 +495,7 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
    * or an exception. setValue and setException are generally more readable
    * methods to use.
    *
-   * @return true or false depending on whether the result was available.
+   * @return true only if the result is updated, false if it was already set.
    */
   def updateIfEmpty(newResult: Try[A]) = ivar.set(newResult)
 
@@ -511,7 +511,6 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
         current.restore()
     }
 
-
     // Note that we return a Future here, so clients can't set it.
     next
   }
@@ -523,50 +522,53 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
     linkTo(new CancellableSink(f))
   }
 
-  override def map[B](f: A => B) = new Promise[B] {
-    linkTo(Promise.this)
-    Promise.this.respond { x =>
-      update(x map(f))
+  override def map[B](f: A => B) = {
+    makePromise[B](this) { promise =>
+      respond { x => promise() = x.map(f) }
     }
   }
 
-  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]) = new Promise[B] {
-    linkTo(Promise.this)  // propagate cancellation
-    Promise.this.respond {
-      case Return(r) =>
-        try {
-          val next = f(r)
-          linkTo(next)
-          next respond(update(_))
-        } catch {
-          case e => update(Throw(e))
-        }
-      case Throw(e) => update(Throw(e))
+  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]) = {
+    makePromise[B](this) { promise =>
+      respond {
+        case Return(r) =>
+          try {
+            val next = f(r)
+            promise.linkTo(next)
+            next.proxyTo(promise)
+          } catch {
+            case e => promise() = Throw(e)
+          }
+        case Throw(e) =>
+          promise() = Throw(e)
+      }
     }
+  }
+
+  def flatten[B](implicit ev: A <:< Future[B]): Future[B] = {
+    flatMap[B, Future] { x => x }
   }
 
   def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
     rescueException: PartialFunction[Throwable, AlsoFuture[B]]
-  ) = new Promise[B] {
-    linkTo(Promise.this)
-    Promise.this.respond {
-      case r: Return[_] => update(r)
+  ) = makePromise[B](this) { promise =>
+    respond {
+      case r: Return[_] => promise() = r
       case Throw(e) if rescueException.isDefinedAt(e) =>
         try {
           val next = rescueException(e)
-          linkTo(next)
-          next respond(update(_))
+          promise.linkTo(next)
+          next.proxyTo(promise)
         } catch {
-          case e => update(Throw(e))
+          case e => promise() = Throw(e)
         }
-      case Throw(e) => update(Throw(e))
-     }
+      case Throw(e) => promise() = Throw(e)
+    }
   }
 
-  override def filter(p: A => Boolean) = new Promise[A] {
-    linkTo(Promise.this)
-    Promise.this.respond { x =>
-      update(x filter(p))
+  override def filter(p: A => Boolean) = {
+    makePromise[A](this) { promise =>
+      respond { x => promise() = x.filter(p) }
     }
   }
 

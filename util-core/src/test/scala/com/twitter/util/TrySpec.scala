@@ -59,6 +59,22 @@ object TrySpec extends Specification {
       }
     }
 
+    "flatten" in {
+      "is a Return(Return)" in {
+        Return(Return(1)).flatten mustEqual Return(1)
+      }
+
+      "is a Return(Throw)" in {
+        val e = new Exception
+        Return(Throw(e)).flatten mustEqual Throw(e)
+      }
+
+      "is a Throw" in {
+        val e = new Exception
+        Throw[Try[Int]](e).flatten mustEqual Throw(e)
+      }
+    }
+
     "for" in {
       "with no Throw values" in {
         val result = for {
