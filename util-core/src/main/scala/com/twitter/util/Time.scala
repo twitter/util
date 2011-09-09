@@ -36,11 +36,13 @@ object Time {
   @deprecated("use Time.fromMilliseconds(...) instead")
   def apply(millis: Long) = fromMilliseconds(millis)
 
-  def fromMilliseconds(millis: Long) = {
-    val nanos = TimeMath.mul(millis, Duration.NanosPerMillisecond)
-    // let Long.MaxValue pass thru unchanged
-    if (nanos < 0 && millis > 0) {
-      new Time(Long.MaxValue)
+  def fromMilliseconds(millis: Long): Time = {
+    val nanos = TimeUnit.MILLISECONDS.toNanos(millis)
+    // handle some overflow, but let Long.MaxValue pass thru unchanged
+    if (nanos == Long.MaxValue && millis != Long.MaxValue) {
+      throw new TimeOverflowException(millis.toString)
+    } else if (nanos == Long.MinValue) {
+      throw new TimeOverflowException(millis.toString)
     } else {
       new Time(nanos)
     }
@@ -250,7 +252,7 @@ object Duration {
 
   def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
 
-  def apply(value: Long, unit: TimeUnit) = {
+  def apply(value: Long, unit: TimeUnit): Duration = {
     val factor = unit match {
       case TimeUnit.DAYS         => NanosPerDay
       case TimeUnit.HOURS        => NanosPerHour
@@ -362,17 +364,27 @@ object TimeMath {
       c
   }
 
-  def mul(a: Long, b: Long) = {
-    if (a == Long.MaxValue) {
-      a
+  def mul(a: Long, b: Long): Long = {
+    if (a > b) {
+      // normalize so that a <= b to keep conditionals to a minimum
+      mul(b, a)
     } else {
-      // there must be a more clever way to do this that is less expensive,
-      // but I can't figure out what it is
-      val bigC = BigInt(a) * BigInt(b)
-      if (bigC > BigInt.MaxLong || bigC < BigInt.MinLong)
-        throw new TimeOverflowException(a + " * " + b)
-      else
-        bigC.toLong
+      // a and b are such that a <= b
+      if (b == Long.MaxValue) {
+        b
+      } else {
+        if (a < 0L) {
+          if (b < 0L) {
+            if (a < Long.MaxValue / b) throw new TimeOverflowException(a + " * " + b)
+          } else if (b > 0L) {
+            if (Long.MinValue / b > a) throw new TimeOverflowException(a + " * " + b)
+          }
+        } else if (a > 0L) {
+          // and b > 0L
+          if (a > Long.MaxValue / b) throw new TimeOverflowException(a + " * " + b)
+        }
+        a * b
+      }
     }
   }
 
