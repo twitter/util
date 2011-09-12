@@ -24,7 +24,7 @@ object TimerSpec extends Specification with Mockito {
       there was one(underlying).stop()
     }
   }
-  
+
   "ReferenceCountedTimer" should {
     val underlying = mock[Timer]
     val factory = mock[() => Timer]
@@ -68,7 +68,7 @@ object TimerSpec extends Specification with Mockito {
       }
       Thread.sleep(1.second.inMillis)
       timer.stop()
-      counter.get() must beCloseTo(50, 1)
+      counter.get() must beCloseTo(50, 2)
     }
   }
 }
