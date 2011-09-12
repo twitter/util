@@ -20,6 +20,29 @@ trait Timer {
     schedule(period.fromNow, period)(f)
   }
 
+  /**
+   * Performs an operation after the specified delay.  Cancelling the Future
+   * will cancel the scheduled timer task, if not too late.
+   */
+  def doLater[A](delay: Duration)(f: => A): Future[A] = {
+    doAt(Time.now + delay)(f)
+  }
+
+  /**
+   * Performs an operation at the specified time.  Cancelling the Future
+   * will cancel the scheduled timer task, if not too late.
+   */
+  def doAt[A](time: Time)(f: => A): Future[A] = {
+    Future.makePromise[A]() { promise =>
+      val task = schedule(time) { promise() = Try(f) }
+      promise.linkTo(new Cancellable {
+        def isCancelled = throw new UnsupportedOperationException
+        def cancel() = task.cancel()
+        def linkTo(other: Cancellable) = throw new UnsupportedOperationException
+      })
+    }
+  }
+
   def stop()
 }
 
