@@ -31,7 +31,13 @@ object Time {
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
-  private[Time] var fn: () => Time = () => Time.fromMilliseconds(System.currentTimeMillis)
+  /*
+   * on some systems (os x), nanoTime is just epoch time with greater precision.
+   * on others (linux), it can be based on system uptime.
+   */
+  val nanoTimeOffset = (System.currentTimeMillis * 1000000) - System.nanoTime
+
+  private[Time] var fn: () => Time = () => Time.fromNanoseconds(System.nanoTime + nanoTimeOffset)
 
   @deprecated("use Time.fromMilliseconds(...) instead")
   def apply(millis: Long) = fromMilliseconds(millis)
@@ -49,6 +55,8 @@ object Time {
   }
 
   def fromSeconds(seconds: Int) = fromMilliseconds(1000L * seconds)
+
+  def fromNanoseconds(nanoseconds: Long) = new Time(nanoseconds)
 
   def now: Time = fn()
 
