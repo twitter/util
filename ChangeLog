@@ -1,3 +1,7 @@
+
+	* util: Time.now is now measured at nanosecond granularity
+          instead of millisecond.
+
 1.11.2	2011-08-12
 
 	* offer: use Int.compare instead of subtraction to avoid
