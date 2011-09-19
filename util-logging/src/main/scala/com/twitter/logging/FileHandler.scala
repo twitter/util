@@ -41,8 +41,14 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
       extends Handler(formatter, level) {
   private var stream: Writer = null
   private var openTime: Long = 0
-  private var nextRollTime: Long = 0
+  private var nextRollTime: Option[Long] = Some(0)
   private var bytesWrittenToFile: Long = 0
+
+  private val maxFileSize: Option[StorageUnit] = rollPolicy match {
+    case Policy.MaxSize(size) => Some(size)
+    case _ => None
+  }
+
 
   openLog()
 
@@ -102,32 +108,30 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
    * Return the time (in absolute milliseconds) of the next desired
    * logfile roll.
    */
-  def computeNextRollTime(now: Long): Long = {
-    val next = formatter.calendar.clone.asInstanceOf[Calendar]
-    next.setTimeInMillis(now)
-    next.set(Calendar.MILLISECOND, 0)
-    next.set(Calendar.SECOND, 0)
-    next.set(Calendar.MINUTE, 0)
+  def computeNextRollTime(now: Long): Option[Long] = {
     rollPolicy match {
-      case Policy.MaxSize(_) | Policy.Never | Policy.SigHup =>
-        next.add(Calendar.YEAR, 100)
-      case Policy.Hourly =>
-        next.add(Calendar.HOUR_OF_DAY, 1)
-      case Policy.Daily =>
-        next.set(Calendar.HOUR_OF_DAY, 0)
-        next.add(Calendar.DAY_OF_MONTH, 1)
-      case Policy.Weekly(weekday) =>
-        next.set(Calendar.HOUR_OF_DAY, 0)
-        do {
-          next.add(Calendar.DAY_OF_MONTH, 1)
-        } while (next.get(Calendar.DAY_OF_WEEK) != weekday)
-    }
-    next.getTimeInMillis
-  }
+      case Policy.MaxSize(_) | Policy.Never | Policy.SigHup => None
+      case _ =>
+        val next = formatter.calendar.clone.asInstanceOf[Calendar]
+        next.setTimeInMillis(now)
+        next.set(Calendar.MILLISECOND, 0)
+        next.set(Calendar.SECOND, 0)
+        next.set(Calendar.MINUTE, 0)
+        rollPolicy match {
+          case Policy.Hourly =>
+            next.add(Calendar.HOUR_OF_DAY, 1)
+          case Policy.Daily =>
+            next.set(Calendar.HOUR_OF_DAY, 0)
+            next.add(Calendar.DAY_OF_MONTH, 1)
+          case Policy.Weekly(weekday) =>
+            next.set(Calendar.HOUR_OF_DAY, 0)
+            do {
+              next.add(Calendar.DAY_OF_MONTH, 1)
+            } while (next.get(Calendar.DAY_OF_WEEK) != weekday)
+        }
 
-  def maxFileSize: StorageUnit = rollPolicy match {
-    case Policy.MaxSize(size) => size
-    case _ => StorageUnit.infinite
+        Some(next.getTimeInMillis)
+    }
   }
 
   /**
@@ -161,13 +165,22 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
     try {
       val formattedLine = getFormatter.format(record)
       val lineSizeBytes = formattedLine.getBytes("UTF-8").length
+
+      if (nextRollTime.isDefined) {
+        synchronized {
+          nextRollTime foreach { time =>
+            if (Time.now.inMilliseconds > time) roll()
+          }
+        }
+      }
+
+      maxFileSize foreach { size =>
+        synchronized {
+          if (bytesWrittenToFile + lineSizeBytes > size.bytes) roll()
+        }
+      }
+
       synchronized {
-        if (Time.now.inMilliseconds > nextRollTime) {
-          roll
-        }
-        if (bytesWrittenToFile + lineSizeBytes > maxFileSize.bytes) {
-          roll
-        }
         stream.write(formattedLine)
         stream.flush()
         bytesWrittenToFile += lineSizeBytes
