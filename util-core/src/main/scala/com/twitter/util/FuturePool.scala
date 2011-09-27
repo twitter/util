@@ -38,13 +38,20 @@ object FuturePool {
 class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePool {
   def apply[T](f: => T): Future[T] = {
     val out = new Promise[T]
+    val saved = Locals.save()
+
     executor.submit(new Runnable {
       def run = {
-
         // Make an effort to skip work in the case the promise
         // has been cancelled or already defined.
         if (!out.isDefined && !out.isCancelled) {
-          out.updateIfEmpty(Try(f))
+          val current = Locals.save()
+          saved.restore()
+          try {
+            out.updateIfEmpty(Try(f))
+          } finally {
+            current.restore()
+          }
         }
       }
     })
