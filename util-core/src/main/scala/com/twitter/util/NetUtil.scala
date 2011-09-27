@@ -1,4 +1,4 @@
-package com.twitter.util.yaml
+package com.twitter.util
 
 import java.net.{InetAddress, Inet4Address}
 
@@ -59,5 +59,4 @@ object NetUtil {
 
   def isIpInBlocks(ip: String, ipBlocks: Iterable[(Int, Int)]) =
     ipBlocks exists { ipBlock => isIpInBlock(ipToInt(ip), ipBlock) }
-
 }

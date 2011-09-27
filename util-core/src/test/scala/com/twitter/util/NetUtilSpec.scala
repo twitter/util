@@ -1,4 +1,4 @@
-package com.twitter.util.yaml
+package com.twitter.util
 
 import org.specs.Specification
 import java.net.InetAddress
