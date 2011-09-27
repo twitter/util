@@ -49,6 +49,11 @@ class Project(info: ProjectInfo)
     "util-hashing", "util-hashing",
     new HashingProject(_), coreProject)
 
+  // util-hashing: hashing and distribution utilities
+  val yamlProject = project(
+    "util-yaml", "util-yaml",
+    new YamlProject(_), coreProject, loggingProject)
+
 
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
@@ -104,7 +109,15 @@ class Project(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-      val commonsCodec = "commons-codec" % "commons-codec" % "1.5" % "test"
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.5" % "test"
+  }
+
+  class YamlProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+  {
+    val yaml = "org.yaml" % "snakeyaml" % "1.8"
+    //val specs = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.7" % "test"
   }
 
   trait ProjectDefaults
