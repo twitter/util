@@ -42,5 +42,130 @@ object IVarSpec extends Specification {
      iv.set(123)
      order.toSeq must be_==(Seq(1, 2, 3))
    }
- }
+
+   "defer recursive gets (run a schedule)" in {
+     var order = new ArrayBuffer[Int]
+     def get(n: Int) {
+       iv.get { _ =>
+         if (n > 0) get(n - 1)
+         order += n
+       }
+     }
+     get(10)
+     iv.set(123)
+     order.toSeq must be_==(10 to 0 by -1 toSeq)
+   }
+
+   "remove waiters on unget" in {
+     var didrun = false
+     val k = { _: Int => didrun = true }
+     iv.get(k)
+     iv.unget(k)
+     iv.set(1)
+     didrun must beFalse
+   }
+
+   "merge" in {
+     val a, b = new IVar[Int]
+     val events = new ArrayBuffer[String]
+     "merges waiters" in {
+       b.get { v => events += "b(%d)".format(v) }
+       a.get { v => events += "a(%d)".format(v) }
+       val expected = Seq("a(1)", "b(1)")
+       a.merge(b)
+       def test(x: IVar[Int], y: IVar[Int]) {
+         x.set(1)
+         events must haveTheSameElementsAs(expected)
+         x.isDefined must beTrue
+         y.isDefined must beTrue
+
+       }
+       "a <- b" in test(a, b)
+       "b <- a" in test(b, a)
+     }
+
+     "works transitively" in {
+       val c = new IVar[Int]
+       a.merge(b)
+       b.merge(c)
+
+       c.set(1)
+       a.isDefined must beTrue
+       b.isDefined must beTrue
+       a() must be_==(1)
+       b() must be_==(1)
+     }
+
+     "inherits an already defined value" in {
+       a.set(1)
+       b.merge(a)
+       b.isDefined must beTrue
+       b() must be_==(1)
+     }
+
+     "fails if already defined" in {
+       a.set(1)
+       a.merge(b) must throwA[IllegalArgumentException]
+     }
+
+     "twoway merges" in {
+       "succeed when values are equal" in {
+         a.set(1)
+         b.set(1)
+         a.merge(b, twoway=true) mustNot throwA[Throwable]
+       }
+
+       "succeeed when values aren't equal, retaining values (it's a noop)" in {
+         a.set(1)
+         b.set(2)
+         a.merge(b, twoway=true) mustNot throwA[Throwable]
+         a.poll must beSome(1)
+         b.poll must beSome(2)
+       }
+     }
+
+     "is idempotent" in {
+       a.merge(b)
+       a.merge(b)
+       a.merge(b)  mustNot throwA[Throwable]
+       b.set(123)
+       a.isDefined must beTrue
+     }
+
+     "performs path compression" in {
+        var first = new IVar[Int]
+        var i = new IVar[Int]
+        i.set(1)
+        first.merge(i)
+
+        for (_ <- 0 until 100)
+          (new IVar[Int]).merge(i)
+
+        first.depth must be_==(0)
+        i.depth must be_==(0)
+      }
+   }
+
+   "apply() recursively schedule (no deadlock)" in {
+     @volatile var didit = false
+     val t = new Thread("IVarSpec") {
+       override def run() {
+         val a, b = new IVar[Int]
+         a.get { _ =>  // inside of the scheduler now
+           a.get { _ =>
+             b.set(1)  // this gets delayed
+           }
+           b.isDefined must beFalse
+           b()
+           didit = true
+         }
+
+         a.set(1)
+       }
+     }
+     t.start()
+     t.join(500/*ms*/)
+     didit must beTrue
+   }
+  }
 }

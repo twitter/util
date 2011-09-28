@@ -9,12 +9,7 @@ import com.twitter.concurrent.SimpleSetter
 object FutureSpec extends Specification with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
-      val latch = new CountDownLatch(1)
-      future.respond { response =>
-        response mustEqual expected
-        latch.countDown()
-      }
-      latch.within(1.second)
+      future.get(1.second) mustEqual expected
     }
   }
 
@@ -119,7 +114,7 @@ object FutureSpec extends Specification with Mockito {
 
       "when cancelled" in {
         iteration.cancel()
-        0 until 3 foreach { _ =>
+        0 until 3 foreach { i =>
           val f = queue.poll()
           f.isCancelled must beTrue
           f.setValue(())
@@ -137,6 +132,7 @@ object FutureSpec extends Specification with Mockito {
         p0() = Return(1)
         f.isDefined must beFalse
         p1() = Return(2)
+        f.isDefined must beTrue
         f() must be_==(Seq(1, 2))
       }
 
@@ -334,6 +330,18 @@ object FutureSpec extends Specification with Mockito {
   }
 
   "Promise" should {
+    "apply" in {
+      "when we're inside of a respond block (without deadlocking)" in {
+        val f = Future(1)
+        var didRun = false
+        f foreach { _ =>
+          f mustProduce Return(1)
+          didRun = true
+        }
+        didRun must beTrue
+      }
+    }
+
     "map" in {
       "when it's all chill" in {
         val f = Future(1) map { x => x + 1 }
@@ -350,7 +358,7 @@ object FutureSpec extends Specification with Mockito {
       }
 
       "cancellation" in {
-        val f1 = Future(1)
+        val f1 = new Promise[Int]
         val f2 = f1 map { _ => () }
         f1.isCancelled must beFalse
         f2.cancel()
@@ -371,13 +379,14 @@ object FutureSpec extends Specification with Mockito {
         }
 
         "cancellation" in {
-          val f1 = Future(1)
+          val f1 = new Promise[Int]
           val f2 = Future(2)
           val f = f1 flatMap { _ => f2 }
           f1.isCancelled must beFalse
           f2.isCancelled must beFalse
           f.cancel()
           f1.isCancelled must beTrue
+          f1() = Return(2)
           f2.isCancelled must beTrue
         }
       }
@@ -423,13 +432,15 @@ object FutureSpec extends Specification with Mockito {
       }
 
       "cancellation" in {
-        val f1 = Future(1)
-        val f2 = Future(f1)
-        val f = f2.flatten
+        val f1 = new Promise[Future[Int]]
+        val f2 = Future(1)
+        val f = f1.flatten
         f1.isCancelled must beFalse
         f2.isCancelled must beFalse
         f.cancel()
         f1.isCancelled must beTrue
+        f2.isCancelled must beFalse
+        f1() = Return(f2)
         f2.isCancelled must beTrue
       }
     }
@@ -467,14 +478,16 @@ object FutureSpec extends Specification with Mockito {
       }
 
       "cancellation" in {
-        val f1 = Future.exception(new Exception)
+        val f1 = new Promise[Int]
         val f2 = Future(2)
         val f = f1 rescue { case _ => f2 }
         f1.isCancelled must beFalse
         f2.isCancelled must beFalse
         f.cancel()
         f1.isCancelled must beTrue
-        f1.isCancelled must beTrue
+        f2.isCancelled must beFalse
+        f1() = Throw(new Exception)
+        f2.isCancelled must beTrue
       }
     }
 
