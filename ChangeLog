@@ -1,6 +1,12 @@
+1.11.7	2011-09-28
 
+	* ivar/future: provide "TCE", per-thread scheduling, and
+	promise squashing
+	* util-core: add bijection
 	* util: Time.now is now measured at nanosecond granularity
-          instead of millisecond.
+	  instead of millisecond.
+	* futurepool: don't attempt to perform work for Futures
+	that are cancelled
 
 1.11.2	2011-08-12
 
