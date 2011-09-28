@@ -156,22 +156,12 @@ object Future {
    * after each computation completes.
    */
   def whileDo[A](p: => Boolean)(f: => Future[A]): Future[Unit] = {
-    val result = new Promise[Unit]
-    def iterate() {
-      if (p) {
-        val iteration = f
-        result.linkTo(iteration)
-        iteration onSuccess { _ =>
-          iterate()
-        } onFailure { cause =>
-          result.setException(cause)
-        }
-      } else {
-        result.setValue(())
-      }
+    def loop(): Future[Unit] = {
+      if (p) f flatMap { _ => loop() }
+      else Future.Unit
     }
-    iterate()
-    result
+
+    loop()
   }
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
@@ -246,18 +236,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * is a Return[_] or Throw[_] depending upon whether the computation finished in
    * time.
    */
-  def get(timeout: Duration): Try[A] = {
-    val latch = new CountDownLatch(1)
-    var result: Try[A] = null
-    respond { a =>
-      result = a
-      latch.countDown()
-    }
-    if (!latch.await(timeout)) {
-      result = Throw(new TimeoutException(timeout.toString))
-    }
-    result
-  }
+  def get(timeout: Duration): Try[A]
 
   /**
    * Same as the other within, but with an implicit timer. Sometimes this is more convenient.
@@ -286,7 +265,10 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Invoke the callback only if the Future returns successfully. Useful for Scala for comprehensions.
    * Use onSuccess instead of this method for more readable code.
    */
-  override def foreach(k: A => Unit) { respond(_ foreach k) }
+  override def foreach(k: A => Unit) =
+    respond(_ foreach k)
+
+  def map[B](f: A => B) = flatMap { a => Future { f(a) } }
 
   /**
    * Invoke the function on the result, if the computation was
@@ -357,6 +339,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
 
   /**
    * Send updates from this Future to the other.
+   * ``other'' must not yet be satisfied.
    */
   def proxyTo[B >: A](other: Promise[B]) {
     respond { other() = _ }
@@ -441,17 +424,22 @@ object Promise {
  * reference to this object as a Promise[_] and updates the value when the computation
  * completes.
  */
-class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
-  extends Future[A]
-{
+class Promise[A] private[Promise] (
+    private[Promise] val ivar: IVar[Try[A]],
+    private[Promise] val cancelled: IVar[Unit])
+  extends Future[A] {
   import Future.makePromise
   import Promise._
 
   def this() = this(new IVar[Try[A]], new IVar[Unit])
 
+  private[this] lazy val chained = new Promise(ivar.chained, cancelled)
+
   def isCancelled = cancelled.isDefined
   def cancel() = cancelled.set(())
-  def linkTo(other: Cancellable) = cancelled.get { _ => other.cancel() }
+  def linkTo(other: Cancellable) {
+    cancelled.get { _ => other.cancel() }
+  }
 
   /**
    * Secondary constructor where result can be provided immediately.
@@ -459,6 +447,29 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
   def this(result: Try[A]) {
     this()
     this.ivar.set(result)
+  }
+
+  def get(timeout: Duration): Try[A] =
+    ivar(timeout) getOrElse {
+      Throw(new TimeoutException(timeout.toString))
+    }
+
+  /**
+   * Merge `other` into this promise.  See
+   * {{com.twitter.concurrent.IVar.merge}} for
+   * details.  This is necessary in bind
+   * operations (flatMap, rescue) in order to
+   * prevent space leaks under iteration.
+   */
+  def merge(other: Future[A]) {
+    if (other.isInstanceOf[Promise[_]]) {
+      val p = other.asInstanceOf[Promise[A]]
+      this.ivar.merge(p.ivar)
+      this.cancelled.merge(p.cancelled, twoway=true)
+    } else {
+      other.proxyTo(this)
+      this.linkTo(other)
+    }
   }
 
   def isDefined = ivar.isDefined
@@ -499,8 +510,7 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
    */
   def updateIfEmpty(newResult: Try[A]) = ivar.set(newResult)
 
-  override def respond(k: Try[A] => Unit): Future[A] = {
-    val next = new Promise(ivar.chained, cancelled)
+  private[Promise] def respond0(k: Try[A] => Unit) {
     val saved = Locals.save()
     ivar.get { result =>
       val current = Locals.save()
@@ -510,9 +520,11 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
       finally
         current.restore()
     }
+  }
 
-    // Note that we return a Future here, so clients can't set it.
-    next
+  override def respond(k: Try[A] => Unit): Future[A] = {
+    respond0(k)
+    chained
   }
 
   /**
@@ -522,53 +534,50 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
     linkTo(new CancellableSink(f))
   }
 
-  override def map[B](f: A => B) = {
-    makePromise[B](this) { promise =>
-      respond { x => promise() = x.map(f) }
-    }
-  }
-
-  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]) = {
-    makePromise[B](this) { promise =>
-      respond {
-        case Return(r) =>
-          try {
-            val next = f(r)
-            promise.linkTo(next)
-            next.proxyTo(promise)
-          } catch {
-            case e => promise() = Throw(e)
-          }
-        case Throw(e) =>
-          promise() = Throw(e)
-      }
-    }
-  }
-
-  def flatten[B](implicit ev: A <:< Future[B]): Future[B] = {
-    flatMap[B, Future] { x => x }
-  }
-
-  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
-    rescueException: PartialFunction[Throwable, AlsoFuture[B]]
-  ) = makePromise[B](this) { promise =>
-    respond {
-      case r: Return[_] => promise() = r
-      case Throw(e) if rescueException.isDefinedAt(e) =>
+  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](
+    f: A => AlsoFuture[B]
+  ) = {
+    val promise = mkChild[B]
+    respond0 {
+      case Return(r) =>
         try {
-          val next = rescueException(e)
-          promise.linkTo(next)
-          next.proxyTo(promise)
+          promise.merge(f(r))
         } catch {
           case e => promise() = Throw(e)
         }
-      case Throw(e) => promise() = Throw(e)
+
+      case Throw(e) =>
+        promise() = Throw(e)
     }
+    promise
+  }
+
+  def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
+    flatMap[B, Future] { x => x }
+
+  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
+    rescueException: PartialFunction[Throwable, AlsoFuture[B]]
+  ) = {
+    val promise = mkChild[B]
+    respond0 {
+      case r: Return[_] =>
+        promise() = r
+
+      case Throw(e) if rescueException.isDefinedAt(e) =>
+        try {
+          promise.merge(rescueException(e))
+        } catch {
+          case e => promise() = Throw(e)
+        }
+      case Throw(e) =>
+        promise() = Throw(e)
+    }
+    promise
   }
 
   override def filter(p: A => Boolean) = {
     makePromise[A](this) { promise =>
-      respond { x => promise() = x.filter(p) }
+      respond0 { x => promise() = x.filter(p) }
     }
   }
 
@@ -576,6 +585,10 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
     case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
     case e: Throwable                                   => this
   }
+
+  @inline
+  final private[Promise] def mkChild[B](): Promise[B] =
+    new Promise[B](new IVar[Try[B]], this.cancelled)
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
