@@ -9,7 +9,12 @@ import com.twitter.concurrent.SimpleSetter
 object FutureSpec extends Specification with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
-      future.get(1.second) mustEqual expected
+      val latch = new CountDownLatch(1)
+      future.respond { response =>
+        response mustEqual expected
+        latch.countDown()
+      }
+      latch.within(1.second)
     }
   }
 
@@ -329,18 +334,6 @@ object FutureSpec extends Specification with Mockito {
   }
 
   "Promise" should {
-    "apply" in {
-      "when we're inside of a respond block (without deadlocking)" in {
-        val f = Future(1)
-        var didRun = false
-        f foreach { _ =>
-          f mustProduce Return(1)
-          didRun = true
-        }
-        didRun must beTrue
-      }
-    }
-
     "map" in {
       "when it's all chill" in {
         val f = Future(1) map { x => x + 1 }
