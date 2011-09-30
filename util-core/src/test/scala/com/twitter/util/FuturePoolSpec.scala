@@ -10,9 +10,7 @@ object FuturePoolSpec extends Specification {
   "FuturePool" should {
     "dispatch to another thread" in {
       val source = new Promise[Int]
-      val result = pool {
-        source.get() // simulate blocking call
-      }
+      val result = pool { source.get() } // simulate blocking call
 
       source.setValue(1)
       result.get() mustEqual 1
@@ -39,6 +37,22 @@ object FuturePoolSpec extends Specification {
       result1.get()  mustEqual 1
       result2.isDefined   mustEqual false
       result2.isCancelled mustEqual true
+    }
+
+    "returns exceptions that result from submitting a task to the pool" in {
+      val executor = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue(1))
+      val pool     = FuturePool(executor)
+
+      val source   = new Promise[Int]
+      val blocker1  = pool { source.get() } // occupy the thread
+      val blocker2  = pool { source.get() } // fill the queue
+
+      val rv = pool { "yay!" }
+
+      rv.isDefined mustEqual true
+      rv.get() must throwA[RejectedExecutionException]
+
+      source.setValue(1)
     }
   }
 }
