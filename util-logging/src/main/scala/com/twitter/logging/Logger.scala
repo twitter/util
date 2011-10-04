@@ -218,17 +218,19 @@ object Logger extends Iterable[Logger] {
   def ALL = Level.ALL
 
   // to force them to get loaded from class files:
-  root.setLevel(OFF)
-  root.setLevel(FATAL)
-  root.setLevel(CRITICAL)
-  root.setLevel(ERROR)
-  root.setLevel(WARNING)
-  root.setLevel(INFO)
-  root.setLevel(DEBUG)
-  root.setLevel(TRACE)
-  root.setLevel(ALL)
-  reset()
-
+  {
+    val originalLevel = root.getLevel()
+    root.setLevel(OFF)
+    root.setLevel(FATAL)
+    root.setLevel(CRITICAL)
+    root.setLevel(ERROR)
+    root.setLevel(WARNING)
+    root.setLevel(INFO)
+    root.setLevel(DEBUG)
+    root.setLevel(TRACE)
+    root.setLevel(ALL)
+    root.setLevel(originalLevel)
+  }
 
   /**
    * Return a map of log level values to the corresponding Level objects.
