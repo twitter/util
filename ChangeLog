@@ -1,3 +1,10 @@
+1.11.8	2011-10-04
+	
+	* Back out TCE for ivar/futures. This introduced a space
+	leak and will be fixed momentarily.
+	* FuturePool: Catch any exception thrown by executor.submit()
+	and return as a Future.exception
+
 1.11.7	2011-09-28
 
 	* ivar/future: provide "TCE", per-thread scheduling, and
