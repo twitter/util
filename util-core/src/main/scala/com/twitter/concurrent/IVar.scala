@@ -42,7 +42,7 @@ object IVar {
   // todo: it's possible, too, to not unwind
   // _every_ get, but rather only after a certain
   // stack depth has been reached.
-  private[IVar] class Schedule {
+  private class Schedule {
     private[this] type Waiter = () => Unit
     private[this] var w0, w1, w2: Waiter = null
     private[this] var ws = new Queue[Waiter]
@@ -81,12 +81,12 @@ object IVar {
     }
   }
 
-  private[IVar] val _sched = new ThreadLocal[Schedule] {
+  private val _sched = new ThreadLocal[Schedule] {
     override def initialValue = new Schedule
   }
-  private[IVar] def sched = _sched.get()
-  private[IVar] val initState: State[Nothing] = Waiting(Nil, Nil)
-  private[IVar] val stateUpd = AtomicReferenceFieldUpdater.newUpdater(
+  private def sched = _sched.get()
+  private val initState: State[Nothing] = Waiting(Nil, Nil)
+  private val stateUpd = AtomicReferenceFieldUpdater.newUpdater(
     classOf[IVarField[_]], classOf[State[_]], "state")
 }
 
@@ -130,8 +130,8 @@ final class IVar[A] extends IVarField[A] {
 
   private[IVar] def resolve(): IVar[A] =
     state match {
-      case s@Linked(ivl) =>
-        val iv = ivl.resolve()
+      case s@Linked(next) =>
+        val iv = next.resolve()
         cas(s, Linked(iv))
         iv
       case _ => this
@@ -189,7 +189,7 @@ final class IVar[A] extends IVarField[A] {
    * Only (transitively) waiting IVars may be
    * merged into, unless twoway=true.  Note that
    * when twoway=true and both `this' and `other'
-   * is is Done, their values must be equal.  See
+   * is Done, their values must be equal.  See
    * `linkWith` for additional caveats.
    */
   @tailrec
@@ -222,8 +222,8 @@ final class IVar[A] extends IVarField[A] {
   def apply(): A = apply(Duration.MaxValue).get
   def apply(timeout: Duration): Option[A] =
     state match {
-      case Linked(iv) =>
-        iv.apply(timeout)
+      case Linked(_) =>
+        resolve().apply(timeout)
       case Done(value) =>
         Some(value)
       case _ =>
