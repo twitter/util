@@ -242,6 +242,11 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   def isDefined: Boolean
 
   /**
+   * Trigger a callback if this future is cancelled.
+   */
+  def onCancellation(f: => Unit)
+
+  /**
    * Demands that the result of the future be available within `timeout`. The result
    * is a Return[_] or Throw[_] depending upon whether the computation finished in
    * time.
@@ -448,6 +453,8 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
   import Promise._
 
   def this() = this(new IVar[Try[A]], new IVar[Unit])
+
+  override def toString = "Promise@%s(ivar=%s, cancelled=%s)".format(hashCode, ivar, cancelled)
 
   def isCancelled = cancelled.isDefined
   def cancel() = cancelled.set(())
