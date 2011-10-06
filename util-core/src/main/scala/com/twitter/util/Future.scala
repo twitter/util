@@ -237,7 +237,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * time.
    */
   def get(timeout: Duration): Try[A]
-  
+
   /**
    * Polls for an available result.  If the Future has been satisfied,
    * returns Some(result), otherwise None.
@@ -464,7 +464,7 @@ class Promise[A] private[Promise] (
     ivar(timeout) getOrElse {
       Throw(new TimeoutException(timeout.toString))
     }
-    
+
   def poll = ivar.poll
 
   /**

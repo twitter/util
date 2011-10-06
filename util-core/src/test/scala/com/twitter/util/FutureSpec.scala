@@ -601,18 +601,18 @@ object FutureSpec extends Specification with Mockito {
         there was one(c1).cancel()
       }
     }
-    
+
     "poll" in {
       val p = new Promise[Int]
       "when waiting" in {
         p.poll must beNone
       }
-      
+
       "when succeeding" in {
         p.setValue(1)
         p.poll must beSome(Return(1))
       }
-      
+
       "when failing" in {
         val e = new Exception
         p.setException(e)
