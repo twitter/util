@@ -209,7 +209,7 @@ class Eval(target: Option[File]) {
 
   /**
    * Check if code is Eval-able.
-   * @throw CompilerException if not Eval-able.
+   * @throws CompilerException if not Eval-able.
    */
   def check(code: String) {
     val id = uniqueId(sourceForString(code).code)
@@ -220,7 +220,7 @@ class Eval(target: Option[File]) {
 
   /**
    * Check if files are Eval-able.
-   * @throw CompilerException if not Eval-able.
+   * @throws CompilerException if not Eval-able.
    */
   def check(files: File*) {
     val code = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
@@ -229,7 +229,7 @@ class Eval(target: Option[File]) {
 
   /**
    * Check if stream is Eval-able.
-   * @throw CompilerException if not Eval-able.
+   * @throws CompilerException if not Eval-able.
    */
   def check(stream: InputStream) {
     check(scala.io.Source.fromInputStream(stream).mkString)
