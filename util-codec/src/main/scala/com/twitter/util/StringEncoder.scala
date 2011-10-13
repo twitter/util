@@ -11,7 +11,7 @@ trait StringEncoder {
 }
 
 trait Base64StringEncoder extends StringEncoder {
-  private[this] lazy val codec = new Base64()
+  private[this] def codec = new Base64()
 
   override def encode(bytes: Array[Byte]): String = {
     codec.encodeAsString(bytes)
