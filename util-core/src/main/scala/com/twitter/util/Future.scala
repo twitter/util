@@ -156,22 +156,12 @@ object Future {
    * after each computation completes.
    */
   def whileDo[A](p: => Boolean)(f: => Future[A]): Future[Unit] = {
-    val result = new Promise[Unit]
-    def iterate() {
-      if (p) {
-        val iteration = f
-        result.linkTo(iteration)
-        iteration onSuccess { _ =>
-          iterate()
-        } onFailure { cause =>
-          result.setException(cause)
-        }
-      } else {
-        result.setValue(())
-      }
+    def loop(): Future[Unit] = {
+      if (p) f flatMap { _ => loop() }
+      else Future.Unit
     }
-    iterate()
-    result
+
+    loop()
   }
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
@@ -246,18 +236,13 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * is a Return[_] or Throw[_] depending upon whether the computation finished in
    * time.
    */
-  def get(timeout: Duration): Try[A] = {
-    val latch = new CountDownLatch(1)
-    var result: Try[A] = null
-    respond { a =>
-      result = a
-      latch.countDown()
-    }
-    if (!latch.await(timeout)) {
-      result = Throw(new TimeoutException(timeout.toString))
-    }
-    result
-  }
+  def get(timeout: Duration): Try[A]
+
+  /**
+   * Polls for an available result.  If the Future has been satisfied,
+   * returns Some(result), otherwise None.
+   */
+  def poll: Option[Try[A]]
 
   /**
    * Same as the other within, but with an implicit timer. Sometimes this is more convenient.
@@ -286,7 +271,10 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Invoke the callback only if the Future returns successfully. Useful for Scala for comprehensions.
    * Use onSuccess instead of this method for more readable code.
    */
-  override def foreach(k: A => Unit) { respond(_ foreach k) }
+  override def foreach(k: A => Unit) =
+    respond(_ foreach k)
+
+  def map[B](f: A => B) = flatMap { a => Future { f(a) } }
 
   /**
    * Invoke the function on the result, if the computation was
@@ -357,6 +345,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
 
   /**
    * Send updates from this Future to the other.
+   * ``other'' must not yet be satisfied.
    */
   def proxyTo[B >: A](other: Promise[B]) {
     respond { other() = _ }
@@ -435,23 +424,25 @@ object Promise {
 }
 
 /**
- * A concrete Future implementation that is updatable by some executor or event loop.
- * A typical use of Promise is for a client to submit a request to some service.
- * The client is given an object that inherits from Future[_]. The server stores a
- * reference to this object as a Promise[_] and updates the value when the computation
- * completes.
+ * A concrete Future implementation that is
+ * updatable by some executor or event loop.  A
+ * typical use of Promise is for a client to
+ * submit a request to some service.  The client
+ * is given an object that inherits from
+ * Future[_].  The server stores a reference to
+ * this object as a Promise[_] and updates the
+ * value when the computation completes.
  */
-class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
+class Promise[A] private[Promise] (
+  private[Promise] final val ivar: IVar[Try[A]],
+  private[Promise] final val cancelled: IVar[Unit])
   extends Future[A]
 {
   import Future.makePromise
   import Promise._
 
+  @volatile private[this] var chained: Future[A] = null
   def this() = this(new IVar[Try[A]], new IVar[Unit])
-
-  def isCancelled = cancelled.isDefined
-  def cancel() = cancelled.set(())
-  def linkTo(other: Cancellable) = cancelled.get { _ => other.cancel() }
 
   /**
    * Secondary constructor where result can be provided immediately.
@@ -459,6 +450,48 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
   def this(result: Try[A]) {
     this()
     this.ivar.set(result)
+  }
+
+  def isCancelled = cancelled.isDefined
+  def cancel() = cancelled.set(())
+  def linkTo(other: Cancellable) {
+    cancelled.get {
+      case () => other.cancel()
+    }
+  }
+
+  def get(timeout: Duration): Try[A] =
+    ivar(timeout) getOrElse {
+      Throw(new TimeoutException(timeout.toString))
+    }
+
+  def poll = ivar.poll
+
+  /**
+   * Merge `other` into this promise.  See
+   * {{com.twitter.concurrent.IVar.merge}} for
+   * details.  This is necessary in bind
+   * operations (flatMap, rescue) in order to
+   * prevent space leaks under iteration.
+   *
+   * Cancellation state is merged along with
+   * values, but the semantics are slightly
+   * different.  Because the receiver of a promise
+   * may affect its cancellation status, we must
+   * allow for divergence here: if `this` has been
+   * cancelled, but `other` is already complete,
+   * `other` will not change its cancellation
+   * state (which is fixed at false).
+   */
+  private[Promise] def merge(other: Future[A]) {
+    if (other.isInstanceOf[Promise[_]]) {
+      val p = other.asInstanceOf[Promise[A]]
+      this.ivar.merge(p.ivar)
+      this.cancelled.merge(p.cancelled, twoway=true)
+    } else {
+      other.proxyTo(this)
+      this.linkTo(other)
+    }
   }
 
   def isDefined = ivar.isDefined
@@ -497,10 +530,10 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
    *
    * @return true only if the result is updated, false if it was already set.
    */
-  def updateIfEmpty(newResult: Try[A]) = ivar.set(newResult)
+  def updateIfEmpty(newResult: Try[A]) =
+    ivar.set(newResult)
 
-  override def respond(k: Try[A] => Unit): Future[A] = {
-    val next = new Promise(ivar.chained, cancelled)
+  private[this] def respond0(k: Try[A] => Unit) {
     val saved = Locals.save()
     ivar.get { result =>
       val current = Locals.save()
@@ -510,8 +543,23 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
       finally
         current.restore()
     }
+  }
 
-    // Note that we return a Future here, so clients can't set it.
+  override def respond(k: Try[A] => Unit): Future[A] = {
+    // Note that there's a race here, but that's
+    // okay.  The resulting Futures are
+    // equivalent, and it only makes the
+    // optimization less effective.
+    //
+    // todo: given that it's likely most responds
+    // don't actually result in the chained ivar
+    // being used, we could create a shell
+    // promise.  this would get rid of one object
+    // allocation (the chained ivar).
+    if (chained eq null)
+      chained = new Promise(ivar.chained, cancelled)
+    val next = chained
+    respond0(k)
     next
   }
 
@@ -522,53 +570,64 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
     linkTo(new CancellableSink(f))
   }
 
-  override def map[B](f: A => B) = {
-    makePromise[B](this) { promise =>
-      respond { x => promise() = x.map(f) }
+  /**
+   * flatMaps propagate cancellation to the parent
+   * promise while it remains waiting.  This means
+   * that in a chain of flatMaps, cancellation
+   * only affects the current parent promise that
+   * is being waited on.
+   */
+  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](
+    f: A => AlsoFuture[B]
+  ) = {
+    val promise = new Promise[B]
+    val k = { _: Unit => this.cancel() }
+    promise.cancelled.get(k)
+    respond0 {
+      case Return(r) =>
+        try {
+          promise.cancelled.unget(k)
+          promise.merge(f(r))
+        } catch {
+          case e =>
+            promise() = Throw(e)
+        }
+
+      case Throw(e) =>
+        promise() = Throw(e)
     }
+    promise
   }
 
-  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]) = {
-    makePromise[B](this) { promise =>
-      respond {
-        case Return(r) =>
-          try {
-            val next = f(r)
-            promise.linkTo(next)
-            next.proxyTo(promise)
-          } catch {
-            case e => promise() = Throw(e)
-          }
-        case Throw(e) =>
-          promise() = Throw(e)
-      }
-    }
-  }
-
-  def flatten[B](implicit ev: A <:< Future[B]): Future[B] = {
+  def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
     flatMap[B, Future] { x => x }
-  }
 
   def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
     rescueException: PartialFunction[Throwable, AlsoFuture[B]]
-  ) = makePromise[B](this) { promise =>
-    respond {
-      case r: Return[_] => promise() = r
+  ) = {
+    val promise = new Promise[B]
+    val k = { _: Unit => this.cancel() }
+    promise.cancelled.get(k)
+    respond0 {
+      case r: Return[_] =>
+        promise() = r
+
       case Throw(e) if rescueException.isDefinedAt(e) =>
         try {
-          val next = rescueException(e)
-          promise.linkTo(next)
-          next.proxyTo(promise)
+          promise.cancelled.unget(k)
+          promise.merge(rescueException(e))
         } catch {
           case e => promise() = Throw(e)
         }
-      case Throw(e) => promise() = Throw(e)
+      case Throw(e) =>
+        promise() = Throw(e)
     }
+    promise
   }
 
   override def filter(p: A => Boolean) = {
     makePromise[A](this) { promise =>
-      respond { x => promise() = x.filter(p) }
+      respond0 { x => promise() = x.filter(p) }
     }
   }
 
@@ -576,6 +635,8 @@ class Promise[A] private[Promise] (ivar: IVar[Try[A]], cancelled: IVar[Unit])
     case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
     case e: Throwable                                   => this
   }
+
+  private[util] def depth = ivar.depth
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
@@ -602,23 +663,45 @@ private[util] object FutureBenchmark {
     System.currentTimeMillis() - begin
   }
 
-  def main(args: Array[String]) {
-    printf("Warming up.. ")
-    val warmupTime = bench(NumIters) {
-      val promise = new Promise[Unit]
-      promise respond { res => () }
-      promise() = Return(())
-    }
+  private[this] def run[A](name: String)(work: => A) {
+    printf("Warming up %s.. ", name)
+    val warmupTime = bench(NumIters)(work)
     printf("%d ms\n", warmupTime)
 
     printf("Running .. ")
-    val runTime = bench(NumIters) {
+    val runTime = bench(NumIters)(work)
+
+    printf(
+      "%d ms, %d %s/sec\n",
+      runTime, 1000 * NumIters / runTime, name)
+  }
+
+  def main(args: Array[String]) {
+    run("respond") {
       val promise = new Promise[Unit]
       promise respond { res => () }
       promise() = Return(())
     }
-    printf(
-      "%d ms, %d responds/sec\n",
-      runTime, 1000 * NumIters / runTime)
+
+    run("flatMaps") {
+      val promise = new Promise[Unit]
+      promise flatMap { _ => Future.value(()) }
+      promise() = Return(())
+    }
+  }
+}
+
+private[util] object Leaky {
+  def main(args: Array[String]) {
+    def loop(i: Int): Future[Int] = Future.value(i) flatMap { count =>
+      if (count % 1000000 == 0) {
+        System.gc()
+        println("iter %d %dMB".format(
+          count, Runtime.getRuntime().totalMemory()>>20))
+      }
+      loop(count + 1)
+    }
+
+    loop(1)
   }
 }
