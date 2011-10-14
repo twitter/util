@@ -53,8 +53,10 @@ class RichU64ByteArray(bytes: Array[Byte]) {
 }
 
 class RichU64String(string: String) {
-  def toU64ByteArray =
-    (0 until 16 by 2).map(i => Integer.parseInt(string.slice(i, i + 2), 16).toByte).toArray
+  def toU64ByteArray = {
+    val padded = "0" * (16-string.length()) + string
+    (0 until 16 by 2).map(i => Integer.parseInt(padded.slice(i, i + 2), 16).toByte).toArray
+  }
 
   def toU64Long = (new RichU64ByteArray(toU64ByteArray)).toU64Long
 }

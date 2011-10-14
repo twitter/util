@@ -274,7 +274,9 @@ final class IVar[A] extends IVarField[A] {
 
   /**
    * Pass a block, 'k' which will be invoked when the value is
-   * available.
+   * available.  Note that 'get' does not preserve ordering, that is:
+   * {{a.get(k); a.get(k')}} does not imply {{k}} happens-before
+   * {{k'}}.
    */
   @tailrec
   def get(k: A => Unit) {
@@ -314,6 +316,16 @@ final class IVar[A] extends IVarField[A] {
    * happens-before relationship vis-a-vis *this* IVar.  That is: an
    * ordering that is visible to the consumer of this IVar (wrt.
    * gets) is preserved via chaining.
+   *
+   * That is, to use in a manner that guarantees strict ordering of
+   * invocation, use the following pattern:
+   *
+   * {{{
+   *   val ivar: IVar[A]
+   *   val next = ivar.chained
+   *   ivar.get { _ => /* first action */ }
+   *   next.get { _ => /* second action */ }
+   * }}}
    */
   @tailrec
   def chained: IVar[A] =

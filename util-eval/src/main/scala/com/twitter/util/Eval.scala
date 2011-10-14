@@ -31,7 +31,7 @@ import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.tools.nsc.util.{BatchSourceFile, Position}
 
-case class LastMod(timestamp: Long, code: String)
+case class LastMod(timestamp: Option[Long], code: String)
 
 /**
  * Evaluate a file or string and return the result.
@@ -100,6 +100,10 @@ class Eval(target: Option[File]) {
           new ClassScopedResolver(getClass),
           new FilesystemResolver(new File(".")),
           new FilesystemResolver(new File("." + File.separator + "config"))
+        ) ++ (
+          Option(System.getProperty("com.twitter.util.Eval.includePath")) map { path =>
+            new FilesystemResolver(new File(path))
+          }
         )
       )
     )
@@ -112,10 +116,15 @@ class Eval(target: Option[File]) {
    * to the text.
    * Last modified is computed here because we support includes
    */
-  def sourceForString(code: String) = {
-    preprocessors.foldLeft(LastMod(0L, code)) { (acc, p) =>
-      val processed = p(acc.code)
-      LastMod(acc.timestamp max processed.timestamp, processed.code)
+  def sourceForString(code: String, lastModified: Option[Long]): LastMod = {
+    preprocessors.foldLeft(LastMod(lastModified, code)) { (acc, p) =>
+      val processed = p(acc.code, lastModified)
+
+      // timestamp of the newest processed file.
+      // if both are defined, take the max. otherwise
+      // take any defined timestamp
+      val newestProcessed = Seq(processed.timestamp, acc.timestamp).max
+      LastMod(newestProcessed, processed.code)
     }
   }
 
@@ -123,7 +132,7 @@ class Eval(target: Option[File]) {
    * Eval[Int]("1 + 1") // => 2
    */
   def apply[T](code: String, resetState: Boolean = true): T = {
-    val processed = sourceForString(code)
+    val processed = sourceForString(code, None)
     applyProcessed(processed.code, resetState)
   }
 
@@ -134,11 +143,22 @@ class Eval(target: Option[File]) {
     if (target.isDefined) {
       val targetDir = target.get
       val unprocessedSource = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
-      val processed = sourceForString(unprocessedSource)
-      val oldestTarget = targetDir.listFiles.foldLeft(Long.MaxValue)((oldest, f) => f.lastModified min oldest)
-      if (processed.timestamp > oldestTarget) {
-        compiler.reset()
+      val lastModified = files.foldLeft(None: Option[Long]) { (acc, f) => Seq(acc, Some(f.lastModified)).max }
+      val processed = sourceForString(unprocessedSource, lastModified)
+      val oldestTarget = targetDir.listFiles.foldLeft(Long.MaxValue) { (oldest, f) =>
+        f.lastModified min oldest
       }
+      processed.timestamp match {
+        // if we got a last-modified-source timestamp threaded through, use it to check compiler resets
+        case Some(newestSource) => {
+          if (newestSource > oldestTarget) {
+            compiler.reset()
+          }
+        }
+        // if there are no timestamps anywhere, just reset the compiler
+        case None => compiler.reset()
+      }
+
       val className = "Evaluator__" + files(0).getName.split("\\.")(0)
       applyProcessed(className, processed.code, false)
     } else {
@@ -150,7 +170,7 @@ class Eval(target: Option[File]) {
    * Eval[Int](getClass.getResourceAsStream("..."))
    */
   def apply[T](stream: InputStream): T = {
-    apply(sourceForString(Source.fromInputStream(stream).mkString).code)
+    apply(sourceForString(Source.fromInputStream(stream).mkString, None).code)
   }
 
   /**
@@ -185,14 +205,14 @@ class Eval(target: Option[File]) {
    * converts the given file to evaluable source.
    */
   def toSource(code: String): String = {
-    sourceForString(code).code
+    sourceForString(code, None).code
   }
 
   /**
    * Compile an entire source file into the virtual classloader.
    */
   def compile(code: String) {
-    compiler(sourceForString(code).code)
+    compiler(sourceForString(code, None).code)
   }
 
   /**
@@ -208,7 +228,7 @@ class Eval(target: Option[File]) {
    * @throw CompilerException if not Eval-able.
    */
   def check(code: String) {
-    val id = uniqueId(sourceForString(code).code)
+    val id = uniqueId(sourceForString(code, None).code)
     val className = "Evaluator__" + id
     val wrappedCode = wrapCodeInClass(className, code)
     compile(wrappedCode) // may throw CompilerException
@@ -287,7 +307,7 @@ class Eval(target: Option[File]) {
   }
 
   trait Preprocessor {
-    def apply(code: String): LastMod
+    def apply(code: String, lastModified: Option[Long]): LastMod
   }
 
   trait Resolver {
@@ -299,7 +319,6 @@ class Eval(target: Option[File]) {
   class FilesystemResolver(root: File) extends Resolver {
     private[this] def file(path: String): File =
       new File(root.getAbsolutePath + File.separator + path)
-
 
     def resolvable(path: String): Boolean =
       file(path).exists
@@ -344,8 +363,13 @@ class Eval(target: Option[File]) {
    * Note that it is *not* recursive. Included files cannot have includes
    */
   class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
-    def apply(code: String): LastMod = {
-      var lastMod = 0L
+    def maximumRecursionDepth = 100
+
+    def apply(code: String, lastModified: Option[Long]): LastMod =
+      apply(code, lastModified, maximumRecursionDepth)
+
+    def apply(code: String, lastModified: Option[Long], maxDepth: Int): LastMod = {
+      var lastMod = lastModified
       val lines = code.lines map { line: String =>
         val tokens = line.trim.split(' ')
         if (tokens.length == 2 && tokens(0).equals("#include")) {
@@ -354,8 +378,15 @@ class Eval(target: Option[File]) {
             resolver.resolvable(path)
           } match {
             case Some(r: Resolver) => {
-              lastMod = lastMod max r.lastModified(path)
-              StreamIO.buffer(r.get(path)).toString
+              lastMod = Seq(lastMod, Some(r.lastModified(path))).max
+              // recursively process includes
+              if (maxDepth == 0) {
+                throw new IllegalStateException("Exceeded maximum recusion depth")
+              } else {
+                val subLastMod = apply(StreamIO.buffer(r.get(path)).toString, lastMod, maxDepth - 1)
+                lastMod = Seq(lastMod, subLastMod.timestamp).max
+                subLastMod.code
+              }
             }
             case _ =>
               throw new IllegalStateException("No resolver could find '%s'".format(path))

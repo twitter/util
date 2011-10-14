@@ -16,11 +16,12 @@
 
 package com.twitter.logging
 
-import java.io.{File, FileOutputStream, OutputStreamWriter, Writer}
+import com.twitter.logging.config._
+import com.twitter.util.{HandleSignal, StorageUnit, Time}
+import java.io.{File, FileOutputStream, OutputStream}
+import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, logging => javalog}
-import com.twitter.util.{HandleSignal, StorageUnit, Time}
-import config._
 
 sealed abstract class Policy
 object Policy {
@@ -32,6 +33,10 @@ object Policy {
   case class MaxSize(size: StorageUnit) extends Policy
 }
 
+object FileHander {
+  val UTF8 = Charset.forName("UTF-8")
+}
+
 /**
  * A log handler that writes log entries into a file, and rolls this file
  * at a requested interval (hourly, daily, or weekly).
@@ -39,9 +44,12 @@ object Policy {
 class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean, rotateCount: Int,
                   formatter: Formatter, level: Option[Level])
       extends Handler(formatter, level) {
-  private var stream: Writer = null
-  private var openTime: Long = 0
-  private var nextRollTime: Option[Long] = Some(0)
+  // Thread-safety is guarded by synchronized on this
+  private var stream: OutputStream = null
+  @volatile private var openTime: Long = 0
+  // Thread-safety is guarded by synchronized on this
+  private var nextRollTime: Option[Long] = None
+  // Thread-safety is guarded by synchronized on this
   private var bytesWrittenToFile: Long = 0
 
   private val maxFileSize: Option[StorageUnit] = rollPolicy match {
@@ -52,40 +60,54 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
 
   openLog()
 
+  // If nextRollTime.isDefined by openLog(), then its will always remain isDefined.
+  // This allows us to avoid volatile reads in the publish method.
+  private val examineRollTime = nextRollTime.isDefined
+
   if (rollPolicy == Policy.SigHup) {
     HandleSignal("HUP") { signal =>
       val oldStream = stream
       synchronized {
-        stream = openWriter()
+        stream = openStream()
       }
       try {
         oldStream.close()
-      } catch { case _ => () }
+      } catch {
+        case e => handleThrowable(e)
+      }
     }
   }
 
-  def flush() = {
-    stream.flush()
+  def flush() {
+    synchronized {
+      stream.flush()
+    }
   }
 
-  def close() = {
-    flush()
-    try {
-      stream.close()
-    } catch { case _ => () }
+  def close() {
+    synchronized {
+      flush()
+      try {
+        stream.close()
+      } catch {
+        case e => handleThrowable(e)
+      }
+    }
   }
 
-  private def openWriter() = {
+  private def openStream(): OutputStream = {
     val dir = new File(filename).getParentFile
     if ((dir ne null) && !dir.exists) dir.mkdirs
-    new OutputStreamWriter(new FileOutputStream(filename, append), "UTF-8")
+    new FileOutputStream(filename, append)
   }
 
-  private def openLog() = {
-    stream = openWriter()
-    openTime = Time.now.inMilliseconds
-    nextRollTime = computeNextRollTime(openTime)
-    bytesWrittenToFile = 0
+  private def openLog() {
+    synchronized {
+      stream = openStream()
+      openTime = Time.now.inMilliseconds
+      nextRollTime = computeNextRollTime(openTime)
+      bytesWrittenToFile = 0
+    }
   }
 
   /**
@@ -146,7 +168,7 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
    * Delete files when "too many" have accumulated.
    * This duplicates logrotate's "rotate count" option.
    */
-  private def removeOldFiles(filenamePrefix: String) = {
+  private def removeOldFiles(filenamePrefix: String) {
     if (rotateCount >= 0) {
       val filesInLogDir = new File(filename).getParentFile().listFiles()
       val rotatedFiles = filesInLogDir.filter(f => f.getName != filename &&
@@ -169,12 +191,14 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
     removeOldFiles(filenamePrefix)
   }
 
-  def publish(record: javalog.LogRecord) = {
+  def publish(record: javalog.LogRecord) {
     try {
       val formattedLine = getFormatter.format(record)
-      val lineSizeBytes = formattedLine.getBytes("UTF-8").length
+      val formattedBytes = formattedLine.getBytes(FileHander.UTF8)
+      val lineSizeBytes = formattedBytes.length
 
-      if (nextRollTime.isDefined) {
+      if (examineRollTime) {
+        // Only allow a single thread at a time to do a roll
         synchronized {
           nextRollTime foreach { time =>
             if (Time.now.inMilliseconds > time) roll()
@@ -189,13 +213,17 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
       }
 
       synchronized {
-        stream.write(formattedLine)
+        stream.write(formattedBytes)
         stream.flush()
         bytesWrittenToFile += lineSizeBytes
       }
     } catch {
-      case e =>
-        System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
+      case e => handleThrowable(e)
     }
   }
+
+  private def handleThrowable(e: Throwable) {
+    System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
+  }
+
 }

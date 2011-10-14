@@ -29,6 +29,8 @@ object TempFile {
     val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
     StreamIO.copy(stream, fos)
     fos.flush()
+    fos.close()
+    stream.close()
 
     file
   }

@@ -546,7 +546,6 @@ class Promise[A] private[Promise] (
   }
 
   override def respond(k: Try[A] => Unit): Future[A] = {
-    respond0(k)
     // Note that there's a race here, but that's
     // okay.  The resulting Futures are
     // equivalent, and it only makes the
@@ -559,7 +558,9 @@ class Promise[A] private[Promise] (
     // allocation (the chained ivar).
     if (chained eq null)
       chained = new Promise(ivar.chained, cancelled)
-    chained
+    val next = chained
+    respond0(k)
+    next
   }
 
   /**
