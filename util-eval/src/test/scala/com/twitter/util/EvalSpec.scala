@@ -85,6 +85,14 @@ object EvalSpec extends Specification {
       derived.toString mustEqual "hello, joe"
     }
 
+    "recursive #include" in {
+      val derived = Eval[() => String](
+        TempFile.fromResourcePath("/Base.scala"),
+        TempFile.fromResourcePath("/IncludeInclude.scala"))
+      derived() mustEqual "hello"
+      derived.toString mustEqual "hello, joe; hello, joe"
+    }
+
     "toSource returns post-processed code" in {
       val derived = Eval.toSource(TempFile.fromResourcePath("/DerivedWithInclude.scala"))
       derived must include("hello, joe")

@@ -38,7 +38,7 @@ abstract class Handler(val formatter: Formatter, val level: Option[Level]) exten
  * Mostly useful for unit tests: logging goes directly into a string buffer.
  */
 class StringHandler(formatter: Formatter, level: Option[Level]) extends Handler(formatter, level) {
-  def this() = this(BasicFormatter, None)
+  def this() = this(new Formatter, None)
 
   private var buffer = new StringBuilder()
 
@@ -61,7 +61,7 @@ class StringHandler(formatter: Formatter, level: Option[Level]) extends Handler(
  * Log things to the console.
  */
 class ConsoleHandler(formatter: Formatter, level: Option[Level]) extends Handler(formatter, level) {
-  def this() = this(BasicFormatter, None)
+  def this() = this(new Formatter, None)
 
   def publish(record: javalog.LogRecord) = {
     System.err.print(getFormatter().format(record))
