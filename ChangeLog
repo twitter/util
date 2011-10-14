@@ -1,3 +1,13 @@
+1.11.9	2011-10-14
+
+	* ivar/future: provide "TCE", per-thread scheduling, and
+	promise squashing
+	* logger: restore original logging level after modifying them
+	* u64: fix
+	* filehandler: thread-visibility
+	* eval: fix mtime invalidation
+	* base64 encoder: make it threadsafe
+
 1.11.8	2011-10-04
 	
 	* Back out TCE for ivar/futures. This introduced a space
