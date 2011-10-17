@@ -188,14 +188,14 @@ final class IVar[A] extends IVarField[A] {
    */
   @tailrec private[IVar]
   def linkTo(other: IVar[A]) {
+    if (this eq other) return
+
     state match {
       case s@Linked(iv) =>
-        if (iv ne other) {
-          if (cas(s, Linked(other)))
-            iv.linkTo(other)
-          else
-            linkTo(other)
-        }
+        if (cas(s, Linked(other)))
+          iv.linkTo(other)
+        else
+          linkTo(other)
       case s@Done(value) =>
         if (!other.set(value) && value != other())
           throw new IllegalArgumentException("Cannot link two Done IVars with differing values")
@@ -272,6 +272,8 @@ final class IVar[A] extends IVarField[A] {
     case Done(_) => true
     case Linked(iv) => iv.isDefined
   }
+
+  override def toString = "IVar(%s)".format(state)
 
   /**
    * Set the value - only the first call will be successful.

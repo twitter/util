@@ -66,7 +66,7 @@ object IVarSpec extends Specification {
     }
 
     "merge" in {
-      val a, b = new IVar[Int]
+      val a, b, c = new IVar[Int]
       val events = new ArrayBuffer[String]
       "merges waiters" in {
         b.get { v => events += "b(%d)".format(v) }
@@ -145,6 +145,35 @@ object IVarSpec extends Specification {
 
         first.depth must be_==(0)
         i.depth must be_==(0)
+      }
+
+      "cycles" >> {
+        "deals with cycles in the done state" in {
+          a.set(1)
+          a.isDefined must beTrue
+          a.merge(a)
+          a() must be_==(1)
+        }
+
+        "deals with shallow cycles in the waiting state" in {
+          a.merge(a)
+          a.set(1)
+          a.isDefined must beTrue
+          a() must be_==(1)
+        }
+
+        "deals with simple indirect cycles" in {
+          a.merge(b)
+          b.merge(c)
+          c.merge(a)
+          b.set(1)
+          a.isDefined must beTrue
+          b.isDefined must beTrue
+          c.isDefined must beTrue
+          a() must be_==(1)
+          b() must be_==(1)
+          c() must be_==(1)
+        }
       }
     }
 
