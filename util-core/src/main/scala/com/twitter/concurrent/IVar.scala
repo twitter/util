@@ -276,8 +276,6 @@ final class IVar[A] extends IVarField[A] {
     case Linked(iv) => iv.isDefined
   }
 
-  override def toString = "IVar(%s)".format(state)
-
   /**
    * Set the value - only the first call will be successful.
    *
