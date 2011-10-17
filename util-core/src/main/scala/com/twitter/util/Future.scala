@@ -494,7 +494,7 @@ class Promise[A] private[Promise] (
     if (other.isInstanceOf[Promise[_]]) {
       val p = other.asInstanceOf[Promise[A]]
       this.ivar.merge(p.ivar)
-      this.cancelled.merge(p.cancelled, twoway=true)
+      this.cancelled.merge(p.cancelled)
     } else {
       other.proxyTo(this)
       this.linkTo(other)
