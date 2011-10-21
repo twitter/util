@@ -7,7 +7,7 @@ class Project(info: ProjectInfo)
   with ParentProjectDependencies
   with DefaultRepos
 {
-  override def subversionRepository = Some("http://svn.twitter.biz/maven-public")
+  override def subversionRepository = Some("https://svn.twitter.biz/maven-public")
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
 
   // Projects
