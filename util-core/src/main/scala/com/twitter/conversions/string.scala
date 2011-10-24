@@ -123,9 +123,9 @@ object string {
      * opposite of `Array[Byte]#hexlify`.
      */
     def unhexlify(): Array[Byte] = {
-      val buffer = new Array[Byte](wrapped.length / 2)
-      for (i <- 0.until(wrapped.length, 2)) {
-        buffer(i/2) = Integer.parseInt(wrapped.substring(i, i+2), 16).toByte
+      val buffer = new Array[Byte]((wrapped.length + 1) / 2)
+      (wrapped.grouped(2).toSeq zipWithIndex) foreach { case (substr, i) =>
+        buffer(i) = Integer.parseInt(substr, 16).toByte
       }
       buffer
     }
