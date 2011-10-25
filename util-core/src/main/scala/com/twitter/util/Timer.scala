@@ -53,14 +53,18 @@ trait Timer {
 class NullTimer extends Timer {
   def schedule(when: Time)(f: => Unit): TimerTask = {
     f
-    new TimerTask { def cancel() {} }
+    NullTimerTask
   }
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
     f
-    new TimerTask { def cancel() {} }
+    NullTimerTask
   }
 
   def stop() {}
+}
+
+object NullTimerTask extends TimerTask {
+  def cancel() {}
 }
 
 class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
