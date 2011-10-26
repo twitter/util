@@ -17,6 +17,7 @@
 package com.twitter.util
 
 import com.twitter.io.StreamIO
+import com.twitter.conversions.string._
 import java.io.{File, InputStream, FileInputStream, FileNotFoundException}
 import java.math.BigInteger
 import java.net.URLClassLoader
@@ -30,6 +31,7 @@ import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.tools.nsc.util.{BatchSourceFile, Position}
+import scala.util.matching.Regex
 
 case class LastMod(timestamp: Option[Long], code: String)
 
@@ -39,6 +41,7 @@ case class LastMod(timestamp: Option[Long], code: String)
 @deprecated("use a throw-away instance of Eval instead")
 object Eval extends Eval {
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
+  val classCleaner: Regex = "\\W".r
 }
 
 /**
@@ -159,7 +162,14 @@ class Eval(target: Option[File]) {
         case None => compiler.reset()
       }
 
-      val className = "Evaluator__" + files(0).getName.split("\\.")(0)
+      // why all this nonsense? Well.
+      // 1) We want to know which file the eval'd code came from
+      // 2) But sometimes files have characters that aren't valid in Java/Scala identifiers
+      // 3) And sometimes files with the same name live in different subdirectories
+      // so, clean it hash it and slap it on the end of Evaluator
+      val cleanBaseName = fileToClassName(files(0))
+      val className = "Evaluator__%s_%s".format(
+        cleanBaseName, uniqueId(files(0).getCanonicalPath, None))
       applyProcessed(className, processed.code, false)
     } else {
       apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"), true)
@@ -255,10 +265,25 @@ class Eval(target: Option[File]) {
     compiler.findClass(className).getOrElse { throw new ClassNotFoundException("no such class: " + className) }
   }
 
-  private def uniqueId(code: String): String = {
+  private[util] def uniqueId(code: String, idOpt: Option[Int] = Some(jvmId)): String = {
     val digest = MessageDigest.getInstance("SHA-1").digest(code.getBytes())
     val sha = new BigInteger(1, digest).toString(16)
-    sha + "_" + jvmId
+    idOpt match {
+      case Some(id) => sha + "_" + jvmId
+      case _ => sha
+    }
+  }
+
+  private[util] def fileToClassName(f: File): String = {
+    // HOPE YOU'RE HAPPY GUYS!!!!
+    val fileName = f.getName
+    val baseName = fileName.lastIndexOf('.') match {
+      case -1 => fileName
+      case dot => fileName.substring(0, dot)
+    }
+    baseName.regexSub(Eval.classCleaner) { m =>
+      "$%02x".format(m.group(0).charAt(0).toInt)
+    }
   }
 
   /*

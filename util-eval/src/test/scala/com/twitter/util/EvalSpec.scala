@@ -7,6 +7,7 @@ import com.twitter.io.TempFile
 
 object EvalSpec extends Specification {
   "Evaluator" should {
+
     "apply('expression')" in {
       (new Eval).apply[Int]("1 + 1") mustEqual 2
     }
@@ -22,6 +23,23 @@ object EvalSpec extends Specification {
       derived() mustEqual "hello"
     }
 
+    "apply(new File(...) with a dash in the name with target" in {
+      val f = File.createTempFile("eval", "target")
+      f.delete()
+      f.mkdir()
+      val e = new Eval(Some(f))
+      val sourceFile = TempFile.fromResourcePath("/file-with-dash.scala")
+      val res: String = e(sourceFile)
+      res mustEqual "hello"
+      val className = e.fileToClassName(sourceFile)
+      val fullClassName = "Evaluator__%s_%s.class".format(
+        className, e.uniqueId(sourceFile.getCanonicalPath, None))
+      val targetFileName = f.getAbsolutePath() + File.separator + fullClassName
+      val targetFile = new File(targetFileName)
+      targetFile.exists must be_==(true)
+      val targetMod = targetFile.lastModified
+    }
+
     "apply(new File(...) with target" in {
       val f = File.createTempFile("eval", "target")
       f.delete()
@@ -32,7 +50,10 @@ object EvalSpec extends Specification {
       res mustEqual 2
 
       // make sure it created a class file with the expected name
-      val targetFileName = f.getAbsolutePath() + File.separator + "Evaluator__" + sourceFile.getName + ".class"
+      val className = e.fileToClassName(sourceFile)
+      val fullClassName = "Evaluator__%s_%s.class".format(
+        className, e.uniqueId(sourceFile.getCanonicalPath, None))
+      val targetFileName = f.getAbsolutePath() + File.separator + fullClassName
       val targetFile = new File(targetFileName)
       targetFile.exists must be_==(true)
       val targetMod = targetFile.lastModified
@@ -102,6 +123,20 @@ object EvalSpec extends Specification {
     "throws a compilation error when Ruby is #included" in {
       Eval[() => String](
         TempFile.fromResourcePath("RubyInclude.scala")) must throwA[Throwable]
+    }
+
+    "clean class names" in {
+      val e = new Eval()
+      // regular old scala file
+      e.fileToClassName(new File("foo.scala")) mustEqual "foo"
+      // without an extension
+      e.fileToClassName(new File("foo")) mustEqual "foo"
+      // with lots o dots
+      e.fileToClassName(new File("foo.bar.baz")) mustEqual "foo$2ebar"
+      // with dashes
+      e.fileToClassName(new File("foo-bar-baz.scala")) mustEqual "foo$2dbar$2dbaz"
+      // with crazy things
+      e.fileToClassName(new File("foo$! -@@@")) mustEqual "foo$24$21$20$2d$40$40$40"
     }
   }
 }
