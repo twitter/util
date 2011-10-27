@@ -27,16 +27,16 @@ object ThriftSerializerSpec extends Specification with PendingUntilFixed {
   val encodedBinary  = Some("CwABAAAAIm1lIGd1c3RhbiBsb3MgdGFjb3MgeSBsb3MgYnVycml0b3MIAAIAAAAqAA==")
   val encodedCompact = Some("GCJtZSBndXN0YW4gbG9zIHRhY29zIHkgbG9zIGJ1cnJpdG9zFVQA")
 
-  def testBinarySerializer(
+  def testSerializer(
       serializer: ThriftSerializer,
-      encoded:    Option[String] = None) = {
+      stringVersion:    Option[String] = None) = {
     val bytes = serializer.toBytes(original)
     var obj = new TestThriftStructure()
     serializer.fromBytes(obj, bytes)
     obj.aString mustEqual original.aString
     obj.aNumber mustEqual original.aNumber
 
-    encoded match {
+    stringVersion match {
       case None =>
       case Some(str) =>
         serializer.toString(original) mustEqual str
@@ -49,23 +49,16 @@ object ThriftSerializerSpec extends Specification with PendingUntilFixed {
 
 
   "ThriftSerializer" should {
-    "encode JSON" in {
-      val serializer = new JsonThriftSerializer
-      serializer.toString(original) mustEqual json
-    }
-
-    "[not] decode JSON" in {
-      val serializer = new JsonThriftSerializer
-      val obj = new TestThriftStructure
-      serializer.fromString(obj, json) must throwA[UnsupportedOperationException]
+    "encode and decode json" in {
+      testSerializer(new JsonThriftSerializer, Some(json))
     }
 
     "encode and decode binary" in {
-      testBinarySerializer(new BinaryThriftSerializer, encodedBinary)
+      testSerializer(new BinaryThriftSerializer, encodedBinary)
     }
 
     "encode and decode compact" in {
-      testBinarySerializer(new CompactThriftSerializer, encodedCompact)
+      testSerializer(new CompactThriftSerializer, encodedCompact)
     }
   }
 }

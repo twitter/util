@@ -101,6 +101,8 @@ class Project(info: ProjectInfo)
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift = "thrift"        % "libthrift"     % "0.5.0"
     val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.8" % "provided"
+    val jacksonCore     = "org.codehaus.jackson" % "jackson-core-asl"   % "1.8.1"
+    val jacksonMapper   = "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.1"
   }
 
   class HashingProject(info: ProjectInfo)
