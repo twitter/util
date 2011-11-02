@@ -6,7 +6,7 @@ import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.concurrent.SimpleSetter
 
-object FutureSpec extends Specification with Mockito {
+class FutureSpec extends Specification with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       val latch = new CountDownLatch(1)
@@ -616,17 +616,18 @@ object FutureSpec extends Specification with Mockito {
     }
   }
 
-  "FutureTask" should {
-    "return result" in {
+  "FutureTask" in {
+    "should return result" in {
       val task = new FutureTask("hello")
       task.run()
       task() mustEqual "hello"
     }
 
-    "throw result" in {
+    "should throw result" in {
       val task = new FutureTask[String](throw new IllegalStateException)
       task.run()
       task() must throwA(new IllegalStateException)
     }
   }
+
 }

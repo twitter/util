@@ -39,7 +39,7 @@ object Time {
 
   private[Time] var fn: () => Time = () => Time.fromNanoseconds(System.nanoTime + nanoTimeOffset)
 
-  @deprecated("use Time.fromMilliseconds(...) instead")
+  @deprecated("use Time.fromMilliseconds(...) instead", "1.8.7")
   def apply(millis: Long) = fromMilliseconds(millis)
 
   def fromMilliseconds(millis: Long): Time = {
@@ -224,7 +224,7 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
   /**
    * Duration that has passed between the epoch and the current time.
    */
-  @deprecated("use sinceEpoch")
+  @deprecated("use sinceEpoch", "1.8.7")
   def fromEpoch = this - Time.epoch
 
   /**
@@ -273,7 +273,7 @@ object Duration {
     new Duration(TimeMath.mul(value, factor))
   }
 
-  @deprecated("use time.untilNow")
+  @deprecated("use time.untilNow", "1.8.7")
   def since(time: Time) = Time.now.since(time)
 
   val MaxValue = Long.MaxValue.nanoseconds

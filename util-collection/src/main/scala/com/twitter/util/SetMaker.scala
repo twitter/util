@@ -19,7 +19,7 @@ object SetMaker {
     def softValues = { mapMaker.softKeys; mapMaker.softValues; this }
     def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
-    def expiration(expiration: Duration) = { mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this }
+    def expiration(expiration: Duration) = { mapMaker.expireAfterWrite(expiration.inMillis, TimeUnit.MILLISECONDS); this }
 
     def apply() = new MapToSetAdapter(
       new JConcurrentMapWrapper[A, A](mapMaker.makeMap()))

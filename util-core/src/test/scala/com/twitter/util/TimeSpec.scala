@@ -178,7 +178,7 @@ object TimeSpec extends Specification {
     "add" in {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) + BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.add(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.add(a, b) mustEqual bigC.toLong
@@ -192,7 +192,7 @@ object TimeSpec extends Specification {
     "sub" in {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) - BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.sub(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.sub(a, b) mustEqual bigC.toLong
@@ -230,7 +230,7 @@ object TimeSpec extends Specification {
 
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) * BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.mul(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.mul(a, b) mustEqual bigC.toLong
