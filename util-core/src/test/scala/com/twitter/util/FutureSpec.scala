@@ -6,7 +6,7 @@ import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.concurrent.SimpleSetter
 
-object FutureSpec extends Specification with Mockito {
+class FutureSpec extends Specification with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       future.get(1.second) mustEqual expected
@@ -619,31 +619,31 @@ object FutureSpec extends Specification with Mockito {
         p.poll must beSome(Throw(e))
       }
     }
-  }
 
-  "within" in {
-    "when we run out of time" in {
-      implicit val timer = new JavaTimer
-      val p = new Promise[Int]
-      p.within(50.milliseconds).get() must throwA[TimeoutException]
-      timer.stop()
-    }
+    "within" in {
+      "when we run out of time" in {
+        implicit val timer = new JavaTimer
+        val p = new Promise[Int]
+        p.within(50.milliseconds).get() must throwA[TimeoutException]
+        timer.stop()
+      }
 
-    "when everything is chill" in {
-      implicit val timer = new JavaTimer
-      val p = new Promise[Int]
-      p.setValue(1)
-      p.within(50.milliseconds).get() mustBe 1
-      timer.stop()
-    }
+      "when everything is chill" in {
+        implicit val timer = new JavaTimer
+        val p = new Promise[Int]
+        p.setValue(1)
+        p.within(50.milliseconds).get() mustBe 1
+        timer.stop()
+      }
 
-    "cancellation" in Time.withCurrentTimeFrozen { tc =>
-      implicit val timer = new MockTimer
-      val p = new Promise[Int]
-      val f = p.within(50.milliseconds)
-      p.isCancelled must beFalse
-      f.cancel()
-      p.isCancelled must beTrue
+      "cancellation" in Time.withCurrentTimeFrozen { tc =>
+        implicit val timer = new MockTimer
+        val p = new Promise[Int]
+        val f = p.within(50.milliseconds)
+        p.isCancelled must beFalse
+        f.cancel()
+        p.isCancelled must beTrue
+      }
     }
   }
 

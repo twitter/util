@@ -90,7 +90,7 @@ class U64Spec extends Specification {
     0x8000000000000000L.u64_/(3) must be_==(0x2AAAAAAAAAAAAAAAL)
   }
 
-  "ids" should {
+  "ids" in {
     "survive conversions" in {
       val rng = new Random
 
