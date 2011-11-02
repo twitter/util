@@ -21,6 +21,10 @@ class Project(info: ProjectInfo)
     "util-eval", "util-eval",
     new EvalProject(_), coreProject)
 
+  val codecProject = project(
+    "util-codec", "util-codec",
+    new CodecProject(_), coreProject)
+
   val collectionProject = project(
     "util-collection", "util-collection",
     new CollectionProject(_), coreProject)
@@ -38,7 +42,7 @@ class Project(info: ProjectInfo)
   // util-thrift: thrift (serialization) utilities
   val thriftProject = project(
     "util-thrift", "util-thrift",
-    new ThriftProject(_), coreProject)
+    new ThriftProject(_), coreProject, codecProject)
 
   // util-hashing: hashing and distribution utilities
   val hashingProject = project(
@@ -54,15 +58,22 @@ class Project(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-    val scalaTools = "org.scala-lang" % "scala-compiler" % "2.9.0-1" % "compile"
+    val scalaTools = "org.scala-lang" % "scala-compiler" % "2.9.1" % "compile"
     override def filterScalaJars = false
+  }
+
+  class CodecProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+  {
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.5"
   }
 
   class CollectionProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-    val guava              = "com.google.guava"    % "guava"               % "r08"
+    val guava              = "com.google.guava"    % "guava"               % "r09"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
   }
 
@@ -76,6 +87,9 @@ class Project(info: ProjectInfo)
   class LoggingProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+  {
+    val compileWithSpecs = "org.scala-tools.testing" %% "specs" % "1.6.9" % "provided"
+  }
 
   class ThriftProject(info: ProjectInfo)
     extends StandardProject(info)
@@ -89,6 +103,9 @@ class Project(info: ProjectInfo)
   class HashingProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+  {
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.5" % "test"
+  }
 
   trait ProjectDefaults
     extends StandardProject
@@ -97,7 +114,7 @@ class Project(info: ProjectInfo)
     with ProjectDependencies
     with DefaultRepos
   {
-    val specs   = "org.scala-tools.testing" % "specs_2.9.0-1" % "1.6.8" % "test" withSources()
+    val specs   = "org.scala-tools.testing" %%  "specs"     % "1.6.9" % "test" withSources()
     val mockito = "org.mockito"             % "mockito-all" % "1.8.5" % "test" withSources()
     val junit   = "junit"                   %       "junit" % "3.8.2" % "test"
 

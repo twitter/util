@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import collection.mutable.ArrayBuffer
+
 import java.util.concurrent.{
   RejectedExecutionHandler, ScheduledThreadPoolExecutor,
   ThreadFactory, TimeUnit, ExecutorService}
@@ -18,7 +20,47 @@ trait Timer {
     schedule(period.fromNow, period)(f)
   }
 
+  /**
+   * Performs an operation after the specified delay.  Cancelling the Future
+   * will cancel the scheduled timer task, if not too late.
+   */
+  def doLater[A](delay: Duration)(f: => A): Future[A] = {
+    doAt(Time.now + delay)(f)
+  }
+
+  /**
+   * Performs an operation at the specified time.  Cancelling the Future
+   * will cancel the scheduled timer task, if not too late.
+   */
+  def doAt[A](time: Time)(f: => A): Future[A] = {
+    Future.makePromise[A]() { promise =>
+      val task = schedule(time) { promise() = Try(f) }
+      promise.linkTo(new Cancellable {
+        def isCancelled = throw new UnsupportedOperationException
+        def cancel() = task.cancel()
+        def linkTo(other: Cancellable) = throw new UnsupportedOperationException
+      })
+    }
+  }
+
   def stop()
+}
+
+/**
+ * A NullTimer is not a timer at all: it invokes all tasks immediately
+ * and inline.
+ */
+class NullTimer extends Timer {
+  def schedule(when: Time)(f: => Unit): TimerTask = {
+    f
+    new TimerTask { def cancel() {} }
+  }
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
+    f
+    new TimerTask { def cancel() {} }
+  }
+
+  def stop() {}
 }
 
 class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
@@ -101,7 +143,7 @@ extends Timer {
   /** Construct a ScheduledThreadPoolTimer with a NamedPoolThreadFactory. */
   def this(poolSize: Int = 2, name: String = "timer") =
     this(poolSize, new NamedPoolThreadFactory(name), None)
-  
+
   private[this] val underlying = rejectedExecutionHandler match {
     case None =>
       new ScheduledThreadPoolExecutor(poolSize, threadFactory)
@@ -134,4 +176,38 @@ extends Timer {
   private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
     def cancel() { task.cancel() }
   }
+}
+
+// Exceedingly useful for writing well-behaved tests.
+class MockTimer extends Timer {
+  case class Task(var when: Time, runner: () => Unit)
+    extends TimerTask
+  {
+    var isCancelled = false
+    def cancel() { isCancelled = true; when = Time.now; tick() }
+  }
+
+  var isStopped = false
+  var tasks = ArrayBuffer[Task]()
+
+  def tick() {
+    if (isStopped)
+      throw new IllegalStateException("timer is stopped already")
+
+    val now = Time.now
+    val (toRun, toQueue) = tasks.partition { task => task.when <= now }
+    tasks = toQueue
+    toRun filter { !_.isCancelled } foreach { _.runner() }
+  }
+
+  def schedule(when: Time)(f: => Unit) = {
+    val task = Task(when, () => f)
+    tasks += task
+    task
+  }
+
+  def schedule(when: Time, period: Duration)(f: => Unit) =
+    throw new Exception("periodic scheduling not supported")
+
+  def stop() { isStopped = true }
 }

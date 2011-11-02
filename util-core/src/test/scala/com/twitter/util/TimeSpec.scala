@@ -122,6 +122,20 @@ object TimeSpec extends Specification {
       }
     }
 
+    "fromMillis" in {
+      Time.fromMilliseconds(0).inNanoseconds mustEqual 0L
+      Time.fromMilliseconds(-1).inNanoseconds mustEqual -1L * 1000000L
+
+      Time.fromMilliseconds(Long.MaxValue).inNanoseconds mustEqual Long.MaxValue
+      Time.fromMilliseconds(Long.MaxValue-1) must throwA[TimeOverflowException]
+
+      Time.fromMilliseconds(Long.MinValue) must throwA[TimeOverflowException]
+      Time.fromMilliseconds(Long.MinValue+1) must throwA[TimeOverflowException]
+
+      val currentTimeMs = System.currentTimeMillis
+      Time.fromMilliseconds(currentTimeMs).inNanoseconds mustEqual(currentTimeMs * 1000000L)
+    }
+
     "until" in {
       val t0 = Time.now
       val t1 = t0 + 10.seconds
@@ -164,7 +178,7 @@ object TimeSpec extends Specification {
     "add" in {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) + BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.add(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.add(a, b) mustEqual bigC.toLong
@@ -178,7 +192,7 @@ object TimeSpec extends Specification {
     "sub" in {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) - BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.sub(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.sub(a, b) mustEqual bigC.toLong
@@ -189,17 +203,50 @@ object TimeSpec extends Specification {
       }
     }
 
-    "mull" in {
+    "mul" in {
+      TimeMath.mul(0L, 10L) mustEqual 0L
+      TimeMath.mul(1L, 11L) mustEqual 11L
+      TimeMath.mul(-1L, -11L) mustEqual 11L
+      TimeMath.mul(-1L, 22L) mustEqual -22L
+      TimeMath.mul(22L, -1L) mustEqual -22L
+
+      TimeMath.mul(3456116450671355229L, -986247066L) must throwA[TimeOverflowException]
+
+      TimeMath.mul(Long.MaxValue, 9L) mustEqual Long.MaxValue
+      TimeMath.mul(Long.MaxValue, 1L) mustEqual Long.MaxValue
+      TimeMath.mul(Long.MaxValue, 0L) mustEqual Long.MaxValue // this is a strange case, huh?
+      TimeMath.mul(Long.MaxValue - 1L, 9L) must throwA[TimeOverflowException]
+
+      TimeMath.mul(Long.MinValue, 2L) must throwA[TimeOverflowException]
+      TimeMath.mul(Long.MinValue, -2L) must throwA[TimeOverflowException]
+      TimeMath.mul(Long.MinValue, 3L) must throwA[TimeOverflowException]
+      TimeMath.mul(Long.MinValue, -3L) must throwA[TimeOverflowException]
+      TimeMath.mul(Long.MinValue, 1L) mustEqual Long.MinValue
+      TimeMath.mul(Long.MinValue, -1L) must throwA[TimeOverflowException]
+      TimeMath.mul(1L, Long.MinValue) mustEqual Long.MinValue
+      TimeMath.mul(-1L, Long.MinValue) must throwA[TimeOverflowException]
+      TimeMath.mul(Long.MinValue, 0L) mustEqual 0L
+      TimeMath.mul(Long.MinValue + 1L, 2L) must throwA[TimeOverflowException]
+
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) * BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.mul(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.mul(a, b) mustEqual bigC.toLong
       }
 
       for (i <- 0 until 1000) {
-        test(randLong, randLong)
+        val a = randLong
+        val b = randLong
+        try {
+          test(a, b)
+        } catch {
+          case x => {
+            println(a + " * " + b + " failed")
+            throw x
+          }
+        }
       }
     }
   }

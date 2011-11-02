@@ -10,7 +10,7 @@ object Sieve {
     gen(from)
     b.recv
   }
-  
+
   def filter(in: Offer[Int], prime: Int): Offer[Int] = {
     val b = new Broker[Int]
     def loop() {
@@ -22,14 +22,14 @@ object Sieve {
       }
     }
     loop()
-    
+
     b.recv
   }
-  
+
   def sieve = {
     val b = new Broker[Int]
     def loop(of: Offer[Int]) {
-      for (prime <- of(); _ <- b.send(prime)())
+      for (prime <- of?; _ <- b ! prime)
         loop(filter(of, prime))
     }
     loop(integers(2))
@@ -39,7 +39,7 @@ object Sieve {
   def main(args: Array[String]) {
     val primes = sieve
     0 until 100 foreach { _ =>
-      println(primes()())
-    }    
+      println(primes??)
+    }
   }
 }

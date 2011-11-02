@@ -110,9 +110,9 @@ class FileHandlerSpec extends Specification with TempFolder {
       "hourly" in {
         withTempFolder {
           val handler = config("test.log", Policy.Hourly, true, -1, BareFormatterConfig)()
-          handler.computeNextRollTime(1206769996722L) mustEqual 1206770400000L
-          handler.computeNextRollTime(1206770400000L) mustEqual 1206774000000L
-          handler.computeNextRollTime(1206774000001L) mustEqual 1206777600000L
+          handler.computeNextRollTime(1206769996722L) mustEqual Some(1206770400000L)
+          handler.computeNextRollTime(1206770400000L) mustEqual Some(1206774000000L)
+          handler.computeNextRollTime(1206774000001L) mustEqual Some(1206777600000L)
         }
       }
 
@@ -120,11 +120,11 @@ class FileHandlerSpec extends Specification with TempFolder {
         withTempFolder {
           val formatter = new FormatterConfig { timezone = "GMT-7:00" }
           val handler = config("test.log", Policy.Weekly(Calendar.SUNDAY), true, -1, formatter)()
-          handler.computeNextRollTime(1250354734000L) mustEqual 1250406000000L
-          handler.computeNextRollTime(1250404734000L) mustEqual 1250406000000L
-          handler.computeNextRollTime(1250406001000L) mustEqual 1251010800000L
-          handler.computeNextRollTime(1250486000000L) mustEqual 1251010800000L
-          handler.computeNextRollTime(1250496000000L) mustEqual 1251010800000L
+          handler.computeNextRollTime(1250354734000L) mustEqual Some(1250406000000L)
+          handler.computeNextRollTime(1250404734000L) mustEqual Some(1250406000000L)
+          handler.computeNextRollTime(1250406001000L) mustEqual Some(1251010800000L)
+          handler.computeNextRollTime(1250486000000L) mustEqual Some(1251010800000L)
+          handler.computeNextRollTime(1250496000000L) mustEqual Some(1251010800000L)
         }
       }
     }

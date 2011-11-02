@@ -33,18 +33,23 @@ class ScribeHandlerSpec extends Specification {
   record2.setLoggerName("hello")
   record2.setMillis(1206769996722L)
 
+  val portWithoutListener = 50506
+
   "ScribeHandler" should {
     doBefore {
       Logger.reset()
       Logger.get("").setLevel(Logger.FATAL)
     }
 
+    // TODO: the hack mentioned in several places below is not preventing flush from being
+    // called. if there's a service listening on localhost:50506 this test will hang again
+
     "build a scribe RPC call" in {
       Time.withCurrentTimeFrozen { _ =>
         val scribe = new ScribeHandlerConfig {
           // This is a huge hack to make sure that the buffer doesn't
           // get flushed.
-          port = 50505
+          port = portWithoutListener
           bufferTime = 100.milliseconds
           maxMessagesToBuffer = 10000
           formatter = new FormatterConfig { timezone = "UTC" }
@@ -71,7 +76,7 @@ class ScribeHandlerSpec extends Specification {
       val scribe = new ScribeHandlerConfig {
         // This is a huge hack to make sure that the buffer doesn't
         // get flushed.
-        port = 50505
+        port = portWithoutListener
         bufferTime = 100.milliseconds
         maxMessagesToBuffer = 10000
         formatter = new FormatterConfig { timezone = "UTC" }
@@ -90,7 +95,7 @@ class ScribeHandlerSpec extends Specification {
       val scribe = new ScribeHandlerConfig {
         // This is a huge hack to make sure that the buffer doesn't
         // get flushed.
-        port = 50505
+        port = portWithoutListener
         bufferTime = 5.seconds
         maxMessagesToBuffer = 1
         formatter = BareFormatterConfig

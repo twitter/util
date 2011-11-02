@@ -35,7 +35,11 @@ class KetamaDistributor[A](_nodes: Seq[KetamaNode[A]], numReps: Int) extends Dis
   def nodeCount = _nodes.size
 
   def nodeForHash(hash: Long) = {
-    val entry = continuum.ceilingEntry(hash)
+    // hashes are 32-bit because they are 32-bit on the libmemcached and
+    // we need to maintain compatibility with libmemcached
+    val trunucatedHash = hash & 0xffffffffL
+
+    val entry = continuum.ceilingEntry(trunucatedHash)
     val node = Option(entry).getOrElse(continuum.firstEntry).getValue
     node.handle
   }

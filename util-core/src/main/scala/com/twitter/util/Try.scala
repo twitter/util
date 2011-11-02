@@ -113,7 +113,7 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
   /**
    * Invokes the given closure when the value is available.  Returns
    * another 'This[R]' that is guaranteed to be available only *after*
-   * 'k' has run.  This enables the enorcement of invocation ordering.
+   * 'k' has run.  This enables the enforcement of invocation ordering.
    *
    * This is overridden by subclasses.
    */
@@ -128,6 +128,11 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
 
 sealed abstract class Try[+R] extends TryLike[R, Try] {
   def respond(k: Try[R] => Unit) = { k(this); this }
+
+  /**
+   * Converts a Try[Try[T]] into a Try[T]
+   */
+  def flatten[T](implicit ev: R <:< Try[T]): Try[T]
 }
 
 final case class Throw[+R](e: Throwable) extends Try[R] {
@@ -142,6 +147,7 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
   }
   def apply(): R = throw e
   def flatMap[R2, That[R2] >: Try[R2] <: Try[R2]](f: R => That[R2]) = Throw[R2](e)
+  def flatten[T](implicit ev: R <:< Try[T]): Try[T] = Throw[T](e)
   def map[X](f: R => X) = Throw(e)
   def filter(p: R => Boolean) = this
   def onFailure(rescueException: Throwable => Unit) = { rescueException(e); this }
@@ -160,6 +166,7 @@ final case class Return[+R](r: R) extends Try[R] {
   def rescue[R2 >: R, AlsoTry[R2] >: Try[R2] <: Try[R2]](rescueException: PartialFunction[Throwable, AlsoTry[R2]]) = Return(r)
   def apply() = r
   def flatMap[R2, That[R2] >: Try[R2] <: Try[R2]](f: R => That[R2]) = try f(r) catch { case e => Throw(e) }
+  def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
   def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
   def onFailure(rescueException: Throwable => Unit) = this

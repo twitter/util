@@ -31,22 +31,32 @@ object Time {
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
-  private[Time] var fn: () => Time = () => Time.fromMilliseconds(System.currentTimeMillis)
+  /*
+   * on some systems (os x), nanoTime is just epoch time with greater precision.
+   * on others (linux), it can be based on system uptime.
+   */
+  val nanoTimeOffset = (System.currentTimeMillis * 1000000) - System.nanoTime
 
-  @deprecated("use Time.fromMilliseconds(...) instead")
+  private[Time] var fn: () => Time = () => Time.fromNanoseconds(System.nanoTime + nanoTimeOffset)
+
+  @deprecated("use Time.fromMilliseconds(...) instead", "1.8.7")
   def apply(millis: Long) = fromMilliseconds(millis)
 
-  def fromMilliseconds(millis: Long) = {
-    val nanos = TimeMath.mul(millis, Duration.NanosPerMillisecond)
-    // let Long.MaxValue pass thru unchanged
-    if (nanos < 0 && millis > 0) {
-      new Time(Long.MaxValue)
+  def fromMilliseconds(millis: Long): Time = {
+    val nanos = TimeUnit.MILLISECONDS.toNanos(millis)
+    // handle some overflow, but let Long.MaxValue pass thru unchanged
+    if (nanos == Long.MaxValue && millis != Long.MaxValue) {
+      throw new TimeOverflowException(millis.toString)
+    } else if (nanos == Long.MinValue) {
+      throw new TimeOverflowException(millis.toString)
     } else {
       new Time(nanos)
     }
   }
 
   def fromSeconds(seconds: Int) = fromMilliseconds(1000L * seconds)
+
+  def fromNanoseconds(nanoseconds: Long) = new Time(nanoseconds)
 
   def now: Time = fn()
 
@@ -214,7 +224,7 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
   /**
    * Duration that has passed between the epoch and the current time.
    */
-  @deprecated("use sinceEpoch")
+  @deprecated("use sinceEpoch", "1.8.7")
   def fromEpoch = this - Time.epoch
 
   /**
@@ -250,7 +260,7 @@ object Duration {
 
   def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
 
-  def apply(value: Long, unit: TimeUnit) = {
+  def apply(value: Long, unit: TimeUnit): Duration = {
     val factor = unit match {
       case TimeUnit.DAYS         => NanosPerDay
       case TimeUnit.HOURS        => NanosPerHour
@@ -263,7 +273,7 @@ object Duration {
     new Duration(TimeMath.mul(value, factor))
   }
 
-  @deprecated("use time.untilNow")
+  @deprecated("use time.untilNow", "1.8.7")
   def since(time: Time) = Time.now.since(time)
 
   val MaxValue = Long.MaxValue.nanoseconds
@@ -362,17 +372,27 @@ object TimeMath {
       c
   }
 
-  def mul(a: Long, b: Long) = {
-    if (a == Long.MaxValue) {
-      a
+  def mul(a: Long, b: Long): Long = {
+    if (a > b) {
+      // normalize so that a <= b to keep conditionals to a minimum
+      mul(b, a)
     } else {
-      // there must be a more clever way to do this that is less expensive,
-      // but I can't figure out what it is
-      val bigC = BigInt(a) * BigInt(b)
-      if (bigC > BigInt.MaxLong || bigC < BigInt.MinLong)
-        throw new TimeOverflowException(a + " * " + b)
-      else
-        bigC.toLong
+      // a and b are such that a <= b
+      if (b == Long.MaxValue) {
+        b
+      } else {
+        if (a < 0L) {
+          if (b < 0L) {
+            if (a < Long.MaxValue / b) throw new TimeOverflowException(a + " * " + b)
+          } else if (b > 0L) {
+            if (Long.MinValue / b > a) throw new TimeOverflowException(a + " * " + b)
+          }
+        } else if (a > 0L) {
+          // and b > 0L
+          if (a > Long.MaxValue / b) throw new TimeOverflowException(a + " * " + b)
+        }
+        a * b
+      }
     }
   }
 

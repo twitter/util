@@ -16,24 +16,24 @@ object Offer {
    * The offer that chooses exactly one of the given offers, choosing
    * among immediately realizable offers at random.
    */
-  def choose[T](ofs: Offer[T]*): Offer[T] = new Offer[T] {
-    require(!ofs.isEmpty)
-    def poll(): Option[() => T] = {
-      val rng = new Random(Time.now.inMilliseconds)
-      val shuffled = rng.shuffle(ofs.toList)
-      shuffled.foldLeft(None: Option[() => T]) {
-        case (None, of) => of.poll()
-        case (some@Some(_), _) => some
+  def choose[T](ofs: Offer[T]*): Offer[T] =
+    if (ofs.isEmpty) never[T] else new Offer[T] {
+      def poll() = {
+        val rng = new Random(Time.now.inMilliseconds)
+        val shuffled = rng.shuffle(ofs.toList)
+        shuffled.foldLeft(None: Option[() => T]) {
+          case (None, of) => of.poll()
+          case (some@Some(_), _) => some
+        }
       }
-    }
 
-    def enqueue(setter: Setter) = {
-      val dqs = ofs map { _.enqueue(setter) }
-      () => dqs foreach { dq => dq() }
-    }
+      def enqueue(setter: Setter) = {
+        val dqs = ofs map { _.enqueue(setter) }
+        () => dqs foreach { dq => dq() }
+      }
 
-    def objects: Seq[AnyRef] = ofs flatMap { _.objects }
-  }
+      def objects: Seq[AnyRef] = ofs flatMap { _.objects }
+    }
 
   /**
    * Convenience function to choose, then sync.
@@ -69,7 +69,7 @@ object Offer {
     def poll() = if (deadline <= Time.now) Some(() => ()) else None
     def enqueue(setter: Setter) = {
       val task = timer.schedule(deadline) {
-        setter() foreach { set => set(() => ()) }
+        setter() foreach { set => set(()) }
       }
       () => task.cancel()
     }
@@ -92,9 +92,12 @@ object Offer {
     private[this] var nextId = 0L
 
     def compare(a: AnyRef, b: AnyRef): Int = {
+      if (a eq b)
+        return 0
+
       val ha = System.identityHashCode(a)
       val hb = System.identityHashCode(b)
-      val d = ha - hb
+      val d = ha compare hb
       if (d != 0)
         return d
 
@@ -124,16 +127,12 @@ trait Offer[+T] { self =>
    * synchronization.  One is given to the {{enqueue}} method when
    * the offer cannot be immediately realized.
    *
-   * The type is somewhat complex in order to aid in atomic
-   * realization and deferred execution.  First, the setter returns
-   * {{Some(..)}} only when the synchronization has not yet been
-   * realized.  If the setter is invoked, and {{Some(..)}} is
-   * returned, the realization of the offer is given to the caller,
-   * and a function must be provided that yields the value to be set.
-   * The execution of this function may be deferred.
+   * It is a {{Function0}} that, when called, attempts to reserve the
+   * right to set the value.  If it succeeds, it returns a
+   * {{Function1}} that is to be used in setting the value.  The
+   * caller guarantees that, when succesful, it will set the value.
    */
-  type Thunk[+A] = () => A
-  type Setter = Thunk[Option[Thunk[T] => Unit]]
+  type Setter = () => Option[T => Unit]
 
   /*
    * The following methods (poll, enqueue, objects) are used in
@@ -144,8 +143,15 @@ trait Offer[+T] { self =>
    * Polls this offer.  This is the first stage of synchronization.
    * If the offer is ready, returns {{Some(..)}}.  At this point, the
    * offer is realized, and {{enqueue}} will not be called.
+   *
+   * Note: {{poll()}} returns a *delayed* value so that the caller
+   * controls the context of execution (in particular, we need to be
+   * able to guarantee that we don't hold locks while retrieving the
+   * value, in case it has side effects).  Thus, it is important that
+   * the implementation only perform side effects (outside of the
+   * offer) in the delayed function.
    */
-  def poll(): Option[Thunk[T]]
+  protected[concurrent] def poll(): Option[() => T]
 
   /**
    * Enqueue the given {{Setter}} for notification of realization of
@@ -153,7 +159,7 @@ trait Offer[+T] { self =>
    * value is a cancellation that is called if the offer is not
    * selected.
    */
-  def enqueue(setter: Setter): () => Unit
+  protected[concurrent] def enqueue(setter: Setter): () => Unit
 
   /**
    * A sequence of objects needing synchronization before
@@ -165,18 +171,18 @@ trait Offer[+T] { self =>
    * given here is locked (as in {{object.synchronized}}) before
    * invoking {{poll}} or {{enqueue}}.
    */
-  def objects: Seq[AnyRef]
+  protected[concurrent] def objects: Seq[AnyRef]
 
   /**
    * Lock the monitors of the objects in {{objs}} in order, then
    * invoke {{f}}.
    */
-  private[this] def lock[R](objs: List[AnyRef])(f: () => R): R = {
+  private[this] def lock[R](objs: List[AnyRef])(f: => R): R = {
     objs match {
       case obj :: rest =>
         obj.synchronized { lock(rest)(f) }
       case Nil =>
-        f()
+        f
     }
   }
 
@@ -188,12 +194,11 @@ trait Offer[+T] { self =>
    * succesfully synchronized.
    */
   def map[U](f: T => U): Offer[U] = new Offer[U] {
-    def poll() = self.poll() map { t => () => f(t()) }
-    def enqueue(setter: Setter): () => Unit = {
-      val tsetter: Offer[T]#Setter = () =>
-        setter() map { uset => { tget => uset { () => f(tget()) } } }
-      self.enqueue(tsetter)
+    def poll() = self.poll() map { t => { () => f(t()) } }
+    def enqueue(setter: Setter): () => Unit = self.enqueue { () =>
+      setter() map { uset => { t => uset(f(t)) } }
     }
+
     def objects: Seq[AnyRef] = self.objects
   }
 
@@ -213,9 +218,12 @@ trait Offer[+T] { self =>
    */
   def orElse[U >: T](other: Offer[U]): Offer[U] = new Offer[U] {
     def poll() = self.poll() orElse other.poll()
-    def enqueue(setter: Setter) = self.enqueue(setter)
+    def enqueue(setter: Setter) = other.enqueue(setter)
     def objects = self.objects ++ other.objects
   }
+
+  def or[U](other: Offer[U]): Offer[Either[T, U]] =
+    Offer.choose(this map { Left(_) }, other map { Right(_) })
 
   /**
    * Synchronize on this offer indefinitely, invoking the given {{f}}
@@ -303,11 +311,13 @@ trait Offer[+T] { self =>
     this() onSuccess { _ => f }
   }
 
+  def apply[R](f: T => R): Offer[R] = map(f)
+
   /**
    * Synchronize this offer.  This activates this offer and attempts
    * to perform the communication specified.
    *
-   * @returns A {{Future}} containing the communicated value.
+   * @return A {{Future}} containing the communicated value.
    */
   def apply(): Future[T] = {
     // We sort the objects here according to their identity.  In this
@@ -317,7 +327,7 @@ trait Offer[+T] { self =>
     // already acquired.  Thus there cannot be cycles.
     val objs = (objects toList) sorted(ObjectOrder)
 
-    val action: Thunk[Future[T]] = lock(objs) { () =>
+    val action = lock(objs) {
       // first, attempt to poll.  if there are any values immediately
       // available, then simply return this.  we assume the underlying
       // implementation is fair.
@@ -326,9 +336,8 @@ trait Offer[+T] { self =>
           () => Future.value(res())
         case None =>
           // we failed to poll, so we need to enqueue
-          val promise = new Promise[T]
           val activated = new AtomicBoolean(false)
-          val computation = new Promise[() => T]
+          val computation = new Promise[T]
           val setter: Setter = () => {
             if (activated.compareAndSet(false, true))
               Some { f => computation() = Return(f) }
@@ -339,9 +348,10 @@ trait Offer[+T] { self =>
           val dequeue = enqueue(setter)
 
           () => {
+            val promise = new Promise[T]
             // activate the computation.
-            computation onSuccess { f =>
-              promise() = Return(f())
+            computation onSuccess { t =>
+              promise() = Return(t)
             }
 
             promise ensure {
@@ -352,7 +362,7 @@ trait Offer[+T] { self =>
               //
               // todo: we could do with per-object locks here instead of
               // doing the whole lock dance again.
-              dequeue()
+              lock(objs) { dequeue() }
             }
           }
       }
@@ -360,4 +370,29 @@ trait Offer[+T] { self =>
 
     action()
   }
+
+  /* Java friendly syntax */
+
+  /**
+   * Synchronize this offer. See {{apply()}}
+   */
+  def sync() = apply()
+
+  /**
+   * Synchronize this offer, blocking for the result. See {{apply()}}
+   * and {{com.twitter.util.Future.apply()}}
+   */
+  def syncWait() = sync()()
+
+  /* Scala actor-style syntax */
+
+  /**
+   * Alias for synchronize.
+   */
+  def ? = apply()
+
+  /**
+   * Synchronize, blocking for the result.
+   */
+  def ?? = ?()
 }

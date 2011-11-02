@@ -1,5 +1,7 @@
 package com.twitter.util
 
+abstract class Function0[R] extends (() => R)
+
 /**
  * This class is for Java friendliness. Any Scala method that takes Function1[A, B]
  * can now take a Function[A, B]. Because Function1 is a trait, it is very difficult

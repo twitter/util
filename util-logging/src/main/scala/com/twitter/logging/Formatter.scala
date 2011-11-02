@@ -163,11 +163,6 @@ class Formatter(val timezone: Option[String], val truncateAt: Int, val truncateS
 }
 
 /**
- * Formatter that uses all the defaults.
- */
-object BasicFormatter extends Formatter
-
-/**
  * Formatter that logs only the text of a log message, with no prefix (no date, etc).
  */
 object BareFormatter extends Formatter {

@@ -16,7 +16,7 @@ class SimpleOffer[T](var value: Option[T] = None, objs: Seq[AnyRef] = Seq()) ext
       require(!dequeued)
       val set = s()
       require(set.isDefined)
-      set.get { () => v }
+      set.get(v)
     }
   }
   var enqueues: Seq[Enqueue] = Seq()
@@ -39,7 +39,7 @@ class SimpleSetter[T] extends Offer[T]#Setter {
       None
     } else {
       taken = true
-      Some { f => v = Some(f()) }
+      Some { x => v = Some(x) }
     }
   }
 
@@ -192,8 +192,8 @@ object OfferSpec extends Specification with Mockito {
         there was no(e0).enqueue(any)
         there was no(e1).enqueue(any)
         e.enqueue(new SimpleSetter[Int])
-        there was one(e0).enqueue(any)
-        there was no(e1).enqueue(any)
+        there was no(e0).enqueue(any)
+        there was one(e1).enqueue(any)
       }
     }
   }

@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.ExecutorService
 import com.twitter.conversions.time._
 import org.specs.Specification
@@ -24,7 +24,7 @@ object TimerSpec extends Specification with Mockito {
       there was one(underlying).stop()
     }
   }
-  
+
   "ReferenceCountedTimer" should {
     val underlying = mock[Timer]
     val factory = mock[() => Timer]
@@ -68,7 +68,63 @@ object TimerSpec extends Specification with Mockito {
       }
       Thread.sleep(1.second.inMillis)
       timer.stop()
-      counter.get() must beCloseTo(50, 1)
+      counter.get() must beCloseTo(50, 2)
+    }
+  }
+
+  "Timer" should {
+    val result = "boom"
+
+    "doLater" in {
+      val timer = new MockTimer
+      val f = timer.doLater(1.millis)(result)
+      f.isDefined must beFalse
+      Thread.sleep(2.millis)
+      timer.tick()
+      f.isDefined must beTrue
+      f() mustEqual result
+    }
+
+    "doLater throws exception" in {
+      val timer = new MockTimer
+      val ex = new Exception
+      def task: String = throw ex
+      val f = timer.doLater(1.millis)(task)
+      f.isDefined must beFalse
+      Thread.sleep(2.millis)
+      timer.tick()
+      f.isDefined must beTrue
+      f.get(0.millis) mustEqual Throw(ex)
+    }
+
+    "cancel doLater" in {
+      val timer = new MockTimer
+      val f = timer.doLater(1.millis)(result)
+      f.isDefined must beFalse
+      f.cancel()
+      Thread.sleep(2.millis)
+      timer.tick()
+      f.isDefined must beFalse
+    }
+
+    "doAt" in {
+      val timer = new MockTimer
+      val f = timer.doAt(Time.now + 1.millis)(result)
+      f.isDefined must beFalse
+      Thread.sleep(2.millis)
+      timer.tick()
+      f.isDefined must beTrue
+      f() mustEqual result
+    }
+
+    "cancel doAt" in {
+      val timer = new MockTimer
+      val f = timer.doAt(Time.now + 1.millis)(result)
+      f.isDefined must beFalse
+      f.cancel()
+      Thread.sleep(2.millis)
+      timer.tick()
+      f.isDefined must beFalse
     }
   }
 }

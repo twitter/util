@@ -98,12 +98,16 @@ class U64Spec extends Specification {
         id must be equalTo(id.toU64ByteArray.toU64Long)
         id must be equalTo(id.toU64ByteArray.toU64HexString.toU64ByteArray.toU64Long)
       }
-    }
 
     "ids should be serializable" in {
       0L.toU64HexString must be_==("0000000000000000")
       0x0102030405060700L.toU64HexString must be_==("0102030405060700")
       0xFFF1F2F3F4F5F6F7L.toU64HexString must be_==("fff1f2f3f4f5f6f7")
     }
-  
+
+    "convert from short hex string" in {
+      new RichU64String("7b").toU64Long mustEqual 123L
+    }
+  }
+
 }

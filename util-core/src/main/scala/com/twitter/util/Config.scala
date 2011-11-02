@@ -81,14 +81,14 @@ object Config {
  * Optional fields can be defined with:
  *    var something = optional[Duration]
  *
- * Fields that are depdendent on other fields and have a default value computed
+ * Fields that are dependent on other fields and have a default value computed
  * from an expression should be marked as computed:
  *
  *    var level = required[Int]
  *    var nextLevel = computed(level + 1)
  *
  * Making a field Computed means that the expression is lazily evaluated, allowing
- * subclasses to set the value of the indepedent vars before computing the depdendent var.
+ * subclasses to set the value of the independent vars before computing the dependent var.
  */
 trait Config[T] extends (() => T) {
   import Config.{Computed, Required, Specified, Unspecified, RequiredValuesMissing}

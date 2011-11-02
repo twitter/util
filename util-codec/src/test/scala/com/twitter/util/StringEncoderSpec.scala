@@ -1,3 +1,5 @@
+package com.twitter.util
+
 /*
  * Copyright 2011 Twitter, Inc.
  *
@@ -14,9 +16,8 @@
  * limitations under the License.
  */
 
-package com.twitter.util
-
 import org.specs.Specification
+import java.lang.StringBuilder
 
 class TestBase64Encoder extends Base64StringEncoder {
 }
@@ -32,5 +33,27 @@ class StringEncoderSpec extends Specification {
 
   "decode value with stripped new lines" in {
     new String(testEncoder.decode(result)) mustEqual longString
+  }
+}
+
+object GZIPStringEncoderSpec extends Specification {
+  "a gzip string encoder" should {
+    val gse = new GZIPStringEncoder {}
+    "properly encode and decode strings" in {
+      def testCodec(str: String) {
+        str mustMatch gse.decodeString(gse.encodeString(str))
+      }
+
+      testCodec("a")
+      testCodec("\n\t\n\t\n\n\n\n\t\n\nt\n\t\n\t\n\tn\t\nt\nt\nt\nt\nt\nt\tn\nt\nt\n\t\nt\n")
+      testCodec("aosnetuhsaontehusaonethsoantehusaonethusonethusnaotehu")
+
+      // build a huge string
+      val sb = new StringBuilder
+      for (_ <- 1 to 10000) {
+        sb.append("oasnuthoesntihosnteidosentidosentauhsnoetidosentihsoneitdsnuthsin\n")
+      }
+      testCodec(sb.toString)
+    }
   }
 }

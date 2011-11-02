@@ -16,6 +16,7 @@ trait KeyHasher {
  * Commonly used key hashing algorithms.
  */
 object KeyHasher {
+  private[this] val MaxUnsignedInt = 0xFFFFFFFFL
   /**
    * FNV fast hashing algorithm in 32 bits.
    * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
@@ -30,7 +31,7 @@ object KeyHasher {
         rv = (rv * PRIME) ^ (key(i) & 0xff)
         i += 1
       }
-      rv & 0xffffffffL
+      rv & MaxUnsignedInt
     }
 
     override def toString() = "FNV1_32"
@@ -50,7 +51,7 @@ object KeyHasher {
         rv = (rv ^ (key(i) & 0xff)) * PRIME
         i += 1
       }
-      rv & 0xffffffffL
+      rv & MaxUnsignedInt
     }
 
     override def toString() = "FNV1A_32"
@@ -70,7 +71,7 @@ object KeyHasher {
         rv = (rv * PRIME) ^ (key(i) & 0xff)
         i += 1
       }
-      rv & 0xffffffffL
+      rv
     }
 
     override def toString() = "FNV1_64"
@@ -90,7 +91,7 @@ object KeyHasher {
         rv = (rv ^ (key(i) & 0xff)) * PRIME
         i += 1
       }
-      rv & 0xffffffffL
+      rv
     }
 
     override def toString() = "FNV1A_64"
@@ -106,7 +107,7 @@ object KeyHasher {
       hasher.update(key)
       val buffer = ByteBuffer.wrap(hasher.digest)
       buffer.order(ByteOrder.LITTLE_ENDIAN)
-      buffer.getInt.toLong & 0xffffffffL
+      buffer.getInt.toLong & MaxUnsignedInt
     }
 
     override def toString() = "Ketama"
@@ -119,7 +120,7 @@ object KeyHasher {
     def hashKey(key: Array[Byte]): Long = {
       var i = 0
       val len = key.length
-      var rv: Long = 0xffffffffL
+      var rv: Long = MaxUnsignedInt
       while (i < len) {
         rv = rv ^ (key(i) & 0xff)
         var j = 0
@@ -133,7 +134,7 @@ object KeyHasher {
         }
         i += 1
       }
-      (rv ^ 0xffffffffL) & 0xffffffffL
+      (rv ^ MaxUnsignedInt) & MaxUnsignedInt
     }
 
     override def toString() = "CRC32_ITU"
@@ -198,31 +199,82 @@ object KeyHasher {
       hash ^= hash << 25
       hash += hash >>> 6
 
-      hash & 0xffffffffL
+      hash & MaxUnsignedInt
     }
 
     override def toString() = "Hsieh"
   }
-
 
   /**
   * Jenkins Hash Function
   * http://en.wikipedia.org/wiki/Jenkins_hash_function
   */
   val JENKINS = new KeyHasher {
-    private val MAX_VALUE = 0xFFFFFFFFL
     override def hashKey(key: Array[Byte]): Long = {
-      var hash: Long = 0
+      var a, b, c = 0xdeadbeef + key.size
 
-      for (i <- 0 until key.size) {
-        hash = (hash + key(i)) & MAX_VALUE
-        hash = (hash + (hash << 10)) & MAX_VALUE
-        hash = (hash + (hash >> 6)) & MAX_VALUE
+      def rot(x: Int, k: Int) = (((x) << (k)) | ((x) >> (32 - (k))))
+
+      def mix() {
+        a -= c; a ^= rot(c, 4); c += b
+        b -= a; b ^= rot(a, 6); a += c
+        c -= b; c ^= rot(b, 8); b += a
+        a -= c; a ^= rot(c, 16); c += b
+        b -= a; b ^= rot(a, 19); a += c
+        c -= b; c ^= rot(b, 4); b += a
       }
 
-      hash = (hash + (hash << 3)) & MAX_VALUE
-      hash = (hash ^ (hash >> 11)) & MAX_VALUE
-      (hash + (hash << 15)) & MAX_VALUE
+      def fin() {
+        c ^= b; c -= rot(b, 14); a ^= c; a -= rot(c, 11)
+        b ^= a; b -= rot(a, 25); c ^= b; c -= rot(b, 16)
+        a ^= c; a -= rot(c, 4); b ^= a; b -= rot(a, 14)
+        c ^= b; c -= rot(b, 24)
+      }
+
+      var block = 0
+      val numBlocks = (key.size - 1) / 12
+      while (block < numBlocks) {
+        val offset = block * 12
+        a += key(offset)
+        a += key(offset + 1) << 8
+        a += key(offset + 2) << 16
+        a += key(offset + 3) << 24
+
+        b += key(offset + 4)
+        b += key(offset + 5) << 8
+        b += key(offset + 6) << 16
+        b += key(offset + 7) << 24
+
+        c += key(offset + 8)
+        c += key(offset + 9) << 8
+        c += key(offset + 10) << 16
+        c += key(offset + 11) << 24
+
+        mix()
+        block += 1
+      }
+
+      val remaining = key.size - (numBlocks * 12)
+      val offset = numBlocks * 12
+
+      if (remaining > 0) a += key(offset)
+      if (remaining > 1) a += key(offset + 1) << 8
+      if (remaining > 2) a += key(offset + 2) << 16
+      if (remaining > 3) a += key(offset + 3) << 24
+
+      if (remaining > 4) b += key(offset + 4)
+      if (remaining > 5) b += key(offset + 5) << 8
+      if (remaining > 6) b += key(offset + 6) << 16
+      if (remaining > 7) b += key(offset + 7) << 24
+
+      if (remaining > 8) c += key(offset + 8)
+      if (remaining > 9) c += key(offset + 9) << 8
+      if (remaining > 10) c += key(offset + 10) << 16
+      if (remaining > 11) c += key(offset + 11) << 24
+
+      if (key.size > 0) fin()
+
+      (b.toLong << 32) + c.toLong
     }
   }
 
