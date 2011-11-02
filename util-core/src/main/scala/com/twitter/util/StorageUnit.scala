@@ -20,6 +20,12 @@ object StorageUnit {
   val infinite = new StorageUnit(Long.MaxValue)
 }
 
+/**
+ * Representation of storage units.
+ *
+ * If you import the [[com.twitter.conversions.storage]] implicits you can
+ * write human-readable values such as `1.gigabyte` or `50.megabytes`.
+ */
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   require(bytes >= 0, "Negative storage units are useful[Citation Needed] but unsupported")
 
@@ -40,7 +46,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
     }
   }
 
-  def compare(other: StorageUnit) = if (bytes < other.bytes) -1 else (if (bytes > other.bytes) 1 else 0)
+  override def compare(other: StorageUnit) = if (bytes < other.bytes) -1 else if (bytes > other.bytes) 1 else 0
 
   override def toString() = inBytes + ".bytes"
 

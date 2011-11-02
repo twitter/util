@@ -115,7 +115,7 @@ object Offer {
 /**
  * An offer to _communicate_ with another process.  The offer is
  * parameterized on the type of the value communicated.  An offer that
- * * _sends_ a value typically has type {{Unit}}.  An offer is
+ * _sends_ a value typically has type {{Unit}}.  An offer is
  * activated by synchronizing it.  Synchronization is done with the
  * apply() method.
  */
