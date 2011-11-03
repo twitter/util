@@ -17,38 +17,31 @@
 package com.twitter.util
 
 import java.io.File
+import com.twitter.io.Files
 
 /**
  * Test mixin that creates a new folder for a block of code to execute in.
  * The folder is recursively deleted after the test.
+ *
+ * Note, the [[com.twitter.util.io]] package would be a better home for this trait.
  */
 trait TempFolder {
   private val _folderName = new ThreadLocal[File]
 
-  // recursively delete a folder. should be built in. bad java.
-  private def deleteFolder(folder: File): Unit = {
-    folder.listFiles.foreach { f =>
-      if (f.isDirectory) {
-        deleteFolder(f)
-      } else {
-        f.delete
-      }
-    }
-    folder.delete
-  }
-
-  def withTempFolder(f: => Any): Unit = {
+  def withTempFolder(f: => Any) {
     val tempFolder = System.getProperty("java.io.tmpdir")
+    // Note: If we were willing to have a dependency on Guava in util-core
+    // we could just use `com.google.common.io.Files.createTempDir()`
     var folder: File = null
     do {
       folder = new File(tempFolder, "scala-test-" + System.currentTimeMillis)
-    } while (! folder.mkdir)
+    } while (! folder.mkdir())
     _folderName.set(folder)
 
     try {
       f
     } finally {
-      deleteFolder(folder)
+      Files.delete(folder)
     }
   }
 
