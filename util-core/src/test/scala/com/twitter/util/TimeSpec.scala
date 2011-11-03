@@ -34,6 +34,19 @@ object TimeSpec extends Specification {
       (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)
     }
 
+    "withTimeFunction" in {
+      val t0 = Time.now
+      var t = t0
+      Time.withTimeFunction(t) { _ =>
+        Time.now mustEqual t0
+        Thread.sleep(50)
+        Time.now mustEqual t0
+        val delta = 100.milliseconds
+        t += delta
+        Time.now mustEqual t0 + delta
+      }
+    }
+
     "withCurrentTimeFrozen" in {
       val t0 = new Time(123456789L)
       Time.withCurrentTimeFrozen { _ =>
