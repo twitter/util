@@ -1,57 +1,79 @@
-1.11.8	2011-10-04
-	
-	* Back out TCE for ivar/futures. This introduced a space
-	leak and will be fixed momentarily.
-	* FuturePool: Catch any exception thrown by executor.submit()
-	and return as a Future.exception
+1.12.2  2011-10-28
 
-1.11.7	2011-09-28
+  * Json thrift deserializer
+  * Finagle: count pending timeouts
+  * Fix eval precompile bug
 
-	* ivar/future: provide "TCE", per-thread scheduling, and
-	promise squashing
-	* util-core: add bijection
-	* util: Time.now is now measured at nanosecond granularity
-	  instead of millisecond.
-	* futurepool: don't attempt to perform work for Futures
-	that are cancelled
+1.12.0  2011-10-21
 
-1.11.2	2011-08-12
+  * util.Config.Specified now delays evaluation of specified value, to ensure evaluation
+    happens in correct dependency order, rather than in class-hierarchy order.  This
+    change is mostly source compatible, unless you have directly used the Specified class.
 
-	* offer: use Int.compare instead of subtraction to avoid
-	integer overflow in ObjectOrder
-	* offer: accept an empty offer list.  this is just Offer.never
-	* Eval: persistent compilation targets
+1.11.9  2011-10-14
 
-1.11.1	2011-08-05
+  * ivar/future: provide "TCE", per-thread scheduling, and
+  promise squashing
+  * logger: restore original logging level after modifying them
+  * u64: fix
+  * filehandler: thread-visibility
+  * eval: fix mtime invalidation
+  * base64 encoder: make it threadsafe
 
-	* offer/broker: fixes, simplifications - gets rid of thunked
-	values on sends.  removing the infrastructure required to
-	support this led to significant simplification.  lock the
-	correct objects for broker events.  don't try to resolve
-	identical objects in lock order.
-	* offer: java support
-	* hashing: actually return 64bit values from the 64bit hash
-	functions; tests
+1.11.8  2011-10-04
+  
+  * Back out TCE for ivar/futures. This introduced a space
+  leak and will be fixed momentarily.
+  * FuturePool: Catch any exception thrown by executor.submit()
+  and return as a Future.exception
 
-1.11.0	2011-08-02
+1.11.7  2011-09-28
 
-	* Introduce new util-codec module to contain various codecs.
-	Primarily so that it can depend on apache commons-codec 1.5
-	for base64 improvements over the sun one.
+  * ivar/future: provide "TCE", per-thread scheduling, and
+  promise squashing
+  * util-core: add bijection
+  * util: Time.now is now measured at nanosecond granularity
+    instead of millisecond.
+  * futurepool: don't attempt to perform work for Futures
+  that are cancelled
 
-1.10.4	2011-07-29
+1.11.2  2011-08-12
 
-	* Added TestLogging specs helper to util-logging.
-	* Spools: like scala streams, but with deferred tails.
+  * offer: use Int.compare instead of subtraction to avoid
+  integer overflow in ObjectOrder
+  * offer: accept an empty offer list.  this is just Offer.never
+  * Eval: persistent compilation targets
 
-1.10.3	2011-07-27
+1.11.1  2011-08-05
 
-	* add GZip string encoder
+  * offer/broker: fixes, simplifications - gets rid of thunked
+  values on sends.  removing the infrastructure required to
+  support this led to significant simplification.  lock the
+  correct objects for broker events.  don't try to resolve
+  identical objects in lock order.
+  * offer: java support
+  * hashing: actually return 64bit values from the 64bit hash
+  functions; tests
 
-1.10.2	2011-07-18
+1.11.0  2011-08-02
 
-	* Maintain a map of already visited objects incase someone
-	creates a circular of config objects.  
-	* Make Duration hashable.  
-	* Promise.on{Success, Failure}: returned chained future.
+  * Introduce new util-codec module to contain various codecs.
+  Primarily so that it can depend on apache commons-codec 1.5
+  for base64 improvements over the sun one.
+
+1.10.4  2011-07-29
+
+  * Added TestLogging specs helper to util-logging.
+  * Spools: like scala streams, but with deferred tails.
+
+1.10.3  2011-07-27
+
+  * add GZip string encoder
+
+1.10.2  2011-07-18
+
+  * Maintain a map of already visited objects incase someone
+  creates a circular of config objects.  
+  * Make Duration hashable.  
+  * Promise.on{Success, Failure}: returned chained future.
 

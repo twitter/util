@@ -53,14 +53,18 @@ trait Timer {
 class NullTimer extends Timer {
   def schedule(when: Time)(f: => Unit): TimerTask = {
     f
-    new TimerTask { def cancel() {} }
+    NullTimerTask
   }
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
     f
-    new TimerTask { def cancel() {} }
+    NullTimerTask
   }
 
   def stop() {}
+}
+
+object NullTimerTask extends TimerTask {
+  def cancel() {}
 }
 
 class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
@@ -74,7 +78,13 @@ class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends 
   }
 }
 
-class ReferenceCountedTimer(factory: () => Timer) extends Timer {
+trait ReferenceCountedTimer extends Timer {
+  def acquire()
+}
+
+class ReferenceCountingTimer(factory: () => Timer)
+  extends ReferenceCountedTimer
+{
   private[this] var refcount = 0
   private[this] var underlying: Timer = null
 
@@ -200,13 +210,13 @@ class MockTimer extends Timer {
     toRun filter { !_.isCancelled } foreach { _.runner() }
   }
 
-  def schedule(when: Time)(f: => Unit) = {
+  def schedule(when: Time)(f: => Unit): TimerTask = {
     val task = Task(when, () => f)
     tasks += task
     task
   }
 
-  def schedule(when: Time, period: Duration)(f: => Unit) =
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
     throw new Exception("periodic scheduling not supported")
 
   def stop() { isStopped = true }

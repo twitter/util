@@ -17,6 +17,7 @@
 package com.twitter.util
 
 import com.twitter.io.StreamIO
+import com.twitter.conversions.string._
 import java.io.{File, InputStream, FileInputStream, FileNotFoundException}
 import java.math.BigInteger
 import java.net.URLClassLoader
@@ -30,8 +31,9 @@ import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.tools.nsc.util.{BatchSourceFile, Position}
+import scala.util.matching.Regex
 
-case class LastMod(timestamp: Long, code: String)
+case class LastMod(timestamp: Option[Long], code: String)
 
 /**
  * Evaluate a file or string and return the result.
@@ -39,6 +41,7 @@ case class LastMod(timestamp: Long, code: String)
 @deprecated("use a throw-away instance of Eval instead")
 object Eval extends Eval {
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
+  val classCleaner: Regex = "\\W".r
 }
 
 /**
@@ -116,10 +119,15 @@ class Eval(target: Option[File]) {
    * to the text.
    * Last modified is computed here because we support includes
    */
-  def sourceForString(code: String): LastMod = {
-    preprocessors.foldLeft(LastMod(0L, code)) { (acc, p) =>
-      val processed = p(acc.code)
-      LastMod(acc.timestamp max processed.timestamp, processed.code)
+  def sourceForString(code: String, lastModified: Option[Long]): LastMod = {
+    preprocessors.foldLeft(LastMod(lastModified, code)) { (acc, p) =>
+      val processed = p(acc.code, lastModified)
+
+      // timestamp of the newest processed file.
+      // if both are defined, take the max. otherwise
+      // take any defined timestamp
+      val newestProcessed = Seq(processed.timestamp, acc.timestamp).max
+      LastMod(newestProcessed, processed.code)
     }
   }
 
@@ -127,7 +135,7 @@ class Eval(target: Option[File]) {
    * Eval[Int]("1 + 1") // => 2
    */
   def apply[T](code: String, resetState: Boolean = true): T = {
-    val processed = sourceForString(code)
+    val processed = sourceForString(code, None)
     applyProcessed(processed.code, resetState)
   }
 
@@ -138,12 +146,30 @@ class Eval(target: Option[File]) {
     if (target.isDefined) {
       val targetDir = target.get
       val unprocessedSource = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
-      val processed = sourceForString(unprocessedSource)
-      val oldestTarget = targetDir.listFiles.foldLeft(Long.MaxValue)((oldest, f) => f.lastModified min oldest)
-      if (processed.timestamp > oldestTarget) {
-        compiler.reset()
+      val lastModified = files.foldLeft(None: Option[Long]) { (acc, f) => Seq(acc, Some(f.lastModified)).max }
+      val processed = sourceForString(unprocessedSource, lastModified)
+      val oldestTarget = targetDir.listFiles.foldLeft(Long.MaxValue) { (oldest, f) =>
+        f.lastModified min oldest
       }
-      val className = "Evaluator__" + files(0).getName.split("\\.")(0)
+      processed.timestamp match {
+        // if we got a last-modified-source timestamp threaded through, use it to check compiler resets
+        case Some(newestSource) => {
+          if (newestSource > oldestTarget) {
+            compiler.reset()
+          }
+        }
+        // if there are no timestamps anywhere, just reset the compiler
+        case None => compiler.reset()
+      }
+
+      // why all this nonsense? Well.
+      // 1) We want to know which file the eval'd code came from
+      // 2) But sometimes files have characters that aren't valid in Java/Scala identifiers
+      // 3) And sometimes files with the same name live in different subdirectories
+      // so, clean it hash it and slap it on the end of Evaluator
+      val cleanBaseName = fileToClassName(files(0))
+      val className = "Evaluator__%s_%s".format(
+        cleanBaseName, uniqueId(files(0).getCanonicalPath, None))
       applyProcessed(className, processed.code, false)
     } else {
       apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"), true)
@@ -154,7 +180,7 @@ class Eval(target: Option[File]) {
    * Eval[Int](getClass.getResourceAsStream("..."))
    */
   def apply[T](stream: InputStream): T = {
-    apply(sourceForString(Source.fromInputStream(stream).mkString).code)
+    apply(sourceForString(Source.fromInputStream(stream).mkString, None).code)
   }
 
   /**
@@ -189,14 +215,14 @@ class Eval(target: Option[File]) {
    * converts the given file to evaluable source.
    */
   def toSource(code: String): String = {
-    sourceForString(code).code
+    sourceForString(code, None).code
   }
 
   /**
    * Compile an entire source file into the virtual classloader.
    */
   def compile(code: String) {
-    compiler(sourceForString(code).code)
+    compiler(sourceForString(code, None).code)
   }
 
   /**
@@ -212,7 +238,7 @@ class Eval(target: Option[File]) {
    * @throws CompilerException if not Eval-able.
    */
   def check(code: String) {
-    val id = uniqueId(sourceForString(code).code)
+    val id = uniqueId(sourceForString(code, None).code)
     val className = "Evaluator__" + id
     val wrappedCode = wrapCodeInClass(className, code)
     compile(wrappedCode) // may throw CompilerException
@@ -239,10 +265,25 @@ class Eval(target: Option[File]) {
     compiler.findClass(className).getOrElse { throw new ClassNotFoundException("no such class: " + className) }
   }
 
-  private def uniqueId(code: String): String = {
+  private[util] def uniqueId(code: String, idOpt: Option[Int] = Some(jvmId)): String = {
     val digest = MessageDigest.getInstance("SHA-1").digest(code.getBytes())
     val sha = new BigInteger(1, digest).toString(16)
-    sha + "_" + jvmId
+    idOpt match {
+      case Some(id) => sha + "_" + jvmId
+      case _ => sha
+    }
+  }
+
+  private[util] def fileToClassName(f: File): String = {
+    // HOPE YOU'RE HAPPY GUYS!!!!
+    val fileName = f.getName
+    val baseName = fileName.lastIndexOf('.') match {
+      case -1 => fileName
+      case dot => fileName.substring(0, dot)
+    }
+    baseName.regexSub(Eval.classCleaner) { m =>
+      "$%02x".format(m.group(0).charAt(0).toInt)
+    }
   }
 
   /*
@@ -291,7 +332,7 @@ class Eval(target: Option[File]) {
   }
 
   trait Preprocessor {
-    def apply(code: String): LastMod
+    def apply(code: String, lastModified: Option[Long]): LastMod
   }
 
   trait Resolver {
@@ -348,9 +389,12 @@ class Eval(target: Option[File]) {
    */
   class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
     def maximumRecursionDepth = 100
-    def apply(code: String): LastMod = apply(code, maximumRecursionDepth)
-    def apply(code: String, maxDepth: Int): LastMod = {
-      var lastMod = 0L
+
+    def apply(code: String, lastModified: Option[Long]): LastMod =
+      apply(code, lastModified, maximumRecursionDepth)
+
+    def apply(code: String, lastModified: Option[Long], maxDepth: Int): LastMod = {
+      var lastMod = lastModified
       val lines = code.lines map { line: String =>
         val tokens = line.trim.split(' ')
         if (tokens.length == 2 && tokens(0).equals("#include")) {
@@ -359,16 +403,14 @@ class Eval(target: Option[File]) {
             resolver.resolvable(path)
           } match {
             case Some(r: Resolver) => {
-              lastMod = lastMod max r.lastModified(path)
+              lastMod = Seq(lastMod, Some(r.lastModified(path))).max
               // recursively process includes
               if (maxDepth == 0) {
                 throw new IllegalStateException("Exceeded maximum recusion depth")
               } else {
-                apply(StreamIO.buffer(r.get(path)).toString, maxDepth - 1) match {
-                  case LastMod(timestamp, code) =>
-                    lastMod = lastMod max timestamp
-                    code
-                }
+                val subLastMod = apply(StreamIO.buffer(r.get(path)).toString, lastMod, maxDepth - 1)
+                lastMod = Seq(lastMod, subLastMod.timestamp).max
+                subLastMod.code
               }
             }
             case _ =>

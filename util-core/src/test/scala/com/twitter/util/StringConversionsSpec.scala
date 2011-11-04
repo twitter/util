@@ -45,6 +45,8 @@ class StringConversionsSpec extends Specification {
     "unhexlify" in {
       "656c6c".unhexlify.toList mustEqual "hello".getBytes.slice(1, 4).toList
       "68656c6c6f".unhexlify.toList mustEqual "hello".getBytes.toList
+      "5".unhexlify mustNot throwA[StringIndexOutOfBoundsException]
+      "5".unhexlify.hexlify.toInt mustEqual 5
     }
   }
 }

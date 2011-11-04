@@ -24,6 +24,9 @@ import java.util.concurrent.TimeUnit
  * Use `Time.now` in your app instead of `System.currentTimeMillis`, and
  * unit tests will be able to adjust the current time to verify timeouts
  * and other time-dependent behavior, without calling `sleep`.
+ *
+ * If you import the [[com.twitter.conversions.time]] implicits you can
+ * write human-readable values such as `1.minute` or `250.millis`.
  */
 object Time {
   import com.twitter.conversions.time._
@@ -31,7 +34,7 @@ object Time {
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
-  /*
+  /**
    * on some systems (os x), nanoTime is just epoch time with greater precision.
    * on others (linux), it can be based on system uptime.
    */

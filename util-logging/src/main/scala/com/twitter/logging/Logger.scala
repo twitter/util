@@ -178,9 +178,6 @@ object Logger extends Iterable[Logger] {
 
   private val root: Logger = get("")
 
-  // clear out some cruft from the java root logger.
-  private val javaRoot = javalog.Logger.getLogger("")
-
 
   // ----- convenience methods:
 
@@ -249,7 +246,7 @@ object Logger extends Iterable[Logger] {
    */
   def reset() = {
     clearHandlers()
-    javaRoot.addHandler(new ConsoleHandler(new Formatter(), None))
+    root.addHandler(new ConsoleHandler(new Formatter(), None))
   }
 
   /**

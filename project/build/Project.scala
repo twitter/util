@@ -7,7 +7,7 @@ class Project(info: ProjectInfo)
   with ParentProjectDependencies
   with DefaultRepos
 {
-  override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
+  override def subversionRepository = Some("https://svn.twitter.biz/maven-public")
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
 
   // Projects
@@ -53,6 +53,9 @@ class Project(info: ProjectInfo)
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+  {
+    override def compileOrder = CompileOrder.Mixed
+  }
 
   class EvalProject(info: ProjectInfo)
     extends StandardProject(info)
@@ -88,7 +91,7 @@ class Project(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-    val compileWithSpecs = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "provided"
+    val compileWithSpecs = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.8" % "provided"
   }
 
   class ThriftProject(info: ProjectInfo)
@@ -98,6 +101,8 @@ class Project(info: ProjectInfo)
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift = "thrift"        % "libthrift"     % "0.5.0"
     val slf4j  = "org.slf4j"     % "slf4j-nop"     % "1.5.8" % "provided"
+    val jacksonCore     = "org.codehaus.jackson" % "jackson-core-asl"   % "1.8.1"
+    val jacksonMapper   = "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.1"
   }
 
   class HashingProject(info: ProjectInfo)
@@ -114,7 +119,7 @@ class Project(info: ProjectInfo)
     with ProjectDependencies
     with DefaultRepos
   {
-    val specs   = "org.scala-tools.testing" % "specs_2.8.0" % "1.6.5" % "test" withSources()
+    val specs   = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.8" % "test" withSources()
     val mockito = "org.mockito"             % "mockito-all" % "1.8.5" % "test" withSources()
     val junit   = "junit"                   %       "junit" % "3.8.2" % "test"
 
