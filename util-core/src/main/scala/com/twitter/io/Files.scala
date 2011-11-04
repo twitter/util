@@ -1,11 +1,27 @@
 package com.twitter.io
 
-import java.io.File
+import java.io.{ByteArrayOutputStream, File, FileInputStream}
 
 /**
  * Utilities for working with `java.io.File`s
  */
 object Files {
+  /**
+   * Read a file fully into a byte array.
+   *
+   * @param file file to read
+   * @param limit number of bytes to read, default 4MB
+   * @returns array of bytes
+   */
+  def readBytes(file: File, limit: Int = 1024 * 1024 * 4): Array[Byte]= {
+    require(file.length() < limit, "File '%s' is too big".format(file.getAbsolutePath()))
+    val buf = new ByteArrayOutputStream(file.length().intValue())
+    val in = new FileInputStream(file)
+    StreamIO.copy(in, buf)
+    in.close()
+
+    buf.toByteArray()
+  }
 
   /**
    * Deletes a given file or folder.
