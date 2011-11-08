@@ -1,3 +1,9 @@
+1.12.3  2011-11-08
+
+  * add some docs to Offer, Time
+  * util.io.Files: file utilities, documentation for TempFile
+  * Offer/Broker: explicit return types for Java compat.
+
 1.12.2  2011-10-28
 
   * Json thrift deserializer
@@ -6,9 +12,10 @@
 
 1.12.0  2011-10-21
 
-  * util.Config.Specified now delays evaluation of specified value, to ensure evaluation
-    happens in correct dependency order, rather than in class-hierarchy order.  This
-    change is mostly source compatible, unless you have directly used the Specified class.
+  * util.Config.Specified now delays evaluation of specified value, to
+  ensure evaluation happens in correct dependency order, rather than
+  in class-hierarchy order.  This change is mostly source compatible,
+  unless you have directly used the Specified class.
 
 1.11.9  2011-10-14
 

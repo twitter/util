@@ -317,7 +317,7 @@ trait Offer[+T] { self =>
    * Synchronize this offer.  This activates this offer and attempts
    * to perform the communication specified.
    *
-   * @returns A {{Future}} containing the communicated value.
+   * @return A {{Future}} containing the communicated value.
    */
   def apply(): Future[T] = {
     // We sort the objects here according to their identity.  In this
