@@ -72,6 +72,11 @@ object Time {
 
   def at(datetime: String) = defaultFormat.parse(datetime)
 
+  /**
+   * Execute body with the time function replaced by `timeFunction`
+   * WARNING: This functionality isn't thread safe, as Time.fn is a global!
+   *          It must be used only for testing purpose.
+   */
   def withTimeFunction[A](timeFunction: => Time)(body: TimeControl => A): A = {
     val prevFn = Time.fn
     try {
