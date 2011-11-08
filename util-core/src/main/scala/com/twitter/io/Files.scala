@@ -26,25 +26,21 @@ object Files {
   /**
    * Deletes a given file or folder.
    *
-   * Symlinks themselves will be deleted, but what they point to will
-   * not be followed nor deleted.
+   * Note since symlink detection in java is not reliable across platforms,
+   * symlinks are in fact traversed and in the case of directories, what they
+   * target will be deleted as well. Perhaps when we upgrade to jdk7 we can
+   * use File.isSymbolicLink() here and make following symlinks optional.
    *
    * Returns whether or not the entire delete was successful
    */
-  // Note: If we were willing to have a dependency on Guava in util-core
-  // we could basically replace this with `com.google.common.io.Files.deleteRecursively()`
   def delete(file: File): Boolean = {
     if (!file.exists) {
       true
     } else if (file.isFile) {
       file.delete()
     } else {
-      // canonical paths follow symlinks while absolute paths do not,
-      // and by checking this, we can avoid deleting what a symlink points to
-      if (file.getCanonicalPath == file.getAbsolutePath) {
-        file.listFiles.foreach { f =>
-          delete(f)
-        }
+      file.listFiles.foreach { f =>
+        delete(f)
       }
       file.delete()
     }
