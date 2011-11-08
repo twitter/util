@@ -30,7 +30,7 @@ class Broker[E] {
    * synchronization, the offer is realized exactly when there is a
    * receiver that is also synchronizing.
    */
-  def send(e: E) = new Offer[Unit] {
+  def send(e: E): Offer[Unit] = new Offer[Unit] {
     def poll(): Option[() => Unit] = {
       while (!recvq.isEmpty) {
         val setter = recvq.dequeue()
@@ -56,7 +56,7 @@ class Broker[E] {
    * synchronization, the offer is realized exactly when there is a
    * sender.  Receives are in FIFO order of sends.
    */
-  def recv = new Offer[E] {
+  def recv: Offer[E] = new Offer[E] {
     def poll(): Option[() => E] = {
       while (!sendq.isEmpty) {
         val (e, setter) = sendq.dequeue()
