@@ -1,7 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.{
-  CancellationException, ExecutorService, Executors, RejectedExecutionException}
+import java.util.concurrent.{CancellationException, ExecutorService, Executors}
 
 /**
  * A FuturePool executes tasks asynchronously, typically using a pool
@@ -65,7 +64,7 @@ class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePoo
         out.updateIfEmpty(Throw(new CancellationException))
       }
     } catch {
-      case e: RejectedExecutionException => out.updateIfEmpty(Throw(e))
+      case e => out.updateIfEmpty(Throw(e))
     }
 
     out
