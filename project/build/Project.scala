@@ -8,7 +8,7 @@ class Project(info: ProjectInfo)
   with DefaultRepos
 {
   override def usesMavenStyleBasePatternInPublishLocalConfiguration = true
-  override def subversionRepository = Some("http://svn.local.twitter.com/maven-public")
+  override def subversionRepository = Some("https://svn.twitter.biz/maven-public")
   val twitterRepo = "twitter.com" at "http://maven.twttr.com"
 
   // Projects
