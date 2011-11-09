@@ -1,3 +1,10 @@
+1.12.4  2011-11-09
+
+ * Files.delete has to follow symlinks because jdk6 support
+ for symlinks is weaksauce
+ * properly handle cancellation in FuturePool
+ * Locals: ensure ``Local'' is fully initialized before registering
+
 1.12.3  2011-11-08
 
   * add some docs to Offer, Time
