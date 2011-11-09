@@ -30,12 +30,13 @@ object FuturePoolSpec extends Specification {
 
       // The executor will run the task for result 2, but the wrapper
       // in FuturePool will throw away the work if the future
-      // representing the outcome has already been cancelled.
+      // representing the outcome has already been cancelled,
+      // and will set the result to a CancellationException
       executor.getCompletedTaskCount must eventually(be_==(2))
 
       runCount.get() mustEqual 1
       result1.get()  mustEqual 1
-      result2.isDefined   mustEqual false
+      result2.get() must throwA[CancellationException]
       result2.isCancelled mustEqual true
     }
 
