@@ -38,12 +38,14 @@ private[util] final object Locals {
 }
 
 final class Local[T] {
-  Locals += this
-
   private[this] val threadLocal =
     new ThreadLocal[Option[T]] {
       override def initialValue: Option[T] = None
     }
+
+  // Note the order here is important.  This must come last as
+  // ``this'' must be fully initialized before it's registered.
+  Locals += this
 
   def update(value: T) = threadLocal.set(Some(value))
   def set(optValue: Option[T]) = threadLocal.set(optValue)
