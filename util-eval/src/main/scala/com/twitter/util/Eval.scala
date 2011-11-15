@@ -18,7 +18,7 @@ package com.twitter.util
 
 import com.twitter.io.StreamIO
 import com.twitter.conversions.string._
-import java.io.{File, InputStream, FileInputStream, FileNotFoundException}
+import java.io._
 import java.math.BigInteger
 import java.net.URLClassLoader
 import java.security.MessageDigest
@@ -32,8 +32,6 @@ import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.tools.nsc.util.{BatchSourceFile, Position}
 import scala.util.matching.Regex
-
-case class LastMod(timestamp: Option[Long], code: String)
 
 /**
  * Evaluate a file or string and return the result.
@@ -114,52 +112,50 @@ class Eval(target: Option[File]) {
   private lazy val compiler = new StringCompiler(2, target)
 
   /**
-   * run preprocessors on our string, returning a LastMod
-   * where timestamp is the last modified time of any file in that contributed
-   * to the text.
-   * Last modified is computed here because we support includes
+   * run preprocessors on our string, returning a String that is the processed source
    */
-  def sourceForString(code: String, lastModified: Option[Long]): LastMod = {
-    preprocessors.foldLeft(LastMod(lastModified, code)) { (acc, p) =>
-      val processed = p(acc.code, lastModified)
-
-      // timestamp of the newest processed file.
-      // if both are defined, take the max. otherwise
-      // take any defined timestamp
-      val newestProcessed = Seq(processed.timestamp, acc.timestamp).max
-      LastMod(newestProcessed, processed.code)
+  def sourceForString(code: String): String = {
+    preprocessors.foldLeft(code) { (acc, p) =>
+      p(acc)
     }
   }
 
   /**
-   * Eval[Int]("1 + 1") // => 2
+   * write the current checksum to a file
    */
-  def apply[T](code: String, resetState: Boolean = true): T = {
-    val processed = sourceForString(code, None)
-    applyProcessed(processed.code, resetState)
+  def writeChecksum(checksum: String, file: File) {
+    val writer = new FileWriter(file)
+    writer.write("%s".format(checksum))
+    writer.close
   }
 
   /**
-   * Eval[Int](new File("..."))
+   * val i: Int = new Eval()("1 + 1") // => 2
+   */
+  def apply[T](code: String, resetState: Boolean = true): T = {
+    val processed = sourceForString(code)
+    applyProcessed(processed, resetState)
+  }
+
+  /**
+   * val i: Int = new Eval()(new File("..."))
    */
   def apply[T](files: File*): T = {
     if (target.isDefined) {
       val targetDir = target.get
       val unprocessedSource = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
-      val lastModified = files.foldLeft(None: Option[Long]) { (acc, f) => Seq(acc, Some(f.lastModified)).max }
-      val processed = sourceForString(unprocessedSource, lastModified)
-      val oldestTarget = targetDir.listFiles.foldLeft(Long.MaxValue) { (oldest, f) =>
-        f.lastModified min oldest
+      val processed = sourceForString(unprocessedSource)
+      val sourceChecksum = uniqueId(processed, None)
+      val checksumFile = new File(targetDir, "checksum")
+      val lastChecksum = if (checksumFile.exists) {
+        Source.fromFile(checksumFile).getLines.take(1).toList.head
+      } else {
+        -1
       }
-      processed.timestamp match {
-        // if we got a last-modified-source timestamp threaded through, use it to check compiler resets
-        case Some(newestSource) => {
-          if (newestSource > oldestTarget) {
-            compiler.reset()
-          }
-        }
-        // if there are no timestamps anywhere, just reset the compiler
-        case None => compiler.reset()
+
+      if (lastChecksum != sourceChecksum) {
+        compiler.reset()
+        writeChecksum(sourceChecksum, checksumFile)
       }
 
       // why all this nonsense? Well.
@@ -169,18 +165,18 @@ class Eval(target: Option[File]) {
       // so, clean it hash it and slap it on the end of Evaluator
       val cleanBaseName = fileToClassName(files(0))
       val className = "Evaluator__%s_%s".format(
-        cleanBaseName, uniqueId(files(0).getCanonicalPath, None))
-      applyProcessed(className, processed.code, false)
+        cleanBaseName, sourceChecksum)
+      applyProcessed(className, processed, false)
     } else {
       apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"), true)
     }
   }
 
   /**
-   * Eval[Int](getClass.getResourceAsStream("..."))
+   * val i: Int = new Eval()(getClass.getResourceAsStream("..."))
    */
   def apply[T](stream: InputStream): T = {
-    apply(sourceForString(Source.fromInputStream(stream).mkString, None).code)
+    apply(sourceForString(Source.fromInputStream(stream).mkString))
   }
 
   /**
@@ -215,14 +211,14 @@ class Eval(target: Option[File]) {
    * converts the given file to evaluable source.
    */
   def toSource(code: String): String = {
-    sourceForString(code, None).code
+    sourceForString(code)
   }
 
   /**
    * Compile an entire source file into the virtual classloader.
    */
   def compile(code: String) {
-    compiler(sourceForString(code, None).code)
+    compiler(sourceForString(code))
   }
 
   /**
@@ -238,7 +234,7 @@ class Eval(target: Option[File]) {
    * @throw CompilerException if not Eval-able.
    */
   def check(code: String) {
-    val id = uniqueId(sourceForString(code, None).code)
+    val id = uniqueId(sourceForString(code))
     val className = "Evaluator__" + id
     val wrappedCode = wrapCodeInClass(className, code)
     compile(wrappedCode) // may throw CompilerException
@@ -332,13 +328,12 @@ class Eval(target: Option[File]) {
   }
 
   trait Preprocessor {
-    def apply(code: String, lastModified: Option[Long]): LastMod
+    def apply(code: String): String
   }
 
   trait Resolver {
     def resolvable(path: String): Boolean
     def get(path: String): InputStream
-    def lastModified(path: String): Long
   }
 
   class FilesystemResolver(root: File) extends Resolver {
@@ -347,14 +342,6 @@ class Eval(target: Option[File]) {
 
     def resolvable(path: String): Boolean =
       file(path).exists
-
-    def lastModified(path: String): Long = {
-      if (resolvable(path)) {
-        file(path).lastModified
-      } else {
-        0
-      }
-    }
 
     def get(path: String): InputStream =
       new FileInputStream(file(path))
@@ -366,8 +353,6 @@ class Eval(target: Option[File]) {
 
     def resolvable(path: String): Boolean =
       clazz.getResourceAsStream(quotePath(path)) != null
-
-    def lastModified(path: String): Long = 0
 
     def get(path: String): InputStream =
       clazz.getResourceAsStream(quotePath(path))
@@ -390,11 +375,10 @@ class Eval(target: Option[File]) {
   class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
     def maximumRecursionDepth = 100
 
-    def apply(code: String, lastModified: Option[Long]): LastMod =
-      apply(code, lastModified, maximumRecursionDepth)
+    def apply(code: String): String =
+      apply(code, maximumRecursionDepth)
 
-    def apply(code: String, lastModified: Option[Long], maxDepth: Int): LastMod = {
-      var lastMod = lastModified
+    def apply(code: String, maxDepth: Int): String = {
       val lines = code.lines map { line: String =>
         val tokens = line.trim.split(' ')
         if (tokens.length == 2 && tokens(0).equals("#include")) {
@@ -403,14 +387,11 @@ class Eval(target: Option[File]) {
             resolver.resolvable(path)
           } match {
             case Some(r: Resolver) => {
-              lastMod = Seq(lastMod, Some(r.lastModified(path))).max
               // recursively process includes
               if (maxDepth == 0) {
                 throw new IllegalStateException("Exceeded maximum recusion depth")
               } else {
-                val subLastMod = apply(StreamIO.buffer(r.get(path)).toString, lastMod, maxDepth - 1)
-                lastMod = Seq(lastMod, subLastMod.timestamp).max
-                subLastMod.code
+                apply(StreamIO.buffer(r.get(path)).toString, maxDepth - 1)
               }
             }
             case _ =>
@@ -420,8 +401,7 @@ class Eval(target: Option[File]) {
           line
         }
       }
-      val processed = lines.mkString("\n")
-      LastMod(lastMod, processed)
+      lines.mkString("\n")
     }
   }
 
