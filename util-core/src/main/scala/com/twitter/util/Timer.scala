@@ -130,8 +130,26 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
 
   def stop() = underlying.cancel()
 
+  /**
+   * log any Throwables caught by the internal TimerTask.
+   *
+   * By default we log to System.err but users may subclass and log elsewhere.
+   *
+   * This method MUST NOT throw or else your Timer will die.
+   */
+  def logError(t: Throwable) {
+    System.err.println("WARNING: JavaTimer caught exception running task: %s".format(t))
+    t.printStackTrace(System.err)
+  }
+
   private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
-    def run { f }
+    def run {
+      try {
+        f
+      } catch {
+        case t => logError(t)
+      }
+    }
   }
 
   private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
