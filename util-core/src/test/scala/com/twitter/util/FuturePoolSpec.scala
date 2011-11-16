@@ -1,9 +1,13 @@
 package com.twitter.util
 
-import org.specs.Specification
+import com.twitter.conversions.time._
+import java.util.concurrent.{Future => JFuture}
 import java.util.concurrent._
+import org.specs.Specification
+import org.specs.mock.Mockito
+import org.mockito.Matchers._
 
-object FuturePoolSpec extends Specification {
+object FuturePoolSpec extends Specification with Mockito {
   val executor = Executors.newFixedThreadPool(1).asInstanceOf[ThreadPoolExecutor]
   val pool     = FuturePool(executor)
 
@@ -14,6 +18,24 @@ object FuturePoolSpec extends Specification {
 
       source.setValue(1)
       result.get() mustEqual 1
+    }
+
+    "Executor failing contains failures" in {
+      val badExecutor = new ScheduledThreadPoolExecutor(1) {
+        override def submit(runnable: Runnable): JFuture[_] = {
+          throw new RejectedExecutionException()
+        }
+      }
+
+      val pool = FuturePool(badExecutor)
+
+      val runCount = new atomic.AtomicInteger(0)
+
+      val result1 = pool {
+        runCount.incrementAndGet()
+      }
+
+      runCount.get() mustEqual 0
     }
 
     "does not execute cancelled tasks" in {
@@ -38,6 +60,39 @@ object FuturePoolSpec extends Specification {
       result1.get()  mustEqual 1
       result2.get() must throwA[CancellationException]
       result2.isCancelled mustEqual true
+    }
+
+    "continue to run a task if it's cancelled in the middle of running" in {
+      val runCount = new atomic.AtomicInteger
+
+      val source = new Promise[Int]
+
+      val startedLatch = new CountDownLatch(1)
+      val cancelledLatch = new CountDownLatch(1)
+
+      val result: Future[Int] = pool {
+        try {
+          startedLatch.countDown()
+          runCount.incrementAndGet()
+          cancelledLatch.await()
+          throw new RuntimeException()
+        } finally {
+          runCount.incrementAndGet()
+        }
+        runCount.get
+      }
+
+      startedLatch.await(50.milliseconds)
+      result.cancel()
+      cancelledLatch.countDown()
+
+      executor.getCompletedTaskCount must eventually(be_==(1))
+
+      runCount.get() mustEqual 2
+      result.get() must throwA[RuntimeException]
+
+      // The result believes it was cancelled but the work was finished.
+      result.isCancelled mustEqual true
     }
 
     "returns exceptions that result from submitting a task to the pool" in {
