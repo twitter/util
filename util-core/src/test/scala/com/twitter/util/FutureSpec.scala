@@ -327,6 +327,47 @@ class FutureSpec extends Specification with Mockito {
         jf.get() must throwA(new RuntimeException())
       }
     }
+
+    "monitored" in {
+      val inner = new Promise[Int]
+      val exc = new Exception("some exception")
+      "catch raw exceptions (direct)" in {
+        val f = Future.monitored {
+          throw exc
+          inner
+        }
+        f.poll must beSome(Throw(exc))
+      }
+
+      "catch raw exceptions (indirect), cancelling computation" in {
+        val inner1 = new Promise[Int]
+        var ran = false
+        val f = Future.monitored {
+          inner1 ensure {
+            throw exc
+          }
+          inner1 ensure {
+            ran = true
+            inner.update(Return(1)) mustNot throwA[Throwable]
+          }
+          inner
+        }
+        ran must beFalse
+        f.poll must beNone
+        inner.isCancelled must beFalse
+        inner1.update(Return(1)) mustNot throwA[Throwable]
+        ran must beTrue
+        f.poll must beSome(Throw(exc))
+        inner.isCancelled must beTrue
+      }
+
+      "link" in {
+        val f = Future.monitored { inner }
+        inner.isCancelled must beFalse
+        f.cancel()
+        inner.isCancelled must beTrue
+      }
+    }
   }
 
   "Promise" should {
@@ -520,6 +561,21 @@ class FutureSpec extends Specification with Mockito {
         wasCalledWith mustEqual None
         f()= Return(1)
         wasCalledWith mustEqual Some(1)
+      }
+
+      "monitor exceptions" in {
+        val m = spy(new MonitorSpec.MockMonitor)
+        val exc = new Exception
+        m.handle(any) returns true
+        val p = new Promise[Int]
+
+        m {
+          p ensure { throw exc }
+        }
+
+        there was no(m).handle(any)
+        p.update(Return(1)) mustNot throwA[Throwable]
+        there was one(m).handle(exc)
       }
     }
 

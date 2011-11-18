@@ -66,6 +66,34 @@ object Future {
   def apply[A](a: => A): Future[A] = new Promise[A](Try(a))
 
   /**
+   * Run the computation {{f}} while installing a monitor that
+   * translates any exception thrown into a coded one.  If an
+   * exception is thrown anywhere, the underlying computation is
+   * cancelled.
+   *
+   * This function is usually called to wrap a computation that
+   * returns a Future (f0) whose value is satisfied by the invocation
+   * of an onSuccess/onFailure/ensure callbacks of another future
+   * (f1).  If an exception happens in the callbacks on f1, f0 is
+   * never satisfied.  In this example, `Future.monitored { f1
+   * onSuccess g; f0 }` will cancel f0 so that f0 never hangs.
+   */
+  def monitored[A](f: => Future[A]): Future[A] = {
+    val p = new Promise[A]
+    val monitor = Monitor.mk { case exc =>
+      if (!p.updateIfEmpty(Throw(exc))) false else {
+        p.cancel()
+        true
+      }
+    }
+    monitor {
+      val res = f respond { p.updateIfEmpty(_) }
+      p.linkTo(res)
+    }
+    p
+  }
+
+  /**
    * Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
    */
   def flatten[A](ffa: Future[Future[A]]): Future[A] = ffa.flatten
@@ -576,6 +604,14 @@ class Promise[A] private[Promise](
   def updateIfEmpty(newResult: Try[A]) =
     ivar.set(newResult)
 
+  /**
+   * Note: exceptions in responds are monitored.  That is, if the
+   * computation {{k}} throws a raw (ie.  not encoded in a Future)
+   * exception, it is handled by the current monitor, see
+   * {{com.twitter.util.Monitor}} for details.
+   */
+  override def respond(k: Try[A] => Unit): Future[A] = respond(k, k)
+
   def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
     // Note that there's a race here, but that's
     // okay.  The resulting Futures are
@@ -590,7 +626,7 @@ class Promise[A] private[Promise](
     if (chained eq null)
       chained = new Promise(ivar.chained, cancelled)
     val next = chained
-    respondWithoutChaining(tracingObject, k)
+    respondWithoutChaining(tracingObject, { r => Monitor { k(r) } })
     next
   }
 
@@ -671,7 +707,7 @@ class Promise[A] private[Promise](
 
   override def filter(p: A => Boolean): Future[A] = {
     makePromise[A](this) { promise =>
-      respondWithoutChaining(p, { x => promise() = x.filter(p) })
+      respondWithoutChaining(p, { x => Monitor { promise() = x.filter(p) } })
     }
   }
 
