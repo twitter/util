@@ -4,7 +4,7 @@ import org.specs.Specification
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
-import com.twitter.concurrent.SimpleSetter
+import java.lang.Exception
 
 class FutureSpec extends Specification with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {

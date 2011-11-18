@@ -14,6 +14,39 @@ object Future {
   val Done = Unit
 
   /**
+   * An object that can trace control flow through an asynchronous program.
+   */
+  trait Tracer {
+    /**
+     * Record the current location in the code, using the provided object as a hint.
+     * Typically the provided object is a closure or inner-class that has enough metadata
+     * to reconstruct something resembling a stack frame.
+     */
+    def record(a: AnyRef)
+
+    /**
+     * Decorate an exception with additional trace data. Implementations
+     * must return an exception of the same type as the argument, so either
+     * mutate the given exception (which is not thread-safe) or use the provided
+     * manifest to create a dynamic proxy.
+     */
+    def wrap[T <: Throwable](t: T)(implicit m: Manifest[T]): T
+  }
+
+  @volatile var tracer: Tracer = null
+  try {
+    // By default, use the standard reflection-based tracer, if it's on the classpath.
+    val clazz = Class.forName("com.twitter.util.reflect.AsmFutureTracer")
+    tracer = clazz.newInstance.asInstanceOf[Tracer]
+  } catch {
+    case e: ClassNotFoundException =>
+      tracer = new Tracer {
+        def record(a: AnyRef) {}
+        def wrap[T <: Throwable : Manifest](t: T) = t
+      }
+  }
+
+  /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
    */
   def value[A](a: A): Future[A] = new Promise[A](Return(a))
@@ -210,8 +243,12 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * one of the alternatives (onSuccess(), onFailure(), etc.). Note that almost
    * all methods on Future[_] are written in terms of respond(), so this is
    * the essential template method for use in concrete subclasses.
+   *
+   * @return a chained Future[A]
    */
-  def respond(k: Try[A] => Unit): Future[A]
+  def respond(k: Try[A] => Unit) = respond(k, k)
+
+  protected def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A]
 
   /**
    * Block indefinitely, wait for the result of the Future to be available.
@@ -224,7 +261,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   def apply(timeout: Duration): A = get(timeout)()
 
   def isReturn = get(DEFAULT_TIMEOUT) isReturn
-  def isThrow = get(DEFAULT_TIMEOUT) isThrow
+  def isThrow  = get(DEFAULT_TIMEOUT) isThrow
 
   /**
    * Is the result of the Future available yet?
@@ -276,8 +313,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Invoke the callback only if the Future returns successfully. Useful for Scala for comprehensions.
    * Use onSuccess instead of this method for more readable code.
    */
-  override def foreach(k: A => Unit) =
-    respond(_ foreach k)
+  override def foreach(k: A => Unit) = onSuccess(k)
 
   def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
 
@@ -288,10 +324,10 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * @return chained Future
    */
   def onSuccess(f: A => Unit): Future[A] =
-    respond {
+    respond(f, {
       case Return(value) => f(value)
       case _ =>
-    }
+    })
 
   /**
    * Invoke the function on the error, if the computation was
@@ -300,15 +336,15 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * @return chained Future
    */
   def onFailure(rescueException: Throwable => Unit): Future[A] =
-    respond {
+    respond(rescueException, {
       case Throw(throwable) => rescueException(throwable)
       case _ =>
-    }
+    })
 
-  def addEventListener(listener: FutureEventListener[_ >: A]) = respond {
+  def addEventListener(listener: FutureEventListener[_ >: A]) = respond(listener, {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
-  }
+  })
 
   /**
    * Choose the first Future to succeed.
@@ -438,7 +474,7 @@ object Promise {
  * this object as a Promise[_] and updates the
  * value when the computation completes.
  */
-class Promise[A] private[Promise] (
+class Promise[A] private[Promise](
   private[Promise] final val ivar: IVar[Try[A]],
   private[Promise] final val cancelled: IVar[Unit])
   extends Future[A]
@@ -540,19 +576,7 @@ class Promise[A] private[Promise] (
   def updateIfEmpty(newResult: Try[A]) =
     ivar.set(newResult)
 
-  private[this] def respond0(k: Try[A] => Unit) {
-    val saved = Locals.save()
-    ivar.get { result =>
-      val current = Locals.save()
-      saved.restore()
-      try
-        k(result)
-      finally
-        current.restore()
-    }
-  }
-
-  override def respond(k: Try[A] => Unit): Future[A] = {
+  def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
     // Note that there's a race here, but that's
     // okay.  The resulting Futures are
     // equivalent, and it only makes the
@@ -566,8 +590,21 @@ class Promise[A] private[Promise] (
     if (chained eq null)
       chained = new Promise(ivar.chained, cancelled)
     val next = chained
-    respond0(k)
+    respondWithoutChaining(tracingObject, k)
     next
+  }
+
+  private[this] def respondWithoutChaining(tracingObject: AnyRef, k: Try[A] => Unit) {
+    val saved = Locals.save()
+    ivar.get { result =>
+      val current = Locals.save()
+      saved.restore()
+      Future.tracer.record(tracingObject)
+      try
+        k(result)
+      finally
+        current.restore()
+    }
   }
 
   /**
@@ -590,19 +627,19 @@ class Promise[A] private[Promise] (
     val promise = new Promise[B]
     val k = { _: Unit => this.cancel() }
     promise.cancelled.get(k)
-    respond0 {
+    respondWithoutChaining(f, {
       case Return(r) =>
         try {
           promise.cancelled.unget(k)
           promise.merge(f(r))
         } catch {
           case e =>
-            promise() = Throw(e)
+            promise() = Throw(Future.tracer.wrap(e))
         }
 
       case Throw(e) =>
-        promise() = Throw(e)
-    }
+        promise() = Throw(Future.tracer.wrap(e))
+    })
     promise
   }
 
@@ -615,7 +652,7 @@ class Promise[A] private[Promise] (
     val promise = new Promise[B]
     val k = { _: Unit => this.cancel() }
     promise.cancelled.get(k)
-    respond0 {
+    respondWithoutChaining(rescueException, {
       case r: Return[_] =>
         promise() = r
 
@@ -628,13 +665,13 @@ class Promise[A] private[Promise] (
         }
       case Throw(e) =>
         promise() = Throw(e)
-    }
+    })
     promise
   }
 
   override def filter(p: A => Boolean): Future[A] = {
     makePromise[A](this) { promise =>
-      respond0 { x => promise() = x.filter(p) }
+      respondWithoutChaining(p, { x => promise() = x.filter(p) })
     }
   }
 

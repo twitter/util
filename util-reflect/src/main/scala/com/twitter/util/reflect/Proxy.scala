@@ -6,7 +6,6 @@ import net.sf.cglib.proxy._
 import net.sf.cglib.proxy.{MethodInterceptor => CGMethodInterceptor}
 import com.twitter.util.Future
 
-
 class NonexistentTargetException extends Exception("MethodCall was invoked without a valid target.")
 
 object Proxy {
@@ -20,7 +19,7 @@ object Proxy {
 }
 
 object ProxyFactory {
-  private[reflect] object NoOpInterceptor extends MethodInterceptor[AnyRef](None, _())
+  private[reflect] object NoOpInterceptor extends MethodInterceptor[AnyRef](None, m => null)
 
   private[reflect] object IgnoredMethodFilter extends CallbackFilter {
     def accept(m: Method) = {
