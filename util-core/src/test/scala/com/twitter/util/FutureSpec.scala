@@ -4,7 +4,6 @@ import org.specs.Specification
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.lang.Exception
 
 class FutureSpec extends Specification with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
@@ -577,6 +576,10 @@ class FutureSpec extends Specification with Mockito {
         p.update(Return(1)) mustNot throwA[Throwable]
         there was one(m).handle(exc)
       }
+    }
+
+    "willEqual" in {
+      (Future.value(1) willEqual(Future.value(1)))(1.second) must beTrue
     }
 
     "Future() handles exceptions" in {

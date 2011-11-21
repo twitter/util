@@ -1,12 +1,13 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
 import scala.collection.mutable
 import scala.annotation.tailrec
 
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
+import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
+
 import com.twitter.concurrent.{Offer, IVar}
 import com.twitter.conversions.time._
-import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
@@ -486,6 +487,8 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Converts a Future[Future[B]] into a Future[B]
    */
   def flatten[B](implicit ev: A <:< Future[B]): Future[B]
+
+  def willEqual[B](that: Future[B]): Future[Boolean]
 }
 
 object Promise {
@@ -612,6 +615,12 @@ class Promise[A] private[Promise](
    */
   override def respond(k: Try[A] => Unit): Future[A] = respond(k, k)
 
+  /**
+   * Note: exceptions in responds are monitored.  That is, if the
+   * computation {{k}} throws a raw (ie.  not encoded in a Future)
+   * exception, it is handled by the current monitor, see
+   * {{com.twitter.util.Monitor}} for details.
+   */
   def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
     // Note that there's a race here, but that's
     // okay.  The resulting Futures are
@@ -717,6 +726,20 @@ class Promise[A] private[Promise](
   }
 
   private[util] def depth = ivar.depth
+
+  /**
+   * Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
+   * Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
+   */
+  def willEqual[B](that: Future[B]) = {
+    val areEqual = new Promise[Boolean]
+    this respond { thisResult =>
+      that respond { thatResult =>
+        areEqual.setValue(thisResult == thatResult)
+      }
+    }
+    areEqual
+  }
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
