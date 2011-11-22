@@ -1,6 +1,7 @@
 package com.twitter.util
 
-import java.util.concurrent.{CancellationException, ExecutorService, Executors}
+import java.util.concurrent.{CancellationException, ExecutorService, Executors, Future => JFuture}
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * A FuturePool executes tasks asynchronously, typically using a pool
@@ -35,38 +36,55 @@ object FuturePool {
 
 /**
  * A FuturePool implementation backed by an ExecutorService.
+ *
+ * If a piece of work has started, it cannot be cancelled and will not propagate
+ * cancellation.
  */
 class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePool {
   def apply[T](f: => T): Future[T] = {
-    val out = new Promise[T]
     val saved = Locals.save()
 
-    try {
-      val javaFuture = executor.submit(new Runnable {
-        def run = {
-          // Make an effort to skip work in the case the promise
-          // has been cancelled or already defined.
-          if (!out.isDefined && !out.isCancelled) {
-            val current = Locals.save()
-            saved.restore()
-            try {
-              out.updateIfEmpty(Try(f))
-            } finally {
-              current.restore()
-            }
+    val stoppable = new AtomicBoolean(true)
+
+    def makePromiseTask(out: Promise[T], f: => T): Runnable = new Runnable {
+      def run = {
+        // At this point, nothing should be cancelling us
+        // sets running=true and returns whether we were inProgress or not.
+        val runnable = stoppable.compareAndSet(true, false)
+        // Make an effort to skip work in the case the promise
+        // has been cancelled or already defined.
+        if (runnable) {
+          val current = Locals.save()
+          saved.restore()
+
+          try {
+            out.update(Try(f))
+          } finally {
+            current.restore()
           }
         }
-      })
-
-      // basically out.linkTo(javaFuture)
-      out onCancellation {
-        javaFuture.cancel(true)
-        out.updateIfEmpty(Throw(new CancellationException))
       }
-    } catch {
-      case e => out.updateIfEmpty(Throw(e))
     }
 
-    out
+    /**
+     * link the cancellation of the Promise to the JFuture
+     */
+    def linkCancellation(promise: Promise[T], javaFuture: JFuture[_]) {
+      promise onCancellation {
+        val cancelled = stoppable.compareAndSet(true, false)
+
+        if (cancelled) {
+          javaFuture.cancel(true)
+          promise.update(Throw(new CancellationException))
+        }
+      }
+    }
+
+    Future {
+      val out = new Promise[T]
+      linkCancellation(out, executor.submit(makePromiseTask(out, f)))
+
+      out
+    } flatten
   }
 }

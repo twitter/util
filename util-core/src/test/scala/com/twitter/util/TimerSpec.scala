@@ -72,6 +72,30 @@ object TimerSpec extends Specification with Mockito {
     }
   }
 
+  "JavaTimer" should {
+    "not stop working when an exception is thrown" in {
+      var errors = 0
+
+      val timer = new JavaTimer {
+        override def logError(t: Throwable) {
+          errors += 1
+        }
+      }
+
+      timer.schedule(Time.now) {
+        throw new scala.MatchError
+      }
+
+      errors mustEqual 1
+
+      var result = 0
+      timer.schedule(Time.now) { result = 1 + 1 } mustNot throwA[Throwable]
+      result mustEqual 2
+
+      errors mustEqual 1
+    }
+  }
+
   "Timer" should {
     val result = "boom"
 

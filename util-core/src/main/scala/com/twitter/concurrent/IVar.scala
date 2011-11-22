@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
 import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 
-
 /**
  * An IVar is an "I-structured variable". It is a mutable cell that begins empty but can
  * eventually contain a value. It supports write-once semantics (subsequent writes are ignored);
