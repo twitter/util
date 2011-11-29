@@ -87,6 +87,13 @@ object Config {
 trait Config[T] extends (() => T) {
   import Config.{Required, Specified, Unspecified, RequiredValuesMissing}
 
+  /**
+   * a lazy singleton of the configured class. Allows one to pass
+   * the Config around to multiple classes without producing multiple
+   * configured instances
+   */
+  lazy val memoized: T = apply()
+
   def required[A]: Required[A] = Unspecified
   def optional[A]: Option[A] = None
   def computed[A](f: => A): Required[A] = new Specified(f)
