@@ -1,5 +1,6 @@
-package com.twitter.util
+package com.twitter.collection
 
+import com.twitter.util.{Duration, Time}
 import com.twitter.util.TimeConversions._
 import org.specs.Specification
 import org.specs.mock.Mockito

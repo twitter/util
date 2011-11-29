@@ -1,6 +1,7 @@
-package com.twitter.util
+package com.twitter.collection
 
 import collection._
+import com.twitter.util.{Duration, Time}
 import com.twitter.util.TimeConversions._
 
 trait GenerationalQueue[A] {
@@ -36,13 +37,13 @@ class ExactGenerationalQueue[A] extends GenerationalQueue[A] {
       None
     else
       container.min match {
-        case (a, t) if (age < Time.now - t) => Some(a)
+        case (a, t) if (t.untilNow > age) => Some(a)
         case _ => None
       }
   }
 
   def collectAll(age: Duration): Iterable[A] = synchronized {
-    (container filter { case (_, t) => age < Time.now - t }).keys
+    (container filter { case (_, t) => t.untilNow > age }).keys
   }
 }
 
@@ -68,7 +69,7 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 
     // return the age of the potential youngest element of the bucket (may be negative if the
     // bucket is not yet expired)
-    def age(now: Time = Time.now): Duration = now - (origin + span)
+    def age(now: Time = Time.now): Duration = (origin + span).until(now)
 
     def ++=(other: TimeBucket[A]) = {
       origin = List(origin, other.origin).min
@@ -84,11 +85,11 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
   }
 
   private[this] val timeSlice = timeout / 3
-  /*private[this]*/ var buckets = List(TimeBucket.empty[A])
+  private[this] var buckets = List(TimeBucket.empty[A])
 
   private[this] def maybeGrowChain() = {
     // NB: age of youngest element is negative when bucket isn't expired
-    if (0 < buckets.head.age()) {
+    if (buckets.head.age() > 0) {
       buckets = TimeBucket.empty[A] :: buckets
       true
     } else
