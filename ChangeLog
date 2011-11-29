@@ -1,3 +1,17 @@
+1.12.5  2011-11-29
+
+  * Config: recompile configs based on hash instead of timestamp, add
+  memoization
+  * Timer: make JavaTimer more resilient, log errors
+  * FuturePool: Fixed race condition in FuturePool where work that was
+  cancelled would not clean up after itself
+  * Function: Add ExceptionalFunction type to allow Java to throw
+  checked exceptions.
+  * Futures: trace dispatch "stack", supplying it as a stack trace for
+  exceptions, implement "transform", "transformedBy" to allow for a
+  more imperative control flow when used from Java.
+  * Monitors: composable widgets for handling exceptions
+
 1.12.4  2011-11-09
 
  * Files.delete has to follow symlinks because jdk6 support
