@@ -26,4 +26,17 @@ public class FutureTest extends TestCase {
     });
     assertEquals((int) f2.get(), 23);
   }
+
+  public void testTransformedBy() {
+    Future<String> f = Future.value("23");
+    Future<Integer> f2 = f.transformedBy(new FutureTransformer<String, Integer>() {
+      public Future<Integer> flatMap(String value) {
+        return Future.value(Integer.parseInt(value));
+      }
+      public Future<Integer> rescue(Throwable throwable) {
+        return Future.value(0);
+      }
+    });
+    assertEquals((int) f2.get(), 23);
+  }
 }

@@ -53,9 +53,16 @@ object Future {
   def value[A](a: A): Future[A] = new Promise[A](Return(a))
 
   /**
-   * Make a Future with an error. E.g., Future.exception(new Exception("boo"))
+   * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
+   * The exception is wrapped using the current `Future.tracer`.
    */
-  def exception[A](e: Throwable): Future[A] = new Promise[A](Throw(e))
+  def exception[A](e: Throwable): Future[A] = new Promise[A](Throw(Future.tracer.wrap(e)))
+
+  /**
+   * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
+   * The exception is not wrapped in any way.
+   */
+  def rawException[A](e: Throwable): Future[A] = new Promise[A](Throw(e))
 
   def void() = Future[Void] { null }
 
@@ -240,7 +247,8 @@ object Future {
 
 /**
  * An alternative interface for handling Future Events. This interface is designed
- * to be friendly to Java users since it does not require closures.
+ * to be friendly to Java users since it does not require creating many small
+ * Function objects.
  */
 trait FutureEventListener[T] {
   /**
@@ -252,6 +260,47 @@ trait FutureEventListener[T] {
    * Invoked if the computation completes unsuccessfully
    */
   def onFailure(cause: Throwable): Unit
+}
+
+/**
+ * An alternative interface for performing Future transformations; that is,
+ * converting a Future[A] to a Future[B]. This interface is designed to be
+ * friendly to Java users since it does not require creating many small
+ * Function objects. It is used in conjunction with `transformedBy`.
+ *
+ * You must override one of `{map, flatMap}`. If you override both `map` and
+ * `flatMap`, `flatMap` takes precedence. If you fail to override one of
+ * `{map, flatMap}`, an `AbstractMethodError` will be thrown at Runtime.
+ *
+ * '''Note:''' an exception e thrown in any of map/flatMap/handle/rescue will
+ * make the result of transformedBy be equivalent to Future.exception(e).
+ */
+abstract class FutureTransformer[-A, +B] {
+  /**
+   * Invoked if the computation completes successfully. Returns the new transformed
+   * value in a Future.
+   */
+  def flatMap(value: A): Future[B] = Future.value(map(value))
+
+  /**
+   * Invoked if the computation completes successfully. Returns the new transformed
+   * value.
+   *
+   * ''Note'': this method will throw an `AbstractMethodError` if it is not overridden.
+   */
+  def map(value: A): B = throw new AbstractMethodError
+
+  /**
+   * Invoked if the computation completes unsuccessfully. Returns the new Future
+   * value.
+   */
+  def rescue(throwable: Throwable): Future[B] = Future.value(handle(throwable))
+
+  /**
+   * Invoked if the computation fails. Returns the new transformed
+   * value.
+   */
+  def handle(throwable: Throwable): B = throw throwable
 }
 
 /**
@@ -370,10 +419,49 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       case _ =>
     })
 
+  /**
+   * Register a FutureEventListener to be invoked when the computation
+   * completes. This method is typically used by Java programs because
+   * it avoids the use of small Function objects.
+   *
+   * Compare this method to `transformedBy`. The difference is that `addEventListener`
+   * is used to perform a simple action when a computation completes, such as recording
+   * data in a log-file. It analogous to a `void` method in Java: it has side-effects
+   * and no return value. `transformedBy`, on the other hand, is used to transform
+   * values from one type to another, or to chain a series of asynchronous calls and
+   * return the result. It is analogous to methods in Java that have a return-type.
+   * Note that `transformedBy` and `addEventListener` are not mutually exclusive and
+   * may be profitably combined.
+   */
   def addEventListener(listener: FutureEventListener[_ >: A]) = respond(listener, {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
   })
+
+  /**
+   * Transform the Future[A] into a Future[B] using the FutureTransformer.
+   * The FutureTransformer handles both success (Return) and failure (Throw)
+   * values by implementing map/flatMap and handle/rescue. This method is typically used
+   * by Java programs because it avoids the use of small Function objects.
+   *
+   * Compare this method to `addEventListener`. The difference is that `addEventListener`
+   * is used to perform a simple action when a computation completes, such as recording
+   * data in a log-file. It analogous to a `void` method in Java: it has side-effects
+   * and no return value. `transformedBy`, on the other hand, is used to transform
+   * values from one type to another, or to chain a series of asynchronous calls and
+   * return the result. It is analogous to methods in Java that have a return-type.
+   * Note that `transformedBy` and `addEventListener` are not mutually exclusive and
+   * may be profitably combined.
+   *
+   * ''Note'': The FutureTransformer must implement either `flatMap` or `map` and may
+   * optionally implement `handle`. Failing to implement a method will result in
+   * a run-time (AbstractMethod) error.
+   */
+  def transformedBy[B](transformer: FutureTransformer[A, B]): Future[B] =
+    transform {
+      case Return(v) => transformer.flatMap(v)
+      case Throw(t)  => transformer.rescue(t)
+    }
 
   /**
    * Choose the first Future to succeed.
@@ -652,6 +740,30 @@ class Promise[A] private[Promise](
     }
   }
 
+  protected[this] def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
+    tracingObject: AnyRef,
+    f: Try[A] => AlsoFuture[B]
+  ): Future[B] = {
+    val promise = new Promise[B]
+
+    val k = { _: Unit => this.cancel() }
+    promise.cancelled.get(k)
+    respondWithoutChaining(tracingObject, { r =>
+      promise.cancelled.unget(k)
+      val result =
+        try
+          f(r)
+        catch {
+          case e => Future.exception(e)
+        }
+      promise.merge(result)
+    })
+    promise
+  }
+
+  def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: Try[A] => AlsoFuture[B]): Future[B] =
+    transform(f, f)
+
   /**
    * Invoke 'f' if this Future is cancelled.
    */
@@ -666,53 +778,22 @@ class Promise[A] private[Promise](
    * only affects the current parent promise that
    * is being waited on.
    */
-  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](
-    f: A => AlsoFuture[B]
-  ): Future[B] = {
-    val promise = new Promise[B]
-    val k = { _: Unit => this.cancel() }
-    promise.cancelled.get(k)
-    respondWithoutChaining(f, {
-      case Return(r) =>
-        try {
-          promise.cancelled.unget(k)
-          promise.merge(f(r))
-        } catch {
-          case e =>
-            promise() = Throw(Future.tracer.wrap(e))
-        }
-
-      case Throw(e) =>
-        promise() = Throw(Future.tracer.wrap(e))
+  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]): Future[B] =
+    transform(f, {
+      case Return(v) => f(v)
+      case Throw(t) => Future.rawException(t)
     })
-    promise
-  }
 
   def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
     flatMap[B, Future] { x => x }
 
   def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
     rescueException: PartialFunction[Throwable, AlsoFuture[B]]
-  ): Future[B] = {
-    val promise = new Promise[B]
-    val k = { _: Unit => this.cancel() }
-    promise.cancelled.get(k)
-    respondWithoutChaining(rescueException, {
-      case r: Return[_] =>
-        promise() = r
-
-      case Throw(e) if rescueException.isDefinedAt(e) =>
-        try {
-          promise.cancelled.unget(k)
-          promise.merge(rescueException(e))
-        } catch {
-          case e => promise() = Throw(e)
-        }
-      case Throw(e) =>
-        promise() = Throw(e)
+  ): Future[B] =
+    transform(rescueException, {
+      case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
+      case _ => this
     })
-    promise
-  }
 
   override def filter(p: A => Boolean): Future[A] = {
     makePromise[A](this) { promise =>

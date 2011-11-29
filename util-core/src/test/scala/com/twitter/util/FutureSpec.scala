@@ -406,6 +406,70 @@ class FutureSpec extends Specification with Mockito {
       }
     }
 
+    "transform" in {
+      val e = new Exception("rdrr")
+
+      "values" in {
+        Future.value(1).transform {
+          case Return(v) => Future.value(v + 1)
+          case Throw(t) => Future.value(0)
+        } mustProduce(Return(2))
+      }
+
+      "exceptions" in {
+        Future.exception(e).transform {
+          case Return(_) => Future.value(1)
+          case Throw(t) => Future.value(0)
+        } mustProduce(Return(0))
+      }
+
+      "exceptions thrown during transformation" in {
+        Future.value(1).transform {
+          case Return(v) => Future.value(throw e)
+          case Throw(t) => Future.value(0)
+        } mustProduce(Throw(e))
+      }
+    }
+
+    "transformedBy" in {
+      val e = new Exception("rdrr")
+
+      "flatMap" in {
+        Future.value(1).transformedBy(new FutureTransformer[Int, Int] {
+          override def flatMap(value: Int) = Future.value(value + 1)
+          override def rescue(t: Throwable) = Future.value(0)
+        }) mustProduce(Return(2))
+      }
+
+      "rescue" in {
+        Future.exception(e).transformedBy(new FutureTransformer[Int, Int] {
+          override def flatMap(value: Int) = Future.value(value + 1)
+          override def rescue(t: Throwable) = Future.value(0)
+        }) mustProduce(Return(0))
+      }
+
+      "exceptions thrown during transformation" in {
+        Future.value(1).transformedBy(new FutureTransformer[Int, Int] {
+          override def flatMap(value: Int) = throw e
+          override def rescue(t: Throwable) = Future.value(0)
+        }) mustProduce(Throw(e))
+      }
+
+      "map" in {
+        Future.value(1).transformedBy(new FutureTransformer[Int, Int] {
+          override def map(value: Int) = value + 1
+          override def handle(t: Throwable) = 0
+        }) mustProduce(Return(2))
+      }
+
+      "handle" in {
+        Future.exception(e).transformedBy(new FutureTransformer[Int, Int] {
+          override def map(value: Int) = value + 1
+          override def handle(t: Throwable) = 0
+        }) mustProduce(Return(0))
+      }
+    }
+
     "flatMap" in {
       "successes" in {
         val f = Future(1) flatMap { x => Future(x + 1) }
@@ -418,16 +482,30 @@ class FutureSpec extends Specification with Mockito {
           f mustProduce Return(2)
         }
 
-        "cancellation" in {
-          val f1 = new Promise[Int]
-          val f2 = Future(2)
-          val f = f1 flatMap { _ => f2 }
-          f1.isCancelled must beFalse
-          f2.isCancelled must beFalse
-          f.cancel()
-          f1.isCancelled must beTrue
-          f1() = Return(2)
-          f2.isCancelled must beTrue
+        "cancellation of the produced future" in {
+          "before the antecedent Future obtains, propagates back to the antecedent" in {
+            val f1 = new Promise[Int]
+            val f2 = Future(2)
+            val f = f1 flatMap { _ => f2 }
+            f1.isCancelled must beFalse
+            f2.isCancelled must beFalse
+            f.cancel()
+            f1.isCancelled must beTrue
+            f1() = Return(2)
+            f2.isCancelled must beTrue
+          }
+
+          "after the antecedent Future obtains, does not propagate back to the antecedent" in {
+            val f1 = new Promise[Int]
+            val f2 = Future(2)
+            val f = f1 flatMap { _ => f2 }
+            f1.isCancelled must beFalse
+            f2.isCancelled must beFalse
+            f1() = Return(2)
+            f.cancel()
+            f1.isCancelled must beFalse
+            f2.isCancelled must beTrue
+          }
         }
       }
 
@@ -517,17 +595,31 @@ class FutureSpec extends Specification with Mockito {
         }
       }
 
-      "cancellation" in {
-        val f1 = new Promise[Int]
-        val f2 = Future(2)
-        val f = f1 rescue { case _ => f2 }
-        f1.isCancelled must beFalse
-        f2.isCancelled must beFalse
-        f.cancel()
-        f1.isCancelled must beTrue
-        f2.isCancelled must beFalse
-        f1() = Throw(new Exception)
-        f2.isCancelled must beTrue
+      "cancellation of the produced future" in {
+        "before the antecedent Future obtains, propagates back to the antecedent" in {
+          val f1 = new Promise[Int]
+          val f2 = Future(2)
+          val f = f1 rescue { case _ => f2 }
+          f1.isCancelled must beFalse
+          f2.isCancelled must beFalse
+          f.cancel()
+          f1.isCancelled must beTrue
+          f2.isCancelled must beFalse
+          f1() = Throw(new Exception)
+          f2.isCancelled must beTrue
+        }
+
+        "after the antecedent Future obtains, does not propagate back to the antecedent" in {
+          val f1 = new Promise[Int]
+          val f2 = Future(2)
+          val f = f1 rescue { case _ => f2 }
+          f1.isCancelled must beFalse
+          f2.isCancelled must beFalse
+          f1() = Throw(new Exception)
+          f.cancel()
+          f1.isCancelled must beFalse
+          f2.isCancelled must beTrue
+        }
       }
     }
 
