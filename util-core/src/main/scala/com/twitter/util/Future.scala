@@ -576,6 +576,9 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    */
   def flatten[B](implicit ev: A <:< Future[B]): Future[B]
 
+  /**
+   * Returns a Future[Boolean] indicating whether `this` and `that` are equals().
+   */
   def willEqual[B](that: Future[B]): Future[Boolean]
 }
 
