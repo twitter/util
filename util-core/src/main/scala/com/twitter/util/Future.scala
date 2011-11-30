@@ -1,7 +1,8 @@
 package com.twitter.util
 
-import scala.collection.mutable
 import scala.annotation.tailrec
+import scala.collection.mutable
+import scala.collection.JavaConversions.{asScalaBuffer, asJavaList}
 
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
@@ -134,6 +135,16 @@ object Future {
   }
 
   /**
+   * Take a sequence of Futures, wait till they all complete
+   * successfully.  The future fails immediately if any of the joined
+   * Futures do, mimicking the semantics of exceptions.
+   *
+   * @param fs a java.util.List of Futures
+   * @return a Future[Unit] whose value is populated when all of the fs return.
+   */
+  def join[A](fs: java.util.List[Future[A]]): Future[Unit] = join(asScalaBuffer(fs))
+
+  /**
    * Collect the results from the given futures into a new future of
    * Seq[A].
    *
@@ -165,29 +176,21 @@ object Future {
     }
   }
 
-  /*
-   * original version:
+  /**
+   * Collect the results from the given futures into a new future of
+   * Seq[A].
    *
-   * often, this version will not trigger even after all of the collected
-   * futures have triggered. some debugging is required.
-   *
-  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
-    val collected = fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
-      a flatMap { aa => e map { _ :: aa } }
-    } map { _.reverse }
-
-    // Cancellations don't get propagated in flatMap because the
-    // computation is short circuited.  Thus we link manually to get
-    // the expected behavior from collect().
-    fs foreach { f => collected.linkTo(f) }
-
-    collected
-  }
-  */
+   * @param fs a java.util.List of Futures
+   * @return a Future[java.util.List[A]] containing the collected values from fs.
+   */
+  def collect[A](fs: java.util.List[Future[A]]): Future[java.util.List[A]] =
+    collect(asScalaBuffer(fs)) map(asJavaList(_))
 
   /**
    * "Select" off the first future to be satisfied.  Return this as a
    * result, with the remainder of the Futures as a sequence.
+   *
+   * @param fs a scala.collection.Seq
    */
   def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] = {
     if (fs.isEmpty) {
@@ -208,6 +211,20 @@ object Future {
 
         stripe(Seq(), fs.head, fs.tail)
       }
+    }
+  }
+
+  /**
+   * "Select" off the first future to be satisfied.  Return this as a
+   * result, with the remainder of the Futures as a sequence.
+   *
+   * @param fs a java.util.List
+   * @return a Future[Tuple2[Try[A], java.util.List[Future[A]]]] representing the first future
+   * to be satisfied and the rest of the futures.
+   */
+  def select[A](fs: java.util.List[Future[A]]): Future[(Try[A], java.util.List[Future[A]])] = {
+    select(asScalaBuffer(fs)) map { case (first, rest) =>
+      (first, asJavaList(rest))
     }
   }
 
