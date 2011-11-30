@@ -95,6 +95,7 @@ trait Config[T] extends (() => T) {
   lazy val memoized: T = apply()
 
   def required[A]: Required[A] = Unspecified
+  def required[A](default: => A): Required[A] = new Specified(default)
   def optional[A]: Option[A] = None
   def computed[A](f: => A): Required[A] = new Specified(f)
   /** a non-lazy way to create a Specified that can be called from java */
