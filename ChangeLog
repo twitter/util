@@ -1,3 +1,8 @@
+1.12.6  2011-12-01
+
+  * Future: all helper methods now have Java-friendly equivalents
+  that take Lists.
+
 1.12.5  2011-11-29
 
   * Config: recompile configs based on hash instead of timestamp, add
