@@ -120,6 +120,17 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
   def respond(k: Try[R] => Unit): This[R]
 
   /**
+   * Invokes the given transformation when the value is available,
+   * returning the transformed value. This method is like a combination
+   * of flatMap and rescue. This method is typically used for more
+   * imperative control-flow than flatMap/rescue which often exploits
+   * the Null Object Pattern.
+   *
+   * This is overridden by subclasses.
+   */
+  def transform[R2, AlsoThis[R2] >: This[R2] <: This[R2]](f: Try[R] => AlsoThis[R2]): AlsoThis[R2]
+
+  /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw.
    * Alias for flatMap
    */
@@ -129,9 +140,8 @@ trait TryLike[+R, This[+R] <: TryLike[R, This]] {
 sealed abstract class Try[+R] extends TryLike[R, Try] {
   def respond(k: Try[R] => Unit) = { k(this); this }
 
-  /**
-   * Converts a Try[Try[T]] into a Try[T]
-   */
+  def transform[R2, That[R2] >: Try[R2] <: Try[R2]](f: (Try[R]) => That[R2]) = f(this)
+
   def flatten[T](implicit ev: R <:< Try[T]): Try[T]
 }
 
