@@ -36,17 +36,18 @@ object Future {
   }
 
   @volatile var tracer: Tracer = null
-  try {
-    // By default, use the standard reflection-based tracer, if it's on the classpath.
-    val clazz = Class.forName("com.twitter.util.reflect.AsmFutureTracer")
-    tracer = clazz.newInstance.asInstanceOf[Tracer]
-  } catch {
-    case e: ClassNotFoundException =>
+// TEMPORARILY DISABLED:
+//  try {
+//    // By default, use the standard reflection-based tracer, if it's on the classpath.
+//    val clazz = Class.forName("com.twitter.util.reflect.AsmFutureTracer")
+//    tracer = clazz.newInstance.asInstanceOf[Tracer]
+//  } catch {
+//    case e: ClassNotFoundException =>
       tracer = new Tracer {
         def record(a: AnyRef) {}
         def wrap[T <: Throwable : Manifest](t: T) = t
       }
-  }
+//  }
 
   /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
