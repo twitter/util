@@ -75,10 +75,12 @@ object TimerSpec extends Specification with Mockito {
   "JavaTimer" should {
     "not stop working when an exception is thrown" in {
       var errors = 0
+      var latch = new CountDownLatch(1)
 
       val timer = new JavaTimer {
         override def logError(t: Throwable) {
           errors += 1
+          latch.countDown
         }
       }
 
@@ -86,12 +88,20 @@ object TimerSpec extends Specification with Mockito {
         throw new scala.MatchError
       }
 
+      latch.await(30.seconds)
+
       errors mustEqual 1
 
       var result = 0
-      timer.schedule(Time.now) { result = 1 + 1 } mustNot throwA[Throwable]
-      result mustEqual 2
+      latch = new CountDownLatch(1)
+      timer.schedule(Time.now) {
+        result = 1 + 1
+        latch.countDown
+      } mustNot throwA[Throwable]
 
+      latch.await(30.seconds)
+
+      result mustEqual 2
       errors mustEqual 1
     }
   }
