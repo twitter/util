@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.{CancellationException, ExecutorService, Executors, Future => JFuture}
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -30,7 +31,10 @@ object FuturePool {
    * Convenient, but higher demand systems should configure their own.
    */
   lazy val defaultPool = new ExecutorServiceFuturePool(
-    Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2)
+    Executors.newFixedThreadPool(
+      Runtime.getRuntime().availableProcessors() * 2,
+      new NamedPoolThreadFactory("DefaultFuturePool")
+    )
   )
 }
 
