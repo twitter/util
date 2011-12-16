@@ -24,7 +24,7 @@ object Future {
      * Typically the provided object is a closure or inner-class that has enough metadata
      * to reconstruct something resembling a stack frame.
      */
-    def record(a: AnyRef)
+    private[util] def record(a: AnyRef)
 
     /**
      * Decorate an exception with additional trace data. Implementations
@@ -32,22 +32,29 @@ object Future {
      * mutate the given exception (which is not thread-safe) or use the provided
      * manifest to create a dynamic proxy.
      */
-    def wrap[T <: Throwable](t: T)(implicit m: Manifest[T]): T
+    private[util] def wrap[T <: Throwable](t: T): T
+
+    /**
+     * Produces a sequence of StackTraceElements indicating the asynchronous path that
+     * lead to the current stack-frame. This method is public and is meant to help end
+     * users debug difficult asynchronous control-flow.
+     */
+    def stackTrace: Seq[StackTraceElement]
   }
 
-  @volatile var tracer: Tracer = null
-// TEMPORARILY DISABLED:
-//  try {
-//    // By default, use the standard reflection-based tracer, if it's on the classpath.
-//    val clazz = Class.forName("com.twitter.util.reflect.AsmFutureTracer")
-//    tracer = clazz.newInstance.asInstanceOf[Tracer]
-//  } catch {
-//    case e: ClassNotFoundException =>
-      tracer = new Tracer {
-        def record(a: AnyRef) {}
-        def wrap[T <: Throwable : Manifest](t: T) = t
+  @volatile var trace: Tracer = null
+  try {
+    // By default, use the standard reflection-based tracer, if it's on the classpath.
+    val clazz = Class.forName("com.twitter.util.reflect.AsmFutureTracer")
+    trace = clazz.newInstance.asInstanceOf[Tracer]
+  } catch {
+    case e: ClassNotFoundException =>
+      trace = new Tracer {
+        private[util] def record(a: AnyRef) {}
+        private[util] def wrap[T <: Throwable](t: T) = t
+        def stackTrace = Seq[StackTraceElement]()
       }
-//  }
+  }
 
   /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
@@ -58,7 +65,7 @@ object Future {
    * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
    * The exception is wrapped using the current `Future.tracer`.
    */
-  def exception[A](e: Throwable): Future[A] = new Promise[A](Throw(Future.tracer.wrap(e)))
+  def exception[A](e: Throwable): Future[A] = new Promise[A](Throw(Future.trace.wrap(e)))
 
   /**
    * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
@@ -753,7 +760,7 @@ class Promise[A] private[Promise](
     ivar.get { result =>
       val current = Locals.save()
       saved.restore()
-      Future.tracer.record(tracingObject)
+      Future.trace.record(tracingObject)
       try
         k(result)
       finally

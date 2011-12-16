@@ -37,31 +37,40 @@ class AsmFutureTracer(maxDepth: Int) extends Future.Tracer {
 
   private[this] val local = new Local[Vector[Class[_]]]
 
-  def record(a: AnyRef) {
+  private[util] def record(a: AnyRef) {
     val clazz = a.getClass
     local() = (clazz +: local().getOrElse(Vector.empty[Class[_]])).take(maxDepth)
   }
 
-  def wrap[T <: Throwable](t: T)(implicit manifest: Manifest[T]) = {
-    val clazzes = local().getOrElse(Vector.empty[Class[_]])
-    if (clazzes.isEmpty) t
-    else {
-      val fakeStack = clazzes.map(toStackTraceElement(_))
-      val tracedException = new TracedException(t, fakeStack)
-      val enhancer = new Enhancer
-      enhancer.setSuperclass(manifest.erasure)
-      val interceptor = new MethodInterceptor[T](None, { call =>
-        val method = call.method
-        val args = call.args
+  /**
+   * Note: because of limitations in the JVM, exceptions can only be enhanced if their class
+   * has a zero-args constructor. The original exception is returned if this is not the case.
+   */
+  private[util] def wrap[T <: Throwable](throwable: T): T = {
+    val fakeTrace = stackTrace
+    if (fakeTrace.isEmpty) return throwable
+    val hasNoArgsConstructor = throwable.getClass.getConstructors.exists(_.getParameterTypes.isEmpty)
+    if (!hasNoArgsConstructor) return throwable
 
-        if (method.getDeclaringClass == classOf[Throwable]) {
-          method.invoke(tracedException, args: _*)
-        } else
-          call()
-      })
-      enhancer.setCallback(interceptor)
-      enhancer.create.asInstanceOf[T]
-    }
+    val tracedException = new TracedException(throwable, fakeTrace)
+    val enhancer = new Enhancer
+    enhancer.setSuperclass(throwable.getClass)
+    val interceptor = new MethodInterceptor[T](None, { call =>
+      val method = call.method
+      val args = call.args
+
+      if (method.getDeclaringClass == classOf[Throwable]) {
+        method.invoke(tracedException, args: _*)
+      } else
+        method.invoke(throwable, args: _*)
+    })
+    enhancer.setCallback(interceptor)
+    enhancer.create.asInstanceOf[T]
+  }
+
+  def stackTrace = {
+    val clazzes = local().getOrElse(Vector.empty[Class[_]])
+    clazzes.map(toStackTraceElement(_))
   }
 
   private[this] def toStackTraceElement(clazz: Class[_]) = {
