@@ -21,6 +21,7 @@ trait Base64StringEncoder extends StringEncoder {
     codec.decode(str)
 }
 
+object StringEncoder extends StringEncoder
 object Base64StringEncoder extends Base64StringEncoder
 
 /**
