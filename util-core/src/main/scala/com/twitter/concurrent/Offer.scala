@@ -2,7 +2,8 @@ package com.twitter.concurrent
 
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.util.Random
-import scala.collection.mutable.WeakHashMap
+import scala.collection.mutable.ArrayBuffer
+import scala.ref.WeakReference
 
 import com.twitter.util.{Future, Promise, Return}
 import com.twitter.util.{Time, Timer, Duration}
@@ -87,30 +88,42 @@ object Offer {
    *
    *  For more information.
    */
-  private[Offer] object ObjectOrder extends Ordering[AnyRef] {
-    private[this] val order = new WeakHashMap[AnyRef, Long]
-    private[this] var nextId = 0L
+  private[concurrent] object ObjectOrder extends Ordering[AnyRef] {
+    private[concurrent] var order: ArrayBuffer[WeakReference[AnyRef]] = new ArrayBuffer()
+
+    // Returns the index of x in the buffer; appends x if it's not in the buffer
+    def indexOf(x: AnyRef): Int = {
+      val i = order.indexWhere { wr =>
+        wr.get match {
+          case Some (r) => r eq x
+          case None => false
+        }
+      }
+
+      if (i != -1) i else {
+        order += new WeakReference(x)
+        order.length - 1
+      }
+    }
 
     def compare(a: AnyRef, b: AnyRef): Int = {
       if (a eq b)
         return 0
 
-      val ha = System.identityHashCode(a)
-      val hb = System.identityHashCode(b)
-      val d = ha compare hb
+      val d = System.identityHashCode(a) compare System.identityHashCode(b)
       if (d != 0)
         return d
 
       // Slow path:
+      // first, scan buffer to remove unreachable references.
+      // Then find the indices of a and b, which determine their order
       synchronized {
-        val ia = order.getOrElseUpdate(a, { nextId += 1; nextId })
-        val ib = order.getOrElseUpdate(b, { nextId += 1; nextId })
-        ia compare ib
+        order = order.filterNot(r => r.get.isEmpty)
+        indexOf(a) compare indexOf(b)
       }
     }
   }
 }
-
 
 /**
  * An offer to _communicate_ with another process.  The offer is

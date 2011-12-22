@@ -47,6 +47,55 @@ class SimpleSetter[T] extends Offer[T]#Setter {
 }
 
 object OfferSpec extends Specification with Mockito {
+  private[OfferSpec] class DynamicHashCode{
+    var internalHashCode: Int = 0
+    override def hashCode(): Int = internalHashCode
+    def ChangeHashCode(a: Int): Unit = {
+      internalHashCode = a
+    }
+  }
+
+  private[OfferSpec] class ConstantHashCode{
+    override def hashCode(): Int = 0
+  }
+
+  "Offer.ObjectOrder" should {
+
+    "Add and retrieve objects in the order List" in {
+      var r1 = new Object()
+      var r2 = new Object()
+
+      // add objects to the order list
+      Offer.ObjectOrder.indexOf(r1) must be(0)
+      Offer.ObjectOrder.order must haveSize(1)
+      Offer.ObjectOrder.indexOf(r2) must be(1)
+      Offer.ObjectOrder.order must haveSize(2)
+
+      // retrieve objects from the order list
+      Offer.ObjectOrder.indexOf(r1) must be(0)
+      Offer.ObjectOrder.indexOf(r2) must be(1)
+
+      // what we really want to test is that the entries pointing to GC-ed objects will be removed from
+      // the order list when ObjectOrder.Compare is called. However we cannot force GC, so we mimic the
+      // behavior by clearing the first entry to pretend its object has been Gc-ed
+      Offer.ObjectOrder.order.head.clear()
+      Offer.ObjectOrder.order = Offer.ObjectOrder.order.filterNot(r => r.get.isEmpty)
+      Offer.ObjectOrder.order must haveSize(1)
+    }
+
+    "Changing hashcode" in {
+      val a = new DynamicHashCode()
+      val b = new ConstantHashCode()
+      val originalOrder = Offer.ObjectOrder.compare(a, b)
+      originalOrder must be_!=(0)
+
+      a.ChangeHashCode(10)
+      Offer.ObjectOrder.compare(a, b) must be_==(originalOrder)
+      a.ChangeHashCode(-10)
+      Offer.ObjectOrder.compare(a, b) must be_==(originalOrder)
+    }
+  }
+
   "Offer.map" should {
     // mockito can't spy on anonymous classes.
     val e = spy(new SimpleOffer[Int](Some(123)))
