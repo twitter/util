@@ -51,8 +51,19 @@ class Project(info: ProjectInfo)
     "util-hashing", "util-hashing",
     new HashingProject(_), coreProject)
 
+  // util-zk: An asynchronous ZooKeeper client
+  val zkProject = project(
+    "util-zk", "util-zk",
+    new ZkProject(_), coreProject, collectionProject, loggingProject)
+
+  // util-zk-common: Uses common-zookeeper for connection management
+  val zkCommonProject = project(
+    "util-zk-common", "util-zk-common",
+    new ZkCommonProject(_), coreProject, loggingProject, zkProject)
+
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
+    with Mockito
     with ProjectDefaults
   {
     override def compileOrder = CompileOrder.Mixed
@@ -76,6 +87,7 @@ class Project(info: ProjectInfo)
   class CollectionProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+    with Mockito
   {
     val guava              = "com.google.guava"    % "guava"               % "r09"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
@@ -112,9 +124,26 @@ class Project(info: ProjectInfo)
   class HashingProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+    with Mockito
   {
     val commonsCodec = "commons-codec" % "commons-codec" % "1.5" % "test"
   }
+
+  class ZkProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+    with JMock
+  {
+    val zookeeper = "org.apache.zookeeper" % "zookeeper" % zkVersion
+  }
+
+  class ZkCommonProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
+  {
+    val zookeeper = "org.apache.zookeeper" % "zookeeper" % zkVersion
+    val commonZk  = "com.twitter.common"   % "zookeeper" % "0.0.31"
+ }
 
   trait ProjectDefaults
     extends StandardProject
@@ -123,12 +152,31 @@ class Project(info: ProjectInfo)
     with ProjectDependencies
     with DefaultRepos
   {
-    val specs   = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.8" % "test" withSources()
-    val mockito = "org.mockito"             % "mockito-all" % "1.8.5" % "test" withSources()
-    val junit   = "junit"                   %       "junit" % "3.8.2" % "test"
+    val specs = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.8" % "test" withSources()
+    val junit = "junit"                   %       "junit" % "3.8.2" % "test"
+
+    val zkVersion = "3.3.4"
+    override def ivyXML =
+      <dependencies>
+        <exclude org="com.sun.jmx" module="jmxri" />
+        <exclude org="com.sun.jdmk" module="jmxtools" />
+        <exclude org="javax.jms" module="jms" />
+      </dependencies>
 
     override def compileOptions = super.compileOptions ++ Seq(Unchecked) ++
       compileOptions("-encoding", "utf8") ++
       compileOptions("-deprecation")
+  }
+
+  trait Mockito extends StandardProject {
+    val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test" withSources()
+  }
+
+  trait JMock extends StandardProject {
+    val jmock = "org.jmock" % "jmock" % "2.4.0" % "test"
+    val cglib = "cglib" % "cglib" % "2.1_3" % "test"
+    val asm = "asm" % "asm" % "1.5.3" % "test"
+    val objenesis = "org.objenesis" % "objenesis" % "1.1" % "test"
+    val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
   }
 }
