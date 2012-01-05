@@ -1,6 +1,12 @@
+1.12.9  2012-01-05
+
+  * ThreadPoolFactories are named by default
+  * Offer: ensure ObjectOrder is independent of Object#hashCode
+  * new package: util-zk: asynchronous bindings to ZooKeeper
+
 1.12.7  2011-12-02
 
-  *  Future: temporarily disabling default usage of the AsmTracer
+  * Future: temporarily disabling default usage of the AsmTracer
 
 1.12.6  2011-12-01
 
