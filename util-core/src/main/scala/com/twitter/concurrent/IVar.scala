@@ -314,12 +314,12 @@ final class IVar[A] extends IVarField[A] {
 
   /**
    * Remove the given closure {{k}} from
-   * the waiter list.
+   * the waiter list by object identity.
    */
   @tailrec
   def unget(k: A => Unit) {
     state match {
-      case s@Waiting(k :: Nil, Nil) =>
+      case s@Waiting(k0 :: Nil, Nil) if k0 eq k =>
         if (!cas(s, initState: State[A]))
           unget(k)
       case s@Waiting(waitq, _) =>

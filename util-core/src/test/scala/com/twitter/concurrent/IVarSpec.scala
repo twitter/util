@@ -64,6 +64,14 @@ object IVarSpec extends Specification {
       iv.set(1)
       didrun must beFalse
     }
+    
+    "not remove another waiter on unget" in {
+      var ran = false
+      iv.get { _: Int => ran = true }
+      iv.unget({_: Int => ()})
+      iv.set(1)
+      ran must beTrue
+    }
 
     "merge" in {
       val a, b, c = new IVar[Int]
