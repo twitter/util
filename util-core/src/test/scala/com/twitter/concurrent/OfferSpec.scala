@@ -150,10 +150,16 @@ object OfferSpec extends Specification with Mockito {
     "shuffle events" in Time.withTimeAt(Time.epoch) { tc =>
       (es zipWithIndex) foreach { case (e, i) => e.value = Some(i) }
       val e = Offer.choose(es:_*)
-
-      e.poll() must beSome[()=> Int].which { _() == 2 }
-      tc.advance(2.seconds)
-      e.poll() must beSome[() => Int].which { _() == 0 }
+      val histo = new Array[Int](3)
+      for (_ <- 0 until 1000) {
+        tc.advance(1.nanosecond)
+        val Some(f) = e.poll()
+        histo(f()) += 1
+      }
+      
+      histo(0) must be_==(327)
+      histo(1) must be_==(332)
+      histo(2) must be_==(341)
     }
   }
 

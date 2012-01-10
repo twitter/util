@@ -20,7 +20,7 @@ object Offer {
   def choose[T](ofs: Offer[T]*): Offer[T] =
     if (ofs.isEmpty) never[T] else new Offer[T] {
       def poll() = {
-        val rng = new Random(Time.now.inMilliseconds)
+        val rng = new Random(Time.now.inNanoseconds)
         val shuffled = rng.shuffle(ofs.toList)
         shuffled.foldLeft(None: Option[() => T]) {
           case (None, of) => of.poll()
