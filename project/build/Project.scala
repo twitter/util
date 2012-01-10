@@ -140,6 +140,7 @@ class Project(info: ProjectInfo)
   class ZkCommonProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
+    with JMock
   {
     val zookeeper = "org.apache.zookeeper" % "zookeeper" % zkVersion
     val commonZk  = "com.twitter.common"   % "zookeeper" % "0.0.31"
