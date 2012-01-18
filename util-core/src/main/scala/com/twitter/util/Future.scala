@@ -57,21 +57,26 @@ object Future {
   }
 
   /**
+   * Makes a Future with a constant result.
+   */
+  def const[A](result: Try[A]): Future[A] = new Promise[A](result)
+
+  /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
    */
-  def value[A](a: A): Future[A] = new Promise[A](Return(a))
+  def value[A](a: A): Future[A] = const[A](Return(a))
 
   /**
    * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
    * The exception is wrapped using the current `Future.tracer`.
    */
-  def exception[A](e: Throwable): Future[A] = new Promise[A](Throw(Future.trace.wrap(e)))
+  def exception[A](e: Throwable): Future[A] = const[A](Throw(Future.trace.wrap(e)))
 
   /**
    * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
    * The exception is not wrapped in any way.
    */
-  def rawException[A](e: Throwable): Future[A] = new Promise[A](Throw(e))
+  def rawException[A](e: Throwable): Future[A] = const[A](Throw(e))
 
   def void() = Future[Void] { null }
 
