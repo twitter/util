@@ -269,6 +269,10 @@ object Logger extends Iterable[Logger] {
         logger
       case null =>
         val logger = new Logger(name, javalog.Logger.getLogger(name))
+        logger.clearHandlers()
+        logger.setLevel(null)
+        logger.setUseParentHandlers(true)
+
         val oldLogger = loggersCache.putIfAbsent(name, logger)
         if (oldLogger != null) {
           oldLogger
