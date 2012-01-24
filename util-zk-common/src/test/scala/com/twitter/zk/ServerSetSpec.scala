@@ -11,7 +11,7 @@ import org.specs.mock.{ClassMocker, JMocker}
 import scala.collection.JavaConverters._
 import scala.collection.{Map, Set}
 
-object ServerSetSpec extends Specification with JMocker with ClassMocker {
+/*object ServerSetSpec extends Specification with JMocker with ClassMocker {
   "ServerSet" should {
     val pool = FuturePool.immediatePool
     val address = new InetSocketAddress("localhost", 34245)
@@ -70,3 +70,4 @@ object ServerSetSpec extends Specification with JMocker with ClassMocker {
     }
   }
 }
+*/
