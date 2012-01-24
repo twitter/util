@@ -1,3 +1,10 @@
+1.12.12  2012-01-24
+
+  * util-zk-common: Asynchronous wrappers for common ServerSets.
+  * IVar.unget: only remove closures by object equality
+  * Offer.choose: use nanoseconds for random seed
+  * Future.const - builds a constant Future from an existing Try
+
 1.12.9  2012-01-05
 
   * ThreadPoolFactories are named by default
