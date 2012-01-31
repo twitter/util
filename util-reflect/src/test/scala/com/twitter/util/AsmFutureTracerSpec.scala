@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import org.specs.Specification
+import com.twitter.util.reflect.AsmFutureTracer
 
 object AsmFutureTracerSpec extends Specification {
   class MyException extends Exception("yarrr")
@@ -32,12 +33,20 @@ object AsmFutureTracerSpec extends Specification {
          *   println(t.getCause.getCause.getStackTrace.toList.map(_.toString))
          */
         t.getCause.getCause.getStackTrace.toList.map(_.toString) mustEqual(List(
-          "com.twitter.util.AsmFutureTracerSpec$$anonfun$2$$anonfun$apply$2$$anonfun$3$$anonfun$apply$3.<init>(AsmFutureTracerSpec.scala:14)",
-          "com.twitter.util.AsmFutureTracerSpec$$anonfun$2$$anonfun$apply$2$$anonfun$3.<init>(AsmFutureTracerSpec.scala:13)"
+          "com.twitter.util.AsmFutureTracerSpec$$anonfun$2$$anonfun$apply$2$$anonfun$3$$anonfun$apply$3.<init>(AsmFutureTracerSpec.scala:15)",
+          "com.twitter.util.AsmFutureTracerSpec$$anonfun$2$$anonfun$apply$2$$anonfun$3.<init>(AsmFutureTracerSpec.scala:14)"
         ))
       }
     }
   }
+
+  "multiple wraps" should {
+    "not throw exceptions" in {
+      val wrapped = new AsmFutureTracer().wrap(new MyException)
+      new AsmFutureTracer().wrap(wrapped)
+     }
+   }
+
 
   "exceptions should preserve class" in {
     val e = Future.value(1) flatMap { _ =>

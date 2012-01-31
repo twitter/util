@@ -54,7 +54,16 @@ class AsmFutureTracer(maxDepth: Int) extends Future.Tracer {
 
     val tracedException = new TracedException(throwable, fakeTrace)
     val enhancer = new Enhancer
-    enhancer.setSuperclass(throwable.getClass)
+
+    // You need to check whether your class is already enhanced via Enhancer.isEnhanced() method.
+    //
+    // If it is, your 2nd enhancement should be applied to original class, not the already enhanced version
+    var proxyableClass = throwable.getClass
+    while(Enhancer.isEnhanced(proxyableClass)) {
+      proxyableClass = proxyableClass.getSuperclass
+    }
+
+    enhancer.setSuperclass(proxyableClass)
     val interceptor = new MethodInterceptor[T](None, { call =>
       val method = call.method
       val args = call.args
