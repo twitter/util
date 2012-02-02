@@ -131,21 +131,24 @@ object string {
     }
   }
 
+  def hexlify(array: Array[Byte], from: Int, to: Int): String = {
+    val out = new StringBuffer
+    for (i <- from until to) {
+      val b = array(i)
+      val s = (b.toInt & 0xff).toHexString
+      if (s.length < 2) {
+        out append '0'
+      }
+      out append s
+    }
+    out.toString
+  }
+
   final class RichByteArray(wrapped: Array[Byte]) {
     /**
      * Turn an Array[Byte] into a string of hex digits.
      */
-    def hexlify(): String = {
-      val out = new StringBuffer
-      for (b <- wrapped) {
-        val s = (b.toInt & 0xff).toHexString
-        if (s.length < 2) {
-          out append '0'
-        }
-        out append s
-      }
-      out.toString
-    }
+    def hexlify: String = string.hexlify(wrapped, 0, wrapped.length)
   }
 
   implicit def stringToConfiggyString(s: String) = new RichString(s)
