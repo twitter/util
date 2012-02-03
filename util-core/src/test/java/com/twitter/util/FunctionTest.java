@@ -23,7 +23,7 @@ public class FunctionTest extends TestCase {
     }
   }
 
-  /** Confirm that we can extend ExceptionalFunction with applyE(). */
+  /** Confirm that we can extend ExceptionalFunction0 with applyE(). */
   public void testExceptionalFunction0() {
     ExceptionalFunction0<Integer> fun = new ExceptionalFunction0<Integer>() {
       @Override
