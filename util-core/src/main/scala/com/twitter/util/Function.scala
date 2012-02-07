@@ -2,6 +2,16 @@ package com.twitter.util
 
 abstract class Function0[R] extends (() => R)
 
+abstract class ExceptionalFunction0[R] extends Function0[R] {
+   /**
+    * Implements apply in terms of abstract applyE, to allow Java code to throw checked exceptions.
+    */
+   final override def apply(): R = applyE()
+
+   @throws(classOf[Throwable])
+   def applyE(): R
+}
+
 /**
  * This class is for Java friendliness. Any Scala method that takes Function1[A, B]
  * can now take a Function[A, B]. Because Function1 is a trait, it is very difficult
