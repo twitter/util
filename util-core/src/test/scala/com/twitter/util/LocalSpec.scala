@@ -20,13 +20,13 @@ object LocalSpec extends Specification {
       val saved = Locals.save()
       local() = 321
 
-      saved.restore()
+      Locals.restore(saved)
       local() must beSome(123)
     }
 
     "have a per-thread definition" in {
       var threadValue: Option[Int] = null
-      
+
       local() = 123
 
       val t = new Thread {
@@ -49,8 +49,18 @@ object LocalSpec extends Specification {
 
       val saved = Locals.save()
       local() = 123
-      saved.restore()
-      
+      Locals.restore(saved)
+
+      local() must beNone
+    }
+
+    "not restore cleared variables" in {
+      val local = new Local[Int]
+
+      local() = 123
+      Locals.save()  // to trigger caching
+      local.clear()
+      Locals.restore(Locals.save())
       local() must beNone
     }
   }

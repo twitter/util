@@ -59,12 +59,12 @@ class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePoo
         // has been cancelled or already defined.
         if (runnable) {
           val current = Locals.save()
-          saved.restore()
+          Locals.restore(saved)
 
           try {
             out.update(Try(f))
           } finally {
-            current.restore()
+            Locals.restore(current)
           }
         }
       }

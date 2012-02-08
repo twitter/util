@@ -764,12 +764,12 @@ class Promise[A] private[Promise](
     val saved = Locals.save()
     ivar.get { result =>
       val current = Locals.save()
-      saved.restore()
+      Locals.restore(saved)
       Future.trace.record(tracingObject)
       try
         k(result)
       finally
-        current.restore()
+        Locals.restore(current)
     }
   }
 

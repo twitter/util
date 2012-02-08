@@ -10,7 +10,14 @@ package com.twitter.util
 import collection.mutable.ArrayBuffer
 
 private[util] final object Locals {
+  type Context = Array[Option[_]]
+
   @volatile private[this] var locals: Array[Local[_]] = Array()
+  private[this] val saveCache = new ThreadLocal[Context]
+
+  def invalidateCache() {
+    saveCache.remove()
+  }
 
   def +=(local: Local[_]) = synchronized {
     val newLocals = new Array[Local[_]](locals.size + 1)
@@ -19,22 +26,43 @@ private[util] final object Locals {
     locals = newLocals
   }
 
-  private[this] val emptyLocals = new SavedLocals(Array.empty)
+  private[this] val emptyCtx: Context = Array.empty
 
-  def save(): SavedLocals =
-    if (locals.isEmpty) {
-      emptyLocals
-    } else {
-      val locals0 = locals
-      val saved = new Array[SavedLocal[_]](locals0.size)
-      var i = 0: Int
-      while (i < locals0.size) {
-        saved(i) = locals0(i).save
-        i += 1
-      }
+  def save(): Context = {
+    val cached = saveCache.get
+    if (cached != null)
+      return cached
 
-      new SavedLocals(saved)
+    if (locals.isEmpty)
+      return emptyCtx
+
+    val locals0 = locals
+    val saved = new Context(locals0.size)
+    var i = 0: Int
+    while (i < locals0.size) {
+      saved(i) = locals0(i)()
+      i += 1
     }
+
+    saveCache.set(saved)
+    saved
+  }
+
+  def restore(saved: Context) {
+    val locals0 = locals
+    var i = 0
+    while (i < saved.size) {
+      locals0(i).setUnsafe(saved(i))
+      i += 1
+    }
+
+    while (i < locals0.size) {
+      locals0(i).clear()
+      i += 1
+    }
+
+    saveCache.set(saved)
+  }
 }
 
 final class Local[T] {
@@ -47,30 +75,18 @@ final class Local[T] {
   // ``this'' must be fully initialized before it's registered.
   Locals += this
 
-  def update(value: T) = threadLocal.set(Some(value))
-  def set(optValue: Option[T]) = threadLocal.set(optValue)
-  def clear() = threadLocal.remove()
-  def apply() = threadLocal.get()
-  def save() = new SavedLocal[T](this)
-}
-
-private[util] class SavedLocal[T](local: Local[T]) {
-  private[this] val savedValue = local()
-
-  def restore() {
-    savedValue match {
-      case Some(value) => local() = value
-      case None        => local.clear()
-    }
+  def update(value: T) = set(Some(value))
+  def set(optValue: Option[T]) = {
+    Locals.invalidateCache()
+    threadLocal.set(optValue)
   }
-}
+  def clear() = {
+    Locals.invalidateCache()
+    threadLocal.remove()
+  }
+  def apply() = threadLocal.get()
 
-private[util] final class SavedLocals(locals: Array[SavedLocal[_]]) {
-  def restore(): Unit = {
-    var i = 0: Int
-    while (i < locals.size) {
-      locals(i).restore()
-      i += 1
-    }
+  private[util] def setUnsafe(optValue: Option[_]) {
+    set(optValue.asInstanceOf[Option[T]])
   }
 }
