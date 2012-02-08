@@ -31,6 +31,19 @@ object NetUtil {
     }
   }
 
+  def inetAddressToInt(inetAddress: InetAddress): Int = {
+    inetAddress match {
+      case inetAddress: Inet4Address =>
+        val addr = inetAddress.getAddress
+        ((addr(0) & 0xff) << 24) |
+        ((addr(1) & 0xff) << 16) |
+        ((addr(2) & 0xff) <<  8) |
+         (addr(3) & 0xff)
+      case _ =>
+        throw new IllegalArgumentException("non-Inet4Address cannot be converted to an Int")
+    }
+  }
+
   // Converts either a full or partial ip, (e.g.127.0.0.1, 127.0)
   // to it's integer equivalent with mask specified by prefixlen.
   // Assume missing bits are 0s for a partial ip. Result returned as
@@ -57,6 +70,17 @@ object NetUtil {
     case (netIp, mask) => (mask & ip) == netIp
   }
 
-  def isIpInBlocks(ip: String, ipBlocks: Iterable[(Int, Int)]) =
-    ipBlocks exists { ipBlock => isIpInBlock(ipToInt(ip), ipBlock) }
+  def isInetAddressInBlock(inetAddress: InetAddress, ipBlock: (Int, Int)): Boolean =
+    isInetAddressInBlock(inetAddress, ipBlock)
+
+  def isIpInBlocks(ip: Int, ipBlocks: Iterable[(Int, Int)]): Boolean = {
+    ipBlocks exists { ipBlock => isIpInBlock(ip, ipBlock) }
+  }
+
+  def isIpInBlocks(ip: String, ipBlocks: Iterable[(Int, Int)]): Boolean = {
+    isIpInBlocks(ipToInt(ip), ipBlocks)
+  }
+
+  def isInetAddressInBlocks(inetAddress: InetAddress, ipBlocks: Iterable[(Int, Int)]): Boolean =
+    isIpInBlocks(inetAddressToInt(inetAddress), ipBlocks)
 }

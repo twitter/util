@@ -40,7 +40,17 @@ object NetUtilSpec extends Specification {
       NetUtil.ipToInt("255.255.255.255") must_== 0xFFFFFFFF
       NetUtil.ipToInt("255.255.255.0")   must_== 0xFFFFFF00
       NetUtil.ipToInt("255.0.255.0")     must_== 0xFF00FF00
+      NetUtil.ipToInt("61.197.253.56")   must_== 0x3dc5fd38
       NetUtil.ipToInt("256.0.255.0")     must throwA[IllegalArgumentException]
+    }
+
+    "inetAddressToInt" in {
+      NetUtil.inetAddressToInt(InetAddress.getByName("0.0.0.0"))         must_== 0
+      NetUtil.inetAddressToInt(InetAddress.getByName("255.255.255.255")) must_== 0xFFFFFFFF
+      NetUtil.inetAddressToInt(InetAddress.getByName("255.255.255.0"))   must_== 0xFFFFFF00
+      NetUtil.inetAddressToInt(InetAddress.getByName("255.0.255.0"))     must_== 0xFF00FF00
+      NetUtil.inetAddressToInt(InetAddress.getByName("61.197.253.56"))   must_== 0x3dc5fd38
+      NetUtil.inetAddressToInt(InetAddress.getByName("::1"))             must throwA[IllegalArgumentException]
     }
 
     "cidrToIpBlock" in {

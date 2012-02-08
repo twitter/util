@@ -1,3 +1,7 @@
+1.12.13  ???
+
+  * NetUtil: Add inetAddressToInt, isInetAddressInBlock, isInetAddressInBlocks
+
 1.12.12  2012-01-24
 
   * util-zk-common: Asynchronous wrappers for common ServerSets.
@@ -71,7 +75,7 @@
   * base64 encoder: make it threadsafe
 
 1.11.8  2011-10-04
-  
+
   * Back out TCE for ivar/futures. This introduced a space
   leak and will be fixed momentarily.
   * FuturePool: Catch any exception thrown by executor.submit()
@@ -123,7 +127,7 @@
 1.10.2  2011-07-18
 
   * Maintain a map of already visited objects incase someone
-  creates a circular of config objects.  
-  * Make Duration hashable.  
+  creates a circular of config objects.
+  * Make Duration hashable.
   * Promise.on{Success, Failure}: returned chained future.
 
