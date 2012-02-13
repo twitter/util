@@ -5,88 +5,64 @@ package com.twitter.util
  * restoring the state of *all* Locals. This is useful for threading
  * Locals through execution contexts. In this manner they are
  * propagated in delayed computations in {@link Promise}.
+ *
+ * Note: the implementation is optimized for situations in which
+ * save and restore optimizations are dominant.
  */
 
 import collection.mutable.ArrayBuffer
+import java.util.Arrays
 
-private[util] final object Locals {
+private[util] final object Local {
   type Context = Array[Option[_]]
+  private[this] val localCtx = new ThreadLocal[Context]
+  @volatile private[this] var size: Int = 0
 
-  @volatile private[this] var locals: Array[Local[_]] = Array()
-  private[this] val saveCache = new ThreadLocal[Context]
+  def save(): Context = localCtx.get
+  def restore(saved: Context): Unit = localCtx.set(saved)
 
-  def invalidateCache() {
-    saveCache.remove()
+  private def add() = synchronized {
+    size += 1
+    size-1
   }
 
-  def +=(local: Local[_]) = synchronized {
-    val newLocals = new Array[Local[_]](locals.size + 1)
-    locals.copyToArray(newLocals)
-    newLocals(newLocals.size - 1) = local
-    locals = newLocals
+  private def set(i: Int, v: Option[_]) {
+    assert(i < size)
+    var ctx = localCtx.get
+
+    if (ctx == null)
+      ctx = new Array[Option[_]](size)
+    else {
+      val oldCtx = ctx
+      ctx = new Array[Option[_]](size)
+      System.arraycopy(oldCtx, 0, ctx, 0, oldCtx.size)
+    }
+
+    ctx(i) = v
+    localCtx.set(ctx)
   }
 
-  private[this] val emptyCtx: Context = Array.empty
+  private def get(i: Int): Option[_] = {
+    val ctx = localCtx.get
+    if (ctx == null || ctx.size <= i)
+      return None
 
-  def save(): Context = {
-    val cached = saveCache.get
-    if (cached != null)
-      return cached
-
-    if (locals.isEmpty)
-      return emptyCtx
-
-    val locals0 = locals
-    val saved = new Context(locals0.size)
-    var i = 0: Int
-    while (i < locals0.size) {
-      saved(i) = locals0(i)()
-      i += 1
-    }
-
-    saveCache.set(saved)
-    saved
+    val v = ctx(i)
+    if (v == null) None else v
   }
 
-  def restore(saved: Context) {
-    val locals0 = locals
-    var i = 0
-    while (i < saved.size) {
-      locals0(i).setUnsafe(saved(i))
-      i += 1
-    }
-
-    while (i < locals0.size) {
-      locals0(i).clear()
-      i += 1
-    }
-
-    saveCache.set(saved)
+  private def clear(i: Int) {
+    val ctx = localCtx.get
+    if (ctx != null && ctx.size > i)
+      ctx(i) = null
   }
 }
 
 final class Local[T] {
-  private[this] val threadLocal =
-    new ThreadLocal[Option[T]] {
-      override def initialValue: Option[T] = None
-    }
+  private[this] val me = Local.add()
 
-  // Note the order here is important.  This must come last as
-  // ``this'' must be fully initialized before it's registered.
-  Locals += this
-
-  def update(value: T) = set(Some(value))
-  def set(optValue: Option[T]) = {
-    Locals.invalidateCache()
-    threadLocal.set(optValue)
-  }
-  def clear() = {
-    Locals.invalidateCache()
-    threadLocal.remove()
-  }
-  def apply() = threadLocal.get()
-
-  private[util] def setUnsafe(optValue: Option[_]) {
-    set(optValue.asInstanceOf[Option[T]])
-  }
+  def update(value: T) { set(Some(value)) }
+  def set(optValue: Option[T]) { Local.set(me, optValue) }
+  def clear() { Local.clear(me) }
+  def apply() = Local.get(me).asInstanceOf[Option[T]]
 }

@@ -17,10 +17,10 @@ object LocalSpec extends Specification {
 
     "restore saved values" in {
       local() = 123
-      val saved = Locals.save()
+      val saved = Local.save()
       local() = 321
 
-      Locals.restore(saved)
+      Local.restore(saved)
       local() must beSome(123)
     }
 
@@ -47,9 +47,9 @@ object LocalSpec extends Specification {
     "unset undefined variables when restoring" in {
       val local = new Local[Int]
 
-      val saved = Locals.save()
+      val saved = Local.save()
       local() = 123
-      Locals.restore(saved)
+      Local.restore(saved)
 
       local() must beNone
     }
@@ -58,10 +58,29 @@ object LocalSpec extends Specification {
       val local = new Local[Int]
 
       local() = 123
-      Locals.save()  // to trigger caching
+      Local.save()  // to trigger caching
       local.clear()
-      Locals.restore(Locals.save())
+      Local.restore(Local.save())
       local() must beNone
+    }
+
+    "maintain value definitions when other locals change" in {
+      val l0 = new Local[Int]
+      l0() = 123
+      val save0 = Local.save()
+      val l1 = new Local[Int]
+      l0() must beSome(123)
+      l1() = 333
+      l1() must beSome(333)
+      
+      val save1 = Local.save()
+      Local.restore(save0)
+      l0() must beSome(123)
+      l1() must beNone
+      
+      Local.restore(save1)
+      l0() must beSome(123)
+      l1() must beSome(333)
     }
   }
 }

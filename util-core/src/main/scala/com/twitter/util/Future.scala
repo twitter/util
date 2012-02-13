@@ -761,15 +761,15 @@ class Promise[A] private[Promise](
   }
 
   private[this] def respondWithoutChaining(tracingObject: AnyRef, k: Try[A] => Unit) {
-    val saved = Locals.save()
+    val saved = Local.save()
     ivar.get { result =>
-      val current = Locals.save()
-      Locals.restore(saved)
+      val current = Local.save()
+      Local.restore(saved)
       Future.trace.record(tracingObject)
       try
         k(result)
       finally
-        Locals.restore(current)
+        Local.restore(current)
     }
   }
 

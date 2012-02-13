@@ -46,7 +46,7 @@ object FuturePool {
  */
 class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePool {
   def apply[T](f: => T): Future[T] = {
-    val saved = Locals.save()
+    val saved = Local.save()
 
     val stoppable = new AtomicBoolean(true)
 
@@ -58,13 +58,13 @@ class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePoo
         // Make an effort to skip work in the case the promise
         // has been cancelled or already defined.
         if (runnable) {
-          val current = Locals.save()
-          Locals.restore(saved)
+          val current = Local.save()
+          Local.restore(saved)
 
           try {
             out.update(Try(f))
           } finally {
-            Locals.restore(current)
+            Local.restore(current)
           }
         }
       }
