@@ -1,6 +1,10 @@
-1.12.13  ???
+1.12.13  2012-02-13
 
   * NetUtil: Add inetAddressToInt, isInetAddressInBlock, isInetAddressInBlocks
+  * Future tracer: fix bug where double proxied exceptions fail
+  * add "ExceptionalFunction0" for easier use from Java
+  * Locals: many optimizations to reduce allocations caused by saving
+  and restoring contexts
 
 1.12.12  2012-01-24
 
