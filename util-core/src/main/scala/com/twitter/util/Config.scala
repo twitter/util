@@ -23,7 +23,7 @@ import scala.collection.mutable
  * that does not inherit from trait Config.
  */
 object Config {
-  sealed trait Required[+A] {
+  sealed trait Required[+A] extends java.io.Serializable {
     def value: A
     def isSpecified: Boolean
     def isEmpty = !isSpecified
