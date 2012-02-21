@@ -22,6 +22,19 @@ object NetUtilSpec extends Specification {
       NetUtil.isIpv4Address("0.256.0.0")   must beFalse
       NetUtil.isIpv4Address("0.0.256.0")   must beFalse
       NetUtil.isIpv4Address("0.0.0.256")   must beFalse
+      NetUtil.isIpv4Address("x1.2.3.4")    must beFalse
+      NetUtil.isIpv4Address("1.x2.3.4")    must beFalse
+      NetUtil.isIpv4Address("1.2.x3.4")    must beFalse
+      NetUtil.isIpv4Address("1.2.3.x4")    must beFalse
+      NetUtil.isIpv4Address("1.2.3.4x")    must beFalse
+      NetUtil.isIpv4Address(" 1.2.3.4")    must beFalse
+      NetUtil.isIpv4Address("1.2.3.4 ")    must beFalse
+      NetUtil.isIpv4Address(".")           must beFalse
+      NetUtil.isIpv4Address("....")        must beFalse
+      NetUtil.isIpv4Address("1....")       must beFalse
+      NetUtil.isIpv4Address("1.2...")      must beFalse
+      NetUtil.isIpv4Address("1.2.3.")      must beFalse
+      NetUtil.isIpv4Address(".2.3.4")      must beFalse
     }
 
     "isPrivate" in {
