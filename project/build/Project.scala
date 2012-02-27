@@ -89,7 +89,7 @@ class Project(info: ProjectInfo)
     with ProjectDefaults
     with Mockito
   {
-    val guava              = "com.google.guava"    % "guava"               % "r09"
+    val guava              = "com.google.guava"    % "guava"               % "11.0.2"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
   }
 
