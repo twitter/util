@@ -16,6 +16,7 @@
 
 package com.twitter.util
 
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -314,7 +315,7 @@ object Duration {
   }
 }
 
-class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
+class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] with Serializable {
   import Duration._
 
   def inNanoseconds = nanos
