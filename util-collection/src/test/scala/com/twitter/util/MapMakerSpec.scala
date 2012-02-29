@@ -10,6 +10,23 @@ object MapMakerSpec extends Specification {
     val id = 1010101L
     val r = Runtime.getRuntime()
 
+    "Compute keys" in {
+      val computed = MapMaker[String, String](_.compute { k => "computed"+k })
+      computed.get("ok") must beSome("computedok")
+      computed.putIfAbsent("ok", "yes")
+      computed.get("ok") must beSome("computedok")
+
+      computed.putIfAbsent("notok", "no")
+      computed.get("notok") must beSome("no")
+    }
+
+    "Store values" in {
+      val map = MapMaker[String, String](Function.const(()))
+      map.get("ok") must beNone
+      map.put("ok", "yes")
+      map.get("ok") must beSome("yes")
+    }
+
     "A weak value map removes items when there is no longer a reference to them" in {
       val weakValueMap = MapMaker[Int, Item](_.weakValues)
       val cell = new Cell(new Item)
