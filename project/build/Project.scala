@@ -89,7 +89,7 @@ class Project(info: ProjectInfo)
     with ProjectDefaults
     with Mockito
   {
-    val guava              = "com.google.guava"    % "guava"               % "r09"
+    val guava              = "com.google.guava"    % "guava"               % "11.0.2"
     val commonsCollections = "commons-collections" % "commons-collections" % "3.2.1"
   }
 
@@ -142,8 +142,10 @@ class Project(info: ProjectInfo)
     with ProjectDefaults
     with JMock
   {
+    val commonClient    = "com.twitter.common.zookeeper" % "client"     % "0.0.6"
+    val commonGroup     = "com.twitter.common.zookeeper" % "group"      % "0.0.5"
+    val commonServerSet = "com.twitter.common.zookeeper" % "server-set" % "0.0.5"
     val zookeeper = "org.apache.zookeeper" % "zookeeper" % zkVersion
-    val commonZk  = "com.twitter.common"   % "zookeeper" % "0.0.31"
  }
 
   trait ProjectDefaults

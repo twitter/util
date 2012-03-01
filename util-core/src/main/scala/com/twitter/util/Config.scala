@@ -17,13 +17,18 @@
 package com.twitter.util
 
 import scala.collection.mutable
+import java.io.Serializable
 
 /**
  * You can import Config._ if you want the auto-conversions in a class
  * that does not inherit from trait Config.
  */
 object Config {
+<<<<<<< HEAD
   sealed trait Required[+A] extends java.io.Serializable {
+=======
+  sealed trait Required[+A] extends Serializable {
+>>>>>>> finagle-memcached-hadoop
     def value: A
     def isSpecified: Boolean
     def isEmpty = !isSpecified
