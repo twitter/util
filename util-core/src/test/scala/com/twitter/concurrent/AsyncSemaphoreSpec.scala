@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import org.specs.Specification
 import org.specs.mock.Mockito
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 
 object AsyncSemaphoreSpec extends Specification with Mockito {
   "AsyncSemaphore" should {
@@ -43,6 +43,41 @@ object AsyncSemaphoreSpec extends Specification with Mockito {
 
       permits.poll().release()
       there were 4.times(f)()
+    }
+
+    "bound the number of waiters" in {
+      val s2 = new AsyncSemaphore(2, 3)
+      def acquire2() = {
+        s2.acquire() onSuccess { permit =>
+          f()
+          permits add permit
+        }
+      }
+
+      // The first two acquires obtain a permit.
+      acquire2()
+      acquire2()
+
+      there were two(f)()
+
+      // The next three acquires wait.
+      acquire2()
+      acquire2()
+      acquire2()
+
+      there were two(f)()
+      s2.numWaiters mustEqual(3)
+
+      // The next acquire should be rejected.
+      val futurePermit = acquire2()
+      s2.numWaiters mustEqual(3)
+      futurePermit.get() must throwA[RejectedExecutionException]
+
+      // Waiting tasks should still execute once permits are available.
+      permits.poll().release()
+      permits.poll().release()
+      permits.poll().release()
+      there were 5.times(f)()
     }
   }
 }
