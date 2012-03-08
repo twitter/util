@@ -37,7 +37,8 @@ class ScribeHandler(hostname: String, port: Int, category: String, bufferTime: D
                     maxMessagesToBuffer: Int, formatter: Formatter, level: Option[Level])
       extends Handler(formatter, level) {
   // it may be necessary to log errors here if scribe is down:
-  val log = Logger.get("scribe")
+  val loggerName = this.getClass.toString
+  val log = Logger.get(loggerName)
 
   var lastTransmission = Time.epoch
   var lastConnectAttempt = Time.epoch
@@ -148,7 +149,7 @@ class ScribeHandler(hostname: String, port: Int, category: String, bufferTime: D
   }
 
   def publish(record: javalog.LogRecord): Unit = {
-    if (record.getLoggerName == "scribe") return
+    if (record.getLoggerName == loggerName) return
     publish(getFormatter.format(record).getBytes("UTF-8"))
   }
 
