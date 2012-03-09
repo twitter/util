@@ -40,6 +40,22 @@ object Level {
   case object DEBUG extends Level("DEBUG", 500)
   case object TRACE extends Level("TRACE", 400)
   case object ALL extends Level("ALL", Int.MinValue)
+
+  // to force them to get loaded from class files:
+  {
+    val root = Logger.root
+    val originalLevel = root.getLevel()
+    root.setLevel(OFF)
+    root.setLevel(FATAL)
+    root.setLevel(CRITICAL)
+    root.setLevel(ERROR)
+    root.setLevel(WARNING)
+    root.setLevel(INFO)
+    root.setLevel(DEBUG)
+    root.setLevel(TRACE)
+    root.setLevel(ALL)
+    root.setLevel(originalLevel)
+  }
 }
 
 class LoggingException(reason: String) extends Exception(reason)
@@ -176,8 +192,7 @@ object Logger extends Iterable[Logger] {
   // many loggers at the same time.
   private val loggersCache = new ConcurrentHashMap[String, Logger](128, 0.75f, 2)
 
-  private val root: Logger = get("")
-
+  private[logging] val root: Logger = get("")
 
   // ----- convenience methods:
 
@@ -213,21 +228,6 @@ object Logger extends Iterable[Logger] {
 
   /** ALL is used to log everything. */
   def ALL = Level.ALL
-
-  // to force them to get loaded from class files:
-  {
-    val originalLevel = root.getLevel()
-    root.setLevel(OFF)
-    root.setLevel(FATAL)
-    root.setLevel(CRITICAL)
-    root.setLevel(ERROR)
-    root.setLevel(WARNING)
-    root.setLevel(INFO)
-    root.setLevel(DEBUG)
-    root.setLevel(TRACE)
-    root.setLevel(ALL)
-    root.setLevel(originalLevel)
-  }
 
   /**
    * Return a map of log level values to the corresponding Level objects.
