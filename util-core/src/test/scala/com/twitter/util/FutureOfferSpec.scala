@@ -9,22 +9,14 @@ object FutureOfferSpec extends Specification with Mockito {
     "activate when future is satisfied (poll)" in {
       val p = new Promise[Int]
       val o = p.toOffer
-      o.poll() must beNone
+      o.prepare().poll must beNone
       p() = Return(123)
-      o.poll() must beLike {
-         case Some(f) =>
-           f() must be_==(Return(123))
+      o.prepare().poll must beLike {
+         case Some(Return(tx)) =>
+           tx.ack().poll must beLike {
+             case Some(Return(Tx.Commit(Return(123)))) => true
+           }
       }
-    }
-
-    "activate when future is satisfied (enqueue)" in {
-      val p = new Promise[Int]
-      val o = p.toOffer
-      val s = new SimpleSetter[Try[Int]]
-      o.enqueue(s)
-      s.get must beNone
-      p() = Return(123)
-      s.get must beSome(Return(123))
     }
   }
 }

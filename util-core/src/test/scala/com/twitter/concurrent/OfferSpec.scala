@@ -10,245 +10,253 @@ import com.twitter.util.{Future, Return, Promise}
 import com.twitter.util.{Time, MockTimer}
 import com.twitter.conversions.time._
 
-class SimpleOffer[T](var value: Option[T] = None, objs: Seq[AnyRef] = Seq()) extends Offer[T] {
-  case class Enqueue(s: Setter, var dequeued: Boolean) {
-    def apply(v: T) {
-      require(!dequeued)
-      val set = s()
-      require(set.isDefined)
-      set.get(v)
-    }
-  }
-  var enqueues: Seq[Enqueue] = Seq()
+class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
+  def this(fut: Future[Tx[T]]) = this(Stream.continually(fut))
+  def this(tx: Tx[T]) = this(Stream.continually(Future.value(tx)))
 
-  def poll() = value map { v => () => v }
-  def enqueue(s: Setter) = {
-    val eq = Enqueue(s, false)
-    val dq = { () => eq.dequeued = true }
-    enqueues ++= Seq(eq)
-    dq
+  def prepare() = {
+    val next #:: rest = futures
+    futures = rest
+    next
   }
-  def objects = objs
-}
-
-class SimpleSetter[T] extends Offer[T]#Setter {
-  private[this] var v: Option[T] = None
-  private[this] var taken = false
-  def apply() = synchronized {
-    if (taken) {
-      None
-    } else {
-      taken = true
-      Some { x => v = Some(x) }
-    }
-  }
-
-  def get = v
 }
 
 object OfferSpec extends Specification with Mockito {
-  private[OfferSpec] class DynamicHashCode{
-    var internalHashCode: Int = 0
-    override def hashCode(): Int = internalHashCode
-    def ChangeHashCode(a: Int): Unit = {
-      internalHashCode = a
-    }
-  }
-
-  private[OfferSpec] class ConstantHashCode{
-    override def hashCode(): Int = 0
-  }
-
-  "Offer.ObjectOrder" should {
-
-    "Add and retrieve objects in the order List" in {
-      var r1 = new Object()
-      var r2 = new Object()
-
-      // add objects to the order list
-      Offer.ObjectOrder.indexOf(r1) must be(0)
-      Offer.ObjectOrder.order must haveSize(1)
-      Offer.ObjectOrder.indexOf(r2) must be(1)
-      Offer.ObjectOrder.order must haveSize(2)
-
-      // retrieve objects from the order list
-      Offer.ObjectOrder.indexOf(r1) must be(0)
-      Offer.ObjectOrder.indexOf(r2) must be(1)
-
-      // what we really want to test is that the entries pointing to GC-ed objects will be removed from
-      // the order list when ObjectOrder.Compare is called. However we cannot force GC, so we mimic the
-      // behavior by clearing the first entry to pretend its object has been Gc-ed
-      Offer.ObjectOrder.order.head.clear()
-      Offer.ObjectOrder.order = Offer.ObjectOrder.order.filterNot(r => r.get.isEmpty)
-      Offer.ObjectOrder.order must haveSize(1)
-    }
-
-    "Changing hashcode" in {
-      val a = new DynamicHashCode()
-      val b = new ConstantHashCode()
-      val originalOrder = Offer.ObjectOrder.compare(a, b)
-      originalOrder must be_!=(0)
-
-      a.ChangeHashCode(10)
-      Offer.ObjectOrder.compare(a, b) must be_==(originalOrder)
-      a.ChangeHashCode(-10)
-      Offer.ObjectOrder.compare(a, b) must be_==(originalOrder)
-    }
-  }
+  import Tx.{Commit, Abort}
 
   "Offer.map" should {
     // mockito can't spy on anonymous classes.
-    val e = spy(new SimpleOffer[Int](Some(123)))
-    val mapped = e map { i => (i - 100).toString }
+    val tx = mock[Tx[Int]]
+    tx.ack() returns Future.value(Commit(123))
+    val offer = spy(new SimpleOffer(tx))
 
-    "apply f in poll" in {
-      mapped.poll() must beSome[() => String].which { _() == "23" }
-      there was no(e).enqueue(any)
+    val mapped = offer map { i => (i - 100).toString }
+
+    "apply f in after Tx.ack()" in {
+      val f = mapped.prepare() flatMap { tx => tx.ack() }
+      f must beLike {
+        case Future(Return(Commit("23"))) => true
+      }
     }
-
-   "apply f in enqueue" in {
-     val s = new SimpleSetter[String]
-     mapped.enqueue(s)
-     e.enqueues must haveSize(1)
-     val eq = e.enqueues.head
-     eq(200)  // do the set
-     s.get must beSome("100") // trickles up
-   }
   }
 
   "Offer.choose" should {
-    val es = Seq(
-      spy(new SimpleOffer[Int]),
-      spy(new SimpleOffer[Int]),
-      spy(new SimpleOffer[Int]))
-    val e = Offer.choose(es:_*)
+    val pendingTxs = 0 until 3 map { _ => new Promise[Tx[Int]] }
+    val offers = pendingTxs map { tx => spy(new SimpleOffer(tx)) }
+    val offer = Offer.choose(offers:_*)
 
-    "select the first among unsatisfied events (poll)" in {
-      e.poll() must beNone
-      es foreach { e =>
-        e.enqueues must beEmpty
-        there was one(e).poll()
+    "when a tx is already ready" in {
+      val tx1 = mock[Tx[Int]]
+      pendingTxs(1).setValue(tx1)
+
+      "prepare() prepares all" in {
+        offers foreach { of => there was no(of).prepare() }
+        offer.prepare().isDefined must beTrue
+        offers foreach { of => there was one(of).prepare() }
       }
 
-      es(0).value = Some(333)
-      e.poll() must beSome[() => Int].which { _() == 333 }
+      "select it" in {
+        offer.prepare() must beLike {
+          case Future(Return(tx)) => tx eq tx1
+        }
+        there was no(tx1).ack()
+        there was no(tx1).nack()
+      }
+
+      "nack losers" in {
+        offer.prepare()
+        for (i <- Seq(0, 2)) {
+          val tx = mock[Tx[Int]]
+          pendingTxs(i).setValue(tx)
+          there was one(tx).nack()
+          there was no(tx).ack()
+        }
+      }
     }
 
-    "select the first among unsatisfied events (enqueue)" in {
-      val s = new SimpleSetter[Int]
-      e.enqueue(s)
-      es foreach { e =>
-        e.enqueues must haveSize(1)
-        there was one(e).enqueue(any)
+    "when a tx is ready after prepare()" in {
+      "select it" in {
+        val tx = offer.prepare()
+        tx.isDefined must beFalse
+        val tx0 = mock[Tx[Int]]
+        pendingTxs(0).setValue(tx0)
+        tx must beLike {
+          case Future(Return(tx)) => tx eq tx0
+        }
       }
 
-      s.get must beNone
-      es(1).enqueues.head(111)
-      s.get must beSome(111)
+      "nack losers" in {
+        offer.prepare()
+        pendingTxs(0).setValue(mock[Tx[Int]])
+        for (i <- Seq(1, 2)) {
+          val tx = mock[Tx[Int]]
+          pendingTxs(i).setValue(tx)
+          there was one(tx).nack()
+          there was no(tx).ack()
+        }
+      }
     }
 
-    "shuffle events" in Time.withTimeAt(Time.epoch) { tc =>
-      (es zipWithIndex) foreach { case (e, i) => e.value = Some(i) }
-      val e = Offer.choose(es:_*)
-      val histo = new Array[Int](3)
-      for (_ <- 0 until 1000) {
-        tc.advance(1.nanosecond)
-        val Some(f) = e.poll()
-        histo(f()) += 1
+    "when all txs are ready" in {
+      val txs = for (p <- pendingTxs) yield {
+        val tx = mock[Tx[Int]]
+        p.setValue(tx)
+        tx
       }
-      
-      histo(0) must be_==(327)
-      histo(1) must be_==(332)
-      histo(2) must be_==(341)
+
+      "shuffle winner" in Time.withTimeAt(Time.epoch) { tc =>
+        val histo = new Array[Int](3)
+        for (_ <- 0 until 1000) {
+          tc.advance(1.nanosecond)
+          for (tx <- offer.prepare())
+            histo(txs.indexOf(tx)) += 1
+        }
+
+        histo(0) must be_==(327)
+        histo(1) must be_==(332)
+        histo(2) must be_==(341)
+      }
+
+      "nack losers" in {
+        offer.prepare() must beLike {
+          case Future(Return(tx)) =>
+            for (loser <- txs if loser ne tx)
+              there was one(loser).nack()
+            true
+        }
+      }
+    }
+
+    "work with 0 offers" in {
+      val of = Offer.choose()
+      of.sync().poll must beNone
     }
   }
 
   "Offer.sync" should {
-    // this appears to be impossible: "lock all involved objects in object-id order"
-    "succeed immediately when poll is successful" in {
-      val e = spy(new SimpleOffer[Int](Some(111)))
-      val f = e()
-      f.isDefined must beTrue
-      f() must be_==(111)
-      there was one(e).poll()
-      there was no(e).enqueue(any)
-    }
-
-    "enqueue when poll is unsuccesful" in {
-      val e = spy(new SimpleOffer[Int]())
-      val f = e()
-      f.isDefined must beFalse
-      there was one(e).poll()
-      there was one(e).enqueue(any)
-      e.enqueues must haveSize(1)
-      val eq = e.enqueues.head
-      eq(123)
-
-      "propagate value" in {
-        f.isDefined must beTrue
-        f() must be_==(123)
+    "when Tx.prepare is immediately available" in {
+      "when it commits" in {
+        val txp = new Promise[Tx[Int]]
+        val offer = spy(new SimpleOffer(txp))
+        val tx = mock[Tx[Int]]
+        tx.ack() returns Future.value(Commit(123))
+        txp.setValue(tx)
+        offer.sync() must beLike {
+          case Future(Return(123)) => true
+        }
+        there was one(tx).ack()
+        there was no(tx).nack()
       }
 
-      "dequeue" in {
-        eq.dequeued must beTrue
+      "retry when it aborts" in {
+        val txps = new Promise[Tx[Int]] #:: new Promise[Tx[Int]] #:: Stream.empty
+        val offer = spy(new SimpleOffer(txps))
+        val badTx = mock[Tx[Int]]
+        badTx.ack() returns Future.value(Abort)
+        txps(0).setValue(badTx)
+
+        val syncd = offer.sync()
+
+        syncd.poll must beNone
+        there was one(badTx).ack()
+        there were two(offer).prepare()
+
+        val okTx = mock[Tx[Int]]
+        okTx.ack() returns Future.value(Commit(333))
+        txps(1).setValue(okTx)
+
+        syncd.poll must beSome(Return(333))
+
+        there was one(okTx).ack()
+        there were two(offer).prepare()
+      }
+    }
+
+    "when Tx.prepare is delayed" in {
+      "when it commits" in {
+        val tx = mock[Tx[Int]]
+        tx.ack() returns Future.value(Commit(123))
+        val offer = spy(new SimpleOffer(tx))
+
+        offer.sync() must beLike {
+          case Future(Return(123)) => true
+        }
+        there was one(tx).ack()
+        there were no(tx).nack()
+        there was one(offer).prepare()
       }
     }
   }
 
   "Offer.const" should {
     "always provide the same result" in {
-      val e = Offer.const(123)
-      e.poll() must beSome[() => Int].which { _() == 123 }
-      e.poll() must beSome[() => Int].which { _() == 123 }
+      val offer = Offer.const(123)
+
+      offer.sync().poll must beSome(Return(123))
+      offer.sync().poll must beSome(Return(123))
     }
 
-    "evaluate argument for each poll()" in {
+    "evaluate argument for each prepare()" in {
       var i = 0
-      val e = Offer.const { i = i + 1; i }
-      e.poll() must beSome[() => Int].which { _() == 1 }
-      e.poll() must beSome[() => Int].which { _() == 2 }
-    }
-
-    "catch illegal use" in {
-      val e = Offer.const(123)
-      e.enqueue(new SimpleSetter[Int]) must throwA[IllegalStateException]
+      val offer = Offer.const { i = i + 1; i }
+      offer.sync().poll must beSome(Return(1))
+      offer.sync().poll must beSome(Return(2))
     }
   }
 
   "Offer.orElse" should {
     "with const orElse" in {
-      val e0 = spy(new SimpleOffer[Int])
-      val e1 = mock[Offer[Int]]
-      e1.poll() returns Some(() => 123)
-      val e = e0 orElse e1
+      val txp = new Promise[Tx[Int]]
+      val e0 = spy(new SimpleOffer(txp))
 
-      "poll orElse event when poll fails" in {
-        e.poll() must beSome[() => Int].which { _() == 123 }
-        there was one(e0).poll()
-        there was one(e1).poll()
-        there was no(e0).enqueue(any)
-        there was no(e1).enqueue(any)
+      "prepare orElse event when prepare isn't immediately available" in {
+        val e1 = Offer.const(123)
+        val offer = e0 orElse e1
+        offer.sync().poll must beSome(Return(123))
+        there was one(e0).prepare()
+        val tx = mock[Tx[Int]]
+        txp.setValue(tx)
+        there was one(tx).nack()
+        there were no(tx).ack()
       }
 
-      "not poll orElse event when poll succeed" in {
-        e0.value = Some(999)
-        e.poll() must beSome[() => Int].which { _() == 999 }
-        there was one(e0).poll()
-        there was no(e1).poll()
-        there was no(e0).enqueue(any)
-        there was no(e1).enqueue(any)
+      "not prepare orElse event when the result is immediately available" in {
+        val e1 = spy(new SimpleOffer(Stream.empty))
+        val offer = e0 orElse e1
+        val tx = mock[Tx[Int]]
+        tx.ack() returns Future.value(Commit(321))
+        txp.setValue(tx)
+        offer.sync().poll must beSome(Return(321))
+        there was one(e0).prepare()
+        there was one(tx).ack()
+        there was no(tx).nack()
+        there was no(e1).prepare()
+      }
+    }
+
+    "sync integration: when first transaction aborts" in {
+      val tx2 = new Promise[Tx[Int]]
+      val e0 = spy(new SimpleOffer(Future.value(Tx.aborted: Tx[Int]) #:: (tx2: Future[Tx[Int]]) #:: Stream.empty))
+      val offer = e0 orElse Offer.const(123)
+
+      "select first again if tx2 is ready" in {
+        val tx = mock[Tx[Int]]
+        tx.ack() returns Future.value(Commit(321))
+        tx2.setValue(tx)
+
+        offer.sync().poll must beSome(Return(321))
+        there were two(e0).prepare()
+        there was one(tx).ack()
+        there was no(tx).nack()
       }
 
-      "not enqueue orElse event" in {
-        e1.poll() returns None
-        e.poll() must beNone
-        there was one(e0).poll()
-        there was one(e1).poll()
-        there was no(e0).enqueue(any)
-        there was no(e1).enqueue(any)
-        e.enqueue(new SimpleSetter[Int])
-        there was no(e0).enqueue(any)
-        there was one(e1).enqueue(any)
+      "select alternative if not ready the second time" in {
+        offer.sync().poll must beSome(Return(123))
+        there were two(e0).prepare()
+
+        val tx = mock[Tx[Int]]
+        tx2.setValue(tx)
+        there was one(tx).nack()
       }
     }
   }
@@ -267,46 +275,34 @@ object OfferSpec extends Specification with Mockito {
   }
 
   "Offer.timeout" should {
-    "be available after timeout (poll)" in Time.withTimeAt(Time.epoch) { tc =>
+    "be available after timeout (prepare)" in Time.withTimeAt(Time.epoch) { tc =>
       implicit val timer = new MockTimer
       val e = Offer.timeout(10.seconds)
-      e.poll() must beNone
+      e.prepare().isDefined must beFalse
       tc.advance(9.seconds)
       timer.tick()
-      e.poll() must beNone
+      e.prepare().isDefined must beFalse
       tc.advance(1.second)
       timer.tick()
-      e.poll() must beSomething
+      e.prepare().isDefined must beTrue
     }
 
-    "be available after timeout (enqueue)" in Time.withTimeAt(Time.epoch) { tc =>
+    "cancel timer tasks when losing" in Time.withTimeAt(Time.epoch) { tc =>
       implicit val timer = new MockTimer
-      val e = Offer.timeout(10.seconds)
-      val s = new SimpleSetter[Unit]
-      e.enqueue(s)
-      s.get must beNone
-      tc.advance(9.seconds)
-      timer.tick()
-      s.get must beNone
-      tc.advance(1.second)
-      timer.tick()
-      s.get must beSomething
-    }
+      val e10 = Offer.timeout(10.seconds) map { _ => 10 }
+      val e5 = Offer.timeout(5.seconds) map { _ => 5 }
 
-    "cancel timer task when cancelled" in Time.withTimeAt(Time.epoch) { tc =>
-      implicit val timer = new MockTimer
-      val e = Offer.timeout(10.seconds)
-      val s = new SimpleSetter[Unit]
-      val cancel = e.enqueue(s)
-      s.get must beNone
-      timer.tasks must haveSize(1)
-      val task = timer.tasks(0)
-      task.isCancelled must beFalse
-      cancel()
-      task.isCancelled must beTrue
-      tc.advance(10.seconds)
+      val item = Offer.select(e5, e10)
+      item.poll must beNone
+      timer.tasks must haveSize(2)
+      timer.nCancelled must be_==(0)
+
+      tc.advance(6.seconds)
       timer.tick()
-      s.get must beNone  // didn't fire. was cancelled.
+
+      item.poll must beSome(Return(5))
+      timer.tasks must haveSize(0)
+      timer.nCancelled must be_==(1)
     }
   }
 
@@ -374,4 +370,3 @@ object OfferSpec extends Specification with Mockito {
     }
   }
 }
-

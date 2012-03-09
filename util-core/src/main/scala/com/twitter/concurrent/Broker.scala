@@ -1,104 +1,144 @@
 package com.twitter.concurrent
 
-/*
- * Brokers coordinate offers to send and receive messages in FIFO
- * order.  They guarantee synchronous and exclusive delivery between
- * sender and receiver.
+import com.twitter.util.{Future, Promise, Return}
+import java.util.concurrent.atomic.AtomicReference
+import scala.annotation.tailrec
+import scala.collection.immutable.Queue
+
+/**
+ * An unbuffered FIFO queue, brokered by `Offer`s. Note that the queue is
+ * ordered by successful operations, not initiations, so `one` and `two`
+ * may not be received in that order with this code:
  *
- * Brokers are analogous to "Channels" in Concurrent ML or Go.
- * However, we name them differently here in order to avoid confusion
- * with {{com.twitter.concurrent.Channel}}.  Also, "Broker" more
- * accurately reflects its function, in our view.
+ * {{{
+ * val b: Broker[Int]
+ * b ! 1
+ * b ! 2
+ * }}}
+ *
+ * But rather we need to explicitly sequence them:
+ *
+ * {{{
+ * val b: Broker[Int]
+ * for {
+ *   () <- b ! 1
+ *   () <- b ! 2
+ * } ()
+ * }}}
+ *
+ * BUGS: the implementation would be much simpler in the absence of
+ * cancellation.
  */
 
-import scala.collection.mutable.Queue
+class Broker[T] {
+  private[this] sealed trait State
+  private[this] case object Quiet extends State
+  private[this] case class Sending(q: Queue[(Promise[Tx[Unit]], T)]) extends State
+  private[this] case class Receiving(q: Queue[Promise[Tx[T]]]) extends State
 
-import com.twitter.util.{Future, Promise, Return}
+  private[this] val state = new AtomicReference[State](Quiet)
 
-// todo: provide buffered brokers
-class Broker[E] {
-  /*
-   * We rely on the fact that `sendq' and `recvq' aren't
-   * simultaneously nonempty.  The correctness of the implementation
-   * follows.
-   */
-  private[this] val sendq = new Queue[(E, Offer[Unit]#Setter)]
-  private[this] val recvq = new Queue[Offer[E]#Setter]
+  @tailrec
+  private[this] def rmElem(elem: AnyRef) {
+    state.get match {
+      case s@Sending(q) =>
+        val nextq = q filter { _ ne elem }
+        val nextState = if (nextq.isEmpty) Quiet else Sending(nextq)
+        if (!state.compareAndSet(s, nextState))
+          rmElem(elem)
 
-   /**
-   * Create an offer to broker the sending of the value {{e}}.  Upon
-   * synchronization, the offer is realized exactly when there is a
-   * receiver that is also synchronizing.
-   */
-  def send(e: E): Offer[Unit] = new Offer[Unit] {
-    def poll(): Option[() => Unit] = {
-      while (!recvq.isEmpty) {
-        val setter = recvq.dequeue()
-        setter() foreach { receiver =>
-          return Some { () => receiver(e) }
-        }
-      }
+      case s@Receiving(q) =>
+        val nextq = q filter { _ ne elem }
+        val nextState = if (nextq.isEmpty) Quiet else Receiving(nextq)
+        if (!state.compareAndSet(s, nextState))
+          rmElem(elem)
 
-      None
+      case Quiet => ()
     }
-
-    def enqueue(setter: Offer[Unit]#Setter) = {
-      val item = (e, setter)
-      sendq += item
-      () => { sendq.dequeueFirst { _ eq item } }
-    }
-
-    def objects = Seq(Broker.this)
   }
 
-  /**
-   * Create an offer to receive a brokered value.  Upon
-   * synchronization, the offer is realized exactly when there is a
-   * sender.  Receives are in FIFO order of sends.
-   */
-  def recv: Offer[E] = new Offer[E] {
-    def poll(): Option[() => E] = {
-      while (!sendq.isEmpty) {
-        val (e, setter) = sendq.dequeue()
-        setter() foreach { sender =>
-          return Some { () =>
-            sender(())
-            e
+  def send(msg: T): Offer[Unit] = new Offer[Unit] {
+    @tailrec
+    def prepare() = {
+      state.get match {
+        case s@Receiving(Queue(recvp, newq@_*)) =>
+          val nextState = if (newq.isEmpty) Quiet else Receiving(Queue(newq:_*))
+          if (!state.compareAndSet(s, nextState)) prepare() else {
+            val (sendTx, recvTx) = Tx.twoParty(msg)
+            recvp.setValue(recvTx)
+            Future.value(sendTx)
           }
-        }
+
+        case s@(Quiet | Sending(_)) =>
+          val p = new Promise[Tx[Unit]]
+          val elem = (p, msg)
+          val nextState = s match {
+            case Quiet => Sending(Queue(elem))
+            case Sending(q) => Sending(q enqueue elem)
+            case Receiving(_) => throw new IllegalStateException()
+          }
+
+          if (!state.compareAndSet(s, nextState)) prepare() else {
+            p.onCancellation { rmElem(elem) }
+            p
+          }
+
+        case Receiving(Queue()) =>
+          throw new IllegalStateException()
       }
-
-      None
     }
-
-    def enqueue(setter: Offer[E]#Setter) = {
-      recvq += setter
-      () => { recvq.dequeueFirst { _ eq setter } }
-    }
-
-    def objects = Seq(Broker.this)
   }
 
-  /* Scala actor style syntax. */
+  val recv: Offer[T] = new Offer[T] {
+    @tailrec
+    def prepare() =
+      state.get match {
+        case s@Sending(Queue((sendp, msg), newq@_*)) =>
+          val nextState = if (newq.isEmpty) Quiet else Sending(Queue(newq:_*))
+          if (!state.compareAndSet(s, nextState)) prepare() else {
+            val (sendTx, recvTx) = Tx.twoParty(msg)
+            sendp.setValue(sendTx)
+            Future.value(recvTx)
+          }
+
+        case s@(Quiet | Receiving(_)) =>
+          val p = new Promise[Tx[T]]
+          val nextState = s match {
+            case Quiet => Receiving(Queue(p))
+            case Receiving(q) => Receiving(q enqueue p)
+            case Sending(_) => throw new IllegalStateException()
+          }
+
+          if (!state.compareAndSet(s, nextState)) prepare() else {
+            p.onCancellation { rmElem(p) }
+            p
+          }
+
+        case Sending(Queue()) =>
+          throw new IllegalStateException()
+      }
+  }
+
+  /* Scala actor style / CSP syntax. */
 
   /**
    * Send an item on the broker, returning a {{Future}} indicating
    * completion.
    */
-  def !(e: E): Future[Unit] = send(e)()
+  def !(msg: T): Future[Unit] = send(msg)()
 
   /**
    * Like {!}, but block until the item has been sent.
    */
-  def !!(e: E): Unit = this.!(e)()
+  def !!(msg: T): Unit = (this ! msg)()
 
   /**
    * Retrieve an item from the broker, asynchronously.
    */
-  def ? : Future[E] = recv()
+  def ? : Future[T] = recv()
 
   /**
    * Retrieve an item from the broker, blocking.
    */
-  def ?? : E = this.?()
+  def ?? : T = (this?)()
 }
