@@ -191,7 +191,7 @@ trait TimeLike[+This <: TimeLike[This]] {
   def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
 }
 
-class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] {
+class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] with Serializable {
   protected override def build(nanos: Long) = new Time(nanos)
 
   def inNanoseconds = nanos
