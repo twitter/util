@@ -208,15 +208,18 @@ extends Timer {
 
 // Exceedingly useful for writing well-behaved tests.
 class MockTimer extends Timer {
+  // These are weird semantics admittedly, but there may
+  // be a bunch of tests that rely on them already.
   case class Task(var when: Time, runner: () => Unit)
     extends TimerTask
   {
     var isCancelled = false
-    def cancel() { isCancelled = true; when = Time.now; tick() }
+    def cancel() { isCancelled = true; nCancelled += 1; when = Time.now; tick() }
   }
 
   var isStopped = false
   var tasks = ArrayBuffer[Task]()
+  var nCancelled = 0
 
   def tick() {
     if (isStopped)

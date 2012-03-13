@@ -1,238 +1,110 @@
 package com.twitter.concurrent
 
-import java.util.concurrent.atomic.AtomicBoolean
+import com.twitter.util.{Future, Promise, Time, Timer, Duration}
 import scala.util.Random
-import scala.collection.mutable.ArrayBuffer
-import scala.ref.WeakReference
-
-import com.twitter.util.{Future, Promise, Return}
-import com.twitter.util.{Time, Timer, Duration}
-
-// todo:  pre-synchronization activation (eg. "activate()") so that we may
-// have reusable timeouts, etc.?
-// todo: provide something similar to "withNack" from CML?
-
-object Offer {
-  /**
-   * The offer that chooses exactly one of the given offers, choosing
-   * among immediately realizable offers at random.
-   */
-  def choose[T](ofs: Offer[T]*): Offer[T] =
-    if (ofs.isEmpty) never[T] else new Offer[T] {
-      def poll() = {
-        val rng = new Random(Time.now.inNanoseconds)
-        val shuffled = rng.shuffle(ofs.toList)
-        shuffled.foldLeft(None: Option[() => T]) {
-          case (None, of) => of.poll()
-          case (some@Some(_), _) => some
-        }
-      }
-
-      def enqueue(setter: Setter) = {
-        val dqs = ofs map { _.enqueue(setter) }
-        () => dqs foreach { dq => dq() }
-      }
-
-      def objects: Seq[AnyRef] = ofs flatMap { _.objects }
-    }
-
-  /**
-   * Convenience function to choose, then sync.
-   */
-  def select[T](ofs: Offer[T]*): Future[T] = choose(ofs:_*)()
-
-  /**
-   * The constant offer: always available with the given value.
-   * Note: Computed by-name.
-   */
-  def const[T](t: =>T): Offer[T] = new Offer[T] {
-    def poll() = Some(() => t)
-    def enqueue(setter: Setter) =
-      throw new IllegalStateException("enqueue cannot be called after succesfull poll()!")
-    def objects = Seq()
-  }
-
-  /**
-   * An offer that is never available.
-   */
-  def never[T]: Offer[T] = new Offer[T] {
-    def poll() = None
-    def enqueue(setter: Setter) = () => ()
-    val objects = Seq()
-  }
-
-  /**
-   * An offer that is available after the given time.
-   */
-  def timeout(timeout: Duration)(implicit timer: Timer) = new Offer[Unit] {
-    private[this] val deadline = timeout.fromNow
-
-    def poll() = if (deadline <= Time.now) Some(() => ()) else None
-    def enqueue(setter: Setter) = {
-      val task = timer.schedule(deadline) {
-        setter() foreach { set => set(()) }
-      }
-      () => task.cancel()
-    }
-    val objects = Seq()
-  }
-
-  /**
-   *  Defines a total order over heap objects.  This is required
-   *  because the identity hash code is not unique across objects.
-   *  Thus, we keep a hash map that specifies the order(s) for given
-   *  collisions.  We can do this because reference equality is well
-   *  defined in Java.  See:
-   *
-   *    http://gafter.blogspot.com/2007/03/compact-object-comparator.html
-   *
-   *  For more information.
-   */
-  private[concurrent] object ObjectOrder extends Ordering[AnyRef] {
-    private[concurrent] var order: ArrayBuffer[WeakReference[AnyRef]] = new ArrayBuffer()
-
-    // Returns the index of x in the buffer; appends x if it's not in the buffer
-    def indexOf(x: AnyRef): Int = {
-      val i = order.indexWhere { wr =>
-        wr.get match {
-          case Some (r) => r eq x
-          case None => false
-        }
-      }
-
-      if (i != -1) i else {
-        order += new WeakReference(x)
-        order.length - 1
-      }
-    }
-
-    def compare(a: AnyRef, b: AnyRef): Int = {
-      if (a eq b)
-        return 0
-
-      val d = System.identityHashCode(a) compare System.identityHashCode(b)
-      if (d != 0)
-        return d
-
-      // Slow path:
-      // first, scan buffer to remove unreachable references.
-      // Then find the indices of a and b, which determine their order
-      synchronized {
-        order = order.filterNot(r => r.get.isEmpty)
-        indexOf(a) compare indexOf(b)
-      }
-    }
-  }
-}
 
 /**
- * An offer to _communicate_ with another process.  The offer is
- * parameterized on the type of the value communicated.  An offer that
- * _sends_ a value typically has type {{Unit}}.  An offer is
- * activated by synchronizing it.  Synchronization is done with the
- * apply() method.
+ * An offer to communicate with another process. The offer is
+ * parameterized on the type of the value communicated. An offer that
+ * sends a value typically has type {{Unit}}. An offer is activated by
+ * synchronizing it, which is done with `apply()`.
+ *
+ * Note that Offers are persistent values -- they may be synchronized
+ * multiple times. They represent a standing offer of communication, not
+ * a one-shot event.
+ *
+ * =The synchronization protocol=
+ *
+ * Synchronization is performed via a two-phase commit process.
+ * `prepare()` commenses the transaction, and when the other party is
+ * ready, it returns with a transaction object, `Tx[T]`. This must then
+ * be ackd or nackd. If both parties acknowledge, `Tx.ack()` returns
+ * with a commit object, containing the value. This finalizes the
+ * transaction. Please see the `Tx` documentation for more details on
+ * that phase of the protocol.
+ *
+ * Note that a user should never perform this protocol themselves --
+ * synchronization should always be done with `apply()`.
+ *
+ * Future cancellation is propagated, and failure is passed through. It
+ * is up to the implementor of the Offer to decide on failure semantics,
+ * but they are always passed through in all of the combinators.
  */
 trait Offer[+T] { self =>
-  import Offer._
+  /**
+   * Prepare a new transaction. This is the first stage of the 2 phase
+   * commit. This is typically only called by the offer implementation
+   * directly or by combinators.
+   */
+  def prepare(): Future[Tx[T]]
 
   /**
-   * A setter represents the atomic realization of an offer
-   * synchronization.  One is given to the {{enqueue}} method when
-   * the offer cannot be immediately realized.
-   *
-   * It is a {{Function0}} that, when called, attempts to reserve the
-   * right to set the value.  If it succeeds, it returns a
-   * {{Function1}} that is to be used in setting the value.  The
-   * caller guarantees that, when succesful, it will set the value.
+   * Synchronizes this offer, returning a future representing the result
+   * of the synchronization.
    */
-  type Setter = () => Option[T => Unit]
-
-  /*
-   * The following methods (poll, enqueue, objects) are used in
-   * synchronization and must be implemented by concrete offers.
-   */
-
-  /**
-   * Polls this offer.  This is the first stage of synchronization.
-   * If the offer is ready, returns {{Some(..)}}.  At this point, the
-   * offer is realized, and {{enqueue}} will not be called.
-   *
-   * Note: {{poll()}} returns a *delayed* value so that the caller
-   * controls the context of execution (in particular, we need to be
-   * able to guarantee that we don't hold locks while retrieving the
-   * value, in case it has side effects).  Thus, it is important that
-   * the implementation only perform side effects (outside of the
-   * offer) in the delayed function.
-   */
-  protected[concurrent] def poll(): Option[() => T]
-
-  /**
-   * Enqueue the given {{Setter}} for notification of realization of
-   * the offer.  This is invoked only if {{poll}} fails.  The return
-   * value is a cancellation that is called if the offer is not
-   * selected.
-   */
-  protected[concurrent] def enqueue(setter: Setter): () => Unit
-
-  /**
-   * A sequence of objects needing synchronization before
-   * synchronization begins.  This needs to be defined in order to
-   * allow for atomic operations across all participants in an offer
-   * (eg.  for {{Offer.choose}})
-   *
-   * The implementation guarantees that the monitor of any object
-   * given here is locked (as in {{object.synchronized}}) before
-   * invoking {{poll}} or {{enqueue}}.
-   */
-  protected[concurrent] def objects: Seq[AnyRef]
-
-  /**
-   * Lock the monitors of the objects in {{objs}} in order, then
-   * invoke {{f}}.
-   */
-  private[this] def lock[R](objs: List[AnyRef])(f: => R): R = {
-    objs match {
-      case obj :: rest =>
-        obj.synchronized { lock(rest)(f) }
-      case Nil =>
-        f
+  def apply(): Future[T] =
+    prepare() flatMap { tx =>
+      tx.ack() flatMap {
+        case Tx.Commit(v) => Future.value(v)
+        case Tx.Abort => apply()
+      }
     }
-  }
+
+  /**
+   * Synonym for `apply()`
+   */
+  def sync(): Future[T] = apply()
 
   /* Combinators */
 
   /**
    * Map this offer of type {{T}} into one of type {{U}}.  The
-   * translation (performed by {{f}}) is done when the offer has
-   * succesfully synchronized.
+   * translation (performed by {{f}}) is done after the {{Offer[T]}} has
+   * successfully synchronized.
    */
   def map[U](f: T => U): Offer[U] = new Offer[U] {
-    def poll() = self.poll() map { t => { () => f(t()) } }
-    def enqueue(setter: Setter): () => Unit = self.enqueue { () =>
-      setter() map { uset => { t => uset(f(t)) } }
-    }
+    def prepare() = self.prepare() map { tx =>
+      new Tx[U] {
+        import Tx.{Commit, Abort}
+        def ack() = tx.ack() map {
+          case Commit(t) => Commit(f(t))
+          case Abort => Abort
+        }
 
-    def objects: Seq[AnyRef] = self.objects
+        def nack() { tx.nack() }
+      }
+    }
   }
 
   /**
-   * Like {{map}}, but a constant function.
+   * Synonym for `map()`. Useful in combination with `Offer.choose()`
+   * and `Offer.select()`
+   */
+  def apply[U](f: T => U): Offer[U] = map(f)
+
+  /**
+   * Like {{map}}, but to a constant (call-by-name).
    */
   def const[U](f: => U): Offer[U] = map { _ => f }
 
   /**
-   * An offer that, when synchronized, fails to synchronize {{this}}
-   * immediately, synchronizes on {{other}} instead.  This is useful
+   * An offer that, when synchronized, attempts to synchronize {{this}}
+   * immediately, and if it fails, synchronizes on {{other}} instead.  This is useful
    * for providing default values. Eg.:
    *
    * {{{
-   * offer OrElse Offer.const { computeDefaultValue() }
+   * offer orElse Offer.const { computeDefaultValue() }
    * }}}
    */
   def orElse[U >: T](other: Offer[U]): Offer[U] = new Offer[U] {
-    def poll() = self.poll() orElse other.poll()
-    def enqueue(setter: Setter) = other.enqueue(setter)
-    def objects = self.objects ++ other.objects
+    def prepare() = {
+      val ourTx = self.prepare()
+      if (ourTx.isDefined) ourTx else {
+        ourTx foreach { tx => tx.nack() }
+        ourTx.cancel()
+        other.prepare()
+      }
+    }
   }
 
   def or[U](other: Offer[U]): Offer[Either[T, U]] =
@@ -251,6 +123,14 @@ trait Offer[+T] { self =>
   }
 
   /**
+   * Synchronize (discarding the value), and then invoke the given
+   * closure.  Convenient for loops.
+   */
+  def andThen(f: => Unit) {
+    this() onSuccess { _ => f }
+  }
+
+  /**
    * Enumerate this offer (ie.  synchronize while there are active
    * responders until the channel is closed) to the given
    * {{ChannelSource}}.  n.b.: this may buffer at most one value, and
@@ -260,10 +140,8 @@ trait Offer[+T] { self =>
    *  synchronization around the channel (this would require us to
    *  make generic the concept of synchronization, and would create
    *  far too much complexity for what would never be a use case)
-   *
-   *  todo: create version with backpressure (using =:= on T, with
-   *  convention for acks)
    */
+  @deprecated("Channels are deprecated")
   def enumToChannel[U >: T](ch: ChannelSource[U]) {
     // these are all protected by ch.serialized:
     var buf: Option[T] = None
@@ -310,6 +188,7 @@ trait Offer[+T] { self =>
   /**
    * Create a channel, and enumerate this offer onto it.
    */
+  @deprecated("Channels are deprecated")
   def toChannel: Channel[T] = {
     val ch = new ChannelSource[T]
     enumToChannel(ch)
@@ -317,95 +196,92 @@ trait Offer[+T] { self =>
   }
 
   /**
-   * Synchronize (discarding the value), and then invoke the given
-   * closure.  Convenient for loops.
-   */
-  def andThen(f: => Unit) {
-    this() onSuccess { _ => f }
-  }
-
-  def apply[R](f: T => R): Offer[R] = map(f)
-
-  /**
-   * Synchronize this offer.  This activates this offer and attempts
-   * to perform the communication specified.
-   *
-   * @return A {{Future}} containing the communicated value.
-   */
-  def apply(): Future[T] = {
-    // We sort the objects here according to their identity.  In this
-    // way we avoid deadlock conditions upon locking all the objects.
-    // When they are locked in this order, one thread cannot attempt
-    // to acquire a lock lower in the ordering than any lock it has
-    // already acquired.  Thus there cannot be cycles.
-    val objs = (objects toList) sorted(ObjectOrder)
-
-    val action = lock(objs) {
-      // first, attempt to poll.  if there are any values immediately
-      // available, then simply return this.  we assume the underlying
-      // implementation is fair.
-      poll() match {
-        case Some(res) =>
-          () => Future.value(res())
-        case None =>
-          // we failed to poll, so we need to enqueue
-          val activated = new AtomicBoolean(false)
-          val computation = new Promise[T]
-          val setter: Setter = () => {
-            if (activated.compareAndSet(false, true))
-              Some { f => computation() = Return(f) }
-            else
-              None
-          }
-
-          val dequeue = enqueue(setter)
-
-          () => {
-            val promise = new Promise[T]
-            // activate the computation.
-            computation onSuccess { t =>
-              promise() = Return(t)
-            }
-
-            promise ensure {
-              // finally, dequeue from waitqs.  this doesn't matter for busy
-              // queues (since they'd be naturally garbage collected when
-              // attempting to dequeue), but for idle queues, we could pile
-              // up waiters that are never collected.
-              //
-              // todo: we could do with per-object locks here instead of
-              // doing the whole lock dance again.
-              lock(objs) { dequeue() }
-            }
-          }
-      }
-    }
-
-    action()
-  }
-
-  /* Java friendly syntax */
-
-  /**
-   * Synchronize this offer. See {{apply()}}
-   */
-  def sync() = apply()
-
-  /**
    * Synchronize this offer, blocking for the result. See {{apply()}}
    * and {{com.twitter.util.Future.apply()}}
    */
-  def syncWait() = sync()()
+  def syncWait(): T = sync()()
 
   /* Scala actor-style syntax */
 
   /**
    * Alias for synchronize.
    */
-  def ? = apply()
+  def ? = sync()
 
   /**
    * Synchronize, blocking for the result.
    */
-  def ?? = ?()
+  def ?? = syncWait()
+}
+
+object Offer {
+  /**
+   * A constant offer: synchronizes the given value always. This is
+   * call-by-name and a new value is produced for each `prepare()`.
+   */
+  def const[T](x: => T): Offer[T] = new Offer[T] {
+    def prepare() = Future.value(Tx.const(x))
+  }
+
+  /**
+   * An offer that never synchronizes.
+   */
+  val never: Offer[Nothing] = new Offer[Nothing] {
+    def prepare() = new Promise[Tx[Nothing]]
+  }
+
+  /**
+   * The offer that chooses exactly one of the given offers. If there are any
+   * Offers that are synchronizable immediately, one is chosen at random.
+   */
+  def choose[T](evs: Offer[T]*): Offer[T] = if (evs.isEmpty) Offer.never else new Offer[T] {
+    def prepare(): Future[Tx[T]] = {
+      val rng = new Random(Time.now.inNanoseconds)
+      val prepd = rng.shuffle(evs map { ev => ev.prepare() })
+
+      prepd find(_.isDefined) match {
+        case Some(winner) =>
+          for (loser <- prepd filter { _ ne winner }) {
+            loser onSuccess { tx => tx.nack() }
+            loser.cancel()
+          }
+
+          winner
+
+        case None =>
+          Future.select(prepd) flatMap { case (winner, losers) =>
+            for (loser <- losers) {
+              loser onSuccess { tx => tx.nack() }
+              loser.cancel()
+            }
+
+            Future.const(winner)
+          }
+      }
+    }
+  }
+
+  /**
+   * `Offer.choose()` and synchronize it.
+   */
+  def select[T](ofs: Offer[T]*): Future[T] = choose(ofs:_*)()
+
+  /**
+   * An offer that is available after the given time out.
+   */
+  def timeout(timeout: Duration)(implicit timer: Timer): Offer[Unit] = new Offer[Unit] {
+    private[this] val deadline = timeout.fromNow
+    private[this] val tx = Tx.const(())
+
+    def prepare() = {
+      if (deadline <= Time.now) Future.value(tx) else {
+        val p = new Promise[Tx[Unit]]
+        val task = timer.schedule(deadline) {
+          p.setValue(tx)
+        }
+        p.onCancellation { task.cancel() }
+        p
+      }
+    }
+  }
 }

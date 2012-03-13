@@ -4,7 +4,6 @@ import org.specs.Specification
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
-import com.twitter.concurrent.SimpleSetter
 
 object MonitorSpec extends Specification with Mockito {
   class MockMonitor extends Monitor {

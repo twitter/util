@@ -59,7 +59,6 @@ object Config {
   implicit def toSpecifiedOption[A](value: => A) = new Specified(Some(value))
   implicit def fromRequired[A](req: Required[A]) = req.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
-  implicit def fromOption[A](item: Option[A]): A = item.get
   implicit def intoList[A](item: A): List[A] = List(item)
 }
 
@@ -97,15 +96,22 @@ trait Config[T] extends (() => T) {
 
   def required[A]: Required[A] = Unspecified
   def required[A](default: => A): Required[A] = new Specified(default)
-  def optional[A]: Option[A] = None
+  def optional[A]: Required[Option[A]] = new Specified(None)
+  def optional[A](default: => A): Required[Option[A]] = new Specified(Some(default))
+
+  /**
+   * The same as specifying required[A] with a default value, but the intent to the
+   * use is slightly different.
+   */
   def computed[A](f: => A): Required[A] = new Specified(f)
+
   /** a non-lazy way to create a Specified that can be called from java */
   def specified[A](value: A) = new Specified(value)
+
   implicit def toSpecified[A](value: => A) = new Specified(value)
   implicit def toSpecifiedOption[A](value: => A) = new Specified(Some(value))
   implicit def fromRequired[A](req: Required[A]) = req.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
-  implicit def fromOption[A](item: Option[A]): A = item.get
   implicit def intoList[A](item: A): List[A] = List(item)
 
   /**

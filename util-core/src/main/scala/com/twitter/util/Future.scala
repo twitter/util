@@ -7,7 +7,7 @@ import scala.collection.JavaConversions.{asScalaBuffer, asJavaList}
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 
-import com.twitter.concurrent.{Offer, IVar}
+import com.twitter.concurrent.{Offer, IVar, Tx}
 import com.twitter.conversions.time._
 
 object Future {
@@ -86,6 +86,8 @@ object Future {
    * in the Return[_] type.
    */
   def apply[A](a: => A): Future[A] = new Promise[A](Try(a))
+
+  def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 
   /**
    * Run the computation {{f}} while installing a monitor that
@@ -544,15 +546,14 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * is satisfied.
    */
   def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
-    def poll() = if (isDefined) Some(() => get(0.seconds)) else None
-    def enqueue(setter: Setter) = {
-      respond { v =>
-        setter() foreach { _(v) }
+    def prepare() = transform { tryV =>
+      val tx = new Tx[Try[A]] {
+        def ack() = Future.value(Tx.Commit(tryV))
+        def nack() {}
       }
-      // we can't dequeue futures
-      () => ()
+
+      Future.value(tx)
     }
-    def objects = Seq()
   }
 
   /**

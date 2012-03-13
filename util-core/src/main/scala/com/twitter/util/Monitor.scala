@@ -155,7 +155,6 @@ object RootMonitor extends Monitor {
       true  /*NOTREACHED*/
     case e =>
       log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
-      e.printStackTrace()
       false
     }
 }

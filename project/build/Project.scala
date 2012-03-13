@@ -67,6 +67,7 @@ class Project(info: ProjectInfo)
     with ProjectDefaults
   {
     override def compileOrder = CompileOrder.Mixed
+    val objectSize = "com.twitter.common" % "objectsize" % "0.0.3" % "test"
   }
 
   class EvalProject(info: ProjectInfo)
