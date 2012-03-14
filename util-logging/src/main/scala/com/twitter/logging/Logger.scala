@@ -56,6 +56,9 @@ object Level {
     root.setLevel(ALL)
     root.setLevel(originalLevel)
   }
+
+  // All we need is for the object to be initialized.
+  private[logging] def init() {}
 }
 
 class LoggingException(reason: String) extends Exception(reason)
@@ -228,6 +231,10 @@ object Logger extends Iterable[Logger] {
 
   /** ALL is used to log everything. */
   def ALL = Level.ALL
+
+  // We need to make sure levels are initialized here, in case
+  // Logger is referred to before Level (eg. Logger.levelsMap).
+  Level.init()
 
   /**
    * Return a map of log level values to the corresponding Level objects.
