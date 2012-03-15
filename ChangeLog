@@ -1,3 +1,12 @@
+3.0.0  2012-03-14
+
+  * AsyncSemaphore: allow parameterizing maximum queue size
+  * Logging: scribe handlers may now be named "scribe"
+  * Logging: Always make sure Level is initialized before being
+  able to refer to Logger.
+  * Offer/Broker: simpler, more flexible implementation
+  * Config: Config.optional results in lazy evaluation
+
 2.0.0  2012-02-27
 
   * NetUtil: optimize ipv4 address parsing
