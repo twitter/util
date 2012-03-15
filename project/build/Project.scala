@@ -59,7 +59,12 @@ class Project(info: ProjectInfo)
   // util-zk-common: Uses common-zookeeper for connection management
   val zkCommonProject = project(
     "util-zk-common", "util-zk-common",
-    new ZkCommonProject(_), coreProject, loggingProject, zkProject)
+    new ZkCommonProject(_), coreProject, loggingProject, zkProject,
+    // These are required to provide transitive dependencies that
+    // would otherwise be incompatible, see ZkCommonProject for more
+    // details.
+    evalProject, collectionProject, hashingProject
+    )
 
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
@@ -147,6 +152,23 @@ class Project(info: ProjectInfo)
     val commonGroup     = "com.twitter.common.zookeeper" % "group"      % "0.0.5"
     val commonServerSet = "com.twitter.common.zookeeper" % "server-set" % "0.0.5"
     val zookeeper = "org.apache.zookeeper" % "zookeeper" % zkVersion
+    // com.twitter.common.zookeeper transitively depends on
+    // com.twitter.util via com.twitter.finagle. This is otherwise
+    // handled by ProjectDependencies because it transitively inlines
+    // projects. However, for publishing we need to build without
+    // ProjectDependencies turned on. This anyway highlights a
+    // dangerous circularity: if this path involves ABI breaking
+    // changes, we must publish broken builds.
+    override def ivyXML =
+      <dependencies>
+        <exclude module="util-core"/>
+        <exclude module="util-collection"/>
+        <exclude module="util-hashing"/>
+        <exclude module="util-reflect"/>
+        <exclude module="util-thrift"/>
+        <exclude module="util-logging"/>
+        <exclude module="util-eval"/>
+      </dependencies>
  }
 
   trait ProjectDefaults
