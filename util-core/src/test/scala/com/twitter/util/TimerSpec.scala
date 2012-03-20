@@ -66,9 +66,9 @@ object TimerSpec extends Specification with Mockito {
       timer.schedule(0.millis, 20.millis) {
         counter.incrementAndGet()
       }
-      Thread.sleep(1.second.inMillis)
+      Thread.sleep(40.milliseconds.inMilliseconds)
       timer.stop()
-      counter.get() must beCloseTo(50, 2)
+      counter.get() must eventually(be_>=(2))
     }
   }
 
