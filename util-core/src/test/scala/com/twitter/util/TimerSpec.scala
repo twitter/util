@@ -67,8 +67,8 @@ object TimerSpec extends Specification with Mockito {
         counter.incrementAndGet()
       }
       Thread.sleep(40.milliseconds.inMilliseconds)
-      timer.stop()
       counter.get() must eventually(be_>=(2))
+      timer.stop()
     }
   }
 
