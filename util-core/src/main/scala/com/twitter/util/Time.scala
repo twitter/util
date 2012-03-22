@@ -111,6 +111,18 @@ object Time {
     end - start
   }
 
+  def measureMany(n: Int)(f: => Unit): Duration = {
+    require(n > 0)
+    val d = measure {
+      var i = 0
+      while (i < n) {
+        f
+        i += 1
+      }
+    }
+    d/n
+  }
+
   // Wed, 15 Jun 2005 19:00:00 GMT
   def fromRss(rss: String) = rssFormat.parse(rss)
 }

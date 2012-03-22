@@ -51,6 +51,11 @@ class Project(info: ProjectInfo)
     "util-hashing", "util-hashing",
     new HashingProject(_), coreProject)
 
+  // util-jvm: jvm (mostly hotspot) utilities
+  val jvmProject = project(
+    "util-jvm", "util-jvm",
+    new JvmProject(_), coreProject)
+
   // util-zk: An asynchronous ZooKeeper client
   val zkProject = project(
     "util-zk", "util-zk",
@@ -134,6 +139,10 @@ class Project(info: ProjectInfo)
   {
     val commonsCodec = "commons-codec" % "commons-codec" % "1.5" % "test"
   }
+
+  class JvmProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
 
   class ZkProject(info: ProjectInfo)
     extends StandardProject(info)
