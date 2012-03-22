@@ -21,5 +21,5 @@ class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
     else
       super.ivyRepositories
 
-  val defaultProject = "com.twitter" % "standard-project" % "0.12.12"
+  val defaultProject = "com.twitter" % "standard-project" % "1.0.4"
 }
