@@ -227,7 +227,7 @@ object Offer {
    * An offer that never synchronizes.
    */
   val never: Offer[Nothing] = new Offer[Nothing] {
-    def prepare() = new Promise[Tx[Nothing]]
+    def prepare() = Future.never
   }
 
   /**

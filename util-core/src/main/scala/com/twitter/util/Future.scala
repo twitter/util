@@ -1,14 +1,13 @@
 package com.twitter.util
 
-import scala.annotation.tailrec
-import scala.collection.mutable
-import scala.collection.JavaConversions.{asScalaBuffer, asJavaList}
-
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
-import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
-
 import com.twitter.concurrent.{Offer, IVar, Tx}
 import com.twitter.conversions.time._
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
+import java.util.concurrent.{
+  CancellationException, Future => JavaFuture, TimeUnit}
+import scala.annotation.tailrec
+import scala.collection.JavaConversions.{asScalaBuffer, asJavaList}
+import scala.collection.mutable
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
@@ -20,24 +19,27 @@ object Future {
    */
   trait Tracer {
     /**
-     * Record the current location in the code, using the provided object as a hint.
-     * Typically the provided object is a closure or inner-class that has enough metadata
-     * to reconstruct something resembling a stack frame.
+     * Record the current location in the code, using the provided
+     * object as a hint. Typically the provided object is a closure
+     * or inner-class that has enough metadata to reconstruct
+     * something resembling a stack frame.
      */
     private[util] def record(a: AnyRef)
 
     /**
-     * Decorate an exception with additional trace data. Implementations
-     * must return an exception of the same type as the argument, so either
-     * mutate the given exception (which is not thread-safe) or use the provided
-     * manifest to create a dynamic proxy.
+     * Decorate an exception with additional trace data.
+     * Implementations must return an exception of the same type as
+     * the argument, so either mutate the given exception (which is
+     * not thread-safe) or use the provided manifest to create a
+     * dynamic proxy.
      */
     private[util] def wrap[T <: Throwable](t: T): T
 
     /**
-     * Produces a sequence of StackTraceElements indicating the asynchronous path that
-     * lead to the current stack-frame. This method is public and is meant to help end
-     * users debug difficult asynchronous control-flow.
+     * Produces a sequence of StackTraceElements indicating the
+     * asynchronous path that lead to the current stack-frame. This
+     * method is public and is meant to help end users debug
+     * difficult asynchronous control-flow.
      */
     def stackTrace: Seq[StackTraceElement]
   }
@@ -59,7 +61,7 @@ object Future {
   /**
    * Makes a Future with a constant result.
    */
-  def const[A](result: Try[A]): Future[A] = new Promise[A](result)
+  def const[A](result: Try[A]): Future[A] = new ConstFuture[A](result)
 
   /**
    * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
@@ -67,25 +69,49 @@ object Future {
   def value[A](a: A): Future[A] = const[A](Return(a))
 
   /**
-   * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
-   * The exception is wrapped using the current `Future.tracer`.
+   * Make a Future with an error. E.g., Future.exception(new
+   * Exception("boo")). The exception is wrapped using the current
+   * `Future.tracer`.
    */
   def exception[A](e: Throwable): Future[A] = const[A](Throw(Future.trace.wrap(e)))
 
   /**
-   * Make a Future with an error. E.g., Future.exception(new Exception("boo")).
-   * The exception is not wrapped in any way.
+   * Make a Future with an error. E.g., Future.exception(new
+   * Exception("boo")). The exception is not wrapped in any way.
    */
   def rawException[A](e: Throwable): Future[A] = const[A](Throw(e))
 
-  def void() = Future[Void] { null }
+  /**
+   * A future that can never complete.
+   */
+  val never: Future[Nothing] = new Future[Nothing] {
+    protected def respond(tracingObject: AnyRef, k: Try[Nothing] => Unit): Future[Nothing] = this
+    protected def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
+      tracingObject: AnyRef, f: Try[Nothing] => AlsoFuture[B]): Future[B] = this
+
+    def isDefined: Boolean = false
+    def onCancellation(f: =>Unit) {}
+    def linkTo(other: Cancellable) {}
+    def cancel() {}
+    def isCancelled: Boolean = false
+    def get(timeout: Duration): Try[Nothing] = {
+      // We perhaps should just throw right away, but code might rely
+      // on Future.get(timeout) blocking for at least that amount of
+      // time.
+      Thread.sleep(timeout.inMilliseconds)
+      throw new TimeoutException(timeout.toString)
+    }
+    def poll: Option[Try[Nothing]] = None
+  }
+
+  def void(): Future[Void] = value[Void](null)
 
   /**
-   * A factory function to "lift" computations into the Future monad. It will catch
-   * exceptions and wrap them in the Throw[_] type. Non-exceptional values are wrapped
-   * in the Return[_] type.
+   * A factory function to "lift" computations into the Future monad.
+   * It will catch exceptions and wrap them in the Throw[_] type.
+   * Non-exceptional values are wrapped in the Return[_] type.
    */
-  def apply[A](a: => A): Future[A] = new Promise[A](Try(a))
+  def apply[A](a: => A): Future[A] = const(Try(a))
 
   def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 
@@ -278,9 +304,9 @@ object Future {
 }
 
 /**
- * An alternative interface for handling Future Events. This interface is designed
- * to be friendly to Java users since it does not require creating many small
- * Function objects.
+ * An alternative interface for handling Future Events. This
+ * interface is designed to be friendly to Java users since it does
+ * not require creating many small Function objects.
  */
 trait FutureEventListener[T] {
   /**
@@ -295,36 +321,39 @@ trait FutureEventListener[T] {
 }
 
 /**
- * An alternative interface for performing Future transformations; that is,
- * converting a Future[A] to a Future[B]. This interface is designed to be
- * friendly to Java users since it does not require creating many small
- * Function objects. It is used in conjunction with `transformedBy`.
+ * An alternative interface for performing Future transformations;
+ * that is, converting a Future[A] to a Future[B]. This interface is
+ * designed to be friendly to Java users since it does not require
+ * creating many small Function objects. It is used in conjunction
+ * with `transformedBy`.
  *
- * You must override one of `{map, flatMap}`. If you override both `map` and
- * `flatMap`, `flatMap` takes precedence. If you fail to override one of
- * `{map, flatMap}`, an `AbstractMethodError` will be thrown at Runtime.
+ * You must override one of `{map, flatMap}`. If you override both
+ * `map` and `flatMap`, `flatMap` takes precedence. If you fail to
+ * override one of `{map, flatMap}`, an `AbstractMethodError` will be
+ * thrown at Runtime.
  *
- * '''Note:''' an exception e thrown in any of map/flatMap/handle/rescue will
- * make the result of transformedBy be equivalent to Future.exception(e).
+ * '''Note:''' an exception e thrown in any of
+ * map/flatMap/handle/rescue will make the result of transformedBy be
+ * equivalent to Future.exception(e).
  */
 abstract class FutureTransformer[-A, +B] {
   /**
-   * Invoked if the computation completes successfully. Returns the new transformed
-   * value in a Future.
+   * Invoked if the computation completes successfully. Returns the
+   * new transformed value in a Future.
    */
   def flatMap(value: A): Future[B] = Future.value(map(value))
 
   /**
-   * Invoked if the computation completes successfully. Returns the new transformed
-   * value.
+   * Invoked if the computation completes successfully. Returns the
+   * new transformed value.
    *
    * ''Note'': this method will throw an `AbstractMethodError` if it is not overridden.
    */
   def map(value: A): B = throw new AbstractMethodError
 
   /**
-   * Invoked if the computation completes unsuccessfully. Returns the new Future
-   * value.
+   * Invoked if the computation completes unsuccessfully. Returns the
+   * new Future value.
    */
   def rescue(throwable: Throwable): Future[B] = Future.value(handle(throwable))
 
@@ -336,23 +365,29 @@ abstract class FutureTransformer[-A, +B] {
 }
 
 /**
- * A computation evaluated asynchronously. This implementation of Future does not
- * assume any concrete implementation; in particular, it does not couple the user
- * to a specific executor or event loop.
+ * A computation evaluated asynchronously. This implementation of
+ * Future does not assume any concrete implementation; in particular,
+ * it does not couple the user to a specific executor or event loop.
  *
- * Note that this class extends Try[_] indicating that the results of the computation
- * may succeed or fail.
+ * Note that this class extends Try[_] indicating that the results of
+ * the computation may succeed or fail.
+ *
+ * Futures are also [[com.twitter.util.Cancellable]], but with
+ * special semantics: the cancellation signal is only guaranteed to
+ * be delivered when the promise has not yet completed.
  */
 abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   import Future.{DEFAULT_TIMEOUT, makePromise}
 
   /**
-   * When the computation completes, invoke the given callback function. Respond()
-   * yields a Try (either a Return or a Throw). This method is most useful for
-   * very generic code (like libraries). Otherwise, it is a best practice to use
-   * one of the alternatives (onSuccess(), onFailure(), etc.). Note that almost
-   * all methods on Future[_] are written in terms of respond(), so this is
-   * the essential template method for use in concrete subclasses.
+   * When the computation completes, invoke the given callback
+   * function. Respond() yields a Try (either a Return or a Throw).
+   * This method is most useful for very generic code (like
+   * libraries). Otherwise, it is a best practice to use one of the
+   * alternatives (onSuccess(), onFailure(), etc.). Note that almost
+   * all methods on Future[_] are written in terms of respond(), so
+   * this is the essential template method for use in concrete
+   * subclasses.
    *
    * @return a chained Future[A]
    */
@@ -384,15 +419,15 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   def onCancellation(f: => Unit)
 
   /**
-   * Demands that the result of the future be available within `timeout`. The result
-   * is a Return[_] or Throw[_] depending upon whether the computation finished in
-   * time.
+   * Demands that the result of the future be available within
+   * `timeout`. The result is a Return[_] or Throw[_] depending upon
+   * whether the computation finished in time.
    */
   def get(timeout: Duration): Try[A]
 
   /**
-   * Polls for an available result.  If the Future has been satisfied,
-   * returns Some(result), otherwise None.
+   * Polls for an available result.  If the Future has been
+   * satisfied, returns Some(result), otherwise None.
    */
   def poll: Option[Try[A]]
 
@@ -418,6 +453,32 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       }
     }
   }
+  
+  protected def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
+    tracingObject: AnyRef,
+    f: Try[A] => AlsoFuture[B]
+  ): Future[B]
+
+  def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: Try[A] => AlsoFuture[B]): Future[B] = transform(f, f)
+
+  /**
+   * flatMaps propagate cancellation to the parent promise while it
+   * remains waiting.  This means that in a chain of flatMaps,
+   * cancellation only affects the current parent promise that is
+   * being waited on.
+   */
+  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]): Future[B] =
+    transform(f, {
+      case Return(v) => f(v)
+      case Throw(t) => Future.rawException(t)
+    })
+
+  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
+    rescueException: PartialFunction[Throwable, AlsoFuture[B]]
+  ): Future[B] = transform(rescueException, {
+    case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
+    case _ => this
+  })
 
   /**
    * Invoke the callback only if the Future returns successfully. Useful for Scala for comprehensions.
@@ -426,6 +487,8 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   override def foreach(k: A => Unit) = onSuccess(k)
 
   def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
+
+  def filter(p: A => Boolean): Future[A] = transform { x: Try[A] => Future.const(x.filter(p)) }
 
   /**
    * Invoke the function on the result, if the computation was
@@ -452,18 +515,20 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
     })
 
   /**
-   * Register a FutureEventListener to be invoked when the computation
-   * completes. This method is typically used by Java programs because
-   * it avoids the use of small Function objects.
+   * Register a FutureEventListener to be invoked when the
+   * computation completes. This method is typically used by Java
+   * programs because it avoids the use of small Function objects.
    *
-   * Compare this method to `transformedBy`. The difference is that `addEventListener`
-   * is used to perform a simple action when a computation completes, such as recording
-   * data in a log-file. It analogous to a `void` method in Java: it has side-effects
-   * and no return value. `transformedBy`, on the other hand, is used to transform
-   * values from one type to another, or to chain a series of asynchronous calls and
-   * return the result. It is analogous to methods in Java that have a return-type.
-   * Note that `transformedBy` and `addEventListener` are not mutually exclusive and
-   * may be profitably combined.
+   * Compare this method to `transformedBy`. The difference is that
+   * `addEventListener` is used to perform a simple action when a
+   * computation completes, such as recording data in a log-file. It
+   * analogous to a `void` method in Java: it has side-effects and no
+   * return value. `transformedBy`, on the other hand, is used to
+   * transform values from one type to another, or to chain a series
+   * of asynchronous calls and return the result. It is analogous to
+   * methods in Java that have a return-type. Note that
+   * `transformedBy` and `addEventListener` are not mutually
+   * exclusive and may be profitably combined.
    */
   def addEventListener(listener: FutureEventListener[_ >: A]) = respond(listener, {
     case Throw(cause)  => listener.onFailure(cause)
@@ -471,29 +536,38 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   })
 
   /**
-   * Transform the Future[A] into a Future[B] using the FutureTransformer.
-   * The FutureTransformer handles both success (Return) and failure (Throw)
-   * values by implementing map/flatMap and handle/rescue. This method is typically used
-   * by Java programs because it avoids the use of small Function objects.
+   * Transform the Future[A] into a Future[B] using the
+   * FutureTransformer. The FutureTransformer handles both success
+   * (Return) and failure (Throw) values by implementing map/flatMap
+   * and handle/rescue. This method is typically used by Java
+   * programs because it avoids the use of small Function objects.
    *
-   * Compare this method to `addEventListener`. The difference is that `addEventListener`
-   * is used to perform a simple action when a computation completes, such as recording
-   * data in a log-file. It analogous to a `void` method in Java: it has side-effects
-   * and no return value. `transformedBy`, on the other hand, is used to transform
-   * values from one type to another, or to chain a series of asynchronous calls and
-   * return the result. It is analogous to methods in Java that have a return-type.
-   * Note that `transformedBy` and `addEventListener` are not mutually exclusive and
-   * may be profitably combined.
+   * Compare this method to `addEventListener`. The difference is
+   * that `addEventListener` is used to perform a simple action when
+   * a computation completes, such as recording data in a log-file.
+   * It analogous to a `void` method in Java: it has side-effects and
+   * no return value. `transformedBy`, on the other hand, is used to
+   * transform values from one type to another, or to chain a series
+   * of asynchronous calls and return the result. It is analogous to
+   * methods in Java that have a return-type. Note that
+   * `transformedBy` and `addEventListener` are not mutually
+   * exclusive and may be profitably combined.
    *
-   * ''Note'': The FutureTransformer must implement either `flatMap` or `map` and may
-   * optionally implement `handle`. Failing to implement a method will result in
-   * a run-time (AbstractMethod) error.
+   * ''Note'': The FutureTransformer must implement either `flatMap`
+   * or `map` and may optionally implement `handle`. Failing to
+   * implement a method will result in a run-time (AbstractMethod)
+   * error.
    */
   def transformedBy[B](transformer: FutureTransformer[A, B]): Future[B] =
     transform {
       case Return(v) => transformer.flatMap(v)
       case Throw(t)  => transformer.rescue(t)
     }
+
+  def handle[B >: A](rescueException: PartialFunction[Throwable, B]) = rescue {
+    case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
+    case e: Throwable                                   => this
+  }
 
   /**
    * Choose the first Future to succeed.
@@ -546,9 +620,9 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * is satisfied.
    */
   def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
-    def prepare() = transform { tryV =>
+    def prepare() = transform { res: Try[A] =>
       val tx = new Tx[Try[A]] {
-        def ack() = Future.value(Tx.Commit(tryV))
+        def ack() = Future.value(Tx.Commit(res))
         def nack() {}
       }
 
@@ -557,9 +631,9 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   }
 
   /**
-   * Convert a Twitter Future to a Java native Future. This should match the semantics
-   * of a Java Future as closely as possible to avoid issues with the way another API might
-   * use them. See:
+   * Convert a Twitter Future to a Java native Future. This should
+   * match the semantics of a Java Future as closely as possible to
+   * avoid issues with the way another API might use them. See:
    *
    * http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
    */
@@ -605,12 +679,23 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   /**
    * Converts a Future[Future[B]] into a Future[B]
    */
-  def flatten[B](implicit ev: A <:< Future[B]): Future[B]
+  def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
+    flatMap[B, Future] { x => x }
 
   /**
-   * Returns a Future[Boolean] indicating whether `this` and `that` are equals().
+   * Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
+   * Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
    */
-  def willEqual[B](that: Future[B]): Future[Boolean]
+  def willEqual[B](that: Future[B]) = {
+    val areEqual = new Promise[Boolean]
+    this respond { thisResult =>
+      that respond { thatResult =>
+        areEqual.setValue(thisResult == thatResult)
+      }
+    }
+    areEqual
+  }
+
 }
 
 object Promise {
@@ -618,14 +703,12 @@ object Promise {
 }
 
 /**
- * A concrete Future implementation that is
- * updatable by some executor or event loop.  A
- * typical use of Promise is for a client to
- * submit a request to some service.  The client
- * is given an object that inherits from
- * Future[_].  The server stores a reference to
- * this object as a Promise[_] and updates the
- * value when the computation completes.
+ * A concrete Future implementation that is updatable by some
+ * executor or event loop.  A typical use of Promise is for a client
+ * to submit a request to some service.  The client is given an
+ * object that inherits from Future[_].  The server stores a
+ * reference to this object as a Promise[_] and updates the value
+ * when the computation completes.
  */
 class Promise[A] private[Promise](
   private[Promise] final val ivar: IVar[Try[A]],
@@ -656,6 +739,13 @@ class Promise[A] private[Promise](
     }
   }
 
+  /**
+   * Invoke 'f' if this Future is cancelled.
+   */
+  def onCancellation(f: => Unit) {
+    linkTo(new CancellableSink(f))
+  }
+
   def get(timeout: Duration): Try[A] =
     ivar(timeout) getOrElse {
       Throw(new TimeoutException(timeout.toString))
@@ -665,21 +755,18 @@ class Promise[A] private[Promise](
 
   /**
    * Merge `other` into this promise.  See
-   * {{com.twitter.concurrent.IVar.merge}} for
-   * details.  This is necessary in bind
-   * operations (flatMap, rescue) in order to
+   * {{com.twitter.concurrent.IVar.merge}} for details.  This is
+   * necessary in bind operations (flatMap, rescue) in order to
    * prevent space leaks under iteration.
    *
-   * Cancellation state is merged along with
-   * values, but the semantics are slightly
-   * different.  Because the receiver of a promise
-   * may affect its cancellation status, we must
-   * allow for divergence here: if `this` has been
-   * cancelled, but `other` is already complete,
-   * `other` will not change its cancellation
-   * state (which is fixed at false).
+   * Cancellation state is merged along with values, but the
+   * semantics are slightly different.  Because the receiver of a
+   * promise may affect its cancellation status, we must allow for
+   * divergence here: if `this` has been cancelled, but `other` is
+   * already complete, `other` will not change its cancellation state
+   * (which is fixed at false).
    */
-  private[Promise] def merge(other: Future[A]) {
+  private[util] def merge(other: Future[A]) {
     if (other.isInstanceOf[Promise[_]]) {
       val p = other.asInstanceOf[Promise[A]]
       this.ivar.merge(p.ivar)
@@ -707,9 +794,9 @@ class Promise[A] private[Promise](
   def setException(throwable: Throwable) = update(Throw(throwable))
 
   /**
-   * Populate the Promise with the given Try. The try can either be a value
-   * or an exception. setValue and setException are generally more readable
-   * methods to use.
+   * Populate the Promise with the given Try. The try can either be a
+   * value or an exception. setValue and setException are generally
+   * more readable methods to use.
    *
    * @throws ImmutableResult if the Promise is already populated
    */
@@ -720,9 +807,9 @@ class Promise[A] private[Promise](
   }
 
   /**
-   * Populate the Promise with the given Try. The try can either be a value
-   * or an exception. setValue and setException are generally more readable
-   * methods to use.
+   * Populate the Promise with the given Try. The try can either be a
+   * value or an exception. setValue and setException are generally
+   * more readable methods to use.
    *
    * @return true only if the result is updated, false if it was already set.
    */
@@ -735,30 +822,19 @@ class Promise[A] private[Promise](
    * exception, it is handled by the current monitor, see
    * {{com.twitter.util.Monitor}} for details.
    */
-  override def respond(k: Try[A] => Unit): Future[A] = respond(k, k)
-
-  /**
-   * Note: exceptions in responds are monitored.  That is, if the
-   * computation {{k}} throws a raw (ie.  not encoded in a Future)
-   * exception, it is handled by the current monitor, see
-   * {{com.twitter.util.Monitor}} for details.
-   */
   def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
-    // Note that there's a race here, but that's
-    // okay.  The resulting Futures are
-    // equivalent, and it only makes the
-    // optimization less effective.
+    // Note that there's a race here, but that's okay.  The resulting
+    // Futures are equivalent, and it only makes the optimization
+    // less effective.
     //
-    // todo: given that it's likely most responds
-    // don't actually result in the chained ivar
-    // being used, we could create a shell
-    // promise.  this would get rid of one object
-    // allocation (the chained ivar).
+    // todo: given that it's likely most responds don't actually
+    // result in the chained ivar being used, we could create a shell
+    // promise.  this would get rid of one object allocation (the
+    // chained ivar).
     if (chained eq null)
       chained = new Promise(ivar.chained, cancelled)
-    val next = chained
     respondWithoutChaining(tracingObject, { r => Monitor { k(r) } })
-    next
+    chained
   }
 
   private[this] def respondWithoutChaining(tracingObject: AnyRef, k: Try[A] => Unit) {
@@ -795,33 +871,7 @@ class Promise[A] private[Promise](
     promise
   }
 
-  def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: Try[A] => AlsoFuture[B]): Future[B] =
-    transform(f, f)
-
-  /**
-   * Invoke 'f' if this Future is cancelled.
-   */
-  def onCancellation(f: => Unit) {
-    linkTo(new CancellableSink(f))
-  }
-
-  /**
-   * flatMaps propagate cancellation to the parent
-   * promise while it remains waiting.  This means
-   * that in a chain of flatMaps, cancellation
-   * only affects the current parent promise that
-   * is being waited on.
-   */
-  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]): Future[B] =
-    transform(f, {
-      case Return(v) => f(v)
-      case Throw(t) => Future.rawException(t)
-    })
-
-  def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
-    flatMap[B, Future] { x => x }
-
-  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
+  override def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
     rescueException: PartialFunction[Throwable, AlsoFuture[B]]
   ): Future[B] =
     transform(rescueException, {
@@ -829,32 +879,49 @@ class Promise[A] private[Promise](
       case _ => this
     })
 
-  override def filter(p: A => Boolean): Future[A] = {
-    makePromise[A](this) { promise =>
-      respondWithoutChaining(p, { x => Monitor { promise() = x.filter(p) } })
-    }
-  }
-
-  def handle[B >: A](rescueException: PartialFunction[Throwable, B]) = rescue {
-    case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
-    case e: Throwable                                   => this
-  }
-
   private[util] def depth = ivar.depth
+}
 
-  /**
-   * Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
-   * Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
-   */
-  def willEqual[B](that: Future[B]) = {
-    val areEqual = new Promise[Boolean]
-    this respond { thisResult =>
-      that respond { thatResult =>
-        areEqual.setValue(thisResult == thatResult)
-      }
+/**
+ * A Future that is already completed. These are cheap in
+ * construction compared to Promises.
+ */
+class ConstFuture[A](result: Try[A]) extends Future[A] {
+  def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
+    val saved = Local.save()
+    IVar.sched { () =>
+      val current = Local.save()
+      Local.restore(saved)
+      Future.trace.record(tracingObject)
+      try Monitor { k(result) } finally Local.restore(current)
     }
-    areEqual
+    this
   }
+
+  def isDefined: Boolean = true
+
+  // We don't guarantee cancellation delivery after future
+  // completion, so we simply don't provide it for const
+  // futures.
+  def onCancellation(f: => Unit) {}
+  def linkTo(other: Cancellable) {}
+  def cancel() {}
+  def isCancelled: Boolean = false
+
+  protected def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
+    tracingObject: AnyRef,
+    f: Try[A] => AlsoFuture[B]
+  ): Future[B] = {
+    val p = new Promise[B]
+    respond(tracingObject, { r =>
+      val result = try f(r) catch { case e => Future.exception(e) }
+      p.merge(result)
+    })
+    p
+  }
+
+  def get(timeout: Duration): Try[A] = result
+  def poll: Option[Try[A]] = Some(result)
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {

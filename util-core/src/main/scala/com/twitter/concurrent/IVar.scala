@@ -7,46 +7,60 @@ import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 
 /**
- * An IVar is an "I-structured variable". It is a mutable cell that begins empty but can
- * eventually contain a value. It supports write-once semantics (subsequent writes are ignored);
- * in order to read the value of the cell, you pass in a callback that will be invoked when the
- * cell is eventually populated. IVars are a building block for Futures; Futures add additional
- * composition and error-handling functionality.
+ * An IVar is an "I-structured variable". It is a mutable cell that
+ * begins empty but can eventually contain a value. It supports
+ * write-once semantics (subsequent writes are ignored); in order to
+ * read the value of the cell, you pass in a callback that will be
+ * invoked when the cell is eventually populated. IVars are a
+ * building block for Futures; Futures add additional composition and
+ * error-handling functionality.
  *
  * IVars have three features:
  *
- * 1. A concurrency-safe mutable container for a value. When the value is not yet populated,
- * it is in a "Waiting" state, and it can keep track of callback functions, called "waiters".
- * When the value is populated, the IVar transitions to a Done(value) state, and all waiters
- * are invoked. Note that the waiters are invoked indirectly by enqueueing work on a Scheduler.
- * A Scheduler is a thread-local object that, when invoked, dequeues and processes items until
- * the queue is empty. This ensures that recursive operations do not cause stack-overflows. For
- * example, if when executing waiters of an IVar a, waiters would be added to another IVar b in the
- * Done state, rather than evaluating b's waiters immediately, which would deepen the stack, that
- * work is enqueued for later. When all waiters of IVar a have been evaluated, remaining work on
- * the queue (including the waiters for IVar b) are executed at the same stack level as IVar a's
- * waiters. Thus, execution order differs from a normal procedural language: it is breadth-first.
+ * 1. A concurrency-safe mutable container for a value. When the
+ * value is not yet populated, it is in a "Waiting" state, and it can
+ * keep track of callback functions, called "waiters". When the value
+ * is populated, the IVar transitions to a Done(value) state, and all
+ * waiters are invoked. Note that the waiters are invoked indirectly
+ * by enqueueing work on a Scheduler. A Scheduler is a thread-local
+ * object that, when invoked, dequeues and processes items until the
+ * queue is empty. This ensures that recursive operations do not
+ * cause stack-overflows. For example, if when executing waiters of
+ * an IVar a, waiters would be added to another IVar b in the Done
+ * state, rather than evaluating b's waiters immediately, which would
+ * deepen the stack, that work is enqueued for later. When all
+ * waiters of IVar a have been evaluated, remaining work on the queue
+ * (including the waiters for IVar b) are executed at the same stack
+ * level as IVar a's waiters. Thus, execution order differs from a
+ * normal procedural language: it is breadth-first.
  *
- * 2. A facility for specifying the order in which callback functions are invoked. Generally,
- * waiters are invoked in an arbitrary order. However, by "chaining" you can express that
- * a set of waiters must be invoked AFTER another set of waiters. By using chaining you can
- * create a schedule of waiters in a tree topology. Chaining is implemented by creating a child
- * IVar of the parent. Waiters on the parent are executed before waiters on the child. Execution
- * order is breadth-first.
+ * 2. A facility for specifying the order in which callback functions
+ * are invoked. Generally, waiters are invoked in an arbitrary order.
+ * However, by "chaining" you can express that a set of waiters must
+ * be invoked AFTER another set of waiters. By using chaining you can
+ * create a schedule of waiters in a tree topology. Chaining is
+ * implemented by creating a child IVar of the parent. Waiters on the
+ * parent are executed before waiters on the child. Execution order
+ * is breadth-first.
  *
- * 3. An ability to merge two equivalent IVars. Two equivalent Futures are constructed in the
- * implementation of `Promise#flatMap` (and `Promise#rescue`). By having equivalent Futures use
- * merged IVars, we avoid having equivalent Futures linked to one another, thus avoiding space-
- * leaks. Consider the operation `a flatMap b flatMap c flatMap d`. This would, without merging,
- * create a reference chain like `a <- b <- c <- d`, with client code having references to both `a`
- * and `d`. With merging, we produce a star (approximately), rather than a chain topology. So for
- * the same flatMap example, the underlying merged IVars are linked like: `a <- b, a <- c, a <- d`.
- * When two IVars are merged, one is considered canonical (in this example, `a`). Upon merging,
- * waiters and chainers of apocryphal IVars are moved into the canonical IVar. The benefit of
- * the star topology is that since client code only has pointers to `a` and `d`, all intermediate
- * objects can be freed by the garbage collector. Note that certain sequences of operations can
- * have the topology diverge from a star, but these should be infrequent.
- *
+ * 3. An ability to merge two equivalent IVars. Two equivalent
+ * Futures are constructed in the implementation of `Promise#flatMap`
+ * (and `Promise#rescue`). By having equivalent Futures use merged
+ * IVars, we avoid having equivalent Futures linked to one another,
+ * thus avoiding space- leaks. Consider the operation `a flatMap b
+ * flatMap c flatMap d`. This would, without merging, create a
+ * reference chain like `a <- b <- c <- d`, with client code having
+ * references to both `a` and `d`. With merging, we produce a star
+ * (approximately), rather than a chain topology. So for the same
+ * flatMap example, the underlying merged IVars are linked like: `a
+ * <- b, a <- c, a <- d`. When two IVars are merged, one is
+ * considered canonical (in this example, `a`). Upon merging, waiters
+ * and chainers of apocryphal IVars are moved into the canonical
+ * IVar. The benefit of the star topology is that since client code
+ * only has pointers to `a` and `d`, all intermediate objects can be
+ * freed by the garbage collector. Note that certain sequences of
+ * operations can have the topology diverge from a star, but these
+ * should be infrequent.
  */
 package ivar {
   // State laws:
@@ -66,15 +80,18 @@ package ivar {
 import ivar._
 
 object IVar {
-  // Schedules are local to a thread, and
-  // iteratively unwind IVar `gets` so that we can
-  // implement recursive structures without
+  trait Scheduler {
+    def apply(waiter: () => Unit)
+    def flush()
+  }
+
+  // Schedules are local to a thread, and iteratively unwind IVar
+  // `gets` so that we can implement recursive structures without
   // exhausting the stack.
   //
-  // todo: it's possible, too, to not unwind
-  // _every_ get, but rather only after a certain
-  // stack depth has been reached.
-  private class Schedule {
+  // todo: it's possible, too, to not unwind _every_ get, but rather
+  // only after a certain stack depth has been reached.
+  private class LocalScheduler extends Scheduler {
     private[this] type Waiter = () => Unit
     private[this] var w0, w1, w2: Waiter = null
     private[this] var ws = new Queue[Waiter]
@@ -113,13 +130,15 @@ object IVar {
     }
   }
 
-  private val _sched = new ThreadLocal[Schedule] {
-    override def initialValue = new Schedule
+  private val _sched = new ThreadLocal[LocalScheduler] {
+    override def initialValue = new LocalScheduler
   }
-  private def sched = _sched.get()
   private val initState: State[Nothing] = Waiting(Nil, Nil)
   private val stateUpd = AtomicReferenceFieldUpdater.newUpdater(
     classOf[IVarField[_]], classOf[State[_]], "state")
+
+  // This should only be used by IVar and ConstFuture
+  private[twitter] def sched: Scheduler = _sched.get()
 }
 
 final class IVar[A] extends IVarField[A] {
@@ -173,20 +192,23 @@ final class IVar[A] extends IVarField[A] {
     }
 
   /**
-   * Link `this` to `other`. `Other` is now considered canonical in this cluster. So if
-   * we are already linked, we'll fix up our state and issue `linkTo` recursively
-   * on the linked IVar. This will leave other IVars pointing to the recursive IVar
-   * unmolested, so we will diverge from a pure star-topology (we will have a chain). This
-   * causes a minor space-leak. But this should be very rare, and such chains should be very short.
+   * Link `this` to `other`. `Other` is now considered canonical in
+   * this cluster. So if we are already linked, we'll fix up our
+   * state and issue `linkTo` recursively on the linked IVar. This
+   * will leave other IVars pointing to the recursive IVar
+   * unmolested, so we will diverge from a pure star-topology (we
+   * will have a chain). This causes a minor space-leak. But this
+   * should be very rare, and such chains should be very short.
    *
-   * Note that we require `this` != `other` (transitively).  Furthermore, IVars do
-   * not provide protection against linking races.  That is, the behavior of the race between
+   * Note that we require `this` != `other` (transitively).
+   * Furthermore, IVars do not provide protection against linking
+   * races.  That is, the behavior of the race between
    *
    *  a merge b
    *  b merge a
    *
-   * is undefined.  Thus, linking/merging should be used only in scenarios where such races
-   * can be guaranteed not to occur.
+   * is undefined.  Thus, linking/merging should be used only in
+   * scenarios where such races can be guaranteed not to occur.
    */
   @tailrec private[IVar]
   def linkTo(other: IVar[A]) {
@@ -227,18 +249,17 @@ final class IVar[A] extends IVarField[A] {
    *   1.  `this` assumes waiters and chainers of `other`.
    *   2.  the state of `other` is changed to Linked(this).
    *
-   * Note that two Done IVars can only be merged if their
-   * values are equal. An InvalidArgumentException is thrown,
-   * otherwise.
+   * Note that two Done IVars can only be merged if their values are
+   * equal. An InvalidArgumentException is thrown, otherwise.
    */
   def merge(other: IVar[A]) {
     other.linkTo(resolve())
   }
 
   /**
-   * A blocking get.  It won't cause a deadlock if
-   * the IVar is already defined because it does
-   * not attempt to defer getting a defined value.
+   * A blocking get.  It won't cause a deadlock if the IVar is
+   * already defined because it does not attempt to defer getting a
+   * defined value.
    */
   def apply(): A = apply(Duration.MaxValue).get
   def apply(timeout: Duration): Option[A] =
@@ -313,8 +334,8 @@ final class IVar[A] extends IVarField[A] {
   }
 
   /**
-   * Remove the given closure {{k}} from
-   * the waiter list by object identity.
+   * Remove the given closure {{k}} from the waiter list by object
+   * identity.
    */
   @tailrec
   def unget(k: A => Unit) {
