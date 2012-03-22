@@ -39,10 +39,14 @@ class ConfigSpec extends Specification with Mockito {
       class Bar extends Config.Nothing {
         var z = required[Int]
       }
+      class Baz extends Config.Nothing {
+        var w = required[Int]
+      }
       class Foo extends Config.Nothing {
         var x = required[Int]
         var y = 3
         var bar = required[Bar]
+        var baz = optional[Baz]
       }
 
       "must return empty Seq when no values are missing" in {
@@ -65,6 +69,17 @@ class ConfigSpec extends Specification with Mockito {
           bar = new Bar
         }
         foo.missingValues must haveSameElementsAs(Seq("x", "bar.z"))
+      }
+
+      "must find nested missing values in optional sub-configs" in {
+        val foo = new Foo {
+          x = 3
+          bar = new Bar {
+            z = 1
+          }
+          baz = new Baz
+        }
+        foo.missingValues must haveSameElementsAs(Seq("baz.w"))
       }
     }
   }

@@ -122,7 +122,7 @@ trait Config[T] extends (() => T) {
    */
   def missingValues: Seq[String] = {
     val alreadyVisited = mutable.Set[AnyRef]()
-    val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]])
+    val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]], classOf[Option[_]])
     val buf = new mutable.ListBuffer[String]
     def collect(prefix: String, config: Config[_]) {
       if (!alreadyVisited.contains(config)) {
@@ -132,6 +132,7 @@ trait Config[T] extends (() => T) {
           val name = method.getName
           val rt = method.getReturnType
           if (name != "required" &&
+              name != "optional" &&
               !name.endsWith("$outer") && // no loops!
               interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
             method.invoke(config) match {
@@ -139,7 +140,11 @@ trait Config[T] extends (() => T) {
                 buf += (prefix + name)
               case Specified(sub: Config[_]) =>
                 collect(prefix + name + ".", sub)
+              case Specified(Some(sub: Config[_])) =>
+                collect(prefix + name + ".", sub)
               case sub: Config[_] =>
+                collect(prefix + name + ".", sub)
+              case Some(sub: Config[_]) =>
                 collect(prefix + name + ".", sub)
               case _ =>
             }
