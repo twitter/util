@@ -72,15 +72,25 @@ object LocalSpec extends Specification {
       l0() must beSome(123)
       l1() = 333
       l1() must beSome(333)
-      
+
       val save1 = Local.save()
       Local.restore(save0)
       l0() must beSome(123)
       l1() must beNone
-      
+
       Local.restore(save1)
       l0() must beSome(123)
       l1() must beSome(333)
+    }
+
+    "make a copy when clearing" in {
+      val l = new Local[Int]
+      l() = 1
+      val save0 = Local.save()
+      l.clear()
+      l() must beNone
+      Local.restore(save0)
+      l() must beSome(1)
     }
   }
 }

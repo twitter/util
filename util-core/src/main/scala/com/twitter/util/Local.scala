@@ -52,9 +52,7 @@ private[util] final object Local {
   }
 
   private def clear(i: Int) {
-    val ctx = localCtx.get
-    if (ctx != null && ctx.size > i)
-      ctx(i) = null
+    set(i, None)
   }
 }
 
