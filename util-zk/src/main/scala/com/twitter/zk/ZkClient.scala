@@ -32,7 +32,7 @@ trait ZkClient {
   def apply(): Future[ZooKeeper] = connector()
 
   /** All events from the global ZooKeeper watcher are published on this Offer. */
-  lazy val sessionEvents: Offer[WatchedEvent] = connector.events
+  def sessionEvents: Offer[WatchedEvent] = connector.events
 
   /** Release the connection */
   def release(): Future[Unit] = connector.release()

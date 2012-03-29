@@ -10,7 +10,7 @@ trait Connector {
   protected[this] lazy val log = Logger.get(name)
 
   protected[this] val sessionBroker = new EventBroker
-  protected[zk] lazy val events: Offer[WatchedEvent] = sessionBroker.recv
+  protected[zk] def events: Offer[WatchedEvent] = sessionBroker.recv
 
   /** Connect to a ZooKeeper cluster and yield a handle once the connection is complete. */
   def apply(): Future[ZooKeeper]
