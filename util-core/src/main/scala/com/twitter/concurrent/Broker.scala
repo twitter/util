@@ -125,7 +125,7 @@ class Broker[T] {
    * Send an item on the broker, returning a {{Future}} indicating
    * completion.
    */
-  def !(msg: T): Future[Unit] = send(msg)()
+  def !(msg: T): Future[Unit] = send(msg).sync()
 
   /**
    * Like {!}, but block until the item has been sent.
@@ -135,7 +135,7 @@ class Broker[T] {
   /**
    * Retrieve an item from the broker, asynchronously.
    */
-  def ? : Future[T] = recv()
+  def ? : Future[T] = recv.sync()
 
   /**
    * Retrieve an item from the broker, blocking.

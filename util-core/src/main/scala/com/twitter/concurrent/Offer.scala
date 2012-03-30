@@ -42,7 +42,7 @@ trait Offer[+T] { self =>
    * Synchronizes this offer, returning a future representing the result
    * of the synchronization.
    */
-  def apply(): Future[T] =
+  def sync(): Future[T] =
     prepare() flatMap { tx =>
       tx.ack() flatMap {
         case Tx.Commit(v) => Future.value(v)
@@ -51,9 +51,10 @@ trait Offer[+T] { self =>
     }
 
   /**
-   * Synonym for `apply()`
+   * Synonym for `sync()`
    */
-  def sync(): Future[T] = apply()
+  @deprecated("use sync() intstead")
+  def apply(): Future[T] = sync()
 
   /* Combinators */
 

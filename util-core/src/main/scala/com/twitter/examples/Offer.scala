@@ -14,7 +14,7 @@ object Sieve {
   def filter(in: Offer[Int], prime: Int): Offer[Int] = {
     val b = new Broker[Int]
     def loop() {
-      in() onSuccess { i =>
+      in.sync() onSuccess { i =>
         if (i % prime != 0)
           b.send(i) andThen loop()
         else
