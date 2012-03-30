@@ -1,12 +1,12 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import org.mockito.{Matchers, ArgumentCaptor}
 import com.twitter.util.Return
 import com.twitter.common.objectsize.ObjectSizeCalculator
 
-object BrokerSpec extends Specification with Mockito {
+class BrokerSpec extends SpecificationWithJUnit with Mockito {
   "Broker" should {
     "send data (send, recv)" in {
       val br = new Broker[Int]

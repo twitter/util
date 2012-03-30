@@ -18,10 +18,10 @@ package com.twitter.logging
 
 import com.twitter.util.{TempFolder, Time}
 import com.twitter.conversions.time._
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import config._
 
-class ThrottledHandlerSpec extends Specification with TempFolder {
+class ThrottledHandlerSpec extends SpecificationWithJUnit with TempFolder {
   private var handler: StringHandler = null
 
   "ThrottledHandler" should {

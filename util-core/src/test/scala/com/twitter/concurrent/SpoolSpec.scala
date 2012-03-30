@@ -2,13 +2,13 @@ package com.twitter.concurrent
 
 import scala.collection.mutable.ArrayBuffer
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
 import com.twitter.util.{Promise, Return, Throw}
 
 import Spool.{*::, **::}
 
-object SpoolSpec extends Specification {
+class SpoolSpec extends SpecificationWithJUnit {
   "Simple resolved Spool" should {
     val s = 1 **:: 2 **:: Spool.empty
 

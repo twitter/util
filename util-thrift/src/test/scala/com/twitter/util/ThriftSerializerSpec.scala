@@ -16,10 +16,10 @@
 
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.specification.PendingUntilFixed
 
-object ThriftSerializerSpec extends Specification with PendingUntilFixed {
+class ThriftSerializerSpec extends SpecificationWithJUnit with PendingUntilFixed {
   val aString = "me gustan los tacos y los burritos"
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)

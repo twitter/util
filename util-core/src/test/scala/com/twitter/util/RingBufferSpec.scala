@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object RingBufferSpec extends Specification {
+class RingBufferSpec extends SpecificationWithJUnit {
   "RingBuffer" should {
     "empty" in {
       val buf = new RingBuffer[String](4)

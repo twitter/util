@@ -16,9 +16,9 @@
 
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object CredentialsSpec extends Specification {
+class CredentialsSpec extends SpecificationWithJUnit {
   "Credentials" should {
     "parse a simple auth file" in {
       val content = "username: root\npassword: hellokitty\n"

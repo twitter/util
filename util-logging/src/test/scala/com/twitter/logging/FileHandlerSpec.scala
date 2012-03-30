@@ -23,10 +23,10 @@ import com.twitter.conversions.storage._
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import config._
 
-class FileHandlerSpec extends Specification with TempFolder {
+class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
   def config(_filename: String, _policy: Policy, _append: Boolean, _rotateCount: Int,
              _formatter: FormatterConfig): FileHandlerConfig = {
     new FileHandlerConfig {

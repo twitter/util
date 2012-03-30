@@ -1,7 +1,7 @@
 package com.twitter.util
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object LastWriteWinsQueueSpec extends Specification {
+class LastWriteWinsQueueSpec extends SpecificationWithJUnit {
   "LastWriteWinsQueue" should {
     val queue = new LastWriteWinsQueue[String]
 

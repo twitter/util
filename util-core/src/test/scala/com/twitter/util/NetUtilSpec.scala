@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import java.net.InetAddress
 
-object NetUtilSpec extends Specification {
+class NetUtilSpec extends SpecificationWithJUnit {
   "NetUtil" should {
     "isIpv4Address" in {
       for (i <- 0.to(255)) {

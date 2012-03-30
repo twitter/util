@@ -2,9 +2,9 @@ package com.twitter.util
 
 import util.Random
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-class U64Spec extends Specification {
+class U64Spec extends SpecificationWithJUnit {
   import U64._
 
   "comparable" in {

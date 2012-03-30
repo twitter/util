@@ -1,10 +1,10 @@
 package com.twitter.io
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.util.TempFolder
 import java.io.File
 
-class FilesSpec extends Specification with TempFolder {
+class FilesSpec extends SpecificationWithJUnit with TempFolder {
   noDetailedDiffs()
 
   "Files" should {

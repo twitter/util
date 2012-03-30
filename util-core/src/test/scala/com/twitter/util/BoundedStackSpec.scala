@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object BoundedStackSpec extends Specification {
+class BoundedStackSpec extends SpecificationWithJUnit {
   "BoundedStack" should {
     "empty" in {
       val buf = new BoundedStack[String](4)

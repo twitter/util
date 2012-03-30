@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object TrySpec extends Specification {
+class TrySpec extends SpecificationWithJUnit {
   class MyException extends Exception
   val e = new Exception("this is an exception")
 

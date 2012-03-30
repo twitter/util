@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
 import java.util.concurrent.CountDownLatch
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object SerializedSpec extends Specification with Serialized {
+class SerializedSpec extends SpecificationWithJUnit with Serialized {
   "Serialized" should {
     "runs blocks, one at a time, in the order received" in {
       val t1CallsSerializedFirst = new CountDownLatch(1)

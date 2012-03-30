@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.util.Return
 
-object TxSpec extends Specification {
+class TxSpec extends SpecificationWithJUnit {
   "Tx.twoParty" should {
     "commit when everything goes dandy" in {
       val (stx, rtx) = Tx.twoParty(123)

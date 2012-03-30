@@ -1,14 +1,18 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 
-object MonitorSpec extends Specification with Mockito {
+object MonitorSpec {
   class MockMonitor extends Monitor {
     def handle(cause: Throwable) = false
   }
+}
+
+class MonitorSpec extends SpecificationWithJUnit with Mockito {
+  import MonitorSpec._
 
   "Monitor#orElse" should {
     val m0, m1, m2 = spy(new MockMonitor)

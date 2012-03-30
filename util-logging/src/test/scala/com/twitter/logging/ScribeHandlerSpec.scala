@@ -19,13 +19,13 @@ package logging
 
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{Time, Duration}
 import config._
 
-class ScribeHandlerSpec extends Specification {
+class ScribeHandlerSpec extends SpecificationWithJUnit {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")

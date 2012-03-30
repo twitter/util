@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.util.reflect.AsmFutureTracer
 
-object AsmFutureTracerSpec extends Specification {
+class AsmFutureTracerSpec extends SpecificationWithJUnit {
   class MyException extends Exception("yarrr")
 
   "error reporting" should {

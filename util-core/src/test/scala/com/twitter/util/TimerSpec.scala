@@ -3,11 +3,11 @@ package com.twitter.util
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.ExecutorService
 import com.twitter.conversions.time._
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import org.mockito.{Matchers, ArgumentCaptor}
 
-object TimerSpec extends Specification with Mockito {
+class TimerSpec extends SpecificationWithJUnit with Mockito {
   "ThreadStoppingTimer" should {
     "stop timers in a different thread" in {
       // For some reason proper type inference fails here.

@@ -2,9 +2,9 @@
 
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object ConcurrentMultiMapSpec extends Specification {
+class ConcurrentMultiMapSpec extends SpecificationWithJUnit {
   "behave like a multimap" in {
     val map = new ConcurrentMultiMap[Int, Int]
     map += 1 -> 2

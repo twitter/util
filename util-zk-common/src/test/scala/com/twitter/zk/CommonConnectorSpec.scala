@@ -6,11 +6,11 @@ import com.twitter.conversions.common.quantity._
 import com.twitter.conversions.common.zookeeper._
 import com.twitter.conversions.time._
 import com.twitter.util.FuturePool
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import java.net.InetSocketAddress
 import scala.collection.JavaConverters._
 
-object CommonConnectorSpec extends Specification {
+class CommonConnectorSpec extends SpecificationWithJUnit {
   val timeout = 2.seconds
   val addresses = new InetSocketAddress("localhost", 2181) :: Nil
 

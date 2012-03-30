@@ -2,9 +2,9 @@
 
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object ConcurrentBijectionSpec extends Specification {
+class ConcurrentBijectionSpec extends SpecificationWithJUnit {
   "maintain a bijective map" in {
     val b = new ConcurrentBijection[Int, Int]
     b ++= (1 -> 1) :: (2 -> 3) :: (100 -> 2) :: Nil

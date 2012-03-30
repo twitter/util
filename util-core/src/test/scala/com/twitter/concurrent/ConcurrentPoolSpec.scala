@@ -1,8 +1,8 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object ConcurrentPoolSpec extends Specification {
+class ConcurrentPoolSpec extends SpecificationWithJUnit {
   "reserve items" in {
     val pool = new ConcurrentPool[Int, Int]
 

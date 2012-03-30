@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import scala.collection.mutable.ArrayBuffer
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import org.mockito.{Matchers, ArgumentCaptor}
 
@@ -21,7 +21,7 @@ class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
   }
 }
 
-object OfferSpec extends Specification with Mockito {
+class OfferSpec extends SpecificationWithJUnit with Mockito {
   import Tx.{Commit, Abort}
 
   "Offer.map" should {

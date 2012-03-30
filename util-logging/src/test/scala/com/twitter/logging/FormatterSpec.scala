@@ -17,11 +17,11 @@
 package com.twitter.logging
 
 import java.util.{logging => javalog}
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.string._
 import config._
 
-class FormatterSpec extends Specification {
+class FormatterSpec extends SpecificationWithJUnit {
   val basicFormatter = new Formatter
 
   val utcConfig = new FormatterConfig {

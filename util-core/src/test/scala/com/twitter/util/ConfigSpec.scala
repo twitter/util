@@ -1,10 +1,10 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 
-class ConfigSpec extends Specification with Mockito {
+class ConfigSpec extends SpecificationWithJUnit with Mockito {
   import Config._
 
   "Config" should {

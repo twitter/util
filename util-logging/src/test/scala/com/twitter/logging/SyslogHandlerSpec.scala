@@ -19,10 +19,10 @@ package com.twitter.logging
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
 import com.twitter.conversions.string._
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import config._
 
-class SyslogHandlerSpec extends Specification {
+class SyslogHandlerSpec extends SpecificationWithJUnit {
   val record1 = new javalog.LogRecord(Level.FATAL, "fatal message!")
   record1.setLoggerName("net.lag.whiskey.Train")
   record1.setMillis(1206769996722L)

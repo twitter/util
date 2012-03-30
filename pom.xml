@@ -1,0 +1,28 @@
+<project 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.twitter</groupId>
+  <artifactId>util</artifactId>
+  <packaging>pom</packaging>
+  <version>3.0.1-SNAPSHOT</version>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>artifactory-snapshot</id>
+      <name>Twitter Artifactory Snapshots</name>
+      <url>http://artifactory.local.twitter.com/libs-snapshots-local</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <modules>
+    <module>util-codec</module>
+    <module>util-collection</module>
+    <module>util-core</module>
+    <module>util-eval</module>
+    <module>util-hashing</module>
+    <module>util-jvm</module>
+    <module>util-logging</module>
+    <module>util-reflect</module>
+    <module>util-thrift</module>
+    <module>util-zk</module>
+    <module>util-zk-common</module>
+  </modules>
+</project>

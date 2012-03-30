@@ -3,11 +3,11 @@ package com.twitter.util
 import com.twitter.conversions.time._
 import java.util.concurrent.{Future => JFuture}
 import java.util.concurrent._
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import org.mockito.Matchers._
 
-object FuturePoolSpec extends Specification with Mockito {
+class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
   val executor = Executors.newFixedThreadPool(1).asInstanceOf[ThreadPoolExecutor]
   val pool     = FuturePool(executor)
 

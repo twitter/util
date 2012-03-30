@@ -1,10 +1,10 @@
 package com.twitter.hashing
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.codec.binary.Base64
 
-object KeyHasherSpec extends Specification {
+class KeyHasherSpec extends SpecificationWithJUnit {
   def readResource(name: String) = {
     var lines = new ListBuffer[String]()
     val src = scala.io.Source.fromFile(getClass.getResource("/" + name).getPath)

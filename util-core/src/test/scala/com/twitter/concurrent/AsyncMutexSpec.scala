@@ -1,8 +1,8 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object AsyncMutexSpec extends Specification {
+class AsyncMutexSpec extends SpecificationWithJUnit {
   "AsyncMutex" should {
     "admit only one operation at a time" in {
       val m = new AsyncMutex

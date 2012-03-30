@@ -16,13 +16,13 @@ package com.twitter.util
  * limitations under the License.
  */
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import java.lang.StringBuilder
 
 class TestBase64Encoder extends Base64StringEncoder {
 }
 
-class StringEncoderSpec extends Specification {
+class StringEncoderSpec extends SpecificationWithJUnit {
   val longString = "A string that is really really really really really really long and has more than 76 characters"
   val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
   val testEncoder = new TestBase64Encoder()
@@ -36,7 +36,7 @@ class StringEncoderSpec extends Specification {
   }
 }
 
-object GZIPStringEncoderSpec extends Specification {
+class GZIPStringEncoderSpec extends SpecificationWithJUnit {
   "a gzip string encoder" should {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {

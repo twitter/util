@@ -2,10 +2,10 @@ package com.twitter.util
 
 import scala.math.BigInt
 import scala.util.Random
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import TimeConversions._
 
-object TimeSpec extends Specification {
+class TimeSpec extends SpecificationWithJUnit {
   "Time" should {
     "now should be now" in {
       (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)

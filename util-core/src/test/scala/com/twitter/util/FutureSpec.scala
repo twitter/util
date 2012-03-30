@@ -1,11 +1,11 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class FutureSpec extends Specification with Mockito {
+class FutureSpec extends SpecificationWithJUnit with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       future.get(1.second) mustEqual expected

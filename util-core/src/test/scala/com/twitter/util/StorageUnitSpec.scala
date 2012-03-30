@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.storage._
 
-object StorageUnitSpec extends Specification {
+class StorageUnitSpec extends SpecificationWithJUnit {
   "StorageUnit" should {
     "convert whole numbers into storage units (back and forth)" in {
       1.byte.inBytes mustEqual(1)

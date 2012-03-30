@@ -17,11 +17,11 @@
 package com.twitter.logging
 
 import java.util.{logging => javalog}
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.util.TimeConversions._
 
 
-class QueueingHandlerSpec extends Specification {
+class QueueingHandlerSpec extends SpecificationWithJUnit {
   class NullHandler extends Handler(BareFormatter, None) {
     def publish(record: javalog.LogRecord) {}
     def close() {}

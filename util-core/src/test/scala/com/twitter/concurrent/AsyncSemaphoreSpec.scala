@@ -1,10 +1,10 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 
-object AsyncSemaphoreSpec extends Specification with Mockito {
+class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
   "AsyncSemaphore" should {
     val f = mock[() => Unit]
     val s = new AsyncSemaphore(2)

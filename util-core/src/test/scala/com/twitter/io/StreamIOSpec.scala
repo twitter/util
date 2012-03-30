@@ -2,9 +2,9 @@ package com.twitter.io
 
 import scala.util.Random
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object StreamIOSpec extends Specification {
+class StreamIOSpec extends SpecificationWithJUnit {
   noDetailedDiffs()
 
   "StreamIO.copy" should {

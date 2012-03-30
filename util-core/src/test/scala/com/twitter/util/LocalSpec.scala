@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object LocalSpec extends Specification {
+class LocalSpec extends SpecificationWithJUnit {
   "Local" should {
     val local = new Local[Int]
 

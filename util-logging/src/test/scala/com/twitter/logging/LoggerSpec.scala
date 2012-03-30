@@ -23,10 +23,10 @@ import scala.collection.mutable
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.TempFolder
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import config._
 
-class LoggerSpec extends Specification with TempFolder with TestLogging {
+class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging {
   private var myHandler: Handler = null
   private var log: Logger = null
 

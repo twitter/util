@@ -17,10 +17,10 @@
 package com.twitter.util
 
 import java.util.concurrent.TimeUnit
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.time._
 
-object DurationSpec extends Specification {
+class DurationSpec extends SpecificationWithJUnit {
   "Duration" should {
     "*" in {
       1.second * 2 mustEqual 2.seconds

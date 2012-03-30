@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object CancellableSpec extends Specification {
+class CancellableSpec extends SpecificationWithJUnit {
   "CancellableSink" should {
     "cancel once" in {
       var count = 0

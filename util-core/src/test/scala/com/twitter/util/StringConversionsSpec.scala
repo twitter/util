@@ -16,10 +16,10 @@
 
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.string._
 
-class StringConversionsSpec extends Specification {
+class StringConversionsSpec extends SpecificationWithJUnit {
   "string" should {
     "quoteC" in {
       "nothing".quoteC mustEqual "nothing"

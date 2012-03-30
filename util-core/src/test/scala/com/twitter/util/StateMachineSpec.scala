@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object StateMachineSpec extends Specification {
+class StateMachineSpec extends SpecificationWithJUnit {
   "StateMachine" should {
     val stateMachine = new StateMachine {
       case class State1() extends State

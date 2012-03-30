@@ -1,10 +1,10 @@
 package com.twitter.util.reflect
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.util.{Future,Promise}
 
 
-object ProxySpec extends Specification {
+object ProxySpec {
   trait TestInterface {
     def foo: String
     def bar(a: Int): Option[Long]
@@ -31,7 +31,11 @@ object ProxySpec extends Specification {
     val slota = "a"
     val slotb = 2.0
   }
+}
 
+class ProxySpec extends SpecificationWithJUnit {
+
+  import ProxySpec._
 
   "ProxyFactory" should {
     "generate a factory for an interface" in {

@@ -1,13 +1,13 @@
 package com.twitter.hashing
 
 import org.specs.mock.Mockito
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import scala.collection.mutable
 import _root_.java.io.{BufferedReader, InputStreamReader}
 
 
 
-object KetamaDistributorSpec extends Specification with Mockito {
+class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
   "KetamaDistributor" should {
     val nodes = Seq(
       KetamaNode("10.0.1.1", 600, 1),

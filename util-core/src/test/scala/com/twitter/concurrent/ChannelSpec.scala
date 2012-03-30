@@ -1,13 +1,13 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.time._
 import collection.mutable.ArrayBuffer
 import com.twitter.util.{Future, Promise}
 import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.conversions.time._
 
-object ChannelSpec extends Specification {
+class ChannelSpec extends SpecificationWithJUnit {
   "ChannelSource" should {
     "send & receive" in {
       val source = new ChannelSource[Int]

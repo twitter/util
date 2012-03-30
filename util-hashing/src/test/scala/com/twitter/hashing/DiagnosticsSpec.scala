@@ -2,11 +2,11 @@ package com.twitter.hashing
 
 import com.twitter.util.Time
 import org.specs.mock.Mockito
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import scala.collection.mutable
 import _root_.java.io.{BufferedReader, InputStreamReader}
 
-object DiagnosticsSpec extends Specification with Mockito {
+class DiagnosticsSpec extends SpecificationWithJUnit with Mockito {
   "Diagnostics" should {
     "print distribution" in {
       val hosts = 1 until 500 map { "10.1.1." + _ + ":11211:4" }

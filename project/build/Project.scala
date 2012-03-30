@@ -150,6 +150,10 @@ class Project(info: ProjectInfo)
     with JMock
   {
     val zookeeper = "org.apache.zookeeper" % "zookeeper" % zkVersion
+    override def ivyXML =
+      <dependencies>
+        <override org="junit" rev="4.8.1"/>
+      </dependencies>
   }
 
   class ZkCommonProject(info: ProjectInfo)
@@ -177,6 +181,7 @@ class Project(info: ProjectInfo)
         <exclude module="util-thrift"/>
         <exclude module="util-logging"/>
         <exclude module="util-eval"/>
+        <override org="junit" rev="4.8.1"/>
       </dependencies>
  }
 
@@ -188,7 +193,7 @@ class Project(info: ProjectInfo)
     with DefaultRepos
   {
     val specs = "org.scala-tools.testing" % "specs_2.8.1" % "1.6.8" % "test" withSources()
-    val junit = "junit"                   %       "junit" % "3.8.2" % "test"
+    val junit = "junit"                   %       "junit" % "4.8.1" % "test" withSources()
 
     val zkVersion = "3.3.4"
     override def ivyXML =

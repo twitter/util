@@ -1,12 +1,12 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import java.io.{File, FileOutputStream, FileWriter}
 import scala.io.Source
 
 import com.twitter.io.TempFile
 
-object EvalSpec extends Specification {
+class EvalSpec extends SpecificationWithJUnit {
   "Evaluator" should {
 
     "apply('expression')" in {

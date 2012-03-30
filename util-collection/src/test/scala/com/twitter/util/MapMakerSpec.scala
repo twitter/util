@@ -1,9 +1,9 @@
 package com.twitter.util
 
 import com.twitter.conversions.time._
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object MapMakerSpec extends Specification {
+class MapMakerSpec extends SpecificationWithJUnit {
   "MapMaker" should {
     class Item
     case class Cell[A](var elem: A)

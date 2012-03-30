@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.util._
 
-object BijectionSpec extends Specification {
+class BijectionSpec extends SpecificationWithJUnit {
   case class Foo(i: Int)
 
   val fooject = new Bijection[Foo, Int] {

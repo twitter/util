@@ -3,9 +3,9 @@ package com.twitter.concurrent
 import java.util.concurrent.CountDownLatch
 import scala.collection.mutable.{ArrayBuffer, SynchronizedBuffer}
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 
-object IVarSpec extends Specification {
+class IVarSpec extends SpecificationWithJUnit {
   "IVar" should {
     val iv = new IVar[Int]
     "invoke gets after value is set" in {

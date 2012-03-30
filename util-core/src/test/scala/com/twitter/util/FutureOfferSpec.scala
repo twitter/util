@@ -1,10 +1,10 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import com.twitter.util.{Promise, Return, Try}
 
-object FutureOfferSpec extends Specification with Mockito {
+class FutureOfferSpec extends SpecificationWithJUnit with Mockito {
   "Future.toOffer" should {
     "activate when future is satisfied (poll)" in {
       val p = new Promise[Int]

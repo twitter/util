@@ -6,12 +6,12 @@ import com.twitter.common.zookeeper.{ServerSet => CommonServerSet, ServerSetImpl
 import com.twitter.thrift.{Endpoint, ServiceInstance, Status}
 import com.twitter.util.{Future, FuturePool, JavaTimer, Promise}
 import java.net.InetSocketAddress
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.{ClassMocker, JMocker}
 import scala.collection.JavaConverters._
 import scala.collection.{Map, Set}
 
-/*object ServerSetSpec extends Specification with JMocker with ClassMocker {
+/*class ServerSetSpec extends SpecificationWithJUnit with JMocker with ClassMocker {
   "ServerSet" should {
     val pool = FuturePool.immediatePool
     val address = new InetSocketAddress("localhost", 34245)

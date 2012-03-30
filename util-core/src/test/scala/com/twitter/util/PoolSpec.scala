@@ -1,10 +1,10 @@
 package com.twitter.util
 
 import scala.collection.mutable
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.time._
 
-object PoolSpec extends Specification {
+class PoolSpec extends SpecificationWithJUnit {
   "SimplePool" should {
     "with a simple queue of items" >> {
       "it reseves items in FIFO order" in {

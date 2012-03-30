@@ -2,10 +2,10 @@ package com.twitter.collection
 
 import com.twitter.util.{Duration, Time}
 import com.twitter.util.TimeConversions._
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 
-object GenerationalQueueSpec extends Specification with Mockito {
+class GenerationalQueueSpec extends SpecificationWithJUnit with Mockito {
 
   def genericGenerationalQueueTest[A](queue: GenerationalQueue[String], timeout: Duration) {
 
