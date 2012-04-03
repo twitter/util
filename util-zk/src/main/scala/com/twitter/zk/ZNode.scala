@@ -1,8 +1,8 @@
 package com.twitter.zk
 
 import com.twitter.concurrent.{Broker, Offer}
-import com.twitter.util.{Future, Promise, Return, Throw, Try}
-import org.apache.zookeeper.{AsyncCallback, CreateMode, KeeperException, WatchedEvent, ZooKeeper}
+import com.twitter.util.{Future, Return, Throw, Try}
+import org.apache.zookeeper.{CreateMode, KeeperException, WatchedEvent}
 import org.apache.zookeeper.common.PathUtils
 import org.apache.zookeeper.data.{ACL, Stat}
 import scala.collection.JavaConverters._

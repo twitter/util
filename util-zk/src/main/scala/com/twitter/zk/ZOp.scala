@@ -1,10 +1,7 @@
 package com.twitter.zk
 
 import com.twitter.concurrent.{Broker, Offer}
-import com.twitter.util.{Future, Return, Throw, Try}
-import org.apache.zookeeper.{CreateMode, KeeperException}
-import org.apache.zookeeper.data.ACL
-import scala.collection.JavaConverters._
+import com.twitter.util.{Future, Try}
 
 /** A ZNode-read operation. */
 trait ZOp[T <: ZNode.Exists] {
