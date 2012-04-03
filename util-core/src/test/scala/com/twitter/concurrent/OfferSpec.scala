@@ -267,9 +267,9 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
       var count = 0
       b.recv foreach { _ => count += 1 }
       count must be_==(0)
-      b.send(1)().isDefined must beTrue
+      b.send(1).sync().isDefined must beTrue
       count must be_==(1)
-      b.send(1)().isDefined must beTrue
+      b.send(1).sync().isDefined must beTrue
       count must be_==(2)
     }
   }
@@ -313,16 +313,16 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
     b.recv.enumToChannel(ch)
 
     "synchronize only when a responder is present" in {
-      val f0 = b.send(123)()
+      val f0 = b.send(123).sync()
       f0.isDefined must beFalse
       val r0 = ch respond { v => buf += v; Future.Done }
       f0.isDefined must beTrue
       buf.toSeq must be_==(Seq(123))
-      b.send(333)().isDefined must beTrue
+      b.send(333).sync().isDefined must beTrue
       buf.toSeq must be_==(Seq(123, 333))
       r0.dispose()
-      b.send(999)().isDefined must beTrue  // buffered
-      val f1 = b.send(111)()
+      b.send(999).sync().isDefined must beTrue  // buffered
+      val f1 = b.send(111).sync()
       f1.isDefined must beFalse
       ch respond { v => buf += v; Future.Done }
       f1.isDefined must beTrue
@@ -331,13 +331,13 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
 
     "stop synchronizing on close" in {
       ch respond { v => buf += v; Future.Done }
-      b.send(123)().isDefined must beTrue
-      b.send(333)().isDefined must beTrue
+      b.send(123).sync().isDefined must beTrue
+      b.send(333).sync().isDefined must beTrue
       buf.toSeq must be_==(Seq(123, 333))
       ch.close()
-      b.send(444)().isDefined must beTrue // buffered
+      b.send(444).sync().isDefined must beTrue // buffered
       buf.toSeq must be_==(Seq(123, 333))  // but value doesn't make it.
-      b.send(444)().isDefined must beFalse
+      b.send(444).sync().isDefined must beFalse
     }
   }
 
@@ -351,22 +351,22 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
         b1.recv
       )
 
-      val f = o()
+      val f = o.sync()
       f.isDefined must beFalse
-      b1.send("hey")().isDefined must beTrue
+      b1.send("hey").sync().isDefined must beTrue
       f.isDefined must beTrue
       f() must be_==("hey")
 
-      val gf = b0.recv()
+      val gf = b0.recv.sync()
       gf.isDefined must beFalse
-      val of = o()
+      val of = o.sync()
       of.isDefined must beTrue
       of() must be_==("put!")
       gf.isDefined must beTrue
       gf() must be_==(123)
 
       // syncing again fails.
-      o().isDefined must beFalse
+      o.sync().isDefined must beFalse
     }
   }
 }

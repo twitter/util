@@ -10,9 +10,9 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
   "Broker" should {
     "send data (send, recv)" in {
       val br = new Broker[Int]
-      val sendF = br.send(123)()
+      val sendF = br.send(123).sync()
       sendF.isDefined must beFalse
-      val recvF = br.recv()
+      val recvF = br.recv.sync()
       recvF.isDefined must beTrue
       recvF() must be_==(123)
       sendF.isDefined must beTrue
@@ -20,9 +20,9 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
 
     "send data (recv, send)" in {
       val br = new Broker[Int]
-      val recvF = br.recv()
+      val recvF = br.recv.sync()
       recvF.isDefined must beFalse
-      val sendF = br.send(123)()
+      val sendF = br.send(123).sync()
       sendF.isDefined must beTrue
       recvF.isDefined must beTrue
 
@@ -31,30 +31,30 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
 
     "queue receivers (recv, recv, send, send)" in {
       val br = new Broker[Int]
-      val r0, r1 = br.recv()
+      val r0, r1 = br.recv.sync()
       r0.isDefined must beFalse
       r1.isDefined must beFalse
       val s = br.send(123)
-      s().poll must beSome(Return(()))
+      s.sync().poll must beSome(Return(()))
       r0.poll must beSome(Return(123))
       r1.isDefined must beFalse
-      s().poll must beSome(Return(()))
+      s.sync().poll must beSome(Return(()))
       r1.poll must beSome(Return(123))
-      s().isDefined must beFalse
+      s.sync().isDefined must beFalse
     }
 
     "queue senders (send, send, recv, recv)" in {
       val br = new Broker[Int]
-      val s0, s1 = br.send(123)()
+      val s0, s1 = br.send(123).sync()
       s0.isDefined must beFalse
       s1.isDefined must beFalse
       val r = br.recv
-      r().poll must beSome(Return(123))
+      r.sync().poll must beSome(Return(123))
       s0.poll must beSome(Return(()))
       s1.isDefined must beFalse
-      r().poll must beSome(Return(123))
+      r.sync().poll must beSome(Return(123))
       s1.poll must beSome(Return(()))
-      r().isDefined must beFalse
+      r.sync().isDefined must beFalse
     }
 
     "cancellation" in {

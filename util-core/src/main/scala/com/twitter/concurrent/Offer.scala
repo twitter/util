@@ -46,7 +46,7 @@ trait Offer[+T] { self =>
     prepare() flatMap { tx =>
       tx.ack() flatMap {
         case Tx.Commit(v) => Future.value(v)
-        case Tx.Abort => apply()
+        case Tx.Abort => sync()
       }
     }
 
@@ -117,7 +117,7 @@ trait Offer[+T] { self =>
    * this to enumerate over all received values.
    */
   def foreach(f: T => Unit) {
-    this() foreach { v =>
+    sync() foreach { v =>
       f(v)
       foreach(f)
     }
@@ -128,7 +128,7 @@ trait Offer[+T] { self =>
    * closure.  Convenient for loops.
    */
   def andThen(f: => Unit) {
-    this() onSuccess { _ => f }
+    sync() onSuccess { _ => f }
   }
 
   /**
@@ -265,7 +265,7 @@ object Offer {
   /**
    * `Offer.choose()` and synchronize it.
    */
-  def select[T](ofs: Offer[T]*): Future[T] = choose(ofs:_*)()
+  def select[T](ofs: Offer[T]*): Future[T] = choose(ofs:_*).sync()
 
   /**
    * An offer that is available after the given time out.
