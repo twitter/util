@@ -1,12 +1,12 @@
 package com.twitter.util
 
-import collection.mutable.ArrayBuffer
-
+import com.twitter.conversions.time._
+import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.{
   RejectedExecutionHandler, ScheduledThreadPoolExecutor,
-  ThreadFactory, TimeUnit, ExecutorService}
-import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.conversions.time._
+  ThreadFactory, TimeUnit, ExecutorService, CancellationException}
+import java.util.concurrent.atomic.AtomicBoolean
+import scala.collection.mutable.ArrayBuffer
 
 trait TimerTask {
   def cancel()
@@ -33,13 +33,20 @@ trait Timer {
    * will cancel the scheduled timer task, if not too late.
    */
   def doAt[A](time: Time)(f: => A): Future[A] = {
+    val pending = new AtomicBoolean(true)
+
     Future.makePromise[A]() { promise =>
-      val task = schedule(time) { promise() = Try(f) }
-      promise.linkTo(new Cancellable {
-        def isCancelled = throw new UnsupportedOperationException
-        def cancel() = task.cancel()
-        def linkTo(other: Cancellable) = throw new UnsupportedOperationException
-      })
+      val task = schedule(time) {
+        if (pending.compareAndSet(true, false)) {
+          promise() = Try(f)
+        }
+      }
+      promise onCancellation {
+        if (pending.compareAndSet(true, false)) {
+          task.cancel()
+          promise() = Throw(new CancellationException)
+        }
+      }
     }
   }
 

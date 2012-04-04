@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
-import java.util.concurrent.ExecutorService
+import java.util.concurrent.{CancellationException, ExecutorService}
 import com.twitter.conversions.time._
 import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
@@ -138,7 +138,8 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       f.cancel()
       Thread.sleep(2.millis)
       timer.tick()
-      f.isDefined must beFalse
+      f.isDefined must beTrue
+      f() must throwA[CancellationException]
     }
 
     "doAt" in {
@@ -158,7 +159,8 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       f.cancel()
       Thread.sleep(2.millis)
       timer.tick()
-      f.isDefined must beFalse
+      f.isDefined must beTrue
+      f() must throwA[CancellationException]
     }
   }
 }
