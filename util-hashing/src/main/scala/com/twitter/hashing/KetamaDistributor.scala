@@ -7,16 +7,30 @@ import scala.collection.JavaConversions._
 
 case class KetamaNode[A](identifier: String, weight: Int, handle: A)
 
-class KetamaDistributor[A](_nodes: Seq[KetamaNode[A]], numReps: Int) extends Distributor[A] {
+class KetamaDistributor[A](
+  _nodes: Seq[KetamaNode[A]],
+  numReps: Int,
+  // Certain versions of libmemcached return subtly different results for points on
+  // ring. In order to always hash a key to the same server as the
+  // clients who depend on those versions of libmemcached, we have to reproduce their result.
+  // If the oldLibMemcachedVersionComplianceMode is true the behavior will be reproduced.
+  oldLibMemcachedVersionComplianceMode: Boolean = false
+) extends Distributor[A] {
   private val continuum = {
     val continuum = new TreeMap[Long, KetamaNode[A]]()
-    val nodeCount = _nodes.size
-    val totalWeight = _nodes.foldLeft(0) { _ + _.weight }.toDouble
+
+    val nodeCount   = _nodes.size
+    val totalWeight = _nodes.foldLeft(0) { _ + _.weight }
 
     _nodes foreach { node =>
-      val percent = node.weight.toDouble / totalWeight
-      // the tiny fudge fraction is added to counteract float errors.
-      val pointsOnRing = (percent * nodeCount * (numReps / 4) + 0.0000000001).toInt
+      val pointsOnRing = if (oldLibMemcachedVersionComplianceMode) {
+        val percent = node.weight.toFloat / totalWeight.toFloat
+        (percent * numReps / 4 * nodeCount.toFloat + 0.0000000001).toInt
+      } else {
+        val percent = node.weight.toDouble / totalWeight.toDouble
+        (percent * nodeCount * (numReps / 4) + 0.0000000001).toInt
+      }
+
       for (i <- 0 until pointsOnRing) {
         val key = node.identifier + "-" + i
         for (k <- 0 until 4) {
@@ -25,8 +39,10 @@ class KetamaDistributor[A](_nodes: Seq[KetamaNode[A]], numReps: Int) extends Dis
       }
     }
 
-    assert(continuum.size <= numReps * nodeCount)
-    assert(continuum.size >= numReps * (nodeCount - 1))
+    if (!oldLibMemcachedVersionComplianceMode) {
+      assert(continuum.size <= numReps * nodeCount)
+      assert(continuum.size >= numReps * (nodeCount - 1))
+    }
 
     continuum
   }

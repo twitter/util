@@ -21,8 +21,8 @@ class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
     )
 
     // 160 is the hard coded value for libmemcached, which was this input data is from
-    val ketamaClient = new KetamaDistributor(nodes, 160)
-
+    val ketamaDistributor = new KetamaDistributor(nodes, 160)
+    val ketamaDistributorInoldLibMemcachedVersionComplianceMode = new KetamaDistributor(nodes, 160, true)
     "pick the correct node with ketama hash function" in {
       // Test from Smile's KetamaNodeLocatorSpec.scala
 
@@ -44,9 +44,14 @@ class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
       // Test that ketamaClient.clientOf(key) == expected IP
       val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
       for (testcase <- expected) {
-        val handle = ketamaClient.nodeForHash(KeyHasher.KETAMA.hashKey(testcase(0).getBytes))
+        val hash = KeyHasher.KETAMA.hashKey(testcase(0).getBytes)
+
+        val handle = ketamaDistributor.nodeForHash(hash)
+        val handle2 = ketamaDistributorInoldLibMemcachedVersionComplianceMode.nodeForHash(hash)
         val resultIp = handleToIp(handle)
+        val resultIp2 = handleToIp(handle2)
         testcase(3) must be_==(resultIp)
+        testcase(3) must be_==(resultIp2)
       }
     }
 
@@ -60,7 +65,7 @@ class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
       )
 
       knownGoodValues foreach { case (key, node) =>
-        val handle = ketamaClient.nodeForHash(key)
+        val handle = ketamaDistributor.nodeForHash(key)
         handle mustEqual node
       }
     }
