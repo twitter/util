@@ -176,8 +176,8 @@ extends Timer {
     this(poolSize, threadFactory, Some(handler))
 
   /** Construct a ScheduledThreadPoolTimer with a NamedPoolThreadFactory. */
-  def this(poolSize: Int = 2, name: String = "timer") =
-    this(poolSize, new NamedPoolThreadFactory(name), None)
+  def this(poolSize: Int = 2, name: String = "timer", makeDaemons: Boolean = false) =
+    this(poolSize, new NamedPoolThreadFactory(name, makeDaemons), None)
 
   private[this] val underlying = rejectedExecutionHandler match {
     case None =>

@@ -1,3 +1,8 @@
+3.0.?
+
+  * ScheduledThreadPoolExecutor: constructor has new makeDaemons
+     parameter (default is still false)
+
 3.0.0  2012-03-14
 
   * AsyncSemaphore: allow parameterizing maximum queue size
