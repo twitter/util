@@ -34,15 +34,15 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
              acls: Seq[ACL] = zkClient.acl,
              mode: CreateMode = zkClient.mode,
              code: KeeperException.Code = KeeperException.Code.OK)
-            (wait: => Future[Unit]) {
+            (wait: => Future[String]) {
     val cb = capturingParam[AsyncCallback.StringCallback]
     one(zk).create(equal(path),
         equal(data), equal(acls.asJava),
         equal(mode), cb.capture(4),
         equal(null)) willReturn cb.map { cb =>
-      wait onSuccess { _ =>
-        cb.processResult(code.intValue, path, null,
-          if (code == KeeperException.Code.OK) path else null)
+      wait onSuccess { newPath =>
+        cb.processResult(code.intValue, newPath, null,
+          if (code == KeeperException.Code.OK) newPath else null)
       }
       null // explicitly void
     }
@@ -287,7 +287,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
       "ok" in {
         val data = "blah".getBytes
         expect {
-          create(path, data)(Future.Done)
+          create(path, data)(Future(path))
         }
         zkClient(path).create(data).apply() must beLike { case ZNode(p) => p == path }
       }
@@ -295,13 +295,22 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
       "error" in {
         val data = null
         expect {
-          create(path, data, code = KeeperException.Code.NODEEXISTS)(Future.Done)
+          create(path, data, code = KeeperException.Code.NODEEXISTS)(Future(path))
         }
         zkClient(path).create(data) map { _ =>
           fail("Unexpected success")
         } handle { case e: KeeperException.NodeExistsException =>
           e.getPath mustEqual path
         } apply()
+      }
+
+      "sequence" in {
+        val data = Array[Byte]()
+        val newPath = path + "0000000000"
+        expect {
+          create(path, data, mode = CreateMode.PERSISTENT_SEQUENTIAL)(Future(newPath))
+        }
+        zkClient(path).create(data, mode = CreateMode.PERSISTENT_SEQUENTIAL).apply() must beLike { case ZNode(p) => p == newPath }
       }
     }
 
