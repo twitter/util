@@ -78,7 +78,7 @@ trait ZNode {
     zkClient.retrying { zk =>
       val result = new StringCallbackPromise
       zk.create(path, data, acls.asJava, mode, result, null)
-      result map { _ => this }
+      result map { newPath => ZNode(zkClient, newPath) }
     }
   }
 
