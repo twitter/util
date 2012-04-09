@@ -4,6 +4,7 @@ import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
+import com.twitter.common.objectsize.ObjectSizeCalculator
 
 class FutureSpec extends SpecificationWithJUnit with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
@@ -422,6 +423,17 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           inner.isCancelled must beFalse
           f.cancel()
           inner.isCancelled must beTrue
+        }
+        
+        "doesn't leak the underlying promise after completion" in {
+          val inner = new Promise[String]
+          val inner1 = new Promise[String]
+          val f = Future.monitored { inner1.ensure(()); inner }
+          val s = "."*1024
+          val sSize = ObjectSizeCalculator.getObjectSize(s)
+          inner.setValue("."*1024)
+          val inner1Size = ObjectSizeCalculator.getObjectSize(inner1)
+          inner1Size must be_<(sSize)
         }
       }
     }

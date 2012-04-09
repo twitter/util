@@ -2,7 +2,7 @@ package com.twitter.util
 
 import com.twitter.concurrent.{Offer, IVar, Tx}
 import com.twitter.conversions.time._
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference, AtomicReferenceArray}
 import java.util.concurrent.{
   CancellationException, Future => JavaFuture, TimeUnit}
 import scala.annotation.tailrec
@@ -129,18 +129,27 @@ object Future {
    * onSuccess g; f0 }` will cancel f0 so that f0 never hangs.
    */
   def monitored[A](f: => Future[A]): Future[A] = {
-    val p = new Promise[A]
+    val promise = new Promise[A]
+    val promiseRef = new AtomicReference(promise)
     val monitor = Monitor.mk { case exc =>
-      if (!p.updateIfEmpty(Throw(exc))) false else {
-        p.cancel()
-        true
+      promiseRef.getAndSet(null) match {
+        case null => false
+        case p =>
+          p.setException(exc)
+          p.cancel()
+          true
       }
     }
     monitor {
-      val res = f respond { p.updateIfEmpty(_) }
-      p.linkTo(res)
+      val res = f respond { r=> 
+        promiseRef.getAndSet(null) match {
+          case null => ()
+          case p => p() = r
+        }
+      }
+      promise.linkTo(res)
     }
-    p
+    promise
   }
 
   /**
