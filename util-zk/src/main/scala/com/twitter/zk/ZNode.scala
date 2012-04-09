@@ -5,8 +5,8 @@ import com.twitter.util.{Future, Return, Throw, Try}
 import org.apache.zookeeper.{CreateMode, KeeperException, WatchedEvent}
 import org.apache.zookeeper.common.PathUtils
 import org.apache.zookeeper.data.{ACL, Stat}
+import scala.collection.{Seq, Set}
 import scala.collection.JavaConverters._
-import scala.collection.Seq
 
 /**
  * A handle to a ZNode attached to a ZkClient
@@ -24,7 +24,7 @@ trait ZNode {
 
   /** ZNodes are equal if they share a path. */
   override def equals(other: Any) = other match {
-    case ZNode(p) => p == path
+    case z @ ZNode(_) => (z.hashCode == hashCode)
     case _ => false
   }
 
@@ -187,6 +187,9 @@ trait ZNode {
    * If this node is deleted and it had children, an offer is sent indicating that this
    * node no longer has children.  A watch is maintained on deleted nodes so that if the
    * parent node is not monitored, the monitor continues to work when the node is restored.
+   *
+   * If an authorization failure or session expiration is encountered, the monitor will be lost
+   * silently.  To detect these situations, receive events from ZkClient.monitorSession().
    */
   def monitorTree(): Offer[ZNode.TreeUpdate] = {
     val broker = new Broker[ZNode.TreeUpdate]
@@ -199,18 +202,18 @@ trait ZNode {
       watch onSuccess {
         // When a node is fetched with a watch, send a ZNode.TreeUpdate on the broker, and start
         // monitoring
-        case ZNode.Watch(Return(parent), eventUpdate) => {
-          val children = parent.children.toSet
-          val treeUpdate = ZNode.TreeUpdate(parent,
+        case ZNode.Watch(Return(zparent), eventUpdate) => {
+          val children = zparent.children.toSet
+          val treeUpdate = ZNode.TreeUpdate(zparent,
               added = children -- knownChildren,
               removed = knownChildren -- children)
-          broker!(treeUpdate) onSuccess { _ =>
+          broker send(treeUpdate) sync() onSuccess { _ =>
             treeUpdate.added foreach { z =>
               pipeSubTreeUpdates(z.monitorTree())
             }
             eventUpdate onSuccess {
-              case MonitorableEvent() => monitorWatch(parent.getChildren.watch(), children)
-              case event => log.error("Unmonitorable event: %s: %s", path, event)
+              case MonitorableEvent() => monitorWatch(zparent.getChildren.watch(), children)
+              case event => log.debug("Unmonitorable event: %s: %s", path, event)
             }
           }
         }
@@ -218,11 +221,13 @@ trait ZNode {
           // Tell the broker about the children we lost; otherwise, if there were no children,
           // this deletion should be reflected in a watch on the parent node, if one exists.
           if (knownChildren.size > 0) {
-            broker! ZNode.TreeUpdate(this, removed = knownChildren)
-          } else { Future.Done } onSuccess { _ =>
+            broker send(ZNode.TreeUpdate(this, removed = knownChildren)) sync()
+          } else {
+            Future.Done
+          } onSuccess { _ =>
             eventUpdate onSuccess {
               case MonitorableEvent() => monitorWatch(parent.getChildren.watch(), Set.empty[ZNode])
-              case event => log.error("Unmonitorable event: %s: %s", path, event)
+              case event => log.debug("Unmonitorable event: %s: %s", path, event)
             }
           }
         }
@@ -236,12 +241,12 @@ trait ZNode {
     broker.recv
   }
 
+  /** AuthFailed and Expired are unmonitorable. Everything else can be resumed. */
   protected[this] object MonitorableEvent {
     def unapply(event: WatchedEvent) = event match {
-      case NodeEvent.ChildrenChanged(p) => true
-      case NodeEvent.Created(p) => true
-      case NodeEvent.Deleted(p) => true
-      case event => false
+      case StateEvent.AuthFailed() => false
+      case StateEvent.Expired() => false
+      case _ => true
     }
   }
 }

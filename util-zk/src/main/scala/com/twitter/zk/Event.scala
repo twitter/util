@@ -2,7 +2,7 @@ package com.twitter.zk
 
 import com.twitter.concurrent.Broker
 import com.twitter.util.{Promise, Return}
-import org.apache.zookeeper.{AsyncCallback, KeeperException, WatchedEvent, Watcher, ZooKeeper}
+import org.apache.zookeeper.{WatchedEvent, Watcher}
 import org.apache.zookeeper.Watcher.Event.{EventType, KeeperState}
 
 /*
@@ -17,7 +17,7 @@ object Event {
   }
 }
 
-trait StateEvent {
+sealed trait StateEvent {
   val eventType = EventType.None
   val state: KeeperState
   def apply() = Event(eventType, state, None)
@@ -28,6 +28,10 @@ trait StateEvent {
 }
 
 object StateEvent {
+  object AuthFailed extends StateEvent {
+    val state = KeeperState.AuthFailed
+  }
+
   object Connected extends StateEvent {
     val state = KeeperState.SyncConnected
   }
@@ -41,7 +45,7 @@ object StateEvent {
   }
 }
 
-trait NodeEvent {
+sealed trait NodeEvent {
   val state = KeeperState.SyncConnected
   val eventType: EventType
   def apply(path: String) = Event(eventType, state, Some(path))

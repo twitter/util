@@ -53,7 +53,7 @@ trait Offer[+T] { self =>
   /**
    * Synonym for `sync()`
    */
-  @deprecated("use sync() intstead")
+  @deprecated("use sync() instead")
   def apply(): Future[T] = sync()
 
   /* Combinators */

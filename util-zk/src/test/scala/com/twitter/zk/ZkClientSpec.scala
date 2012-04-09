@@ -1,15 +1,14 @@
 package com.twitter.zk
 
-import com.twitter.concurrent.{Broker, Offer}
 import com.twitter.conversions.time._
-import com.twitter.logging.{ Level, Logger }
-import com.twitter.util.{Future, JavaTimer, Promise, Return, Try}
-import org.apache.zookeeper.{AsyncCallback, CreateMode, KeeperException, ZooKeeper, Watcher}
+import com.twitter.logging.{Level, Logger}
+import org.apache.zookeeper._
 import org.apache.zookeeper.data.{ACL, Stat}
-import org.apache.zookeeper.ZooDefs
 import org.specs.SpecificationWithJUnit
 import org.specs.mock._
+import scala.collection.Set
 import scala.collection.JavaConverters._
+import com.twitter.util._
 
 class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker {
   Logger.get("").setLevel(Level.TRACE)
@@ -23,7 +22,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
   }
   def zkClient = new TestZkClient
 
-  implicit val javaTimer = new JavaTimer
+  implicit val javaTimer = new JavaTimer(true)
 
   /*
    * ZooKeeper expectation wrappers
@@ -32,8 +31,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
   def create(path: String,
              data: Array[Byte] = "".getBytes,
              acls: Seq[ACL] = zkClient.acl,
-             mode: CreateMode = zkClient.mode,
-             code: KeeperException.Code = KeeperException.Code.OK)
+             mode: CreateMode = zkClient.mode)
             (wait: => Future[Unit]) {
     val cb = capturingParam[AsyncCallback.StringCallback]
     one(zk).create(equal(path),
@@ -41,135 +39,133 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         equal(mode), cb.capture(4),
         equal(null)) willReturn cb.map { cb =>
       wait onSuccess { _ =>
-        cb.processResult(code.intValue, path, null,
-          if (code == KeeperException.Code.OK) path else null)
+        cb.processResult(0, path, null, path)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null)
       }
       null // explicitly void
     }
   }
 
-  def delete(path: String, version: Int,
-             code: KeeperException.Code = KeeperException.Code.OK)
-            (wait: => Future[Unit]) {
+  def delete(path: String, version: Int)(wait: => Future[Unit]) {
     val cb = capturingParam[AsyncCallback.VoidCallback]
     one(zk).delete(equal(path), equal(version), cb.capture(2), same(null)) willReturn cb.map { cb =>
-      wait onSuccess { _ => cb.processResult(code.intValue, path, null) }
+      wait onSuccess { _ =>
+        cb.processResult(0, path, null)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null)
+      }
       null // explicitly void
     }
   }
 
   def exists(path: String)(stat: => Future[Stat]) {
-    exists(path, KeeperException.Code.OK)(stat)
-  }
-  def exists(path: String, code: KeeperException.Code)(stat: => Future[Stat]) {
     val cb = capturingParam[AsyncCallback.StatCallback]
     one(zk).exists(equal(path), equal(false), cb.capture(2), equal(null)) willReturn cb.map { cb =>
-      stat onSuccess { cb.processResult(code.intValue, path, null, _) }
+      stat onSuccess {
+        cb.processResult(0, path, null, _)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null)
+      }
       null // explicitly void
     }
   }
-  def watch(path: String,
-            code: KeeperException.Code = KeeperException.Code.OK)
-           (stat: => Future[Stat])(update: => Future[Unit]) {
+
+  def watch(path: String)(stat: => Future[Stat])(update: => Future[WatchedEvent]) {
     val watcher = capturingParam[Watcher]
     val cb = capturingParam[AsyncCallback.StatCallback]
     one(zk).exists(equal(path), watcher.capture(1), cb.capture(2),
         equal(null)) willReturn cb.map { cb =>
       stat onSuccess {
-        cb.processResult(code.intValue, path, null, _)
+        cb.processResult(0, path, null, _)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null)
       }
-      update onSuccess { _ =>
-        watcher.captured.process(NodeEvent.Deleted(path))
-      }
+      update onSuccess { watcher.captured.process(_) }
       null // explicitly void
     }
   }
 
-  def getChildren(path: String,
-                  code: KeeperException.Code = KeeperException.Code.OK)
-                 (children: => Future[ZNode.Children]) {
+  def getChildren(path: String)(children: => Future[ZNode.Children]) {
     val cb = capturingParam[AsyncCallback.Children2Callback]
     one(zk).getChildren(equal(path),
         equal(false), cb.capture(2),
         equal(null)) willReturn cb.map { cb =>
       children onSuccess { znode =>
-        cb.processResult(code.intValue, path, null,
-          if (code == KeeperException.Code.OK) znode.children.map { _.name }.toList.asJava else null,
-          if (code == KeeperException.Code.OK) znode.stat else null)
-      }
-      null // explicitly void
-    }
-  }
-  def watchChildren(path: String,
-                    code: KeeperException.Code = KeeperException.Code.OK)
-                   (children: => Future[ZNode.Children])
-                   (update: => Future[Unit]) {
-    val w = capturingParam[Watcher]
-    val cb = capturingParam[AsyncCallback.Children2Callback]
-    one(zk).getChildren(equal(path),
-        w.capture(1), cb.capture(2),
-        equal(null)) willReturn cb.map { cb =>
-      children onSuccess { case ZNode.Children(znode, stat, children) =>
-        cb.processResult(code.intValue, path, null, children.map { _.name }.toList.asJava, stat)
-      }
-      update onSuccess { _ =>
-        w.captured.process(NodeEvent.ChildrenChanged(path))
+        cb.processResult(0, path, null, znode.children.map { _.name }.toList.asJava, znode.stat)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null, null)
       }
       null // explicitly void
     }
   }
 
-  def getData(path: String,
-              code: KeeperException.Code = KeeperException.Code.OK)
-             (result: => Future[ZNode.Data]) {
+  def watchChildren(path: String)
+                   (children: => Future[ZNode.Children])
+                   (update: => Future[WatchedEvent]) {
+    val w = capturingParam[Watcher]
+    val cb = capturingParam[AsyncCallback.Children2Callback]
+    one(zk).getChildren(equal(path), w.capture(1), cb.capture(2),
+        equal(null)) willReturn cb.map { cb =>
+      children onSuccess { case ZNode.Children(znode, stat, children) =>
+        cb.processResult(0, path, null, children.map { _.name }.toList.asJava, stat)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null, null)
+      }
+      update onSuccess { w.captured.process(_) }
+      null // explicitly void
+    }
+  }
+
+  def getData(path: String)(result: => Future[ZNode.Data]) {
     val cb = capturingParam[AsyncCallback.DataCallback]
     one(zk).getData(equal(path), equal(false), cb.capture(2), equal(null)) willReturn cb.map { cb =>
       result onSuccess { z =>
-        cb.processResult(code.intValue, path, null,
-          if (code == KeeperException.Code.OK) z.bytes else null,
-          if (code == KeeperException.Code.OK) z.stat else null)
+        cb.processResult(0, path, null, z.bytes, z.stat)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null, null)
       }
       null // explicitly void
     }
   }
-  def watchData(path: String,
-                code: KeeperException.Code = KeeperException.Code.OK)
-               (result: => Future[ZNode.Data])(update: => Future[Unit]) {
+  def watchData(path: String)(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]) {
     val w = capturingParam[Watcher]
     val cb = capturingParam[AsyncCallback.DataCallback]
     one(zk).getData(equal(path),
         w.capture(1), cb.capture(2),
         equal(null)) willReturn cb.map { cb =>
       result onSuccess { z =>
-        cb.processResult(code.intValue, path, null, z.bytes, z.stat)
+        cb.processResult(0, path, null, z.bytes, z.stat)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null, null)
       }
-      update onSuccess { _ =>
-        w.captured.process(NodeEvent.DataChanged(path))
-      }
+      update onSuccess { w.captured.process(_) }
       null // explicitly void
     }
   }
 
-  def setData(path: String, data: Array[Byte], version: Int,
-              code: KeeperException.Code = KeeperException.Code.OK)
+  def setData(path: String, data: Array[Byte], version: Int)
              (wait: => Future[Stat]) {
     val cb = capturingParam[AsyncCallback.StatCallback]
     one(zk).setData(equal(path), equal(data), equal(version),
         cb.capture(3), equal(null)) willReturn cb.map { cb =>
       wait onSuccess { stat =>
-        cb.processResult(code.intValue, path, null, stat)
+        cb.processResult(0, path, null, stat)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null, null)
       }
       null // explicitly void
     }
   }
 
-  def sync(path: String,
-           code: KeeperException.Code = KeeperException.Code.OK)
+  def sync(path: String)
           (wait: Future[Unit]) {
     val cb = capturingParam[AsyncCallback.VoidCallback]
     one(zk).sync(equal(path), cb.capture(1), equal(null)) willReturn cb.map { cb =>
       wait onSuccess { _ =>
-        cb.processResult(code.intValue, path, null)
+        cb.processResult(0, path, null)
+      } onFailure { case ke: KeeperException =>
+        cb.processResult(ke.code.intValue, path, null)
       }
       null // explicitly void
     }
@@ -295,7 +291,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
       "error" in {
         val data = null
         expect {
-          create(path, data, code = KeeperException.Code.NODEEXISTS)(Future.Done)
+          create(path, data)(Future.exception(new KeeperException.NodeExistsException(path)))
         }
         zkClient(path).create(data) map { _ =>
           fail("Unexpected success")
@@ -317,7 +313,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
       "error" in {
         expect {
-          delete(path, version, KeeperException.Code.NONODE)(Future(null))
+          delete(path, version)(Future.exception(new KeeperException.NoNodeException(path)))
         }
         zkClient(path).delete(version) map { _ =>
           fail("Unexpected success")
@@ -336,14 +332,12 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           expect {
             exists(znode.path)(Future(result.stat))
           }
-          znode.exists().apply() must beLike {
-            case ZNode.Exists(p, s) => (p == result.path && s == result.stat)
-          }
+          znode.exists().apply() mustEqual result
         }
 
         "error" in {
           expect {
-            exists(znode.path, KeeperException.Code.NONODE)(Future(null))
+            exists(znode.path)(Future.exception(new KeeperException.NoNodeException(znode.path)))
           }
           znode.exists() map { _ =>
             fail("Unexpected success")
@@ -354,43 +348,78 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
       }
 
       "watch" in {
+        val event = NodeEvent.Deleted(znode.path)
         expect {
-          watch(znode.path)(Future(result.stat))(Future.Done)
+          watch(znode.path)(Future(result.stat))(Future(event))
         }
-        znode.exists.watch().onSuccess { case ZNode.Watch(r, update) =>
-          r.onSuccess { case ZNode.Exists(p, s) =>
-            p mustBe result.path
-            s mustBe result.stat
+        znode.exists.watch() onSuccess { case ZNode.Watch(r, update) =>
+          r onSuccess { exists =>
+            exists mustEqual result
             update onSuccess {
-              case NodeEvent.Deleted(name) => name mustEqual znode.path
+              case e @ NodeEvent.Deleted(name) => e mustEqual event
               case e => fail("Incorrect event: %s".format(e))
             }
           }
-        }.apply()
+        } apply()
       }
 
       "monitor" in {
+        val deleted = NodeEvent.Deleted(znode.path)
         def expectZNodes(n: Int) {
-          val results = 0 until n map { _ => new Stat } map { ZNode.Exists(znode, _) }
+          val results = 0 until n map { _ => ZNode.Exists(znode, new Stat) }
           expect {
             results foreach { r =>
-              watch(znode.path)(Future(r.stat))(Future.Done)
+              watch(znode.path)(Future(r.stat))(Future(deleted))
             }
           }
           val update = znode.exists.monitor()
           results foreach { result =>
-            (update??) match {
-              case Return(ZNode.Exists(p, s)) => {
-                p mustEqual result.path
-                s mustBe result.stat
-              }
-              case _ => fail("unexpected return value")
-            }
+            update syncWait() get() mustEqual result
           }
         }
 
         "that updates several times" in {
           expectZNodes(3)
+        }
+
+        "handles session events properly" in {
+          "AuthFailed" in {
+            expect {
+              // this case is somewhat unrealistic
+              watch(znode.path)(Future(new Stat))(Future(StateEvent.AuthFailed()))
+              // does not reset
+            }
+            val offer = znode.exists.monitor()
+            offer syncWait() get() mustEqual result
+          }
+
+          "Disconnected" in {
+            val update = new Promise[WatchedEvent]
+            expect {
+              watch(znode.path)(Future(new Stat))(Future(StateEvent.Disconnected()))
+              watch(znode.path)(Future(new Stat))(Future(NodeEvent.Deleted(znode.path)))
+              watch(znode.path)(Future.exception(new KeeperException.NoNodeException(znode.path)))(update)
+            }
+            val offer = znode.exists.monitor()
+            offer syncWait() get() mustEqual result
+            offer syncWait() get() mustEqual result
+            offer syncWait() get() must throwA[KeeperException.NoNodeException]
+            offer.sync().isDefined must beFalse
+          }
+
+          "SessionExpired" in {
+            expect {
+              watch(znode.path)(Future(new Stat))(Future(StateEvent.Disconnected()))
+              watch(znode.path) {
+                Future.exception(new KeeperException.SessionExpiredException)
+              } {
+                Future(StateEvent.Expired())
+              }
+            }
+            val offer = znode.exists.monitor()
+            offer syncWait() get() mustEqual result
+            offer.sync().isDefined must beFalse
+          }
         }
 
         //"that updates many times" in {
@@ -413,7 +442,9 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
         "error" in {
           expect {
-            getChildren(znode.path, KeeperException.Code.NOCHILDRENFOREPHEMERALS)(Future(null))
+            getChildren(znode.path) {
+              Future.exception(new KeeperException.NoChildrenForEphemeralsException(znode.path))
+            }
           }
           znode.getChildren() map { _ =>
             fail("Unexpected success")
@@ -425,7 +456,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
       "watch" in {
         expect {
-          watchChildren(znode.path)(Future(result))(Future.Done)
+          watchChildren(znode.path)(Future(result))(Future(NodeEvent.ChildrenChanged(znode.path)))
         }
         znode.getChildren.watch().onSuccess { case ZNode.Watch(r, f) =>
           r onSuccess { case ZNode.Children(p, s, c) =>
@@ -440,28 +471,22 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
       }
 
       "monitor" in {
+        val znode = zkClient("/characters")
         val results = List(
             Seq("Angel", "Buffy", "Giles", "Willow", "Xander"),
             Seq("Angel", "Buffy", "Giles", "Spike", "Willow", "Xander"),
             Seq("Buffy", "Giles", "Willow", "Xander"),
-            Seq("Angel", "Spike")) map { children =>
-          ZNode.Children(znode, new Stat, children)
-        }
+            Seq("Angel", "Spike")) map { ZNode.Children(znode, new Stat, _) }
         expect {
-          results foreach { result =>
-            watchChildren(znode.path)(Future(result))(Future.Done)
+          results foreach { r =>
+            watchChildren(znode.path)(Future(r))(Future(NodeEvent.ChildrenChanged(znode.path)))
           }
+
         }
-        val update = {
-          val b = new Broker[ZNode.Children]
-          def loop(next: Offer[Try[ZNode.Children]]) {
-            next() flatMap { _ map(b!) getOrElse(Future.Done) } ensure loop(next)
-          }
-          loop(znode.getChildren.monitor)
-          b.recv
-        }
-        results foreach { r =>
-          (update??) mustEqual r
+        val update = znode.getChildren.monitor()
+        results foreach { result =>
+          val r = update syncWait() get()
+          r mustEqual result
         }
       }
     }
@@ -480,7 +505,9 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
         "error" in {
           expect {
-            getData(znode.path, KeeperException.Code.SESSIONEXPIRED)(Future(null))
+            getData(znode.path) {
+              Future.exception(new KeeperException.SessionExpiredException)
+            }
           }
           znode.getData() map { _ =>
             fail("Unexpected success")
@@ -492,7 +519,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
       "watch" in {
         expect {
-          watchData(znode.path)(Future(result))(Future.Done)
+          watchData(znode.path) {
+            Future(result)
+          } {
+            Future(NodeEvent.DataChanged(znode.path))
+          }
         }
         try {
           znode.getData.watch().onSuccess {
@@ -517,36 +548,37 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         }
         expect {
           results foreach { result =>
-            watchData(znode.path)(Future(result))(Future.Done)
+            watchData(znode.path)(Future(result)) {
+              Future(NodeEvent.ChildrenChanged(znode.path))
+            }
+          }
+          watchData(znode.path) {
+            Future.exception(new KeeperException.SessionExpiredException)
+          } {
+            new Promise[WatchedEvent]
           }
         }
-        val update = {
-          val b = new Broker[ZNode.Data]
-          def loop(next: Offer[Try[ZNode.Data]]) {
-            next() flatMap { _ map(b!) getOrElse(Future.Done) } ensure loop(next)
-          }
-          loop(znode.getData.monitor)
-          b.recv
-        }
+        val update = znode.getData.monitor()
         try {
-          results foreach {
-            (update??) mustEqual _
+          results foreach { data =>
+            update.syncWait().get() mustEqual data
           }
-        } catch { case e => fail("unexpected error: %s".format(e)) }
+        } catch { case e =>
+          fail("unexpected error: %s".format(e))
+        }
       }
     }
 
     "monitorTree" in {
       // Lay out a tree of ZNode.Children
       val treeRoot = ZNode.Children(zkClient("/arboreal"), new Stat, 'a' to 'e' map { _.toString })
+
       val treeChildren = treeRoot +: ('a' to 'e').map { c =>
         ZNode.Children(treeRoot(c.toString), new Stat, 'a' to c map { _.toString })
       }.flatMap { z =>
         z +: z.children.map { c => ZNode.Children(c, new Stat, Nil) }
       }
-      // Create promises for each node in the tree -- satisfying a promise will fire a
-      // ChildrenChanged event for its associated node.
-      val updatePromises = treeChildren map { _.path -> new Promise[Unit] } toMap
+
       // Lay out node updates for the tree: Add a 'z' node to all nodes named 'a'
       val updateTree = treeChildren.collect {
         case z @ ZNode.Children(p, s, c) if (p.endsWith("/c")) => {
@@ -556,48 +588,70 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         }
       }.flatten
 
-      expect {
-        treeChildren foreach { z =>
-          watchChildren(z.path)(Future(z))(updatePromises(z.path))
-        }
-        updateTree foreach { z =>
-          watchChildren(z.path)(Future(z))(new Promise[Unit])  // nohollaback
-        }
-      }
-
-      // Start monitoring the tree.
-      val offer = treeRoot.monitorTree()
-
       // Initially, we should get a ZNode.TreeUpdate for each node in the tree with only added nodes
       val expectedByPath = treeChildren.map { z =>
         z.path -> ZNode.TreeUpdate(z, z.children.toSet)
       }.toMap
-      treeChildren foreach { _ =>
-        offer() onSuccess { case ZNode.TreeUpdate(z, added, _) =>
-          val expected = expectedByPath(z.path)
-          z mustEqual expected.parent
-          added.map { _.path } mustEqual expected.added.map { _.path }.toSet
-        } apply(1.second)
-      }
-
       val updatesByPath = updateTree.map { z =>
-        val prior = expectedByPath.get(z.path).map { _.added } getOrElse Set.empty
-        z.path -> ZNode.TreeUpdate(z,
-            z.children.toSet -- prior,
-            prior -- z.children.toSet)
+        val prior: Set[ZNode] = expectedByPath.get(z.path).map { _.added }.getOrElse(Set.empty)
+        z.path -> ZNode.TreeUpdate(z, z.children.toSet -- prior, prior -- z.children.toSet)
       }.toMap
-      updateTree foreach { z =>
-        updatePromises.get(z.path) foreach { _.setValue(Unit) }
-      }
-      Future.collect {
-        updateTree.map { _ =>
-          offer() onSuccess { case ZNode.TreeUpdate(z, added, removed) =>
-            val expected = updatesByPath(z.path)
-            z mustEqual expected.parent
-            added.map { _.path } mustEqual expected.added.map { _.path }.toSet
+
+      def okUpdates(event: String => WatchedEvent) {
+        // Create promises for each node in the tree -- satisfying a promise will fire a
+        // ChildrenChanged event for its associated node.
+        val updatePromises = treeChildren.map { _.path -> new Promise[WatchedEvent] }.toMap
+        expect {
+          treeChildren foreach { z =>
+            watchChildren(z.path)(Future(z))(updatePromises(z.path))
+          }
+          updateTree foreach { z =>
+            watchChildren(z.path)(Future(z))(new Promise[WatchedEvent])  // nohollaback
           }
         }
-      }.apply(10.seconds)
+
+        val offer = treeRoot.monitorTree()
+        treeChildren foreach { _ =>
+          val ztu = offer sync() apply(1.second)
+          val e = expectedByPath(ztu.parent.path)
+          ztu.parent mustEqual e.parent
+          ztu.added.map { _.path } mustEqual e.added.map { _.path }.toSet
+          ztu.removed must beEmpty
+        }
+        updateTree foreach { z =>
+          updatePromises get(z.path) foreach { _.setValue(event(z.path)) }
+          val ztu = offer sync() apply(1.second)
+          val e = updatesByPath(z.path)
+          ztu.parent mustEqual e.parent
+          ztu.added.map { _.path } mustEqual e.added.map { _.path }.toSet
+          ztu.removed must beEmpty
+        }
+        offer.sync().apply(1.second) must throwA[TimeoutException]
+      }
+
+      "ok" in okUpdates { NodeEvent.ChildrenChanged(_) }
+      "be resilient to disconnect" in okUpdates { _ => StateEvent.Disconnected() }
+
+      "stop on session expiration" in {
+        expect {
+          treeChildren foreach { z =>
+            watchChildren(z.path)(Future(z))(Future(StateEvent.Disconnected()))
+            watchChildren(z.path)(Future.exception(new KeeperException.SessionExpiredException)) {
+              Future(StateEvent.Expired())
+            }
+          }
+        }
+
+        val offer = treeRoot.monitorTree()
+        treeChildren foreach { _ =>
+          val ztu = offer sync() apply(1.second)
+          val e = expectedByPath(ztu.parent.path)
+          ztu.parent mustEqual e.parent
+          ztu.added.map { _.path } mustEqual e.added.map { _.path }.toSet
+          ztu.removed must beEmpty
+        }
+        offer.sync().apply(1.second) must throwA[TimeoutException]
+      }
     }
 
     "set data" in {
@@ -609,18 +663,16 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           setData(znode.path, data, version)(Future(result.stat))
         }
-        znode.setData(data, version).apply() mustEqual znode
+        znode.setData(data, version).apply(1.second) mustEqual znode
       }
 
       "error" in {
         expect {
-          setData(znode.path, data, version, KeeperException.Code.SESSIONEXPIRED)(Future(null))
+          setData(znode.path, data, version) {
+            Future.exception(new KeeperException.SessionExpiredException)
+          }
         }
-        znode.setData(data, version) map { _ =>
-          fail("Unexpected success")
-        } handle { case e: KeeperException.SessionExpiredException =>
-          e.getPath mustEqual znode.path
-        } apply()
+        znode.setData(data, version).apply() must throwA[KeeperException.SessionExpiredException]
       }
     }
 
@@ -631,18 +683,20 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           sync(znode.path)(Future.Done)
         }
-        znode.sync().apply() mustEqual znode
+        znode.sync().apply(1.second) mustEqual znode
       }
 
       "error" in {
         expect {
-          sync(znode.path, KeeperException.Code.SYSTEMERROR)(Future(null))
+          sync(znode.path) {
+            Future.exception(new KeeperException.SystemErrorException)
+          }
         }
         znode.sync() map { _ =>
           fail("Unexpected success")
         } handle { case e: KeeperException.SystemErrorException =>
           e.getPath mustEqual znode.path
-        } apply()
+        } apply(1.second)
       }
     }
   }
