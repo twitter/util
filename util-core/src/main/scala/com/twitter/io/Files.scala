@@ -11,7 +11,7 @@ object Files {
    *
    * @param file file to read
    * @param limit number of bytes to read, default 4MB
-   * @returns array of bytes
+   * @return array of bytes
    */
   def readBytes(file: File, limit: Int = 1024 * 1024 * 4): Array[Byte]= {
     require(file.length() < limit, "File '%s' is too big".format(file.getAbsolutePath()))
