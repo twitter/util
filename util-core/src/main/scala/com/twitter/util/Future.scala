@@ -12,6 +12,7 @@ import scala.collection.mutable
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
   val Unit = apply(())
+  val Void = apply[Void](null)
   val Done = Unit
 
   /**
@@ -104,6 +105,7 @@ object Future {
     def poll: Option[Try[Nothing]] = None
   }
 
+  @deprecated("Prefer static Future.Void.")
   def void(): Future[Void] = value[Void](null)
 
   /**
@@ -606,6 +608,11 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Convert this Future[A] to a Future[Unit] by discarding the result.
    */
   def unit: Future[Unit] = map(_ => ())
+
+  /**
+   * Convert this Future[A] to a Future[Void] by discarding the result.
+   */
+  def void: Future[Void] = map(_ => null.asInstanceOf[Void])
 
   /**
    * Send updates from this Future to the other.
