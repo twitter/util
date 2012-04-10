@@ -575,7 +575,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       case Throw(t)  => transformer.rescue(t)
     }
 
-  def handle[B >: A](rescueException: PartialFunction[Throwable, B]) = rescue {
+  def handle[B >: A](rescueException: PartialFunction[Throwable, B]): Future[B] = rescue {
     case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
     case e: Throwable                                   => this
   }
