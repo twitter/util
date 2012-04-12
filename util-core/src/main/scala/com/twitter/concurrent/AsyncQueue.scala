@@ -90,4 +90,6 @@ class AsyncQueue[T] {
 
     case Excepting(_) => // Just take the first one.
   }
+  
+  override def toString = "AsyncQueue<%s>".format(state.get)
 }

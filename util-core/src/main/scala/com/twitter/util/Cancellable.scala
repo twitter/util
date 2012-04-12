@@ -30,6 +30,14 @@ trait Cancellable {
   def linkTo(other: Cancellable): Unit
 }
 
+object Cancellable {
+  val nil: Cancellable = new Cancellable {
+    def isCancelled = false
+    def cancel() {}
+    def linkTo(other: Cancellable) {}
+  }
+}
+
 class CancellableSink(f: => Unit) extends Cancellable {
   private[this] val wasCancelled = new AtomicBoolean(false)
   def isCancelled = wasCancelled.get
