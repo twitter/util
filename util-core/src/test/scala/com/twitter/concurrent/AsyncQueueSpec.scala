@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import com.twitter.util.{Return, Throw}
 
-object AsyncQueueSpec extends Specification {
+class AsyncQueueSpec extends SpecificationWithJUnit {
   "AsyncQueue" should {
     val q = new AsyncQueue[Int]
 
