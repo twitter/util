@@ -1,6 +1,5 @@
 package com.twitter.zk
 
-
 import com.twitter.concurrent.Offer
 import com.twitter.logging.Logger
 import com.twitter.util.{Duration, Future, Timer}
