@@ -41,6 +41,11 @@ object Time {
    */
   val nanoTimeOffset = (System.currentTimeMillis * 1000000) - System.nanoTime
 
+  /**
+   * Note, this should only ever be updated by methods used for testing.
+   * Even there, since this is shared global state, there are risks about memory visibility
+   * with multi-threaded tests.
+   */
   private[Time] var fn: () => Time = () => Time.fromNanoseconds(System.nanoTime + nanoTimeOffset)
 
   @deprecated("use Time.fromMilliseconds(...) instead")
@@ -97,16 +102,34 @@ object Time {
     }
   }
 
+  /**
+   * Runs the given body at a specified time.
+   * Makes for simple, fast, predictable unit tests that are dependent on time.
+   *
+   * Note, this intended for use in tests.
+   *
+   * Since this updates shared global state, there are risks about memory visibility
+   * with multi-threaded tests.
+   */
   def withTimeAt[A](time: Time)(body: TimeControl => A): A =
     withTimeFunction(time)(body)
 
+  /**
+   * Runs the given body at the current time.
+   * Makes for simple, fast, predictable unit tests that are dependent on time.
+   *
+   * Note, this intended for use in tests.
+   *
+   * Since this updates shared global state, there are risks about memory visibility
+   * with multi-threaded tests.
+   */
   def withCurrentTimeFrozen[A](body: TimeControl => A): A = {
     withTimeAt(Time.now)(body)
   }
 
   def measure(f: => Unit): Duration = {
     val start = now
-    val result = f
+    f
     val end = now
     end - start
   }
@@ -123,7 +146,7 @@ object Time {
     d/n
   }
 
-  // Wed, 15 Jun 2005 19:00:00 GMT
+  /** Returns the Time parsed from a string in RSS format. Eg: "Wed, 15 Jun 2005 19:00:00 GMT" */
   def fromRss(rss: String) = rssFormat.parse(rss)
 }
 
