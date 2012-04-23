@@ -93,6 +93,12 @@ class EvalSpec extends SpecificationWithJUnit {
       (new Eval).apply[Int](getClass.getResourceAsStream("/OnePlusOne.scala")) mustEqual 2
     }
 
+    "uses deprecated" in {
+      val deprecated = (new Eval).apply[() => String](
+        TempFile.fromResourcePath("/Deprecated.scala"))
+      deprecated() mustEqual "hello"
+    }
+
     "inPlace('expression')" in {
       // Old object API works
       Eval.compile("object Doubler { def apply(n: Int) = n * 2 }")

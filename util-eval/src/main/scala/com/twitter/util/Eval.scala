@@ -418,8 +418,7 @@ class Eval(target: Option[File]) {
     val cache = new mutable.HashMap[String, Class[_]]()
 
     val settings = new Settings
-    settings.deprecation.value = true // enable detailed deprecation warnings
-    settings.unchecked.value = true // enable detailed unchecked warnings
+    settings.nowarnings.value = true // warnings are exceptions, so disable
     settings.outputDirs.setSingleOutput(target)
 
     val pathList = compilerPath ::: libPath
