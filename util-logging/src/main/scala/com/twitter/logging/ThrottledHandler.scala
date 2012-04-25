@@ -16,14 +16,50 @@
 
 package com.twitter.logging
 
-import java.util.{logging => javalog}
-import scala.collection.mutable
 import com.twitter.conversions.time._
 import com.twitter.util.{Duration, Time}
-import config._
+import java.util.{logging => javalog}
+import scala.collection.mutable
 
-class ThrottledHandler(val handler: Handler, val duration: Duration, val maxToDisplay: Int)
-      extends Handler(handler.formatter, handler.level) {
+object ThrottledHandler {
+  /**
+   * Generates a HandlerFactory that returns a ThrottledHandler
+   *
+   * @param handler
+   * Wrapped handler.
+   *
+   * @param duration
+   * Timespan to consider duplicates. After this amount of time, duplicate entries will be logged
+   * again.
+   *
+   * @param maxToDisplay
+   * Maximum duplicate log entries to pass before suppressing them.
+   */
+  def apply(
+    handler: HandlerFactory,
+    duration: Duration = 0.seconds,
+    maxToDisplay: Int = Int.MaxValue
+  ): HandlerFactory =
+    () => new ThrottledHandler(handler(), duration, maxToDisplay)
+}
+
+/**
+ * @param handler
+ * Wrapped handler.
+ *
+ * @param duration
+ * Timespan to consider duplicates. After this amount of time, duplicate entries will be logged
+ * again.
+ *
+ * @param maxToDisplay
+ * Maximum duplicate log entries to pass before suppressing them.
+ */
+class ThrottledHandler(
+    val handler: Handler,
+    val duration: Duration,
+    val maxToDisplay: Int)
+  extends Handler(handler.formatter, handler.level) {
+
   private class Throttle(now: Time, name: String, level: javalog.Level) {
     var startTime: Time = now
     var count: Int = 0

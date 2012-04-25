@@ -18,7 +18,6 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 import scala.collection.mutable
-import com.twitter.conversions.string._
 
 /**
  * A base log handler for scala. This extends the java built-in handler and connects it with a
@@ -34,11 +33,24 @@ abstract class Handler(val formatter: Formatter, val level: Option[Level]) exten
   }
 }
 
+object StringHandler {
+  /**
+   * Generates a HandlerFactory that returns a StringHandler
+   */
+  def apply(
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): HandlerFactory =
+    () => new StringHandler(formatter, level)
+}
+
 /**
  * Mostly useful for unit tests: logging goes directly into a string buffer.
  */
-class StringHandler(formatter: Formatter, level: Option[Level]) extends Handler(formatter, level) {
-  def this() = this(new Formatter, None)
+class StringHandler(
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None)
+  extends Handler(formatter, level) {
 
   private var buffer = new StringBuilder()
 
@@ -57,11 +69,24 @@ class StringHandler(formatter: Formatter, level: Option[Level]) extends Handler(
   }
 }
 
+object ConsoleHandler {
+  /**
+   * Generates a HandlerFactory that returns a ConsoleHandler
+   */
+  def apply(
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): HandlerFactory =
+    () => new ConsoleHandler(formatter, level)
+}
+
 /**
  * Log things to the console.
  */
-class ConsoleHandler(formatter: Formatter, level: Option[Level]) extends Handler(formatter, level) {
-  def this() = this(new Formatter, None)
+class ConsoleHandler(
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None)
+  extends Handler(formatter, level) {
 
   def publish(record: javalog.LogRecord) = {
     System.err.print(getFormatter().format(record))

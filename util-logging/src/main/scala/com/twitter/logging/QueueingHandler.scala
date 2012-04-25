@@ -19,12 +19,35 @@ package com.twitter.logging
 import java.util.concurrent.{CountDownLatch, LinkedBlockingQueue}
 import java.util.{logging => javalog}
 
+object QueueingHandler {
+  /**
+   * Generates a HandlerFactory that returns a QueueingHandler
+   *
+   * @param handler
+   * Wrapped handler.
+   *
+   * @param maxQueueSize
+   * Maximum queue size.  Records are dropped when queue overflows.
+   */
+  def apply(
+    handler: HandlerFactory,
+    maxQueueSize: Int = Int.MaxValue
+  ): HandlerFactory =
+    () => new QueueingHandler(handler(), maxQueueSize)
+}
+
 /**
  * Proxy handler that queues log records and publishes them in another thread to
  * a nested handler. Useful for when a handler may block.
+ *
+ * @param handler
+ * Wrapped handler.
+ *
+ * @param maxQueueSize
+ * Maximum queue size.  Records are dropped when queue overflows.
  */
-class QueueingHandler(val handler: Handler, maxQueueSize: Int=Int.MaxValue)
-    extends Handler(handler.formatter, handler.level) {
+class QueueingHandler(val handler: Handler, maxQueueSize: Int = Int.MaxValue)
+  extends Handler(handler.formatter, handler.level) {
 
   protected val dropLogNode: String = ""
   protected val log: Logger = Logger(dropLogNode)

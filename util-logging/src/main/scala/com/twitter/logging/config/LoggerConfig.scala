@@ -21,6 +21,7 @@ import java.net.InetAddress
 import com.twitter.conversions.time._
 import com.twitter.util.{Config, Duration}
 
+@deprecated("use LoggerFactory")
 class LoggerConfig extends Config[Logger] {
   /**
    * Name of the logging node. The default ("") is the top-level logger.
@@ -53,6 +54,7 @@ class LoggerConfig extends Config[Logger] {
   }
 }
 
+@deprecated("use Formatter directly")
 class FormatterConfig extends Config[Formatter] {
   /**
    * Should dates in log messages be reported in a different time zone rather than local time?
@@ -99,10 +101,12 @@ class FormatterConfig extends Config[Formatter] {
     prefix)
 }
 
+@deprecated("use BareFormatter directly")
 object BareFormatterConfig extends FormatterConfig {
   override def apply() = BareFormatter
 }
 
+@deprecated("use SyslogFormatter directly")
 class SyslogFormatterConfig extends FormatterConfig {
   /**
    * Hostname to prepend to log lines.
@@ -130,16 +134,19 @@ class SyslogFormatterConfig extends FormatterConfig {
     timezone, truncateAt, truncateStackTracesAt)
 }
 
+@deprecated("use Formatter directly")
 trait HandlerConfig extends Config[Handler] {
   var formatter: FormatterConfig = new FormatterConfig
 
   var level: Option[Level] = None
 }
 
+@deprecated("use HandlerFactory")
 class ConsoleHandlerConfig extends HandlerConfig {
   def apply() = new ConsoleHandler(formatter(), level)
 }
 
+@deprecated("use HandlerFactory")
 class ThrottledHandlerConfig extends HandlerConfig {
   /**
    * Timespan to consider duplicates. After this amount of time, duplicate entries will be logged
@@ -160,6 +167,7 @@ class ThrottledHandlerConfig extends HandlerConfig {
   def apply() = new ThrottledHandler(handler(), duration, maxToDisplay)
 }
 
+@deprecated("use HandlerFactory")
 class QueuingHandlerConfig extends HandlerConfig {
   def apply() = new QueueingHandler(handler(), maxQueueSize)
 
@@ -174,6 +182,7 @@ class QueuingHandlerConfig extends HandlerConfig {
   var handler: HandlerConfig = null
 }
 
+@deprecated("use HandlerFactory")
 class FileHandlerConfig extends HandlerConfig {
   /**
    * Filename to log to.
@@ -198,6 +207,7 @@ class FileHandlerConfig extends HandlerConfig {
   def apply() = new FileHandler(filename, roll, append, rotateCount, formatter(), level)
 }
 
+@deprecated("use HandlerFactory")
 class SyslogHandlerConfig extends HandlerConfig {
   /**
    * Syslog server hostname.
@@ -212,6 +222,7 @@ class SyslogHandlerConfig extends HandlerConfig {
   def apply() = new SyslogHandler(server, port, formatter(), level)
 }
 
+@deprecated("use HandlerFactory")
 class ScribeHandlerConfig extends HandlerConfig {
   // send a scribe message no more frequently than this:
   var bufferTime = 100.milliseconds

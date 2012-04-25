@@ -16,13 +16,12 @@
 
 package com.twitter.logging
 
-import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress, SocketAddress}
-import java.util.{logging => javalog}
+import com.twitter.conversions.string._
+import java.net.{DatagramPacket, DatagramSocket, InetAddress, InetSocketAddress, SocketAddress}
 import java.text.SimpleDateFormat
+import java.util.{logging => javalog}
 import scala.actors._
 import scala.actors.Actor._
-import com.twitter.conversions.string._
-import config._
 
 object SyslogHandler {
   val DEFAULT_PORT = 514
@@ -68,12 +67,90 @@ object SyslogHandler {
 
   val ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
   val OLD_SYSLOG_DATE_FORMAT = new SimpleDateFormat("MMM dd HH:mm:ss")
+
+  /**
+   * Generates a HandlerFactory that returns a SyslogHandler.
+   *
+   * @param server
+   * Syslog server hostname.
+   *
+   * @param port
+   * Syslog server port.
+   */
+  def apply(
+    server: String = "localhost",
+    port: Int = SyslogHandler.DEFAULT_PORT,
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): HandlerFactory =
+    () => new SyslogHandler(server, port, formatter, level)
 }
 
-class SyslogFormatter(val hostname: String, val serverName: Option[String],
-                      val useIsoDateFormat: Boolean, val priority: Int,
-                      timezone: Option[String], truncateAt: Int, truncateStackTracesAt: Int)
-      extends Formatter(timezone, truncateAt, truncateStackTracesAt, false, "") {
+class SyslogHandler(
+    val server: String,
+    val port: Int,
+    formatter: Formatter,
+    level: Option[Level])
+  extends Handler(formatter, level) {
+
+  private val socket = new DatagramSocket
+  private[logging] val dest = new InetSocketAddress(server, port)
+
+  def flush() = { }
+  def close() = { }
+
+  def publish(record: javalog.LogRecord) = {
+    val data = formatter.format(record).getBytes
+    val packet = new DatagramPacket(data, data.length, dest)
+    SyslogFuture {
+      try {
+        socket.send(packet)
+      } catch {
+        case e =>
+          System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
+      }
+    }
+  }
+}
+
+/**
+ * @param hostname
+ * Hostname to prepend to log lines.
+ *
+ * @param serverName
+ * Optional server name to insert before log entries.
+ *
+ * @param useIsoDateFormat
+ * Use new standard ISO-format timestamps instead of old BSD-format?
+ *
+ * @param priority
+ * Priority level in syslog numbers.
+ *
+ * @param timezone
+ * Should dates in log messages be reported in a different time zone rather than local time?
+ * If set, the time zone name must be one known by the java `TimeZone` class.
+ *
+ * @param truncateAt
+ * Truncate log messages after N characters. 0 = don't truncate (the default).
+ *
+ * @param truncateStackTracesAt
+ * Truncate stack traces in exception logging (line count).
+ */
+class SyslogFormatter(
+    val hostname: String = InetAddress.getLocalHost().getHostName(),
+    val serverName: Option[String] = None,
+    val useIsoDateFormat: Boolean = true,
+    val priority: Int = SyslogHandler.PRIORITY_USER,
+    timezone: Option[String] = None,
+    truncateAt: Int = 0,
+    truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit)
+  extends Formatter(
+    timezone,
+    truncateAt,
+    truncateStackTracesAt,
+    useFullPackageNames = false,
+    prefix = "") {
+
   override def dateFormat = if (useIsoDateFormat) {
     SyslogHandler.ISO_DATE_FORMAT
   } else {
@@ -92,28 +169,6 @@ class SyslogFormatter(val hostname: String, val serverName: Option[String],
         "<%d>%s %s %s: ".format(priority | syslogLevel, date, hostname, name)
       case Some(serverName) =>
         "<%d>%s %s [%s] %s: ".format(priority | syslogLevel, date, hostname, serverName, name)
-    }
-  }
-}
-
-class SyslogHandler(val server: String, val port: Int, formatter: Formatter, level: Option[Level])
-      extends Handler(formatter, level) {
-  private val socket = new DatagramSocket
-  private[logging] val dest = new InetSocketAddress(server, port)
-
-  def flush() = { }
-  def close() = { }
-
-  def publish(record: javalog.LogRecord) = {
-    val data = formatter.format(record).getBytes
-    val packet = new DatagramPacket(data, data.length, dest)
-    SyslogFuture {
-      try {
-        socket.send(packet)
-      } catch {
-        case e =>
-          System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
-      }
     }
   }
 }

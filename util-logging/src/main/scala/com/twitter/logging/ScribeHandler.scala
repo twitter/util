@@ -17,25 +17,72 @@
 package com.twitter
 package logging
 
+import com.twitter.conversions.time._
+import com.twitter.util.{Duration, Time}
 import java.io.IOException
 import java.net._
 import java.nio.{ByteBuffer, ByteOrder}
 import java.util.{Arrays, logging => javalog}
 import scala.collection.mutable
-import com.twitter.util.{Duration, Time}
-import config._
 
 private class Retry extends Exception("retry")
 
 object ScribeHandler {
   val OK = 0
   val TRY_LATER = 1
+
+  val DefaultHostname = "localhost"
+  val DefaultPort = 1463
+  val DefaultCategory = "scala"
+  val DefaultBufferTime = 100.milliseconds
+  val DefaultConnectBackoff = 15.seconds
+  val DefaultMaxMessagesPerTransaction = 1000
+  val DefaultMaxMessagesToBuffer = 10000
+
+  /**
+   * Generates a HandlerFactory that returns a ScribeHandler
+   *
+   * @param bufferTime
+   * send a scribe message no more frequently than this:
+   *
+   * @param connectBackoff
+   * don't connect more frequently than this (when the scribe server is down):
+   */
+  def apply(
+    hostname: String = DefaultHostname,
+    port: Int = DefaultPort,
+    category: String = DefaultCategory,
+    bufferTime: Duration = DefaultBufferTime,
+    connectBackoff: Duration = DefaultConnectBackoff,
+    maxMessagesPerTransaction: Int = DefaultMaxMessagesPerTransaction,
+    maxMessagesToBuffer: Int = DefaultMaxMessagesToBuffer,
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): HandlerFactory =
+    () => new ScribeHandler(
+      hostname,
+      port,
+      category,
+      bufferTime,
+      connectBackoff,
+      maxMessagesPerTransaction,
+      maxMessagesToBuffer,
+      formatter,
+      level)
 }
 
-class ScribeHandler(hostname: String, port: Int, category: String, bufferTime: Duration,
-                    connectBackoff: Duration, maxMessagesPerTransaction: Int,
-                    maxMessagesToBuffer: Int, formatter: Formatter, level: Option[Level])
-      extends Handler(formatter, level) {
+class ScribeHandler(
+    hostname: String,
+    port: Int,
+    category: String,
+    bufferTime: Duration,
+    connectBackoff: Duration,
+    maxMessagesPerTransaction: Int,
+    maxMessagesToBuffer: Int,
+    formatter: Formatter,
+    level: Option[Level])
+  extends Handler(formatter, level) {
+
   // it may be necessary to log errors here if scribe is down:
   val loggerName = this.getClass.toString
   val log = Logger.get(loggerName)

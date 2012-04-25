@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.collection.{JavaConversions, Map}
 import scala.collection.mutable
 import scala.io.Source
-import config._
 
 // replace java's ridiculous log levels with the standard ones.
 sealed abstract class Level(val name: String, val value: Int) extends javalog.Level(name, value) {
@@ -326,8 +325,8 @@ object Logger extends Iterable[Logger] {
    */
   def iterator: Iterator[Logger] = JavaConversions.asScalaIterator(loggersCache.values.iterator)
 
-  def configure(config: List[LoggerConfig]) {
+  def configure(loggerFactories: List[() => Logger]) {
     clearHandlers()
-    config.foreach { _() }
+    loggerFactories.foreach { _() }
   }
 }

@@ -16,7 +16,6 @@
 
 package com.twitter.logging
 
-import com.twitter.logging.config._
 import com.twitter.util.{HandleSignal, StorageUnit, Time}
 import java.io.{File, FileOutputStream, OutputStream}
 import java.nio.charset.Charset
@@ -33,17 +32,48 @@ object Policy {
   case class MaxSize(size: StorageUnit) extends Policy
 }
 
-object FileHander {
+object FileHandler {
   val UTF8 = Charset.forName("UTF-8")
+
+  /**
+   * Generates a HandlerFactory that returns a FileHandler
+   *
+   * @param filename
+   * Filename to log to.
+   *
+   * @param rollPolicy
+   * When to roll the logfile.
+   *
+   * @param append
+   * Append to an existing logfile, or truncate it?
+   *
+   * @param rotateCount
+   * How many rotated logfiles to keep around, maximum. -1 means to keep them all.
+   */
+  def apply(
+    filename: String,
+    rollPolicy: Policy = Policy.Never,
+    append: Boolean = false,
+    rotateCount: Int = -1,
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): HandlerFactory =
+    () => new FileHandler(filename, rollPolicy, append, rotateCount, formatter, level)
 }
 
 /**
  * A log handler that writes log entries into a file, and rolls this file
  * at a requested interval (hourly, daily, or weekly).
  */
-class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean, rotateCount: Int,
-                  formatter: Formatter, level: Option[Level])
-      extends Handler(formatter, level) {
+class FileHandler(
+    val filename: String,
+    rollPolicy: Policy,
+    val append: Boolean,
+    rotateCount: Int,
+    formatter: Formatter,
+    level: Option[Level])
+  extends Handler(formatter, level) {
+
   // Thread-safety is guarded by synchronized on this
   private var stream: OutputStream = null
   @volatile private var openTime: Long = 0
@@ -56,7 +86,6 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
     case Policy.MaxSize(size) => Some(size)
     case _ => None
   }
-
 
   openLog()
 
