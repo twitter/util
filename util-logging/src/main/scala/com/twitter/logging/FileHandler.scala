@@ -223,7 +223,7 @@ class FileHandler(
   def publish(record: javalog.LogRecord) {
     try {
       val formattedLine = getFormatter.format(record)
-      val formattedBytes = formattedLine.getBytes(FileHander.UTF8)
+      val formattedBytes = formattedLine.getBytes(FileHandler.UTF8)
       val lineSizeBytes = formattedBytes.length
 
       if (examineRollTime) {
