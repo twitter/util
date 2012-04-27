@@ -71,6 +71,11 @@ class Project(info: ProjectInfo)
     evalProject, collectionProject, hashingProject
     )
 
+  // util-class-preloader: A javaagent for preloading class files
+  val classPreloaderProject = project(
+    "util-class-preloader", "util-class-preloader",
+    new ClassPreloaderProject(_))
+
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
     with Mockito
@@ -183,7 +188,11 @@ class Project(info: ProjectInfo)
         <exclude module="util-eval"/>
         <override org="junit" rev="4.8.1"/>
       </dependencies>
- }
+  }
+
+  class ClassPreloaderProject(info: ProjectInfo)
+    extends StandardProject(info)
+    with ProjectDefaults
 
   trait ProjectDefaults
     extends StandardProject
@@ -220,3 +229,4 @@ class Project(info: ProjectInfo)
     val hamcrest = "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
   }
 }
+
