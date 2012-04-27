@@ -87,8 +87,7 @@ object Future {
    */
   val never: Future[Nothing] = new Future[Nothing] {
     protected def respond(tracingObject: AnyRef, k: Try[Nothing] => Unit): Future[Nothing] = this
-    protected def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
-      tracingObject: AnyRef, f: Try[Nothing] => AlsoFuture[B]): Future[B] = this
+    protected def transform[B](tracingObject: AnyRef, f: Try[Nothing] => Future[B]): Future[B] = this
 
     def isDefined: Boolean = false
     def onCancellation(f: =>Unit) {}
@@ -143,7 +142,7 @@ object Future {
       }
     }
     monitor {
-      val res = f respond { r=> 
+      val res = f respond { r =>
         promiseRef.getAndSet(null) match {
           case null => ()
           case p => p() = r
@@ -387,7 +386,7 @@ abstract class FutureTransformer[-A, +B] {
  * special semantics: the cancellation signal is only guaranteed to
  * be delivered when the promise has not yet completed.
  */
-abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
+abstract class Future[+A] extends Cancellable {
   import Future.{DEFAULT_TIMEOUT, makePromise}
 
   /**
@@ -402,22 +401,39 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    *
    * @return a chained Future[A]
    */
-  def respond(k: Try[A] => Unit) = respond(k, k)
+  def respond(k: Try[A] => Unit): Future[A] = respond(k, k)
 
   protected def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A]
 
   /**
+   * Invoked regardless of whether the computation completed successfully or unsuccessfully.
+   * Implemented in terms of `respond` so that subclasses control evaluation order. Returns a
+   * chained Future.
+   */
+  def ensure(f: => Unit): Future[A] = respond { _ => f }
+
+  /**
    * Block indefinitely, wait for the result of the Future to be available.
    */
-  override def apply(): A = apply(DEFAULT_TIMEOUT)
+  def apply(): A = apply(DEFAULT_TIMEOUT)
 
   /**
    * Block, but only as long as the given Timeout.
    */
   def apply(timeout: Duration): A = get(timeout)()
 
+  /**
+   * Alias for apply().
+   */
+  def get() = apply()
+
   def isReturn = get(DEFAULT_TIMEOUT) isReturn
   def isThrow  = get(DEFAULT_TIMEOUT) isThrow
+
+  /**
+   * Returns None if this is a Throw or a Some containing the value if this is a Return.
+   */
+  def toOption = if (isReturn) Some(apply()) else None
 
   /**
    * Is the result of the Future available yet?
@@ -464,13 +480,10 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       }
     }
   }
-  
-  protected def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
-    tracingObject: AnyRef,
-    f: Try[A] => AlsoFuture[B]
-  ): Future[B]
 
-  def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: Try[A] => AlsoFuture[B]): Future[B] = transform(f, f)
+  protected def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B]
+
+  def transform[B](f: Try[A] => Future[B]): Future[B] = transform(f, f)
 
   /**
    * flatMaps propagate cancellation to the parent promise while it
@@ -478,24 +491,29 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * cancellation only affects the current parent promise that is
    * being waited on.
    */
-  def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](f: A => AlsoFuture[B]): Future[B] =
+  def flatMap[B](f: A => Future[B]): Future[B] =
     transform(f, {
       case Return(v) => f(v)
       case Throw(t) => Future.rawException(t)
     })
 
-  def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
-    rescueException: PartialFunction[Throwable, AlsoFuture[B]]
+  def rescue[B >: A](
+    rescueException: PartialFunction[Throwable, Future[B]]
   ): Future[B] = transform(rescueException, {
     case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
     case _ => this
   })
 
   /**
-   * Invoke the callback only if the Future returns successfully. Useful for Scala for comprehensions.
-   * Use onSuccess instead of this method for more readable code.
+   * Invoke the callback only if the Future returns successfully. Useful for Scala `for`
+   * comprehensions. Use `onSuccess` instead of this method for more readable code.
    */
-  override def foreach(k: A => Unit) = onSuccess(k)
+  def foreach(k: A => Unit) = onSuccess(k)
+
+  /**
+   * Alias for flatMap.
+   */
+  def andThen[B](f: A => Future[B]) = flatMap(f)
 
   def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
 
@@ -696,7 +714,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Converts a Future[Future[B]] into a Future[B]
    */
   def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
-    flatMap[B, Future] { x => x }
+    flatMap[B] { x => x }
 
   /**
    * Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
@@ -866,10 +884,7 @@ class Promise[A] private[Promise](
     }
   }
 
-  protected[this] def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
-    tracingObject: AnyRef,
-    f: Try[A] => AlsoFuture[B]
-  ): Future[B] = {
+  protected[this] def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B] = {
     val promise = new Promise[B]
 
     val k = { _: Unit => this.cancel() }
@@ -887,8 +902,8 @@ class Promise[A] private[Promise](
     promise
   }
 
-  override def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
-    rescueException: PartialFunction[Throwable, AlsoFuture[B]]
+  override def rescue[B >: A](
+    rescueException: PartialFunction[Throwable, Future[B]]
   ): Future[B] =
     transform(rescueException, {
       case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
@@ -924,10 +939,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   def cancel() {}
   def isCancelled: Boolean = false
 
-  protected def transform[B, AlsoFuture[B] >: Future[B] <: Future[B]](
-    tracingObject: AnyRef,
-    f: Try[A] => AlsoFuture[B]
-  ): Future[B] = {
+  protected def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
     respond(tracingObject, { r =>
       val result = try f(r) catch { case e => Future.exception(e) }

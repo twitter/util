@@ -52,10 +52,10 @@ class TrySpec extends SpecificationWithJUnit {
       }
 
       "when there is an exception" in {
-        Return(1).flatMap[Int, Try](_ => throw e) mustEqual Throw(e)
+        Return(1).flatMap[Int](_ => throw e) mustEqual Throw(e)
 
         val e2 = new Exception
-        Throw[Int](e).flatMap[Int, Try](_ => throw e2) mustEqual Throw(e)
+        Throw[Int](e).flatMap[Int](_ => throw e2) mustEqual Throw(e)
       }
     }
 

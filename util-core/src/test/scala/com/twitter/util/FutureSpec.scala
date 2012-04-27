@@ -424,7 +424,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f.cancel()
           inner.isCancelled must beTrue
         }
-        
+
         "doesn't leak the underlying promise after completion" in {
           val inner = new Promise[String]
           val inner1 = new Promise[String]
@@ -590,7 +590,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
 
           "when there is an exception in the passed in function" in {
             val e = new Exception
-            val f = Future(1).flatMap[Int, Future] { x =>
+            val f = Future(1).flatMap[Int] { x =>
               throw e
             }
             f() must throwA(e)
@@ -880,15 +880,26 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
 
   test("ConstFuture", new MkConst { def apply[A](r: Try[A]) = Future.const(r) })
   test("Promise", new MkConst { def apply[A](r: Try[A]) = new Promise(r) })
-  
+
   "Future.never" should {
     "must be undefined" in {
       Future.never.isDefined must beFalse
       Future.never.poll must beNone
     }
-    
+
     "always time out" in {
       Future.never.get(0.milliseconds) must throwA[TimeoutException]
     }
   }
+
+  "Java" should {
+    "work" in {
+      val test = new FutureTest()
+      test.testFutureCastMap()
+      test.testFutureCastFlatMap()
+      test.testTransformedBy()
+      true mustEqual true
+    }
+  }
 }
+
