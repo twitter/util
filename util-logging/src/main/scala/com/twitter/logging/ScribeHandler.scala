@@ -58,7 +58,7 @@ object ScribeHandler {
     maxMessagesToBuffer: Int = DefaultMaxMessagesToBuffer,
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
-  ): HandlerFactory =
+  ) =
     () => new ScribeHandler(
       hostname,
       port,

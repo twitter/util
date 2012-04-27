@@ -23,7 +23,6 @@ import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{Time, Duration}
-import config._
 
 class ScribeHandlerSpec extends SpecificationWithJUnit {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
@@ -46,16 +45,16 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
 
     "build a scribe RPC call" in {
       Time.withCurrentTimeFrozen { _ =>
-        val scribe = new ScribeHandlerConfig {
+        val scribe = ScribeHandler(
           // This is a huge hack to make sure that the buffer doesn't
           // get flushed.
-          port = portWithoutListener
-          bufferTime = 100.milliseconds
-          maxMessagesToBuffer = 10000
-          formatter = new FormatterConfig { timezone = "UTC" }
-          category = "test"
-          level = Level.DEBUG
-        }.apply()
+          port = portWithoutListener,
+          bufferTime = 100.milliseconds,
+          maxMessagesToBuffer = 10000,
+          formatter = new Formatter(timezone = Some("UTC")),
+          category = "test",
+          level = Some(Level.DEBUG)
+        ).apply()
         scribe.publish(record1)
         scribe.publish(record2)
         scribe.queue must haveSize(2)
@@ -73,16 +72,16 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
     }
 
     "be able to log binary data" in {
-      val scribe = new ScribeHandlerConfig {
+      val scribe = ScribeHandler(
         // This is a huge hack to make sure that the buffer doesn't
         // get flushed.
-        port = portWithoutListener
-        bufferTime = 100.milliseconds
-        maxMessagesToBuffer = 10000
-        formatter = new FormatterConfig { timezone = "UTC" }
-        category = "test"
-        level = Level.DEBUG
-      }.apply()
+        port = portWithoutListener,
+        bufferTime = 100.milliseconds,
+        maxMessagesToBuffer = 10000,
+        formatter = new Formatter(timezone = Some("UTC")),
+        category = "test",
+        level = Some(Level.DEBUG)
+      ).apply()
 
       val bytes = Array[Byte](1,2,3,4,5)
 
@@ -92,15 +91,15 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
     }
 
     "throw away log messages if scribe is too busy" in {
-      val scribe = new ScribeHandlerConfig {
+      val scribe = ScribeHandler(
         // This is a huge hack to make sure that the buffer doesn't
         // get flushed.
-        port = portWithoutListener
-        bufferTime = 5.seconds
-        maxMessagesToBuffer = 1
-        formatter = BareFormatterConfig
+        port = portWithoutListener,
+        bufferTime = 5.seconds,
+        maxMessagesToBuffer = 1,
+        formatter = BareFormatter,
         category = "test"
-      }.apply()
+      ).apply()
       scribe.publish(record1)
       scribe.publish(record2)
       scribe.queue.map(bytes=>new String(bytes)).toList mustEqual List("This is another message.\n")

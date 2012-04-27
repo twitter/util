@@ -24,13 +24,12 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.TempFolder
 import org.specs.SpecificationWithJUnit
-import config._
 
 class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging {
   private var myHandler: Handler = null
   private var log: Logger = null
 
-  val timeFrozenFormatter = new FormatterConfig { timezone = "UTC" }.apply()
+  val timeFrozenFormatter = new Formatter(timezone = Some("UTC"))
   val timeFrozenHandler = new StringHandler(timeFrozenFormatter, None) {
     override def publish(record: javalog.LogRecord) = {
       record.setMillis(1206769996722L)
@@ -46,7 +45,7 @@ class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging
 
   "Logger" should {
     doBefore {
-      Logger.clearHandlers
+      Logger.clearHandlers()
       timeFrozenHandler.clear()
       myHandler = new StringHandler(BareFormatter, None)
       log = Logger.get("")
@@ -140,21 +139,21 @@ class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging
 
       "file handler" in {
         withTempFolder {
-          val log = new LoggerConfig {
-            node = "com.twitter"
-            level = Level.DEBUG
-            handlers = new FileHandlerConfig {
-              filename = folderName + "/test.log"
-              roll = Policy.Never
-              append = false
-              level = Level.INFO
-              formatter = new FormatterConfig {
-                useFullPackageNames = true
-                truncateAt = 1024
+          val log: Logger = LoggerFactory(
+            node = "com.twitter",
+            level = Some(Level.DEBUG),
+            handlers = FileHandler(
+              filename = folderName + "/test.log",
+              rollPolicy = Policy.Never,
+              append = false,
+              level = Some(Level.INFO),
+              formatter = new Formatter(
+                useFullPackageNames = true,
+                truncateAt = 1024,
                 prefix = "%s <HH:mm> %s"
-              }
-            } :: Nil
-          }.apply()
+              )
+            ) :: Nil
+          ).apply()
 
           log.getLevel mustEqual Level.DEBUG
           log.getHandlers().length mustEqual 1
@@ -172,17 +171,17 @@ class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging
 
       "syslog handler" in {
         withTempFolder {
-          val log = new LoggerConfig {
-            node = "com.twitter"
-            handlers = new SyslogHandlerConfig {
-              formatter = new SyslogFormatterConfig {
-                serverName = "elmo"
+          val log: Logger = LoggerFactory(
+            node = "com.twitter",
+            handlers = SyslogHandler(
+              formatter = new SyslogFormatter(
+                serverName = Some("elmo"),
                 priority = 128
-              }
-              server = "example.com"
+              ),
+              server = "example.com",
               port = 212
-            } :: Nil
-          }.apply()
+            ) :: Nil
+          ).apply()
 
           log.getHandlers.length mustEqual 1
           val h = log.getHandlers()(0).asInstanceOf[SyslogHandler]
@@ -196,43 +195,43 @@ class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging
 
       "complex config" in {
         withTempFolder {
-          val config = new LoggerConfig {
-            level = Level.INFO
-            handlers = new ThrottledHandlerConfig {
-              duration = 60.seconds
-              maxToDisplay = 10
-              handler = new FileHandlerConfig {
-                filename = folderName + "/production.log"
-                roll = Policy.SigHup
-                formatter = new FormatterConfig {
+          val factories = LoggerFactory(
+            level = Some(Level.INFO),
+            handlers = ThrottledHandler(
+              duration = 60.seconds,
+              maxToDisplay = 10,
+              handler = FileHandler(
+                filename = folderName + "/production.log",
+                rollPolicy = Policy.SigHup,
+                formatter = new Formatter(
                   truncateStackTracesAt = 100
-                }
-              }
-            }
-          } :: new LoggerConfig {
-            node = "w3c"
-            level = Level.OFF
+                )
+              )
+            ) :: Nil
+          ) :: LoggerFactory(
+            node = "w3c",
+            level = Some(Level.OFF),
             useParents = false
-          } :: new LoggerConfig {
-            node = "stats"
-            level = Level.INFO
-            useParents = false
-            handlers = new ScribeHandlerConfig {
-              formatter = BareFormatterConfig
-              maxMessagesToBuffer = 100
+          ) :: LoggerFactory(
+            node = "stats",
+            level = Some(Level.INFO),
+            useParents = false,
+            handlers = ScribeHandler(
+              formatter = BareFormatter,
+              maxMessagesToBuffer = 100,
               category = "cuckoo_json"
-            }
-          } :: new LoggerConfig {
-            node = "bad_jobs"
-            level = Level.INFO
-            useParents = false
-            handlers = new FileHandlerConfig {
-              filename = folderName + "/bad_jobs.log"
-              roll = Policy.Never
-            }
-          } :: Nil
+            ) :: Nil
+          ) :: LoggerFactory(
+            node = "bad_jobs",
+            level = Some(Level.INFO),
+            useParents = false,
+            handlers = FileHandler(
+              filename = folderName + "/bad_jobs.log",
+              rollPolicy = Policy.Never
+            ) :: Nil
+          ) :: Nil
 
-          Logger.configure(config)
+          Logger.configure(factories)
           Logger.get("").getLevel mustEqual Level.INFO
           Logger.get("w3c").getLevel mustEqual Level.OFF
           Logger.get("stats").getLevel mustEqual Level.INFO

@@ -19,26 +19,28 @@ package com.twitter.logging
 import java.util.{logging => javalog}
 import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.string._
-import config._
 
 class FormatterSpec extends SpecificationWithJUnit {
   val basicFormatter = new Formatter
 
-  val utcConfig = new FormatterConfig {
-    timezone = "UTC"
-  }
-  val fullPackageConfig = new FormatterConfig {
-    timezone = "UTC"
+  val utcFormatter = new Formatter(
+    timezone = Some("UTC")
+  )
+
+  val fullPackageFormatter = new Formatter(
+    timezone = Some("UTC"),
     useFullPackageNames = true
-  }
-  val prefixConfig = new FormatterConfig {
-    timezone = "UTC"
+  )
+
+  val prefixFormatter = new Formatter(
+    timezone = Some("UTC"),
     prefix = "%2$s <HH:mm> %1$.4s "
-  }
-  val truncateConfig = new FormatterConfig {
-    timezone = "UTC"
+  )
+
+  val truncateFormatter = new Formatter(
+    timezone = Some("UTC"),
     truncateAt = 30
-  }
+  )
 
   val record1 = new javalog.LogRecord(Level.ERROR, "boo.")
   record1.setLoggerName("com.example.jobs.BadJob")
@@ -71,8 +73,7 @@ class FormatterSpec extends SpecificationWithJUnit {
     }
 
     "format a timestamp" in {
-      val formatter = utcConfig()
-      formatter.format(record1) mustEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
+      utcFormatter.format(record1) mustEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
     }
 
     "do lazy message evaluation" in {
@@ -92,17 +93,17 @@ class FormatterSpec extends SpecificationWithJUnit {
     }
 
     "format package names" in {
-      utcConfig().format(record1) mustEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
-      fullPackageConfig().format(record1) mustEqual
+      utcFormatter.format(record1) mustEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
+      fullPackageFormatter.format(record1) mustEqual
         "ERR [20080329-05:53:16.722] com.example.jobs: boo.\n"
     }
 
     "handle other prefixes" in {
-      prefixConfig().format(record2) mustEqual "jobs 05:53 DEBU useless info.\n"
+      prefixFormatter.format(record2) mustEqual "jobs 05:53 DEBU useless info.\n"
     }
 
     "truncate line" in {
-      truncateConfig().format(record3) mustEqual
+      truncateFormatter.format(record3) mustEqual
         "CRI [20080329-05:53:16.722] whiskey: Something terrible happened th...\n"
     }
 

@@ -40,8 +40,7 @@ object StringHandler {
   def apply(
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
-  ): HandlerFactory =
-    () => new StringHandler(formatter, level)
+  ) = () => new StringHandler(formatter, level)
 }
 
 /**
@@ -76,8 +75,7 @@ object ConsoleHandler {
   def apply(
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
-  ): HandlerFactory =
-    () => new ConsoleHandler(formatter, level)
+  ) = () => new ConsoleHandler(formatter, level)
 }
 
 /**
