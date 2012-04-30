@@ -39,8 +39,7 @@ object ThrottledHandler {
     handler: HandlerFactory,
     duration: Duration = 0.seconds,
     maxToDisplay: Int = Int.MaxValue
-  ): HandlerFactory =
-    () => new ThrottledHandler(handler(), duration, maxToDisplay)
+  ) = () => new ThrottledHandler(handler(), duration, maxToDisplay)
 }
 
 /**

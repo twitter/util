@@ -24,20 +24,8 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
 import org.specs.SpecificationWithJUnit
-import config._
 
 class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
-  def config(_filename: String, _policy: Policy, _append: Boolean, _rotateCount: Int,
-             _formatter: FormatterConfig): FileHandlerConfig = {
-    new FileHandlerConfig {
-      filename = folderName + "/" + _filename
-      formatter = _formatter
-      roll = _policy
-      append = _append
-      rotateCount = _rotateCount
-    }
-  }
-
   def reader(filename: String) = {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))
   }
@@ -56,7 +44,13 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         f.write("hello!\n")
         f.close
 
-        val handler = config("test.log", Policy.Hourly, true, -1, BareFormatterConfig)()
+        val handler = FileHandler(
+          filename = folderName + "/test.log",
+          rollPolicy = Policy.Hourly,
+          append = true,
+          formatter = BareFormatter
+        ).apply()
+
         handler.publish(record1)
 
         val f2 = reader("test.log")
@@ -68,7 +62,13 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         f.write("hello!\n")
         f.close
 
-        val handler = config("test.log", Policy.Hourly, false, -1, BareFormatterConfig)()
+        val handler = FileHandler(
+          filename = folderName + "/test.log",
+          rollPolicy = Policy.Hourly,
+          append = false,
+          formatter = BareFormatter
+        ).apply()
+
         handler.publish(record1)
 
         val f2 = reader("test.log")
@@ -83,7 +83,12 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         val raiseMethod = signalClass.getMethod("raise", signalClass)
 
         withTempFolder {
-          val handler = config("new.log", Policy.SigHup, true, -1, BareFormatterConfig)()
+          val handler = FileHandler(
+            filename = folderName + "/new.log",
+            rollPolicy = Policy.SigHup,
+            append = true,
+            formatter = BareFormatter
+          ).apply()
 
           val logFile = new File(folderName, "new.log")
           logFile.renameTo(new File(folderName, "old.log"))
@@ -109,7 +114,12 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
     "roll logs on time" in {
       "hourly" in {
         withTempFolder {
-          val handler = config("test.log", Policy.Hourly, true, -1, BareFormatterConfig)()
+          val handler = FileHandler(
+            filename = folderName + "/test.log",
+            rollPolicy = Policy.Hourly,
+            append = true,
+            formatter = BareFormatter
+          ).apply()
           handler.computeNextRollTime(1206769996722L) mustEqual Some(1206770400000L)
           handler.computeNextRollTime(1206770400000L) mustEqual Some(1206774000000L)
           handler.computeNextRollTime(1206774000001L) mustEqual Some(1206777600000L)
@@ -118,8 +128,12 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
 
       "weekly" in {
         withTempFolder {
-          val formatter = new FormatterConfig { timezone = "GMT-7:00" }
-          val handler = config("test.log", Policy.Weekly(Calendar.SUNDAY), true, -1, formatter)()
+          val handler = FileHandler(
+            filename = folderName + "/test.log",
+            rollPolicy = Policy.Weekly(Calendar.SUNDAY),
+            append = true,
+            formatter = new Formatter(timezone = Some("GMT-7:00"))
+          ).apply()
           handler.computeNextRollTime(1250354734000L) mustEqual Some(1250406000000L)
           handler.computeNextRollTime(1250404734000L) mustEqual Some(1250406000000L)
           handler.computeNextRollTime(1250406001000L) mustEqual Some(1251010800000L)
@@ -152,7 +166,14 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
       withTempFolder {
         new File(folderName).list().length mustEqual 0
 
-        val handler = config("test.log", Policy.Hourly, true, 2, BareFormatterConfig)()
+        val handler = FileHandler(
+          filename = folderName + "/test.log",
+          rollPolicy = Policy.Hourly,
+          append = true,
+          rotateCount = 2,
+          formatter = BareFormatter
+        ).apply()
+
         handler.publish(record1)
         new File(folderName).list().length mustEqual 1
         handler.roll()
@@ -174,7 +195,12 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
 
         new File(folderName).list().length mustEqual 0
 
-        val handler = config("test.log", Policy.MaxSize(maxSize.bytes), true, -1, BareFormatterConfig)()
+        val handler = FileHandler(
+          filename = folderName + "/test.log",
+          rollPolicy = Policy.MaxSize(maxSize.bytes),
+          append = true,
+          formatter = BareFormatter
+        ).apply()
 
         // move time forward so the rotated logfiles will have distinct names.
         Time.withCurrentTimeFrozen { time =>
