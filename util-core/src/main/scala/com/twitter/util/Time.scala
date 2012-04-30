@@ -307,8 +307,11 @@ object Duration {
 
   def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
 
-  def apply(value: Long, unit: TimeUnit): Duration = {
-    val factor = unit match {
+  /**
+   * Returns the scaling factor for going from nanoseconds to the given TimeUnit.
+   */
+  private def nanosecondsPerUnit(unit: TimeUnit): Long = {
+    unit match {
       case TimeUnit.DAYS         => NanosPerDay
       case TimeUnit.HOURS        => NanosPerHour
       case TimeUnit.MINUTES      => NanosPerMinute
@@ -317,6 +320,10 @@ object Duration {
       case TimeUnit.MICROSECONDS => NanosPerMicrosecond
       case TimeUnit.NANOSECONDS  => 1L
     }
+  }
+
+  def apply(value: Long, unit: TimeUnit): Duration = {
+    val factor = nanosecondsPerUnit(unit)
     new Duration(TimeMath.mul(value, factor))
   }
 
@@ -354,6 +361,16 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
   import Duration._
 
   def inNanoseconds = nanos
+
+  /**
+   * Returns the length of the duration in the given TimeUnit.
+   *
+   * In general, a simpler approach is to use the named methods (eg. inSeconds)
+   * However, this is useful for more programmatic call sites.
+   */
+  def inUnit(unit: TimeUnit): Long = {
+    TimeMath.div(inNanoseconds, nanosecondsPerUnit(unit))
+  }
 
   def build(nanos: Long) = new Duration(nanos)
 

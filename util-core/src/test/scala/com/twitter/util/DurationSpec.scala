@@ -106,6 +106,14 @@ class DurationSpec extends SpecificationWithJUnit {
       23.seconds.inTimeUnit mustEqual ((23, TimeUnit.SECONDS))
     }
 
+    "inUnit" in {
+      23.seconds.inUnit(TimeUnit.SECONDS) mustEqual(23L)
+      23.seconds.inUnit(TimeUnit.MILLISECONDS) mustEqual(23000L)
+      2301.millis.inUnit(TimeUnit.SECONDS) mustEqual(2L)
+      2301.millis.inUnit(TimeUnit.MICROSECONDS) mustEqual(2301000L)
+      4680.nanoseconds.inUnit(TimeUnit.MICROSECONDS) mustEqual(4L)
+    }
+
     "time milliseconds" in {
       val (rv, duration) = Duration.inMilliseconds {
         Thread.sleep(10)
