@@ -431,11 +431,6 @@ abstract class Future[+A] extends Cancellable {
   def isThrow  = get(DEFAULT_TIMEOUT) isThrow
 
   /**
-   * Returns None if this is a Throw or a Some containing the value if this is a Return.
-   */
-  def toOption = if (isReturn) Some(apply()) else None
-
-  /**
    * Is the result of the Future available yet?
    */
   def isDefined: Boolean
@@ -509,11 +504,6 @@ abstract class Future[+A] extends Cancellable {
    * comprehensions. Use `onSuccess` instead of this method for more readable code.
    */
   def foreach(k: A => Unit) = onSuccess(k)
-
-  /**
-   * Alias for flatMap.
-   */
-  def andThen[B](f: A => Future[B]) = flatMap(f)
 
   def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
 
