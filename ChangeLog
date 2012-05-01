@@ -1,7 +1,19 @@
-3.0.?
+3.0.1
 
-  * ScheduledThreadPoolExecutor: constructor has new makeDaemons
-     parameter (default is still false)
+  * added AsyncQueue
+  * config:validate optional subconfigs
+  * util-zk: allow multiple session event listeners, fix AsyncCallbackPromise
+  exception handling, misc fixes
+  * offer: deprecate apply()
+  * propagate cancellation exception when Timer.doAt future is cancelled
+  * KetamaDistributor optionally preserves a floating point truncation
+  * Timer uses daemon thread by default
+  * Future.monitor: release reference to promise when it's satisfied
+  * Future: misc Java commpatibility fixes
+  * Eval.scala: Allow @deprecated
+  * util-logging: Add LoggerFactory
+  * Util: Add util-class-preloader (classfile preloading), util-jvm
+  (access to performance counters)
 
 3.0.0  2012-03-14
 
