@@ -32,6 +32,9 @@ trait ZNode {
    * Helpers
    */
 
+  /** Return the ZkClient associated with this node. */
+  def client = zkClient
+
   /** Get a child node. */
   def apply(child: String): ZNode = ZNode(zkClient, childPath(child))
 
@@ -78,7 +81,7 @@ trait ZNode {
     zkClient.retrying { zk =>
       val result = new StringCallbackPromise
       zk.create(path, data, acls.asJava, mode, result, null)
-      result map { _ => this }
+      result map { newPath => zkClient(newPath) }
     }
   }
 
