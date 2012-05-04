@@ -226,32 +226,32 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-collection</artifactId>
-      <version>3.0.1-SNAPSHOT</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core</artifactId>
-      <version>3.0.1-SNAPSHOT</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-eval</artifactId>
-      <version>3.0.1-SNAPSHOT</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-hashing</artifactId>
-      <version>3.0.1-SNAPSHOT</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-logging</artifactId>
-      <version>3.0.1-SNAPSHOT</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-zk</artifactId>
-      <version>3.0.1-SNAPSHOT</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
