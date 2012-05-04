@@ -30,11 +30,8 @@ trait ZkClient {
   /** Get a connected ZooKeeper handle */
   def apply(): Future[ZooKeeper] = connector()
 
-  @deprecated("use monitorSession() instead")
-  def sessionEvents: Offer[WatchedEvent] = monitorSession()
-
-  /** Obtain an Offer that synchronizes with session events. */
-  def monitorSession(): Offer[WatchedEvent] = connector.events
+  /** Attach a listener to receive session events */
+  def onSessionEvent(f: PartialFunction[WatchedEvent, Unit]) = connector.onSessionEvent(f)
 
   /** Release the connection */
   def release(): Future[Unit] = connector.release()
