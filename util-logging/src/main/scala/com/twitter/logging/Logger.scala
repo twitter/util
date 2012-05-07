@@ -98,7 +98,7 @@ class Logger private(val name: String, private val wrapped: javalog.Logger) {
   final def log(level: Level, thrown: Throwable, message: String, items: Any*) {
     val myLevel = getLevel
     if ((myLevel eq null) || (level.intValue >= myLevel.intValue)) {
-      val record = new javalog.LogRecord(level, message)
+      val record = new LogRecord(level, message)
       if (items.size > 0) {
         record.setParameters(items.toArray[Any].asInstanceOf[Array[AnyRef]])
       }

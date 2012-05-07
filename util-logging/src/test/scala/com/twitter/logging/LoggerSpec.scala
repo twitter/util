@@ -244,5 +244,34 @@ class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging
         }
       }
     }
+
+    "java logging" in {
+      val logger = javalog.Logger.getLogger("")
+
+      doBefore {
+        traceLogger(Level.INFO)
+      }
+
+      "single arg calls" in {
+        logger.log(javalog.Level.INFO, "V1={0}", "A")
+        mustLog("V1=A")
+      }
+
+      "varargs calls" in {
+        logger.log(javalog.Level.INFO, "V1={0}, V2={1}", Array[AnyRef]("A", "B"))
+        mustLog("V1=A, V2=B")
+      }
+
+      "invalid message format" in {
+        logger.log(javalog.Level.INFO, "V1=%s", "A")
+        mustLog("V1=%s") // %s notation is not known in java MessageFormat
+      }
+
+      // logging in scala uses the %s format and not the Java MessageFormat
+      "compare scala logging format" in {
+        Logger.get("").info("V1{0}=%s","A")
+        mustLog("V1{0}=A")
+      }
+    }
   }
 }

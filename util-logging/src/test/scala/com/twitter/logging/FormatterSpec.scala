@@ -66,7 +66,7 @@ class FormatterSpec extends SpecificationWithJUnit {
     }
 
     "format text" in {
-      val record = new javalog.LogRecord(Level.ERROR, "error %s")
+      val record = new LogRecord(Level.ERROR, "error %s")
       basicFormatter.formatText(record) mustEqual "error %s"
       record.setParameters(Array("123"))
       basicFormatter.formatText(record) mustEqual "error 123"
