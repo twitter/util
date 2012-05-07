@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Twitter, Inc.
+ * Copyright 2012 Twitter, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -18,17 +18,11 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 
-class LazyLogRecord(level: javalog.Level, messageGenerator: => AnyRef) extends LogRecord(level, "") {
-  // for each logged line, generate this string only once, regardless of how many handlers there are:
-  var cached: Option[AnyRef] = None
-
-  def generate = {
-    cached match {
-      case Some(value) =>
-        value
-      case None =>
-        cached = Some(messageGenerator)
-        cached.get
-    }
-  }
-}
+/**
+ * Wrapper around {@link java.util.logging.LogRecord}.
+ *
+ * The only difference is around log time where messages by Java are formatted using
+ * {@link java.text.MessageFormat}, whereas this class formats using a regular
+ * {@link java.text.StringFormat}.
+ */
+class LogRecord(level: javalog.Level, msg: String) extends javalog.LogRecord(level, msg)

@@ -17,7 +17,7 @@
 package com.twitter.logging
 
 import com.twitter.conversions.string._
-import java.text.SimpleDateFormat
+import java.text.{MessageFormat, SimpleDateFormat}
 import java.util.regex.Pattern
 import java.util.{Date, GregorianCalendar, TimeZone, logging => javalog}
 import scala.collection.mutable
@@ -141,17 +141,20 @@ class Formatter(
    */
   def formatText(record: javalog.LogRecord): String = {
     record match {
-      case null =>
-        ""
-      case r: LazyLogRecord =>
-        r.generate.toString
-      case r: javalog.LogRecord =>
+      case null => ""
+      case r: LazyLogRecord => r.generate.toString
+      case r: LogRecord => {
         r.getParameters match {
-          case null =>
-            r.getMessage
-          case formatArgs =>
-            String.format(r.getMessage, formatArgs: _*)
+          case null => r.getMessage
+          case formatArgs => String.format(r.getMessage, formatArgs: _*)
         }
+      }
+      case r: javalog.LogRecord => {
+        r.getParameters match {
+          case null => r.getMessage
+          case formatArgs => MessageFormat.format(r.getMessage, formatArgs: _*)
+        }
+      }
     }
   }
 
