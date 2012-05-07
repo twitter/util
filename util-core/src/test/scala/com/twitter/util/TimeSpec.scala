@@ -181,11 +181,11 @@ class TimeSpec extends SpecificationWithJUnit {
     val random = new Random
     val maxSqrt = 3037000499L
 
-    def randLong = {
+    def randLong() = {
       if (random.nextInt > 0)
-        random.nextLong % maxSqrt
+        random.nextLong() % maxSqrt
       else
-        random.nextLong
+        random.nextLong()
     }
 
     "add" in {
@@ -198,8 +198,13 @@ class TimeSpec extends SpecificationWithJUnit {
       }
 
       for (i <- 0 until 1000) {
-        test(randLong, randLong)
+        test(randLong(), randLong())
       }
+    }
+    
+    "add MaxValues" in {
+      TimeMath.add(Long.MaxValue, randLong()) must be_==(Long.MaxValue)
+      TimeMath.add(randLong(), Long.MaxValue) must be_==(Long.MaxValue)
     }
 
     "sub" in {
@@ -212,8 +217,12 @@ class TimeSpec extends SpecificationWithJUnit {
       }
 
       for (i <- 0 until 1000) {
-        test(randLong, randLong)
+        test(randLong(), randLong())
       }
+    }
+    
+    "sub MaxValues" in {
+      TimeMath.sub(Long.MaxValue, randLong()) must be_==(Long.MaxValue)
     }
 
     "mul" in {
@@ -250,8 +259,8 @@ class TimeSpec extends SpecificationWithJUnit {
       }
 
       for (i <- 0 until 1000) {
-        val a = randLong
-        val b = randLong
+        val a = randLong()
+        val b = randLong()
         try {
           test(a, b)
         } catch {

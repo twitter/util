@@ -417,23 +417,32 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
 }
 
 /**
- * Checks for overflow
+ * Checks for overflow, and maintains sentinel (MaxValue)
+ * times.
  */
 object TimeMath {
   def add(a: Long, b: Long) = {
-    val c = a + b
-    if (((a ^ c) & (b ^ c)) < 0)
-      throw new TimeOverflowException(a + " + " + b)
-    else
-      c
+    if (a == Long.MaxValue || b == Long.MaxValue)
+      Long.MaxValue
+    else {
+      val c = a + b
+      if (((a ^ c) & (b ^ c)) < 0)
+        throw new TimeOverflowException(a + " + " + b)
+      else
+        c
+    }
   }
 
   def sub(a: Long, b: Long) = {
-    val c = a - b
-    if (((a ^ c) & (-b ^ c)) < 0)
-      throw new TimeOverflowException(a + " - " + b)
-    else
-      c
+    if (a == Long.MaxValue)
+      Long.MaxValue
+    else {
+      val c = a - b
+      if (((a ^ c) & (-b ^ c)) < 0)
+        throw new TimeOverflowException(a + " - " + b)
+      else
+        c
+    }
   }
 
   def mul(a: Long, b: Long): Long = {
