@@ -20,7 +20,7 @@ import com.twitter.io.StreamIO
 import com.twitter.conversions.string._
 import java.io._
 import java.math.BigInteger
-import java.net.{URLClassLoader, URLDecoder}
+import java.net.URLClassLoader
 import java.security.MessageDigest
 import java.util.Random
 import java.util.jar.JarFile
@@ -309,7 +309,7 @@ class Eval(target: Option[File]) {
    * This is probably fragile.
    */
   lazy val impliedClassPath: List[String] = {
-    val currentClassPath = this.getClass.getClassLoader.asInstanceOf[java.net.URLClassLoader].getURLs.
+    val currentClassPath = this.getClass.getClassLoader.asInstanceOf[URLClassLoader].getURLs.
       filter(_.getProtocol == "file").map(u => new File(u.toURI).getPath).toList
 
     // if there's just one thing in the classpath, and it's a jar, assume an executable jar.
