@@ -17,7 +17,7 @@ abstract class ExceptionalFunction0[R] extends Function0[R] {
  * can now take a Function[A, B]. Because Function1 is a trait, it is very difficult
  * to instantiate directly in Java.
  */
-abstract class Function[-T1, R] extends PartialFunction[T1, R] {
+abstract class Function[-T1, +R] extends PartialFunction[T1, R] {
   /**
    * These overrides do nothing but delegate to super. They are necessary for Java
    * compatibility.
