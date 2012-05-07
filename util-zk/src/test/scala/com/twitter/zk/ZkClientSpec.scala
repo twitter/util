@@ -38,8 +38,8 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         equal(data), equal(acls.asJava),
         equal(mode), cb.capture(4),
         equal(null)) willReturn cb.map { cb =>
-      wait onSuccess { _ =>
-        cb.processResult(0, path, null, wait.get())
+      wait onSuccess { newPath =>
+        cb.processResult(0, path, null, newPath)
       } onFailure { case ke: KeeperException =>
         cb.processResult(ke.code.intValue, path, null, null)
       }
