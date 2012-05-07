@@ -32,14 +32,14 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
              data: Array[Byte] = "".getBytes,
              acls: Seq[ACL] = zkClient.acl,
              mode: CreateMode = zkClient.mode)
-            (wait: => Future[Unit]) {
+            (wait: => Future[String]) {
     val cb = capturingParam[AsyncCallback.StringCallback]
     one(zk).create(equal(path),
         equal(data), equal(acls.asJava),
         equal(mode), cb.capture(4),
         equal(null)) willReturn cb.map { cb =>
-      wait onSuccess { _ =>
-        cb.processResult(0, path, null, path)
+      wait onSuccess { newPath =>
+        cb.processResult(0, path, null, newPath)
       } onFailure { case ke: KeeperException =>
         cb.processResult(ke.code.intValue, path, null, null)
       }
@@ -280,10 +280,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
     "create" in {
       val path = "/root/path/to/a/node"
+
       "ok" in {
         val data = "blah".getBytes
         expect {
-          create(path, data)(Future.Done)
+          create(path, data)(Future(path))
         }
         zkClient(path).create(data).apply() must beLike { case ZNode(p) => p == path }
       }
@@ -298,6 +299,17 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         } handle { case e: KeeperException.NodeExistsException =>
           e.getPath mustEqual path
         } apply()
+      }
+
+      "new name" in {
+        val data = null
+
+        expect {
+          create(path, data, mode = CreateMode.EPHEMERAL_SEQUENTIAL)(Future(path + "0000"))
+        }
+
+        val newPath = zkClient(path).create(data, mode = CreateMode.EPHEMERAL_SEQUENTIAL).apply()
+        newPath.name mustEqual "node0000"
       }
     }
 

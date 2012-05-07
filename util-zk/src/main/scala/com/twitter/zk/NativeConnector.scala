@@ -24,7 +24,7 @@ trait NativeConnector extends Connector with Serialized {
   } flatMap { _.apply() }
 
   protected[this] def mkConnection = {
-    new NativeConnector.Connection(connectString, connectTimeout, sessionTimeout, sessionBroker)
+    new NativeConnector.Connection(connectString, connectTimeout, sessionTimeout, sessionBroker, this)
   }
 
   def release() = serialized {
@@ -56,12 +56,12 @@ object NativeConnector {
    * Once a connection is released, it may not be re-opened.
    */
   class Connection(
-      connectString: String,
-      connectTimeout: Option[Duration],
-      sessionTimeout: Duration,
-      sessionBroker: EventBroker)
-      (implicit timer: Timer)
-  extends Serialized {
+    connectString: String,
+    connectTimeout: Option[Duration],
+    sessionTimeout: Duration,
+    sessionBroker: EventBroker,
+    connector: Connector
+  )(implicit timer: Timer) extends Serialized {
     @volatile protected[this] var zookeeper: ZooKeeper = null
 
     protected[this] val _connected = new Promise[ZooKeeper]
@@ -75,10 +75,7 @@ object NativeConnector {
     val released: Future[Unit] = _released
 
     /** Watch session events for a connection event. */
-    sessionBroker.recv.foreach {
-      case StateEvent.Connected() => _connected.setValue(zookeeper)
-      case e =>
-    }
+    connector.onSessionEvent { case StateEvent.Connected() => _connected.setValue(zookeeper) }
 
     /** Obtain a ZooKeeper connection */
     def apply(): Future[ZooKeeper] = serialized {

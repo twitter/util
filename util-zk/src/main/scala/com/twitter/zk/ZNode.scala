@@ -32,6 +32,9 @@ trait ZNode {
    * Helpers
    */
 
+  /** Return the ZkClient associated with this node. */
+  def client = zkClient
+
   /** Get a child node. */
   def apply(child: String): ZNode = ZNode(zkClient, childPath(child))
 
@@ -78,7 +81,7 @@ trait ZNode {
     zkClient.retrying { zk =>
       val result = new StringCallbackPromise
       zk.create(path, data, acls.asJava, mode, result, null)
-      result map { _ => this }
+      result map { newPath => zkClient(newPath) }
     }
   }
 
@@ -104,11 +107,11 @@ trait ZNode {
   }
 
   /** Provides access to this node's children. */
-  val getChildren: ZOp[ZNode.Children] =  new ZOp[ZNode.Children] {
+  val getChildren: ZOp[ZNode.Children] = new ZOp[ZNode.Children] {
     import LiftableFuture._
 
     /** Get this ZNode with its metadata and children */
-    def apply() = zkClient.retrying { zk =>
+    def apply(): Future[ZNode.Children] = zkClient.retrying { zk =>
       val result = new ChildrenCallbackPromise(ZNode.this)
       zk.getChildren(path, false, result, null)
       result
@@ -136,7 +139,7 @@ trait ZNode {
     import LiftableFuture._
 
     /** Get this node's data */
-    def apply() = zkClient.retrying { zk =>
+    def apply(): Future[ZNode.Data] = zkClient.retrying { zk =>
       val result = new DataCallbackPromise(ZNode.this)
       zk.getData(path, false, result, null)
       result
@@ -302,7 +305,6 @@ object ZNode {
       case Children(p, s, c) => (p == path && s == stat && c == children)
       case o => super.equals(o)
     }
-
   }
 
   object Children {

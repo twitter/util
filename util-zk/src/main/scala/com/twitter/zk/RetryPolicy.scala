@@ -1,7 +1,7 @@
 package com.twitter.zk
 
 import com.twitter.conversions.time._
-import com.twitter.util.{Duration, Timer, Future}
+import com.twitter.util.{Duration, Future, Timer}
 import org.apache.zookeeper.KeeperException
 
 /** Pluggable retry strategy. */
@@ -34,19 +34,24 @@ object RetryPolicy {
   }
 
   /**
-   *  Retries an operation indefinitely until success with a delay that increases exponentially
+   *  Retries an operation indefinitely until success, with a delay that increases exponentially.
    *
    *  @param base   initial value that is multiplied by factor every time; must be > 0
    *  @param factor must be >= 1 so the retries do not become more aggressive
    */
-  case class Exponential(base: Duration, factor: Double)(implicit timer: Timer) extends RetryPolicy {
+  case class Exponential(
+    base: Duration,
+    factor: Double = 2.0,
+    maximum: Duration = 30.seconds
+  )(implicit timer: Timer) extends RetryPolicy {
     require(base > 0)
     require(factor >= 1)
+
     def apply[T](op: => Future[T]): Future[T] = {
       def retry(delay: Duration): Future[T] = {
         op rescue { case KeeperConnectionException(_) =>
           timer.doLater(delay) {
-            retry((delay.inNanoseconds * factor).toLong.nanoseconds)
+            retry((delay.inNanoseconds * factor).toLong.nanoseconds min maximum)
           }.flatten
         }
       }
