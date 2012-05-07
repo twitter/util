@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import com.twitter.concurrent.{Offer, IVar, Tx}
-import com.twitter.conversions.time._
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference, AtomicReferenceArray}
 import java.util.concurrent.{
   CancellationException, Future => JavaFuture, TimeUnit}
@@ -481,10 +480,13 @@ abstract class Future[+A] extends Cancellable {
   def transform[B](f: Try[A] => Future[B]): Future[B] = transform(f, f)
 
   /**
-   * flatMaps propagate cancellation to the parent promise while it
-   * remains waiting.  This means that in a chain of flatMaps,
-   * cancellation only affects the current parent promise that is
-   * being waited on.
+   * If this, the original future, succeeds, run f on the result.
+   *
+   * The returned result is a Future that is satisfied when the original future
+   * and the callback, f, are done.
+   * If the original future fails, this one will also fail, without executing f.
+   *
+   * @see map()
    */
   def flatMap[B](f: A => Future[B]): Future[B] =
     transform(f, {
@@ -505,6 +507,15 @@ abstract class Future[+A] extends Cancellable {
    */
   def foreach(k: A => Unit) = onSuccess(k)
 
+  /**
+   * If this, the original future, succeeds, run f on the result.
+   *
+   * The returned result is a Future that is satisfied when the original future
+   * and the callback, f, are done.
+   * If the original future fails, this one will also fail, without executing f.
+   *
+   * @see flatMap()
+   */
   def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
 
   def filter(p: A => Boolean): Future[A] = transform { x: Try[A] => Future.const(x.filter(p)) }
@@ -739,7 +750,6 @@ class Promise[A] private[Promise](
   private[Promise] final val cancelled: IVar[Unit])
   extends Future[A]
 {
-  import Future.makePromise
   import Promise._
 
   @volatile private[this] var chained: Future[A] = null
@@ -756,7 +766,7 @@ class Promise[A] private[Promise](
   }
 
   def isCancelled = cancelled.isDefined
-  def cancel() = cancelled.set(())
+  def cancel() { cancelled.set(()) }
   def linkTo(other: Cancellable) {
     cancelled.get {
       case () => other.cancel()
@@ -808,14 +818,14 @@ class Promise[A] private[Promise](
    *
    * @throws ImmutableResult if the Promise is already populated
    */
-  def setValue(result: A) = update(Return(result))
+  def setValue(result: A) { update(Return(result)) }
 
   /**
    * Populate the Promise with the given exception.
    *
    * @throws ImmutableResult if the Promise is already populated
    */
-  def setException(throwable: Throwable) = update(Throw(throwable))
+  def setException(throwable: Throwable) { update(Throw(throwable)) }
 
   /**
    * Populate the Promise with the given Try. The try can either be a
