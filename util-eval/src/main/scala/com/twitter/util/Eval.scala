@@ -43,25 +43,22 @@ object Eval extends Eval {
 }
 
 /**
- * evaluates files, strings or input streams, and returns the result.
- * In all cases, code to be evaled is wrapped in an apply method in a
- * generated class. An instance of the class is instantiated, and the
- * result of apply is returned.
+ * Evaluates files, strings, or input streams as scala code, and returns the result.
  *
- * If target is None, the results are compiled to memory (and are therefore
- * ephemeral). If target is Some(path), path must point to a directory, and
- * eval emits class files to that directory.
+ * If `target` is `None`, the results are compiled to memory (and are therefore ephemeral). If
+ * `target` is `Some(path)`, the path must point to a directory, and classes will be saved into
+ * that directory.
  *
- * eval also supports a limited set of preprocessors. Limited means
- * exactly one, that supports directives of the form #include <file>.
+ * Eval also supports a limited set of preprocessors. Currently, "limited" means "exactly one":
+ * directives of the form `#include <file>`.
  *
- * The general flow of evaluation is
- * # convert arguments to a string
- * # run preprocessors on that string
- * # wrap processed code in a class
- * # compile the class
- * # create an instance of that class
- * # return the results of apply()
+ * The flow of evaluation is:
+ * - extract a string of code from the file, string, or input stream
+ * - run preprocessors on that string
+ * - wrap processed code in an `apply` method in a generated class
+ * - compile the class
+ * - contruct an instance of that class
+ * - return the result of `apply()`
  */
 class Eval(target: Option[File]) {
   /**
@@ -109,7 +106,7 @@ class Eval(target: Option[File]) {
       )
     )
 
-  private lazy val compiler = new StringCompiler(2, target)
+  private[this] lazy val compiler = new StringCompiler(2, target)
 
   /**
    * run preprocessors on our string, returning a String that is the processed source
