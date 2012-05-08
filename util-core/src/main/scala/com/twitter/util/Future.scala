@@ -82,26 +82,9 @@ object Future {
   def rawException[A](e: Throwable): Future[A] = const[A](Throw(e))
 
   /**
-   * A future that can never complete.
+   * A new future that can never complete.
    */
-  val never: Future[Nothing] = new Future[Nothing] {
-    protected def respond(tracingObject: AnyRef, k: Try[Nothing] => Unit): Future[Nothing] = this
-    protected def transform[B](tracingObject: AnyRef, f: Try[Nothing] => Future[B]): Future[B] = this
-
-    def isDefined: Boolean = false
-    def onCancellation(f: =>Unit) {}
-    def linkTo(other: Cancellable) {}
-    def cancel() {}
-    def isCancelled: Boolean = false
-    def get(timeout: Duration): Try[Nothing] = {
-      // We perhaps should just throw right away, but code might rely
-      // on Future.get(timeout) blocking for at least that amount of
-      // time.
-      Thread.sleep(timeout.inMilliseconds)
-      throw new TimeoutException(timeout.toString)
-    }
-    def poll: Option[Try[Nothing]] = None
-  }
+  def never: Future[Nothing] = new NoFuture
 
   @deprecated("Prefer static Future.Void.")
   def void(): Future[Void] = value[Void](null)
@@ -950,6 +933,28 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def get(timeout: Duration): Try[A] = result
   def poll: Option[Try[A]] = Some(result)
+}
+
+/**
+ * A future with no future (never completes).
+ */
+class NoFuture extends Future[Nothing] {
+  protected def respond(tracingObject: AnyRef, k: Try[Nothing] => Unit): Future[Nothing] = this
+  protected def transform[B](tracingObject: AnyRef, f: Try[Nothing] => Future[B]): Future[B] = this
+
+  def isDefined: Boolean = false
+  def onCancellation(f: =>Unit) {}
+  def linkTo(other: Cancellable) {}
+  def cancel() {}
+  def isCancelled: Boolean = false
+  def get(timeout: Duration): Try[Nothing] = {
+    // We perhaps should just throw right away, but code might rely
+    // on Future.get(timeout) blocking for at least that amount of
+    // time.
+    Thread.sleep(timeout.inMilliseconds)
+    throw new TimeoutException(timeout.toString)
+  }
+  def poll: Option[Try[Nothing]] = None
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
