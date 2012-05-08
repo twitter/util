@@ -309,8 +309,12 @@ class Eval(target: Option[File]) {
    * This is probably fragile.
    */
   lazy val impliedClassPath: List[String] = {
-    val currentClassPath = this.getClass.getClassLoader.asInstanceOf[URLClassLoader].getURLs.
-      map(_.toString).filter(_.startsWith("file:")).map(_.substring(5)).toList
+    val loader = this.getClass.getClassLoader.asInstanceOf[URLClassLoader]
+    val currentClassPath = loader.getURLs filter {
+      _.getProtocol == "file"
+    } map { u =>
+      new File(u.toURI).getPath
+    } toList
 
     // if there's just one thing in the classpath, and it's a jar, assume an executable jar.
     currentClassPath ::: (if (currentClassPath.size == 1 && currentClassPath(0).endsWith(".jar")) {
