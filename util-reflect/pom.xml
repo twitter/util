@@ -4,7 +4,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>util-reflect</artifactId>
   <packaging>jar</packaging>
-  <version>4.0.1-SNAPSHOT</version>
+  <version>4.0.1</version>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>scala-parent</artifactId>
