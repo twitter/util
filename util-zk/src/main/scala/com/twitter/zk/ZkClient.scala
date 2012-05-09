@@ -31,7 +31,7 @@ trait ZkClient {
   def apply(): Future[ZooKeeper] = connector()
 
   /** Attach a listener to receive session events */
-  def onSessionEvent(f: PartialFunction[WatchedEvent, Unit]) = connector.onSessionEvent(f)
+  def onSessionEvent(f: PartialFunction[StateEvent, Unit]) = connector.onSessionEvent(f)
 
   /** Release the connection */
   def release(): Future[Unit] = connector.release()

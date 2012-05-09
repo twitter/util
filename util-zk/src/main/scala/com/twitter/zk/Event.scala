@@ -43,6 +43,15 @@ object StateEvent {
   object Expired extends StateEvent {
     val state = KeeperState.Expired
   }
+
+  def apply(w: WatchedEvent): StateEvent = {
+    w.getState() match {
+      case KeeperState.AuthFailed => AuthFailed
+      case KeeperState.SyncConnected => Connected
+      case KeeperState.Disconnected => Disconnected
+      case KeeperState.Expired => Expired
+    }
+  }
 }
 
 sealed trait NodeEvent {
