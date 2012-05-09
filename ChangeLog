@@ -1,4 +1,4 @@
-3.0.1
+4.0.1
 
   * added AsyncQueue
   * config:validate optional subconfigs
@@ -9,11 +9,14 @@
   * KetamaDistributor optionally preserves a floating point truncation
   * Timer uses daemon thread by default
   * Future.monitor: release reference to promise when it's satisfied
-  * Future: misc Java commpatibility fixes
+  * Future: misc Java compatibility fixes
   * Eval.scala: Allow @deprecated
   * util-logging: Add LoggerFactory
   * Util: Add util-class-preloader (classfile preloading), util-jvm
   (access to performance counters)
+  * Future: divorce from TryLike hierarchy
+  * LogRecord: use MessageFormat
+  * Time: Treat MaxValue specially in TimeMod.{add,sub}
 
 3.0.0  2012-03-14
 
