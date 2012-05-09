@@ -43,7 +43,7 @@ object Eval extends Eval {
 }
 
 /**
- * Evaluates files, strings, or input streams as scala code, and returns the result.
+ * Evaluates files, strings, or input streams as Scala code, and returns the result.
  *
  * If `target` is `None`, the results are compiled to memory (and are therefore ephemeral). If
  * `target` is `Some(path)`, the path must point to a directory, and classes will be saved into
@@ -106,7 +106,8 @@ class Eval(target: Option[File]) {
       )
     )
 
-  private[this] lazy val compiler = new StringCompiler(2, target)
+  private[this] val STYLE_INDENT = 2
+  private[this] lazy val compiler = new StringCompiler(STYLE_INDENT, target)
 
   /**
    * run preprocessors on our string, returning a String that is the processed source
@@ -269,6 +270,13 @@ class Eval(target: Option[File]) {
 
   private[util] def fileToClassName(f: File): String = {
     // HOPE YOU'RE HAPPY GUYS!!!!
+    /*          __
+     *    __/|_/ /_  __  ______ ________/|_
+     *   |    / __ \/ / / / __ `/ ___/    /
+     *  /_ __/ / / / /_/ / /_/ (__  )_ __|
+     *   |/ /_/ /_/\__,_/\__, /____/ |/
+     *                  /____/
+     */
     val fileName = f.getName
     val baseName = fileName.lastIndexOf('.') match {
       case -1 => fileName
