@@ -102,7 +102,7 @@ the root logger to filter at `INFO` level and write to a file:
 
     val config = new LoggerConfig {
       node = ""
-      level = INFO
+      level = Logger.INFO
       handlers = new FileHandlerConfig {
         filename = "/var/log/example/example.log"
         roll = Policy.SigHup
