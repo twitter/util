@@ -1,15 +1,27 @@
 #!/bin/bash
 
-sbtjar=sbt-launch-0.7.5.jar
+root=$(
+  cd $(dirname $(readlink $0 || echo $0))/..
+  /bin/pwd
+)
+
+sbtjar=sbt-launch.jar
 
 if [ ! -f $sbtjar ]; then
   echo 'downloading '$sbtjar 1>&2
-  curl -O http://simple-build-tool.googlecode.com/files/$sbtjar
+  curl -O http://repo.typesafe.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.11.2/$sbtjar
 fi
 
 test -f $sbtjar || exit 1
+if [ $(openssl md5 < $sbtjar) != 2886cc391e38fa233b3e6c0ec9adfa1e ]; then
+  echo 'bad sbtjar!' 1>&2
+  exit 1
+fi
+
+test -f ~/.sbtconfig && . ~/.sbtconfig
 
 java -ea                          \
+  $SBT_OPTS                       \
   $JAVA_OPTS                      \
   -Djava.net.preferIPv4Stack=true \
   -XX:+AggressiveOpts             \
