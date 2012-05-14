@@ -2,7 +2,6 @@ A bunch of idiomatic, small General Purpose tools.
 
 See the Scaladoc [here](http://twitter.github.com/util)
 
-
 # Units
 
 ## Time
