@@ -183,6 +183,9 @@ object Util extends Build {
     name := "util-zk",
     ivyXML :=
       <dependencies>
+        <exclude org="com.sun.jmx" module="jmxri" />
+        <exclude org="com.sun.jdmk" module="jmxtools" />
+        <exclude org="javax.jms" module="jms" />
         <override org="junit" rev="4.8.1"/>
       </dependencies>,
     libraryDependencies ++= Seq(
@@ -215,6 +218,9 @@ object Util extends Build {
         <exclude module="util-thrift"/>
         <exclude module="util-logging"/>
         <exclude module="util-eval"/>
+        <exclude org="com.sun.jmx" module="jmxri" />
+        <exclude org="com.sun.jdmk" module="jmxtools" />
+        <exclude org="javax.jms" module="jms" />
         <override org="junit" rev="4.8.1"/>
       </dependencies>,
 
