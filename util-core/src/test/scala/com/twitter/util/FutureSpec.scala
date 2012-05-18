@@ -881,6 +881,15 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
   test("ConstFuture", new MkConst { def apply[A](r: Try[A]) = Future.const(r) })
   test("Promise", new MkConst { def apply[A](r: Try[A]) = new Promise(r) })
 
+  "Future.None" should {
+    "always be defined" in {
+      Future.None.isDefined must beTrue
+    }
+    "but still None" in {
+      Future.None.get must beNone
+    }
+  }
+
   "Future.never" should {
     "must be undefined" in {
       Future.never.isDefined must beFalse

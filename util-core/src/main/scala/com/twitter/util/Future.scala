@@ -13,6 +13,7 @@ object Future {
   val Unit = apply(())
   val Void = apply[Void](null)
   val Done = Unit
+  val None: Future[Option[Nothing]] = new ConstFuture(Return(Option.empty))
 
   /**
    * An object that can trace control flow through an asynchronous program.
