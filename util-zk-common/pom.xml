@@ -4,7 +4,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>util-zk-common</artifactId>
   <packaging>jar</packaging>
-  <version>4.0.2-SNAPSHOT</version>
+  <version>4.0.3</version>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>scala-parent</artifactId>
@@ -226,32 +226,32 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-collection</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>4.0.3</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>4.0.3</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-eval</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>4.0.3</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-hashing</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>4.0.3</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-logging</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>4.0.3</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-zk</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>4.0.3</version>
     </dependency>
   </dependencies>
 </project>
