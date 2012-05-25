@@ -4,7 +4,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>util-class-preloader</artifactId>
   <packaging>jar</packaging>
-  <version>4.0.2-SNAPSHOT</version>
+  <version>4.0.4-SNAPSHOT</version>
   <properties>
     <git.dir>${project.basedir}/../../.git</git.dir>
   </properties>
