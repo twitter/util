@@ -7,8 +7,8 @@
   <version>3.0.1-SNAPSHOT</version>
   <parent>
     <groupId>com.twitter</groupId>
-    <artifactId>scala-parent</artifactId>
+    <artifactId>scala-parent-292</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../../scala-parent</relativePath>
+    <relativePath>../../scala-parent-292</relativePath>
   </parent>
 </project>
