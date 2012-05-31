@@ -624,7 +624,10 @@ abstract class Future[+A] extends Cancellable {
   /**
    * Convert this Future[A] to a Future[Void] by discarding the result.
    */
-  def void: Future[Void] = map(_ => null.asInstanceOf[Void])
+  def voided: Future[Void] = map(_ => null.asInstanceOf[Void])
+
+  @deprecated("'void' is a reserved word in javac.")
+  def void: Future[Void] = voided
 
   /**
    * Send updates from this Future to the other.
