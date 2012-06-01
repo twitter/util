@@ -4,7 +4,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>util-collection</artifactId>
   <packaging>jar</packaging>
-  <version>5.0.4-SNAPSHOT</version>
+  <version>5.0.5-SNAPSHOT</version>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>scala-parent-292</artifactId>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core</artifactId>
-      <version>5.0.4-SNAPSHOT</version>
+      <version>5.0.5-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
