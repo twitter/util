@@ -18,7 +18,7 @@
     <!-- library dependencies -->
     <dependency>
       <groupId>org.scala-tools.testing</groupId>
-      <artifactId>specs_2.9.1</artifactId>
+      <artifactId>specs_2.9.2</artifactId>
       <version>1.6.9</version>
       <scope>provided</scope>
     </dependency>
