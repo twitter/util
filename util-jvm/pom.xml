@@ -22,5 +22,11 @@
       <artifactId>util-core</artifactId>
       <version>5.0.5-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>util-logging</artifactId>
+      <scope>test</scope>
+      <version>5.0.4-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

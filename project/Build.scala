@@ -170,7 +170,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-jvm"
-  ).dependsOn(utilCore)
+  ).dependsOn(utilCore, utilLogging % "test")
 
   lazy val utilZk = Project(
     id = "util-zk",

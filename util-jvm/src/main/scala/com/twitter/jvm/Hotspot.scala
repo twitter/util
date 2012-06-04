@@ -1,11 +1,15 @@
 package com.twitter.jvm
 
+import com.twitter.conversions.time._
+import com.twitter.util.Time
 import java.lang.management.ManagementFactory
 import javax.management.openmbean.CompositeDataSupport
 import javax.management.{ObjectName, RuntimeMBeanException}
 import scala.collection.JavaConverters._
 
 class Hotspot extends Jvm {
+  private[this] val epoch = Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean().getStartTime())
+
   private[this] type Counter = {
     def getName(): String
     def getUnits(): Object
@@ -52,25 +56,55 @@ class Hotspot extends Jvm {
     def compileThresh = opt("CompileThreshold") map(_.toInt)
   }
 
-  def snap: Snapshot = Snapshot({
-    val sungc = counters("sun.gc")
+  private[this] def ticksToDuration(ticks: Long, freq: Long) =
+    (1000000*ticks/freq).microseconds
 
-    val allocated = for {
-      invocations <- sungc.get("sun.gc.collector.0.invocations") map(long)
-      capacity <- sungc.get("sun.gc.generation.0.space.0.capacity") map(long)
-      used <- sungc.get("sun.gc.generation.0.space.0.used") map(long)
-    } yield invocations*capacity + used
+  private[this] def getGc(which: Int, cs: Map[String, Counter]) = {
+    def get(what: String) = cs.get("sun.gc.collector.%d.%s".format(which, what))
 
-    val tenuringThreshold = sungc.get("sun.gc.policy.tenuringThreshold") map(long)
+    for {
+      invocations <- get("invocations") map(long(_))
+      lastEntryTicks <- get("lastEntryTime") map(long(_))
+      name <- get("name") map(_.getValue().toString)
+      time <- get("time") map(long(_))
+      freq <- cs.get("sun.os.hrt.frequency") map(long(_))
+      duration = ticksToDuration(time, freq)
+      lastEntryTime = ticksToDuration(lastEntryTicks, freq)
+      kind = "%d.%s".format(which, name)
+    } yield Gc(invocations, kind, epoch+lastEntryTime, duration)
+  }
 
-    val ageHisto = for {
-      thresh <- tenuringThreshold.toSeq
-      i <- 1L to thresh
-      bucket <- sungc.get("sun.gc.generation.0.agetable.bytes.%02d".format(i))
-    } yield long(bucket)
+  def snap: Snapshot = {
+    val cs = counters("")
+    val heap = {
+      val allocated = for {
+        invocations <- cs.get("sun.gc.collector.0.invocations") map(long(_))
+        capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
+        used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
+      } yield invocations*capacity + used
 
-    Gc(allocated getOrElse -1, tenuringThreshold getOrElse -1, ageHisto)
-  })
+      val tenuringThreshold = cs.get("sun.gc.policy.tenuringThreshold") map(long(_))
+
+      val ageHisto = for {
+        thresh <- tenuringThreshold.toSeq
+        i <- 1L to thresh
+        bucket <- cs.get("sun.gc.generation.0.agetable.bytes.%02d".format(i))
+      } yield long(bucket)
+
+      Heap(allocated getOrElse -1, tenuringThreshold getOrElse -1, ageHisto)
+    }
+
+    val timestamp = for {
+      freq <- cs.get("sun.os.hrt.frequency") map(long(_))
+      ticks <- cs.get("sun.os.hrt.ticks") map(long(_))
+    } yield epoch+ticksToDuration(ticks, freq)
+
+    // TODO: include causes for GCs?
+    Snapshot(
+      timestamp getOrElse Time.epoch,
+      heap,
+      getGc(0, cs).toSeq ++ getGc(1, cs).toSeq)
+  }
 
   def snapCounters: Map[String, String] =
     counters("") mapValues(_.getValue().toString)
