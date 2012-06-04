@@ -1,8 +1,8 @@
 package com.twitter.concurrent
 
 import com.twitter.util.Duration
-import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
+import java.util.concurrent.CountDownLatch
 import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 
@@ -269,14 +269,15 @@ final class IVar[A] extends IVarField[A] {
       case Done(value) =>
         Some(value)
       case _ =>
-        val q = new ArrayBlockingQueue[A](1)
-        get(q.offer(_))
-        sched.flush()
+        val condition = new CountDownLatch(1)
+        get { _ => condition.countDown() }
         val (v, u) = timeout.inTimeUnit
-        // This actually does work also with
-        // primitive types due to some underlying
-        // boxing magic?
-        Option(q.poll(v, u))
+        sched.flush()
+        if (condition.await(v, u)) {
+          Some(state.asInstanceOf[Done[A]].value)
+        } else {
+          None
+        }
     }
 
   @tailrec
