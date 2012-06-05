@@ -306,41 +306,6 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
     }
   }
 
-  "Offer.enumToChannel" should {
-    val ch = new ChannelSource[Int]
-    val b = new Broker[Int]
-    val buf = new ArrayBuffer[Int]
-    b.recv.enumToChannel(ch)
-
-    "synchronize only when a responder is present" in {
-      val f0 = b.send(123).sync()
-      f0.isDefined must beFalse
-      val r0 = ch respond { v => buf += v; Future.Done }
-      f0.isDefined must beTrue
-      buf.toSeq must be_==(Seq(123))
-      b.send(333).sync().isDefined must beTrue
-      buf.toSeq must be_==(Seq(123, 333))
-      r0.dispose()
-      b.send(999).sync().isDefined must beTrue  // buffered
-      val f1 = b.send(111).sync()
-      f1.isDefined must beFalse
-      ch respond { v => buf += v; Future.Done }
-      f1.isDefined must beTrue
-      buf.toSeq must be_==(Seq(123, 333, 999, 111))
-    }
-
-    "stop synchronizing on close" in {
-      ch respond { v => buf += v; Future.Done }
-      b.send(123).sync().isDefined must beTrue
-      b.send(333).sync().isDefined must beTrue
-      buf.toSeq must be_==(Seq(123, 333))
-      ch.close()
-      b.send(444).sync().isDefined must beTrue // buffered
-      buf.toSeq must be_==(Seq(123, 333))  // but value doesn't make it.
-      b.send(444).sync().isDefined must beFalse
-    }
-  }
-
   "Integration" should {
     "select across multiple brokers" in {
       val b0 = new Broker[Int]
