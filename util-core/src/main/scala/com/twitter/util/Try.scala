@@ -91,8 +91,8 @@ sealed abstract class Try[+R] {
   def onSuccess(f: R => Unit): Try[R]
 
   /**
-   * Invoked only if the computation was successful.  Returns a
-   * chained `this` as in `respond`.
+   * Invoke the function on the error, if the computation was
+   * unsuccessful.  Returns a chained `this` as in `respond`.
    */
   def onFailure(rescueException: Throwable => Unit): Try[R]
 
