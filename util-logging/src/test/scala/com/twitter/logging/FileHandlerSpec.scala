@@ -188,6 +188,43 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
       }
     }
 
+    "correctly handles relative paths" in {
+      withTempFolder {
+        // user.dir will be replaced with the temp folder,
+        // and will be restored when the test is complete
+        val wdir = System.getProperty("user.dir")
+
+        try {
+          System.setProperty("user.dir", folderName)
+
+          val handler = FileHandler(
+            filename = "test.log", // Note relative path!
+            rollPolicy = Policy.Hourly,
+            append = true,
+            rotateCount = 2,
+            formatter = BareFormatter
+          ).apply()
+
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 1
+          handler.roll()
+
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 2
+          handler.roll()
+
+          handler.publish(record1)
+          new File(folderName).list().length mustEqual 2
+          handler.close()
+        }
+        finally {
+          // restore user.dir to its original configuration
+          System.setProperty("user.dir", wdir)
+        }
+
+      }
+    }
+
     "roll log files based on max size" in {
       withTempFolder {
         // roll the log on the 3rd write.

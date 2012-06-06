@@ -65,13 +65,16 @@ object FileHandler {
  * at a requested interval (hourly, daily, or weekly).
  */
 class FileHandler(
-    val filename: String,
+    path: String,
     rollPolicy: Policy,
     val append: Boolean,
     rotateCount: Int,
     formatter: Formatter,
     level: Option[Level])
   extends Handler(formatter, level) {
+
+  // This converts relative paths to absolute paths, as expected
+  val filename = new File(checkName).getAbsolutePath
 
   // Thread-safety is guarded by synchronized on this
   private var stream: OutputStream = null
