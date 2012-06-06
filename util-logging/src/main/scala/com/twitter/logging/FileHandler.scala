@@ -74,7 +74,7 @@ class FileHandler(
   extends Handler(formatter, level) {
 
   // This converts relative paths to absolute paths, as expected
-  val filename = new File(checkName).getAbsolutePath
+  val filename = new File(path).getAbsolutePath
 
   // Thread-safety is guarded by synchronized on this
   private var stream: OutputStream = null
