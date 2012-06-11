@@ -24,7 +24,14 @@ class Hotspot extends Jvm {
     "com.sun.management:type=HotSpotDiagnostic")
 
   private[this] val jvm: VMManagement = {
-    val fld = Class.forName("sun.management.ManagementFactory").getDeclaredField("jvm")
+    val fld = try {
+      // jdk5/6 have jvm field in ManagementFactory class
+      Class.forName("sun.management.ManagementFactory").getDeclaredField("jvm")
+    } catch {
+      case _: NoSuchFieldException =>
+        // jdk7 moves jvm field to ManagementFactoryHelper class
+        Class.forName("sun.management.ManagementFactoryHelper").getDeclaredField("jvm")
+    }
     fld.setAccessible(true)
     fld.get(null).asInstanceOf[VMManagement]
   }
