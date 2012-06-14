@@ -5,6 +5,7 @@ import com.twitter.util.{Timer, Duration, Time}
 import java.lang.management.ManagementFactory
 import java.util.logging.Logger
 import scala.collection.mutable
+import scala.collection.JavaConverters._
 import java.util.concurrent.{ScheduledExecutorService, Executors, TimeUnit}
 
 case class Heap(
@@ -112,6 +113,24 @@ trait Jvm {
     }
 
     (since: Time) => buffer takeWhile(_.timestamp > since)
+  }
+
+  /**
+   * Get the main class name for the currently running application.
+   * Note that this works only by heuristic, and may not be accurate.
+   *
+   * TODO: take into account the standard callstack around scala
+   * invocations better.
+   */
+  def mainClassName: String = {
+    val mainClass = for {
+      (_, stack) <- Thread.getAllStackTraces().asScala find { case (t, s) => t.getName == "main" }
+      frame <- stack.reverse find {
+        elem => !(elem.getClassName startsWith "scala.tools.nsc.MainGenericRunner")
+      }
+    } yield frame.getClassName
+
+    mainClass getOrElse "unknown"
   }
 }
 

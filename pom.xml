@@ -30,5 +30,6 @@
     <module>util-thrift</module>
     <module>util-zk</module>
     <module>util-zk-common</module>
+    <module>util-benchmark</module>
   </modules>
 </project>
