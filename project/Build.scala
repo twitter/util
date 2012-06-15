@@ -6,7 +6,7 @@ object Util extends Build {
   val zkVersion = "3.3.4"
 
   val sharedSettings = Seq(
-    version := "4.0.2-SNAPSHOT",
+    version := "5.2.1-SNAPSHOT",
     organization := "com.twitter",
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
@@ -48,7 +48,7 @@ object Util extends Build {
   ) aggregate(
     utilCore, utilEval, utilCodec, utilCollection, utilReflect,
     utilLogging, utilThrift, utilHashing, utilJvm, utilZk,
-    utilZkCommon, utilClassPreloader
+    utilZkCommon, utilClassPreloader, utilBenchmark
   )
 
   lazy val utilCore = Project(
@@ -202,32 +202,10 @@ object Util extends Build {
       jmockSettings
   ).settings(
     name := "util-zk-common",
-    // com.twitter.common.zookeeper transitively depends on
-    // com.twitter.util via com.twitter.finagle. This is otherwise
-    // handled by ProjectDependencies because it transitively inlines
-    // projects. However, for publishing we need to build without
-    // ProjectDependencies turned on. This anyway highlights a
-    // dangerous circularity: if this path involves ABI breaking
-    // changes, we must publish broken builds.
-    ivyXML :=
-      <dependencies>
-        <exclude module="util-core"/>
-        <exclude module="util-collection"/>
-        <exclude module="util-hashing"/>
-        <exclude module="util-reflect"/>
-        <exclude module="util-thrift"/>
-        <exclude module="util-logging"/>
-        <exclude module="util-eval"/>
-        <exclude org="com.sun.jmx" module="jmxri" />
-        <exclude org="com.sun.jdmk" module="jmxtools" />
-        <exclude org="javax.jms" module="jms" />
-        <override org="junit" rev="4.8.1"/>
-      </dependencies>,
-
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % "0.0.6",
-      "com.twitter.common.zookeeper" % "group"      % "0.0.5",
-      "com.twitter.common.zookeeper" % "server-set" % "0.0.5",
+      "com.twitter.common.zookeeper" % "client"     % "0.0.10",
+      "com.twitter.common.zookeeper" % "group"      % "0.0.14",
+      "com.twitter.common.zookeeper" % "server-set" % "1.0.3",
       "org.apache.zookeeper" % "zookeeper" % zkVersion
     )
   ).dependsOn(utilCore, utilLogging, utilZk,
@@ -245,4 +223,18 @@ object Util extends Build {
   ).settings(
     name := "util-class-preloader"
   ).dependsOn(utilCore)
+
+  lazy val utilBenchmark = Project(
+    id = "util-benchmark",
+    base = file("util-benchmark"),
+    settings = Project.defaultSettings ++
+      StandardProject.newSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-benchmark",
+    libraryDependencies ++= Seq(
+      "com.google.caliper" % "caliper" % "0.5-rc1"
+    )
+  ).dependsOn(utilCore, utilJvm)
+
 }
