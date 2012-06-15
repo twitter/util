@@ -38,13 +38,17 @@ case class CpuProfile(
       out.write(word.array())
     }
 
-    out.write("--- symbol\nbinary=%s\n".format(Jvm().mainClassName).getBytes)
+    def putString(s: String) {
+      out.write(s.getBytes)
+    }
+
+    putString("--- symbol\nbinary=%s\n".format(Jvm().mainClassName))
     for ((stack, _) <- counts; frame <- stack if !uniq.contains(frame)) {
-      out.write("0x%016x %s\n".format(next, frame.toString).getBytes)
+      putString("0x%016x %s\n".format(next, frame.toString))
       uniq(frame) = next
       next += 1
     }
-    out.write("---\n--- profile\n".getBytes)
+    putString("---\n--- profile\n")
     for (w <- Seq(0, 3, 0, 1, 0))
       putWord(w)
 
@@ -63,8 +67,8 @@ case class CpuProfile(
 
 object CpuProfile {
   /**
-   * Profile CPU usage for `howlong`, sampling stacks at `frequency`
-   * Hz.
+   * Profile CPU usage of threads in `state` for `howlong`, sampling
+   * stacks at `frequency` Hz.
    *
    * As an example, using Nyquist's sampling theorem, we see that
    * sampling at 100Hz will accurately represent components 50Hz or
@@ -75,8 +79,7 @@ object CpuProfile {
    * Anything greater than this is likely to consume considerable
    * amounts of CPU while sampling.
    *
-   * The profiler will only consider stacks of threads that are in a
-   * RUNNABLE state, and it discounts its own stacks.
+   * The profiler will discount its own stacks.
    *
    * TODO:
    *
@@ -84,7 +87,7 @@ object CpuProfile {
    *   impact, so it seems nonfaithful to exlude them.
    *   - Limit stack depth?
    */
-  def record(howlong: Duration, frequency: Int): CpuProfile = {
+  def record(howlong: Duration, frequency: Int, state: Thread.State): CpuProfile = {
     require(frequency < 1000)
 
     // TODO: it may make sense to write a custom hash function here
@@ -103,7 +106,7 @@ object CpuProfile {
 
     while (Time.now < end) {
       for (thread <- bean.dumpAllThreads(false, false)
-          if thread.getThreadState() == Thread.State.RUNNABLE
+          if thread.getThreadState() == state
           && thread.getThreadId() != myId) {
         val s = thread.getStackTrace().toSeq
         if (!s.isEmpty)
@@ -125,18 +128,24 @@ object CpuProfile {
     CpuProfile(counts.toMap, Time.now - begin, n, nmissed)
   }
 
+  def record(howlong: Duration, frequency: Int): CpuProfile =
+    record(howlong, frequency, Thread.State.RUNNABLE)
+
   /**
    * Call `record` in a thread with the given parameters, returning a
    * `Future` representing the completion of the profile.
    */
-  def recordInThread(howlong: Duration, frequency: Int): Future[CpuProfile] = {
+  def recordInThread(howlong: Duration, frequency: Int, state: Thread.State): Future[CpuProfile] = {
     val p = new Promise[CpuProfile]
     val thr = new Thread("CpuProfile") {
       override def run() {
-        p.setValue(record(howlong, frequency))
+        p.setValue(record(howlong, frequency, state))
       }
     }
     thr.start()
     p
   }
+
+  def recordInThread(howlong: Duration, frequency: Int): Future[CpuProfile] =
+    recordInThread(howlong, frequency, Thread.State.RUNNABLE)
 }
