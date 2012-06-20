@@ -1,3 +1,19 @@
+5.2.0  2012-06-14
+
+  * JVM CPU profiler
+  * util-jvm: fix for JDK 7
+
+5.1.2  2012-06-07
+
+  * fix documentation
+  * util-jvm: gc monitoring
+  * Kill com.twitter.concurrent.Channel
+
+5.0.4  2012-06-01
+
+  * Upgrade scala to 2.9.2
+  * Java compatibility: void -> voided
+
 4.0.1
 
   * added AsyncQueue
