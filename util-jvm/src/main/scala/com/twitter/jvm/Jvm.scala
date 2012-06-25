@@ -1,12 +1,13 @@
 package com.twitter.jvm
 
+import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
 import com.twitter.util.{Timer, Duration, Time}
 import java.lang.management.ManagementFactory
+import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import java.util.logging.Logger
 import scala.collection.mutable
 import scala.collection.JavaConverters._
-import java.util.concurrent.{ScheduledExecutorService, Executors, TimeUnit}
 
 case class Heap(
   // Number of bytes allocated so far.
@@ -135,7 +136,8 @@ trait Jvm {
 }
 
 object Jvm {
-  private lazy val executor = Executors.newScheduledThreadPool(1)
+  private lazy val executor =
+    Executors.newScheduledThreadPool(1, new NamedPoolThreadFactory("util-jvm-timer", true))
 
   private[this] lazy val _jvm = {
     val name = ManagementFactory.getRuntimeMXBean.getVmName
