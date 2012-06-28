@@ -18,6 +18,7 @@ package com.twitter.logging
 
 import java.util.concurrent.{CountDownLatch, LinkedBlockingQueue}
 import java.util.{logging => javalog}
+import com.twitter.util.Time
 
 object QueueingHandler {
   /**
@@ -106,9 +107,9 @@ class QueueingHandler(val handler: Handler, maxQueueSize: Int = Int.MaxValue)
   }
 
   /**
-   * Called when record dropped.  Default is to log to root logger.
+   * Called when record dropped.  Default is to log to console.
    */
   protected def onOverflow(record: javalog.LogRecord) {
-    Console.err.println("log queue overflow - record dropped")
+    Console.err.println(String.format("[%s] log queue overflow - record dropped", Time.now.toString))
   }
 }
