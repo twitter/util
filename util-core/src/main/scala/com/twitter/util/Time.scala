@@ -20,6 +20,7 @@ import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import java.util.TimeZone
 
 /**
  * Use `Time.now` in your app instead of `System.currentTimeMillis`, and
@@ -30,7 +31,6 @@ import java.util.concurrent.TimeUnit
  * write human-readable values such as `1.minute` or `250.millis`.
  */
 object Time {
-  import com.twitter.conversions.time._
 
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
@@ -157,9 +157,12 @@ trait TimeControl {
 
 /**
  * A thread-safe wrapper around a SimpleDateFormat object.
+ *
+ * The timezone used will be UTC.
  */
 class TimeFormat(pattern: String) {
   private val format = new SimpleDateFormat(pattern)
+  format.setTimeZone(TimeZone.getTimeZone("UTC"))
 
   def parse(str: String): Time = {
     // SimpleDateFormat is not thread-safe
