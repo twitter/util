@@ -1,33 +1,35 @@
 package com.twitter.zk
 
-import com.twitter.concurrent.Offer
 import com.twitter.logging.Logger
 import com.twitter.util.Future
 import java.util.concurrent.atomic.AtomicReference
-import org.apache.zookeeper.{ZooKeeper, WatchedEvent}
+import org.apache.zookeeper.ZooKeeper
 import scala.annotation.tailrec
 
 trait Connector {
-  val name = "zk.connector"
+  val name = "zk-connector"
   protected[this] lazy val log = Logger.get(name)
 
   private[this] val listeners = new AtomicReference[List[PartialFunction[StateEvent, Unit]]](Nil)
 
-  protected[this] val sessionBroker = new EventBroker
+  protected[this] val sessionBroker: EventBroker = new EventBroker
 
   // a broker may only be used for 1:1 communication, so we fan-out event notifications
   sessionBroker.recv foreach { event =>
+    val listening = listeners.get()
+    log.debug("propagating event to %d listeners %s", listening.size, event)
     val stateEvent = StateEvent(event)
-    listeners.get().foreach { listener =>
+    listening.foreach { listener =>
       if (listener.isDefinedAt(stateEvent)) {
         try {
           listener(stateEvent)
         } catch {
           case e: Throwable => log.error(e, "Exception in connection event listener")
         }
-      }
+      } else log.debug("listener does not handle %s", event)
     }
   }
+
 
   @tailrec
   final def onSessionEvent(f: PartialFunction[StateEvent, Unit]) {

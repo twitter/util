@@ -1,13 +1,14 @@
 package com.twitter.zk
 
 import com.twitter.concurrent.{Offer, Serialized}
-import com.twitter.util.{Duration, Future, Promise, Timer}
+import com.twitter.util.{Duration, Future, Promise, Return, Timer}
 import org.apache.zookeeper.ZooKeeper
 
 /**
  * An Asynchronous ZooKeeper Client.
  */
 trait NativeConnector extends Connector with Serialized {
+  override val name = "native-zk-connector"
   val connectString: String
   val connectTimeout: Option[Duration]
   val sessionTimeout: Duration
@@ -18,13 +19,21 @@ trait NativeConnector extends Connector with Serialized {
   def apply() = serialized {
     connection getOrElse {
       val c = mkConnection
+      c.sessionEvents.foreach { event =>
+        sessionBroker.send(event()).sync()
+      }
       connection = Some(c)
       c
     }
   } flatMap { _.apply() }
 
   protected[this] def mkConnection = {
-    new NativeConnector.Connection(connectString, connectTimeout, sessionTimeout, sessionBroker, this)
+    new NativeConnector.Connection(connectString, connectTimeout, sessionTimeout)
+  }
+
+  onSessionEvent {
+    // Invalidate the connection on expiration.
+    case StateEvent.Expired => release()()
   }
 
   def release() = serialized {
@@ -58,13 +67,32 @@ object NativeConnector {
   class Connection(
     connectString: String,
     connectTimeout: Option[Duration],
-    sessionTimeout: Duration,
-    sessionBroker: EventBroker,
-    connector: Connector
+    sessionTimeout: Duration
   )(implicit timer: Timer) extends Serialized {
-    @volatile protected[this] var zookeeper: ZooKeeper = null
+    @volatile protected[this] var zookeeper: Option[ZooKeeper] = None
 
     protected[this] val _connected = new Promise[ZooKeeper]
+
+    protected[this] val sessionBroker = new EventBroker
+
+    /*
+     * Publish session events, but intercept Connected events and use them to satisfy the pending
+     * connection promise if possible.
+     *
+     * It is possible for events to be sent on this Offer before the connection promise is satisfied
+     * and I think that is okay.
+     */
+    val sessionEvents: Offer[StateEvent] = sessionBroker.recv map { StateEvent(_) } map {
+      case event @ StateEvent.Connected => {
+        serialized {
+          zookeeper.foreach { zk =>
+            _connected.updateIfEmpty(Return(zk))
+          }
+        }
+        event
+      }
+      case event => event
+    }
 
     /** A ZooKeeper handle that will error if connectTimeout is exceeded. */
     lazy val connected: Future[ZooKeeper] = {
@@ -74,13 +102,10 @@ object NativeConnector {
     protected[this] val _released = new Promise[Unit]
     val released: Future[Unit] = _released
 
-    /** Watch session events for a connection event. */
-    connector.onSessionEvent { case StateEvent.Connected() => _connected.setValue(zookeeper) }
-
     /** Obtain a ZooKeeper connection */
     def apply(): Future[ZooKeeper] = serialized {
       assert(!_released.isDefined)
-      zookeeper = Option { zookeeper } getOrElse { mkZooKeeper }
+      zookeeper = zookeeper orElse Some { mkZooKeeper }
     } flatMap { _ => connected }
 
     protected[this] def mkZooKeeper = {
@@ -88,9 +113,9 @@ object NativeConnector {
     }
 
     def release(): Future[Unit] = serialized {
-      if (zookeeper != null) {
-        zookeeper.close()
-        zookeeper = null
+      zookeeper.foreach { zk =>
+        zk.close()
+        zookeeper = None
         _released.setValue(Unit)
       }
     }

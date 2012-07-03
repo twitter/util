@@ -202,7 +202,11 @@ trait ZNode {
     }
     /** Monitor a watch on this node. */
     def monitorWatch(watch: Future[ZNode.Watch[ZNode.Children]], knownChildren: Set[ZNode]) {
-      watch onSuccess {
+      log.debug("monitoring %s with %d known children", path, knownChildren.size)
+      watch onFailure { case e =>
+        // An error occurred and there's not really anything we can do about it.
+        log.error(e, "%s: watch could not be established", path)
+      } onSuccess {
         // When a node is fetched with a watch, send a ZNode.TreeUpdate on the broker, and start
         // monitoring
         case ZNode.Watch(Return(zparent), eventUpdate) => {
@@ -210,11 +214,15 @@ trait ZNode {
           val treeUpdate = ZNode.TreeUpdate(zparent,
               added = children -- knownChildren,
               removed = knownChildren -- children)
+          log.debug("updating %s with %d children", path, treeUpdate.added.size)
           broker send(treeUpdate) sync() onSuccess { _ =>
+            log.debug("updated %s with %d children", path, treeUpdate.added.size)
             treeUpdate.added foreach { z =>
               pipeSubTreeUpdates(z.monitorTree())
             }
-            eventUpdate onSuccess {
+            eventUpdate onSuccess { event =>
+              log.debug("event received on %s: %s", path, event)
+            } onSuccess {
               case MonitorableEvent() => monitorWatch(zparent.getChildren.watch(), children)
               case event => log.debug("Unmonitorable event: %s: %s", path, event)
             }
@@ -234,9 +242,6 @@ trait ZNode {
             }
           }
         }
-      } handle { case e =>
-        // An error occurred and there's not really anything we can do about it.
-        log.error(e, "%s: watch could not be established", path)
       }
     }
     // Initially, we don't know about any children for the node.

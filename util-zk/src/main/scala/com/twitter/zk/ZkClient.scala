@@ -1,9 +1,8 @@
 package com.twitter.zk
 
-import com.twitter.concurrent.Offer
 import com.twitter.logging.Logger
 import com.twitter.util.{Duration, Future, Timer}
-import org.apache.zookeeper.{CreateMode, WatchedEvent, ZooKeeper}
+import org.apache.zookeeper.{CreateMode, ZooKeeper}
 import org.apache.zookeeper.data.ACL
 import org.apache.zookeeper.ZooDefs.Ids.CREATOR_ALL_ACL
 import scala.collection.JavaConverters._
@@ -31,7 +30,9 @@ trait ZkClient {
   def apply(): Future[ZooKeeper] = connector()
 
   /** Attach a listener to receive session events */
-  def onSessionEvent(f: PartialFunction[StateEvent, Unit]) = connector.onSessionEvent(f)
+  def onSessionEvent(f: PartialFunction[StateEvent, Unit]) {
+    connector.onSessionEvent(f)
+  }
 
   /** Release the connection */
   def release(): Future[Unit] = connector.release()
