@@ -45,7 +45,7 @@ object TempFile {
       case null =>
         throw new FileNotFoundException(path)
       case stream =>
-        val file = File.createTempFile(basename, ext)
+        val file = File.createTempFile(basename, "." + ext)
         file.deleteOnExit()
         val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
         StreamIO.copy(stream, fos)
