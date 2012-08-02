@@ -6,7 +6,7 @@ object Util extends Build {
   val zkVersion = "3.3.4"
 
   val sharedSettings = Seq(
-    version := "5.2.1-SNAPSHOT",
+    version := "5.3.6",
     organization := "com.twitter",
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
