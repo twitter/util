@@ -71,7 +71,10 @@ trait Jvm {
    */
   def foreachGc(f: Gc => Unit) {
     val Period = 1.second
+    val LogPeriod = 30.minutes
     val log = Logger.getLogger(getClass.getName)
+    @volatile var missedCollections = 0L
+    @volatile var lastLog = Time.epoch
 
     val lastByName = mutable.HashMap[String, Long]()
     def sample() {
@@ -81,8 +84,12 @@ trait Jvm {
         lastByName.get(name) match {
           case Some(`count`) => // old
           case Some(lastCount) =>
-            if (lastCount != count-1)
-              log.warning("Missed %d collections for %s due to sampling".format(count-1-lastCount, name))
+            missedCollections += count - 1 - lastCount
+            if (missedCollections > 0 && Time.now - lastLog > LogPeriod) {
+              log.warning("Missed %d collections for %s due to sampling".format(missedCollections, name))
+              lastLog = Time.now
+              missedCollections = 0
+            }
             f(gc)
           case None =>
             f(gc)

@@ -67,7 +67,7 @@ class JvmSpec extends SpecificationWithJUnit with Mockito with TestLogging {
         b(3) must be_==(gc1.copy(count=1))
       }
 
-      "Complain when sampling rate is too low" in {
+      "Complain when sampling rate is too low, every 30 minutes" in Time.withCurrentTimeFrozen { tc =>
         traceLogger(Level.WARNING)
 
         jvm foreachGc { _ => /*ignore*/}
@@ -79,7 +79,20 @@ class JvmSpec extends SpecificationWithJUnit with Mockito with TestLogging {
         r.run()
         jvm.pushGc(gc.copy(count=2))
         r.run()
-        mustLog("Missed 1 collections for pcopy due to sampling")
+        logLines() must be_==(Seq("Missed 1 collections for pcopy due to sampling"))
+        jvm.pushGc(gc.copy(count=10))
+        logLines() must be_==(Seq("Missed 1 collections for pcopy due to sampling"))
+        r.run()
+        tc.advance(29.minutes)
+        r.run()
+        logLines() must be_==(Seq("Missed 1 collections for pcopy due to sampling"))
+        tc.advance(2.minutes)
+        jvm.pushGc(gc.copy(count=12))
+        r.run()
+        logLines() must be_==(Seq(
+          "Missed 1 collections for pcopy due to sampling",
+          "Missed 8 collections for pcopy due to sampling"
+        ))
       }
     }
 

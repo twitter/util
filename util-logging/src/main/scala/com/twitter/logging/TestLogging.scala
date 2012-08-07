@@ -65,13 +65,14 @@ trait TestLogging { self: Specification =>
     logger.clearHandlers()
     logger.addHandler(traceHandler)
   }
+  
+  def logLines(): Seq[String] = traceHandler.get.split("\n")
 
   /**
    * Verify that the logger set up with `traceLogger` has received a log line with the given
    * substring somewhere inside it.
    */
   def mustLog(substring: String) = {
-    val lines = traceHandler.get.split("\n")
-    lines.filter { _ contains substring }.size must be_>(0)
+    logLines().filter { _ contains substring }.size must be_>(0)
   }
 }
