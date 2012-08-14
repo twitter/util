@@ -5,6 +5,10 @@ import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory }
 import org.apache.thrift.transport.TIOStreamTransport
 
+object ThriftCodec {
+  def apply[T <: TBase[_,_]: Manifest, P <: TProtocolFactory: Manifest] = new ThriftCodec[T,P]
+}
+
 class ThriftCodec[T <: TBase[_,_]: Manifest, P <: TProtocolFactory:Manifest]
 extends Codec[T, Array[Byte]] with ThriftSerializer {
 
