@@ -7,6 +7,15 @@ import TimeConversions._
 
 class TimeSpec extends SpecificationWithJUnit {
   "Time" should {
+    "work in collections" in {
+      val t0 = Time.fromSeconds(100)
+      val t1 = Time.fromSeconds(100)
+      t0 mustEqual t1
+      t0.hashCode mustEqual t1.hashCode
+      val pairs = List((t0, "foo"), (t1, "bar"))
+      pairs.groupBy { case (time: Time, value: String) => time } mustEqual Map(t0 -> pairs)
+    }
+
     "now should be now" in {
       (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)
     }

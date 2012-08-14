@@ -239,6 +239,8 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
    */
   override def toString = Time.defaultFormat.format(this)
 
+  override def hashCode = nanos.hashCode
+
   /**
    * Formats this Time according to the given SimpleDateFormat pattern.
    */
