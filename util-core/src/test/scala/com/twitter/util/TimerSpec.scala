@@ -70,6 +70,17 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       counter.get() must eventually(be_>=(2))
       timer.stop()
     }
+
+    "schedule(when)" in {
+      val timer = new ScheduledThreadPoolTimer
+      val counter = new AtomicInteger(0)
+      timer.schedule(Time.now + 20.millis) {
+        counter.incrementAndGet()
+      }
+      Thread.sleep(40.milliseconds.inMilliseconds)
+      counter.get() must eventually(be_==(1))
+      timer.stop()
+    }
   }
 
   "JavaTimer" should {
@@ -103,6 +114,29 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
 
       result mustEqual 2
       errors mustEqual 1
+    }
+
+    "schedule(when)" in {
+      val timer = new JavaTimer
+      val counter = new AtomicInteger(0)
+      timer.schedule(Time.now + 20.millis) {
+        counter.incrementAndGet()
+      }
+      Thread.sleep(40.milliseconds.inMilliseconds)
+      counter.get() must eventually(be_==(1))
+      timer.stop()
+    }
+
+    "cancel schedule(when)" in {
+      val timer = new JavaTimer
+      val counter = new AtomicInteger(0)
+      val task = timer.schedule(Time.now + 20.millis) {
+        counter.incrementAndGet()
+      }
+      task.cancel()
+      Thread.sleep(40.milliseconds.inMilliseconds)
+      counter.get() must not(eventually(be_==(1)))
+      timer.stop()
     }
   }
 
@@ -161,6 +195,25 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       timer.tick()
       f.isDefined must beTrue
       f() must throwA[CancellationException]
+    }
+
+    "schedule(when)" in {
+      val timer = new MockTimer
+      val counter = new AtomicInteger(0)
+      timer.schedule(Time.now + 1.millis)(counter.incrementAndGet())
+      Thread.sleep(2.millis)
+      timer.tick()
+      counter.get() mustEqual 1
+    }
+
+    "cancel schedule(when)" in {
+      val timer = new MockTimer
+      val counter = new AtomicInteger(0)
+      val task = timer.schedule(Time.now + 1.millis)(counter.incrementAndGet())
+      task.cancel()
+      Thread.sleep(2.millis)
+      timer.tick()
+      counter.get() mustEqual 0
     }
   }
 }
