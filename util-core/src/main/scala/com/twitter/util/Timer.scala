@@ -187,30 +187,22 @@ extends Timer {
   }
 
   def schedule(when: Time)(f: => Unit): TimerTask = {
-    val task = toJavaTimerTask(f)
-    underlying.schedule(task, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
-    toTimerTask(task)
+    val runnable = new Runnable { def run = f }
+    val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
+    new TimerTask { def cancel() { javaFuture.cancel(true) } }
   }
 
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
     schedule(when.sinceNow, period)(f)
 
   def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
-    val task = toJavaTimerTask(f)
-    underlying.scheduleAtFixedRate(task,
+    val runnable = new Runnable { def run = f }
+    val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
-    toTimerTask(task)
+    new TimerTask { def cancel() { javaFuture.cancel(true) } }
   }
 
   def stop() = underlying.shutdown()
-
-  private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
-    def run { f }
-  }
-
-  private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
-    def cancel() { task.cancel() }
-  }
 }
 
 // Exceedingly useful for writing well-behaved tests.
