@@ -48,16 +48,16 @@ trait ZNode {
   def apply(stat: Stat, bytes: Array[Byte]): ZNode.Data = ZNode.Data(this, stat, bytes)
 
   /** The 'basename' of the ZNode path. */
-  lazy val name: String = path.split('/') match {
-    case Array() => path
-    case nodes => nodes.last
+  lazy val name: String = path.lastIndexOf('/') match {
+    case i if (i == -1 || i == path.length - 1) => ""
+    case i => path.substring(i + 1)
   }
 
   /** The parent node.  The root node is its own parent. */
   lazy val parent: ZNode = ZNode(zkClient, parentPath)
-  lazy val parentPath: String = path.split('/') match {
-    case Array() => path
-    case nodes => nodes.tail.init.mkString("/", "/", "")
+  lazy val parentPath: String = path.lastIndexOf('/') match {
+    case i if (i == -1 || i == path.length - 1) => path
+    case i => path.substring(0, i)
   }
 
   /** The absolute path of a child */
