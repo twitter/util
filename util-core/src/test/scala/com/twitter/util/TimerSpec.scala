@@ -81,6 +81,18 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       counter.get() must eventually(be_==(1))
       timer.stop()
     }
+
+    "cancel schedule(when)" in {
+      val timer = new ScheduledThreadPoolTimer
+      val counter = new AtomicInteger(0)
+      val task = timer.schedule(Time.now + 20.millis) {
+        counter.incrementAndGet()
+      }
+      task.cancel()
+      Thread.sleep(40.milliseconds.inMilliseconds)
+      counter.get() must not(eventually(be_==(1)))
+      timer.stop()
+    }
   }
 
   "JavaTimer" should {
