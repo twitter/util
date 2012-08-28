@@ -1,3 +1,13 @@
+5.3.7  2012-08-21
+  * Disable log handler purging
+  * Added ThriftCodec
+  * Add a Time.hashCode method
+  * GC monitor: be more quiet about missed GCs
+  * patch public release of OSS libraries; catch up sbt
+
+5.3.6  2012-07-26
+  * Fix temporary file name generation
+
 5.3.0  2012-06-25
   * util-jvm: start timer thread in 'daemon' mode
 
