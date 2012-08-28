@@ -16,12 +16,8 @@ object SetMaker {
     private val mapMaker = new GoogleMapMaker
 
     def weakValues = { mapMaker.weakKeys; mapMaker.weakValues; this }
-    @deprecated("softValues is deprecated in Guava11 - use CacheBuilder")
-    def softValues = { mapMaker.softKeys; mapMaker.softValues; this }
     def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
-    @deprecated("Expiration is deprecated in Guava11 - use CacheBuilder")
-    def expiration(expiration: Duration) = { mapMaker.expiration(expiration.inMillis, TimeUnit.MILLISECONDS); this }
 
     def apply() = new MapToSetAdapter(
       new JConcurrentMapWrapper[A, A](mapMaker.makeMap()))
