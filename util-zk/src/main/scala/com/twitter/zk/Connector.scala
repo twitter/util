@@ -7,10 +7,13 @@ import org.apache.zookeeper.ZooKeeper
 import scala.annotation.tailrec
 
 trait Connector {
-  val name = "zk-connector"
-  protected[this] lazy val log = Logger.get(name)
 
-  private[this] val listeners = new AtomicReference[List[PartialFunction[StateEvent, Unit]]](Nil)
+  import Connector.EventHandler
+
+  val name = "zk-connector"
+  protected lazy val log = Logger.get(name)
+
+  private[this] val listeners = new AtomicReference[List[EventHandler]](Nil)
 
   protected[this] val sessionBroker: EventBroker = new EventBroker
 
@@ -30,9 +33,8 @@ trait Connector {
     }
   }
 
-
   @tailrec
-  final def onSessionEvent(f: PartialFunction[StateEvent, Unit]) {
+  final def onSessionEvent(f: EventHandler) {
     val list = listeners.get()
     if (!listeners.compareAndSet(list, f :: list)) onSessionEvent(f)
   }
@@ -42,4 +44,44 @@ trait Connector {
 
   /** Disconnect from the ZooKeeper server. */
   def release(): Future[Unit]
+}
+
+object Connector {
+  type EventHandler = PartialFunction[StateEvent, Unit]
+
+  /**
+   * Dispatches requests across several connectors.
+   *
+   * Session events from all Connnectors are published on the session broker; however consumers
+   * of these events cannot know which specific connection the event was fired on.
+   */
+  case class RoundRobin(connectors: Connector*) extends Connector {
+    require(connectors.length > 0)
+    override val name = "round-robin-zk-connector:%d".format(connectors.length)
+
+    private[this] var index = 0
+    protected[this] def nextConnector() = {
+      val i = synchronized {
+        if (index == Int.MaxValue ) {
+          index = 0
+        }
+        index = index + 1
+        index % connectors.length
+      }
+      log.trace("connector %d of %d", i+1, connectors.length)
+      connectors(i)
+    }
+
+    connectors foreach {
+      _ onSessionEvent { case event => sessionBroker.send(event()).sync() }
+    }
+
+    def apply(): Future[ZooKeeper] = nextConnector().apply()
+
+    /** Disconnect from all ZooKeeper servers. */
+    def release(): Future[Unit] = Future.join {
+      log.trace("release")
+      connectors map { _.release() }
+    }
+  }
 }
