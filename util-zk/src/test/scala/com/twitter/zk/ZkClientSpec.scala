@@ -1,15 +1,18 @@
 package com.twitter.zk
 
 import com.twitter.conversions.time._
+import com.twitter.logging.{Level, Logger}
+import com.twitter.util._
 import org.apache.zookeeper._
 import org.apache.zookeeper.data.{ACL, Stat}
 import org.specs.SpecificationWithJUnit
 import org.specs.mock._
-import scala.collection.Set
 import scala.collection.JavaConverters._
-import com.twitter.util._
+import scala.collection.Set
 
 class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker {
+  Logger.get("").setLevel(Level.FATAL)
+
   val zk = mock[ZooKeeper]
   class TestZkClient extends ZkClient {
     val connector = new Connector {
