@@ -73,14 +73,18 @@ trait ZNode {
    * Remote node operations
    */
 
-  /** Returns a Future that is satisfied with this ZNode */
+  /**
+   * Create this ZNode; or if a child name is specified create that child.
+   */
   def create(
       data: Array[Byte] = Array.empty[Byte],
       acls: Seq[ACL]    = zkClient.acl,
-      mode: CreateMode  = zkClient.mode): Future[ZNode] = {
+      mode: CreateMode  = zkClient.mode,
+      child: Option[String] = None): Future[ZNode] = {
+    val creatingPath = child map { "%s/%s".format(path, _) } getOrElse path
     zkClient.retrying { zk =>
       val result = new StringCallbackPromise
-      zk.create(path, data, acls.asJava, mode, result, null)
+      zk.create(creatingPath, data, acls.asJava, mode, result, null)
       result map { newPath => zkClient(newPath) }
     }
   }

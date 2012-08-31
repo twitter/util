@@ -281,7 +281,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
     "create" in {
       val path = "/root/path/to/a/node"
 
-      "ok" in {
+      "with data" in {
         val data = "blah".getBytes
         expect {
           create(path, data)(Future(path))
@@ -301,7 +301,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         } apply()
       }
 
-      "new name" in {
+      "sequential" in {
         val data = null
 
         expect {
@@ -310,6 +310,46 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
         val newPath = zkClient(path).create(data, mode = CreateMode.EPHEMERAL_SEQUENTIAL).apply()
         newPath.name mustEqual "node0000"
+      }
+
+      "a child" in {
+        val childPath = path + "/child"
+
+        "with a name and data" in {
+          val data = "blah".getBytes
+          expect {
+            create(childPath, data)(Future(childPath))
+          }
+          val znode = zkClient(path).create(data, child = Some("child")).apply()
+          znode.path mustEqual childPath
+        }
+
+        "error" in {
+          val data = null
+          expect {
+            create(childPath, data) {
+              Future.exception(new KeeperException.NodeExistsException(childPath))
+            }
+          }
+          zkClient(path).create(data, child = Some("child")) map { _ =>
+            fail("Unexpected success")
+          } handle { case e: KeeperException.NodeExistsException =>
+            e.getPath mustEqual childPath
+          } apply()
+        }
+
+        "sequential, with an empty name" in {
+          val data = null
+
+          expect {
+            create(path+"/", data, mode = CreateMode.EPHEMERAL_SEQUENTIAL)(Future(path+"/0000"))
+          }
+
+          zkClient(path).create(data,
+            child = Some(""),
+            mode = CreateMode.EPHEMERAL_SEQUENTIAL
+          ).apply().path mustEqual path + "/0000"
+        }
       }
     }
 
