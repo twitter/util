@@ -24,8 +24,9 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.TempFolder
 import org.specs.SpecificationWithJUnit
+import org.specs.mock.Mockito
 
-class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging {
+class LoggerSpec extends SpecificationWithJUnit with Mockito with TempFolder with TestLogging {
   private var myHandler: Handler = null
   private var log: Logger = null
 
@@ -130,6 +131,18 @@ class LoggerSpec extends SpecificationWithJUnit with TempFolder with TestLogging
         val result = futureResults(i).get
         result must be(expected)
       }
+    }
+
+    "withLoggers applies logger factories, executes a block, and then applies original factories" in {
+      val initialFactories = List(LoggerFactory(node = "", level = Some(Level.DEBUG)))
+      val otherFactories = List(LoggerFactory(node = "", level = Some(Level.INFO)))
+      Logger.configure(initialFactories)
+
+      Logger.get("").getLevel mustEqual Level.DEBUG
+      Logger.withLoggers(otherFactories) {
+        Logger.get("").getLevel() mustEqual Level.INFO
+      }
+      Logger.get("").getLevel mustEqual Level.DEBUG
     }
 
     "configure logging" in {

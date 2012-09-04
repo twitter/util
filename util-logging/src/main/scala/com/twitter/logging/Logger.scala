@@ -192,7 +192,10 @@ object Logger extends Iterable[Logger] {
   // A cache of scala Logger objects by name.
   // Using a low concurrencyLevel (2), with the assumption that we aren't ever creating too
   // many loggers at the same time.
-  private val loggersCache = new ConcurrentHashMap[String, Logger](128, 0.75f, 2)
+  private[this] val loggersCache = new ConcurrentHashMap[String, Logger](128, 0.75f, 2)
+
+  // A cache of LoggerFactory functions passed into Logger.configure.
+  @volatile private[this] var loggerFactoryCache = List[() => Logger]()
 
   private[logging] val root: Logger = get("")
 
@@ -266,6 +269,24 @@ object Logger extends Iterable[Logger] {
   }
 
   /**
+   * Execute a block with a given set of handlers, reverting back to the original
+   * handlers upon completion.
+   */
+  def withLoggers(loggerFactories: List[() => Logger])(f: => Unit) {
+    // Hold onto a local copy of loggerFactoryCache in case Logger.configure is called within f.
+    val localLoggerFactoryCache = loggerFactoryCache
+
+    clearHandlers()
+    loggerFactories.foreach { _() }
+
+    f
+
+    reset()
+    loggerFactoryCache = localLoggerFactoryCache
+    loggerFactoryCache.foreach { _() }
+  }
+
+  /**
    * Return a logger for the given package name. If one doesn't already
    * exist, a new logger will be created and returned.
    */
@@ -322,6 +343,8 @@ object Logger extends Iterable[Logger] {
   def iterator: Iterator[Logger] = JavaConversions.asScalaIterator(loggersCache.values.iterator)
 
   def configure(loggerFactories: List[() => Logger]) {
+    loggerFactoryCache = loggerFactories
+
     clearHandlers()
     loggerFactories.foreach { _() }
   }
