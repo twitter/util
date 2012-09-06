@@ -211,15 +211,6 @@ trait TimeLike[+This <: TimeLike[This]] {
   // backward compat:
   def inMillis = inMilliseconds
 
-  override def equals(other: Any) = {
-    other match {
-      case x: TimeLike[_] =>
-        inNanoseconds == x.inNanoseconds
-      case x =>
-        false
-    }
-  }
-
   /**
    * Rounds down to the nearest multiple of the given duration.  For example:
    * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
@@ -238,6 +229,11 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
    * Renders this time using the default format.
    */
   override def toString = Time.defaultFormat.format(this)
+
+  override def equals(other: Any) = other match {
+    case t: Time => nanos == t.nanos
+    case _ => false
+  }
 
   override def hashCode = nanos.hashCode
 
@@ -379,13 +375,6 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
 
   def build(nanos: Long) = new Duration(nanos)
 
-  override def hashCode = nanos.hashCode
-
-  override def equals(that: Any) = that match {
-    case t: Duration => this.nanos == t.nanos
-    case _ => false
-  }
-
   override def toString = {
     if (nanos == Long.MaxValue) {
       "never"
@@ -399,6 +388,13 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
       inNanoseconds + ".nanoseconds"
     }
   }
+
+  override def equals(other: Any) = other match {
+    case t: Duration => this.nanos == t.nanos
+    case _ => false
+  }
+
+  override def hashCode = nanos.hashCode
 
   /**
    * Equality within a delta.
