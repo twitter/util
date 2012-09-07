@@ -1,3 +1,12 @@
+5.3.10  2012-09-06
+  * Improve ZNode.name and ZNode.parentPath to not use Regexes
+  * Fix ScheduledThreadPoolTimer.schedule(...).cancel()
+  * Upgrade guava dependency to v13
+  * Add a ZkClient Connector that dispatches requests across several zookeeper connections
+  * Support prefix-less sequential nodes in util-zk
+  * util-logging: Add Logger.withLoggers.
+  * Clean up equals and hashCode for Time and Duration
+
 5.3.7  2012-08-21
   * Disable log handler purging
   * Added ThriftCodec
