@@ -7,7 +7,7 @@ import scala.util.Random
  * An offer to communicate with another process. The offer is
  * parameterized on the type of the value communicated. An offer that
  * sends a value typically has type {{Unit}}. An offer is activated by
- * synchronizing it, which is done with `apply()`.
+ * synchronizing it, which is done with `sync()`.
  *
  * Note that Offers are persistent values -- they may be synchronized
  * multiple times. They represent a standing offer of communication, not
@@ -24,7 +24,7 @@ import scala.util.Random
  * that phase of the protocol.
  *
  * Note that a user should never perform this protocol themselves --
- * synchronization should always be done with `apply()`.
+ * synchronization should always be done with `sync()`.
  *
  * Future cancellation is propagated, and failure is passed through. It
  * is up to the implementor of the Offer to decide on failure semantics,
@@ -132,7 +132,7 @@ trait Offer[+T] { self =>
   }
 
   /**
-   * Synchronize this offer, blocking for the result. See {{apply()}}
+   * Synchronize this offer, blocking for the result. See {{sync()}}
    * and {{com.twitter.util.Future.apply()}}
    */
   def syncWait(): T = sync()()
