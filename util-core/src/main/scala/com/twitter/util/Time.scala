@@ -48,7 +48,7 @@ object Time {
    */
   private[Time] var fn: () => Time = () => Time.fromNanoseconds(System.nanoTime + nanoTimeOffset)
 
-  @deprecated("use Time.fromMilliseconds(...) instead")
+  @deprecated("use Time.fromMilliseconds(...) instead", "2011-09-12") // date is a guess
   def apply(millis: Long) = fromMilliseconds(millis)
 
   def fromMilliseconds(millis: Long): Time = {
@@ -272,7 +272,7 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
   /**
    * Duration that has passed between the epoch and the current time.
    */
-  @deprecated("use sinceEpoch")
+  @deprecated("use sinceEpoch", "2011-05-23") // date is a guess
   def fromEpoch = this - Time.epoch
 
   /**
@@ -295,6 +295,7 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
    */
   def toDate = new Date(inMillis)
 }
+
 
 object Duration {
   import com.twitter.conversions.time._
@@ -328,7 +329,7 @@ object Duration {
     new Duration(TimeMath.mul(value, factor))
   }
 
-  @deprecated("use time.untilNow")
+  @deprecated("use time.untilNow", "2011-05-03") // date is a guess
   def since(time: Time) = Time.now.since(time)
 
   val MaxValue = Long.MaxValue.nanoseconds
@@ -356,6 +357,15 @@ object Duration {
     val duration = new Duration(System.nanoTime - start)
     (rv, duration)
   }
+
+  private val timeUnits = Seq(
+    TimeUnit.DAYS,
+    TimeUnit.HOURS,
+    TimeUnit.MINUTES,
+    TimeUnit.SECONDS,
+    TimeUnit.MILLISECONDS,
+    TimeUnit.MICROSECONDS,
+    TimeUnit.NANOSECONDS)
 }
 
 class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] with Serializable {
@@ -375,18 +385,40 @@ class Duration private[util] (protected val nanos: Long) extends TimeLike[Durati
 
   def build(nanos: Long) = new Duration(nanos)
 
-  override def toString = {
-    if (nanos == Long.MaxValue) {
-      "never"
-    } else if (inNanoseconds % NanosPerMinute == 0) {
-      inMinutes + ".minutes"
-    } else if (inNanoseconds % NanosPerSecond == 0) {
-      inSeconds + ".seconds"
-    } else if (inNanoseconds % NanosPerMillisecond == 0) {
-      inMilliseconds + ".milliseconds"
-    } else {
-      inNanoseconds + ".nanoseconds"
+  /**
+   * toString produces a representation that
+   *
+   * - loses no information
+   * - is easy to read
+   * - can be read back in if com.twitter.conversions.time._ is imported
+   *
+   * An example:
+   *
+   * com.twitter.util.Duration(9999999, java.util.concurrent.TimeUnit.MICROSECONDS)
+   * res0: com.twitter.util.Duration = 9.seconds+999.milliseconds+999.microseconds
+   */
+
+  override def toString: String = {
+    if (nanos == Long.MaxValue)
+      return "Duration.Never"
+    else if (nanos == 0)
+      return "0.seconds"
+
+    val s = new StringBuilder
+    var ns = nanos
+    for (u <- timeUnits) {
+      val v = u.convert(ns, TimeUnit.NANOSECONDS)
+      if (v != 0) {
+        ns -= TimeUnit.NANOSECONDS.convert(v, u)
+        if (v > 0 && !s.isEmpty)
+          s.append("+")
+        s.append(v.toString)
+        s.append(".")
+        s.append(u.name.toLowerCase)
+      }
     }
+
+    s.toString()
   }
 
   override def equals(other: Any) = other match {

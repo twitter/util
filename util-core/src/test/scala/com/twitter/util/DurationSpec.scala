@@ -141,5 +141,13 @@ class DurationSpec extends SpecificationWithJUnit {
       map.get(44.millis) mustEqual 44
       map.get(233) mustEqual 0
     }
+
+    "toString must display as sums" in {
+      (9999999.seconds).toString mustEqual "115.days+17.hours+46.minutes+39.seconds"
+    }
+
+    "toString must handle negative durations" in {
+      (-9999999.seconds).toString mustEqual "-115.days-17.hours-46.minutes-39.seconds"
+    }
   }
 }
