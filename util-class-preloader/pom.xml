@@ -4,7 +4,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>util-class-preloader</artifactId>
   <packaging>jar</packaging>
-  <version>5.3.11-SNAPSHOT</version>
+  <version>5.3.11</version>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>scala-parent-292</artifactId>
