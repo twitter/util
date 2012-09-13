@@ -200,7 +200,7 @@ class TimeSpec extends SpecificationWithJUnit {
     "add" in {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) + BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.add(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.add(a, b) mustEqual bigC.toLong
@@ -210,7 +210,7 @@ class TimeSpec extends SpecificationWithJUnit {
         test(randLong(), randLong())
       }
     }
-    
+
     "add MaxValues" in {
       TimeMath.add(Long.MaxValue, randLong()) must be_==(Long.MaxValue)
       TimeMath.add(randLong(), Long.MaxValue) must be_==(Long.MaxValue)
@@ -219,7 +219,7 @@ class TimeSpec extends SpecificationWithJUnit {
     "sub" in {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) - BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.sub(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.sub(a, b) mustEqual bigC.toLong
@@ -229,7 +229,7 @@ class TimeSpec extends SpecificationWithJUnit {
         test(randLong(), randLong())
       }
     }
-    
+
     "sub MaxValues" in {
       TimeMath.sub(Long.MaxValue, randLong()) must be_==(Long.MaxValue)
     }
@@ -261,7 +261,7 @@ class TimeSpec extends SpecificationWithJUnit {
 
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) * BigInt(b)
-        if (bigC.abs > BigInt.MaxLong)
+        if (bigC.abs > Long.MaxValue)
           TimeMath.mul(a, b) must throwA[TimeOverflowException]
         else
           TimeMath.mul(a, b) mustEqual bigC.toLong
