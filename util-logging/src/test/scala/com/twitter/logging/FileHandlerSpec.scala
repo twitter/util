@@ -188,6 +188,39 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
       }
     }
 
+    "ignores the target filename despite shorter filenames" in {
+      // even if the sort order puts the target filename before `rotateCount` other
+      // files, it should not be removed
+      withTempFolder {
+        new File(folderName).list().length mustEqual 0
+        val namePrefix = "test"
+        val name = namePrefix + ".log"
+
+        val handler = FileHandler(
+          filename = folderName + "/" + name,
+          rollPolicy = Policy.Hourly,
+          append = true,
+          rotateCount = 1,
+          formatter = BareFormatter
+        ).apply()
+
+        // create a file without the '.log' suffix, which will sort before the target
+        new File(folderName, namePrefix).createNewFile()
+
+        def flush() = {
+          handler.publish(record1)
+          handler.roll()
+          new File(folderName).list().length mustEqual 3
+        }
+
+        // the target, 1 rotated file, and the short file should all remain
+        (1 to 5).foreach { _ => flush() }
+        new File(folderName).list().toSet must beLike {
+          case x => x.contains(name) && x.contains(namePrefix)
+        }
+      }
+    }
+
     "correctly handles relative paths" in {
       withTempFolder {
         // user.dir will be replaced with the temp folder,

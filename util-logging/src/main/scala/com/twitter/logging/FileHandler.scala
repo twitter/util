@@ -17,7 +17,7 @@
 package com.twitter.logging
 
 import com.twitter.util.{HandleSignal, StorageUnit, Time}
-import java.io.{File, FileOutputStream, OutputStream}
+import java.io.{File, FilenameFilter, FileOutputStream, OutputStream}
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, logging => javalog}
@@ -74,7 +74,18 @@ class FileHandler(
   extends Handler(formatter, level) {
 
   // This converts relative paths to absolute paths, as expected
-  val filename = new File(path).getAbsolutePath
+  val (filename, name) = {
+    val f = new File(path)
+    (f.getAbsolutePath, f.getName)
+  }
+  val (filenamePrefix, filenameSuffix) = {
+    val n = filename.lastIndexOf('.')
+    if (n > 0) {
+      (filename.substring(0, n), filename.substring(n))
+    } else {
+      (filename, "")
+    }
+  }
 
   // Thread-safety is guarded by synchronized on this
   private var stream: OutputStream = null
@@ -91,7 +102,7 @@ class FileHandler(
 
   openLog()
 
-  // If nextRollTime.isDefined by openLog(), then its will always remain isDefined.
+  // If nextRollTime.isDefined by openLog(), then it will always remain isDefined.
   // This allows us to avoid volatile reads in the publish method.
   private val examineRollTime = nextRollTime.isDefined
 
@@ -199,11 +210,17 @@ class FileHandler(
    * Delete files when "too many" have accumulated.
    * This duplicates logrotate's "rotate count" option.
    */
-  private def removeOldFiles(filenamePrefix: String) {
+  private def removeOldFiles() {
     if (rotateCount >= 0) {
-      val filesInLogDir = new File(filename).getParentFile().listFiles()
-      val rotatedFiles = filesInLogDir.filter(f => f.getName != filename &&
-        f.getName.startsWith(new File(filenamePrefix).getName)).sortBy(_.getName)
+      // collect files which are not `filename`, but which share the prefix/suffix
+      val prefixName = new File(filenamePrefix).getName
+      val rotatedFiles =
+        new File(filename).getParentFile().listFiles(
+          new FilenameFilter {
+            def accept(f: File, fname: String): Boolean =
+              fname != name && fname.startsWith(prefixName) && fname.endsWith(filenameSuffix)
+          }
+        ).sortBy(_.getName)
 
       val toDeleteCount = math.max(0, rotatedFiles.size - rotateCount)
       rotatedFiles.take(toDeleteCount).foreach(_.delete())
@@ -212,14 +229,10 @@ class FileHandler(
 
   def roll() = synchronized {
     stream.close()
-    val n = filename.lastIndexOf('.')
-    val (filenamePrefix, filenameSuffix) =
-      if (n > 0) (filename.substring(0, n), filename.substring(n)) else (filename, "")
-
     val newFilename = filenamePrefix + "-" + timeSuffix(new Date(openTime)) + filenameSuffix
     new File(filename).renameTo(new File(newFilename))
     openLog()
-    removeOldFiles(filenamePrefix)
+    removeOldFiles()
   }
 
   def publish(record: javalog.LogRecord) {
