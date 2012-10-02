@@ -1,8 +1,9 @@
 package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import java.util.concurrent.{CancellationException, ExecutorService, Executors, Future => JFuture}
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.{CancellationException, ExecutorService, Executors,
+  Future => JFuture}
 
 /**
  * A FuturePool executes tasks asynchronously, typically using a pool
@@ -27,13 +28,23 @@ object FuturePool {
   }
 
   /**
-   * A default shared FuturePool, configured at 2 times the number of cores, similar to Netty.
-   * Convenient, but higher demand systems should configure their own.
+   * The default future pool, using a cached threadpool, provided by
+   * [[java.util.concurrent.Executors.newCachedThreadPool]]. Note
+   * that this is intended for IO concurrency; computational
+   * parallelism typically requires special treatment.
    */
-  lazy val defaultPool = new ExecutorServiceFuturePool(
-    Executors.newFixedThreadPool(
-      Runtime.getRuntime().availableProcessors() * 2,
-      new NamedPoolThreadFactory("DefaultFuturePool")
+  @deprecated("use unboundedPool instead", "5.3.11")
+  lazy val defaultPool = unboundedPool
+
+  /**
+   * The default future pool, using a cached threadpool, provided by
+   * [[java.util.concurrent.Executors.newCachedThreadPool]]. Note
+   * that this is intended for IO concurrency; computational
+   * parallelism typically requires special treatment.
+   */
+  lazy val unboundedPool = new ExecutorServiceFuturePool(
+    Executors.newCachedThreadPool(
+      new NamedPoolThreadFactory("UnboundedFuturePool")
     )
   )
 }
