@@ -62,7 +62,7 @@ sealed trait Spool[+A] {
       // stacks in case a large portion
       // of the stream is already defined
       var next = tail
-      while (next.isDefined && !next().isEmpty) {
+      while (next.isDefined && next.isReturn && !next().isEmpty) {
         f(Some(next().head))
         next = next().tail
       }

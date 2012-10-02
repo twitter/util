@@ -37,6 +37,17 @@ class SpoolSpec extends SpecificationWithJUnit {
     }
   }
 
+  "Simple resolved spool with error" should {
+    val p = new Promise[Spool[Int]](Throw(new Exception("sad panda")))
+    val s = 1 **:: 2 *:: p
+
+    "EOF iteration on error" in {
+        val xs = new ArrayBuffer[Option[Int]]
+        s foreachElem { xs += _ }
+        xs.toSeq must be_==(Seq(Some(1), Some(2), None))
+    }
+  }
+
   "Simple delayed Spool" should {
     val p = new Promise[Spool[Int]]
     val p1 = new Promise[Spool[Int]]
