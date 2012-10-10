@@ -53,7 +53,7 @@ object FileHandler {
   def apply(
     filename: String,
     rollPolicy: Policy = Policy.Never,
-    append: Boolean = false,
+    append: Boolean = true,
     rotateCount: Int = -1,
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
