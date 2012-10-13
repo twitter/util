@@ -36,19 +36,21 @@ class ThrottledHandlerSpec extends SpecificationWithJUnit with TempFolder {
     "throttle keyed log messages" in {
       val log = Logger()
       val throttledLog = new ThrottledHandler(handler, 1.second, 3)
-      log.addHandler(throttledLog)
+      Time.withCurrentTimeFrozen { timeCtrl =>
+        log.addHandler(throttledLog)
 
-      log.error("apple: %s", "help!")
-      log.error("apple: %s", "help 2!")
-      log.error("orange: %s", "orange!")
-      log.error("orange: %s", "orange!")
-      log.error("apple: %s", "help 3!")
-      log.error("apple: %s", "help 4!")
-      log.error("apple: %s", "help 5!")
-      throttledLog.reset()
-      log.error("apple: %s", "done.")
+        log.error("apple: %s", "help!")
+        log.error("apple: %s", "help 2!")
+        log.error("orange: %s", "orange!")
+        log.error("orange: %s", "orange!")
+        log.error("apple: %s", "help 3!")
+        log.error("apple: %s", "help 4!")
+        log.error("apple: %s", "help 5!")
+        timeCtrl.advance(2.seconds)
+        log.error("apple: %s", "done.")
 
-      handler.get.split("\n").toList mustEqual List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done.")
+        handler.get.split("\n").toList mustEqual List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done.")
+      }
     }
 
     "log the summary even if nothing more is logged with that name" in {
