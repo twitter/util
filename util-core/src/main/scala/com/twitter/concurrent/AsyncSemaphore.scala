@@ -13,8 +13,8 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
   def this(initialPermits: Int = 0) = this(initialPermits, None)
   def this(initialPermits: Int, maxWaiters: Int) = this(initialPermits, Some(maxWaiters))
   require(maxWaiters.getOrElse(0) >= 0)
-  private[this] var waiters = new Queue[() => Unit]
-  private[this] var availablePermits = initialPermits
+  @volatile private[this] var waiters = new Queue[() => Unit]
+  @volatile private[this] var availablePermits = initialPermits
 
   private[this] class SemaphorePermit extends Permit {
     /**
@@ -35,7 +35,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
     }
   }
 
-  def numWaiters = synchronized { waiters.size }
+  def numWaiters = waiters.size
   def numPermitsAvailable = availablePermits
 
   /**
