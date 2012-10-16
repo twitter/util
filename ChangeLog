@@ -1,3 +1,13 @@
+5.3.13  2012-10-16
+  * AsyncSemaphore: Use volatile vars for the active number and the waiters
+  * util-logging: fix ThrottledHandler to not leak memory
+  * util-logging: for file handlers, default to append=true since that was the default with FileHandlerConfig and is safer behavior
+  * upgrading slf4j dependent projects (1.6.1).
+  * sbt: robust MD5 checking.
+  * Fix Spool.foreachElem crashing on resoved spool with error
+  * FuturePool.defaultPool: use cached threadpool by default.
+  * util-logging: Correctly handle files with a shared prefix.
+
 5.3.10  2012-09-06
   * Improve ZNode.name and ZNode.parentPath to not use Regexes
   * Fix ScheduledThreadPoolTimer.schedule(...).cancel()
