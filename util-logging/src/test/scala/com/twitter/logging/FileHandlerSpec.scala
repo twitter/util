@@ -76,40 +76,42 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
       }
     }
 
-    "respond to a sighup to reopen a logfile with sun.misc" in {
-      try {
-        val signalClass = Class.forName("sun.misc.Signal")
-        val sighup = signalClass.getConstructor(classOf[String]).newInstance("HUP").asInstanceOf[Object]
-        val raiseMethod = signalClass.getMethod("raise", signalClass)
+    // /* Test is commented out according to http://jira.local.twitter.com/browse/REPLA-618 */
+    //
+    // "respond to a sighup to reopen a logfile with sun.misc" in {
+    //   try {
+    //     val signalClass = Class.forName("sun.misc.Signal")
+    //     val sighup = signalClass.getConstructor(classOf[String]).newInstance("HUP").asInstanceOf[Object]
+    //     val raiseMethod = signalClass.getMethod("raise", signalClass)
 
-        withTempFolder {
-          val handler = FileHandler(
-            filename = folderName + "/new.log",
-            rollPolicy = Policy.SigHup,
-            append = true,
-            formatter = BareFormatter
-          ).apply()
+    //     withTempFolder {
+    //       val handler = FileHandler(
+    //         filename = folderName + "/new.log",
+    //         rollPolicy = Policy.SigHup,
+    //         append = true,
+    //         formatter = BareFormatter
+    //       ).apply()
 
-          val logFile = new File(folderName, "new.log")
-          logFile.renameTo(new File(folderName, "old.log"))
-          handler.publish(record1)
+    //       val logFile = new File(folderName, "new.log")
+    //       logFile.renameTo(new File(folderName, "old.log"))
+    //       handler.publish(record1)
 
-          raiseMethod.invoke(null, sighup)
+    //       raiseMethod.invoke(null, sighup)
 
-          val newLogFile = new File(folderName, "new.log")
-          newLogFile.exists() must eventually(be_==(true))
+    //       val newLogFile = new File(folderName, "new.log")
+    //       newLogFile.exists() must eventually(be_==(true))
 
-          handler.publish(record2)
+    //       handler.publish(record2)
 
-          val oldReader = reader("old.log")
-          oldReader.readLine mustEqual "first post!"
-          val newReader = reader("new.log")
-          newReader.readLine mustEqual "second post"
-        }
-      } catch {
-        case ex: ClassNotFoundException =>
-      }
-    }
+    //       val oldReader = reader("old.log")
+    //       oldReader.readLine mustEqual "first post!"
+    //       val newReader = reader("new.log")
+    //       newReader.readLine mustEqual "second post"
+    //     }
+    //   } catch {
+    //     case ex: ClassNotFoundException =>
+    //   }
+    // }
 
     "roll logs on time" in {
       "hourly" in {
