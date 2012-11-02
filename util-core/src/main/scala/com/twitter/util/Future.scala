@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.{AtomicInteger, AtomicReference, AtomicRefere
 import java.util.concurrent.{
   CancellationException, Future => JavaFuture, TimeUnit}
 import scala.annotation.tailrec
-import scala.collection.JavaConversions.{asScalaBuffer, asJavaList}
+import scala.collection.JavaConversions.{asScalaBuffer, seqAsJavaList}
 import scala.collection.mutable
 
 object Future {
@@ -87,7 +87,7 @@ object Future {
    */
   def never: Future[Nothing] = new NoFuture
 
-  @deprecated("Prefer static Future.Void.")
+  @deprecated("Prefer static Future.Void.", "5.x")
   def void(): Future[Void] = value[Void](null)
 
   /**
@@ -218,7 +218,7 @@ object Future {
    * @return a Future[java.util.List[A]] containing the collected values from fs.
    */
   def collect[A](fs: java.util.List[Future[A]]): Future[java.util.List[A]] =
-    collect(asScalaBuffer(fs)) map(asJavaList(_))
+    collect(asScalaBuffer(fs)) map(seqAsJavaList(_))
 
   /**
    * "Select" off the first future to be satisfied.  Return this as a
@@ -258,7 +258,7 @@ object Future {
    */
   def select[A](fs: java.util.List[Future[A]]): Future[(Try[A], java.util.List[Future[A]])] = {
     select(asScalaBuffer(fs)) map { case (first, rest) =>
-      (first, asJavaList(rest))
+      (first, seqAsJavaList(rest))
     }
   }
 
@@ -626,7 +626,7 @@ abstract class Future[+A] extends Cancellable {
    */
   def voided: Future[Void] = map(_ => null.asInstanceOf[Void])
 
-  @deprecated("'void' is a reserved word in javac.")
+  @deprecated("'void' is a reserved word in javac.", "5.x")
   def void: Future[Void] = voided
 
   /**
