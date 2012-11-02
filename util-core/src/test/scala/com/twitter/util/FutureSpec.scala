@@ -297,39 +297,44 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         }
       }
 
-      "join" in {
-        val p0 = new Promise[Int]
-        val p1 = new Promise[Int]
-        val f = p0 join p1
-        f.isDefined must beFalse
-
-        "only return when both futures complete" in {
-          p0() = Return(1)
+      def testJoin(label: String, joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])) {
+        "join(%s)".format(label) in {
+          val p0 = new Promise[Int]
+          val p1 = new Promise[Int]
+          val f = joiner(p0, p1)
           f.isDefined must beFalse
-          p1() = Return(2)
-          f() must be_==(1, 2)
-        }
 
-        "return with exception if the first future throws" in {
-          p0() = Throw(new Exception)
-          f() must throwA[Exception]
-        }
+          "only return when both futures complete" in {
+            p0() = Return(1)
+            f.isDefined must beFalse
+            p1() = Return(2)
+            f() must be_==(1, 2)
+          }
 
-        "return with exception if the second future throws" in {
-          p0() = Return(1)
-          f.isDefined must beFalse
-          p1() = Throw(new Exception)
-          f() must throwA[Exception]
-        }
+          "return with exception if the first future throws" in {
+            p0() = Throw(new Exception)
+            f() must throwA[Exception]
+          }
 
-        "propagate cancellation" in {
-          p0.isCancelled must beFalse
-          p1.isCancelled must beFalse
-          f.cancel()
-          p0.isCancelled must beTrue
-          p1.isCancelled must beTrue
+          "return with exception if the second future throws" in {
+            p0() = Return(1)
+            f.isDefined must beFalse
+            p1() = Throw(new Exception)
+            f() must throwA[Exception]
+          }
+
+          "propagate cancellation" in {
+            p0.isCancelled must beFalse
+            p1.isCancelled must beFalse
+            f.cancel()
+            p0.isCancelled must beTrue
+            p1.isCancelled must beTrue
+          }
         }
       }
+
+      testJoin("f join g", _ join _)
+      testJoin("Future.join(f, g)", Future.join(_, _))
 
       "toJavaFuture" in {
         "return the same thing as our Future when initialized" in {
