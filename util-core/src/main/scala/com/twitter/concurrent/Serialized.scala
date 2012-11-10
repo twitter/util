@@ -5,9 +5,11 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import com.twitter.util.{Try, Future, Promise}
 
 /**
- * A trait ensure ordered, non-interleaving operations. Serialized is analogous
- * to the JVM's synchronized operation, except that it is non-blocking. If you
- * cannot acquire the "lock" items are queued.
+ * Efficient ordered ''serialization'' of operations.
+ *
+ * '''Note:''' This should not be used in place of Scala's
+ * `synchronized`, but rather only when serialization semantics are
+ * required.
  */
 trait Serialized {
   protected case class Job[T](promise: Promise[T], doItToIt: () => T) {
