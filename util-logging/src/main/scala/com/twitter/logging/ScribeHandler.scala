@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.twitter
-package logging
+package com.twitter.logging
 
 import com.twitter.conversions.time._
 import com.twitter.util.{Duration, Time}
+import com.twitter.concurrent.NamedPoolThreadFactory
 import java.io.IOException
 import java.net._
 import java.nio.{ByteBuffer, ByteOrder}
 import java.util.{Arrays, logging => javalog}
-import scala.collection.mutable
+import java.util.concurrent.{Executors, LinkedBlockingQueue}
+import java.util.concurrent.atomic.AtomicLong
 
 private class Retry extends Exception("retry")
 
@@ -38,6 +39,8 @@ object ScribeHandler {
   val DefaultConnectBackoff = 15.seconds
   val DefaultMaxMessagesPerTransaction = 1000
   val DefaultMaxMessagesToBuffer = 10000
+  val DefaultStatsReportPeriod = 5.minutes
+  val log = Logger.get(getClass)
 
   /**
    * Generates a HandlerFactory that returns a ScribeHandler
@@ -82,80 +85,120 @@ class ScribeHandler(
     formatter: Formatter,
     level: Option[Level])
   extends Handler(formatter, level) {
+  import ScribeHandler._
 
   // it may be necessary to log errors here if scribe is down:
-  val loggerName = this.getClass.toString
-  val log = Logger.get(loggerName)
+  private val loggerName = getClass.toString
 
-  var lastTransmission = Time.epoch
-  var lastConnectAttempt = Time.epoch
+  private var lastConnectAttempt = Time.epoch
+  private var lastLogStats = Time.epoch
 
-  var socket: Option[Socket] = None
-  val queue = new mutable.ArrayBuffer[Array[Byte]]
+  private var socket: Option[Socket] = None
+  private var archaicServer = false
+  private val flusher = Executors.newSingleThreadExecutor(new NamedPoolThreadFactory("ScribeFlusher", true))
 
-  var archaicServer = false
+  // the following should be private too, make visible for testing
+  @volatile private[logging] var lastTransmission = Time.epoch
+  private[logging] val queue = new LinkedBlockingQueue[Array[Byte]](maxMessagesToBuffer)
+  private[logging] val sentRecords = new AtomicLong()
+  private[logging] val droppedRecords = new AtomicLong()
+  private[logging] val reconnectionFailure = new AtomicLong()
+  private[logging] val reconnectionSkipped = new AtomicLong()
 
-  private def connect() {
-    val now = Time.now
-    if (!socket.isDefined && (now - lastConnectAttempt > connectBackoff)) {
-      lastConnectAttempt = now
-      try {
-        socket = Some(new Socket(hostname, port))
-      } catch {
-        case e: Exception =>
-          log.error("Unable to open socket to scribe server at %s:%d: %s", hostname, port, e)
+  override def flush() {
+
+    def connect() {
+      if (!socket.isDefined) {
+        if (Time.now.since(lastConnectAttempt) > connectBackoff) {
+          try {
+            socket = Some(new Socket(hostname, port))
+            lastConnectAttempt = Time.now
+          } catch {
+            case e: Exception =>
+              log.error("Unable to open socket to scribe server at %s:%d: %s", hostname, port, e)
+              reconnectionFailure.incrementAndGet()
+          }
+        } else {
+          reconnectionSkipped.incrementAndGet()
+        }
       }
     }
-  }
 
-  def flush(): Unit = synchronized {
-    connect()
-    for (s <- socket) {
-      val outStream = s.getOutputStream()
-      val inStream = s.getInputStream()
-      val count = maxMessagesPerTransaction min queue.size
-      val buffer = makeBuffer(count)
+    // report stats
+    def logStats() {
+      val period = Time.now.since(lastLogStats)
+      if (period > DefaultStatsReportPeriod) {
+        val sent = sentRecords.getAndSet(0)
+        val dropped = droppedRecords.getAndSet(0)
+        val failed = reconnectionFailure.getAndSet(0)
+        val skipped = reconnectionSkipped.getAndSet(0)
+        log.info("sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
+                 sent, sent/period.inSeconds, dropped, failed, skipped)
+        lastLogStats = Time.now
+      }
+    }
 
-      try {
-        outStream.write(buffer.array)
-        val expectedReply = if (archaicServer) OLD_SCRIBE_REPLY else SCRIBE_REPLY
+    def sendBatch() {
+      synchronized {
+        connect()
+        socket.foreach { s =>
+          val outStream = s.getOutputStream()
+          val inStream = s.getInputStream()
+          var remaining = queue.size
 
-        // read response:
-        val response = new Array[Byte](expectedReply.length)
-        var offset = 0
-        while (offset < response.length) {
-          val n = inStream.read(response, offset, response.length - offset)
-          if (n < 0) {
-            throw new IOException("End of stream")
+          // try to send the log records in batch
+          // need to check if socket is closed due to exception
+          while (remaining > 0 && socket.isDefined) {
+            val count = maxMessagesPerTransaction min remaining
+            val buffer = makeBuffer(count)
+            var offset = 0
+
+            try {
+              outStream.write(buffer.array)
+              val expectedReply = if (archaicServer) OLD_SCRIBE_REPLY else SCRIBE_REPLY
+
+              // read response:
+              val response = new Array[Byte](expectedReply.length)
+              while (offset < response.length) {
+                val n = inStream.read(response, offset, response.length - offset)
+                if (n < 0) {
+                  throw new IOException("End of stream")
+                }
+                offset += n
+                if (!archaicServer && (offset > 0) && (response(0) == 0)) {
+                  archaicServer = true
+                  lastConnectAttempt = Time.epoch
+                  log.warning("Scribe server is archaic; changing to old protocol for future requests.")
+                  throw new Retry
+                }
+              }
+              if (!Arrays.equals(response, expectedReply)) {
+                throw new IOException("Error response from scribe server: " + response.toList.toString)
+              }
+              sentRecords.getAndAdd(count)
+              remaining -= count
+            } catch {
+              case _: Retry => closeSocket()
+              case e: Exception =>
+                log.error(e, "Failed to send %s %d log entries to scribe server at %s:%d",
+                          category, count, hostname, port)
+                closeSocket()
+            }
           }
-          offset += n
-          if (!archaicServer && (offset > 0) && (response(0) == 0)) {
-            archaicServer = true
-            close()
-            lastConnectAttempt = Time.epoch
-            log.error("Scribe server is archaic; retrying with old protocol.")
-            throw new Retry
-          }
-        }
-        if (!Arrays.equals(response, expectedReply)) {
-          throw new IOException("Error response from scribe server: " + response.toList.toString)
-        }
-        queue.trimStart(count)
-        if (queue.isEmpty) {
           lastTransmission = Time.now
         }
-      } catch {
-        case _: Retry =>
-          flush()
-        case e: Exception =>
-          log.error(e, "Failed to send %d log entries to scribe server at %s:%d", count, hostname, port)
-          close()
+        logStats()
       }
     }
+
+    flusher.execute( new Runnable {
+      def run() { sendBatch() }
+    })
   }
 
-  def makeBuffer(count: Int): ByteBuffer = {
-    val texts = for (i <- 0 until count) yield queue(i)
+  // should be private, make it visible to tests
+  private[logging] def makeBuffer(count: Int): ByteBuffer = {
+    val texts = for (i <- 0 until count) yield queue.poll()
 
     val recordHeader = ByteBuffer.wrap(new Array[Byte](10 + category.length))
     recordHeader.order(ByteOrder.BIG_ENDIAN)
@@ -184,30 +227,33 @@ class ScribeHandler(
     buffer
   }
 
-  def close(): Unit = synchronized {
-    for (s <- socket) {
-      try {
-        s.close()
-      } catch {
-        case _ =>
+  private def closeSocket() {
+    synchronized {
+      socket.foreach { s =>
+        try {
+          s.close()
+        } catch {
+          case _ =>
+        }
       }
+      socket = None
     }
-    socket = None
+
   }
 
-  def publish(record: javalog.LogRecord): Unit = {
+  override def close() {
+    closeSocket()
+    flusher.shutdown()
+  }
+
+  override def publish(record: javalog.LogRecord) {
     if (record.getLoggerName == loggerName) return
     publish(getFormatter.format(record).getBytes("UTF-8"))
   }
 
-  def publish(record: Array[Byte]): Unit = synchronized {
-    queue += record
-    while (queue.size > maxMessagesToBuffer) {
-      queue.trimStart(1)
-    }
-    if (Time.now - lastTransmission >= bufferTime) {
-      flush()
-    }
+  def publish(record: Array[Byte]) {
+    if (!queue.offer(record)) droppedRecords.incrementAndGet()
+    if (Time.now.since(lastTransmission) >= bufferTime) flush()
   }
 
   override def toString = {
@@ -216,26 +262,26 @@ class ScribeHandler(
       hostname, port, bufferTime, connectBackoff, maxMessagesPerTransaction, formatter.toString)
   }
 
-  val SCRIBE_PREFIX: Array[Byte] = Array(
+  private[this] val SCRIBE_PREFIX: Array[Byte] = Array(
     // version 1, call, "Log", reqid=0
     0x80.toByte, 1, 0, 1, 0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 0, 0, 0, 0,
     // list of structs
     15, 0, 1, 12
   )
-  val OLD_SCRIBE_PREFIX: Array[Byte] = Array(
+  private[this] val OLD_SCRIBE_PREFIX: Array[Byte] = Array(
     // (no version), "Log", reply, reqid=0
     0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 1, 0, 0, 0, 0,
     // list of structs
     15, 0, 1, 12
   )
 
-  val SCRIBE_REPLY: Array[Byte] = Array(
+  private[this] val SCRIBE_REPLY: Array[Byte] = Array(
     // version 1, reply, "Log", reqid=0
     0x80.toByte, 1, 0, 2, 0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 0, 0, 0, 0,
     // int, fid 0, 0=ok
     8, 0, 0, 0, 0, 0, 0, 0
   )
-  val OLD_SCRIBE_REPLY: Array[Byte] = Array(
+  private[this] val OLD_SCRIBE_REPLY: Array[Byte] = Array(
     0, 0, 0, 20,
     // (no version), "Log", reply, reqid=0
     0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 2, 0, 0, 0, 0,

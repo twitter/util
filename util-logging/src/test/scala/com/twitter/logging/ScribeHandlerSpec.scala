@@ -57,7 +57,7 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
         ).apply()
         scribe.publish(record1)
         scribe.publish(record2)
-        scribe.queue must haveSize(2)
+        scribe.queue.size must be_==(2)
         scribe.makeBuffer(2).array.hexlify mustEqual (
           "000000b080010001000000034c6f67000000000f0001" +
           "0c000000020b000100000004746573740b0002000000" +
@@ -87,7 +87,7 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
 
       scribe.publish(bytes)
 
-      scribe.queue.head mustEqual bytes
+      scribe.queue.peek() mustEqual bytes
     }
 
     "throw away log messages if scribe is too busy" in {
@@ -100,9 +100,11 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
         formatter = BareFormatter,
         category = "test"
       ).apply()
+      scribe.lastTransmission = Time.now
       scribe.publish(record1)
       scribe.publish(record2)
-      scribe.queue.map(bytes=>new String(bytes)).toList mustEqual List("This is another message.\n")
+      scribe.droppedRecords.get() must be_==(1)
+      scribe.sentRecords.get() must be_==(0)
     }
   }
 }
