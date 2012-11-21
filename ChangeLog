@@ -1,3 +1,10 @@
+5.3.14  2012-11-20
+
+  * fix compiler warnings
+  * Future.join: support up to 22-tupled futures
+  * com.twitter.concurrent.Serialized: explicit docs
+  * util-logging: concurrent enqueue support for ScribeHandler, add stats
+
 5.3.13  2012-10-16
   * AsyncSemaphore: Use volatile vars for the active number and the waiters
   * util-logging: fix ThrottledHandler to not leak memory
