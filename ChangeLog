@@ -1,3 +1,13 @@
+6.0.0  2012-11-26
+
+  * Removed future cancellation, which is now replaced with one-shot
+  interrupts. These also carry a ``cause'' which will be used
+  profitably in finagle.
+  * A new, leaner Promise implemetnation
+  * New implementations for Time and Duration with true sentinels
+  * Promise, Try combinators no longer attempt to catch fatal
+  exceptions
+
 5.3.14  2012-11-20
 
   * fix compiler warnings
