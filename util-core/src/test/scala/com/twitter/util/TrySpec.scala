@@ -11,6 +11,11 @@ class TrySpec extends SpecificationWithJUnit {
       Try[Int](1) mustEqual Return(1)
       Try[Int] { throw e } mustEqual Throw(e)
     }
+
+    "not catch fatal exceptions" in {
+      val ex = new AbstractMethodError
+      Try[Int] { throw ex } must throwA(ex)
+    }
   }
 
   "Try" should {

@@ -20,7 +20,9 @@ import java.util.concurrent.TimeUnit
 import org.specs.SpecificationWithJUnit
 import com.twitter.conversions.time._
 
-class DurationSpec extends SpecificationWithJUnit {
+class DurationSpec extends { val ops = Duration } with TimeLikeSpec[Duration] {
+  import ops._
+
   "Duration" should {
     "*" in {
       1.second * 2 mustEqual 2.seconds
@@ -29,18 +31,28 @@ class DurationSpec extends SpecificationWithJUnit {
 
     "/" in {
       10.seconds / 2 mustEqual 5.seconds
+      1.seconds / 0 mustEqual Top
+      (-1).seconds / 0 mustEqual Bottom
+      0.seconds / 0 mustEqual Undefined
+      Top / 0 mustEqual Undefined
+      Top / -1 mustEqual Bottom
+      Top / 1 mustEqual Top
     }
 
     "%" in {
       10.seconds % 3.seconds mustEqual 1.second
       1.second % 300.millis mustEqual 100.millis
+      1.second % 0.seconds mustEqual Undefined
+      (-1).second % 0.seconds mustEqual Undefined
+      0.seconds % 0.seconds mustEqual Undefined
+      Top % 123.seconds mustEqual Undefined
+      Bottom % 123.seconds mustEqual Undefined
     }
 
-    "floor" in {
-      60.seconds.floor(1.minute) mustEqual 1.minute
-      100.seconds.floor(1.minute) mustEqual 1.minute
-      119.seconds.floor(1.minute) mustEqual 1.minute
-      120.seconds.floor(1.minute) mustEqual 2.minutes
+    "unary_-" in {
+      -((10.seconds).inSeconds) must be_==(-10)
+      -((Long.MinValue+1).nanoseconds) must be_==(Long.MaxValue.nanoseconds)
+      -(Long.MinValue.nanoseconds) must be_==(Top)
     }
 
     "abs" in {
@@ -148,6 +160,21 @@ class DurationSpec extends SpecificationWithJUnit {
 
     "toString must handle negative durations" in {
       (-9999999.seconds).toString mustEqual "-115.days-17.hours-46.minutes-39.seconds"
+    }
+  }
+
+  "Top" should {
+    "Be scaling resistant" in {
+      Top / 100 must be_==(Top)
+      Top * 100 must be_==(Top)
+    }
+
+    "-Top == Bottom" in {
+      -Top must be_==(Bottom)
+    }
+
+    "--Top == Top" in {
+      -(-Top) must be_==(Top)
     }
   }
 }

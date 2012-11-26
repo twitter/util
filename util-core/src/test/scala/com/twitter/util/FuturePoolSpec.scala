@@ -38,7 +38,7 @@ class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
       runCount.get() mustEqual 0
     }
 
-    "does not execute cancelled tasks" in {
+    "does not execute interrupted tasks" in {
       val runCount = new atomic.AtomicInteger
 
       val source1 = new Promise[Int]
@@ -47,22 +47,21 @@ class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
       val result1 = pool { runCount.incrementAndGet(); source1.get() }
       val result2 = pool { runCount.incrementAndGet(); source2.get() }
 
-      result2.cancel()
+      result2.raise(new Exception)
       source1.setValue(1)
 
       // The executor will run the task for result 2, but the wrapper
       // in FuturePool will throw away the work if the future
-      // representing the outcome has already been cancelled,
+      // representing the outcome has already been interrupted,
       // and will set the result to a CancellationException
       executor.getCompletedTaskCount must eventually(be_==(2))
 
       runCount.get() mustEqual 1
       result1.get()  mustEqual 1
       result2.get() must throwA[CancellationException]
-      result2.isCancelled mustEqual true
     }
 
-    "continue to run a task if it's cancelled in the middle of running" in {
+    "continue to run a task if it's interrupted while running" in {
       val runCount = new atomic.AtomicInteger
 
       val source = new Promise[Int]
@@ -83,16 +82,13 @@ class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
       }
 
       startedLatch.await(50.milliseconds)
-      result.cancel()
+      result.raise(new Exception)
       cancelledLatch.countDown()
 
       executor.getCompletedTaskCount must eventually(be_==(1))
 
       runCount.get() mustEqual 2
       result.get() must throwA[RuntimeException]
-
-      // The result believes it was cancelled but the work was finished.
-      result.isCancelled mustEqual true
     }
 
     "returns exceptions that result from submitting a task to the pool" in {

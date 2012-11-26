@@ -26,11 +26,13 @@ import scala.util.Random
  * Note that a user should never perform this protocol themselves --
  * synchronization should always be done with `sync()`.
  *
- * Future cancellation is propagated, and failure is passed through. It
+ * Future interrupts are propagated, and failure is passed through. It
  * is up to the implementor of the Offer to decide on failure semantics,
  * but they are always passed through in all of the combinators.
  */
 trait Offer[+T] { self =>
+  import Offer.LostSynchronization
+
   /**
    * Prepare a new transaction. This is the first stage of the 2 phase
    * commit. This is typically only called by the offer implementation
@@ -102,7 +104,7 @@ trait Offer[+T] { self =>
       val ourTx = self.prepare()
       if (ourTx.isDefined) ourTx else {
         ourTx foreach { tx => tx.nack() }
-        ourTx.cancel()
+        ourTx.raise(LostSynchronization)
         other.prepare()
       }
     }
@@ -179,7 +181,7 @@ object Offer {
         case Some(winner) =>
           for (loser <- prepd filter { _ ne winner }) {
             loser onSuccess { tx => tx.nack() }
-            loser.cancel()
+            loser.raise(LostSynchronization)
           }
 
           winner
@@ -188,7 +190,7 @@ object Offer {
           Future.select(prepd) flatMap { case (winner, losers) =>
             for (loser <- losers) {
               loser onSuccess { tx => tx.nack() }
-              loser.cancel()
+              loser.raise(LostSynchronization)
             }
 
             Future.const(winner)
@@ -212,12 +214,14 @@ object Offer {
     def prepare() = {
       if (deadline <= Time.now) Future.value(tx) else {
         val p = new Promise[Tx[Unit]]
-        val task = timer.schedule(deadline) {
-          p.setValue(tx)
-        }
-        p.onCancellation { task.cancel() }
+        val task = timer.schedule(deadline) { p.setValue(tx) }
+        p.setInterruptHandler { case _cause => task.cancel() }
         p
       }
     }
+  }
+
+  object LostSynchronization extends Exception {
+    override def fillInStackTrace = this
   }
 }

@@ -71,17 +71,17 @@ class Broker[T] {
 
         case s@(Quiet | Sending(_)) =>
           val p = new Promise[Tx[Unit]]
-          val elem = (p, msg)
+          val elem: (Promise[Tx[Unit]], T) = (p, msg)
+          p.setInterruptHandler {
+            case _ => rmElem(elem)
+          }
           val nextState = s match {
             case Quiet => Sending(Queue(elem))
             case Sending(q) => Sending(q enqueue elem)
             case Receiving(_) => throw new IllegalStateException()
           }
 
-          if (!state.compareAndSet(s, nextState)) prepare() else {
-            p.onCancellation { rmElem(elem) }
-            p
-          }
+          if (state.compareAndSet(s, nextState)) p else prepare()
 
         case Receiving(Queue()) =>
           throw new IllegalStateException()
@@ -103,16 +103,14 @@ class Broker[T] {
 
         case s@(Quiet | Receiving(_)) =>
           val p = new Promise[Tx[T]]
+          p.setInterruptHandler { case _ => rmElem(p) }
           val nextState = s match {
             case Quiet => Receiving(Queue(p))
             case Receiving(q) => Receiving(q enqueue p)
             case Sending(_) => throw new IllegalStateException()
           }
 
-          if (!state.compareAndSet(s, nextState)) prepare() else {
-            p.onCancellation { rmElem(p) }
-            p
-          }
+          if (state.compareAndSet(s, nextState)) p else prepare()
 
         case Sending(Queue()) =>
           throw new IllegalStateException()

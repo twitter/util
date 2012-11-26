@@ -1,15 +1,16 @@
 package com.twitter.util
 
-import com.twitter.concurrent.{Offer, IVar, Tx}
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReference, AtomicReferenceArray}
-import java.util.concurrent.{
-  CancellationException, Future => JavaFuture, TimeUnit}
+import com.twitter.concurrent.{Offer, IVar, Tx, Scheduler}
+import java.util.concurrent.atomic.{
+  AtomicBoolean, AtomicInteger, AtomicReference,
+  AtomicReferenceArray}
+import java.util.concurrent.{Future => JavaFuture, TimeUnit}
 import scala.annotation.tailrec
 import scala.collection.JavaConversions.{asScalaBuffer, seqAsJavaList}
 import scala.collection.mutable
 
 object Future {
-  val DEFAULT_TIMEOUT = Duration.MaxValue
+  val DEFAULT_TIMEOUT = Duration.Top
   val Unit = apply(())
   val Void = apply[Void](null)
   val Done = Unit
@@ -92,18 +93,19 @@ object Future {
 
   /**
    * A factory function to "lift" computations into the Future monad.
-   * It will catch exceptions and wrap them in the Throw[_] type.
-   * Non-exceptional values are wrapped in the Return[_] type.
+   * It will catch nonfatal (see: [[com.twitter.util.NonFatal]])
+   * exceptions and wrap them in the Throw[_] type. Non-exceptional
+   * values are wrapped in the Return[_] type.
    */
   def apply[A](a: => A): Future[A] = const(Try(a))
 
   def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 
   /**
-   * Run the computation {{f}} while installing a monitor that
-   * translates any exception thrown into a coded one.  If an
+   * Run the computation {{mkFuture}} while installing a monitor that
+   * translates any exception thrown into an encoded one.  If an
    * exception is thrown anywhere, the underlying computation is
-   * cancelled.
+   * interrupted with that exception.
    *
    * This function is usually called to wrap a computation that
    * returns a Future (f0) whose value is satisfied by the invocation
@@ -112,28 +114,35 @@ object Future {
    * never satisfied.  In this example, `Future.monitored { f1
    * onSuccess g; f0 }` will cancel f0 so that f0 never hangs.
    */
-  def monitored[A](f: => Future[A]): Future[A] = {
-    val promise = new Promise[A]
-    val promiseRef = new AtomicReference(promise)
+  def monitored[A](mkFuture: => Future[A]): Future[A] = {
+    // We define this outside the scope of the following
+    // Promise to guarantee that it is not captured by any
+    // closures.
+    val promiseRef = new AtomicReference[Promise[A]]
     val monitor = Monitor.mk { case exc =>
       promiseRef.getAndSet(null) match {
         case null => false
         case p =>
+          p.raise(exc)
           p.setException(exc)
-          p.cancel()
           true
       }
     }
+
+    val p = new Promise[A]
+    promiseRef.set(p)
     monitor {
-      val res = f respond { r =>
+      val f = mkFuture
+      p.forwardInterruptsTo(f)
+      f respond { r =>
         promiseRef.getAndSet(null) match {
           case null => ()
-          case p => p() = r
+          case p => p.update(r)
         }
       }
-      promise.linkTo(res)
     }
-    promise
+
+    p
   }
 
   /**
@@ -150,21 +159,18 @@ object Future {
    * @return a Future[Unit] whose value is populated when all of the fs return.
    */
   def join[A](fs: Seq[Future[A]]): Future[Unit] = {
-    if (fs.isEmpty) {
-      Unit
-    } else {
+    if (fs.isEmpty) Unit else {
       val count = new AtomicInteger(fs.size)
-      makePromise[Unit]() { promise =>
-        fs foreach { f =>
-          promise.linkTo(f)
-          f onSuccess { _ =>
-            if (count.decrementAndGet() == 0)
-              promise() = Return(())
-          } onFailure { cause =>
-            promise.updateIfEmpty(Throw(cause))
-          }
+      val p = Promise.interrupts[Unit](fs:_*)
+      for (f <- fs) {
+        f onSuccess { _ =>
+          if (count.decrementAndGet() == 0)
+            p.update(Return(()))
+        } onFailure { cause =>
+          p.updateIfEmpty(Throw(cause))
         }
       }
+      p
     }
   }
 
@@ -339,22 +345,21 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     } else {
       val results = new AtomicReferenceArray[A](fs.size)
       val count = new AtomicInteger(fs.size)
-      makePromise[Seq[A]]() { promise =>
-        for (i <- 0 until fs.size) {
-          val f = fs(i)
-          promise.linkTo(f)
-          f onSuccess { x =>
-            results.set(i, x)
-            if (count.decrementAndGet() == 0) {
-              val resultsArray = new mutable.ArrayBuffer[A](fs.size)
-              for (j <- 0 until fs.size) resultsArray += results.get(j)
-              promise.setValue(resultsArray)
-            }
-          } onFailure { cause =>
-            promise.updateIfEmpty(Throw(cause))
+      val p = Promise.interrupts[Seq[A]](fs:_*)
+      for (i <- 0 until fs.size) {
+        val f = fs(i)
+        f onSuccess { x =>
+          results.set(i, x)
+          if (count.decrementAndGet() == 0) {
+            val resultsArray = new mutable.ArrayBuffer[A](fs.size)
+            for (j <- 0 until fs.size) resultsArray += results.get(j)
+            p.setValue(resultsArray)
           }
+        } onFailure { cause =>
+          p.updateIfEmpty(Throw(cause))
         }
       }
+      p
     }
   }
 
@@ -378,21 +383,22 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     if (fs.isEmpty) {
       Future.exception(new IllegalArgumentException("empty future list!"))
     } else {
-      makePromise[(Try[A], Seq[Future[A]])](fs: _*) { promise =>
-        @tailrec
-        def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
-          elem respond { res =>
-            if (!promise.isDefined) {
-              promise.updateIfEmpty(Return((res, heads ++ tail)))
-            }
+      val p = Promise.interrupts[(Try[A], Seq[Future[A]])](fs:_*)
+      @tailrec
+      def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
+        elem respond { res =>
+          if (!p.isDefined) {
+            p.updateIfEmpty(Return((res, heads ++ tail)))
           }
-
-          if (!tail.isEmpty)
-            stripe(heads ++ Seq(elem), tail.head, tail.tail)
         }
 
-        stripe(Seq(), fs.head, fs.tail)
+        if (!tail.isEmpty)
+          stripe(heads ++ Seq(elem), tail.head, tail.tail)
       }
+
+      stripe(Seq(), fs.head, fs.tail)
+
+      p
     }
   }
 
@@ -435,14 +441,10 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
     (0 until n) map { i => f }
   }
-
-  private[util] def makePromise[A](links: Cancellable*)(f: Promise[A] => Unit): Promise[A] = {
-    val promise = new Promise[A]
-    links foreach { promise.linkTo(_) }
-    f(promise)
-    promise
-  }
 }
+
+class FutureCancelledException
+  extends Exception("The future was cancelled with Future.cancel")
 
 /**
  * An alternative interface for handling Future Events. This
@@ -517,8 +519,8 @@ abstract class FutureTransformer[-A, +B] {
  * special semantics: the cancellation signal is only guaranteed to
  * be delivered when the promise has not yet completed.
  */
-abstract class Future[+A] extends Cancellable {
-  import Future.{DEFAULT_TIMEOUT, makePromise}
+abstract class Future[+A] {
+  import Future.DEFAULT_TIMEOUT
 
   /**
    * When the computation completes, invoke the given callback
@@ -564,12 +566,7 @@ abstract class Future[+A] extends Cancellable {
   /**
    * Is the result of the Future available yet?
    */
-  def isDefined: Boolean
-
-  /**
-   * Trigger a callback if this future is cancelled.
-   */
-  def onCancellation(f: => Unit)
+  def isDefined: Boolean = poll.isDefined
 
   /**
    * Demands that the result of the future be available within
@@ -585,6 +582,23 @@ abstract class Future[+A] extends Cancellable {
   def poll: Option[Try[A]]
 
   /**
+   * Raise the given throwable as an interrupt. Interrupts are
+   * one-shot and latest-interrupt wins. That is, the last interrupt
+   * to have been raised is delivered exactly once to the Promise
+   * responsible for making progress on the future (multiple such
+   * promises may be involed in `flatMap` chains).
+   *
+   * Raising an interrupt does not alter the externally observable
+   * state of the Future. They are used to signal to the ''producer''
+   * of the future's value that the result is no longer desired (for
+   * whatever reason given in the passed Throwable).
+   */
+  def raise(interrupt: Throwable)
+
+  @deprecated("Provided for API compatibility; use raise() instead.", "6.0.0")
+  def cancel() { raise(new FutureCancelledException) }
+
+  /**
    * Same as the other within, but with an implicit timer. Sometimes this is more convenient.
    */
   def within(timeout: Duration)(implicit timer: Timer): Future[A] =
@@ -596,15 +610,15 @@ abstract class Future[+A] extends Cancellable {
    * @param timeout indicates how long you are willing to wait for the result to be available.
    */
   def within(timer: Timer, timeout: Duration): Future[A] = {
-    makePromise[A](this) { promise =>
-      val task = timer.schedule(timeout.fromNow) {
-        promise.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
-      }
-      respond { r =>
-        task.cancel()
-        promise.updateIfEmpty(r)
-      }
+    val p = Promise.interrupts[A](this)
+    val task = timer.schedule(timeout.fromNow) {
+      p.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
     }
+    respond { r =>
+      task.cancel()
+      p.updateIfEmpty(r)
+    }
+    p
   }
 
   protected def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B]
@@ -738,10 +752,10 @@ abstract class Future[+A] extends Cancellable {
    * @return a new Future whose result is that of the first of this and other to return
    */
   def select[U >: A](other: Future[U]): Future[U] = {
-    makePromise[U](other, this) { promise =>
-      other respond { promise.updateIfEmpty(_) }
-      this  respond { promise.updateIfEmpty(_) }
-    }
+    val p = Promise.interrupts[U](other, this)
+    other respond { p.updateIfEmpty(_) }
+    this  respond { p.updateIfEmpty(_) }
+    p
   }
 
   /**
@@ -753,15 +767,15 @@ abstract class Future[+A] extends Cancellable {
    * Combines two Futures into one Future of the Tuple of the two results.
    */
   def join[B](other: Future[B]): Future[(A, B)] = {
-    makePromise[(A, B)](this, other) { promise =>
-      respond {
-        case Throw(t) => promise() = Throw(t)
-        case Return(a) => other respond {
-          case Throw(t) => promise() = Throw(t)
-          case Return(b) => promise() = Return((a, b))
-        }
+    val p = Promise.interrupts[(A, B)](this, other)
+    this.respond {
+      case Throw(t) => p() = Throw(t)
+      case Return(a) => other respond {
+        case Throw(t) => p() = Throw(t)
+        case Return(b) => p() = Return((a, b))
       }
     }
+    p
   }
 
   /**
@@ -810,34 +824,26 @@ abstract class Future[+A] extends Cancellable {
   def toJavaFuture: JavaFuture[_ <: A] = {
     val f = this
     new JavaFuture[A] {
-      override def cancel(cancel: Boolean): Boolean = {
-        if (isDone || isCancelled) {
-          false
-        } else {
-          f.cancel()
-          true
-        }
+      val wasCancelled = new AtomicBoolean(false)
+
+      override def cancel(mayInterruptIfRunning: Boolean): Boolean = {
+        if (wasCancelled.compareAndSet(false, true))
+          f.raise(new java.util.concurrent.CancellationException)
+        true
       }
 
-      override def isCancelled: Boolean = {
-        f.isCancelled
-      }
-
-      override def isDone: Boolean = {
-        f.isCancelled || f.isDefined
-      }
+      override def isCancelled: Boolean = wasCancelled.get
+      override def isDone: Boolean = isCancelled || f.isDefined
 
       override def get(): A = {
-        if (isCancelled) {
-          throw new CancellationException()
-        }
+        if (isCancelled)
+          throw new java.util.concurrent.CancellationException()
         f()
       }
 
       override def get(time: Long, timeUnit: TimeUnit): A = {
-        if (isCancelled) {
-          throw new CancellationException()
-        }
+        if (isCancelled)
+          throw new java.util.concurrent.CancellationException()
         f.get(Duration.fromTimeUnit(time, timeUnit)) match {
           case Return(r) => r
           case Throw(e) => throw e
@@ -868,186 +874,6 @@ abstract class Future[+A] extends Cancellable {
 
 }
 
-object Promise {
-  case class ImmutableResult(message: String) extends Exception(message)
-}
-
-/**
- * A concrete Future implementation that is updatable by some
- * executor or event loop.  A typical use of Promise is for a client
- * to submit a request to some service.  The client is given an
- * object that inherits from Future[_].  The server stores a
- * reference to this object as a Promise[_] and updates the value
- * when the computation completes.
- */
-class Promise[A] private[Promise](
-  private[Promise] final val ivar: IVar[Try[A]],
-  private[Promise] final val cancelled: IVar[Unit])
-  extends Future[A]
-{
-  import Promise._
-
-  @volatile private[this] var chained: Future[A] = null
-  def this() = this(new IVar[Try[A]], new IVar[Unit])
-
-  override def toString = "Promise@%s(ivar=%s, cancelled=%s)".format(hashCode, ivar, cancelled)
-
-  /**
-   * Secondary constructor where result can be provided immediately.
-   */
-  def this(result: Try[A]) {
-    this()
-    this.ivar.set(result)
-  }
-
-  def isCancelled = cancelled.isDefined
-  def cancel() { cancelled.set(()) }
-  def linkTo(other: Cancellable) {
-    cancelled.get {
-      case () => other.cancel()
-    }
-  }
-
-  /**
-   * Invoke 'f' if this Future is cancelled.
-   */
-  def onCancellation(f: => Unit) {
-    linkTo(new CancellableSink(f))
-  }
-
-  def get(timeout: Duration): Try[A] =
-    ivar(timeout) getOrElse {
-      Throw(new TimeoutException(timeout.toString))
-    }
-
-  def poll = ivar.poll
-
-  /**
-   * Merge `other` into this promise.  See
-   * {{com.twitter.concurrent.IVar.merge}} for details.  This is
-   * necessary in bind operations (flatMap, rescue) in order to
-   * prevent space leaks under iteration.
-   *
-   * Cancellation state is merged along with values, but the
-   * semantics are slightly different.  Because the receiver of a
-   * promise may affect its cancellation status, we must allow for
-   * divergence here: if `this` has been cancelled, but `other` is
-   * already complete, `other` will not change its cancellation state
-   * (which is fixed at false).
-   */
-  private[util] def merge(other: Future[A]) {
-    if (other.isInstanceOf[Promise[_]]) {
-      val p = other.asInstanceOf[Promise[A]]
-      this.ivar.merge(p.ivar)
-      this.cancelled.merge(p.cancelled)
-    } else {
-      other.proxyTo(this)
-      this.linkTo(other)
-    }
-  }
-
-  def isDefined = ivar.isDefined
-
-  /**
-   * Populate the Promise with the given result.
-   *
-   * @throws ImmutableResult if the Promise is already populated
-   */
-  def setValue(result: A) { update(Return(result)) }
-
-  /**
-   * Populate the Promise with the given exception.
-   *
-   * @throws ImmutableResult if the Promise is already populated
-   */
-  def setException(throwable: Throwable) { update(Throw(throwable)) }
-
-  /**
-   * Populate the Promise with the given Try. The try can either be a
-   * value or an exception. setValue and setException are generally
-   * more readable methods to use.
-   *
-   * @throws ImmutableResult if the Promise is already populated
-   */
-  def update(result: Try[A]) {
-    updateIfEmpty(result) || {
-      throw new ImmutableResult("Result set multiple times: " + result)
-    }
-  }
-
-  /**
-   * Populate the Promise with the given Try. The try can either be a
-   * value or an exception. setValue and setException are generally
-   * more readable methods to use.
-   *
-   * @return true only if the result is updated, false if it was already set.
-   */
-  def updateIfEmpty(newResult: Try[A]) =
-    ivar.set(newResult)
-
-  /**
-   * Note: exceptions in responds are monitored.  That is, if the
-   * computation {{k}} throws a raw (ie.  not encoded in a Future)
-   * exception, it is handled by the current monitor, see
-   * {{com.twitter.util.Monitor}} for details.
-   */
-  def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
-    // Note that there's a race here, but that's okay.  The resulting
-    // Futures are equivalent, and it only makes the optimization
-    // less effective.
-    //
-    // todo: given that it's likely most responds don't actually
-    // result in the chained ivar being used, we could create a shell
-    // promise.  this would get rid of one object allocation (the
-    // chained ivar).
-    if (chained eq null)
-      chained = new Promise(ivar.chained, cancelled)
-    respondWithoutChaining(tracingObject, { r => Monitor { k(r) } })
-    chained
-  }
-
-  private[this] def respondWithoutChaining(tracingObject: AnyRef, k: Try[A] => Unit) {
-    val saved = Local.save()
-    ivar.get { result =>
-      val current = Local.save()
-      Local.restore(saved)
-      Future.trace.record(tracingObject)
-      try
-        k(result)
-      finally
-        Local.restore(current)
-    }
-  }
-
-  protected[this] def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B] = {
-    val promise = new Promise[B]
-
-    val k = { _: Unit => this.cancel() }
-    promise.cancelled.get(k)
-    respondWithoutChaining(tracingObject, { r =>
-      promise.cancelled.unget(k)
-      val result =
-        try
-          f(r)
-        catch {
-          case e => Future.exception(e)
-        }
-      promise.merge(result)
-    })
-    promise
-  }
-
-  override def rescue[B >: A](
-    rescueException: PartialFunction[Throwable, Future[B]]
-  ): Future[B] =
-    transform(rescueException, {
-      case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
-      case _ => this
-    })
-
-  private[util] def depth = ivar.depth
-}
-
 /**
  * A Future that is already completed. These are cheap in
  * construction compared to Promises.
@@ -1055,30 +881,24 @@ class Promise[A] private[Promise](
 class ConstFuture[A](result: Try[A]) extends Future[A] {
   def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
     val saved = Local.save()
-    IVar.sched { () =>
-      val current = Local.save()
-      Local.restore(saved)
-      Future.trace.record(tracingObject)
-      try Monitor { k(result) } finally Local.restore(current)
-    }
+    Scheduler.submit(new Runnable {
+      def run() {
+        val current = Local.save()
+        Local.restore(saved)
+        Future.trace.record(tracingObject)
+        try Monitor { k(result) } finally Local.restore(current)
+      }
+    })
     this
   }
 
-  def isDefined: Boolean = true
-
-  // We don't guarantee cancellation delivery after future
-  // completion, so we simply don't provide it for const
-  // futures.
-  def onCancellation(f: => Unit) {}
-  def linkTo(other: Cancellable) {}
-  def cancel() {}
-  def isCancelled: Boolean = false
+  def raise(interrupt: Throwable) {}
 
   protected def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
     respond(tracingObject, { r =>
-      val result = try f(r) catch { case e => Future.exception(e) }
-      p.merge(result)
+      val result = try f(r) catch { case NonFatal(e) => Future.exception(e) }
+      p.become(result)
     })
     p
   }
@@ -1094,11 +914,8 @@ class NoFuture extends Future[Nothing] {
   protected def respond(tracingObject: AnyRef, k: Try[Nothing] => Unit): Future[Nothing] = this
   protected def transform[B](tracingObject: AnyRef, f: Try[Nothing] => Future[B]): Future[B] = this
 
-  def isDefined: Boolean = false
-  def onCancellation(f: =>Unit) {}
-  def linkTo(other: Cancellable) {}
-  def cancel() {}
-  def isCancelled: Boolean = false
+  def raise(interrupt: Throwable) {}
+
   def get(timeout: Duration): Try[Nothing] = {
     // We perhaps should just throw right away, but code might rely
     // on Future.get(timeout) blocking for at least that amount of

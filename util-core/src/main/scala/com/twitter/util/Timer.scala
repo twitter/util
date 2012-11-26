@@ -1,11 +1,11 @@
 package com.twitter.util
 
-import com.twitter.conversions.time._
 import com.twitter.concurrent.NamedPoolThreadFactory
-import java.util.concurrent.{
-  RejectedExecutionHandler, ScheduledThreadPoolExecutor,
-  ThreadFactory, TimeUnit, ExecutorService, CancellationException}
+import com.twitter.concurrent.Serialized
+import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.{CancellationException, ExecutorService, RejectedExecutionHandler,
+  ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
 import scala.collection.mutable.ArrayBuffer
 
 trait TimerTask {
@@ -21,7 +21,7 @@ trait Timer {
   }
 
   /**
-   * Performs an operation after the specified delay.  Cancelling the Future
+   * Performs an operation after the specified delay.  Interrupting the Future
    * will cancel the scheduled timer task, if not too late.
    */
   def doLater[A](delay: Duration)(f: => A): Future[A] = {
@@ -29,25 +29,30 @@ trait Timer {
   }
 
   /**
-   * Performs an operation at the specified time.  Cancelling the Future
+   * Performs an operation at the specified time.  Interrupting the Future
    * will cancel the scheduled timer task, if not too late.
    */
   def doAt[A](time: Time)(f: => A): Future[A] = {
     val pending = new AtomicBoolean(true)
+    val p = new Promise[A]
 
-    Future.makePromise[A]() { promise =>
-      val task = schedule(time) {
-        if (pending.compareAndSet(true, false)) {
-          promise() = Try(f)
-        }
-      }
-      promise onCancellation {
+    val task = schedule(time) {
+      if (pending.compareAndSet(true, false))
+        p.update(Try(f))
+    }
+
+    p.setInterruptHandler {
+      case cause =>
         if (pending.compareAndSet(true, false)) {
           task.cancel()
-          promise() = Throw(new CancellationException)
+
+          val exc = new CancellationException
+          exc.initCause(cause)
+          p.setException(exc)
         }
-      }
     }
+
+    p
   }
 
   def stop()
@@ -154,7 +159,10 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
       try {
         f
       } catch {
-        case t => logError(t)
+        case NonFatal(t) => logError(t)
+        case fatal =>
+          logError(fatal)
+          throw fatal
       }
     }
   }

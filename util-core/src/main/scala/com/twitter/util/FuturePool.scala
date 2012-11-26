@@ -2,7 +2,7 @@ package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CancellationException, ExecutorService, Executors,
+import java.util.concurrent.{CancellationException, RejectedExecutionException, ExecutorService, Executors,
   Future => JFuture}
 
 /**
@@ -57,49 +57,48 @@ object FuturePool {
  */
 class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePool {
   def apply[T](f: => T): Future[T] = {
-    val saved = Local.save()
+    val runOk = new AtomicBoolean(true)
+    val p = new Promise[T]
+    val task = new Runnable {
+      val saved = Local.save()
 
-    val stoppable = new AtomicBoolean(true)
-
-    def makePromiseTask(out: Promise[T], f: => T): Runnable = new Runnable {
-      def run = {
-        // At this point, nothing should be cancelling us
-        // sets running=true and returns whether we were inProgress or not.
-        val runnable = stoppable.compareAndSet(true, false)
+      def run() {
         // Make an effort to skip work in the case the promise
         // has been cancelled or already defined.
-        if (runnable) {
-          val current = Local.save()
-          Local.restore(saved)
+        if (!runOk.compareAndSet(true, false))
+          return
 
-          try {
-            out.update(Try(f))
-          } finally {
-            Local.restore(current)
-          }
-        }
+        val current = Local.save()
+        Local.restore(saved)
+
+        try
+          p.update(Try(f))
+        finally
+          Local.restore(current)
       }
     }
 
-    /**
-     * link the cancellation of the Promise to the JFuture
-     */
-    def linkCancellation(promise: Promise[T], javaFuture: JFuture[_]) {
-      promise onCancellation {
-        val cancelled = stoppable.compareAndSet(true, false)
 
-        if (cancelled) {
+    // This is safe: the only thing that can call task.run() is
+    // executor, the only thing that can raise an interrupt is the
+    // receiver of this value, which will then be fully initialized.
+    val javaFuture = try executor.submit(task) catch {
+      case e: RejectedExecutionException =>
+        runOk.set(false)
+        p.setException(e)
+        null
+    }
+
+    p.setInterruptHandler {
+      case cause =>
+        if (runOk.compareAndSet(true, false)) {
           javaFuture.cancel(true)
-          promise.update(Throw(new CancellationException))
+          val exc = new CancellationException
+          exc.initCause(cause)
+          p.setException(exc)
         }
-      }
     }
 
-    Future {
-      val out = new Promise[T]
-      linkCancellation(out, executor.submit(makePromiseTask(out, f)))
-
-      out
-    } flatten
+    p
   }
 }

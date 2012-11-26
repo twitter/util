@@ -44,7 +44,7 @@ object RetryPolicy {
     factor: Double = 2.0,
     maximum: Duration = 30.seconds
   )(implicit timer: Timer) extends RetryPolicy {
-    require(base > 0)
+    require(base > 0.seconds)
     require(factor >= 1)
 
     def apply[T](op: => Future[T]): Future[T] = {

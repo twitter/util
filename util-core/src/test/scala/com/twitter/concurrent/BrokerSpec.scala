@@ -57,11 +57,11 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       r.sync().isDefined must beFalse
     }
 
-    "cancellation" in {
+    "interrupts" in {
       "removes queued receiver" in {
         val br = new Broker[Int]
         val recvF = br.recv.sync()
-        recvF.cancel()
+        recvF.raise(new Exception)
         br.send(123).sync().poll must beNone
         recvF.poll must beNone
       }
@@ -69,7 +69,7 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       "removes queued sender" in {
         val br = new Broker[Int]
         val sendF = br.send(123).sync()
-        sendF.cancel()
+        sendF.raise(new Exception)
         br.recv.sync().poll must beNone
         sendF.poll must beNone
       }

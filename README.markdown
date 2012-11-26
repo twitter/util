@@ -149,3 +149,39 @@ import com.xxx.MyConfig
 
 val config = Eval[MyConfig](new File("config/Development.scala"))
 ```
+
+
+# Version 6.x
+
+Major version 6 introduced some breaking changes:
+
+* Futures are no longer `Cancellable`; cancellation is replaced with a simpler interrupt mechanism.
+* Time and duration implement true sentinels (similar to infinities in doubles). `Time.now` uses system time instead of nanotime + offset.
+* The (dangerous) implicit conversion from a `Duration` to a `Long` was removed.
+* `Try`s and `Future`s no longer handle fatal exceptions: these are propagated to the dispatching thread.
+
+## Future interrupts
+
+Method `raise` on `Future` (`def raise(cause: Throwable)`) raises the interrupt described by `cause` to producer of this `Future'. Interrupt handlers are installed on a `Promise` using `setInterruptHandler`, which takes a partial function:
+
+	val p = new Promise[T]
+	p.setInterruptHandler {
+	  case exc: MyException =>
+	    // deal with interrupt..
+	}
+
+Interrupts differ in semantics from cancellation in important ways: there can only be one interrupt handler per promise, and interrupts are only delivered if the promise is not yet complete.
+
+## Time and Duration
+
+Like arithmetic on doubles, `Time` and `Duration` arithmetic is now free of overflows. Instead, they overflow to `Top` and `Bottom` values, which are analogous to positive and negative infinity.
+
+Since the resolution of Time.now has been reduced (and is also more expensive due to its use of system time), a new API has been introduced in order to durations of time. This is Stopwatch.
+
+It's used simply:
+
+	val elapsed: () => Duration = Stopwatch.start()
+
+which is read by applying `elapsed`:
+
+	val duration: Duration = elapsed()

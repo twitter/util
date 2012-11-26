@@ -41,6 +41,4 @@ object time {
 
   implicit def intToTimeableNumber(i: Int) = new RichWholeNumber(i)
   implicit def longToTimeableNumber(l: Long) = new RichWholeNumber(l)
-
-  implicit def timelikeToLong(time: TimeLike[_]) = time.inMillis
 }

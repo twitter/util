@@ -89,7 +89,7 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 
   private[this] def maybeGrowChain() = {
     // NB: age of youngest element is negative when bucket isn't expired
-    if (buckets.head.age() > 0) {
+    if (buckets.head.age() > Duration.Zero) {
       buckets = TimeBucket.empty[A] :: buckets
       true
     } else

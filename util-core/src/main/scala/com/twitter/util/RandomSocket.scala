@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.net.{InetAddress, InetSocketAddress, Socket}
+import java.io.IOException
 import java.util.Random
 
 object RandomSocket {
@@ -21,8 +22,11 @@ object RandomSocket {
       s.bind(ephemeralSocketAddress)
       s.getLocalPort
     } catch {
-      case e: Throwable =>
-        throw new Exception("Couldn't find an open port: %s".format(e.getMessage))
+      case NonFatal(e) =>
+        if (e.getClass == classOf[IOException] || e.getClass == classOf[IllegalArgumentException])
+          throw new Exception("Couldn't find an open port: %s".format(e.getMessage))
+        else
+          throw e
     } finally {
       s.close()
     }

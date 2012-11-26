@@ -11,7 +11,7 @@ object Try {
 
   def apply[R](r: => R): Try[R] = {
     try { Return(r) } catch {
-      case e => Throw(e)
+      case NonFatal(e) => Throw(e)
     }
   }
 }
@@ -142,7 +142,7 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
     try {
       if (rescueException.isDefinedAt(e)) rescueException(e) else this
     } catch {
-      case e2 => Throw(e2)
+      case NonFatal(e2) => Throw(e2)
     }
   }
   def apply(): R = throw e
@@ -165,7 +165,7 @@ final case class Return[+R](r: R) extends Try[R] {
   def isReturn = true
   def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = Return(r)
   def apply() = r
-  def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case e => Throw(e) }
+  def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case NonFatal(e) => Throw(e) }
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
   def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)

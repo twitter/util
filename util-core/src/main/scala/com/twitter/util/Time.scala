@@ -18,27 +18,266 @@ package com.twitter.util
 
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.{Date, TimeZone}
 import java.util.concurrent.TimeUnit
-import java.util.TimeZone
+
+trait TimeLikeOps[This <: TimeLike[This]] {
+  /** The top value is the greatest possible value. It is akin to an infinity. */
+  val Top: This
+  /** The bottom value is the smallest possible value. */
+  val Bottom: This
+  /** An undefined value: behaves like Double.NaN */
+  val Undefined: This
+
+  /** The zero value */
+  val Zero: This = fromNanoseconds(0)
+
+  /**
+   * An extractor for finite `This`, yielding its value in nanoseconds.
+   *
+   * {{{
+   *   duration match {
+   *     case Duration.Nanoseconds(ns) => ...
+   *     case Duration.Top => ...
+   *   }
+   * }}}
+   */
+  object Nanoseconds {
+    def unapply(x: This): Option[Long] =
+      if (x.isFinite) Some(x.inNanoseconds) else None
+  }
+
+  /**
+   * An extractor for finite TimeLikes; eg.:
+   *
+   * {{{
+   *   duration match {
+   *     case Duration.Finite(d) => ...
+   *     case Duration.Top => ..
+   * }}}
+   */
+  object Finite {
+    def unapply(x: This): Option[This] =
+      if (x.isFinite) Some(x) else None
+  }
+
+  /** Make a new `This` from the given number of nanoseconds */
+  def fromNanoseconds(nanoseconds: Long): This
+
+  def fromSeconds(seconds: Int): This = fromMilliseconds(1000L * seconds)
+
+  def fromMilliseconds(millis: Long): This =
+    if (millis > 9223372036854L) Top
+    else if (millis < -9223372036854L) Bottom
+    else fromNanoseconds(TimeUnit.MILLISECONDS.toNanos(millis))
+}
 
 /**
- * Use `Time.now` in your app instead of `System.currentTimeMillis`, and
- * unit tests will be able to adjust the current time to verify timeouts
- * and other time-dependent behavior, without calling `sleep`.
+ * A common trait for time-like values. It requires a companion
+ * `TimeLikeOps` module. `TimeLike`s are finite, but they must always
+ * have two sentinels: `Top` and `Bottom`. These act like positive
+ * and negative infinities: Arithmetic involving them preserves their
+ * values, and so on.
  *
- * If you import the [[com.twitter.conversions.time]] implicits you can
- * write human-readable values such as `1.minute` or `250.millis`.
+ * `TimeLike`s are `Long`-valued nanoseconds, but have different
+ * interpretations: `Duration`s measure the number of nanoseconds
+ * between two points in time, while `Time` measure the number of
+ * nanoseconds since the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * TimeLike behave like '''boxed''' java Double values with respect
+ * to infinity and undefined values. In particular, this means that a
+ * `TimeLike`'s `Undefined` value is comparable to other values. In
+ * turn this means it can be used as keys in maps, etc.
+ *
+ * Overflows are also handled like doubles.
  */
-object Time {
+trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
+  protected val ops: TimeLikeOps[This]
+  import ops._
+
+  /** The `TimeLike`'s value in nanoseconds. */
+  def inNanoseconds: Long
+
+  def inMicroseconds: Long = inNanoseconds / Duration.NanosPerMicrosecond
+  def inMilliseconds: Long = inNanoseconds / Duration.NanosPerMillisecond
+  def inSeconds: Int       = (inNanoseconds / Duration.NanosPerSecond) toInt
+  def inMinutes: Int       = (inNanoseconds / Duration.NanosPerMinute) toInt
+  def inHours: Int         = (inNanoseconds / Duration.NanosPerHour) toInt
+  def inDays: Int          = (inNanoseconds / Duration.NanosPerDay) toInt
+  def inMillis: Long       = inMilliseconds // (Backwards compat)
+
+  /**
+   * Returns a value/`TimeUnit` pair; attempting to return coarser
+   * grained values if possible (specifically: `TimeUnit.SECONDS` or
+   * `TimeUnit.MILLISECONDS`) before resorting to the default
+   * `TimeUnit.NANOSECONDS`.
+   */
+  def inTimeUnit: (Long, TimeUnit) = {
+    // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
+    if (inNanoseconds % Duration.NanosPerSecond == 0) {
+      (inSeconds, TimeUnit.SECONDS)
+    } else if (inNanoseconds % Duration.NanosPerMillisecond == 0) {
+      (inMilliseconds, TimeUnit.MILLISECONDS)
+    } else {
+      (inNanoseconds, TimeUnit.NANOSECONDS)
+    }
+  }
+
+  /**
+   * Adds `delta` to this `TimeLike`. Adding `Duration.Top` results
+   * in the `TimeLike`'s `Top`, adding `Duration.Bottom` results in
+   * the `TimeLike`'s `Bottom`.
+   */
+  def +(delta: Duration): This = delta match {
+    case Duration.Top => Top
+    case Duration.Bottom => Bottom
+    case Duration.Undefined => Undefined
+    case Duration.Nanoseconds(ns) =>
+      try
+        fromNanoseconds(LongOverflowArith.add(inNanoseconds, ns))
+      catch {
+        case _: LongOverflowException if ns < 0 => Bottom
+        case _: LongOverflowException => Top
+      }
+  }
+
+  def -(delta: Duration): This = this.+(-delta)
+
+  /** Is this a finite TimeLike value? */
+  def isFinite: Boolean
+
+  /** The difference between the two `TimeLike`s */
+  def diff(that: This): Duration
+
+  /**
+   * Rounds down to the nearest multiple of the given duration.  For example:
+   * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
+   * Time object with duration greater than 1.hour can have unexpected
+   * results because of timezones.
+   */
+  def floor(x: Duration): This = (this, x) match {
+    case (Nanoseconds(0), Duration.Nanoseconds(0)) => Undefined
+    case (Nanoseconds(num), Duration.Nanoseconds(0)) => if (num < 0) Bottom else Top
+    case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds((num/denom) * denom)
+    case (self, Duration.Nanoseconds(_)) => self
+    case (_, _) => Undefined
+  }
+
+  def max(that: This): This =
+    if ((this compare that) < 0) that else this
+
+  def min(that: This): This =
+    if ((this compare that) < 0) this else that
+
+  def compare(that: This) =
+    if ((that eq Top) || (that eq Undefined)) -1
+    else if (that eq Bottom) 1
+    else inNanoseconds compare that.inNanoseconds
+
+  /** Equality within `maxDelta` */
+  def moreOrLessEquals(other: This, maxDelta: Duration) =
+    (other ne Undefined) && ((this == other) || (this diff other).abs <= maxDelta)
+}
+
+/**
+ * Use `Time.now` in your program instead of
+ * `System.currentTimeMillis`, and unit tests will be able to adjust
+ * the current time to verify timeouts and other time-dependent
+ * behavior, without calling `sleep`.
+ *
+ * If you import the [[com.twitter.conversions.time]] implicits you
+ * can write human-readable values such as `1.minute` or
+ * `250.millis`.
+ */
+object Time extends TimeLikeOps[Time] {
+  def fromNanoseconds(nanoseconds: Long): Time = new Time(nanoseconds)
+
+  // This is needed for Java compatibility.
+  override def fromSeconds(seconds: Int): Time = super.fromSeconds(seconds)
+  override def fromMilliseconds(millis: Long): Time = super.fromMilliseconds(millis)
+
+  /**
+   * Time `Top` is greater than any other definable time, and is
+   * equal only to itself. It may be used as a sentinel value,
+   * representing a time infinitely far into the future.
+   */
+  val Top: Time = new Time(Long.MaxValue) {
+    override def toString = "Time.Top"
+
+    override def compare(that: Time) =
+      if (that eq Undefined) -1
+      else if (that eq Top) 0
+      else 1
+
+    override def +(delta: Duration) = delta match {
+      case Duration.Bottom | Duration.Undefined => Undefined
+      case _ => this  // Top or finite.
+    }
+
+    override def diff(that: Time) = that match {
+      case Top | Undefined => Duration.Undefined
+      case other => Duration.Top
+    }
+
+    override def isFinite = false
+  }
+
+  /**
+   * Time `Bottom` is smaller than any other time, and is equal only
+   * to itself. It may be used as a sentinel value, representing a
+   * time infinitely far in the past.
+   */
+  val Bottom: Time = new Time(Long.MinValue) {
+    override def toString = "Time.Bottom"
+
+    override def compare(that: Time) = if (this eq that) 0 else -1
+
+    override def +(delta: Duration) = delta match {
+      case Duration.Top | Duration.Undefined => Undefined
+      case _ => this
+    }
+
+    override def diff(that: Time) = that match {
+      case Bottom | Undefined => Duration.Undefined
+      case other => Duration.Bottom
+    }
+
+    override def isFinite = false
+  }
+
+  val Undefined: Time = new Time(0) {
+    override def toString = "Time.Undefined"
+
+    override def compare(that: Time) = if (this eq that) 0 else 1
+    override def +(delta: Duration) = this
+    override def diff(that: Time) = Duration.Undefined
+    override def isFinite = false
+  }
+
+  def now: Time = fn()
+
+  /**
+   * The unix epoch. Times are measured relative to this.
+   */
+  val epoch = fromNanoseconds(0L)
+
+  /**
+   * A time larger than any other finite time. Synonymous to `Top`.
+   */
+  @deprecated("Use Time.Top", "5.4.0")
+  val never = Top
 
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
 
   /**
-   * on some systems (os x), nanoTime is just epoch time with greater precision.
-   * on others (linux), it can be based on system uptime.
+   * On some systems (os x), nanoTime is just epoch time with greater
+   * precision. On others (linux), it can be based on system uptime.
+   *
+   * TODO: This isn't always accurate, an NTP daemon may change at
+   * runtime, and so the offset effectively changes.
    */
+  @deprecated("nanoTimeOffset may be dangerous to use", "5.4.0")
   val nanoTimeOffset = (System.currentTimeMillis * 1000000) - System.nanoTime
 
   /**
@@ -46,35 +285,11 @@ object Time {
    * Even there, since this is shared global state, there are risks about memory visibility
    * with multi-threaded tests.
    */
-  private[Time] var fn: () => Time = () => Time.fromNanoseconds(System.nanoTime + nanoTimeOffset)
+  private[Time] var fn: () => Time = () => Time.fromMilliseconds(System.currentTimeMillis())
 
   @deprecated("use Time.fromMilliseconds(...) instead", "2011-09-12") // date is a guess
   def apply(millis: Long) = fromMilliseconds(millis)
-
-  def fromMilliseconds(millis: Long): Time = {
-    val nanos = TimeUnit.MILLISECONDS.toNanos(millis)
-    // handle some overflow, but let Long.MaxValue pass thru unchanged
-    if (nanos == Long.MaxValue && millis != Long.MaxValue) {
-      throw new TimeOverflowException(millis.toString)
-    } else if (nanos == Long.MinValue) {
-      throw new TimeOverflowException(millis.toString)
-    } else {
-      new Time(nanos)
-    }
-  }
-
-  def fromSeconds(seconds: Int) = fromMilliseconds(1000L * seconds)
-
-  def fromNanoseconds(nanoseconds: Long) = new Time(nanoseconds)
-
-  def now: Time = fn()
-
-  /**
-   * The unix epoch. Times are measured relative to this.
-   */
-  val epoch = Time.fromMilliseconds(0)
-
-  def apply(date: Date): Time = Time.fromMilliseconds(date.getTime)
+  def apply(date: Date): Time = fromMilliseconds(date.getTime)
 
   def at(datetime: String) = defaultFormat.parse(datetime)
 
@@ -127,13 +342,14 @@ object Time {
     withTimeAt(Time.now)(body)
   }
 
+  @deprecated("Use Stopwatch", "5.4.0")
   def measure(f: => Unit): Duration = {
-    val start = now
+    val begin = Time.now
     f
-    val end = now
-    end - start
+    Time.now - begin
   }
 
+  @deprecated("Use Stopwatch", "5.4.0")
   def measureMany(n: Int)(f: => Unit): Duration = {
     require(n > 0)
     val d = measure {
@@ -179,59 +395,24 @@ class TimeFormat(pattern: String) {
   }
 }
 
-trait TimeLike[+This <: TimeLike[This]] {
-  import Duration._
-
-  def inNanoseconds: Long
-  protected def build(nanos: Long): This
-
-  def inMicroseconds: Long = TimeMath.div(inNanoseconds, NanosPerMicrosecond)
-  def inMilliseconds: Long = TimeMath.div(inNanoseconds, NanosPerMillisecond)
-  def inSeconds: Int       = TimeMath.divInt(inNanoseconds, NanosPerSecond).toInt
-  def inMinutes: Int       = TimeMath.divInt(inNanoseconds, NanosPerMinute).toInt
-  def inHours: Int         = TimeMath.divInt(inNanoseconds, NanosPerHour).toInt
-  def inDays: Int          = TimeMath.divInt(inNanoseconds, NanosPerDay).toInt
-
-  def inTimeUnit: (Long, TimeUnit) = {
-    // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
-    if (inNanoseconds % NanosPerSecond == 0) {
-      (inSeconds, TimeUnit.SECONDS)
-    } else if (inNanoseconds % NanosPerMillisecond == 0) {
-      (inMilliseconds, TimeUnit.MILLISECONDS)
-    } else {
-      (inNanoseconds, TimeUnit.NANOSECONDS)
-    }
-  }
-
-  def +(delta: Duration): This = build(TimeMath.add(inNanoseconds, delta.inNanoseconds))
-  def -(delta: Duration): This = build(TimeMath.sub(inNanoseconds, delta.inNanoseconds))
-  def max[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds max that.inNanoseconds)
-  def min[A <: TimeLike[_]](that: A): This = build(this.inNanoseconds min that.inNanoseconds)
-
-  // backward compat:
-  def inMillis = inMilliseconds
-
-  /**
-   * Rounds down to the nearest multiple of the given duration.  For example:
-   * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
-   * Time object with duration greater than 1.hour can have unexpected
-   * results because of timezones.
-   */
-  def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
-}
-
-class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] with Serializable {
-  protected override def build(nanos: Long) = new Time(nanos)
+/**
+ * An absolute point in time, represented as the number of
+ * nanoseconds since the Unix epoch.
+ */
+sealed class Time private[util] (protected val nanos: Long) extends {
+  protected val ops = Time
+} with TimeLike[Time] with Serializable {
+  import ops._
 
   def inNanoseconds = nanos
 
   /**
    * Renders this time using the default format.
    */
-  override def toString = Time.defaultFormat.format(this)
+  override def toString = defaultFormat.format(this)
 
   override def equals(other: Any) = other match {
-    case t: Time => nanos == t.nanos
+    case t: Time => (this compare t) == 0
     case _ => false
   }
 
@@ -242,17 +423,25 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
    */
   def format(pattern: String) = new TimeFormat(pattern).format(this)
 
-  def compare(that: Time) = (this.nanos compare that.nanos)
-
-  /**
-   * Equality within a delta.
-   */
-  def moreOrLessEquals(other: Time, maxDelta: Duration) = (this - other).abs <= maxDelta
-
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = new Duration(TimeMath.sub(this.inNanoseconds, that.inNanoseconds))
+  def -(that: Time) = diff(that)
+
+  override def isFinite = true
+
+  def diff(that: Time) =  that match {
+    case Undefined => Duration.Undefined
+    case Top => Duration.Bottom
+    case Bottom => Duration.Top
+    case other =>
+      try
+        new Duration(LongOverflowArith.sub(this.inNanoseconds, other.inNanoseconds))
+      catch {
+        case _: LongOverflowException if other.inNanoseconds < 0 => Duration.Top
+        case _: LongOverflowException => Duration.Bottom
+      }
+  }
 
   /**
    * Duration that has passed between the given time and the current time.
@@ -262,18 +451,18 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
   /**
    * Duration that has passed between the epoch and the current time.
    */
-  def sinceEpoch = since(Time.epoch)
+  def sinceEpoch = since(epoch)
 
   /**
    * Gets the current time as Duration since now
    */
-  def sinceNow = since(Time.now)
+  def sinceNow = since(now)
 
   /**
    * Duration that has passed between the epoch and the current time.
    */
   @deprecated("use sinceEpoch", "2011-05-23") // date is a guess
-  def fromEpoch = this - Time.epoch
+  def fromEpoch = this - epoch
 
   /**
    * Duration between current time and the givne time.
@@ -283,240 +472,15 @@ class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with
   /**
    * Gets the duration between this time and the epoch.
    */
-  def untilEpoch = until(Time.epoch)
+  def untilEpoch = until(epoch)
 
   /**
    * Gets the duration between this time and now.
    */
-  def untilNow = until(Time.now)
+  def untilNow = until(now)
 
   /**
    * Converts this Time object to a java.util.Date
    */
   def toDate = new Date(inMillis)
 }
-
-
-object Duration {
-  import com.twitter.conversions.time._
-
-  val NanosPerMicrosecond = 1000L
-  val NanosPerMillisecond = NanosPerMicrosecond * 1000L
-  val NanosPerSecond = NanosPerMillisecond * 1000L
-  val NanosPerMinute = NanosPerSecond * 60
-  val NanosPerHour = NanosPerMinute * 60
-  val NanosPerDay = NanosPerHour * 24
-
-  def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
-
-  /**
-   * Returns the scaling factor for going from nanoseconds to the given TimeUnit.
-   */
-  private def nanosecondsPerUnit(unit: TimeUnit): Long = {
-    unit match {
-      case TimeUnit.DAYS         => NanosPerDay
-      case TimeUnit.HOURS        => NanosPerHour
-      case TimeUnit.MINUTES      => NanosPerMinute
-      case TimeUnit.SECONDS      => NanosPerSecond
-      case TimeUnit.MILLISECONDS => NanosPerMillisecond
-      case TimeUnit.MICROSECONDS => NanosPerMicrosecond
-      case TimeUnit.NANOSECONDS  => 1L
-    }
-  }
-
-  def apply(value: Long, unit: TimeUnit): Duration = {
-    val factor = nanosecondsPerUnit(unit)
-    new Duration(TimeMath.mul(value, factor))
-  }
-
-  @deprecated("use time.untilNow", "2011-05-03") // date is a guess
-  def since(time: Time) = Time.now.since(time)
-
-  val MaxValue = Long.MaxValue.nanoseconds
-  val MinValue = 0.nanoseconds
-  val zero = MinValue
-  val forever = MaxValue
-  val eternity = MaxValue
-
-  /**
-   * Returns how long it took, in millisecond granularity, to run the function f.
-   */
-  def inMilliseconds[T](f: => T): (T, Duration) = {
-    val start = Time.now
-    val rv = f
-    val duration = Time.now - start
-    (rv, duration)
-  }
-
-  /**
-   * Returns how long it took, in nanosecond granularity, to run the function f.
-   */
-  def inNanoseconds[T](f: => T): (T, Duration) = {
-    val start = System.nanoTime
-    val rv = f
-    val duration = new Duration(System.nanoTime - start)
-    (rv, duration)
-  }
-
-  private val timeUnits = Seq(
-    TimeUnit.DAYS,
-    TimeUnit.HOURS,
-    TimeUnit.MINUTES,
-    TimeUnit.SECONDS,
-    TimeUnit.MILLISECONDS,
-    TimeUnit.MICROSECONDS,
-    TimeUnit.NANOSECONDS)
-}
-
-class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] with Serializable {
-  import Duration._
-
-  def inNanoseconds = nanos
-
-  /**
-   * Returns the length of the duration in the given TimeUnit.
-   *
-   * In general, a simpler approach is to use the named methods (eg. inSeconds)
-   * However, this is useful for more programmatic call sites.
-   */
-  def inUnit(unit: TimeUnit): Long = {
-    TimeMath.div(inNanoseconds, nanosecondsPerUnit(unit))
-  }
-
-  def build(nanos: Long) = new Duration(nanos)
-
-  /**
-   * toString produces a representation that
-   *
-   * - loses no information
-   * - is easy to read
-   * - can be read back in if com.twitter.conversions.time._ is imported
-   *
-   * An example:
-   *
-   * com.twitter.util.Duration(9999999, java.util.concurrent.TimeUnit.MICROSECONDS)
-   * res0: com.twitter.util.Duration = 9.seconds+999.milliseconds+999.microseconds
-   */
-
-  override def toString: String = {
-    if (nanos == Long.MaxValue)
-      return "Duration.Never"
-    else if (nanos == 0)
-      return "0.seconds"
-
-    val s = new StringBuilder
-    var ns = nanos
-    for (u <- timeUnits) {
-      val v = u.convert(ns, TimeUnit.NANOSECONDS)
-      if (v != 0) {
-        ns -= TimeUnit.NANOSECONDS.convert(v, u)
-        if (v > 0 && !s.isEmpty)
-          s.append("+")
-        s.append(v.toString)
-        s.append(".")
-        s.append(u.name.toLowerCase)
-      }
-    }
-
-    s.toString()
-  }
-
-  override def equals(other: Any) = other match {
-    case t: Duration => this.nanos == t.nanos
-    case _ => false
-  }
-
-  override def hashCode = nanos.hashCode
-
-  /**
-   * Equality within a delta.
-   */
-  def moreOrLessEquals(other: Duration, maxDelta: Duration) = (this - other).abs <= maxDelta
-
-  def compare(that: Duration) = (this.nanos compare that.nanos)
-
-  def *(x: Long) = new Duration(TimeMath.mul(nanos, x))
-  def /(x: Long) = new Duration(nanos / x)
-  def %(x: Duration) = new Duration(nanos % x.nanos)
-
-  /**
-   * Converts negative durations to positive durations.
-   */
-  def abs = if (nanos < 0) new Duration(-nanos) else this
-
-  def fromNow = Time.now + this
-  def ago = Time.now - this
-  def afterEpoch = Time.epoch + this
-}
-
-/**
- * Checks for overflow, and maintains sentinel (MaxValue)
- * times.
- */
-object TimeMath {
-  def add(a: Long, b: Long) = {
-    if (a == Long.MaxValue || b == Long.MaxValue)
-      Long.MaxValue
-    else {
-      val c = a + b
-      if (((a ^ c) & (b ^ c)) < 0)
-        throw new TimeOverflowException(a + " + " + b)
-      else
-        c
-    }
-  }
-
-  def sub(a: Long, b: Long) = {
-    if (a == Long.MaxValue)
-      Long.MaxValue
-    else {
-      val c = a - b
-      if (((a ^ c) & (-b ^ c)) < 0)
-        throw new TimeOverflowException(a + " - " + b)
-      else
-        c
-    }
-  }
-
-  def mul(a: Long, b: Long): Long = {
-    if (a > b) {
-      // normalize so that a <= b to keep conditionals to a minimum
-      mul(b, a)
-    } else {
-      // a and b are such that a <= b
-      if (b == Long.MaxValue) {
-        b
-      } else {
-        if (a < 0L) {
-          if (b < 0L) {
-            if (a < Long.MaxValue / b) throw new TimeOverflowException(a + " * " + b)
-          } else if (b > 0L) {
-            if (Long.MinValue / b > a) throw new TimeOverflowException(a + " * " + b)
-          }
-        } else if (a > 0L) {
-          // and b > 0L
-          if (a > Long.MaxValue / b) throw new TimeOverflowException(a + " * " + b)
-        }
-        a * b
-      }
-    }
-  }
-
-  def div(a: Long, b: Long) = {
-    if (a == Long.MaxValue) {
-      Long.MaxValue
-    } else {
-      a / b
-    }
-  }
-
-  def divInt(a: Long, b: Long) = {
-    if (a == Long.MaxValue) {
-      Int.MaxValue
-    } else {
-      a / b
-    }
-  }
-}
-
-class TimeOverflowException(msg: String) extends Exception(msg)

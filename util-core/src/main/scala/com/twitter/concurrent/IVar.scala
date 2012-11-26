@@ -80,65 +80,9 @@ package ivar {
 import ivar._
 
 object IVar {
-  trait Scheduler {
-    def apply(waiter: () => Unit)
-    def flush()
-  }
-
-  // Schedules are local to a thread, and iteratively unwind IVar
-  // `gets` so that we can implement recursive structures without
-  // exhausting the stack.
-  //
-  // todo: it's possible, too, to not unwind _every_ get, but rather
-  // only after a certain stack depth has been reached.
-  private class LocalScheduler extends Scheduler {
-    private[this] type Waiter = () => Unit
-    private[this] var w0, w1, w2: Waiter = null
-    private[this] var ws = new Queue[Waiter]
-    private[this] var running = false
-
-    def apply(waiter: () => Unit) {
-      if (w0 == null) w0 = waiter
-      else if (w1 == null) w1 = waiter
-      else if (w2 == null) w2 = waiter
-      else ws.enqueue(waiter)
-      if (!running) run()
-    }
-
-    def flush() {
-      if (running) run()
-    }
-
-    private[this] def run() {
-      val save = running
-      running = true
-      // via moderately silly benchmarking, the
-      // queue unrolling gives us a ~50% speedup
-      // over pure Queue usage for common
-      // situations.
-      try {
-        while (w0 != null) {
-          val w = w0
-          w0 = w1
-          w1 = w2
-          w2 = if (ws.isEmpty) null else ws.dequeue()
-          w()
-        }
-      } finally {
-        running = save
-      }
-    }
-  }
-
-  private val _sched = new ThreadLocal[LocalScheduler] {
-    override def initialValue = new LocalScheduler
-  }
   private val initState: State[Nothing] = Waiting(Nil, Nil)
   private val stateUpd = AtomicReferenceFieldUpdater.newUpdater(
     classOf[IVarField[_]], classOf[State[_]], "state")
-
-  // This should only be used by IVar and ConstFuture
-  private[twitter] def sched: Scheduler = _sched.get()
 }
 
 final class IVar[A] extends IVarField[A] {
@@ -166,21 +110,23 @@ final class IVar[A] extends IVarField[A] {
     value: A,
     _waitq: List[A => Unit],
     _chainq: List[IVar[A]]
-  ) = sched { () =>
-    // todo: exceptions stop execution
-    // here, but should they?
-    var waitq = _waitq
-    while (waitq != Nil) {
-      waitq.head(value)
-      waitq = waitq.tail
-    }
+  ) = Scheduler.submit(new Runnable {
+    def run() {
+      // todo: exceptions stop execution
+      // here, but should they?
+      var waitq = _waitq
+      while (waitq != Nil) {
+        waitq.head(value)
+        waitq = waitq.tail
+      }
 
-    var chainq = _chainq
-    while (chainq != Nil) {
-      chainq.head.set(value)
-      chainq = chainq.tail
+      var chainq = _chainq
+      while (chainq != Nil) {
+        chainq.head.set(value)
+        chainq = chainq.tail
+      }
     }
-  }
+  })
 
   private[IVar] def resolve(): IVar[A] =
     state match {
@@ -261,7 +207,7 @@ final class IVar[A] extends IVarField[A] {
    * already defined because it does not attempt to defer getting a
    * defined value.
    */
-  def apply(): A = apply(Duration.MaxValue).get
+  def apply(): A = apply(Duration.Top).get
   def apply(timeout: Duration): Option[A] =
     state match {
       case Linked(_) =>
@@ -272,7 +218,7 @@ final class IVar[A] extends IVarField[A] {
         val condition = new CountDownLatch(1)
         get { _ => condition.countDown() }
         val (v, u) = timeout.inTimeUnit
-        sched.flush()
+        Scheduler.flush()
         if (condition.await(v, u)) {
           Some(state.asInstanceOf[Done[A]].value)
         } else {
@@ -328,7 +274,9 @@ final class IVar[A] extends IVarField[A] {
         if (!cas(s, s.copy(waitq = k :: waitq)))
           get(k)
       case Done(value) =>
-        sched { () => k(value) }
+        Scheduler.submit(new Runnable {
+          def run() { k(value) }
+        })
       case Linked(iv) =>
         iv.get(k)
     }

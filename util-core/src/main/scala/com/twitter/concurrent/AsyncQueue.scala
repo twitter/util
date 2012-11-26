@@ -22,6 +22,11 @@ class AsyncQueue[T] {
   import AsyncQueue._
 
   private[this] val state = new AtomicReference[State[T]](Idle)
+  
+  def size: Int = state.get match {
+    case Offering(q) => q.size
+    case _ => 0
+  }
 
   /**
    * Retrieves and removes the head of the queue, completing the

@@ -112,11 +112,21 @@ object Monitor extends Monitor {
   }
 
   /**
+   * An exception catcher that attempts to handle exceptions with
+   * the current monitor.
+   */
+  val catcher: PartialFunction[Throwable, Unit] = {
+    case exc =>
+      if (!handle(exc))
+        throw exc
+  }
+
+  /**
    * Run the computation {{f}} in the context of the current {{Local}}
    * monitor.
    */
   override def apply(f: => Unit) =
-    try f catch { case exc => if (!handle(exc)) throw exc }
+    try f catch catcher
 
   /**
    * Handle {{exc}} with the current {{Local}} monitor.  If the
@@ -147,14 +157,19 @@ object RootMonitor extends Monitor {
   private[this] val log = Logger.getLogger("monitor")
 
   def handle(exc: Throwable) = exc match {
+    case NonFatal(e) =>
+      log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
+      false
+
     case e: VirtualMachineError =>
       log.log(Level.SEVERE, "VM error", e)
       System.err.println("VM error: %s".format(e.getMessage))
       e.printStackTrace(System.err)
       System.exit(1)
       true  /*NOTREACHED*/
+
     case e =>
-      log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
+      log.log(Level.SEVERE, "Fatal exception propagated to the root monitor!", e)
       false
-    }
+  }
 }

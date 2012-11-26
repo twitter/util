@@ -1,7 +1,7 @@
 package com.twitter.jvm
 
 import com.twitter.conversions.time._
-import com.twitter.util.{Future, Promise, Duration, Time}
+import com.twitter.util.{Future, Promise, Duration, Time, Stopwatch}
 import java.io.OutputStream
 import java.nio.{ByteBuffer, ByteOrder}
 import management.ManagementFactory
@@ -95,7 +95,7 @@ object CpuProfile {
     // top handful of frames are distinguishing.
     val counts = mutable.HashMap[Seq[StackTraceElement], Long]()
     val bean = ManagementFactory.getThreadMXBean()
-    val begin = Time.now
+    val elapsed = Stopwatch.start()
     val end = howlong.fromNow
     val period = (1000000/frequency).microseconds
     val myId = Thread.currentThread().getId()
@@ -121,11 +121,11 @@ object CpuProfile {
         next += period
       }
 
-      val sleep = math.max((next - Time.now).inMilliseconds, 0)
+      val sleep = math.max(elapsed().inMilliseconds, 0)
       Thread.sleep(sleep)
     }
 
-    CpuProfile(counts.toMap, Time.now - begin, n, nmissed)
+    CpuProfile(counts.toMap, elapsed(), n, nmissed)
   }
 
   def record(howlong: Duration, frequency: Int): CpuProfile =

@@ -1,11 +1,299 @@
 package com.twitter.util
 
-import scala.math.BigInt
-import scala.util.Random
 import org.specs.SpecificationWithJUnit
 import TimeConversions._
+import java.util.concurrent.TimeUnit
 
-class TimeSpec extends SpecificationWithJUnit {
+trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
+  val ops: TimeLikeOps[T]
+  import ops._
+
+  "Top, Bottom, Undefined, Nanoseconds(_), Finite(_)" should {
+    val easyVs = Seq(Zero, Top, Bottom, Undefined,
+      fromNanoseconds(1), fromNanoseconds(-1))
+    val vs = easyVs ++ Seq(
+      fromNanoseconds(Long.MaxValue-1),
+      fromNanoseconds(Long.MinValue+1))
+
+    "behave like boxed doubles" in {
+      Top compare Undefined must be_<(0)
+      Bottom compare Top must be_<(0)
+      Undefined compare Undefined must be_==(0)
+      Top compare Top must be_==(0)
+      Bottom compare Bottom must be_==(0)
+
+      Top + Duration.Top must be_==(Top)
+      Bottom - Duration.Bottom must be_==(Undefined)
+      Top - Duration.Top must be_==(Undefined)
+      Bottom + Duration.Bottom must be_==(Bottom)
+    }
+
+    "complementary diff" in {
+      // Note that this doesn't always hold because of two's
+      // complement arithmetic.
+      for (a <- easyVs; b <- easyVs)
+        a diff b must be_==(-(b diff a))
+
+    }
+
+    "complementary compare" in {
+      for (a <- vs; b <- vs) {
+        val x = a compare b
+        val y = b compare a
+        (x == 0 && y == 0) || (x < 0 != y < 0) must beTrue
+      }
+    }
+
+    "commutative max" in {
+      for (a <- vs; b <- vs)
+        a max b must be_==(b max a)
+    }
+
+    "commutative min" in {
+      for (a <- vs; b <- vs)
+        a min b must be_==(b min a)
+    }
+
+    "handle underflows" in {
+      fromNanoseconds(Long.MinValue) - 1.nanosecond must be_==(Bottom)
+    }
+
+    "handle overflows" in {
+      fromNanoseconds(Long.MaxValue) + 1.nanosecond must be_==(Top)
+    }
+
+    "Nanoseconds(_) extracts only finite values, in nanoseconds" in {
+      for (t <- Seq(Top, Bottom, Undefined))
+        t mustNot beLike { case Nanoseconds(_) => true }
+
+      for (ns <- Seq(Long.MinValue, -1, 0, 1, Long.MaxValue); t = fromNanoseconds(ns))
+        t must beLike { case Nanoseconds(`ns`) => true }
+    }
+
+    "Finite(_) extracts only finite values" in {
+      for (t <- Seq(Top, Bottom, Undefined))
+        t mustNot beLike { case Finite(_) => true }
+
+      for (ns <- Seq(Long.MinValue, -1, 0, 1, Long.MaxValue); t = fromNanoseconds(ns))
+        t must beLike { case Finite(`t`) => true }
+    }
+  }
+
+  "Top" should {
+    "be impermeable to finite arithmetic" in {
+      Top - 0.seconds must be_==(Top)
+      Top - 100.seconds must be_==(Top)
+      Top - Duration.fromNanoseconds(Long.MaxValue) must be_==(Top)
+    }
+
+    "become undefined when subtracted from itself, or added to bottom" in {
+      Top - Duration.Top must be_==(Undefined)
+      Top + Duration.Bottom must be_==(Undefined)
+    }
+
+    "not be equal to the maximum value" in {
+      fromNanoseconds(Long.MaxValue) mustNot be_==(Top)
+    }
+
+    "always be max" in {
+      Top max fromSeconds(1) must be_==(Top)
+      Top max fromNanoseconds(Long.MaxValue) must be_==(Top)
+      Top max Bottom must be_==(Top)
+    }
+
+    "greater than everything else" in {
+      fromSeconds(0) must be_<(Top)
+      fromNanoseconds(Long.MaxValue) must be_<(Top)
+    }
+
+    "equal to itself" in {
+      Top must be_==(Top)
+    }
+
+    "more or less equals only to itself" in {
+      Top.moreOrLessEquals(Top, Duration.Top) must beTrue
+      Top.moreOrLessEquals(Top, Duration.zero) must beTrue
+      Top.moreOrLessEquals(Bottom, Duration.Top) must beTrue
+      Top.moreOrLessEquals(Bottom, Duration.zero) must beFalse
+      Top.moreOrLessEquals(fromSeconds(0), Duration.Top) must beTrue
+      Top.moreOrLessEquals(fromSeconds(0), Duration.Bottom) must beFalse
+    }
+
+    "Undefined diff to Top" in {
+      Top diff Top must be_==(Duration.Undefined)
+    }
+  }
+
+  "Bottom" should {
+    "be impermeable to finite arithmetic" in {
+      Bottom + 0.seconds must be_==(Bottom)
+      Bottom + 100.seconds must be_==(Bottom)
+      Bottom + Duration.fromNanoseconds(Long.MaxValue) must be_==(Bottom)
+    }
+
+    "become undefined when added with Top or subtracted by bottom" in {
+      Bottom + Duration.Top must be_==(Undefined)
+      Bottom - Duration.Bottom must be_==(Undefined)
+    }
+
+    "always be min" in {
+      Bottom min Top must be_==(Bottom)
+      Bottom min fromNanoseconds(0) must be_==(Bottom)
+    }
+
+    "less than everything else" in {
+      Bottom must be_<(fromSeconds(0))
+      Bottom must be_<(fromNanoseconds(Long.MaxValue))
+      Bottom must be_<(fromNanoseconds(Long.MinValue))
+    }
+
+    "less than Top" in {
+      Bottom must be_<(Top)
+    }
+
+    "equal to itself" in {
+      Bottom must be_==(Bottom)
+    }
+
+    "more or less equals only to itself" in {
+      Bottom.moreOrLessEquals(Bottom, Duration.Top) must beTrue
+      Bottom.moreOrLessEquals(Bottom, Duration.zero) must beTrue
+      Bottom.moreOrLessEquals(Top, Duration.Bottom) must beFalse
+      Bottom.moreOrLessEquals(Top, Duration.zero) must beFalse
+      Bottom.moreOrLessEquals(fromSeconds(0), Duration.Top) must beTrue
+      Bottom.moreOrLessEquals(fromSeconds(0), Duration.Bottom) must beFalse
+    }
+
+
+    "Undefined diff to Bottom" in {
+      Bottom diff Bottom must be_==(Duration.Undefined)
+    }
+  }
+
+  "Undefined" should {
+    "be impermeable to any arithmetic" in {
+      Undefined + 0.seconds must be_==(Undefined)
+      Undefined + 100.seconds must be_==(Undefined)
+      Undefined + Duration.fromNanoseconds(Long.MaxValue) must be_==(Undefined)
+    }
+
+    "become undefined when added with Top or subtracted by bottom" in {
+      Undefined + Duration.Top must be_==(Undefined)
+      Undefined - Duration.Undefined must be_==(Undefined)
+    }
+
+    "always be max" in {
+      Undefined max Top must be_==(Undefined)
+      Undefined max fromNanoseconds(0) must be_==(Undefined)
+    }
+
+    "greater than everything else" in {
+      fromSeconds(0) must be_<(Undefined)
+      Top must be_<(Undefined)
+      fromNanoseconds(Long.MaxValue) must be_<(Undefined)
+    }
+
+    "equal to itself" in {
+      Undefined must be_==(Undefined)
+    }
+
+    "not more or less equal to anything" in {
+      Undefined.moreOrLessEquals(Undefined, Duration.Top) must beFalse
+      Undefined.moreOrLessEquals(Undefined, Duration.zero) must beFalse
+      Undefined.moreOrLessEquals(Top, Duration.Undefined) must beTrue
+      Undefined.moreOrLessEquals(Top, Duration.zero) must beFalse
+      Undefined.moreOrLessEquals(fromSeconds(0), Duration.Top) must beFalse
+      Undefined.moreOrLessEquals(fromSeconds(0), Duration.Undefined) must beTrue
+    }
+
+    "Undefined on diff" in {
+      Undefined diff Top must be_==(Duration.Undefined)
+      Undefined diff Bottom must be_==(Duration.Undefined)
+      Undefined diff fromNanoseconds(123) must be_==(Duration.Undefined)
+    }
+  }
+
+  "values" should {
+    "reflect their underlying value" in {
+      val nss = Seq(
+        1040403005001003L,  // 12.days+1.hour+3.seconds+5.milliseconds+1.microsecond+3.nanoseconds
+        123000000000L,  // 123.seconds
+        1L
+      )
+
+      for (ns <- nss) {
+        val t = fromNanoseconds(ns)
+        t.inNanoseconds must be_==(ns)
+        t.inMicroseconds must be_==(ns/1000L)
+        t.inMilliseconds must be_==(ns/1000000L)
+        t.inSeconds must be_==(ns/1000000000L)
+        t.inMinutes must be_==(ns/60000000000L)
+        t.inHours must be_==(ns/3600000000000L)
+        t.inDays must be_==(ns/86400000000000L)
+      }
+    }
+  }
+
+  "floor" should {
+    "round down" in {
+      fromSeconds(60).floor(1.minute) must be_==(fromSeconds(60))
+      fromSeconds(100).floor(1.minute) must be_==(fromSeconds(60))
+      fromSeconds(119).floor(1.minute) must be_==(fromSeconds(60))
+      fromSeconds(120).floor(1.minute) must be_==(fromSeconds(120))
+    }
+
+    "maintain top and bottom" in {
+      Top.floor(1.hour) must be_==(Top)
+    }
+
+    "divide by zero" in {
+      Zero.floor(Duration.Zero) must be_==(Undefined)
+      fromSeconds(1).floor(Duration.Zero) must be_==(Top)
+      fromSeconds(-1).floor(Duration.Zero) must be_==(Bottom)
+    }
+
+    "deal with undefineds" in {
+      Bottom.floor(1.second) must be_==(Bottom)
+      Undefined.floor(0.seconds) must be_==(Undefined)
+      Undefined.floor(Duration.Top) must be_==(Undefined)
+      Undefined.floor(Duration.Bottom) must be_==(Undefined)
+      Undefined.floor(Duration.Undefined) must be_==(Undefined)
+    }
+
+    "floor itself" in {
+      for (s <- Seq(Long.MinValue, -1, 1, Long.MaxValue); t = fromNanoseconds(s))
+        t.floor(Duration.fromNanoseconds(t.inNanoseconds)) must be_==(t)
+    }
+  }
+
+  "from*" should {
+    "never over/under flow nanos" in {
+      for (v <- Seq(Long.MinValue, Long.MaxValue)) {
+        fromNanoseconds(v) must beLike {
+          case Nanoseconds(ns) => ns == v
+        }
+      }
+    }
+
+    "overflow millis" in {
+      val millis = TimeUnit.NANOSECONDS.toMillis(Long.MaxValue)
+      fromMilliseconds(millis) must beLike {
+        case Nanoseconds(ns) => ns == millis*1e6
+      }
+      fromMilliseconds(millis+1) must be_==(Top)
+    }
+
+    "underflow millis" in {
+      val millis = TimeUnit.NANOSECONDS.toMillis(Long.MinValue)
+      fromMilliseconds(millis) must beLike {
+        case Nanoseconds(ns) => ns == millis*1e6
+      }
+      fromMilliseconds(millis-1) must be_==(Bottom)
+    }
+  }
+}
+
+class TimeSpec extends  { val ops = Time } with TimeLikeSpec[Time] {
   "Time" should {
     "work in collections" in {
       val t0 = Time.fromSeconds(100)
@@ -149,10 +437,10 @@ class TimeSpec extends SpecificationWithJUnit {
       Time.fromMilliseconds(-1).inNanoseconds mustEqual -1L * 1000000L
 
       Time.fromMilliseconds(Long.MaxValue).inNanoseconds mustEqual Long.MaxValue
-      Time.fromMilliseconds(Long.MaxValue-1) must throwA[TimeOverflowException]
+      Time.fromMilliseconds(Long.MaxValue-1) must be_==(Time.Top)
 
-      Time.fromMilliseconds(Long.MinValue) must throwA[TimeOverflowException]
-      Time.fromMilliseconds(Long.MinValue+1) must throwA[TimeOverflowException]
+      Time.fromMilliseconds(Long.MinValue) must be_==(Time.Bottom)
+      Time.fromMilliseconds(Long.MinValue+1) must be_==(Time.Bottom)
 
       val currentTimeMs = System.currentTimeMillis
       Time.fromMilliseconds(currentTimeMs).inNanoseconds mustEqual(currentTimeMs * 1000000L)
@@ -174,110 +462,6 @@ class TimeSpec extends SpecificationWithJUnit {
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now - 100.hours
         t0.untilNow mustEqual 100.hours
-      }
-    }
-
-    "preserve MaxValue" in {
-      Long.MaxValue.nanoseconds.inSeconds mustEqual Int.MaxValue
-      Long.MaxValue.seconds.inMicroseconds mustEqual Long.MaxValue
-      Time.fromMilliseconds(Long.MaxValue).inSeconds mustEqual Int.MaxValue
-      Time.fromMilliseconds(Long.MaxValue).inMilliseconds mustEqual Long.MaxValue
-      Time.fromMilliseconds(Long.MaxValue).inNanoseconds mustEqual Long.MaxValue
-    }
-  }
-
-  "TimeMath" should {
-    val random = new Random
-    val maxSqrt = 3037000499L
-
-    def randLong() = {
-      if (random.nextInt > 0)
-        random.nextLong() % maxSqrt
-      else
-        random.nextLong()
-    }
-
-    "add" in {
-      def test(a: Long, b: Long) {
-        val bigC = BigInt(a) + BigInt(b)
-        if (bigC.abs > Long.MaxValue)
-          TimeMath.add(a, b) must throwA[TimeOverflowException]
-        else
-          TimeMath.add(a, b) mustEqual bigC.toLong
-      }
-
-      for (i <- 0 until 1000) {
-        test(randLong(), randLong())
-      }
-    }
-
-    "add MaxValues" in {
-      TimeMath.add(Long.MaxValue, randLong()) must be_==(Long.MaxValue)
-      TimeMath.add(randLong(), Long.MaxValue) must be_==(Long.MaxValue)
-    }
-
-    "sub" in {
-      def test(a: Long, b: Long) {
-        val bigC = BigInt(a) - BigInt(b)
-        if (bigC.abs > Long.MaxValue)
-          TimeMath.sub(a, b) must throwA[TimeOverflowException]
-        else
-          TimeMath.sub(a, b) mustEqual bigC.toLong
-      }
-
-      for (i <- 0 until 1000) {
-        test(randLong(), randLong())
-      }
-    }
-
-    "sub MaxValues" in {
-      TimeMath.sub(Long.MaxValue, randLong()) must be_==(Long.MaxValue)
-    }
-
-    "mul" in {
-      TimeMath.mul(0L, 10L) mustEqual 0L
-      TimeMath.mul(1L, 11L) mustEqual 11L
-      TimeMath.mul(-1L, -11L) mustEqual 11L
-      TimeMath.mul(-1L, 22L) mustEqual -22L
-      TimeMath.mul(22L, -1L) mustEqual -22L
-
-      TimeMath.mul(3456116450671355229L, -986247066L) must throwA[TimeOverflowException]
-
-      TimeMath.mul(Long.MaxValue, 9L) mustEqual Long.MaxValue
-      TimeMath.mul(Long.MaxValue, 1L) mustEqual Long.MaxValue
-      TimeMath.mul(Long.MaxValue, 0L) mustEqual Long.MaxValue // this is a strange case, huh?
-      TimeMath.mul(Long.MaxValue - 1L, 9L) must throwA[TimeOverflowException]
-
-      TimeMath.mul(Long.MinValue, 2L) must throwA[TimeOverflowException]
-      TimeMath.mul(Long.MinValue, -2L) must throwA[TimeOverflowException]
-      TimeMath.mul(Long.MinValue, 3L) must throwA[TimeOverflowException]
-      TimeMath.mul(Long.MinValue, -3L) must throwA[TimeOverflowException]
-      TimeMath.mul(Long.MinValue, 1L) mustEqual Long.MinValue
-      TimeMath.mul(Long.MinValue, -1L) must throwA[TimeOverflowException]
-      TimeMath.mul(1L, Long.MinValue) mustEqual Long.MinValue
-      TimeMath.mul(-1L, Long.MinValue) must throwA[TimeOverflowException]
-      TimeMath.mul(Long.MinValue, 0L) mustEqual 0L
-      TimeMath.mul(Long.MinValue + 1L, 2L) must throwA[TimeOverflowException]
-
-      def test(a: Long, b: Long) {
-        val bigC = BigInt(a) * BigInt(b)
-        if (bigC.abs > Long.MaxValue)
-          TimeMath.mul(a, b) must throwA[TimeOverflowException]
-        else
-          TimeMath.mul(a, b) mustEqual bigC.toLong
-      }
-
-      for (i <- 0 until 1000) {
-        val a = randLong()
-        val b = randLong()
-        try {
-          test(a, b)
-        } catch {
-          case x => {
-            println(a + " * " + b + " failed")
-            throw x
-          }
-        }
       }
     }
   }

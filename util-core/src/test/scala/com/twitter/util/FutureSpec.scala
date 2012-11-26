@@ -1,10 +1,11 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
-import org.specs.mock.Mockito
+import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
-import com.twitter.common.objectsize.ObjectSizeCalculator
+import org.specs.SpecificationWithJUnit
+import org.specs.mock.Mockito
+import scala.collection.JavaConverters._
 
 class FutureSpec extends SpecificationWithJUnit with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
@@ -19,14 +20,22 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
     def exception[A](exc: Throwable): Future[A] = this(Throw(exc))
   }
 
+  class HandledPromise[A] extends Promise[A] {
+    @volatile var _handled: Option[Throwable] = None
+    def handled: Option[Throwable] = _handled
+    setInterruptHandler { case e => _handled = Some(e) }
+  }
+
   def test(name: String, const: MkConst) {
     "object Future (%s)".format(name) should {
       "times" in {
         val queue = new ConcurrentLinkedQueue[Promise[Unit]]
         var complete = false
         var failure = false
+        var ninterrupt = 0
         val iteration = Future.times(3) {
           val promise = new Promise[Unit]
+          promise.setInterruptHandler { case _ => ninterrupt += 1 }
           queue add promise
           promise
         }
@@ -62,24 +71,24 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           failure mustBe true
         }
 
-        "when cancelled" in {
-          iteration.cancel()
-          0 until 3 foreach { _ =>
-            val f = queue.poll()
-            f.isCancelled must beTrue
-            f.setValue(())
+        "when interrupted" in {
+          ninterrupt must be_==(0)
+          iteration.raise(new Exception)
+          for (i <- 1 to 3) {
+            ninterrupt must be_==(i)
+            queue.poll().setValue(())
           }
         }
       }
 
       "whileDo" in {
         var i = 0
-        val queue = new ConcurrentLinkedQueue[Promise[Unit]]
+        val queue = new ConcurrentLinkedQueue[HandledPromise[Unit]]
         var complete = false
         var failure = false
         val iteration = Future.whileDo(i < 3) {
           i += 1
-          val promise = new Promise[Unit]
+          val promise = new HandledPromise[Unit]
           queue add promise
           promise
         }
@@ -117,19 +126,15 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           failure mustBe true
         }
 
-        "when cancelled" in {
-          iteration.cancel()
-          0 until 3 foreach { i =>
-            val f = queue.poll()
-            f.isCancelled must beTrue
-            f.setValue(())
-          }
+        "when interrupted" in {
+          queue.asScala exists { _.handled.isDefined } must beFalse
+          iteration.raise(new Exception)
+          queue.asScala forall { _.handled.isDefined } must beTrue
         }
       }
 
       "collect" in {
-        val p0 = new Promise[Int]
-        val p1 = new Promise[Int]
+        val p0, p1 = new HandledPromise[Int]
         val f = Future.collect(Seq(p0, p1))
         f.isDefined must beFalse
 
@@ -153,12 +158,11 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f() must throwA[Exception]
         }
 
-        "propagate cancellation" in {
-          p0.isCancelled must beFalse
-          p1.isCancelled must beFalse
-          f.cancel()
-          p0.isCancelled must beTrue
-          p1.isCancelled must beTrue
+        "propagate interrupts" in {
+          val ps = Seq(p0, p1)
+          ps.count(_.handled.isDefined) must be_==(0)
+          f.raise(new Exception)
+          ps.count(_.handled.isDefined) must be_==(2)
         }
       }
 
@@ -207,12 +211,10 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f() must throwA(new IllegalArgumentException("empty future list!"))
         }
 
-        "propagate cancellation" in {
-          val fs = (0 until 10 map { _ => new Promise[Int] }) toArray;
-          Future.select(fs).cancel()
-          fs foreach { f =>
-            f.isCancelled must beTrue
-          }
+        "propagate interrupts" in {
+          val fs = for (_ <- 0 until 10 toArray) yield new HandledPromise[Int]
+          Future.select(fs).raise(new Exception)
+          fs forall (_.handled.isDefined) must beTrue
         }
       }
 
@@ -271,8 +273,8 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
 
     "Future (%s)".format(name) should {
       "select" in {
-        val p0 = new Promise[Int]
-        val p1 = new Promise[Int]
+        var nhandled = 0
+        val p0, p1 = new HandledPromise[Int]
         val f = p0 select p1
         f.isDefined must beFalse
 
@@ -288,19 +290,18 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f() must throwA[Exception]
         }
 
-        "propagate cancellation" in {
-          p0.isCancelled must beFalse
-          p1.isCancelled must beFalse
-          f.cancel()
-          p0.isCancelled must beTrue
-          p1.isCancelled must beTrue
+        "propagate interrupts" in {
+          val ps = Seq(p0, p1)
+          ps exists (_.handled.isDefined) must beFalse
+          f.raise(new Exception)
+          ps forall (_.handled.isDefined) must beTrue
         }
       }
 
       def testJoin(label: String, joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])) {
         "join(%s)".format(label) in {
-          val p0 = new Promise[Int]
-          val p1 = new Promise[Int]
+          val p0 = new HandledPromise[Int]
+          val p1 = new HandledPromise[Int]
           val f = joiner(p0, p1)
           f.isDefined must beFalse
 
@@ -323,12 +324,13 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             f() must throwA[Exception]
           }
 
-          "propagate cancellation" in {
-            p0.isCancelled must beFalse
-            p1.isCancelled must beFalse
-            f.cancel()
-            p0.isCancelled must beTrue
-            p1.isCancelled must beTrue
+          "propagate interrupts" in {
+            p0.handled must beNone
+            p1.handled must beNone
+            val exc = new Exception
+            f.raise(exc)
+            p0.handled must beSome(exc)
+            p1.handled must beSome(exc)
           }
         }
       }
@@ -344,7 +346,6 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           "must both be done" in {
             f.isDefined must beTrue
             jf.isDone must beTrue
-            f.isCancelled must beFalse
             jf.isCancelled must beFalse
           }
         }
@@ -357,29 +358,8 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           "must both be done" in {
             f.isDefined must beTrue
             jf.isDone must beTrue
-            f.isCancelled must beFalse
             jf.isCancelled must beFalse
           }
-        }
-
-        "cancel when the java future is cancelled" in {
-          val f = new Promise[Int]
-          val jf = f.toJavaFuture
-          f.isDefined mustBe false
-          jf.isDone mustBe false
-          jf.cancel(true) mustBe true
-          f.isCancelled mustBe true
-          jf.isCancelled mustBe true
-        }
-
-        "cancel when the twitter future is cancelled" in {
-          val f = new Promise[Int]
-          val jf = f.toJavaFuture
-          f.isDefined mustBe false
-          jf.isDone mustBe false
-          f.cancel()
-          f.isCancelled mustBe true
-          jf.isCancelled mustBe true
         }
 
         "java future should throw an exception" in {
@@ -388,10 +368,20 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f.setException(new RuntimeException())
           jf.get() must throwA(new RuntimeException())
         }
+
+        "interrupt Future when cancelled" in {
+          val f = new HandledPromise[Int]
+          val jf = f.toJavaFuture
+          f.handled must beNone
+          jf.cancel(true)
+          f.handled must beLike {
+            case Some(e: java.util.concurrent.CancellationException) => true
+          }
+        }
       }
 
       "monitored" in {
-        val inner = new Promise[Int]
+        val inner = new HandledPromise[Int]
         val exc = new Exception("some exception")
         "catch raw exceptions (direct)" in {
           val f = Future.monitored {
@@ -401,14 +391,15 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f.poll must beSome(Throw(exc))
         }
 
-        "catch raw exceptions (indirect), cancelling computation" in {
+        "catch raw exceptions (indirect), interrupting computation" in {
           val inner1 = new Promise[Int]
           var ran = false
           val f = Future.monitored {
             inner1 ensure {
               throw exc
-            }
-            inner1 ensure {
+            } ensure {
+              // Note that these are sequenced so that interrupts
+              // will be delivered before inner's handler is cleared.
               ran = true
               inner.update(Return(1)) mustNot throwA[Throwable]
             }
@@ -416,18 +407,21 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           }
           ran must beFalse
           f.poll must beNone
-          inner.isCancelled must beFalse
+          inner.handled must beNone
           inner1.update(Return(1)) mustNot throwA[Throwable]
           ran must beTrue
+          inner.isDefined must beTrue
           f.poll must beSome(Throw(exc))
-          inner.isCancelled must beTrue
+
+          inner.handled must beSome(exc)
         }
 
         "link" in {
           val f = Future.monitored { inner }
-          inner.isCancelled must beFalse
-          f.cancel()
-          inner.isCancelled must beTrue
+          inner.handled must beNone
+          val exc = new Exception
+          f.raise(exc)
+          inner.handled must beSome(exc)
         }
 
         "doesn't leak the underlying promise after completion" in {
@@ -469,14 +463,6 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             x + 1
           }
           f() must throwA(e)
-        }
-
-        "cancellation" in {
-          val f1 = new Promise[Int]
-          val f2 = f1 map { _ => () }
-          f1.isCancelled must beFalse
-          f2.cancel()
-          f1.isCancelled must beTrue
         }
       }
 
@@ -556,27 +542,44 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             f mustProduce Return(2)
           }
 
-          "cancellation of the produced future" in {
+          "interruption of the produced future" in {
             "before the antecedent Future completes, propagates back to the antecedent" in {
-              val f1, f2 = new Promise[Int]
+              val f1, f2 = new HandledPromise[Int]
               val f = f1 flatMap { _ => f2 }
-              f1.isCancelled must beFalse
-              f2.isCancelled must beFalse
-              f.cancel()
-              f1.isCancelled must beTrue
+              f1.handled must beNone
+              f2.handled must beNone
+              f.raise(new Exception)
+              f1.handled must beSomething
               f1() = Return(2)
-              f2.isCancelled must beTrue
+              f2.handled must beSomething
             }
 
             "after the antecedent Future completes, does not propagate back to the antecedent" in {
-              val f1, f2= new Promise[Int]
+              val f1, f2 = new HandledPromise[Int]
               val f = f1 flatMap { _ => f2 }
-              f1.isCancelled must beFalse
-              f2.isCancelled must beFalse
+              f1.handled must beNone
+              f2.handled must beNone
               f1() = Return(2)
-              f.cancel()
-              f1.isCancelled must beFalse
-              f2.isCancelled must beTrue
+              f.raise(new Exception)
+              f1.handled must beNone
+              f2.handled must beSomething
+            }
+
+            "forward through chains" in {
+              val f1, f2 = new Promise[Unit]
+              val exc = new Exception
+              val f3 = new Promise[Unit]
+              var didInterrupt = false
+              f3.setInterruptHandler {
+                case `exc` => didInterrupt = true
+              }
+              val f = f1 flatMap { _ => f2 flatMap { _ => f3 } }
+              f.raise(exc)
+              didInterrupt must beFalse
+              f1.setValue(())
+              didInterrupt must beFalse
+              f2.setValue(())
+              didInterrupt must beTrue
             }
           }
         }
@@ -621,17 +624,17 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f.flatten mustProduce Throw(e)
         }
 
-        "cancellation" in {
-          val f1 = new Promise[Future[Int]]
-          val f2 = new Promise[Int]
+        "interruption" in {
+          val f1 = new HandledPromise[Future[Int]]
+          val f2 = new HandledPromise[Int]
           val f = f1.flatten
-          f1.isCancelled must beFalse
-          f2.isCancelled must beFalse
-          f.cancel()
-          f1.isCancelled must beTrue
-          f2.isCancelled must beFalse
+          f1.handled must beNone
+          f2.handled must beNone
+          f.raise(new Exception)
+          f1.handled must beSomething
+          f2.handled must beNone
           f1() = Return(f2)
-          f2.isCancelled must beTrue
+          f2.handled must beSomething
         }
       }
 
@@ -667,28 +670,28 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           }
         }
 
-        "cancellation of the produced future" in {
+        "interruption of the produced future" in {
           "before the antecedent Future completes, propagates back to the antecedent" in {
-            val f1, f2 = new Promise[Int]
+            val f1, f2 = new HandledPromise[Int]
             val f = f1 rescue { case _ => f2 }
-            f1.isCancelled must beFalse
-            f2.isCancelled must beFalse
-            f.cancel()
-            f1.isCancelled must beTrue
-            f2.isCancelled must beFalse
+            f1.handled must beNone
+            f2.handled must beNone
+            f.raise(new Exception)
+            f1.handled must beSomething
+            f2.handled must beNone
             f1() = Throw(new Exception)
-            f2.isCancelled must beTrue
+            f2.handled must beSomething
           }
 
           "after the antecedent Future completes, does not propagate back to the antecedent" in {
-            val f1, f2 = new Promise[Int]
+            val f1, f2 = new HandledPromise[Int]
             val f = f1 rescue { case _ => f2 }
-            f1.isCancelled must beFalse
-            f2.isCancelled must beFalse
+            f1.handled must beNone
+            f2.handled must beNone
             f1() = Throw(new Exception)
-            f.cancel()
-            f1.isCancelled must beFalse
-            f2.isCancelled must beTrue
+            f.raise(new Exception)
+            f1.handled must beNone
+            f2.handled must beSomething
           }
         }
       }
@@ -722,6 +725,31 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           wasCalledWith mustEqual None
           f()= Return(1)
           wasCalledWith mustEqual Some(1)
+        }
+
+        "runs callbacks just once and in order" in {
+          var i,j,k,h = 0
+          val p = new Promise[Int]
+          p ensure {
+            i = i+j+k+h+1
+          } ensure {
+            j = i+j+k+h+1
+          } ensure {
+            k = i+j+k+h+1
+          } ensure {
+            h = i+j+k+h+1
+          }
+
+          i must be_==(0)
+          j must be_==(0)
+          k must be_==(0)
+          h must be_==(0)
+
+          p.setValue(1)
+          i must be_==(1)
+          j must be_==(2)
+          k must be_==(4)
+          h must be_==(8)
         }
 
         "monitor exceptions" in {
@@ -795,34 +823,6 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         done() must be_==((Some(1010), Some(123)))
       }
 
-      "cancellation" in {
-        val c = spy(new Promise[Int])
-        val c1 = spy(new Promise[Int])
-
-        "dispatch onCancellation upon cancellation" in {
-          val p = new Promise[Int]
-          var wasRun = false
-          p onCancellation { wasRun = true }
-          wasRun must beFalse
-          p.cancel()
-          wasRun must beTrue
-        }
-
-        "cancel a linked cancellable (after cancellation)" in {
-          c.cancel()
-          there was no(c1).cancel()
-          c.linkTo(c1)
-          there was one(c1).cancel()
-        }
-
-        "cancel a linked cancellable (before cancellation)" in {
-          c.linkTo(c1)
-          there was no(c1).cancel()
-          c.cancel()
-          there was one(c1).cancel()
-        }
-      }
-
       "poll" in {
         val p = new Promise[Int]
         "when waiting" in {
@@ -857,13 +857,13 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           timer.stop()
         }
 
-        "cancellation" in Time.withCurrentTimeFrozen { tc =>
+        "interruption" in Time.withCurrentTimeFrozen { tc =>
           implicit val timer = new MockTimer
-          val p = new Promise[Int]
+          val p = new HandledPromise[Int]
           val f = p.within(50.milliseconds)
-          p.isCancelled must beFalse
-          f.cancel()
-          p.isCancelled must beTrue
+          p.handled must beNone
+          f.raise(new Exception)
+          p.handled must beSomething
         }
       }
     }
