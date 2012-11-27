@@ -6,14 +6,14 @@ package com.twitter.concurrent
  */
 
 import java.util.concurrent.RejectedExecutionException
-import collection.mutable.Queue
+import java.util.ArrayDeque
 import com.twitter.util.{Promise, Future}
 
 class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
   def this(initialPermits: Int = 0) = this(initialPermits, None)
   def this(initialPermits: Int, maxWaiters: Int) = this(initialPermits, Some(maxWaiters))
   require(maxWaiters.getOrElse(0) >= 0)
-  @volatile private[this] var waiters = new Queue[() => Unit]
+  private[this] val waitq = new ArrayDeque[() => Unit]
   @volatile private[this] var availablePermits = initialPermits
 
   private[this] class SemaphorePermit extends Permit {
@@ -23,9 +23,9 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
     def release() = {
       val run = AsyncSemaphore.this.synchronized {
         availablePermits += 1
-        if (availablePermits > 0 && !waiters.isEmpty) {
+        if (availablePermits > 0 && !waitq.isEmpty) {
           availablePermits -= 1
-          Some(waiters.dequeue())
+          Some(waitq.removeFirst())
         } else {
           None
         }
@@ -35,7 +35,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
     }
   }
 
-  def numWaiters = waiters.size
+  def numWaiters = synchronized(waitq.size)
   def numPermitsAvailable = availablePermits
 
   /**
@@ -43,7 +43,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
    * block of your onSuccess() callback.
    *
    * @return a Future[Permit] when the Future is satisfied, computation can proceed,
-   * or a Future.Exception[RejectedExecutionException] if the configured maximum number of waiters
+   * or a Future.Exception[RejectedExecutionException] if the configured maximum number of waitq
    * would be exceeded.
    */
   def acquire(): Future[Permit] = {
@@ -59,10 +59,10 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
         (false, true)
       } else {
         maxWaiters match {
-          case Some(max) if (waiters.size >= max) =>
+          case Some(max) if (waitq.size >= max) =>
             (true, false)
           case _ =>
-            waiters enqueue(setAcquired)
+            waitq.addLast(setAcquired)
             (false, false)
         }
       }

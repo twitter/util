@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import scala.collection.mutable
+import java.util.ArrayDeque
 
 trait Scheduler {
   /**
@@ -28,7 +28,7 @@ object Scheduler extends Scheduler {
 
   private class LocalScheduler extends Scheduler {
     private[this] var r0, r1, r2: Runnable = null
-    private[this] var rs = new mutable.Queue[Runnable]
+    private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
 
     def submit(r: Runnable) {
@@ -36,7 +36,7 @@ object Scheduler extends Scheduler {
       if (r0 == null) r0 = r
       else if (r1 == null) r1 = r
       else if (r2 == null) r2 = r
-      else rs.enqueue(r)
+      else rs.addLast(r)
       if (!running) run()
     }
 
@@ -56,7 +56,7 @@ object Scheduler extends Scheduler {
           val r = r0
           r0 = r1
           r1 = r2
-          r2 = if (rs.isEmpty) null else rs.dequeue()
+          r2 = if (rs.isEmpty) null else rs.removeFirst()
           r.run()
         }
       } finally {

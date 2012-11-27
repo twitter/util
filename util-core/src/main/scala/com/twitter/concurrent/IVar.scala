@@ -4,7 +4,6 @@ import com.twitter.util.Duration
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
 import java.util.concurrent.CountDownLatch
 import scala.annotation.tailrec
-import scala.collection.mutable.Queue
 
 /**
  * An IVar is an "I-structured variable". It is a mutable cell that
