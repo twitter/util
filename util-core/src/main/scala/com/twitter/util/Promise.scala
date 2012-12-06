@@ -22,9 +22,6 @@ object Promise {
    *
    * @param saved The saved local context of the invocation site
    *
-   * @param traceCtx An object recorded in the future trace context
-   * upon invocation
-   *
    * @param k the closure to invoke in the saved context, with the
    * provided result
    *
@@ -33,7 +30,6 @@ object Promise {
    */
   private class Monitored[A](
       saved: Local.Context,
-      traceCtx: AnyRef,
       k: Try[A] => Unit,
       val depth: Short)
     extends K[A]
@@ -41,7 +37,6 @@ object Promise {
     def apply(result: Try[A]) {
       val current = Local.save()
       Local.restore(saved)
-      Future.trace.record(traceCtx)
       try k(result)
       catch Monitor.catcher
       finally Local.restore(current)
@@ -49,30 +44,35 @@ object Promise {
   }
 
   /**
-   * An unmonitored continuation.
+   * A transforming continuation.
    *
    * @param saved The saved local context of the invocation site
    *
-   * @param traceCtx An object recorded in the future trace context
-   * upon invocation
+   * @param promise The Promise for the transformed value
    *
-   * @param k the closure to invoke in the saved context, with the
-   * provided result
+   * @param f The closure to invoke to produce the Future of the transformed value.
    *
    * @param depth a tag used to store the chain depth of this context
    * for scheduling purposes.
    */
-  private class Unmonitored[A](
+  private class Transformer[A, B](
       saved: Local.Context,
-      traceCtx: AnyRef,
-      k: Try[A] => Unit,
+      promise: Promise[B],
+      f: Try[A] => Future[B],
       val depth: Short)
     extends K[A]
   {
+    private[this] def k(r: Try[A]) = {
+      promise.become(
+        try f(r) catch {
+          case e => Future.exception(e)
+        }
+      )
+    }
+
     def apply(result: Try[A]) {
       val current = Local.save()
       Local.restore(saved)
-      Future.trace.record(traceCtx)
       try k(result)
       finally Local.restore(current)
     }
@@ -104,6 +104,7 @@ object Promise {
   private sealed trait State[+A]
   private case class Waiting[A](first: K[A], rest: List[K[A]]) extends State[A]
   private case class Interruptible[A](waitq: List[K[A]], handler: PartialFunction[Throwable, Unit]) extends State[A]
+  private case class Transforming[A](waitq: List[K[A]], other: Future[_]) extends State[A]
   private case class Interrupted[A](waitq: List[K[A]], signal: Throwable) extends State[A]
   private case class Done[A](result: Try[A]) extends State[A]
   private case class Linked[A](p: Promise[A]) extends State[A]
@@ -123,27 +124,15 @@ object Promise {
      * exception, it is handled by the current monitor, see
      * {{com.twitter.util.Monitor}} for details.
      */
-    def respond(traceCtx: AnyRef, k: Try[A] => Unit): Future[A] = {
-      continue(new Monitored(Local.save(), traceCtx, k, depth))
+    def respond(k: Try[A] => Unit): Future[A] = {
+      continue(new Monitored(Local.save(), k, depth))
       new Chained(parent, (depth+1).toShort)
     }
 
-    protected[this] def transform[B](traceCtx: AnyRef, f: Try[A] => Future[B]): Future[B] = {
-      // TODO: A future optimization might be to make
-      // ``transforming'' a Promise state, which can keep a reference
-      // to the transformee, allowing us to avoid keeping a separate
-      // interrupt handler.
+    def transform[B](f: Try[A] => Future[B]): Future[B] = {
       val promise = interrupts[B](this)
 
-      val transformer: Try[A] => Unit = { r =>
-        promise.become(
-          try f(r) catch {
-            case e => Future.exception(e)
-          }
-        )
-      }
-
-      continue(new Unmonitored(Local.save(), traceCtx, transformer, depth))
+      continue(new Transformer(Local.save(), promise, f, depth))
 
       promise
     }
@@ -174,11 +163,18 @@ object Promise {
    * the returned promise handles an interrupt when any of ''fs'' do.
    */
   def interrupts[A](fs: Future[_]*): Promise[A] = {
-    val p = new Promise[A]
-    p.setInterruptHandler {
+    val handler: PartialFunction[Throwable, Unit] = {
       case intr => for (f <- fs) f.raise(intr)
     }
+    new Promise[A](handler)
+  }
 
+  /**
+   * Single-arg version to avoid object creation and take advantage of `forwardInterruptsTo`.
+   */
+  def interrupts[A](f: Future[_]): Promise[A] = {
+    val p = new Promise[A]
+    p.forwardInterruptsTo(f)
     p
   }
 }
@@ -308,6 +304,10 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
         if (!cas(s, Interruptible(waitq, f)))
           setInterruptHandler(f)
 
+      case s@Transforming(waitq, _) =>
+        if (!cas(s, Interruptible(waitq, f)))
+          setInterruptHandler(f)
+
       case Interrupted(_, signal) =>
         if (f.isDefinedAt(signal))
           f(signal)
@@ -321,8 +321,29 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    *
    * @param other the Future to which interrupts are forwarded.
    */
+  @tailrec final
   def forwardInterruptsTo(other: Future[_]) {
-    setInterruptHandler { case intr => other.raise(intr) }
+    state match {
+      case Linked(p) => p.forwardInterruptsTo(other)
+
+      case s@Waiting(first, rest) =>
+        val waitq = if (first eq null) rest else first :: rest
+        if (!cas(s, Transforming(waitq, other)))
+          forwardInterruptsTo(other)
+
+      case s@Interruptible(waitq, _) =>
+        if (!cas(s, Transforming(waitq, other)))
+          forwardInterruptsTo(other)
+
+      case s@Transforming(waitq, _) =>
+        if (!cas(s, Transforming(waitq, other)))
+          forwardInterruptsTo(other)
+
+      case Interrupted(_, signal) =>
+        other.raise(signal)
+
+      case Done(_) => // ignore
+    }
   }
 
   @tailrec final
@@ -332,6 +353,11 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
       if (!cas(s, Interrupted(waitq, intr))) raise(intr) else {
         if (handler.isDefinedAt(intr))
           handler(intr)
+      }
+
+    case s@Transforming(waitq, other) =>
+      if (!cas(s, Interrupted(waitq, intr))) raise(intr) else {
+        other.raise(intr)
       }
 
     case s@Interrupted(waitq, _) =>
@@ -350,7 +376,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     state match {
       case Linked(p) => p.get(timeout)
       case Done(res) => res
-      case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) =>
+      case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
         val condition = new java.util.concurrent.CountDownLatch(1)
         respond { _ => condition.countDown() }
         val (v, u) = timeout.inTimeUnit
@@ -369,7 +395,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
   def isInterrupted: Option[Throwable] = state match {
     case Linked(p) => p.isInterrupted
     case Interrupted(_, intr) => Some(intr)
-    case Done(_) | Waiting(_, _) | Interruptible(_, _) => None
+    case Done(_) | Waiting(_, _) | Interruptible(_, _) | Transforming(_, _) => None
   }
 
   /**
@@ -451,6 +477,11 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
         runq(null, waitq, result)
         true
       }
+    case s@Transforming(waitq, _) =>
+      if (!cas(s, Done(result))) updateIfEmpty(result) else {
+        runq(null, waitq, result)
+        true
+      }
     case s@Interrupted(waitq, _) =>
       if (!cas(s, Done(result))) updateIfEmpty(result) else {
         runq(null, waitq, result)
@@ -476,6 +507,9 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
           continue(k)
       case s@Interruptible(waitq, handler) =>
         if (!cas(s, Interruptible(k :: waitq, handler)))
+          continue(k)
+      case s@Transforming(waitq, other) =>
+        if (!cas(s, Transforming(k :: waitq, other)))
           continue(k)
       case s@Interrupted(waitq, signal) =>
         if (!cas(s, Interrupted(k :: waitq, signal)))
@@ -531,6 +565,16 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
           target.setInterruptHandler(handler)
         }
 
+      case s@Transforming(waitq, other) =>
+        if (!cas(s, Linked(target))) link(target) else {
+          var ks = waitq
+          while (ks != Nil) {
+            target.continue(ks.head)
+            ks = ks.tail
+          }
+          target.forwardInterruptsTo(other)
+        }
+
       case s@Interrupted(waitq, signal) =>
         if (!cas(s, Linked(target))) link(target) else {
           var ks = waitq
@@ -546,6 +590,6 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
   def poll: Option[Try[A]] = state match {
     case Linked(p) => p.poll
     case Done(res) => Some(res)
-    case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) => None
+    case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => None
   }
 }

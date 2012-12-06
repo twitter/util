@@ -17,50 +17,6 @@ object Future {
   val None: Future[Option[Nothing]] = new ConstFuture(Return(Option.empty))
 
   /**
-   * An object that can trace control flow through an asynchronous program.
-   */
-  trait Tracer {
-    /**
-     * Record the current location in the code, using the provided
-     * object as a hint. Typically the provided object is a closure
-     * or inner-class that has enough metadata to reconstruct
-     * something resembling a stack frame.
-     */
-    private[util] def record(a: AnyRef)
-
-    /**
-     * Decorate an exception with additional trace data.
-     * Implementations must return an exception of the same type as
-     * the argument, so either mutate the given exception (which is
-     * not thread-safe) or use the provided manifest to create a
-     * dynamic proxy.
-     */
-    private[util] def wrap[T <: Throwable](t: T): T
-
-    /**
-     * Produces a sequence of StackTraceElements indicating the
-     * asynchronous path that lead to the current stack-frame. This
-     * method is public and is meant to help end users debug
-     * difficult asynchronous control-flow.
-     */
-    def stackTrace: Seq[StackTraceElement]
-  }
-
-  @volatile var trace: Tracer = null
-  try {
-    // By default, use the standard reflection-based tracer, if it's on the classpath.
-    val clazz = Class.forName("com.twitter.util.reflect.AsmFutureTracer")
-    trace = clazz.newInstance.asInstanceOf[Tracer]
-  } catch {
-    case e: ClassNotFoundException =>
-      trace = new Tracer {
-        private[util] def record(a: AnyRef) {}
-        private[util] def wrap[T <: Throwable](t: T) = t
-        def stackTrace = Seq[StackTraceElement]()
-      }
-  }
-
-  /**
    * Makes a Future with a constant result.
    */
   def const[A](result: Try[A]): Future[A] = new ConstFuture[A](result)
@@ -72,10 +28,9 @@ object Future {
 
   /**
    * Make a Future with an error. E.g., Future.exception(new
-   * Exception("boo")). The exception is wrapped using the current
-   * `Future.tracer`.
+   * Exception("boo")).
    */
-  def exception[A](e: Throwable): Future[A] = const[A](Throw(Future.trace.wrap(e)))
+  def exception[A](e: Throwable): Future[A] = const[A](Throw(e))
 
   /**
    * Make a Future with an error. E.g., Future.exception(new
@@ -534,9 +489,7 @@ abstract class Future[+A] {
    *
    * @return a chained Future[A]
    */
-  def respond(k: Try[A] => Unit): Future[A] = respond(k, k)
-
-  protected def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A]
+  def respond(k: Try[A] => Unit): Future[A]
 
   /**
    * Invoked regardless of whether the computation completed successfully or unsuccessfully.
@@ -621,9 +574,8 @@ abstract class Future[+A] {
     p
   }
 
-  protected def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B]
 
-  def transform[B](f: Try[A] => Future[B]): Future[B] = transform(f, f)
+  def transform[B](f: Try[A] => Future[B]): Future[B]
 
   /**
    * If this, the original future, succeeds, run f on the result.
@@ -635,14 +587,14 @@ abstract class Future[+A] {
    * @see map()
    */
   def flatMap[B](f: A => Future[B]): Future[B] =
-    transform(f, {
+    transform({
       case Return(v) => f(v)
       case Throw(t) => Future.rawException(t)
     })
 
   def rescue[B >: A](
     rescueException: PartialFunction[Throwable, Future[B]]
-  ): Future[B] = transform(rescueException, {
+  ): Future[B] = transform({
     case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
     case _ => this
   })
@@ -673,7 +625,7 @@ abstract class Future[+A] {
    * @return chained Future
    */
   def onSuccess(f: A => Unit): Future[A] =
-    respond(f, {
+    respond({
       case Return(value) => f(value)
       case _ =>
     })
@@ -685,7 +637,7 @@ abstract class Future[+A] {
    * @return chained Future
    */
   def onFailure(rescueException: Throwable => Unit): Future[A] =
-    respond(rescueException, {
+    respond({
       case Throw(throwable) => rescueException(throwable)
       case _ =>
     })
@@ -706,7 +658,7 @@ abstract class Future[+A] {
    * `transformedBy` and `addEventListener` are not mutually
    * exclusive and may be profitably combined.
    */
-  def addEventListener(listener: FutureEventListener[_ >: A]) = respond(listener, {
+  def addEventListener(listener: FutureEventListener[_ >: A]) = respond({
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
   })
@@ -879,13 +831,12 @@ abstract class Future[+A] {
  * construction compared to Promises.
  */
 class ConstFuture[A](result: Try[A]) extends Future[A] {
-  def respond(tracingObject: AnyRef, k: Try[A] => Unit): Future[A] = {
+  def respond(k: Try[A] => Unit): Future[A] = {
     val saved = Local.save()
     Scheduler.submit(new Runnable {
       def run() {
         val current = Local.save()
         Local.restore(saved)
-        Future.trace.record(tracingObject)
         try Monitor { k(result) } finally Local.restore(current)
       }
     })
@@ -894,9 +845,9 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def raise(interrupt: Throwable) {}
 
-  protected def transform[B](tracingObject: AnyRef, f: Try[A] => Future[B]): Future[B] = {
+  def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
-    respond(tracingObject, { r =>
+    respond({ r =>
       val result = try f(r) catch { case NonFatal(e) => Future.exception(e) }
       p.become(result)
     })
@@ -911,8 +862,8 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
  * A future with no future (never completes).
  */
 class NoFuture extends Future[Nothing] {
-  protected def respond(tracingObject: AnyRef, k: Try[Nothing] => Unit): Future[Nothing] = this
-  protected def transform[B](tracingObject: AnyRef, f: Try[Nothing] => Future[B]): Future[B] = this
+  def respond(k: Try[Nothing] => Unit): Future[Nothing] = this
+  def transform[B](f: Try[Nothing] => Future[B]): Future[B] = this
 
   def raise(interrupt: Throwable) {}
 
