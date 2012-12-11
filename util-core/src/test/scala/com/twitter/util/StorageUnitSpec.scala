@@ -20,5 +20,19 @@ class StorageUnitSpec extends SpecificationWithJUnit {
       Int.MaxValue.bytes.toHuman mustEqual "2.0 GiB"
       Long.MaxValue.bytes.toHuman mustEqual "8.0 EiB"
     }
+
+    "accept humanity" in {
+      StorageUnit.parse("142.bytes") must be_==(142.bytes)
+      StorageUnit.parse("78.kilobytes") must be_==(78.kilobytes)
+      StorageUnit.parse("1.megabyte") must be_==(1.megabyte)
+      StorageUnit.parse("873.gigabytes") must be_==(873.gigabytes)
+      StorageUnit.parse("3.terabytes") must be_==(3.terabytes)
+      StorageUnit.parse("9.petabytes") must be_==(9.petabytes)
+    }
+
+    "reject soulless robots" in {
+      StorageUnit.parse("100.bottles") must throwA[NumberFormatException]
+      StorageUnit.parse("100 bytes") must throwA[NumberFormatException]
+    }
   }
 }

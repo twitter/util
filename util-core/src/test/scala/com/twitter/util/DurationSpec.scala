@@ -161,6 +161,21 @@ class DurationSpec extends { val ops = Duration } with TimeLikeSpec[Duration] {
     "toString must handle negative durations" in {
       (-9999999.seconds).toString mustEqual "-115.days-17.hours-46.minutes-39.seconds"
     }
+
+    "parse" in {
+      Duration.parse("321.nanoseconds") must be_==(321.nanoseconds)
+      Duration.parse("1.microsecond") must be_==(1.microsecond)
+      Duration.parse("876.milliseconds") must be_==(876.milliseconds)
+      Duration.parse("98.seconds") must be_==(98.seconds)
+      Duration.parse("65.minutes") must be_==(65.minutes)
+      Duration.parse("2.hours") must be_==(2.hours)
+      Duration.parse("3.days") must be_==(3.days)
+    }
+
+    "reject obvious human impostors" in {
+      Duration.parse("10.stardates") must throwA[NumberFormatException]
+      Duration.parse("98 milliseconds") must throwA[NumberFormatException]
+    }
   }
 
   "Top" should {

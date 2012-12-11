@@ -18,6 +18,34 @@ package com.twitter.util
 
 object StorageUnit {
   val infinite = new StorageUnit(Long.MaxValue)
+
+  private def factor(s: String) = {
+    var lower = s.toLowerCase
+    if (lower endsWith "s")
+      lower = lower dropRight 1
+
+    lower match {
+      case "byte" => 1L
+      case "kilobyte" => 1L<<10
+      case "megabyte" => 1L<<20
+      case "gigabyte" => 1L<<30
+      case "terabyte" => 1L<<40
+      case "petabyte" => 1L<<50
+      case "exabyte" => 1L<<60
+      case badUnit => throw new NumberFormatException(
+        "Unrecognized unit %s".format(badUnit))
+    }
+  }
+
+  def parse(s: String): StorageUnit = s.split("\\.") match {
+    case Array(v, u) =>
+      val vv = v.toInt
+      val uu = factor(u)
+      new StorageUnit(vv*uu)
+
+    case _ =>
+      throw new NumberFormatException("invalid storage unit string")
+  }
 }
 
 /**

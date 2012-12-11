@@ -175,6 +175,32 @@ object Duration extends TimeLikeOps[Duration] {
     TimeUnit.MILLISECONDS,
     TimeUnit.MICROSECONDS,
     TimeUnit.NANOSECONDS)
+
+  private val nameToUnit = Map() ++ (for {
+    u <- TimeUnit.values()
+    k = u.toString.toLowerCase dropRight 1
+  } yield (k, u))
+
+  private def unitOf(s: String) = {
+    var lower = s.toLowerCase
+    if (lower endsWith "s")
+      lower = lower dropRight 1
+  
+    nameToUnit.get(lower) match {
+      case Some(u) => u
+      case None => throw new NumberFormatException("invalid unit %s".format(s))
+    }
+  }
+  
+  def parse(s: String): Duration = s.split("\\.") match {
+    case Array(v, u) =>
+      val vv = v.toInt
+      val uu = unitOf(u)
+      fromTimeUnit(vv, uu)
+  
+    case _ =>
+      throw new NumberFormatException("invalid duration")
+  }
 }
 
 /**
