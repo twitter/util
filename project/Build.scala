@@ -203,7 +203,7 @@ object Util extends Build {
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % "0.0.10",
+      "com.twitter.common.zookeeper" % "client"     % "0.0.21",
       "com.twitter.common.zookeeper" % "group"      % "0.0.14",
       "com.twitter.common.zookeeper" % "server-set" % "1.0.3",
       "org.apache.zookeeper" % "zookeeper" % zkVersion
