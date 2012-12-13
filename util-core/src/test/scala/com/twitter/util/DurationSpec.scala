@@ -162,19 +162,66 @@ class DurationSpec extends { val ops = Duration } with TimeLikeSpec[Duration] {
       (-9999999.seconds).toString mustEqual "-115.days-17.hours-46.minutes-39.seconds"
     }
 
+    "parse the format from toString" in {
+      Seq(
+        -10.minutes,
+        -9999999.seconds,
+        1.day + 3.hours,
+        1.day,
+        1.nanosecond,
+        42.milliseconds,
+        9999999.seconds,
+        Duration.Bottom,
+        Duration.Top,
+        Duration.Undefined
+      ) foreach { d =>
+        Duration.parse(d.toString) mustEqual d
+      }
+    }
+
     "parse" in {
-      Duration.parse("321.nanoseconds") must be_==(321.nanoseconds)
-      Duration.parse("1.microsecond") must be_==(1.microsecond)
-      Duration.parse("876.milliseconds") must be_==(876.milliseconds)
-      Duration.parse("98.seconds") must be_==(98.seconds)
-      Duration.parse("65.minutes") must be_==(65.minutes)
-      Duration.parse("2.hours") must be_==(2.hours)
-      Duration.parse("3.days") must be_==(3.days)
+      Seq(
+        " 1.second"                   -> 1.second,
+        "+1.second"                   -> 1.second,
+        "-1.second"                   -> -1.second,
+        "1.SECOND"                    -> 1.second,
+        "1.day - 1.second"            -> (1.day - 1.second),
+        "1.day"                       -> 1.day,
+        "1.microsecond"               -> 1.microsecond,
+        "1.millisecond"               -> 1.millisecond,
+        "1.second"                    -> 1.second,
+        "1.second+1.minute  +  1.day" -> (1.second + 1.minute + 1.day),
+        "1.second+1.second"           -> 2.seconds,
+        "2.hours"                     -> 2.hours,
+        "3.days"                      -> 3.days,
+        "321.nanoseconds"             -> 321.nanoseconds,
+        "65.minutes"                  -> 65.minutes,
+        "876.milliseconds"            -> 876.milliseconds,
+        "98.seconds"                  -> 98.seconds,
+        "Duration.Bottom"             -> Duration.Bottom,
+        "Duration.Top"                -> Duration.Top,
+        "Duration.Undefined"          -> Duration.Undefined,
+        "duration.TOP"                -> Duration.Top
+      ) foreach { case (s, d) =>
+        Duration.parse(s) must be_==(d)
+      }
     }
 
     "reject obvious human impostors" in {
-      Duration.parse("10.stardates") must throwA[NumberFormatException]
-      Duration.parse("98 milliseconds") must throwA[NumberFormatException]
+      Seq(
+        "",
+        "++1.second",
+        "1. second",
+        "1.milli",
+        "1.s",
+        "10.stardates",
+        "2.minutes 1.second",
+        "98 milliseconds",
+        "98 millisecons",
+        "99.minutes +"
+      ) foreach { s =>
+        Duration.parse(s) must throwA[NumberFormatException]
+      }
     }
   }
 

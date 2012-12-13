@@ -112,9 +112,9 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
 
     "more or less equals only to itself" in {
       Top.moreOrLessEquals(Top, Duration.Top) must beTrue
-      Top.moreOrLessEquals(Top, Duration.zero) must beTrue
+      Top.moreOrLessEquals(Top, Duration.Zero) must beTrue
       Top.moreOrLessEquals(Bottom, Duration.Top) must beTrue
-      Top.moreOrLessEquals(Bottom, Duration.zero) must beFalse
+      Top.moreOrLessEquals(Bottom, Duration.Zero) must beFalse
       Top.moreOrLessEquals(fromSeconds(0), Duration.Top) must beTrue
       Top.moreOrLessEquals(fromSeconds(0), Duration.Bottom) must beFalse
     }
@@ -157,9 +157,9 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
 
     "more or less equals only to itself" in {
       Bottom.moreOrLessEquals(Bottom, Duration.Top) must beTrue
-      Bottom.moreOrLessEquals(Bottom, Duration.zero) must beTrue
+      Bottom.moreOrLessEquals(Bottom, Duration.Zero) must beTrue
       Bottom.moreOrLessEquals(Top, Duration.Bottom) must beFalse
-      Bottom.moreOrLessEquals(Top, Duration.zero) must beFalse
+      Bottom.moreOrLessEquals(Top, Duration.Zero) must beFalse
       Bottom.moreOrLessEquals(fromSeconds(0), Duration.Top) must beTrue
       Bottom.moreOrLessEquals(fromSeconds(0), Duration.Bottom) must beFalse
     }
@@ -199,9 +199,9 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
 
     "not more or less equal to anything" in {
       Undefined.moreOrLessEquals(Undefined, Duration.Top) must beFalse
-      Undefined.moreOrLessEquals(Undefined, Duration.zero) must beFalse
+      Undefined.moreOrLessEquals(Undefined, Duration.Zero) must beFalse
       Undefined.moreOrLessEquals(Top, Duration.Undefined) must beTrue
-      Undefined.moreOrLessEquals(Top, Duration.zero) must beFalse
+      Undefined.moreOrLessEquals(Top, Duration.Zero) must beFalse
       Undefined.moreOrLessEquals(fromSeconds(0), Duration.Top) must beFalse
       Undefined.moreOrLessEquals(fromSeconds(0), Duration.Undefined) must beTrue
     }
