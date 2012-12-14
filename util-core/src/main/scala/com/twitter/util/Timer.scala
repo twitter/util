@@ -197,7 +197,12 @@ extends Timer {
   def schedule(when: Time)(f: => Unit): TimerTask = {
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask { def cancel() { javaFuture.cancel(true) } }
+    new TimerTask {
+      def cancel() {
+        javaFuture.cancel(true)
+        underlying.remove(runnable)
+      }
+    }
   }
 
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
@@ -207,7 +212,12 @@ extends Timer {
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask { def cancel() { javaFuture.cancel(true) } }
+    new TimerTask {
+      def cancel() {
+        javaFuture.cancel(true)
+        underlying.remove(runnable)
+      }
+    }
   }
 
   def stop() = underlying.shutdown()
