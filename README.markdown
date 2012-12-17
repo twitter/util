@@ -162,7 +162,7 @@ Major version 6 introduced some breaking changes:
 
 ## Future interrupts
 
-Method `raise` on `Future` (`def raise(cause: Throwable)`) raises the interrupt described by `cause` to producer of this `Future'. Interrupt handlers are installed on a `Promise` using `setInterruptHandler`, which takes a partial function:
+Method `raise` on `Future` (`def raise(cause: Throwable)`) raises the interrupt described by `cause` to the producer of this `Future`. Interrupt handlers are installed on a `Promise` using `setInterruptHandler`, which takes a partial function:
 
 	val p = new Promise[T]
 	p.setInterruptHandler {
@@ -176,7 +176,7 @@ Interrupts differ in semantics from cancellation in important ways: there can on
 
 Like arithmetic on doubles, `Time` and `Duration` arithmetic is now free of overflows. Instead, they overflow to `Top` and `Bottom` values, which are analogous to positive and negative infinity.
 
-Since the resolution of Time.now has been reduced (and is also more expensive due to its use of system time), a new API has been introduced in order to durations of time. This is Stopwatch.
+Since the resolution of `Time.now` has been reduced (and is also more expensive due to its use of system time), a new `Stopwatch` API has been introduced in order to calculate durations of time.
 
 It's used simply:
 
