@@ -44,7 +44,7 @@ import com.twitter.util.{Future, Promise}
 
 val f = new Promise[Int]
 val g = f map { result => result + 1 }
-f.setValue(1
+f.setValue(1)
 g.get(1.second) // => This blocks for the futures result (and eventually returns 2)
 
 // Another option:
