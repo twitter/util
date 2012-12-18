@@ -6,7 +6,7 @@ import scala.collection.mutable
 
 /** Type-class for generic hashing
  */
-trait Hashable[-T,+R] extends Function1[T,R] { self =>
+trait Hashable[-T,+R] extends (T => R) { self =>
   override def andThen[A](fn : (R) => A): Hashable[T,A] = new Hashable[T,A] {
     override def apply(t: T) = fn(self.apply(t))
   }
@@ -15,7 +15,17 @@ trait Hashable[-T,+R] extends Function1[T,R] { self =>
   }
 }
 
-object Hashable {
+trait LowPriorityHashable {
+  // XOR the high 32 bits into the low to get a int:
+  implicit def toInt[T](implicit h: Hashable[T,Long]): Hashable[T,Int] =
+    h.andThen { long => (long>>32).toInt ^ long.toInt }
+
+  // Get the UTF-8 bytes of a string to hash it
+  implicit def fromString[T](implicit h: Hashable[Array[Byte],T]): Hashable[String,T] =
+    h.compose { s: String => s.getBytes }
+}
+
+object Hashable extends LowPriorityHashable {
   /** Pull the implicit Hashable instance in scope to compute hash for this type.
    *
    * If in your scope, you set:
@@ -28,14 +38,6 @@ object Hashable {
 
   // Some standard hashing:
   def hashCode[T]: Hashable[T,Int] = new Hashable[T,Int] { def apply(t: T) = t.hashCode }
-
-  // Truncate a Long hashable into an int:
-  def toInt[T](h: Hashable[T,Long]): Hashable[T,Int] =
-    h.andThen { long => (long & MaxUnsignedInt).toInt }
-
-  // Get the UTF-8 bytes of a string to hash it
-  def fromString[T](h: Hashable[Array[Byte],T]): Hashable[String,T] =
-    h.compose { s: String => s.getBytes }
 
   private[this] val MaxUnsignedInt: Long = 0xFFFFFFFFL
   /**
