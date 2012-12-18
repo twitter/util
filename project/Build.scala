@@ -48,7 +48,7 @@ object Util extends Build {
   ) aggregate(
     utilCore, utilEval, utilCodec, utilCollection, utilReflect,
     utilLogging, utilThrift, utilHashing, utilJvm, utilZk,
-    utilZkCommon, utilClassPreloader, utilBenchmark
+    utilZkCommon, utilClassPreloader, utilBenchmark, utilApp
   )
 
   lazy val utilCore = Project(
@@ -237,4 +237,13 @@ object Util extends Build {
     )
   ).dependsOn(utilCore, utilJvm)
 
+  lazy val utilApp = Project(
+    id = "util-app",
+    base = file("util-app"),
+    settings = Project.defaultSettings ++
+      StandardProject.newSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-app"
+  ).dependsOn(utilCore)
 }
