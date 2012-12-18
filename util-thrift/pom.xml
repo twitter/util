@@ -43,10 +43,5 @@
       <artifactId>util-codec</artifactId>
       <version>6.0.4-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>util-core</artifactId>
-      <version>6.0.4-SNAPSHOT</version>
-    </dependency>
   </dependencies>
 </project>

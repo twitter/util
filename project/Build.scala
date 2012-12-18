@@ -147,7 +147,7 @@ object Util extends Build {
       "org.codehaus.jackson" % "jackson-core-asl"   % "1.8.1",
       "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.1"
     )
-  ).dependsOn(utilCore, utilCodec)
+  ).dependsOn(utilCodec)
 
   lazy val utilHashing = Project(
     id = "util-hashing",
