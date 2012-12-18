@@ -131,7 +131,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "org.scala-tools.testing" %% "specs" % "1.6.9" % "provided"
     )
-  ).dependsOn(utilCore)
+  ).dependsOn(utilCore, utilApp)
 
   lazy val utilThrift = Project(
     id = "util-thrift",
