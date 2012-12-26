@@ -1,17 +1,15 @@
 import sbt._
 import Keys._
-import com.twitter.sbt._
 
 object Util extends Build {
   val zkVersion = "3.3.4"
 
   val sharedSettings = Seq(
-    version := "5.3.7",
+    version := "6.0.5",
     organization := "com.twitter",
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
-    SubversionPublisher.subversionRepository := Some("https://svn.twitter.biz/maven-public"),
     libraryDependencies ++= Seq(
       "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" withSources(),
       "junit" % "junit" % "4.8.1" % "test" withSources(),
@@ -29,7 +27,38 @@ object Util extends Build {
     scalacOptions += "-deprecation",
 
     // This is bad news for things like com.twitter.util.Time
-    parallelExecution in Test := false
+    parallelExecution in Test := false,
+
+    // Sonatype publishing
+    publishArtifact in Test := false,
+    pomIncludeRepository := { _ => false },
+    publishMavenStyle := true,
+    pomExtra := (
+      <url>https://github.com/twitter/util</url>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+      </licenses>
+      <scm>
+        <url>git@github.com:twitter/util.git</url>
+        <connection>scm:git:git@github.com:twitter/util.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>twitter</id>
+          <name>Twitter Inc.</name>
+          <url>https://www.twitter.com/</url>
+        </developer>
+      </developers>),
+    publishTo <<= version { (v: String) =>
+      val nexus = "https://oss.sonatype.org/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+    }
   )
 
   val jmockSettings = Seq(
@@ -44,7 +73,9 @@ object Util extends Build {
 
   lazy val util = Project(
     id = "util",
-    base = file(".")
+    base = file("."),
+    settings = Project.defaultSettings ++
+      sharedSettings
   ) aggregate(
     utilCore, utilEval, utilCodec, utilCollection, utilReflect,
     utilLogging, utilThrift, utilHashing, utilJvm, utilZk,
@@ -55,7 +86,6 @@ object Util extends Build {
     id = "util-core",
     base = file("util-core"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-core",
@@ -68,20 +98,16 @@ object Util extends Build {
     id = "util-eval",
     base = file("util-eval"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-eval",
-    libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-compiler" % "2.9.1" % "compile"
-    )
+    libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-compiler" % _ % "compile" }
   ).dependsOn(utilCore)
 
   lazy val utilCodec = Project(
     id = "util-codec",
     base = file("util-codec"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-codec",
@@ -94,7 +120,6 @@ object Util extends Build {
     id = "util-collection",
     base = file("util-collection"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-collection",
@@ -108,7 +133,6 @@ object Util extends Build {
     id = "util-reflect",
     base = file("util-reflect"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-reflect",
@@ -124,7 +148,6 @@ object Util extends Build {
     id = "util-logging",
     base = file("util-logging"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-logging",
@@ -137,7 +160,6 @@ object Util extends Build {
     id = "util-thrift",
     base = file("util-thrift"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-thrift",
@@ -153,7 +175,6 @@ object Util extends Build {
     id = "util-hashing",
     base = file("util-hashing"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-hashing",
@@ -166,7 +187,6 @@ object Util extends Build {
     id = "util-jvm",
     base = file("util-jvm"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-jvm"
@@ -176,7 +196,6 @@ object Util extends Build {
     id = "util-zk",
     base = file("util-zk"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings ++
       jmockSettings
   ).settings(
@@ -197,7 +216,6 @@ object Util extends Build {
     id = "util-zk-common",
     base = file("util-zk-common"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings ++
       jmockSettings
   ).settings(
@@ -218,7 +236,6 @@ object Util extends Build {
     id = "util-class-preloader",
     base = file("util-class-preloader"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-class-preloader"
@@ -228,7 +245,6 @@ object Util extends Build {
     id = "util-benchmark",
     base = file("util-benchmark"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-benchmark",
@@ -241,7 +257,6 @@ object Util extends Build {
     id = "util-app",
     base = file("util-app"),
     settings = Project.defaultSettings ++
-      StandardProject.newSettings ++
       sharedSettings
   ).settings(
     name := "util-app"
