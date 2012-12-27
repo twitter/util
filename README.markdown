@@ -1,5 +1,7 @@
 A bunch of idiomatic, small General Purpose tools.
 
+[![Build Status](https://secure.travis-ci.org/twitter/util.png)](http://travis-ci.org/twitter/util)
+
 See the Scaladoc [here](http://twitter.github.com/util)
 
 # Using in your Project
