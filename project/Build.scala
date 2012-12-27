@@ -11,10 +11,12 @@ object Util extends Build {
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
-      "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" withSources(),
+      "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9" % "provided" withSources(),
       "junit" % "junit" % "4.8.1" % "test" withSources(),
       "org.mockito" % "mockito-all" % "1.8.5" % "test" withSources()
     ),
+
+    resolvers += "twitter repo" at "http://maven.twttr.com",
 
     ivyXML :=
       <dependencies>
@@ -152,7 +154,7 @@ object Util extends Build {
   ).settings(
     name := "util-logging",
     libraryDependencies ++= Seq(
-      "org.scala-tools.testing" %% "specs" % "1.6.9" % "provided"
+      "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9" % "provided"
     )
   ).dependsOn(utilCore, utilApp)
 
