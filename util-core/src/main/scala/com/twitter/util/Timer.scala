@@ -4,9 +4,10 @@ import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.concurrent.Serialized
 import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CancellationException, ExecutorService, RejectedExecutionHandler,
-  ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
+import java.util.concurrent._
 import scala.collection.mutable.ArrayBuffer
+import com.twitter.util.Future
+import scala.Unit
 
 trait TimerTask {
   def cancel()
@@ -172,11 +173,32 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 }
 
+class ScheduledExecutorServiceTimer(underlying: ScheduledExecutorService) extends Timer {
+
+  def schedule(when: Time)(f: => Unit): TimerTask = {
+    val runnable = new Runnable { def run = f }
+    val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
+    new TimerTask { def cancel() { javaFuture.cancel(true) } }
+  }
+
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+    schedule(when.sinceNow, period)(f)
+
+  def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
+    val runnable = new Runnable { def run = f }
+    val javaFuture = underlying.scheduleAtFixedRate(runnable,
+      wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
+    new TimerTask { def cancel() { javaFuture.cancel(true) } }
+  }
+
+  def stop() = underlying.shutdown()
+}
+
 class ScheduledThreadPoolTimer(
   poolSize: Int,
   threadFactory: ThreadFactory,
   rejectedExecutionHandler: Option[RejectedExecutionHandler])
-extends Timer {
+extends ScheduledExecutorServiceTimer(ScheduledThreadPoolTimer.makeScheduler(poolSize, threadFactory, rejectedExecutionHandler)) {
   def this(poolSize: Int, threadFactory: ThreadFactory) =
     this(poolSize, threadFactory, None)
 
@@ -187,40 +209,17 @@ extends Timer {
   def this(poolSize: Int = 2, name: String = "timer", makeDaemons: Boolean = false) =
     this(poolSize, new NamedPoolThreadFactory(name, makeDaemons), None)
 
-  private[this] val underlying = rejectedExecutionHandler match {
-    case None =>
-      new ScheduledThreadPoolExecutor(poolSize, threadFactory)
-    case Some(h: RejectedExecutionHandler) =>
-      new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
-  }
+}
 
-  def schedule(when: Time)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run = f }
-    val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask {
-      def cancel() {
-        javaFuture.cancel(true)
-        underlying.remove(runnable)
-      }
+object ScheduledThreadPoolTimer {
+  private[util] def makeScheduler(poolSize: Int, threadFactory: ThreadFactory,
+                                  rejectedExecutionHandler: Option[RejectedExecutionHandler]) =
+    rejectedExecutionHandler match {
+      case None =>
+        new ScheduledThreadPoolExecutor(poolSize, threadFactory)
+      case Some(h: RejectedExecutionHandler) =>
+        new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
     }
-  }
-
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
-    schedule(when.sinceNow, period)(f)
-
-  def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run = f }
-    val javaFuture = underlying.scheduleAtFixedRate(runnable,
-      wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask {
-      def cancel() {
-        javaFuture.cancel(true)
-        underlying.remove(runnable)
-      }
-    }
-  }
-
-  def stop() = underlying.shutdown()
 }
 
 // Exceedingly useful for writing well-behaved tests.
