@@ -6,7 +6,6 @@ import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent._
 import scala.collection.mutable.ArrayBuffer
-import com.twitter.util.Future
 import scala.Unit
 
 trait TimerTask {
