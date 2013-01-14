@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 
 import org.specs.SpecificationWithJUnit
 
-import com.twitter.util.{Promise, Return, Throw}
+import com.twitter.util.{Future, Promise, Return, Throw}
 
 import Spool.{*::, **::}
 
@@ -35,6 +35,28 @@ class SpoolSpec extends SpecificationWithJUnit {
           }
       }
     }
+
+    "append via ++"  in {
+      (s ++ Spool.empty[Int]).toSeq() must be_==(Seq(1, 2))
+      (Spool.empty[Int] ++ s).toSeq() must be_==(Seq(1, 2))
+
+      val s2 = s ++ (3 **:: 4 **:: Spool.empty)
+      s2.toSeq() must be_==(Seq(1, 2, 3, 4))
+    }
+
+    "append via ++ with Future rhs"  in {
+      (s ++ Future(Spool.empty[Int]))().toSeq() must be_==(Seq(1, 2))
+      (Spool.empty[Int] ++ Future(s))().toSeq() must be_==(Seq(1, 2))
+
+      val s2 = s ++ Future(3 **:: 4 **:: Spool.empty)
+      s2().toSeq() must be_==(Seq(1, 2, 3, 4))
+    }
+
+    "flatMap" in {
+      val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
+      val s2 = s flatMap f
+      s2().toSeq() must be_==(Seq("1", "2", "2", "4"))
+    }
   }
 
   "Simple resolved spool with error" should {
@@ -63,7 +85,7 @@ class SpoolSpec extends SpecificationWithJUnit {
       p1() = Return(Spool.empty)
       xs.toSeq must be_==(Seq(1, 2))
     }
-    
+
     "EOF iteration on failure" in {
       val xs = new ArrayBuffer[Option[Int]]
       s foreachElem { xs += _ }

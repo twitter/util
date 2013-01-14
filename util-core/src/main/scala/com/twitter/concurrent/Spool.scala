@@ -32,6 +32,8 @@ import com.twitter.util.{Future, Promise, Return}
  * }}}
  */
 sealed trait Spool[+A] {
+  import Spool.{cons, empty}
+
   def isEmpty: Boolean
 
   /**
@@ -94,6 +96,26 @@ sealed trait Spool[+A] {
   def filter(f: A => Boolean): Future[Spool[A]] = collect {
     case x if f(x) => x
   }
+
+  /**
+   * Concatenates two spools.
+   */
+  def ++[B >: A](that: Spool[B]): Spool[B] =
+    if (isEmpty) that else cons(head: B, tail map { _ ++ that })
+
+  /**
+   * Concatenates two spools.
+   */
+  def ++[B >: A](that: Future[Spool[B]]): Future[Spool[B]] =
+    if (isEmpty) that else Future.value(cons(head: B, tail flatMap { _ ++ that }))
+
+  /**
+   * Applies a function that generates a spool to each element in this spool,
+   * flattening the result into a single spool.
+   */
+  def flatMap[B](f: A => Future[Spool[B]]): Future[Spool[B]] =
+    if (isEmpty) Future.value(empty[B])
+    else f(head) flatMap { _ ++ (tail flatMap { _ flatMap f }) }
 
   /**
    * Fully buffer the spool to a {{Seq}}.  The returned future is
