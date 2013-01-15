@@ -172,12 +172,27 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 }
 
+/**
+ * Note that cancelling the scheduled task will not necessarily result in the immediate removal of the underlying
+ * Java Future from the underlying executor's queue. When the scheduled delay is long, and the system is under stress,
+ * retention of these futures may result in memory leaks, especially if the hold references to large object graphs.
+ *
+ * One possible solution, if the udnerlying is an instance of {@link ScheduledThreadPoolExecutor} is to set
+ * {@link ScheduledThreadPoolExecutor#setRemoveOnCancelPolicy} to true. Otherwise, it is the user's responsibility to
+ * handle these situations similarly.
+ *
+ * @param underlying
+ */
 class ScheduledExecutorServiceTimer(underlying: ScheduledExecutorService) extends Timer {
 
   def schedule(when: Time)(f: => Unit): TimerTask = {
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask { def cancel() { javaFuture.cancel(true) } }
+    new TimerTask {
+      def cancel() {
+        javaFuture.cancel(true)
+      }
+    }
   }
 
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
@@ -187,7 +202,11 @@ class ScheduledExecutorServiceTimer(underlying: ScheduledExecutorService) extend
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask { def cancel() { javaFuture.cancel(true) } }
+    new TimerTask {
+      def cancel() {
+        javaFuture.cancel(true)
+      }
+    }
   }
 
   def stop() = underlying.shutdown()
@@ -213,11 +232,15 @@ extends ScheduledExecutorServiceTimer(ScheduledThreadPoolTimer.makeScheduler(poo
 object ScheduledThreadPoolTimer {
   private[util] def makeScheduler(poolSize: Int, threadFactory: ThreadFactory,
                                   rejectedExecutionHandler: Option[RejectedExecutionHandler]) =
-    rejectedExecutionHandler match {
-      case None =>
-        new ScheduledThreadPoolExecutor(poolSize, threadFactory)
-      case Some(h: RejectedExecutionHandler) =>
-        new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
+    {
+      val scheduler = rejectedExecutionHandler match {
+        case None =>
+          new ScheduledThreadPoolExecutor(poolSize, threadFactory)
+        case Some(h: RejectedExecutionHandler) =>
+          new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
+      }
+      scheduler.setRemoveOnCancelPolicy(true) // see comment on {@link ScheduledExecutorServiceTimer} for why this is done
+      scheduler
     }
 }
 
