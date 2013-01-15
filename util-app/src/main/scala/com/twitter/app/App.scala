@@ -58,7 +58,15 @@ trait App {
     inits += (() => f)
   }
 
-  // TODO: onExit?
+  /**
+   * Create a new shutdown hook. As such, these will be started in
+   * no particular order and run concurrently.
+   */
+  protected def onExit(f: => Unit) {
+    Runtime.getRuntime.addShutdownHook(new Thread {
+      override def run() = f
+    })
+  }
 
   final def main(args: Array[String]) {
     for (f <- inits) f()
