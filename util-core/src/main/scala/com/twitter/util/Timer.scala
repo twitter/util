@@ -1,8 +1,6 @@
 package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.concurrent.Serialized
-import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent._
 import scala.collection.mutable.ArrayBuffer
@@ -172,27 +170,15 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 }
 
-/**
- * Note that cancelling the scheduled task will not necessarily result in the immediate removal of the underlying
- * Java Future from the underlying executor's queue. When the scheduled delay is long, and the system is under stress,
- * retention of these futures may result in memory leaks, especially if the hold references to large object graphs.
- *
- * One possible solution, if the udnerlying is an instance of {@link ScheduledThreadPoolExecutor} is to set
- * {@link ScheduledThreadPoolExecutor#setRemoveOnCancelPolicy} to true. Otherwise, it is the user's responsibility to
- * handle these situations similarly.
- *
- * @param underlying
- */
-class ScheduledExecutorServiceTimer(underlying: ScheduledExecutorService) extends Timer {
+trait ScheduledExecutorServiceTimerSupport extends Timer {
+
+  def underlying: ScheduledExecutorService
 
   def schedule(when: Time)(f: => Unit): TimerTask = {
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask {
-      def cancel() {
-        javaFuture.cancel(true)
-      }
-    }
+
+    RunnableTimerTask(runnable, javaFuture)
   }
 
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
@@ -202,21 +188,31 @@ class ScheduledExecutorServiceTimer(underlying: ScheduledExecutorService) extend
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask {
-      def cancel() {
-        javaFuture.cancel(true)
-      }
-    }
+
+    RunnableTimerTask(runnable, javaFuture)
   }
 
   def stop() = underlying.shutdown()
+
+  /**
+   * Hook to be overridden by subclasses that wish to be notified of task cancellation
+   */
+  protected def taskCancelled(runnable: Runnable) {} // nothing to see here, move along
+
+  case class RunnableTimerTask(runnable: Runnable, javaFuture: ScheduledFuture[_]) extends TimerTask {
+    def cancel() {
+      javaFuture.cancel(true)
+      taskCancelled(runnable)
+    }
+  }
+
 }
 
 class ScheduledThreadPoolTimer(
   poolSize: Int,
   threadFactory: ThreadFactory,
-  rejectedExecutionHandler: Option[RejectedExecutionHandler])
-extends ScheduledExecutorServiceTimer(ScheduledThreadPoolTimer.makeScheduler(poolSize, threadFactory, rejectedExecutionHandler)) {
+  rejectedExecutionHandler: Option[RejectedExecutionHandler]) extends ScheduledExecutorServiceTimerSupport {
+
   def this(poolSize: Int, threadFactory: ThreadFactory) =
     this(poolSize, threadFactory, None)
 
@@ -227,21 +223,18 @@ extends ScheduledExecutorServiceTimer(ScheduledThreadPoolTimer.makeScheduler(poo
   def this(poolSize: Int = 2, name: String = "timer", makeDaemons: Boolean = false) =
     this(poolSize, new NamedPoolThreadFactory(name, makeDaemons), None)
 
-}
+  val underlying = rejectedExecutionHandler match {
+    case None =>
+      new ScheduledThreadPoolExecutor(poolSize, threadFactory)
+    case Some(h: RejectedExecutionHandler) =>
+      new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
+  }
 
-object ScheduledThreadPoolTimer {
-  private[util] def makeScheduler(poolSize: Int, threadFactory: ThreadFactory,
-                                  rejectedExecutionHandler: Option[RejectedExecutionHandler]) =
-    {
-      val scheduler = rejectedExecutionHandler match {
-        case None =>
-          new ScheduledThreadPoolExecutor(poolSize, threadFactory)
-        case Some(h: RejectedExecutionHandler) =>
-          new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
-      }
-      scheduler.setRemoveOnCancelPolicy(true) // see comment on {@link ScheduledExecutorServiceTimer} for why this is done
-      scheduler
-    }
+  override protected def taskCancelled(runnable: Runnable) {
+    // this removes the runnable from the queue immediately to prevent retention of tasks with long delay, which could
+    // cause memory leaks
+    underlying.remove(runnable)
+  }
 }
 
 // Exceedingly useful for writing well-behaved tests.
