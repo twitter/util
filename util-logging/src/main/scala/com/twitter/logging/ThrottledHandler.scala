@@ -135,7 +135,10 @@ class ThrottledHandler(
       flushThrottled()
     }
 
-    val key = record.getMessage
+    val key = record match {
+      case r: LazyLogRecordUnformatted => r.preformatted
+      case _ => record.getMessage
+    }
     @tailrec def tryPublish() {
       val throttle = synchronized {
         throttleMap.getOrElseUpdate(

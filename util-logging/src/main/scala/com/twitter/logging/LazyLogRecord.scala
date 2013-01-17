@@ -20,15 +20,14 @@ import java.util.{logging => javalog}
 
 class LazyLogRecord(level: javalog.Level, messageGenerator: => AnyRef) extends LogRecord(level, "") {
   // for each logged line, generate this string only once, regardless of how many handlers there are:
-  var cached: Option[AnyRef] = None
+  override lazy val getMessage = messageGenerator.toString
+}
 
-  def generate = {
-    cached match {
-      case Some(value) =>
-        value
-      case None =>
-        cached = Some(messageGenerator)
-        cached.get
-    }
-  }
+/**
+ * A lazy LogRecord that needs formatting
+ */
+class LazyLogRecordUnformatted(level: javalog.Level, message: String, items: Any*)
+  extends LazyLogRecord(level, { message.format(items: _*) }) {
+  require(items.size > 0)
+  val preformatted = message
 }

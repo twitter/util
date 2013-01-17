@@ -142,7 +142,6 @@ class Formatter(
   def formatText(record: javalog.LogRecord): String = {
     record match {
       case null => ""
-      case r: LazyLogRecord => r.generate.toString
       case r: LogRecord => {
         r.getParameters match {
           case null => r.getMessage

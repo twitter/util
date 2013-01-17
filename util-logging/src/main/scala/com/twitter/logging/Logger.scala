@@ -93,15 +93,16 @@ class Logger private(val name: String, private val wrapped: javalog.Logger) {
 
   /**
    * Log a message, with sprintf formatting, at the desired level, and
-   * attach an exception and stack trace.
+   * attach an exception and stack trace. The message is lazily formatted if
+   * formatting is required.
    */
   final def log(level: Level, thrown: Throwable, message: String, items: Any*) {
     val myLevel = getLevel
     if ((myLevel eq null) || (level.intValue >= myLevel.intValue)) {
-      val record = new LogRecord(level, message)
-      if (items.size > 0) {
-        record.setParameters(items.toArray[Any].asInstanceOf[Array[AnyRef]])
-      }
+
+      val record =
+        if (items.size > 0) new LazyLogRecordUnformatted(level, message, items: _*)
+        else new LogRecord(level, message)
       record.setLoggerName(wrapped.getName)
       if (thrown ne null) {
         record.setThrown(thrown)
