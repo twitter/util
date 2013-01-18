@@ -27,6 +27,8 @@ object Util extends Build {
 
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions += "-deprecation",
+    javacOptions ++= Seq("-source", "1.6"),
+    javacOptions ++= Seq("-target", "1.6"),
 
     // This is bad news for things like com.twitter.util.Time
     parallelExecution in Test := false,
