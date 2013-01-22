@@ -31,13 +31,16 @@ class ContentionSnapshot {
     val bean = ManagementFactory.getThreadMXBean
     val lockOwners = mutable.Set[Long]()
 
-    val blocked = bean.getThreadInfo(bean.getAllThreadIds, true, true).collect {
-      case Blocked(t) => t
-    }
+    val blocked = bean.getThreadInfo(bean.getAllThreadIds, true, true)
+                      .filter(_ != null)
+                      .collect { case Blocked(info) => info }
+
     val ownerIds = blocked map(_.getLockOwnerId) filter(_ != -1)
+    val owners = if (ownerIds.size == 0) Seq[String]() else
+      bean.getThreadInfo(ownerIds.toArray, true, true).map(_.toString).toSeq
 
     Snapshot(
       blockedThreads = blocked.map(_.toString).toSeq,
-      lockOwners = bean.getThreadInfo(ownerIds.toArray, true, true).map(_.toString).toSeq)
+      lockOwners = owners)
   }
 }
