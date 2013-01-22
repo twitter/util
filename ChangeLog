@@ -1,3 +1,11 @@
+6.0.6  2013-01-22
+
+  * util-core: concurrent.SpoolSource utility for creating Spools
+  * util-core: Spool.flatMap, Spool.++
+  * util-app: add shutdown hooks
+  * util-logging: Make the logging work properly for Scala and 
+  mixed Scala/Java
+
 6.0.4  2012-12-18
 
   * Broker: more efficient dequeueing of offers
