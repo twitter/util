@@ -5,7 +5,7 @@ object Util extends Build {
   val zkVersion = "3.3.4"
 
   val sharedSettings = Seq(
-    version := "6.0.5",
+    version := "6.0.6",
     organization := "com.twitter",
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
@@ -27,8 +27,9 @@ object Util extends Build {
 
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions += "-deprecation",
-    javacOptions ++= Seq("-source", "1.6"),
-    javacOptions ++= Seq("-target", "1.6"),
+
+    javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+    javacOptions in doc := Seq("-source", "1.6"),
 
     // This is bad news for things like com.twitter.util.Time
     parallelExecution in Test := false,
