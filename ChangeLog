@@ -1,16 +1,22 @@
+6.1.0  2013-01-30
+
+  * preliminary 2.10 port/build
+  * Add Closable trait
+  * Add contention snapshot
+
 6.0.6  2013-01-22
 
   * util-core: concurrent.SpoolSource utility for creating Spools
   * util-core: Spool.flatMap, Spool.++
   * util-app: add shutdown hooks
-  * util-logging: Make the logging work properly for Scala and 
+  * util-logging: Make the logging work properly for Scala and
   mixed Scala/Java
 
 6.0.4  2012-12-18
 
   * Broker: more efficient dequeueing of offers
   * Duration: parse all output of Duration.toString
-  * ScheduledThreadPoolTimer: aggressively remove runnables 
+  * ScheduledThreadPoolTimer: aggressively remove runnables
   to avoid space leak
   * util-core documentation: fix some parentheses, backticks
   * util-hashing: add Hashable type class
@@ -24,7 +30,7 @@
 
 6.0.1  2012-11-26
 
-  * Use java.util.ArrayDeque in place of mutable.Queue due to 
+  * Use java.util.ArrayDeque in place of mutable.Queue due to
   https://issues.scala-lang.org/browse/SI-6690
 
 6.0.0  2012-11-26
