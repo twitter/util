@@ -753,18 +753,23 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         }
 
         "monitor exceptions" in {
-          val m = spy(new MonitorSpec.MockMonitor)
+          val m = new Monitor {
+            var handled = null: Throwable
+            def handle(exc: Throwable) = {
+              handled = exc
+              true
+            }
+          }
           val exc = new Exception
-          m.handle(any) returns true
           val p = new Promise[Int]
 
           m {
             p ensure { throw exc }
           }
-
-          there was no(m).handle(any)
+          
+          m.handled must beNull
           p.update(Return(1)) mustNot throwA[Throwable]
-          there was one(m).handle(exc)
+          m.handled must be_==(exc)
         }
       }
 

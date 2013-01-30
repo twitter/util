@@ -16,12 +16,12 @@
 
 package com.twitter.logging
 
+import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.string._
 import java.net.{DatagramPacket, DatagramSocket, InetAddress, InetSocketAddress, SocketAddress}
 import java.text.SimpleDateFormat
+import java.util.concurrent.Executors
 import java.util.{logging => javalog}
-import scala.actors._
-import scala.actors.Actor._
 
 object SyslogHandler {
   val DEFAULT_PORT = 514
@@ -173,18 +173,16 @@ class SyslogFormatter(
 }
 
 object SyslogFuture {
-  private case class Do(action: () => Unit)
-  private case object Wait
+  private val executor = Executors.newSingleThreadExecutor(
+    new NamedPoolThreadFactory("TWITTER-UTIL-SYSLOG", true/*daemon*/))
+  private val noop = new Runnable { def run() {} }
 
-  def apply(action: => Unit) = writer ! Do(() => action)
-  def sync = writer !? Wait
+  def apply(action: => Unit) = executor.submit(new Runnable {
+    def run() { action }
+  })
 
-  private lazy val writer = actor {
-    while (true) {
-      receive {
-        case Wait => reply(Wait)
-        case Do(action) => action()
-      }
-    }
+  def sync() {
+    val f = executor.submit(noop)
+    f.get()
   }
 }

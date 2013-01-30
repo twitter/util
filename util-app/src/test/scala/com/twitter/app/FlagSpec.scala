@@ -8,8 +8,14 @@ class FlagSpec extends SpecificationWithJUnit {
       Flaggable.ofBoolean.parse("true") must beTrue
       Flaggable.ofBoolean.parse("false") must beFalse
 
-      Flaggable.ofBoolean.parse("") must throwA[NumberFormatException]
-      Flaggable.ofBoolean.parse("gibberish") must throwA[NumberFormatException]
+      Flaggable.ofBoolean.parse("") must throwA(new Exception).like {
+        case _: NumberFormatException => true  // 2.9.x
+        case _: IllegalArgumentException => true  // 2.10.x
+      }
+      Flaggable.ofBoolean.parse("gibberish") must throwA(new Exception).like {
+        case _: NumberFormatException => true  // 2.9.x
+        case _: IllegalArgumentException => true  // 2.10.x
+      }
     }
 
     "parse strings" in {

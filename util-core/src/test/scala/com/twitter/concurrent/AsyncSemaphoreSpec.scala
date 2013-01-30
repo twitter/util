@@ -6,25 +6,25 @@ import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 
 class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
   "AsyncSemaphore" should {
-    val f = mock[() => Unit]
+    var count = 0
     val s = new AsyncSemaphore(2)
     val permits = new ConcurrentLinkedQueue[Permit]
     def acquire() {
       s.acquire() onSuccess { permit =>
-        f()
+        count += 1
         permits add permit
       }
     }
 
     "execute immediately while permits are available" in {
       acquire()
-      there was one(f)()
+      count must be_==(1)
 
       acquire()
-      there were two(f)()
+      count must be_==(2)
 
       acquire()
-      there were two(f)()
+      count must be_==(2)
     }
 
     "execute deferred computations when permits are released" in {
@@ -32,24 +32,24 @@ class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
       acquire()
       acquire()
       acquire()
-
-      there were two(f)()
-
-      permits.poll().release()
-      there were three(f)()
+      
+      count must be_==(2)
 
       permits.poll().release()
-      there were 4.times(f)()
+      count must be_==(3)
 
       permits.poll().release()
-      there were 4.times(f)()
+      count must be_==(4)
+
+      permits.poll().release()
+      count must be_==(4)
     }
 
     "bound the number of waiters" in {
       val s2 = new AsyncSemaphore(2, 3)
       def acquire2() = {
         s2.acquire() onSuccess { permit =>
-          f()
+          count += 1
           permits add permit
         }
       }
@@ -58,14 +58,14 @@ class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
       acquire2()
       acquire2()
 
-      there were two(f)()
+      count must be_==(2)
 
       // The next three acquires wait.
       acquire2()
       acquire2()
       acquire2()
 
-      there were two(f)()
+      count must be_==(2)
       s2.numWaiters mustEqual(3)
 
       // The next acquire should be rejected.
@@ -77,7 +77,7 @@ class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
       permits.poll().release()
       permits.poll().release()
       permits.poll().release()
-      there were 5.times(f)()
+      count must be_==(5)
     }
   }
 }

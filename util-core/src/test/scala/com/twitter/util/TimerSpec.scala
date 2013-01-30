@@ -31,9 +31,9 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
     factory() returns underlying
 
     val refcounted = new ReferenceCountingTimer(factory)
-    there was no(factory)()
 
     "call the factory when it is first acquired" in {
+      there was no(factory)()
       refcounted.acquire()
       there was one(factory)()
     }

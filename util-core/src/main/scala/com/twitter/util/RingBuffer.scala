@@ -65,9 +65,7 @@ class RingBuffer[A: ClassManifest](val maxSize: Int) extends Seq[A] {
     }
   }
 
-  override def iterator = elements
-
-  override def elements = new Iterator[A] {
+  override def iterator = new Iterator[A] {
     var idx = 0
     def hasNext = idx != count_
     def next = {

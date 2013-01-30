@@ -11,7 +11,7 @@ class RingBufferSpec extends SpecificationWithJUnit {
       buf.isEmpty mustEqual true
       buf(0) must throwA[IndexOutOfBoundsException]
       buf.next must throwA[NoSuchElementException]
-      buf.elements.hasNext mustEqual false
+      buf.iterator.hasNext mustEqual false
     }
 
     "handle single element" in {

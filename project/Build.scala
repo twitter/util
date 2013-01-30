@@ -7,12 +7,17 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := "6.0.6",
     organization := "com.twitter",
+    crossScalaVersions := Seq("2.9.2", "2.10.0"),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
-      "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9" % "provided" withSources(),
       "junit" % "junit" % "4.8.1" % "test" withSources(),
+      "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" withSources() cross CrossVersion.binaryMapped {
+        case "2.9.2" => "2.9.1"
+        case "2.10.0" => "2.10"
+        case x => x
+      },
       "org.mockito" % "mockito-all" % "1.8.5" % "test" withSources()
     ),
 
@@ -96,7 +101,13 @@ object Util extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.twitter.common" % "objectsize" % "0.0.3" % "test"
-    )
+    ),
+    testOptions in Test <<= scalaVersion map {
+      // There seems to be an issue with mockito spies, 
+      // specs1, and scala 2.10
+      case "2.10" | "2.10.0" => Seq(Tests.Filter(s => !s.endsWith("MonitorSpec")))
+      case _ => Seq()
+    }
   )
 
   lazy val utilEval = Project(
@@ -157,7 +168,11 @@ object Util extends Build {
   ).settings(
     name := "util-logging",
     libraryDependencies ++= Seq(
-      "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9" % "provided"
+      "org.scala-tools.testing" % "specs" % "1.6.9" % "provided" cross CrossVersion.binaryMapped {
+        case "2.9.2" => "2.9.1"
+        case "2.10.0" => "2.10"
+        case x => x
+      }
     )
   ).dependsOn(utilCore, utilApp)
 

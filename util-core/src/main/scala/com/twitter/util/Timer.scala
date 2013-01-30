@@ -160,7 +160,7 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
         f
       } catch {
         case NonFatal(t) => logError(t)
-        case fatal =>
+        case fatal: Throwable =>
           logError(fatal)
           throw fatal
       }

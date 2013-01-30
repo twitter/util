@@ -36,7 +36,7 @@ trait Monitor { self =>
    * monitor.
    */
   def apply(f: => Unit) = Monitor.using(this) {
-    try f catch { case exc => if (!handle(exc)) throw exc }
+    try f catch { case exc: Throwable => if (!handle(exc)) throw exc }
   }
 
   /**
@@ -168,7 +168,7 @@ object RootMonitor extends Monitor {
       System.exit(1)
       true  /*NOTREACHED*/
 
-    case e =>
+    case e: Throwable =>
       log.log(Level.SEVERE, "Fatal exception propagated to the root monitor!", e)
       false
   }
