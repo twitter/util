@@ -1,6 +1,6 @@
 package com.twitter.app
 
-import com.twitter.util.{Try, Return, Throw, Duration, StorageUnit}
+import com.twitter.util._
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{HashMap, ArrayBuffer}
 import java.net.InetSocketAddress
@@ -27,6 +27,9 @@ object Flaggable {
   implicit val ofDouble = mandatory(_.toDouble)
   implicit val ofDuration = mandatory(Duration.parse(_))
   implicit val ofStorageUnit = mandatory(StorageUnit.parse(_))
+
+  private val defaultTimeFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
+  implicit val ofTime = mandatory(defaultTimeFormat.parse(_))
 
   implicit object ofInetSocketAddress extends Flaggable[InetSocketAddress] {
     def parse(v: String) =  v.split(":") match {
