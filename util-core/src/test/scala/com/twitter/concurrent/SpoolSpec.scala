@@ -9,6 +9,48 @@ import com.twitter.util.{Future, Promise, Return, Throw}
 import Spool.{*::, **::}
 
 class SpoolSpec extends SpecificationWithJUnit {
+  "Empty Spool" should {
+    val s = Spool.empty[Int]
+
+    "iterate over all elements" in {
+      val xs = new ArrayBuffer[Int]
+      s foreach { xs += _ }
+      xs.size must be_==(0)
+    }
+
+    "map" in {
+      (s map { _ * 2 } ) must be_==(Spool.empty[Int])
+    }
+
+    "deconstruct" in {
+      s must beLike {
+        case x **:: rest => false
+        case _ => true
+      }
+    }
+
+    "append via ++"  in {
+      (s ++ Spool.empty[Int]) must be_==(Spool.empty[Int])
+      (Spool.empty[Int] ++ s) must be_==(Spool.empty[Int])
+
+      val s2 = s ++ (3 **:: 4 **:: Spool.empty[Int])
+      s2.toSeq() must be_==(Seq(3, 4))
+    }
+
+    "append via ++ with Future rhs"  in {
+      (s ++ Future(Spool.empty[Int]))() must be_==(Spool.empty[Int])
+      (Spool.empty[Int] ++ Future(s))() must be_==(Spool.empty[Int])
+
+      val s2 = s ++ Future(3 **:: 4 **:: Spool.empty[Int])
+      s2().toSeq() must be_==(Seq(3, 4))
+    }
+
+    "flatMap" in {
+      val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
+      (s flatMap f)() must be_==(Spool.empty[Int])
+    }
+  }
+
   "Simple resolved Spool" should {
     val s = 1 **:: 2 **:: Spool.empty
 
