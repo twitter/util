@@ -31,7 +31,7 @@ import com.twitter.util.{Future, Promise, Return}
  *   firstElem *:: rest
  * }}}
  */
-sealed trait Spool[+A] {
+trait Spool[+A] {
   import Spool.{cons, empty}
 
   def isEmpty: Boolean
@@ -133,7 +133,6 @@ sealed trait Spool[+A] {
 }
 
 object Spool {
-  private[Spool]
   case class Cons[A](value: A, next: Future[Spool[A]])
     extends Spool[A]
   {
@@ -149,7 +148,7 @@ object Spool {
     override def toString = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
   }
 
-  private[Spool] object Empty extends Spool[Nothing] {
+  object Empty extends Spool[Nothing] {
     def isEmpty = true
     def head = throw new NoSuchElementException("stream is empty")
     def tail = throw new UnsupportedOperationException("stream is empty")
