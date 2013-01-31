@@ -161,7 +161,7 @@ object Spool {
    * Cons a value & (possibly deferred) tail to a new {{Spool}}.
    */
   def cons[A](value: A, next: Future[Spool[A]]): Spool[A] = Cons(value, next)
-  def cons[A](value: A, nextStream: Spool[A]): Spool[A] = Cons(value, Future.value(nextStream))
+  def cons[A](value: A, nextSpool: Spool[A]): Spool[A] = Cons(value, Future.value(nextSpool))
 
   /**
    * The empty spool.
