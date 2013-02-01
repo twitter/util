@@ -31,7 +31,7 @@ import com.twitter.util.{Future, Promise, Return}
  *   firstElem *:: rest
  * }}}
  */
-trait Spool[+A] {
+sealed trait Spool[+A] {
   import Spool.{cons, empty}
 
   def isEmpty: Boolean
