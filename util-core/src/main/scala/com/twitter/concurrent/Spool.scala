@@ -151,8 +151,8 @@ object Spool {
 
   private[Spool] object Empty extends Spool[Nothing] {
     def isEmpty = true
-    def head = throw new NoSuchElementException("stream is empty")
-    def tail = throw new UnsupportedOperationException("stream is empty")
+    def head = throw new NoSuchElementException("spool is empty")
+    def tail = Future.exception(new NoSuchElementException("spool is empty"))
     def collect[B](f: PartialFunction[Nothing, B]) = Future.value(this)
     override def toString = "Empty"
   }
@@ -161,7 +161,7 @@ object Spool {
    * Cons a value & (possibly deferred) tail to a new {{Spool}}.
    */
   def cons[A](value: A, next: Future[Spool[A]]): Spool[A] = Cons(value, next)
-  def cons[A](value: A, nextStream: Spool[A]): Spool[A] = Cons(value, Future.value(nextStream))
+  def cons[A](value: A, nextSpool: Spool[A]): Spool[A] = Cons(value, Future.value(nextSpool))
 
   /**
    * The empty spool.
