@@ -133,7 +133,6 @@ sealed trait Spool[+A] {
 }
 
 object Spool {
-  private[Spool]
   case class Cons[A](value: A, next: Future[Spool[A]])
     extends Spool[A]
   {
@@ -149,7 +148,7 @@ object Spool {
     override def toString = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
   }
 
-  private[Spool] object Empty extends Spool[Nothing] {
+  object Empty extends Spool[Nothing] {
     def isEmpty = true
     def head = throw new NoSuchElementException("spool is empty")
     def tail = Future.exception(new NoSuchElementException("spool is empty"))
