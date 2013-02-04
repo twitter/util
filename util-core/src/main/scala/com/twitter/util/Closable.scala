@@ -8,7 +8,7 @@ trait Closable { self =>
    * Close the resource. The returned Future is completed when
    * the resource has been fully relinquished.
    */
-  final def close(): Future[Unit] = close(Time.now)
+  final def close(): Future[Unit] = close(Time.Bottom)
 
   /**
    * Close the resource with the given deadline. This deadline is advisory,
