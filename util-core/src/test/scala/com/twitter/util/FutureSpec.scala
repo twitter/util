@@ -862,6 +862,21 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           timer.stop()
         }
 
+        "when timeout is forever" in {
+          // We manage to throw an exception inside
+          // the scala compiler if we use MockTimer
+          // here. Sigh.
+          implicit val timer = new Timer {
+            def schedule(when: Time)(f: => Unit): TimerTask =
+              throw new Exception("schedule called")
+            def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = 
+              throw new Exception("schedule called")
+            def stop() = ()
+          }
+          val p = new Promise[Int]
+          p.within(Duration.Top) must be(p)
+        }
+
         "interruption" in Time.withCurrentTimeFrozen { tc =>
           implicit val timer = new MockTimer
           val p = new HandledPromise[Int]

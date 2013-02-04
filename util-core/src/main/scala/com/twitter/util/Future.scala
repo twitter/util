@@ -563,6 +563,9 @@ abstract class Future[+A] {
    * @param timeout indicates how long you are willing to wait for the result to be available.
    */
   def within(timer: Timer, timeout: Duration): Future[A] = {
+    if (timeout == Duration.Top)
+      return this
+
     val p = Promise.interrupts[A](this)
     val task = timer.schedule(timeout.fromNow) {
       p.updateIfEmpty(Throw(new TimeoutException(timeout.toString)))
