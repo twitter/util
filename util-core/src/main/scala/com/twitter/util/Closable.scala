@@ -4,6 +4,7 @@ package com.twitter.util
  * Closable is a mixin trait to describe a closable ``resource``.
  */
 trait Closable { self =>
+
   /**
    * Close the resource. The returned Future is completed when
    * the resource has been fully relinquished.

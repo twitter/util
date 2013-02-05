@@ -474,7 +474,7 @@ abstract class FutureTransformer[-A, +B] {
  * special semantics: the cancellation signal is only guaranteed to
  * be delivered when the promise has not yet completed.
  */
-abstract class Future[+A] {
+abstract class Future[+A] extends Awaitable[A] {
   import Future.DEFAULT_TIMEOUT
 
   /**
@@ -507,6 +507,15 @@ abstract class Future[+A] {
    * Block, but only as long as the given Timeout.
    */
   def apply(timeout: Duration): A = get(timeout)()
+  
+  // Awaitable.ready
+  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait) = {
+    get(timeout)()
+    this
+  }
+
+  // Awaitable.result
+  def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = get(timeout)()
 
   /**
    * Alias for apply().
@@ -576,7 +585,6 @@ abstract class Future[+A] {
     }
     p
   }
-
 
   def transform[B](f: Try[A] => Future[B]): Future[B]
 

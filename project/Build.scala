@@ -5,7 +5,7 @@ object Util extends Build {
   val zkVersion = "3.3.4"
 
   val sharedSettings = Seq(
-    version := "6.1.0",
+    version := "6.2.0-SNAPSHOT",
     organization := "com.twitter",
     crossScalaVersions := Seq("2.9.2", "2.10.0"),
     // Workaround for a scaladoc bug which causes it to choke on
@@ -13,6 +13,7 @@ object Util extends Build {
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test" withSources(),
+      "org.scalatest" %% "scalatest" %"1.8" % "test",
       "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" withSources() cross CrossVersion.binaryMapped {
         case "2.9.2" => "2.9.1"
         case "2.10.0" => "2.10"
