@@ -32,6 +32,9 @@ class JvmSpec extends SpecificationWithJUnit with Mockito with TestLogging {
         val gcs = snap.lastGcs filter(_.name != gc.name)
         setSnap(snap.copy(lastGcs=gc +: gcs))
       }
+      
+      def forceGc() = ()
+      def edenPool = NilJvm.edenPool
     }
 
     "foreachGc" in {

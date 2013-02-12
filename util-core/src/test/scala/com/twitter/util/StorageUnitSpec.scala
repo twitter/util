@@ -28,11 +28,17 @@ class StorageUnitSpec extends SpecificationWithJUnit {
       StorageUnit.parse("873.gigabytes") must be_==(873.gigabytes)
       StorageUnit.parse("3.terabytes") must be_==(3.terabytes)
       StorageUnit.parse("9.petabytes") must be_==(9.petabytes)
+      StorageUnit.parse("-3.megabytes") must be_==(-3.megabytes)
     }
 
     "reject soulless robots" in {
       StorageUnit.parse("100.bottles") must throwA[NumberFormatException]
       StorageUnit.parse("100 bytes") must throwA[NumberFormatException]
+    }
+    
+    "deal with negative values" in {
+      -123.bytes.inBytes mustEqual(-123)
+      -2.kilobytes.toHuman mustEqual("-2.0 KiB")
     }
   }
 }

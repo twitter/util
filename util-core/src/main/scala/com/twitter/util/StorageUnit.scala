@@ -55,8 +55,6 @@ object StorageUnit {
  * write human-readable values such as `1.gigabyte` or `50.megabytes`.
  */
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
-  require(bytes >= 0, "Negative storage units are useful[Citation Needed] but unsupported")
-
   def inBytes     = bytes
   def inKilobytes = bytes / (1024L)
   def inMegabytes = bytes / (1024L * 1024)
@@ -64,6 +62,10 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
   def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
   def inExabytes  = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
+  
+  def +(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes + that.bytes)
+  def -(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes - that.bytes)
+  def *(scalar: Double): StorageUnit = new StorageUnit((this.bytes.toDouble*scalar).toLong)
 
   override def equals(other: Any) = {
     other match {
@@ -82,7 +84,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def toHuman(): String = {
     val prefix = "KMGTPE"
     var prefixIndex = -1
-    var display = bytes.toDouble
+    var display = bytes.toDouble.abs
     while (display > 1126.0) {
       prefixIndex += 1
       display /= 1024.0
@@ -90,7 +92,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
     if (prefixIndex < 0) {
       "%d B".format(bytes)
     } else {
-      "%.1f %ciB".format(display, prefix.charAt(prefixIndex))
+      "%.1f %ciB".format(display*bytes.signum, prefix.charAt(prefixIndex))
     }
   }
 }

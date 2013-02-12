@@ -2,7 +2,7 @@ package com.twitter.jvm
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
-import com.twitter.util.{Timer, Duration, Time}
+import com.twitter.util.{Timer, Duration, Time, StorageUnit, Future, Stopwatch}
 import java.lang.management.ManagementFactory
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import java.util.logging.Logger
@@ -10,7 +10,7 @@ import scala.collection.mutable
 import scala.collection.JavaConverters._
 
 case class Heap(
-  // Number of bytes allocated so far.
+  // Estimated number of bytes allocated so far (into eden)
   allocated: Long,
   // Tenuring threshold: How many times an
   // object needs to be copied before being
@@ -20,6 +20,44 @@ case class Heap(
   // been copied as many times. Note: 0-indexed.
   ageHisto: Seq[Long]
 )
+
+case class PoolState(
+  numCollections: Long,
+  capacity: StorageUnit,
+  used: StorageUnit)
+{
+  def -(other: PoolState) = PoolState(
+    numCollections = this.numCollections - other.numCollections,
+    capacity = other.capacity,
+    used = this.used + other.capacity - other.used + 
+      other.capacity*(this.numCollections - other.numCollections -1)
+  )
+}
+
+/**
+ * A handle to a garbage collected memory pool.
+ */
+trait Pool {
+  /** Get the current state of this memory pool. */
+  def state(): PoolState
+
+  /**
+   * Sample the allocation rate of this pool. Note that this is merely
+   * an estimation based on sampling the state of the pool initially
+   * and then again when the period elapses.
+   *
+   * @return Future of the samples rate (in bps).
+   */
+  def estimateAllocRate(period: Duration, timer: Timer): Future[Long] = {
+    val elapsed = Stopwatch.start()
+    val begin = state()
+    timer.doLater(period) {
+      val end = state()
+      val interval = elapsed()
+      ((end - begin).used.inBytes*1000) / interval.inMilliseconds
+    }
+  }
+}
 
 case class Gc(
   count: Long,
@@ -33,7 +71,6 @@ case class Snapshot(
   heap: Heap,
   lastGcs: Seq[Gc]
 )
-
 
 /**
  * Access JVM internal performance counters. We maintain a strict
@@ -58,6 +95,8 @@ trait Jvm {
    * Snapshot of JVM state.
    */
   def snap: Snapshot
+
+  def edenPool: Pool
 
   def executor: ScheduledExecutorService = Jvm.executor
 
@@ -123,6 +162,8 @@ trait Jvm {
     (since: Time) => buffer takeWhile(_.timestamp > since)
   }
 
+  def forceGc()
+
   /**
    * Get the main class name for the currently running application.
    * Note that this works only by heuristic, and may not be accurate.
@@ -146,17 +187,17 @@ object Jvm {
   private lazy val executor =
     Executors.newScheduledThreadPool(1, new NamedPoolThreadFactory("util-jvm-timer", true))
 
-  private[this] lazy val _jvm = {
+  private lazy val _jvm = {
     val name = ManagementFactory.getRuntimeMXBean.getVmName
     // Is there a better way to detect HotSpot?
     //
     // TODO: also check that we can _actually_ create a Hotspot
     // instance without exceptions
     if (name startsWith "Java HotSpot(TM)")
-      Some(new Hotspot: Jvm)
+      new Hotspot
     else
-      None
-  } getOrElse NilJvm
+      NilJvm
+  }
 
   def apply(): Jvm = _jvm
 }

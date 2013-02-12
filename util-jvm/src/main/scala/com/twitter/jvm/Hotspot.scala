@@ -1,5 +1,6 @@
 package com.twitter.jvm
 
+import com.twitter.conversions.storage._
 import com.twitter.conversions.time._
 import com.twitter.util.Time
 import java.lang.management.ManagementFactory
@@ -83,12 +84,14 @@ class Hotspot extends Jvm {
 
   def snap: Snapshot = {
     val cs = counters("")
-    val heap = {
-      val allocated = for {
-        invocations <- cs.get("sun.gc.collector.0.invocations") map(long(_))
-        capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
-        used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
-      } yield invocations*capacity + used
+    val heap = for {
+      invocations <- cs.get("sun.gc.collector.0.invocations") map(long(_))
+      capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
+      used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
+    } yield {
+      val allocated = invocations*capacity + used
+      // This is a somewhat poor estimate, since for example the
+      // capacity can change over time.
 
       val tenuringThreshold = cs.get("sun.gc.policy.tenuringThreshold") map(long(_))
 
@@ -97,8 +100,8 @@ class Hotspot extends Jvm {
         i <- 1L to thresh
         bucket <- cs.get("sun.gc.generation.0.agetable.bytes.%02d".format(i))
       } yield long(bucket)
-
-      Heap(allocated getOrElse -1, tenuringThreshold getOrElse -1, ageHisto)
+      
+      Heap(allocated, tenuringThreshold getOrElse -1, ageHisto)
     }
 
     val timestamp = for {
@@ -109,12 +112,27 @@ class Hotspot extends Jvm {
     // TODO: include causes for GCs?
     Snapshot(
       timestamp getOrElse Time.epoch,
-      heap,
+      heap getOrElse Heap(0, 0, Seq()),
       getGc(0, cs).toSeq ++ getGc(1, cs).toSeq)
+  }
+
+  val edenPool: Pool = new Pool {
+    def state() = {
+      val cs = counters("")
+      val state = for {
+        invocations <- cs.get("sun.gc.collector.0.invocations") map(long(_))
+        capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
+        used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
+      } yield PoolState(invocations, capacity.bytes, used.bytes)
+  
+      state getOrElse NilJvm.edenPool.state()
+    }
   }
 
   def snapCounters: Map[String, String] =
     counters("") mapValues(_.getValue().toString)
+
+  def forceGc() = System.gc()
 }
 
 /*
