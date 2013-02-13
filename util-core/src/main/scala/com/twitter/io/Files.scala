@@ -15,11 +15,13 @@ object Files {
    */
   def readBytes(file: File, limit: Int = 1024 * 1024 * 4): Array[Byte]= {
     require(file.length() < limit, "File '%s' is too big".format(file.getAbsolutePath()))
-    val buf = new ByteArrayOutputStream(file.length().intValue())
+    val buf = new ByteArrayOutputStream(math.min(limit, file.length().intValue()))
     val in = new FileInputStream(file)
-    StreamIO.copy(in, buf)
-    in.close()
-
+    try {
+      StreamIO.copy(in, buf)
+    } finally {
+      in.close()
+    }
     buf.toByteArray()
   }
 
