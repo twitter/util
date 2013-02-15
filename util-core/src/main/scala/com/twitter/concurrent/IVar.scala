@@ -114,13 +114,13 @@ final class IVar[A] extends IVarField[A] {
       // todo: exceptions stop execution
       // here, but should they?
       var waitq = _waitq
-      while (waitq != Nil) {
+      while (waitq.nonEmpty) {
         waitq.head(value)
         waitq = waitq.tail
       }
 
       var chainq = _chainq
-      while (chainq != Nil) {
+      while (chainq.nonEmpty) {
         chainq.head.set(value)
         chainq = chainq.tail
       }

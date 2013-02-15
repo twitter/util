@@ -244,7 +244,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
 
         // Depth 0
         var ks = rest
-        while (ks != Nil) {
+        while (ks ne Nil) {
           k = ks.head
           if (k.depth == 0)
             k(result)
@@ -253,7 +253,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
 
         // Depth 1
         ks = rest
-        while (ks != Nil) {
+        while (ks ne Nil) {
           k = ks.head
           if (k.depth == 1)
             k(result)
@@ -263,7 +263,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
         // Depth > 1 (Rare: ~6%)
         var rem: mutable.Buffer[K[A]] = null
         ks = rest
-        while (ks != Nil) {
+        while (ks ne Nil) {
           k = ks.head
           if (k.depth > 1) {
             if (rem == null) rem = mutable.ArrayBuffer()
@@ -549,7 +549,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
           if (first != null)
             target.continue(first)
           var ks = rest
-          while (ks != Nil) {
+          while (ks ne Nil) {
             target.continue(ks.head)
             ks = ks.tail
           }
@@ -558,7 +558,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
       case s@Interruptible(waitq, handler) =>
         if (!cas(s, Linked(target))) link(target) else {
           var ks = waitq
-          while (ks != Nil) {
+          while (ks ne Nil) {
             target.continue(ks.head)
             ks = ks.tail
           }
@@ -568,7 +568,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
       case s@Transforming(waitq, other) =>
         if (!cas(s, Linked(target))) link(target) else {
           var ks = waitq
-          while (ks != Nil) {
+          while (ks ne Nil) {
             target.continue(ks.head)
             ks = ks.tail
           }
@@ -578,7 +578,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
       case s@Interrupted(waitq, signal) =>
         if (!cas(s, Linked(target))) link(target) else {
           var ks = waitq
-          while (ks != Nil) {
+          while (ks ne Nil) {
             target.continue(ks.head)
             ks = ks.tail
           }
