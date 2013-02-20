@@ -5,12 +5,19 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.{HashMap, ArrayBuffer}
 import java.net.InetSocketAddress
 
+/**
+ * A typeclass providing evidence for parsing type `T`
+ * as a flag.
+ */
 trait Flaggable[T] {
   def parse(s: String): T
   def show(t: T): String = t.toString
   def default: Option[T] = None
 }
 
+/**
+ * Default `Flaggable` implementations.
+ */
 object Flaggable {
   def mandatory[T](f: String => T) = new Flaggable[T] {
     def parse(s: String) = f(s)
@@ -85,9 +92,15 @@ class FlagUndefinedException extends Exception("flag undefined")
  * [[com.twitter.app.Flags]] instance. Its current value is extracted
  * with `apply()`.
  */
-case class Flag[T: Flaggable](name: String, help: String, default: T) {
-  private[this] val flaggable = implicitly[Flaggable[T]]
+class Flag[T: Flaggable] private[app](flagName: Option[String], val help: String, val default: T) {
+  def this(name: String, help: String, default: T) = this(Some(name), help, default)
+  def this(help: String, default: T) = this(None, help, default)
+
+  val name = flagName getOrElse getClass.getName.stripSuffix("$")
+
+  protected val flaggable = implicitly[Flaggable[T]]
   @volatile private[this] var value: Option[T] = None
+  protected def getValue: Option[T] = value
 
   /**
    * Return this flag's current value. The default value is returned
@@ -98,9 +111,9 @@ case class Flag[T: Flaggable](name: String, help: String, default: T) {
   /** Reset this flag's value */
   def reset() { value = None }
   /** True if the flag has been set */
-  def isDefined = value.isDefined
+  def isDefined = getValue.isDefined
   /** Get the value if it has been set */
-  def get: Option[T] = value
+  def get: Option[T] = getValue
   /** String representation of this flag's default value */
   def defaultString = flaggable.show(default)
 
@@ -138,7 +151,9 @@ case class Flag[T: Flaggable](name: String, help: String, default: T) {
  *   val i = flag("i", 123, "iteration count")
  * }}}
  */
-class Flags(argv0: String) {
+class Flags(argv0: String, includeGlobal: Boolean) {
+  def this(argv0: String) = this(argv0, false)
+
   private[this] val flags = new HashMap[String, Flag[_]]
 
   // Add a help flag by default
@@ -153,6 +168,15 @@ class Flags(argv0: String) {
   def reset() = synchronized {
     flags foreach { case (_, f) => f.reset() }
   }
+
+  private[this] def resolveGlobalFlag(f: String) = 
+    if (includeGlobal) GlobalFlag.get(f) else None
+
+  private[this] def resolveFlag(f: String): Option[Flag[_]] =
+    synchronized { flags.get(f) orElse resolveGlobalFlag(f) }
+
+  private[this] def hasFlag(f: String) = resolveFlag(f).isDefined
+  private[this] def flag(f: String) = resolveFlag(f).get
 
   def parse(
     args: Array[String],
@@ -169,21 +193,21 @@ class Flags(argv0: String) {
           // There seems to be a bug Scala's pattern matching
           // optimizer that leaves `v' dangling in the last case if
           // we make this a wildcard (Array(k, _@_*))
-          case Array(k) if !(flags contains k) =>
+          case Array(k) if !hasFlag(k) =>
             if (undefOk)
               remaining += a
             else
               throw FlagParseException(k, new FlagUndefinedException)
 
           // Flag isn't defined
-          case Array(k, _) if !(flags contains k) =>
+          case Array(k, _) if !hasFlag(k) =>
             if (undefOk)
               remaining += a
             else
               throw FlagParseException(k, new FlagUndefinedException)
 
           // Optional argument without a value
-          case Array(k) if flags(k).noArgumentOk =>
+          case Array(k) if flag(k).noArgumentOk =>
             flags(k).parse()
 
           // Mandatory argument without a value and with no more arguments.
@@ -193,13 +217,13 @@ class Flags(argv0: String) {
           // Mandatory argument with another argument
           case Array(k) =>
             i += 1
-            try flags(k).parse(args(i-1)) catch {
-              case e => throw FlagParseException(k, e)
+            try flag(k).parse(args(i-1)) catch {
+              case NonFatal(e) => throw FlagParseException(k, e)
             }
 
           // Mandatory k=v
           case Array(k, v) =>
-            try flags(k).parse(v) catch {
+            try flag(k).parse(v) catch {
               case e => throw FlagParseException(k, e)
             }
         }
@@ -225,7 +249,89 @@ class Flags(argv0: String) {
       val f = flags(k)
       "  -%s='%s': %s".format(k, f.defaultString, f.help)
     }
+    val globalLines = if (!includeGlobal) Seq() else {
+      for (f <- GlobalFlag.getAll(getClass.getClassLoader))
+        yield "  -%s='%s': %s".format(f.name, f.defaultString, f.help)
+    }
 
-    argv0+"\n"+(lines mkString "\n")
+    argv0+"\n"+(lines mkString "\n")+(
+      if (globalLines.isEmpty) "" else "\nglobal flags:\n"+(globalLines mkString "\n")
+    )
   }
+}
+
+/**
+ * Declare a global flag by extending this class with an object.
+ *
+ * {{{
+ * object MyFlag extends GlobalFlag("my", "default value", "my global flag")
+ * }}}
+ *
+ * All such global flag declarations in a given classpath are
+ * visible, and are used by, [[com.twitter.app.App]].
+ *
+ * The name of the flag is the fully-qualified classname, for 
+ * example, the flag
+ *
+ * {{{
+ * package com.twitter.server
+ * 
+ * object port extends GlobalFlag(8080, "the TCP port to which we bind")
+ * }}}
+ *
+ * is accessed by the name `com.twitter.server.port`.
+ *
+ * Global flags may also be set by Java system properties with keys
+ * named in the same way, however values supplied by flags override
+ * those supplied by system properties.
+ *
+ */
+@GlobalFlagVisible
+class GlobalFlag[T: Flaggable](default: T, help: String) extends Flag[T](help, default) {
+  protected override def getValue = super.getValue orElse {
+    Option(System.getProperty(name)) flatMap { p =>
+      try Some(flaggable.parse(p)) catch {
+        case NonFatal(exc) =>
+          java.util.logging.Logger.getLogger("").log(
+            java.util.logging.Level.SEVERE,
+            "Failed to parse system property "+name+" as flag", exc)
+          None
+      }
+    }
+  }
+
+  def getGlobalFlag: Flag[_] = this
+}
+
+private object GlobalFlag {
+  def get(f: String): Option[Flag[_]] = try {
+    val cls = Class.forName(f)
+    val m = cls.getMethod("getGlobalFlag")
+    Some(m.invoke(null).asInstanceOf[Flag[_]])
+  } catch {
+    case _: ClassNotFoundException 
+      | _: NoSuchMethodException 
+      | _: IllegalArgumentException => None
+  }
+
+  def getAll(loader: ClassLoader) = {
+    val markerClass = classOf[GlobalFlagVisible]
+    val flags = new ArrayBuffer[Flag[_]]
+
+    for (info <- ClassPath.browse(loader)) try {
+      val cls = info.load()
+      if (cls.isAnnotationPresent(markerClass) && (info.name endsWith "$")) {
+        get(info.name.dropRight(1)) match {
+          case Some(f) => flags += f
+          case None => println("failed for "+info.name)
+        }
+      }
+    } catch {
+      case _: IllegalStateException 
+        | _: NoClassDefFoundError 
+        | _: ClassNotFoundException =>
+    }
+
+    flags
+  }  
 }

@@ -28,7 +28,7 @@ trait App {
   /** The name of the application, based on the classname */
   val name = getClass.getName.reverse.dropWhile(_ == '$').reverse
   /** The [[com.twitter.app.Flags]] instance associated with this application */
-  val flag = new Flags(name)
+  val flag = new Flags(name, includeGlobal = true)
   private var _args = Array[String]()
   /** The remaining, unparsed arguments */
   def args = _args
