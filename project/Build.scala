@@ -104,7 +104,7 @@ object Util extends Build {
       "com.twitter.common" % "objectsize" % "0.0.3" % "test"
     ),
     testOptions in Test <<= scalaVersion map {
-      // There seems to be an issue with mockito spies, 
+      // There seems to be an issue with mockito spies,
       // specs1, and scala 2.10
       case "2.10" | "2.10.0" => Seq(Tests.Filter(s => !s.endsWith("MonitorSpec")))
       case _ => Seq()
