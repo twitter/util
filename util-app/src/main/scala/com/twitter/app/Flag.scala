@@ -79,6 +79,25 @@ object Flaggable {
     def parse(v: String): Seq[T] = v.split(",") map flag.parse
     override def show(seq: Seq[T]) = seq map flag.show mkString ","
   }
+
+  implicit def ofMap[K: Flaggable, V: Flaggable] = new Flaggable[Map[K, V]] {
+    private val kflag = implicitly[Flaggable[K]]
+    private val vflag = implicitly[Flaggable[V]]
+
+    assert(!kflag.default.isDefined)
+    assert(!vflag.default.isDefined)
+
+    def parse(in: String): Map[K, V] = in.split(",") map { pair =>
+      pair.split("=") match {
+        case Array(k, v) => (kflag.parse(k), vflag.parse(v))
+        case _ => throw new IllegalArgumentException("not a 'k=v'")
+      }
+    } toMap
+
+    override def show(out: Map[K, V]) = {
+      out.toSeq map { case (k, v) => k.toString + "=" + v.toString } mkString(",")
+    }
+  }
 }
 
 case class FlagParseException(which: String, cause: Throwable)
@@ -169,7 +188,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     flags foreach { case (_, f) => f.reset() }
   }
 
-  private[this] def resolveGlobalFlag(f: String) = 
+  private[this] def resolveGlobalFlag(f: String) =
     if (includeGlobal) GlobalFlag.get(f) else None
 
   private[this] def resolveFlag(f: String): Option[Flag[_]] =
@@ -270,12 +289,12 @@ class Flags(argv0: String, includeGlobal: Boolean) {
  * All such global flag declarations in a given classpath are
  * visible, and are used by, [[com.twitter.app.App]].
  *
- * The name of the flag is the fully-qualified classname, for 
+ * The name of the flag is the fully-qualified classname, for
  * example, the flag
  *
  * {{{
  * package com.twitter.server
- * 
+ *
  * object port extends GlobalFlag(8080, "the TCP port to which we bind")
  * }}}
  *
@@ -309,8 +328,8 @@ private object GlobalFlag {
     val m = cls.getMethod("getGlobalFlag")
     Some(m.invoke(null).asInstanceOf[Flag[_]])
   } catch {
-    case _: ClassNotFoundException 
-      | _: NoSuchMethodException 
+    case _: ClassNotFoundException
+      | _: NoSuchMethodException
       | _: IllegalArgumentException => None
   }
 
@@ -327,11 +346,11 @@ private object GlobalFlag {
         }
       }
     } catch {
-      case _: IllegalStateException 
-        | _: NoClassDefFoundError 
+      case _: IllegalStateException
+        | _: NoClassDefFoundError
         | _: ClassNotFoundException =>
     }
 
     flags
-  }  
+  }
 }
