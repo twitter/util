@@ -1,3 +1,24 @@
+6.2.3  2013-03-08
+
+  * util-core: Remove StreamHelper
+  * Flag: create Map flag type
+
+6.2.2  2013-02-25
+
+  * Flag: introduce global flags
+
+6.2.1  2013-02-20
+
+  * HttpMux: provide visibility into available handlers
+  * Flag: add Time type
+  * Spool: encode exceptions
+  * Closable: use Time.Bottom for close()
+  * Future.within: bypass timer entirely if we're passed Duration.Top
+  * Awaitable: introduce Await
+  * util-jvm: GC predictor
+  * io.Files: don't overallocate buffers
+  * Future: use .nonEmpty instead of != Nil
+
 6.1.0  2013-01-30
 
   * preliminary 2.10 port/build
