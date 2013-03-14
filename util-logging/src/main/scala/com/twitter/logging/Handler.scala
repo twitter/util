@@ -51,7 +51,8 @@ class StringHandler(
     level: Option[Level] = None)
   extends Handler(formatter, level) {
 
-  private var buffer = new StringBuilder()
+  // thread-safe logging
+  private val buffer = new StringBuffer()
 
   def publish(record: javalog.LogRecord) = {
     buffer append getFormatter().format(record)
@@ -61,10 +62,13 @@ class StringHandler(
 
   def flush() = { }
 
-  def get = buffer.toString
+  def get = {
+    buffer.toString
+  }
 
   def clear() = {
-    buffer.clear
+    buffer.setLength(0)
+    buffer.trimToSize()
   }
 }
 
