@@ -21,6 +21,10 @@ public class TestVirtualMachineErrorTerminator extends TestCase
         });
     }
 
+    protected void tearDown() {
+      VirtualMachineErrorTerminator.reset();
+    }
+
     public void testNotTerminatingWhenNew() {
         assertNotTerminating();
     }
@@ -86,24 +90,19 @@ public class TestVirtualMachineErrorTerminator extends TestCase
             fail();
         }
         catch(VirtualMachineError e) {
-            try {
-                synchronized(lock) {
-                    long timeout = System.currentTimeMillis() + 1000;
-                    for(;;) {
-                        if(exitInvoked) {
-                            exitInvoked = false;
-                            break;
-                        }
-                        long now = System.currentTimeMillis();
-                        if(now >= timeout) {
-                            fail();
-                        }
-                        lock.wait(timeout - now);
+            synchronized(lock) {
+                long timeout = System.currentTimeMillis() + 1000;
+                for(;;) {
+                    if(exitInvoked) {
+                        exitInvoked = false;
+                        break;
                     }
+                    long now = System.currentTimeMillis();
+                    if(now >= timeout) {
+                        fail();
+                    }
+                    lock.wait(timeout - now);
                 }
-            }
-            finally {
-                VirtualMachineErrorTerminator.reset();
             }
         }
     }
