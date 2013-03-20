@@ -2,7 +2,7 @@ package com.twitter.util
 
 import scala.collection.mutable.{Map, Set}
 import java.util.concurrent.TimeUnit
-import collection.JavaConversions.JConcurrentMapWrapper
+import collection.convert.Wrappers.JConcurrentMapWrapper
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 
 object SetMaker {
