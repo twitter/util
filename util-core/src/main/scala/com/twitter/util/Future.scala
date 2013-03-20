@@ -15,6 +15,7 @@ object Future {
   val Void = apply[Void](null)
   val Done = Unit
   val None: Future[Option[Nothing]] = new ConstFuture(Return(Option.empty))
+  val Nil: Future[Seq[Nothing]] = new ConstFuture(Return(Seq.empty))
 
   /**
    * Makes a Future with a constant result.
@@ -507,7 +508,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * Block, but only as long as the given Timeout.
    */
   def apply(timeout: Duration): A = get(timeout)()
-  
+
   // Awaitable.ready
   def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait) = {
     get(timeout)()
