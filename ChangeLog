@@ -1,3 +1,11 @@
+6.2.4  2013-03-21
+
+  * util-core: Add Future.Nil, it can be used anytime you need a Future[Seq[_]] with an empty sequence.
+  * util-core: fix VM test error by ensuring reset
+  * util-core: Move Disposable/Managed to util
+  * util-logging: scribe binary thrift for tbird add/remove/scrub ops:
+  * util: upgrade com.twitter.common.objectsize to 0.0.7
+
 6.2.3  2013-03-08
 
   * util-core: Remove StreamHelper
