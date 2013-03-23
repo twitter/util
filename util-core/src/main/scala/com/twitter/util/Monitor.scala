@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import java.util.logging.{Logger, Level}
-import scala.annotation.tailrec
 
 /**
  * Wraps an exception that happens when handling another exception in
