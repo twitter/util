@@ -5,7 +5,7 @@ object Util extends Build {
   val zkVersion = "3.3.4"
 
   val sharedSettings = Seq(
-    version := "6.2.3-SNAPSHOT",
+    version := "6.2.4",
     organization := "com.twitter",
     crossScalaVersions := Seq("2.9.2", "2.10.0"),
     // Workaround for a scaladoc bug which causes it to choke on
