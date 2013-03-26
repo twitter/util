@@ -1,34 +1,24 @@
 package com.twitter.zk
 
-import com.twitter.concurrent.{Offer, Serialized}
-import com.twitter.util.{Duration, Future, Promise, Return, Timer}
+import com.twitter.concurrent.{Broker, Offer, Serialized}
+import com.twitter.util.{Duration, Future, Promise, TimeoutException, Timer, Return}
 import org.apache.zookeeper.ZooKeeper
+import com.twitter.logging.Logger
 
 /**
  * An Asynchronous ZooKeeper Client.
  */
-trait NativeConnector extends Connector with Serialized {
+case class NativeConnector(
+  connectString: String,
+  connectTimeout: Option[Duration],
+  sessionTimeout: Duration,
+  timer: Timer)
+extends Connector with Serialized {
   override val name = "native-zk-connector"
-  val connectString: String
-  val connectTimeout: Option[Duration]
-  val sessionTimeout: Duration
-  implicit val timer: Timer
 
-  @volatile protected[this] var connection: Option[NativeConnector.Connection] = None
-
-  def apply() = serialized {
-    connection getOrElse {
-      val c = mkConnection
-      c.sessionEvents.foreach { event =>
-        sessionBroker.send(event()).sync()
-      }
-      connection = Some(c)
-      c
-    }
-  } flatMap { _.apply() }
 
   protected[this] def mkConnection = {
-    new NativeConnector.Connection(connectString, connectTimeout, sessionTimeout)
+    new NativeConnector.Connection(connectString, connectTimeout, sessionTimeout, timer, log)
   }
 
   onSessionEvent {
@@ -36,87 +26,128 @@ trait NativeConnector extends Connector with Serialized {
     case StateEvent.Expired => release()()
   }
 
-  def release() = serialized {
-    connection map { c =>
-      connection = None
+  /*
+   * Access to connection must be serialized, i.e. enqueued to be processed asynchronously and
+   * serially, in order to prevent race conditions between invocations of apply() and release()
+   * since both of these operations may read and write to this variable.  This helps to ensure that
+   * at most one connection is active.
+   */
+  @volatile private[this] var connection: Option[NativeConnector.Connection] = None
+
+  /**
+   * Get the connection if one already exists or obtain a new one.
+   * If the connection is not received within connectTimeout, the connection is released.
+   */
+  def apply() = serialized {
+    connection getOrElse {
+      val c = mkConnection
+      c.sessionEvents foreach { event =>
+        sessionBroker.send(event()).sync()
+      }
+      connection = Some(c)
       c
-    }
-  } flatMap {
-    case Some(c) => c.release()
-    case None => Future.Done
+    } apply()
+  }.flatten rescue { case e: NativeConnector.ConnectTimeoutException =>
+    release() flatMap { _ => Future.exception(e) }
   }
+
+  /**
+   * If there is a connection, release it.
+   */
+  def release() = serialized {
+    connection match {
+      case None => Future.Unit
+      case Some(c) => {
+        connection = None
+        c.release()
+      }
+    }
+  }.flatten
 }
 
 object NativeConnector {
-  /** Build a connector */
-  def apply(
-      _connectString: String,
-      _connectTimeout: Option[Duration],
-      _sessionTimeout: Duration)
-      (implicit _timer: Timer): NativeConnector = new NativeConnector {
-    val connectString  = _connectString
-    val connectTimeout = _connectTimeout
-    val sessionTimeout = _sessionTimeout
-    implicit val timer = _timer
+  def apply(connectString: String, sessionTimeout: Duration)
+           (implicit timer: Timer): NativeConnector = {
+    NativeConnector(connectString, None, sessionTimeout, timer)
   }
+
+  def apply(connectString: String, connectTimeout: Duration, sessionTimeout: Duration)
+           (implicit timer: Timer): NativeConnector = {
+    NativeConnector(connectString, Some(connectTimeout), sessionTimeout, timer)
+  }
+
+  case class ConnectTimeoutException(connectString: String, timeout: Duration)
+    extends TimeoutException("timeout connecting to %s after %s".format(connectString, timeout))
 
   /**
    * Maintains connection and ensures all session events are published.
    * Once a connection is released, it may not be re-opened.
+   *
+   * apply() and release() must not be called concurrently. This is enforced by NativeConnector.
    */
-  class Connection(
-    connectString: String,
-    connectTimeout: Option[Duration],
-    sessionTimeout: Duration
-  )(implicit timer: Timer) extends Serialized {
+  protected class Connection(
+      connectString: String,
+      connectTimeout: Option[Duration],
+      sessionTimeout: Duration,
+      timer: Timer,
+      log: Logger) {
+
     @volatile protected[this] var zookeeper: Option[ZooKeeper] = None
 
-    protected[this] val _connected = new Promise[ZooKeeper]
+    protected[this] val connectPromise = new Promise[ZooKeeper]
+
+    /** A ZooKeeper handle that will error if connectTimeout is specified and exceeded. */
+    lazy val connected: Future[ZooKeeper] = connectTimeout map { timeout =>
+      connectPromise within(timer, timeout) rescue { case _: TimeoutException =>
+        Future.exception(ConnectTimeoutException(connectString, timeout))
+      }
+    } getOrElse(connectPromise)
+
+    protected[this] val releasePromise = new Promise[Unit]
+    val released: Future[Unit] = releasePromise
 
     protected[this] val sessionBroker = new EventBroker
 
-    /*
+    /**
      * Publish session events, but intercept Connected events and use them to satisfy the pending
      * connection promise if possible.
-     *
-     * It is possible for events to be sent on this Offer before the connection promise is satisfied
-     * and I think that is okay.
      */
-    val sessionEvents: Offer[StateEvent] = sessionBroker.recv map { StateEvent(_) } map {
-      case event @ StateEvent.Connected => {
-        serialized {
-          zookeeper.foreach { zk =>
-            _connected.updateIfEmpty(Return(zk))
+    val sessionEvents: Offer[StateEvent] = {
+      val broker = new Broker[StateEvent]
+      def loop() {
+        sessionBroker.recv sync() map { StateEvent(_) } onSuccess {
+          case StateEvent.Connected => zookeeper foreach { zk =>
+            connectPromise.updateIfEmpty(Return(zk))
           }
-        }
-        event
+          case _ =>
+        } flatMap { broker.send(_).sync() } ensure loop()
       }
-      case event => event
+      loop()
+      broker.recv
     }
 
-    /** A ZooKeeper handle that will error if connectTimeout is exceeded. */
-    lazy val connected: Future[ZooKeeper] = {
-      connectTimeout map(_connected.within) getOrElse(_connected)
-    }
-
-    protected[this] val _released = new Promise[Unit]
-    val released: Future[Unit] = _released
-
-    /** Obtain a ZooKeeper connection */
-    def apply(): Future[ZooKeeper] = serialized {
-      assert(!_released.isDefined)
+    /**
+     * Obtain a ZooKeeper connection
+     *
+     * There must not be concurrent calls to this method and/or release();  this is enforced by
+     * NativeConnector.
+     */
+    def apply(): Future[ZooKeeper] = {
+      assert(!releasePromise.isDefined)
       zookeeper = zookeeper orElse Some { mkZooKeeper }
-    } flatMap { _ => connected }
+      connected
+    }
 
     protected[this] def mkZooKeeper = {
       new ZooKeeper(connectString, sessionTimeout.inMillis.toInt, sessionBroker)
     }
 
-    def release(): Future[Unit] = serialized {
-      zookeeper.foreach { zk =>
+    def release(): Future[Unit] = Future {
+      zookeeper foreach { zk =>
+        log.debug("release")
         zk.close()
         zookeeper = None
-        _released.setValue(Unit)
+        releasePromise.setValue(Unit)
       }
     }
   }

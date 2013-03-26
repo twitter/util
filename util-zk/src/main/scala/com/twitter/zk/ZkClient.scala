@@ -88,7 +88,7 @@ object ZkClient {
       connectTimeout: Option[Duration],
       sessionTimeout: Duration)
       (implicit timer: Timer): ZkClient = {
-    apply(NativeConnector(connectString, connectTimeout, sessionTimeout)(timer))
+    apply(NativeConnector(connectString, connectTimeout, sessionTimeout, timer))
   }
 
   /** Build a ZkClient with a NativeConnector */
