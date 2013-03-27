@@ -1,3 +1,9 @@
+6.2.5  2013-03-27
+
+  * util-zk: Improvements to util-zk NativeConnector
+  * util: Update sbt project definition
+  * util: launching test in all scala version of the project
+
 6.2.4  2013-03-21
 
   * util-core: Add Future.Nil, it can be used anytime you need a Future[Seq[_]] with an empty sequence.
