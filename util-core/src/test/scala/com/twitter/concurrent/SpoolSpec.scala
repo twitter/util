@@ -1,10 +1,8 @@
 package com.twitter.concurrent
 
 import scala.collection.mutable.ArrayBuffer
-
 import org.specs.SpecificationWithJUnit
-
-import com.twitter.util.{Future, Promise, Return, Throw}
+import com.twitter.util.{Await, Future, Promise, Return, Throw}
 
 import Spool.{*::, **::}
 
@@ -34,20 +32,20 @@ class SpoolSpec extends SpecificationWithJUnit {
       (Spool.empty[Int] ++ s) must be_==(Spool.empty[Int])
 
       val s2 = s ++ (3 **:: 4 **:: Spool.empty[Int])
-      s2.toSeq() must be_==(Seq(3, 4))
+      Await.result(s2.toSeq) must be_==(Seq(3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      (s ++ Future(Spool.empty[Int]))() must be_==(Spool.empty[Int])
-      (Spool.empty[Int] ++ Future(s))() must be_==(Spool.empty[Int])
+      Await.result(s ++ Future(Spool.empty[Int])) must be_==(Spool.empty[Int])
+      Await.result(Spool.empty[Int] ++ Future(s)) must be_==(Spool.empty[Int])
 
       val s2 = s ++ Future(3 **:: 4 **:: Spool.empty[Int])
-      s2().toSeq() must be_==(Seq(3, 4))
+      Await.result(s2 flatMap (_.toSeq)) must be_==(Seq(3, 4))
     }
 
     "flatMap" in {
       val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
-      (s flatMap f)() must be_==(Spool.empty[Int])
+      Await.result(s flatMap f) must be_==(Spool.empty[Int])
     }
   }
 
@@ -61,11 +59,11 @@ class SpoolSpec extends SpecificationWithJUnit {
     }
 
     "buffer to a sequence" in {
-      s.toSeq() must be_==(Seq(1, 2))
+      Await.result(s.toSeq) must be_==(Seq(1, 2))
     }
 
     "map" in {
-      (s map { _ * 2 } toSeq()) must be_==(Seq(2, 4))
+      Await.result(s map { _ * 2 } toSeq) must be_==(Seq(2, 4))
     }
 
     "deconstruct" in {
@@ -79,25 +77,25 @@ class SpoolSpec extends SpecificationWithJUnit {
     }
 
     "append via ++"  in {
-      (s ++ Spool.empty[Int]).toSeq() must be_==(Seq(1, 2))
-      (Spool.empty[Int] ++ s).toSeq() must be_==(Seq(1, 2))
+      Await.result((s ++ Spool.empty[Int]).toSeq) must be_==(Seq(1, 2))
+      Await.result((Spool.empty[Int] ++ s).toSeq) must be_==(Seq(1, 2))
 
       val s2 = s ++ (3 **:: 4 **:: Spool.empty)
-      s2.toSeq() must be_==(Seq(1, 2, 3, 4))
+      Await.result(s2.toSeq) must be_==(Seq(1, 2, 3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      (s ++ Future(Spool.empty[Int]))().toSeq() must be_==(Seq(1, 2))
-      (Spool.empty[Int] ++ Future(s))().toSeq() must be_==(Seq(1, 2))
+      Await.result(s ++ Future(Spool.empty[Int]) flatMap (_.toSeq)) must be_==(Seq(1, 2))
+      Await.result(Spool.empty[Int] ++ Future(s) flatMap (_.toSeq)) must be_==(Seq(1, 2))
 
       val s2 = s ++ Future(3 **:: 4 **:: Spool.empty)
-      s2().toSeq() must be_==(Seq(1, 2, 3, 4))
+      Await.result(s2 flatMap (_.toSeq)) must be_==(Seq(1, 2, 3, 4))
     }
 
     "flatMap" in {
       val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
       val s2 = s flatMap f
-      s2().toSeq() must be_==(Seq("1", "2", "2", "4"))
+      Await.result(s2 flatMap (_.toSeq)) must be_==(Seq("1", "2", "2", "4"))
     }
   }
 
@@ -143,7 +141,7 @@ class SpoolSpec extends SpecificationWithJUnit {
       f.isDefined must beFalse
       p1() = Return(Spool.empty)
       f.isDefined must beTrue
-      f() must be_==(Seq(1,2))
+      Await.result(f) must be_==(Seq(1,2))
     }
 
     "deconstruct" in {
@@ -160,7 +158,7 @@ class SpoolSpec extends SpecificationWithJUnit {
       f.isDefined must beFalse  // 1 != 2 mod 0
       p() = Return(2 *:: p1)
       f.isDefined must beTrue
-      val s1 = f()
+      val s1 = Await.result(f)
       s1 must beLike {
         case x *:: rest if x == 4 && !rest.isDefined => true
       }
@@ -171,7 +169,7 @@ class SpoolSpec extends SpecificationWithJUnit {
       p2() = Return(4 **:: Spool.empty)
       val s1s = s1.toSeq
       s1s.isDefined must beTrue
-      s1s() must be_==(Seq(4, 8))
+      Await.result(s1s) must be_==(Seq(4, 8))
     }
   }
 }

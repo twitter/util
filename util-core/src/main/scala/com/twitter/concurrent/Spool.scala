@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import scala.collection.mutable.ArrayBuffer
 
-import com.twitter.util.{Future, Promise, Return}
+import com.twitter.util.{Future, Promise, Return, Await, Duration}
 
 /**
  * A spool is an asynchronous stream. It more or less
@@ -60,15 +60,7 @@ sealed trait Spool[+A] {
   def foreachElem[B](f: Option[A] => B) {
     if (!isEmpty) {
       f(Some(head))
-      // note: this hack is to avoid deep
-      // stacks in case a large portion
-      // of the stream is already defined
-      var next = tail
-      while (next.isDefined && next.isReturn && !next().isEmpty) {
-        f(Some(next().head))
-        next = next().tail
-      }
-      next onSuccess { s =>
+      tail onSuccess { s =>
         s.foreachElem(f)
       } onFailure { _ =>
         f(None)
@@ -89,8 +81,7 @@ sealed trait Spool[+A] {
 
   def map[B](f: A => B): Spool[B] = {
     val s = collect { case x => f(x) }
-    require(s.isDefined)
-    s()
+    Await.result(s, Duration.Zero)
   }
 
   def filter(f: A => Boolean): Future[Spool[A]] = collect {
@@ -196,7 +187,7 @@ object Spool {
   object **:: {
     def unapply[A](s: Spool[A]): Option[(A, Spool[A])] = {
       if (s.isEmpty) None
-      else Some((s.head, s.tail()))
+      else Some((s.head, Await.result(s.tail)))
     }
   }
 }

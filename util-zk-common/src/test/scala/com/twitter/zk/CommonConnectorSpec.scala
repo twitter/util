@@ -5,7 +5,7 @@ import com.twitter.common.zookeeper.ZooKeeperClient
 import com.twitter.conversions.common.quantity._
 import com.twitter.conversions.common.zookeeper._
 import com.twitter.conversions.time._
-import com.twitter.util.FuturePool
+import com.twitter.util.{Await, FuturePool}
 import org.specs.SpecificationWithJUnit
 import java.net.InetSocketAddress
 import scala.collection.JavaConverters._
@@ -39,11 +39,11 @@ class CommonConnectorSpec extends SpecificationWithJUnit {
       val zkClient = commonClient.toZkClient(timeout)(FuturePool.immediatePool)
 
       doAfter {
-        zkClient.release().apply()
+        Await.ready(zkClient.release())
       }
 
       "have 'zookeeper' in '/'" in {
-        zkClient("/").getChildren()(timeout).children map { _.name } mustContain("zookeeper")
+        Await.result(zkClient("/").getChildren(), timeout).children map { _.name } mustContain("zookeeper")
       }
     }
   }

@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Return}
+import com.twitter.util.{Future, Promise, Return, Await}
 import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
@@ -126,7 +126,7 @@ class Broker[T] {
   /**
    * Like {!}, but block until the item has been sent.
    */
-  def !!(msg: T): Unit = (this ! msg)()
+  def !!(msg: T): Unit = Await.result(this ! msg)
 
   /**
    * Retrieve an item from the broker, asynchronously.
@@ -136,5 +136,5 @@ class Broker[T] {
   /**
    * Retrieve an item from the broker, blocking.
    */
-  def ?? : T = (this?)()
+  def ?? : T = Await.result(this?)
 }

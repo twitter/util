@@ -7,27 +7,27 @@ import junit.framework.TestCase;
  * a success.
  */
 public class FutureTest extends TestCase {
-  public void testFutureCastMap() {
+  public void testFutureCastMap() throws Exception {
     Future<String> f = Future.value("23");
     Future<Integer> f2 = f.map(new Function<String, Integer>() {
       public Integer apply(String in) {
         return Integer.parseInt(in);
       }
     });
-    assertEquals((int) f2.get(), 23);
+    assertEquals((int) Await.result(f2), 23);
   }
 
-  public void testFutureCastFlatMap() {
+  public void testFutureCastFlatMap() throws Exception {
     Future<String> f = Future.value("23");
     Future<Integer> f2 = f.flatMap(new Function<String, Future<Integer>>() {
       public Future<Integer> apply(String in) {
         return Future.value(Integer.parseInt(in));
       }
     });
-    assertEquals((int) f2.get(), 23);
+    assertEquals((int) Await.result(f2), 23);
   }
 
-  public void testTransformedBy() {
+  public void testTransformedBy() throws Exception {
     Future<String> f = Future.value("23");
     Future<Integer> f2 = f.transformedBy(new FutureTransformer<String, Integer>() {
       public Future<Integer> flatMap(String value) {
@@ -37,6 +37,6 @@ public class FutureTest extends TestCase {
         return Future.value(0);
       }
     });
-    assertEquals((int) f2.get(), 23);
+    assertEquals((int) Await.result(f2), 23);
   }
 }

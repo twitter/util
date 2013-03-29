@@ -1,9 +1,9 @@
 package com.twitter.zk
 
 import com.twitter.concurrent.{Broker, Offer, Serialized}
-import com.twitter.util.{Duration, Future, Promise, TimeoutException, Timer, Return}
-import org.apache.zookeeper.ZooKeeper
 import com.twitter.logging.Logger
+import com.twitter.util.{Duration, Future, Promise, TimeoutException, Timer, Return, Await}
+import org.apache.zookeeper.ZooKeeper
 
 /**
  * An Asynchronous ZooKeeper Client.
@@ -23,7 +23,7 @@ extends Connector with Serialized {
 
   onSessionEvent {
     // Invalidate the connection on expiration.
-    case StateEvent.Expired => release()()
+    case StateEvent.Expired => Await.ready(release())
   }
 
   /*

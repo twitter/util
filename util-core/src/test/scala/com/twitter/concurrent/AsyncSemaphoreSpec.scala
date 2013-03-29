@@ -3,6 +3,7 @@ package com.twitter.concurrent
 import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
+import com.twitter.util.Await
 
 class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
   "AsyncSemaphore" should {
@@ -71,7 +72,7 @@ class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
       // The next acquire should be rejected.
       val futurePermit = acquire2()
       s2.numWaiters mustEqual(3)
-      futurePermit.get() must throwA[RejectedExecutionException]
+      Await.result(futurePermit) must throwA[RejectedExecutionException]
 
       // Waiting tasks should still execute once permits are available.
       permits.poll().release()

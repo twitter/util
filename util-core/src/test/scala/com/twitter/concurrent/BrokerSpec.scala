@@ -3,7 +3,7 @@ package com.twitter.concurrent
 import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import org.mockito.{Matchers, ArgumentCaptor}
-import com.twitter.util.Return
+import com.twitter.util.{Await, Return}
 import com.twitter.common.objectsize.ObjectSizeCalculator
 
 class BrokerSpec extends SpecificationWithJUnit with Mockito {
@@ -14,7 +14,7 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       sendF.isDefined must beFalse
       val recvF = br.recv.sync()
       recvF.isDefined must beTrue
-      recvF() must be_==(123)
+      Await.result(recvF) must be_==(123)
       sendF.isDefined must beTrue
     }
 
@@ -26,7 +26,7 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       sendF.isDefined must beTrue
       recvF.isDefined must beTrue
 
-      recvF() must be_==(123)
+      Await.result(recvF) must be_==(123)
     }
 
     "queue receivers (recv, recv, send, send)" in {

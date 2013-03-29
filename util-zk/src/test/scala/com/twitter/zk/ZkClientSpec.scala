@@ -184,7 +184,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
       "retry KeeperException.ConnectionLossException until completion" in {
         var i = 0
-        zkClient.withRetries(3).retrying { _ =>
+        Await.ready(zkClient.withRetries(3).retrying { _ =>
           i += 1
           Future.exception(connectionLoss)
         }.onSuccess { _ =>
@@ -192,23 +192,23 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         }.handle { case e: KeeperException.ConnectionLossException =>
           e mustBe connectionLoss
           i mustEqual 4
-        }.apply()
+        })
       }
 
       "not retry on success" in {
         var i = 0
-        zkClient.withRetries(3).retrying { _ =>
+        Await.ready(zkClient.withRetries(3).retrying { _ =>
           i += 1
           Future.Done
         }.onSuccess { _ =>
           i mustEqual 1
-        }.apply()
+        })
       }
 
       "convert exceptions to Futures" in {
         val rex = new RuntimeException
         var i = 0
-        zkClient.withRetries(3).retrying { _ =>
+        Await.ready(zkClient.withRetries(3).retrying { _ =>
           i += 1
           throw rex
         }.onSuccess { _ =>
@@ -216,19 +216,19 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         }.handle { case e: RuntimeException =>
           e mustBe rex
           i mustEqual 1
-        }.apply()
+        })
       }
 
       "only retry when instructed to" in {
         var i = 0
-        zkClient.retrying { _ =>
+        Await.ready(zkClient.retrying { _ =>
           i += 1
           Future.exception(connectionLoss)
         }.onSuccess { _ =>
           fail("Shouldn't have succeeded")
         }.handle { case e: KeeperException.ConnectionLossException =>
           i mustEqual 1
-        }.apply()
+        })
       }
     }
 
@@ -286,7 +286,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           create(path, data)(Future(path))
         }
-        zkClient(path).create(data).apply() must beLike { case ZNode(p) => p == path }
+        Await.result(zkClient(path).create(data)) must beLike { case ZNode(p) => p == path }
       }
 
       "error" in {
@@ -294,11 +294,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           create(path, data)(Future.exception(new KeeperException.NodeExistsException(path)))
         }
-        zkClient(path).create(data) map { _ =>
+        Await.ready(zkClient(path).create(data) map { _ =>
           fail("Unexpected success")
         } handle { case e: KeeperException.NodeExistsException =>
           e.getPath mustEqual path
-        } apply()
+        })
       }
 
       "sequential" in {
@@ -308,7 +308,8 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           create(path, data, mode = CreateMode.EPHEMERAL_SEQUENTIAL)(Future(path + "0000"))
         }
 
-        val newPath = zkClient(path).create(data, mode = CreateMode.EPHEMERAL_SEQUENTIAL).apply()
+        val newPath = Await.result(
+          zkClient(path).create(data, mode = CreateMode.EPHEMERAL_SEQUENTIAL))
         newPath.name mustEqual "node0000"
       }
 
@@ -320,7 +321,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           expect {
             create(childPath, data)(Future(childPath))
           }
-          val znode = zkClient(path).create(data, child = Some("child")).apply()
+          val znode = Await.result(zkClient(path).create(data, child = Some("child")))
           znode.path mustEqual childPath
         }
 
@@ -331,11 +332,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
               Future.exception(new KeeperException.NodeExistsException(childPath))
             }
           }
-          zkClient(path).create(data, child = Some("child")) map { _ =>
+          Await.ready(zkClient(path).create(data, child = Some("child")) map { _ =>
             fail("Unexpected success")
           } handle { case e: KeeperException.NodeExistsException =>
             e.getPath mustEqual childPath
-          } apply()
+          })
         }
 
         "sequential, with an empty name" in {
@@ -345,10 +346,10 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
             create(path+"/", data, mode = CreateMode.EPHEMERAL_SEQUENTIAL)(Future(path+"/0000"))
           }
 
-          zkClient(path).create(data,
+          Await.result(zkClient(path).create(data,
             child = Some(""),
             mode = CreateMode.EPHEMERAL_SEQUENTIAL
-          ).apply().path mustEqual path + "/0000"
+          )).path mustEqual path + "/0000"
         }
       }
     }
@@ -360,18 +361,20 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           delete(path, version)(Future.Done)
         }
-        zkClient(path).delete(version).apply() must beLike { case ZNode(p) => p == path }
+        Await.result(zkClient(path).delete(version)) must beLike { 
+          case ZNode(p) => p == path
+        }
       }
 
       "error" in {
         expect {
           delete(path, version)(Future.exception(new KeeperException.NoNodeException(path)))
         }
-        zkClient(path).delete(version) map { _ =>
+        Await.ready(zkClient(path).delete(version) map { _ =>
           fail("Unexpected success")
         } handle { case e: KeeperException.NoNodeException =>
           e.getPath mustEqual path
-        } apply()
+        })
       }
     }
 
@@ -384,18 +387,18 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           expect {
             exists(znode.path)(Future(result.stat))
           }
-          znode.exists().apply() mustEqual result
+          Await.result(znode.exists()) mustEqual result
         }
 
         "error" in {
           expect {
             exists(znode.path)(Future.exception(new KeeperException.NoNodeException(znode.path)))
           }
-          znode.exists() map { _ =>
+          Await.ready(znode.exists() map { _ =>
             fail("Unexpected success")
           } handle { case e: KeeperException.NoNodeException =>
             e.getPath mustEqual znode.path
-          } apply()
+          })
         }
       }
 
@@ -404,7 +407,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           watch(znode.path)(Future(result.stat))(Future(event))
         }
-        znode.exists.watch() onSuccess { case ZNode.Watch(r, update) =>
+        Await.ready(znode.exists.watch() onSuccess { case ZNode.Watch(r, update) =>
           r onSuccess { exists =>
             exists mustEqual result
             update onSuccess {
@@ -412,7 +415,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
               case e => fail("Incorrect event: %s".format(e))
             }
           }
-        } apply()
+        })
       }
 
       "monitor" in {
@@ -489,7 +492,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           expect {
             getChildren(znode.path)(Future(result))
           }
-          znode.getChildren().apply() mustEqual result
+          Await.result(znode.getChildren()) mustEqual result
         }
 
         "error" in {
@@ -498,11 +501,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
               Future.exception(new KeeperException.NoChildrenForEphemeralsException(znode.path))
             }
           }
-          znode.getChildren() map { _ =>
+          Await.ready(znode.getChildren() map { _ =>
             fail("Unexpected success")
           } handle { case e: KeeperException.NoChildrenForEphemeralsException =>
             e.getPath mustEqual znode.path
-          } apply()
+          })
         }
       }
 
@@ -510,7 +513,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           watchChildren(znode.path)(Future(result))(Future(NodeEvent.ChildrenChanged(znode.path)))
         }
-        znode.getChildren.watch().onSuccess { case ZNode.Watch(r, f) =>
+        Await.ready(znode.getChildren.watch().onSuccess { case ZNode.Watch(r, f) =>
           r onSuccess { case ZNode.Children(p, s, c) =>
             p mustBe result.path
             s mustBe result.stat
@@ -519,7 +522,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
               case e => fail("Incorrect event: %s".format(e))
             }
           }
-        }.apply()
+        })
       }
 
       "monitor" in {
@@ -552,7 +555,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           expect {
             getData(znode.path)(Future(result))
           }
-          znode.getData().apply() mustEqual result
+          Await.result(znode.getData()) mustEqual result
         }
 
         "error" in {
@@ -561,11 +564,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
               Future.exception(new KeeperException.SessionExpiredException)
             }
           }
-          znode.getData() map { _ =>
+          Await.ready(znode.getData() map { _ =>
             fail("Unexpected success")
           } handle { case e: KeeperException.SessionExpiredException =>
             e.getPath mustEqual znode.path
-          } apply()
+          })
         }
       }
 
@@ -578,7 +581,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
           }
         }
         try {
-          znode.getData.watch().onSuccess {
+          Await.ready(znode.getData.watch().onSuccess {
             case ZNode.Watch(Return(z), u) => {
               z mustEqual result
               u onSuccess {
@@ -587,7 +590,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
               }
             }
             case _ => fail("unexpected return value")
-          }.apply()
+          })
         } catch { case e => fail("unexpected error: %s".format(e)) }
       }
 
@@ -664,7 +667,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
         val offer = treeRoot.monitorTree()
         treeChildren foreach { _ =>
-          val ztu = offer sync() apply(1.second)
+          val ztu = Await.result(offer sync(), 1.second)
           val e = expectedByPath(ztu.parent.path)
           ztu.parent mustEqual e.parent
           ztu.added.map { _.path } mustEqual e.added.map { _.path }.toSet
@@ -672,13 +675,13 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         }
         updateTree foreach { z =>
           updatePromises get(z.path) foreach { _.setValue(event(z.path)) }
-          val ztu = offer sync() apply(1.second)
+          val ztu = Await.result(offer sync(), 1.second)
           val e = updatesByPath(z.path)
           ztu.parent mustEqual e.parent
           ztu.added.map { _.path } mustEqual e.added.map { _.path }.toSet
           ztu.removed must beEmpty
         }
-        offer.sync().apply(1.second) must throwA[TimeoutException]
+        Await.result(offer.sync(), 1.second) must throwA[TimeoutException]
       }
 
       "ok" in okUpdates { NodeEvent.ChildrenChanged(_) }
@@ -696,13 +699,13 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
 
         val offer = treeRoot.monitorTree()
         treeChildren foreach { _ =>
-          val ztu = offer sync() apply(1.second)
+          val ztu = Await.result(offer sync(), 1.second)
           val e = expectedByPath(ztu.parent.path)
           ztu.parent mustEqual e.parent
           ztu.added.map { _.path } mustEqual e.added.map { _.path }.toSet
           ztu.removed must beEmpty
         }
-        offer.sync().apply(1.second) must throwA[TimeoutException]
+        Await.result(offer.sync(), 1.second) must throwA[TimeoutException]
       }
     }
 
@@ -715,7 +718,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           setData(znode.path, data, version)(Future(result.stat))
         }
-        znode.setData(data, version).apply(1.second) mustEqual znode
+        Await.result(znode.setData(data, version), 1.second) mustEqual znode
       }
 
       "error" in {
@@ -724,7 +727,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
             Future.exception(new KeeperException.SessionExpiredException)
           }
         }
-        znode.setData(data, version).apply() must throwA[KeeperException.SessionExpiredException]
+        Await.result(znode.setData(data, version)) must throwA[KeeperException.SessionExpiredException]
       }
     }
 
@@ -735,7 +738,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
         expect {
           sync(znode.path)(Future.Done)
         }
-        znode.sync().apply(1.second) mustEqual znode
+        Await.result(znode.sync(), 1.second) mustEqual znode
       }
 
       "error" in {
@@ -744,11 +747,11 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
             Future.exception(new KeeperException.SystemErrorException)
           }
         }
-        znode.sync() map { _ =>
+        Await.ready(znode.sync() map { _ =>
           fail("Unexpected success")
         } handle { case e: KeeperException.SystemErrorException =>
           e.getPath mustEqual znode.path
-        } apply(1.second)
+        }, 1.second)
       }
     }
   }
@@ -759,7 +762,7 @@ class ZkClientSpec extends SpecificationWithJUnit with JMocker with ClassMocker 
       val znode = zkClient("/")
       doAfter { zkClient.release() }
       "have 'zookeeper' in '/'" in {
-        znode.getChildren().apply(2.seconds).children.map { _.name } mustContain("zookeeper")
+        Await.result(znode.getChildren(), 2.seconds).children.map { _.name } mustContain("zookeeper")
       }
     }
   }

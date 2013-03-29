@@ -1,6 +1,7 @@
 package com.twitter.concurrent
 
 import org.specs.SpecificationWithJUnit
+import com.twitter.util.Await
 
 class AsyncMutexSpec extends SpecificationWithJUnit {
   "AsyncMutex" should {
@@ -13,12 +14,12 @@ class AsyncMutexSpec extends SpecificationWithJUnit {
       a0.isDefined must beTrue
       a1.isDefined must beFalse
 
-      a0().release()             // satisfy operation 0
+      Await.result(a0).release()             // satisfy operation 0
       a1.isDefined must beTrue   // 1 now available
 
       val a2 = m.acquire()
       a2.isDefined must beFalse
-      a1().release()             // satisfy operation 1
+      Await.result(a1).release()             // satisfy operation 1
       a2.isDefined must beTrue
     }
   }

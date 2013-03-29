@@ -6,7 +6,7 @@ import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import org.mockito.{Matchers, ArgumentCaptor}
 
-import com.twitter.util.{Future, Return, Promise}
+import com.twitter.util.{Future, Return, Promise, Await}
 import com.twitter.util.{Time, MockTimer}
 import com.twitter.conversions.time._
 
@@ -320,15 +320,15 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
       f.isDefined must beFalse
       b1.send("hey").sync().isDefined must beTrue
       f.isDefined must beTrue
-      f() must be_==("hey")
+      Await.result(f) must be_==("hey")
 
       val gf = b0.recv.sync()
       gf.isDefined must beFalse
       val of = o.sync()
       of.isDefined must beTrue
-      of() must be_==("put!")
+      Await.result(of) must be_==("put!")
       gf.isDefined must beTrue
-      gf() must be_==(123)
+      Await.result(gf) must be_==(123)
 
       // syncing again fails.
       o.sync().isDefined must beFalse

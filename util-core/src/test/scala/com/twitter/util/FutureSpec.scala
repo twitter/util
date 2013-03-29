@@ -10,7 +10,12 @@ import scala.collection.JavaConverters._
 class FutureSpec extends SpecificationWithJUnit with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
-      future.get(1.second) mustEqual expected
+      expected match {
+        case Throw(ex) =>
+          Await.result(future, 1.second) must throwA(ex)
+        case Return(v) =>
+          Await.result(future, 1.second) must be_==(v)
+      }
     }
   }
 
@@ -143,19 +148,19 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f.isDefined must beFalse
           p1() = Return(2)
           f.isDefined must beTrue
-          f() must be_==(Seq(1, 2))
+          Await.result(f) must be_==(Seq(1, 2))
         }
 
         "return with exception if the first future throws" in {
           p0() = Throw(new Exception)
-          f() must throwA[Exception]
+          Await.result(f) must throwA[Exception]
         }
 
         "return with exception if the second future throws" in {
           p0() = Return(1)
           f.isDefined must beFalse
           p1() = Throw(new Exception)
-          f() must throwA[Exception]
+          Await.result(f) must throwA[Exception]
         }
 
         "propagate interrupts" in {
@@ -175,7 +180,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
               f.isDefined must beFalse
               fs(i)() = Return(1)
               f.isDefined must beTrue
-              f() must beLike {
+              Await.result(f) must beLike {
                 case (Return(1), rest) =>
                   rest must haveSize(9)
                   val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
@@ -191,7 +196,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
               val e = new Exception("sad panda")
               fs(i)() = Throw(e)
               f.isDefined must beTrue
-              f() must beLike {
+              Await.result(f) must beLike {
                 case (Throw(e), rest) =>
                   rest must haveSize(9)
                   val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
@@ -208,7 +213,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         "fail if we attempt to select an empty future sequence" in {
           val f = Future.select(Seq())
           f.isDefined must beTrue
-          f() must throwA(new IllegalArgumentException("empty future list!"))
+          Await.result(f) must throwA(new IllegalArgumentException("empty future list!"))
         }
 
         "propagate interrupts" in {
@@ -281,13 +286,13 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         "select the first [result] to complete" in {
           p0() = Return(1)
           p1() = Return(2)
-          f() must be_==(1)
+          Await.result(f) must be_==(1)
         }
 
         "select the first [exception] to complete" in {
           p0() = Throw(new Exception)
           p1() = Return(2)
-          f() must throwA[Exception]
+          Await.result(f) must throwA[Exception]
         }
 
         "propagate interrupts" in {
@@ -309,19 +314,19 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             p0() = Return(1)
             f.isDefined must beFalse
             p1() = Return(2)
-            f() must be_==(1, 2)
+            Await.result(f) must be_==(1, 2)
           }
 
           "return with exception if the first future throws" in {
             p0() = Throw(new Exception)
-            f() must throwA[Exception]
+            Await.result(f) must throwA[Exception]
           }
 
           "return with exception if the second future throws" in {
             p0() = Return(1)
             f.isDefined must beFalse
             p1() = Throw(new Exception)
-            f() must throwA[Exception]
+            Await.result(f) must throwA[Exception]
           }
 
           "propagate interrupts" in {
@@ -342,7 +347,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         "return the same thing as our Future when initialized" in {
           val f = const.value(1)
           val jf = f.toJavaFuture
-          f.get() mustBe jf.get()
+          Await.result(f) mustBe jf.get()
           "must both be done" in {
             f.isDefined must beTrue
             jf.isDone must beTrue
@@ -354,7 +359,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           val f = new Promise[Int]
           val jf = f.toJavaFuture
           f.setValue(1)
-          f.get() mustBe jf.get()
+          Await.result(f) mustBe jf.get()
           "must both be done" in {
             f.isDefined must beTrue
             jf.isDone must beTrue
@@ -453,7 +458,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
       "map" in {
         "when it's all chill" in {
           val f = Future(1) map { x => x + 1 }
-          f() mustEqual 2
+          Await.result(f) mustEqual 2
         }
 
         "when there's a problem in the passed in function" in {
@@ -462,7 +467,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             throw e
             x + 1
           }
-          f() must throwA(e)
+          Await.result(f) must throwA(e)
         }
       }
 
@@ -535,7 +540,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           val f = Future(1) flatMap { x => Future(x + 1) }
 
           "apply" in {
-            f() mustEqual 2
+            Await.result(f) mustEqual 2
           }
 
           "respond" in {
@@ -589,7 +594,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           val g = Future[Int](throw e) flatMap { x => Future(x + 1) }
 
           "apply" in {
-            g() must throwA(e)
+            Await.result(g) must throwA(e)
           }
 
           "respond" in {
@@ -601,7 +606,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             val f = Future(1).flatMap[Int] { x =>
               throw e
             }
-            f() must throwA(e)
+            Await.result(f) must throwA(e)
           }
         }
       }
@@ -645,7 +650,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           val f = Future(1) rescue { case e => Future(2) }
 
           "apply" in {
-            f() mustEqual 1
+            Await.result(f) mustEqual 1
           }
 
           "respond" in {
@@ -657,7 +662,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           val g = Future[Int](throw e) rescue { case e => Future(2) }
 
           "apply" in {
-            g() mustEqual 2 //must throwA(e)
+            Await.result(g) mustEqual 2 //must throwA(e)
           }
 
           "respond" in {
@@ -666,7 +671,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
 
           "when the error handler errors" in {
             val g = Future[Int](throw e) rescue { case e => throw e; Future(2) }
-            g() must throwA(e)
+            Await.result(g) must throwA(e)
           }
         }
 
@@ -774,13 +779,13 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
       }
 
       "willEqual" in {
-        (const.value(1) willEqual(const.value(1)))(1.second) must beTrue
+        Await.result((const.value(1) willEqual(const.value(1))), 1.second) must beTrue
       }
 
       "Future() handles exceptions" in {
         val e = new Exception
         val f = Future[Int] { throw e }
-        f() must throwA(e)
+        Await.result(f) must throwA(e)
       }
 
       "propagate locals" in {
@@ -804,7 +809,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         promise1() = Return(())
 
         both.isDefined must beTrue
-        both() must be_==((Some(1010), Some(1010)))
+        Await.result(both) must be_==((Some(1010), Some(1010)))
       }
 
       "propagate locals across threads" in {
@@ -825,7 +830,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         t.join()
 
         done.isDefined must beTrue
-        done() must be_==((Some(1010), Some(123)))
+        Await.result(done) must be_==((Some(1010), Some(123)))
       }
 
       "poll" in {
@@ -850,7 +855,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         "when we run out of time" in {
           implicit val timer = new JavaTimer
           val p = new Promise[Int]
-          p.within(50.milliseconds).get() must throwA[TimeoutException]
+          Await.result(p.within(50.milliseconds)) must throwA[TimeoutException]
           timer.stop()
         }
 
@@ -858,7 +863,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           implicit val timer = new JavaTimer
           val p = new Promise[Int]
           p.setValue(1)
-          p.within(50.milliseconds).get() mustBe 1
+          Await.result(p.within(50.milliseconds)) mustBe 1
           timer.stop()
         }
 
@@ -892,13 +897,13 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
       "return result" in {
         val task = new FutureTask("hello")
         task.run()
-        task() mustEqual "hello"
+        Await.result(task) mustEqual "hello"
       }
 
       "throw result" in {
         val task = new FutureTask[String](throw new IllegalStateException)
         task.run()
-        task() must throwA(new IllegalStateException)
+        Await.result(task) must throwA(new IllegalStateException)
       }
     }
   }
@@ -911,7 +916,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
       Future.None.isDefined must beTrue
     }
     "but still None" in {
-      Future.None.get must beNone
+      Await.result(Future.None) must beNone
     }
   }
 
@@ -922,7 +927,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
     }
 
     "always time out" in {
-      Future.never.get(0.milliseconds) must throwA[TimeoutException]
+      Await.ready(Future.never, 0.milliseconds) must throwA[TimeoutException]
     }
   }
 

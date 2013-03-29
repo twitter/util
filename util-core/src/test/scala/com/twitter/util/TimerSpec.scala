@@ -162,7 +162,7 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       Thread.sleep(2)
       timer.tick()
       f.isDefined must beTrue
-      f() mustEqual result
+      Await.result(f) mustEqual result
     }
 
     "doLater throws exception" in {
@@ -174,7 +174,7 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       Thread.sleep(2)
       timer.tick()
       f.isDefined must beTrue
-      f.get(0.millis) mustEqual Throw(ex)
+      Await.result(f, 0.millis) must throwA(ex)
     }
 
     "interrupt doLater" in {
@@ -185,7 +185,7 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       Thread.sleep(2)
       timer.tick()
       f.isDefined must beTrue
-      f() must throwA[CancellationException]
+      Await.result(f) must throwA[CancellationException]
     }
 
     "doAt" in {
@@ -195,7 +195,7 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
       Thread.sleep(2)
       timer.tick()
       f.isDefined must beTrue
-      f() mustEqual result
+      Await.result(f) mustEqual result
     }
 
     "cancel doAt" in {

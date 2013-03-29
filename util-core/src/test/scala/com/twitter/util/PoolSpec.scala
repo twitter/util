@@ -10,11 +10,11 @@ class PoolSpec extends SpecificationWithJUnit {
       "it reseves items in FIFO order" in {
         val queue = new mutable.Queue[Int] ++ List(1, 2, 3)
         val pool = new SimplePool(queue)
-        pool.reserve()() mustEqual 1
-        pool.reserve()() mustEqual 2
+        Await.result(pool.reserve()) mustEqual 1
+        Await.result(pool.reserve()) mustEqual 2
         pool.release(2)
-        pool.reserve()() mustEqual 3
-        pool.reserve()() mustEqual 2
+        Await.result(pool.reserve()) mustEqual 3
+        Await.result(pool.reserve()) mustEqual 2
         pool.release(1)
         pool.release(2)
         pool.release(3)
@@ -29,27 +29,27 @@ class PoolSpec extends SpecificationWithJUnit {
       }
 
       "reserve & release" >> {
-        pool.reserve()() mustEqual 2
-        pool.reserve()() mustEqual 4
-        pool.reserve()() mustEqual 6
-        pool.reserve()() mustEqual 8
+        Await.result(pool.reserve()) mustEqual 2
+        Await.result(pool.reserve()) mustEqual 4
+        Await.result(pool.reserve()) mustEqual 6
+        Await.result(pool.reserve()) mustEqual 8
         val promise = pool.reserve()
-        promise(1.millisecond) must throwA[TimeoutException]
+        Await.result(promise, 1.millisecond) must throwA[TimeoutException]
         pool.release(8)
         pool.release(6)
-        promise() mustEqual 8
-        pool.reserve()() mustEqual 6
-        pool.reserve()(1.millisecond) must throwA[TimeoutException]
+        Await.result(promise) mustEqual 8
+        Await.result(pool.reserve()) mustEqual 6
+        Await.result(pool.reserve, 1.millisecond) must throwA[TimeoutException]
       }
 
       "reserve & dispose" >> {
-        pool.reserve()() mustEqual 2
-        pool.reserve()() mustEqual 4
-        pool.reserve()() mustEqual 6
-        pool.reserve()() mustEqual 8
-        pool.reserve()(1.millisecond) must throwA[TimeoutException]
+        Await.result(pool.reserve()) mustEqual 2
+        Await.result(pool.reserve()) mustEqual 4
+        Await.result(pool.reserve()) mustEqual 6
+        Await.result(pool.reserve()) mustEqual 8
+        Await.result(pool.reserve(), 1.millisecond) must throwA[TimeoutException]
         pool.dispose(2)
-        pool.reserve()(1.millisecond) mustEqual 10
+        Await.result(pool.reserve(), 1.millisecond) mustEqual 10
       }
     }
   }

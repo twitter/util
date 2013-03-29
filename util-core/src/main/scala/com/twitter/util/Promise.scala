@@ -141,8 +141,19 @@ object Promise {
   /** A future that is chained from a parent promise with a certain depth. */
   private class Chained[A](val parent: Promise[A], val depth: Short) extends Future[A] with Responder[A] {
     assert(depth < Short.MaxValue, "Future chains cannot be longer than 32766!")
+    
+    // Awaitable
+    @throws(classOf[TimeoutException])
+    @throws(classOf[InterruptedException])
+    def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
+      parent.ready(timeout)
+      this
+    }
+  
+    @throws(classOf[Exception])
+    def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A =
+      parent.result(timeout)
 
-    def get(timeout: Duration) = parent.get(timeout)
     def poll = parent.poll
     def raise(interrupt: Throwable) = parent.raise(interrupt)
 
@@ -217,6 +228,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
   protected final def parent = this
 
   @volatile private[this] var state: Promise.State[A] = initState
+  private def theState(): Promise.State[A] = state
 
   def this(handleInterrupt: PartialFunction[Throwable, Unit]) {
     this()
@@ -371,23 +383,31 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
 
     case Done(_) =>
   }
-
-  def get(timeout: Duration): Try[A] =
+  
+  // Awaitable
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = 
     state match {
-      case Linked(p) => p.get(timeout)
-      case Done(res) => res
+      case Linked(p) =>
+        p.ready(timeout)
+        this
+      case Done(res) =>
+        this
       case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
         val condition = new java.util.concurrent.CountDownLatch(1)
         respond { _ => condition.countDown() }
         val (v, u) = timeout.inTimeUnit
         Scheduler.flush()
-        if (condition.await(v, u)) {
-          val Done(res) = state
-          res
-        } else {
-          Throw(new TimeoutException(timeout.toString))
-        }
+        if (condition.await(v, u)) this
+        else throw new TimeoutException(timeout.toString)
     }
+
+  @throws(classOf[Exception])
+  def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = {
+    val Done(theTry) = ready(timeout).compress().theState
+    theTry()
+  }
 
   /**
    * Returns this promise's interrupt if it is interrupted.
@@ -539,7 +559,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
           link(target)
 
       case s@Done(value) =>
-        if (!target.updateIfEmpty(value) && value != target()) {
+        if (!target.updateIfEmpty(value) && value != Await.result(target)) {
           throw new IllegalArgumentException(
             "Cannot link two Done Promises with differing values")
         }

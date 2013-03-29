@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Time, Timer, Duration}
+import com.twitter.util.{Future, Promise, Time, Timer, Duration, Await}
 import scala.util.Random
 
 /**
@@ -137,7 +137,7 @@ trait Offer[+T] { self =>
    * Synchronize this offer, blocking for the result. See {{sync()}}
    * and {{com.twitter.util.Future.apply()}}
    */
-  def syncWait(): T = sync()()
+  def syncWait(): T = Await.result(sync())
 
   /* Scala actor-style syntax */
 
