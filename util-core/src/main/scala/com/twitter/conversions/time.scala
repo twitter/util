@@ -38,7 +38,19 @@ object time {
     def days = Duration(wrapped, TimeUnit.DAYS)
     def day = days
   }
+  
+  private val ZeroRichWholeNumber = new RichWholeNumber(0) {
+    override def nanoseconds = Duration.Zero
+    override def microseconds = Duration.Zero
+    override def milliseconds = Duration.Zero
+    override def seconds = Duration.Zero
+    override def minutes = Duration.Zero
+    override def hours = Duration.Zero
+    override def days = Duration.Zero
+  }
 
-  implicit def intToTimeableNumber(i: Int) = new RichWholeNumber(i)
-  implicit def longToTimeableNumber(l: Long) = new RichWholeNumber(l)
+  implicit def intToTimeableNumber(i: Int): RichWholeNumber =
+    if (i == 0) ZeroRichWholeNumber else new RichWholeNumber(i)
+  implicit def longToTimeableNumber(l: Long): RichWholeNumber = 
+    if (l == 0) ZeroRichWholeNumber else new RichWholeNumber(l)
 }
