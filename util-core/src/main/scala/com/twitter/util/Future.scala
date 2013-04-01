@@ -535,7 +535,11 @@ abstract class Future[+A] extends Awaitable[A] {
   @deprecated("Use Await.result", "6.2.x")
   final def get(timeout: Duration): Try[A] = {
     Await.ready(this, timeout)
-    Try { Await.result(this, Duration.Zero) }
+    try Return(Await.result(this, Duration.Zero)) catch {
+      // For legacy reasons, we catch even
+      // fatal exceptions.
+      case e => Throw(e)
+    }
   }
 
   /**

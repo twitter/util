@@ -440,6 +440,17 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           inner1Size must be_<(sSize)
         }
       }
+      
+      "get(deprecated)" in {
+        val e = new Exception
+        val v = 123
+        Future.exception[Int](e).get(0.seconds) must be_==(Throw(e))
+        Future.value(v).get(0.seconds) must be_==(Return(v))
+        
+        // Including fatal ones:
+        val e2 = new java.lang.IllegalAccessError
+        Future.exception[Int](e2).get(0.seconds)  must be_==(Throw(e2))
+      }
     }
 
     "Promise (%s)".format(name) should {
