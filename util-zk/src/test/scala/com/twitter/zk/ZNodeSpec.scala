@@ -20,6 +20,7 @@ class ZNodeSpec extends SpecificationWithJUnit with Mockito {
 
     pathTest("/", "/", "")
     pathTest("/some/long/path/to/a/znode", "/some/long/path/to/a", "znode")
+    pathTest("/path", "/", "path")
 
     "hash together" in {
       val zs = (0 to 1) map { _ => ZNode(zk, "/some/path") }
