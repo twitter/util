@@ -53,6 +53,10 @@ class RichU64ByteArray(bytes: Array[Byte]) {
 }
 
 class RichU64String(string: String) {
+  if (string.length > 16) {
+    throw new NumberFormatException("Number longer than 16 hex characters")
+  }
+
   def toU64ByteArray = {
     val padded = "0" * (16-string.length()) + string
     (0 until 16 by 2).map(i => Integer.parseInt(padded.slice(i, i + 2), 16).toByte).toArray

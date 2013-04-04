@@ -110,5 +110,9 @@ class U64Spec extends SpecificationWithJUnit {
     "convert from short hex string" in {
       new RichU64String("7b").toU64Long mustEqual 123L
     }
+
+    "don't silently truncate" in {
+      new RichU64String("318528893302738945") must throwA[NumberFormatException]
+    }
   }
 }
