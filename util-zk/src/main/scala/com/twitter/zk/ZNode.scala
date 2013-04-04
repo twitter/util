@@ -56,7 +56,7 @@ trait ZNode {
   /** The parent node.  The root node is its own parent. */
   lazy val parent: ZNode = ZNode(zkClient, parentPath)
   lazy val parentPath: String = path.lastIndexOf('/') match {
-    case i if (i == -1 || i == path.length - 1) => path
+    case i if (i <= 0) => "/"
     case i => path.substring(0, i)
   }
 
