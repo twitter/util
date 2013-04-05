@@ -1,3 +1,10 @@
+6.3.0  2013-04-05
+
+  * util-core: flag a bug with U64 truncation
+  * util-core: Future.get: include fatal exceptions
+  * util-core: deprecate Future#apply, get.
+  * util-core: special-case Duration.Zero to avoid allocation
+
 6.2.5  2013-03-27
 
   * util-zk: Improvements to util-zk NativeConnector
