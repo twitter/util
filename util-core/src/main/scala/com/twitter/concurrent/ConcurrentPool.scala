@@ -13,6 +13,7 @@ import java.util.concurrent.{ConcurrentHashMap, ConcurrentLinkedQueue}
  * The pool currently supports only FIFO ordering of items, and does
  * not yet clean up per-key object lists.
  */
+@deprecated("use finagle's BufferingPool", "6.2.x")
 class ConcurrentPool[K, V] {
   type Queue = ConcurrentLinkedQueue[V]
   type Map   = ConcurrentHashMap[K, Queue]

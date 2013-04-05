@@ -4,6 +4,7 @@ package com.twitter.concurrent
 
 import java.util.concurrent.ConcurrentSkipListMap
 
+@deprecated("use guava's Multimaps.synchronizedMultimap", "6.2.x")
 class ConcurrentMultiMap[K <% Ordered[K], V <% Ordered[V]] {
   class Container(k: K, v: Option[V])
   extends Tuple2[K, Option[V]](k, v)
