@@ -1,12 +1,13 @@
 package com.twitter.concurrent
 
 import org.specs.SpecificationWithJUnit
-import org.specs.mock.Mockito
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 import com.twitter.util.Await
 
-class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
+class AsyncSemaphoreSpec extends SpecificationWithJUnit {
   "AsyncSemaphore" should {
+    // Note: count isn't marked volatile because AsyncSemaphore executes work
+    // immediately in the executing thread when permits are available on both aquire and release.
     var count = 0
     val s = new AsyncSemaphore(2)
     val permits = new ConcurrentLinkedQueue[Permit]
@@ -18,14 +19,18 @@ class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
     }
 
     "execute immediately while permits are available" in {
+      s.numPermitsAvailable must be_==(2)
       acquire()
       count must be_==(1)
+      s.numPermitsAvailable must be_==(1)
 
       acquire()
       count must be_==(2)
+      s.numPermitsAvailable must be_==(0)
 
       acquire()
       count must be_==(2)
+      s.numPermitsAvailable must be_==(0)
     }
 
     "execute deferred computations when permits are released" in {
@@ -33,8 +38,9 @@ class AsyncSemaphoreSpec extends SpecificationWithJUnit with Mockito {
       acquire()
       acquire()
       acquire()
-      
+
       count must be_==(2)
+      s.numPermitsAvailable must be_==(0)
 
       permits.poll().release()
       count must be_==(3)
