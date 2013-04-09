@@ -18,7 +18,7 @@ object ProxySpec {
   class TestImpl extends TestInterface {
     def foo = "foo"
     def bar(a: Int) = Some(a.toLong)
-    def whoops = if (false) 2 else error("whoops")
+    def whoops = if (false) 2 else sys.error("whoops")
     def theVoid {}
     def theJavaVoid = null
     def aFuture = Future.value(2)
