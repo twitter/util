@@ -1,8 +1,8 @@
 package com.twitter.concurrent
 
+import com.twitter.util.{Await, Duration, Future, Promise, Return, Throw}
+import java.io.EOFException
 import scala.collection.mutable.ArrayBuffer
-
-import com.twitter.util.{Future, Promise, Return, Await, Duration}
 
 /**
  * A spool is an asynchronous stream. It more or less
@@ -54,19 +54,20 @@ sealed trait Spool[+A] {
 
   /**
    * A version of {{foreach}} that wraps each element in an
-   * {{Option}}, terminating the stream (EOF or failure) with
+   * {{Option}}, terminating the stream (EOF) with
    * {{None}}.
    */
-  def foreachElem[B](f: Option[A] => B) {
+  def foreachElem[B](f: Option[A] => B): Future[Unit] = {
     if (!isEmpty) {
-      f(Some(head))
-      tail onSuccess { s =>
-        s.foreachElem(f)
-      } onFailure { _ =>
-        f(None)
+      Future { f(Some(head)) } flatMap { _ =>
+        tail transform {
+          case Return(s) => s.foreachElem(f)
+          case Throw(_: EOFException) => Future { f(None) }
+          case Throw(cause) => Future.exception(cause)
+        }
       }
     } else {
-      f(None)
+      Future { f(None) }
     }
   }
 
@@ -113,13 +114,8 @@ sealed trait Spool[+A] {
    * satisfied when the entire result is ready.
    */
   def toSeq: Future[Seq[A]] = {
-    val p = new Promise[Seq[A]]
     val as = new ArrayBuffer[A]
-    foreachElem {
-      case Some(a) => as += a
-      case None => p() = Return(as)
-    }
-    p
+    foreach { a => as += a } map { _ => as }
   }
 }
 

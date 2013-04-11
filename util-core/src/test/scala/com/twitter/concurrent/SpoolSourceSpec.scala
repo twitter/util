@@ -32,5 +32,15 @@ class SpoolSourceSpec extends SpecificationWithJUnit {
       Await.result(futureSpool3 flatMap (_.toSeq)) mustEqual Seq(3)
       Await.result(futureSpool4).isEmpty must beTrue
     }
+
+    "throw exception and close spool when exception is raised" in {
+      val futureSpool1 = source()
+      source.offer(1)
+      source.raise(new Exception("sad panda"))
+      val futureSpool2 = source()
+      source.offer(1)
+      Await.result(futureSpool1 flatMap (_.toSeq)) must throwA[Exception]
+      Await.result(futureSpool2).isEmpty must beTrue
+    }
   }
 }

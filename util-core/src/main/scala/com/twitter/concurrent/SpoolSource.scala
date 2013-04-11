@@ -29,44 +29,47 @@ class SpoolSource[A] {
   /**
    * Puts a value into the spool.  Unless this SpoolSource has been closed, the current
    * Future[Spool[A]] value will be fulfilled with a Spool that contains the
-   * provided value.  If the SpoolSoruce has been closed, then this value is ignored.
+   * provided value.  If the SpoolSource has been closed, then this value is ignored.
    * If multiple threads call offer simultaneously, the operation is thread-safe but
    * the resulting order of values in the spool is non-deterministic.
    */
   final def offer(value: A) {
     val nextPromise = new Promise[Spool[A]]
-
-    @tailrec def set() {
-      val currentPromise = promiseRef.get
-      // if the current promise is emptyPromise, then this source has been closed
-      if (currentPromise ne emptyPromise) {
-        // need to check that promiseRef hasn't already been offerd
-        if (promiseRef.compareAndSet(currentPromise, nextPromise)) {
-          currentPromise.setValue(Spool.cons(value, nextPromise))
-        } else {
-          // try again
-          set()
-        }
-      }
+    updatingTailCall(nextPromise) { currentPromise =>
+      currentPromise.setValue(Spool.cons(value, nextPromise))
     }
-
-    set()
   }
 
   /**
    * Closes this SpoolSource, which also terminates the generated Spool.  This method
    * is idempotent.
    */
-  @tailrec
   final def close() {
+    updatingTailCall(emptyPromise) { currentPromise =>
+      currentPromise.setValue(Spool.empty[A])
+    }
+  }
+
+  /**
+   * Raises exception on this SpoolSource, which also terminates the generated Spool.  This method
+   * is idempotent.
+   */
+  final def raise(e: Throwable) {
+    updatingTailCall(emptyPromise) { currentPromise =>
+      currentPromise.setException(e)
+    }
+  }
+
+  @tailrec
+  private[this] def updatingTailCall(newPromise: Promise[Spool[A]])(f: Promise[Spool[A]] => Unit) {
     val currentPromise = promiseRef.get
     // if the current promise is emptyPromise, then this source has already been closed
     if (currentPromise ne emptyPromise) {
-      if (promiseRef.compareAndSet(currentPromise, emptyPromise)) {
-        currentPromise.setValue(Spool.empty[A])
+      if (promiseRef.compareAndSet(currentPromise, newPromise)) {
+        f(currentPromise)
       } else {
         // try again
-        close()
+        updatingTailCall(newPromise)(f)
       }
     }
   }

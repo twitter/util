@@ -1,8 +1,9 @@
 package com.twitter.concurrent
 
-import scala.collection.mutable.ArrayBuffer
-import org.specs.SpecificationWithJUnit
 import com.twitter.util.{Await, Future, Promise, Return, Throw}
+import java.io.EOFException
+import org.specs.SpecificationWithJUnit
+import scala.collection.mutable.ArrayBuffer
 
 import Spool.{*::, **::}
 
@@ -99,14 +100,37 @@ class SpoolSpec extends SpecificationWithJUnit {
     }
   }
 
+  "Simple resolved spool with EOFException" should {
+    val p = new Promise[Spool[Int]](Throw(new EOFException("sad panda")))
+    val s = 1 **:: 2 *:: p
+
+    "EOF iteration on EOFException" in {
+        val xs = new ArrayBuffer[Option[Int]]
+        s foreachElem { xs += _ }
+        xs.toSeq must be_==(Seq(Some(1), Some(2), None))
+    }
+  }
+
   "Simple resolved spool with error" should {
     val p = new Promise[Spool[Int]](Throw(new Exception("sad panda")))
     val s = 1 **:: 2 *:: p
 
-    "EOF iteration on error" in {
-        val xs = new ArrayBuffer[Option[Int]]
-        s foreachElem { xs += _ }
-        xs.toSeq must be_==(Seq(Some(1), Some(2), None))
+    "return with exception on error" in {
+      val xs = new ArrayBuffer[Option[Int]]
+      s foreachElem { xs += _ }
+      Await.result(s.toSeq) must throwA[Exception]
+    }
+
+    "return with exception on error in callback" in {
+      val xs = new ArrayBuffer[Option[Int]]
+      val f = s foreach { _ => throw new Exception("sad panda") }
+      Await.result(f) must throwA[Exception]
+    }
+
+    "return with exception on EOFException in callback" in {
+      val xs = new ArrayBuffer[Option[Int]]
+      val f = s foreach { _ => throw new EOFException("sad panda") }
+      Await.result(f) must throwA[EOFException]
     }
   }
 
@@ -126,12 +150,34 @@ class SpoolSpec extends SpecificationWithJUnit {
       xs.toSeq must be_==(Seq(1, 2))
     }
 
-    "EOF iteration on failure" in {
+    "EOF iteration on EOFException" in {
+      val xs = new ArrayBuffer[Option[Int]]
+      s foreachElem { xs += _ }
+      xs.toSeq must be_==(Seq(Some(1)))
+      p() = Throw(new EOFException("sad panda"))
+      xs.toSeq must be_==(Seq(Some(1), None))
+    }
+
+    "return with exception on error" in {
       val xs = new ArrayBuffer[Option[Int]]
       s foreachElem { xs += _ }
       xs.toSeq must be_==(Seq(Some(1)))
       p() = Throw(new Exception("sad panda"))
-      xs.toSeq must be_==(Seq(Some(1), None))
+      Await.result(s.toSeq) must throwA[Exception]
+    }
+
+    "return with exception on error in callback" in {
+      val xs = new ArrayBuffer[Option[Int]]
+      val f = s foreach { _ => throw new Exception("sad panda") }
+      p() = Return(2 *:: p1)
+      Await.result(f) must throwA[Exception]
+    }
+
+    "return with exception on EOFException in callback" in {
+      val xs = new ArrayBuffer[Option[Int]]
+      val f = s foreach { _ => throw new EOFException("sad panda") }
+      p() = Return(2 *:: p1)
+      Await.result(f) must throwA[EOFException]
     }
 
     "return a buffered seq when complete" in {
