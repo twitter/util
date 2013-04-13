@@ -450,6 +450,12 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         // Including fatal ones:
         val e2 = new java.lang.IllegalAccessError
         Future.exception[Int](e2).get(0.seconds)  must be_==(Throw(e2))
+
+        implicit val timer = new JavaTimer
+        val p = new Promise[Int]
+        val r = p.get(50.milliseconds)
+        r() must throwA[TimeoutException]
+        timer.stop()
       }
     }
 
