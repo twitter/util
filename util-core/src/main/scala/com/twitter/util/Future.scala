@@ -553,7 +553,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * one-shot and latest-interrupt wins. That is, the last interrupt
    * to have been raised is delivered exactly once to the Promise
    * responsible for making progress on the future (multiple such
-   * promises may be involed in `flatMap` chains).
+   * promises may be involved in `flatMap` chains).
    *
    * Raising an interrupt does not alter the externally observable
    * state of the Future. They are used to signal to the ''producer''
