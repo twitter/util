@@ -533,14 +533,14 @@ abstract class Future[+A] extends Awaitable[A] {
    * whether the computation finished in time.
    */
   @deprecated("Use Await.result", "6.2.x")
-  final def get(timeout: Duration): Try[A] = {
-    Await.ready(this, timeout)
-    try Return(Await.result(this, Duration.Zero)) catch {
+  final def get(timeout: Duration): Try[A] =
+    try {
+      Return(Await.result(this, timeout))
+    } catch {
       // For legacy reasons, we catch even
       // fatal exceptions.
       case e => Throw(e)
     }
-  }
 
   /**
    * Polls for an available result.  If the Future has been
