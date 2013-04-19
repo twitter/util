@@ -3,6 +3,11 @@ import Keys._
 
 object Util extends Build {
   val zkVersion = "3.3.4"
+  val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
+    ExclusionRule("com.sun.jdmk", "jmxtools"),
+    ExclusionRule("com.sun.jmx", "jmxri"),
+    ExclusionRule("javax.jms", "jms")
+  )
 
   val sharedSettings = Seq(
     version := "6.3.0",
@@ -23,13 +28,6 @@ object Util extends Build {
     ),
 
     resolvers += "twitter repo" at "http://maven.twttr.com",
-
-    ivyXML :=
-      <dependencies>
-        <exclude org="com.sun.jmx" module="jmxri" />
-        <exclude org="com.sun.jdmk" module="jmxtools" />
-        <exclude org="javax.jms" module="jms" />
-      </dependencies>,
 
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions += "-deprecation",
@@ -221,15 +219,8 @@ object Util extends Build {
       jmockSettings
   ).settings(
     name := "util-zk",
-    ivyXML :=
-      <dependencies>
-        <exclude org="com.sun.jmx" module="jmxri" />
-        <exclude org="com.sun.jdmk" module="jmxtools" />
-        <exclude org="javax.jms" module="jms" />
-        <override org="junit" rev="4.8.1"/>
-      </dependencies>,
     libraryDependencies ++= Seq(
-      "org.apache.zookeeper" % "zookeeper" % zkVersion
+      zkDependency
     )
   ).dependsOn(utilCore, utilCollection, utilLogging)
 
@@ -245,7 +236,7 @@ object Util extends Build {
       "com.twitter.common.zookeeper" % "client"     % "0.0.21",
       "com.twitter.common.zookeeper" % "group"      % "0.0.14",
       "com.twitter.common.zookeeper" % "server-set" % "1.0.3",
-      "org.apache.zookeeper" % "zookeeper" % zkVersion
+      zkDependency
     )
   ).dependsOn(utilCore, utilLogging, utilZk,
     // These are dependended on to provide transitive dependencies
