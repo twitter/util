@@ -634,6 +634,8 @@ abstract class Future[+A] extends Awaitable[A] {
 
   def filter(p: A => Boolean): Future[A] = transform { x: Try[A] => Future.const(x.filter(p)) }
 
+  def withFilter(p: A => Boolean): Future[A] = filter(p)
+
   /**
    * Invoke the function on the result, if the computation was
    * successful.  Returns a chained Future as in `respond`.
