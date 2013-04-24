@@ -72,6 +72,11 @@ sealed abstract class Try[+R] {
   def filter(p: R => Boolean): Try[R]
 
   /**
+   * Converts this to a Throw if the predicate does not obtain.
+   */
+  def withFilter(p: R => Boolean): Try[R]
+
+  /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
    *
    * ''Note'' The gnarly type parameterization is there for Java compatibility, since Java
@@ -150,6 +155,7 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = Throw[T](e)
   def map[X](f: R => X) = Throw(e)
   def filter(p: R => Boolean) = this
+  def withFilter(p: R => Boolean) = this
   def onFailure(rescueException: Throwable => Unit) = { rescueException(e); this }
   def onSuccess(f: R => Unit) = this
   def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]) =
@@ -169,6 +175,7 @@ final case class Return[+R](r: R) extends Try[R] {
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
   def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
+  def withFilter(p: R => Boolean) = filter(p)
   def onFailure(rescueException: Throwable => Unit) = this
   def onSuccess(f: R => Unit) = { f(r); this }
   def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]) = this
