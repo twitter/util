@@ -46,7 +46,7 @@ object QueueingHandler {
  * @param maxQueueSize
  * Maximum queue size.  Records are dropped when queue overflows.
  */
-class QueueingHandler(val handler: Handler, maxQueueSize: Int = Int.MaxValue)
+class QueueingHandler(val handler: Handler, val maxQueueSize: Int = Int.MaxValue)
   extends Handler(handler.formatter, handler.level) {
 
   protected val dropLogNode: String = ""
