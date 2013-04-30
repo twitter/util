@@ -180,6 +180,28 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
 }
 
 /**
+ * Boxes for serialization. This has to be its own 
+ * toplevel object to remain serializable
+ */
+private[util] object TimeBox {
+  case class Finite(nanos: Long) extends Serializable {
+    private def readResolve(): Object = Time.fromNanoseconds(nanos)
+  }
+
+  case class Top() extends Serializable {
+    private def readResolve(): Object = Time.Top
+  }
+
+  case class Bottom() extends Serializable {
+    private def readResolve(): Object = Time.Bottom
+  }
+
+  case class Undefined() extends Serializable {
+    private def readResolve(): Object = Time.Undefined
+  }
+}
+
+/**
  * Use `Time.now` in your program instead of
  * `System.currentTimeMillis`, and unit tests will be able to adjust
  * the current time to verify timeouts and other time-dependent
@@ -220,6 +242,8 @@ object Time extends TimeLikeOps[Time] {
     }
 
     override def isFinite = false
+    
+    private def writeReplace(): Object = TimeBox.Top()
   }
 
   /**
@@ -243,6 +267,8 @@ object Time extends TimeLikeOps[Time] {
     }
 
     override def isFinite = false
+    
+    private def writeReplace(): Object = TimeBox.Bottom()
   }
 
   val Undefined: Time = new Time(0) {
@@ -252,6 +278,8 @@ object Time extends TimeLikeOps[Time] {
     override def +(delta: Duration) = this
     override def diff(that: Time) = Duration.Undefined
     override def isFinite = false
+    
+    private def writeReplace(): Object = TimeBox.Undefined()
   }
 
   def now: Time = fn()
@@ -483,4 +511,6 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    * Converts this Time object to a java.util.Date
    */
   def toDate = new Date(inMillis)
+  
+  private def writeReplace(): Object = TimeBox.Finite(inNanoseconds)
 }

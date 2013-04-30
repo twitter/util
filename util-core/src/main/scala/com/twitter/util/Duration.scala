@@ -72,6 +72,8 @@ object Duration extends TimeLikeOps[Duration] {
     }
     override def unary_- = Bottom
     override def toString = "Duration.Top"
+    
+    private def writeReplace(): Object = DurationBox.Top()
   }
 
   /**
@@ -111,6 +113,8 @@ object Duration extends TimeLikeOps[Duration] {
 
     override def unary_- = Top
     override def toString = "Duration.Bottom"
+    
+    private def writeReplace(): Object = DurationBox.Bottom()
   }
 
   val Undefined: Duration = new Duration(0) {
@@ -130,6 +134,8 @@ object Duration extends TimeLikeOps[Duration] {
     override def isFinite = false
 
     override def toString = "Duration.Undefined"
+
+    private def writeReplace(): Object = DurationBox.Undefined()
   }
 
   @deprecated("use Duration.Zero", "5.4.0")
@@ -240,6 +246,24 @@ object Duration extends TimeLikeOps[Duration] {
         } reduce { _ + _ }
       case _ => throw new NumberFormatException("Invalid duration: " + s)
     }
+  }
+}
+
+private[util] object DurationBox {
+  case class Finite(nanos: Long) extends Serializable {
+    private def readResolve(): Object = Duration.fromNanoseconds(nanos)
+  }
+
+  case class Top() extends Serializable {
+    private def readResolve(): Object = Duration.Top
+  }
+
+  case class Bottom() extends Serializable {
+    private def readResolve(): Object = Duration.Bottom
+  }
+
+  case class Undefined() extends Serializable {
+    private def readResolve(): Object = Duration.Undefined
   }
 }
 
@@ -363,4 +387,6 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
   def diff(that: Duration) = this - that
 
   def isFinite = true
+
+  private def writeReplace(): Object = DurationBox.Finite(inNanoseconds)
 }

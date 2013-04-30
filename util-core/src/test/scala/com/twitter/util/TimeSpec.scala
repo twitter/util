@@ -1,8 +1,10 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
 import TimeConversions._
+import java.io.{ByteArrayOutputStream, ByteArrayInputStream, 
+  ObjectOutputStream, ObjectInputStream}
 import java.util.concurrent.TimeUnit
+import org.specs.SpecificationWithJUnit
 
 trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
   val ops: TimeLikeOps[T]
@@ -76,6 +78,16 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
 
       for (ns <- Seq(Long.MinValue, -1, 0, 1, Long.MaxValue); t = fromNanoseconds(ns))
         t must beLike { case Finite(`t`) => true }
+    }
+    
+    "roundtrip through serialization" in {
+      for (v <- vs) {
+        val bytes = new ByteArrayOutputStream
+        val out = new ObjectOutputStream(bytes)
+        out.writeObject(v)
+        val in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray))
+        in.readObject() must be_==(v)
+      }
     }
   }
 
