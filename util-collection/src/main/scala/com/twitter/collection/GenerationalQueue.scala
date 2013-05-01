@@ -79,8 +79,8 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
       this
     }
 
-    override def toString() = "TimeBucket(origin=%d, size=%d, Set=%s)".format(
-      origin.inMilliseconds, span.inMilliseconds, super.toString()
+    override def toString() = "TimeBucket(origin=%d, size=%d, age=%s, count=%d)".format(
+      origin.inMilliseconds, span.inMilliseconds, age().toString, super.size
     )
   }
 
