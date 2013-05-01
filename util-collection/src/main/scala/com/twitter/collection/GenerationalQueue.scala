@@ -89,8 +89,12 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 
   private[this] def maybeGrowChain() = {
     // NB: age of youngest element is negative when bucket isn't expired
-    if (buckets.head.age() > Duration.Zero) {
-      buckets = TimeBucket.empty[A] :: buckets
+    val bucket = buckets.head
+    if (bucket.age() > Duration.Zero) {
+      if (bucket.isEmpty)
+        buckets = List(TimeBucket.empty[A])
+      else
+        buckets = TimeBucket.empty[A] :: buckets
       true
     } else
       false
@@ -105,11 +109,14 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
     else {
       val tailBucket = olds.head
       olds drop 1 foreach { tailBucket ++= _ }
-      news ::: List(tailBucket)
+      if (tailBucket.isEmpty)
+        news
+      else 
+        news ::: List(tailBucket)
     }
   }
 
-  def updateBuckets() {
+  private[this] def updateBuckets() {
     if (maybeGrowChain())
       buckets = compactChain()
   }
@@ -126,10 +133,13 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 
   def remove(a: A) = synchronized {
     buckets foreach { _.remove(a) }
-    compactChain()
+    buckets = compactChain()
   }
 
   def collect(d: Duration): Option[A] = synchronized {
+    if (buckets.last.isEmpty)
+      buckets = compactChain()
+
     val oldestBucket = buckets.last
     if (d < oldestBucket.age())
       oldestBucket.headOption
