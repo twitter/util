@@ -106,7 +106,19 @@ object Util extends Build {
       // specs1, and scala 2.10
       case "2.10" | "2.10.0" => Seq(Tests.Filter(s => !s.endsWith("MonitorSpec")))
       case _ => Seq()
-    }
+    },
+
+    resourceGenerators in Compile <+=
+      (resourceManaged in Compile, name, version) map { (dir, name, ver) =>
+        val file = dir / "com" / "twitter" / name / "build.properties"
+        val buildRev = Process("git" :: "rev-parse" :: "HEAD" :: Nil).!!.trim
+        val buildName = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss").format(new java.util.Date)
+        val contents = (
+          "name=%s\nversion=%s\nbuild_revision=%s\nbuild_name=%s"
+        ).format(name, ver, buildRev, buildName)
+        IO.write(file, contents)
+        Seq(file)
+      }
   )
 
   lazy val utilEval = Project(
