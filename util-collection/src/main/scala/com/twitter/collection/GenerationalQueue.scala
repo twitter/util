@@ -85,19 +85,17 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
   }
 
   private[this] val timeSlice = timeout / 3
-  private[this] var buckets = List(TimeBucket.empty[A])
+  private[this] var buckets = List[TimeBucket[A]]()
 
   private[this] def maybeGrowChain() = {
     // NB: age of youngest element is negative when bucket isn't expired
-    val bucket = buckets.head
-    if (bucket.age() > Duration.Zero) {
-      if (bucket.isEmpty)
-        buckets = List(TimeBucket.empty[A])
-      else
-        buckets = TimeBucket.empty[A] :: buckets
-      true
-    } else
-      false
+    val growChain = buckets.headOption.map((bucket) => {
+      bucket.age() > Duration.Zero
+    }).getOrElse(true)
+
+    if (growChain)
+      buckets = TimeBucket.empty[A] :: buckets
+    growChain
   }
 
   private[this] def compactChain(): List[TimeBucket[A]] = {
