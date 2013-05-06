@@ -1,3 +1,13 @@
+6.3.2  2013-04-18
+
+  * util-core: create less garbage in AsyncSemaphore.acquire()
+  * util-core: deprecate com.twitter.util.concurrent.Concurrent{Pool, MultiMap}
+  * util-core: restore prior Future.get behavior
+  * util-core: Spool error propagation
+  * util-core: Use futures for schema detection to avoid blocking finagle threads
+  * util-refect: test: use sys.error
+  * util-zk: ZNode("/path").parentPath should be "/", not an empty string
+
 6.3.0  2013-04-05
 
   * util-core: flag a bug with U64 truncation
