@@ -37,5 +37,11 @@
       <artifactId>util-core</artifactId>
       <version>6.3.3-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_2.9.2</artifactId>
+      <version>1.8</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

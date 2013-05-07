@@ -79,21 +79,23 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
       this
     }
 
-    override def toString() = "TimeBucket(origin=%d, size=%d, Set=%s)".format(
-      origin.inMilliseconds, span.inMilliseconds, super.toString()
+    override def toString() = "TimeBucket(origin=%d, size=%d, age=%s, count=%d)".format(
+      origin.inMilliseconds, span.inMilliseconds, age().toString, super.size
     )
   }
 
   private[this] val timeSlice = timeout / 3
-  private[this] var buckets = List(TimeBucket.empty[A])
+  private[this] var buckets = List[TimeBucket[A]]()
 
   private[this] def maybeGrowChain() = {
     // NB: age of youngest element is negative when bucket isn't expired
-    if (buckets.head.age() > Duration.Zero) {
+    val growChain = buckets.headOption.map((bucket) => {
+      bucket.age() > Duration.Zero
+    }).getOrElse(true)
+
+    if (growChain)
       buckets = TimeBucket.empty[A] :: buckets
-      true
-    } else
-      false
+    growChain
   }
 
   private[this] def compactChain(): List[TimeBucket[A]] = {
@@ -105,11 +107,14 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
     else {
       val tailBucket = olds.head
       olds drop 1 foreach { tailBucket ++= _ }
-      news ::: List(tailBucket)
+      if (tailBucket.isEmpty)
+        news
+      else
+        news ::: List(tailBucket)
     }
   }
 
-  def updateBuckets() {
+  private[this] def updateBuckets() {
     if (maybeGrowChain())
       buckets = compactChain()
   }
@@ -126,10 +131,16 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 
   def remove(a: A) = synchronized {
     buckets foreach { _.remove(a) }
-    compactChain()
+    buckets = compactChain()
   }
 
   def collect(d: Duration): Option[A] = synchronized {
+    if (buckets.isEmpty)
+      return None
+
+    if (buckets.last.isEmpty)
+      buckets = compactChain()
+
     val oldestBucket = buckets.last
     if (d < oldestBucket.age())
       oldestBucket.headOption
