@@ -71,14 +71,14 @@ class Eval(target: Option[File]) {
   import Eval.jvmId
 
   private lazy val compilerPath = try {
-    jarPathOfClass("scala.tools.nsc.Interpreter")
+    classPathOfClass("scala.tools.nsc.Interpreter")
   } catch {
     case e =>
       throw new RuntimeException("Unable lo load scala interpreter from classpath (scala-compiler jar is missing?)", e)
   }
 
   private lazy val libPath = try {
-    jarPathOfClass("scala.ScalaObject")
+    classPathOfClass("scala.ScalaObject")
   } catch {
     case e =>
       throw new RuntimeException("Unable to load scala base object from classpath (scala-library jar is missing?)", e)
@@ -301,12 +301,17 @@ class Eval(target: Option[File]) {
   /*
    * For a given FQ classname, trick the resource finder into telling us the containing jar.
    */
-  private def jarPathOfClass(className: String) = try {
+  private def classPathOfClass(className: String) = try {
     val resource = className.split('.').mkString("/", "/", ".class")
     val path = getClass.getResource(resource).getPath
-    val indexOfFile = path.indexOf("file:") + 5
-    val indexOfSeparator = path.lastIndexOf('!')
-    List(path.substring(indexOfFile, indexOfSeparator))
+    if (path.indexOf("file:") >= 0) {
+      val indexOfFile = path.indexOf("file:") + 5
+      val indexOfSeparator = path.lastIndexOf('!')
+      List(path.substring(indexOfFile, indexOfSeparator))
+    } else {
+      require(path.endsWith(resource))
+      List(path.substring(0, path.length - resource.length + 1))
+    }
   }
 
   /*
@@ -314,8 +319,20 @@ class Eval(target: Option[File]) {
    * This is probably fragile.
    */
   lazy val impliedClassPath: List[String] = {
-    val currentClassPath = this.getClass.getClassLoader.asInstanceOf[URLClassLoader].getURLs.
-      filter(_.getProtocol == "file").map(u => new File(u.toURI).getPath).toList
+    def getClassPath(cl: ClassLoader, acc: List[List[String]] = List.empty): List[List[String]] = {
+      val cp = cl match {
+        case urlClassLoader: URLClassLoader => urlClassLoader.getURLs.filter(_.getProtocol == "file").
+          map(u => new File(u.toURI).getPath).toList
+        case _ => Nil
+      }
+      cl.getParent match {
+        case null => (cp :: acc).reverse
+        case parent => getClassPath(parent, cp :: acc)
+      }
+    }
+
+    val classPath = getClassPath(this.getClass.getClassLoader)
+    val currentClassPath = classPath.head
 
     // if there's just one thing in the classpath, and it's a jar, assume an executable jar.
     currentClassPath ::: (if (currentClassPath.size == 1 && currentClassPath(0).endsWith(".jar")) {
@@ -329,7 +346,7 @@ class Eval(target: Option[File]) {
       }
     } else {
       Nil
-    })
+    }) ::: classPath.tail.flatten
   }
 
   trait Preprocessor {
