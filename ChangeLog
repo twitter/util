@@ -1,3 +1,13 @@
+6.3.3  2013-05-13
+
+  * util-collection: When growing chain only grow the chain. This addresses a NoSuchElementException.
+  * util-eval: fix for when class files are on the classpath directly
+  * util: Generate build.properties from sbt
+  * util-core:Time, Duration: implement Java serialization
+  * util-thrift: Bump Jackson to 1.9.11
+  * util-core: Add withFilter to Future and Try
+  * util: Remove zookeeper dependency ivyXML and replace with ExclusionRules
+
 6.3.2  2013-04-18
 
   * util-core: create less garbage in AsyncSemaphore.acquire()
