@@ -70,6 +70,20 @@ sealed trait Spool[+A] {
     }
   }
 
+  def foldLeft[B](z: B)(f: (B, A) => B): Future[B] =
+    if (isEmpty) {
+      Future.value(z)
+    } else {
+      tail.flatMap(s => s.foldLeft(f(z, head))(f))
+    }
+
+  def reduceLeft[B >: A](f: (B, A) => B): Future[B] =
+    if (isEmpty) {
+      Future.exception(new UnsupportedOperationException("empty.reduceLeft"))
+    } else {
+      tail.flatMap(s => s.foldLeft[B](head)(f))
+    }
+
   /**
    * The standard Scala collect, in order to implement map & filter.
    *
