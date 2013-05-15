@@ -158,7 +158,7 @@ object RootMonitor extends Monitor {
   def handle(exc: Throwable) = exc match {
     case NonFatal(e) =>
       log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
-      false
+      true /* Never propagate non fatal exception */
 
     case e: VirtualMachineError =>
       log.log(Level.SEVERE, "VM error", e)
