@@ -41,6 +41,12 @@ object Awaitable {
  * @define result
  *
  * Returns the result of the action when it has completed.
+ *
+ * @define all
+ *
+ * Returns after all actions have completed. The timeout given is
+ * passed to each awaitable in turn, meaning await time will be
+ * awaitables.size * timeout.
  */
 object Await {
   import Awaitable._
@@ -67,10 +73,22 @@ object Await {
   @throws(classOf[Exception])
   def result[T](awaitable: Awaitable[T], timeout: Duration): T =
     awaitable.result(timeout)(AwaitPermit)
+
+  /** $all */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  def all(awaitables: Awaitable[_]*): Unit =
+    all(awaitables, Duration.Top)
+
+  /** $all */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  def all(awaitables: Seq[Awaitable[_]], timeout: Duration): Unit =
+    awaitables foreach { _.ready(timeout)(AwaitPermit) }
 }
 
 /**
- * A mixin to make an [[com.twitter.util.Awaitable]] out 
+ * A mixin to make an [[com.twitter.util.Awaitable]] out
  * of a [[com.twitter.util.Closable]].
  *
  * Use `closeAwaitably` in the definition of `close`:
