@@ -13,7 +13,7 @@ We use [Semantic Versioning](http://semver.org/) for published artifacts.
 An example SBT dependency string for the `util-collection` tools would look like this:
 
 ```scala
-val collUtils = "com.twitter"   % "util-collection"   % "5.3.10"
+val collUtils = "com.twitter"   %% "util-collection"   % "5.3.10"
 ```
 
 # Units
