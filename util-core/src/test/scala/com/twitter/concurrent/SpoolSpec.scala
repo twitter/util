@@ -48,6 +48,16 @@ class SpoolSpec extends SpecificationWithJUnit {
       val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
       Await.result(s flatMap f) must be_==(Spool.empty[Int])
     }
+
+    "fold left" in {
+      val fold = s.foldLeft(0){(x, y) => x + y}
+      Await.result(fold) must be_==(0)
+    }
+
+    "reduce left" in {
+      val fold = s.reduceLeft{(x, y) => x + y}
+      Await.result(fold) must throwAn[UnsupportedOperationException]
+    }
   }
 
   "Simple resolved Spool" should {
@@ -97,6 +107,16 @@ class SpoolSpec extends SpecificationWithJUnit {
       val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
       val s2 = s flatMap f
       Await.result(s2 flatMap (_.toSeq)) must be_==(Seq("1", "2", "2", "4"))
+    }
+
+    "fold left" in {
+      val fold = s.foldLeft(0){(x, y) => x + y}
+      Await.result(fold) must be_==(3)
+    }
+
+    "reduce left" in {
+      val fold = s.reduceLeft{(x, y) => x + y}
+      Await.result(fold) must be_==(3)
     }
   }
 
@@ -216,6 +236,17 @@ class SpoolSpec extends SpecificationWithJUnit {
       val s1s = s1.toSeq
       s1s.isDefined must beTrue
       Await.result(s1s) must be_==(Seq(4, 8))
+    }
+
+    "fold left" in {
+      val f = s.foldLeft(0){(x, y) => x + y}
+
+      f.isDefined must beFalse
+      p() = Return(2 *:: p1)
+      f.isDefined must beFalse
+      p1() = Return(Spool.empty)
+      f.isDefined must beTrue
+      Await.result(f) must be_==(3)
     }
   }
 }
