@@ -107,16 +107,12 @@ class FlagValueRequiredException extends Exception("flag value is required")
 class FlagUndefinedException extends Exception("flag undefined")
 
 /**
- * A single flag, typically instantiated by a
- * [[com.twitter.app.Flags]] instance. Its current value is extracted
- * with `apply()`.
+ * A single flag, instantiated by a [[com.twitter.app.Flags]] instance.
+ * Its current value is extracted with `apply()`.
+ *
+ * @see [[com.twitter.app.Flags]]
  */
-class Flag[T: Flaggable] private[app](flagName: Option[String], val help: String, val default: T) {
-  def this(name: String, help: String, default: T) = this(Some(name), help, default)
-  def this(help: String, default: T) = this(None, help, default)
-
-  val name = flagName getOrElse getClass.getName.stripSuffix("$")
-
+class Flag[T: Flaggable] private[app](val name: String, val help: String, val default: T) {
   protected val flaggable = implicitly[Flaggable[T]]
   @volatile private[this] var value: Option[T] = None
   protected def getValue: Option[T] = value
@@ -169,6 +165,9 @@ class Flag[T: Flaggable] private[app](flagName: Option[String], val help: String
  *   val flag = new Flags("myapp")
  *   val i = flag("i", 123, "iteration count")
  * }}}
+ *
+ * Global flags, detached from a particular `Flags` instance, but
+ * accessible to all, are defined by [[com.twitter.util.app.GlobalFlag]].
  */
 class Flags(argv0: String, includeGlobal: Boolean) {
   def this(argv0: String) = this(argv0, false)
@@ -306,7 +305,13 @@ class Flags(argv0: String, includeGlobal: Boolean) {
  *
  */
 @GlobalFlagVisible
-class GlobalFlag[T: Flaggable](default: T, help: String) extends Flag[T](help, default) {
+class GlobalFlag[T: Flaggable](default: T, help: String) 
+    extends Flag[T](null, help, default) {
+
+  // Unfortunately, `getClass` in the the extends... above
+  // doesn't give the right answer.
+  override val name = getClass.getName.stripSuffix("$")
+
   protected override def getValue = super.getValue orElse {
     Option(System.getProperty(name)) flatMap { p =>
       try Some(flaggable.parse(p)) catch {
