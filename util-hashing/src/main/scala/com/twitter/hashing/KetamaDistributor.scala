@@ -50,14 +50,22 @@ class KetamaDistributor[A](
   def nodes = _nodes map { _.handle }
   def nodeCount = _nodes.size
 
-  def nodeForHash(hash: Long) = {
+  private def mapEntryForHash(hash: Long) = {
     // hashes are 32-bit because they are 32-bit on the libmemcached and
     // we need to maintain compatibility with libmemcached
-    val trunucatedHash = hash & 0xffffffffL
+    val truncatedHash = hash & 0xffffffffL
 
-    val entry = continuum.ceilingEntry(trunucatedHash)
-    val node = Option(entry).getOrElse(continuum.firstEntry).getValue
-    node.handle
+    Option(continuum.ceilingEntry(truncatedHash))
+        .getOrElse(continuum.firstEntry)
+  }
+
+  def entryForHash(hash: Long) = {
+    val entry = mapEntryForHash(hash)
+    (entry.getKey, entry.getValue.handle)
+  }
+
+  def nodeForHash(hash: Long) = {
+    mapEntryForHash(hash).getValue.handle
   }
 
   protected def computeHash(key: String, alignment: Int) = {
