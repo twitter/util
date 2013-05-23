@@ -23,6 +23,7 @@ import java.io.Serializable
  * You can import Config._ if you want the auto-conversions in a class
  * that does not inherit from trait Config.
  */
+@deprecated("use a Plain Old Scala Object", "")
 object Config {
   sealed trait Required[+A] extends Serializable {
     def value: A
@@ -84,6 +85,7 @@ object Config {
  *    var level = required[Int]
  *    var nextLevel = computed { level + 1 }
  */
+@deprecated("use a Plain Old Scala Object", "")
 trait Config[T] extends (() => T) {
   import Config.{Required, Specified, Unspecified, RequiredValuesMissing}
 
