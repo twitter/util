@@ -146,10 +146,14 @@ object Monitor extends Monitor {
 }
 
 /**
- * A monitor that always fails to handle an exception.
+ * A monitor that always fails to handle an exception. Combining this
+ * with any other Monitor will simply return the other Monitor effectively
+ * removing NullMonitor from the chain.
  */
 object NullMonitor extends Monitor {
   def handle(exc: Throwable) = false
+  override def orElse(next: Monitor) = next
+  override def andThen(next: Monitor) = next
 }
 
 object RootMonitor extends Monitor {
