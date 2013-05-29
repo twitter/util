@@ -6,14 +6,12 @@ See the Scaladoc [here](http://twitter.github.com/util)
 
 # Using in your Project
 
-Pre-compiled jars for each set of tools (`util-core`, `util-collection` etc) are available in the Twitter Maven repository, here: http://maven.twttr.com/
-
 We use [Semantic Versioning](http://semver.org/) for published artifacts.
 
 An example SBT dependency string for the `util-collection` tools would look like this:
 
 ```scala
-val collUtils = "com.twitter"   % "util-collection"   % "5.3.10"
+val collUtils = "com.twitter" %% "util-collection" % "6.3.4"
 ```
 
 # Units
