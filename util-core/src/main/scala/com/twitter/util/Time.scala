@@ -70,6 +70,11 @@ trait TimeLikeOps[This <: TimeLike[This]] {
     if (millis > 9223372036854L) Top
     else if (millis < -9223372036854L) Bottom
     else fromNanoseconds(TimeUnit.MILLISECONDS.toNanos(millis))
+
+  def fromMicroseconds(micros: Long): This =
+    if (micros > 9223372036854775L) Top
+    else if (micros < -9223372036854775L) Bottom
+    else fromNanoseconds(TimeUnit.MICROSECONDS.toNanos(micros))
 }
 
 /**

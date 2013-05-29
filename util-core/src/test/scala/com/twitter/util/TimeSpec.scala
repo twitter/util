@@ -58,10 +58,12 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
 
     "handle underflows" in {
       fromNanoseconds(Long.MinValue) - 1.nanosecond must be_==(Bottom)
+      fromMicroseconds(Long.MinValue) - 1.nanosecond must be_==(Bottom)
     }
 
     "handle overflows" in {
       fromNanoseconds(Long.MaxValue) + 1.nanosecond must be_==(Top)
+      fromMicroseconds(Long.MaxValue) + 1.nanosecond must be_==(Top)
     }
 
     "Nanoseconds(_) extracts only finite values, in nanoseconds" in {
@@ -442,6 +444,20 @@ class TimeSpec extends  { val ops = Time } with TimeLikeSpec[Time] {
         val t0 = Time.now + 100.hours
         t0.sinceNow mustEqual 100.hours
       }
+    }
+
+    "fromMicroseconds" in {
+      Time.fromMicroseconds(0).inNanoseconds mustEqual 0L
+      Time.fromMicroseconds(-1).inNanoseconds mustEqual -1L * 1000L
+
+      Time.fromMicroseconds(Long.MaxValue).inNanoseconds mustEqual Long.MaxValue
+      Time.fromMicroseconds(Long.MaxValue-1) must be_==(Time.Top)
+
+      Time.fromMicroseconds(Long.MinValue) must be_==(Time.Bottom)
+      Time.fromMicroseconds(Long.MinValue+1) must be_==(Time.Bottom)
+
+      val currentTimeMicros = System.currentTimeMillis()*1000
+      Time.fromMicroseconds(currentTimeMicros).inNanoseconds mustEqual(currentTimeMicros.microseconds.inNanoseconds)
     }
 
     "fromMillis" in {
