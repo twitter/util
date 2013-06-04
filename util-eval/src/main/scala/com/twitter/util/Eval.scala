@@ -458,7 +458,14 @@ class Eval(target: Option[File]) {
           case WARNING => "warning: "
           case _ => ""
         }
-        messages += (severityName + "line " + (pos.line - lineOffset) + ": " + message) ::
+        // the line number is not always available
+        val lineMessage =
+          try {
+            "line " + (pos.line - lineOffset)
+          } catch {
+            case _: Throwable => ""
+          }
+        messages += (severityName + lineMessage + ": " + message) ::
           (if (pos.isDefined) {
             pos.inUltimateSource(pos.source).lineContent.stripLineEnd ::
               (" " * (pos.column - 1) + "^") ::
