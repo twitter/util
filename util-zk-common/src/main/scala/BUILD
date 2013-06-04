@@ -1,0 +1,17 @@
+scala_library(name='scala',
+  dependencies=[
+    pants('3rdparty:guava'),
+    pants('3rdparty:zookeeper'),
+    pants('3rdparty/com/twitter/common:quantity'),
+    pants('3rdparty/com/twitter/common:service-thrift'),
+    pants('3rdparty/com/twitter/common/zookeeper:client'),
+    pants('3rdparty/com/twitter/common/zookeeper:server-set'),
+    pants('util/util-collection/src/main/scala'),
+    pants('util/util-core/src/main/scala'),
+    pants('util/util-eval/src/main/scala'),
+    pants('util/util-hashing/src/main/scala'),
+    pants('util/util-logging/src/main/scala'),
+    pants('util/util-zk/src/main/scala'),
+  ],
+  sources=rglobs('*.scala')
+)

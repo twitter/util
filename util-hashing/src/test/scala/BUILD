@@ -1,0 +1,14 @@
+junit_tests(name='scala',
+  dependencies=[
+    pants('3rdparty:commons-codec'),
+    pants('3rdparty:junit'),
+    pants('3rdparty:mockito-all'),
+    pants('3rdparty:specs_2.9.2'),
+    pants('util/util-core/src/main/scala'),
+    pants('util/util-hashing/src/main/scala')
+  ],
+  sources=rglobs('*.scala'),
+  resources=[
+    pants('util/util-hashing/src/test/resources')
+  ]
+)

@@ -1,0 +1,16 @@
+junit_tests(name='scala',
+  dependencies=[
+    pants('3rdparty:cglib'),
+    pants('3rdparty:guava'),
+    pants('3rdparty:jmock'),
+    pants('3rdparty:junit'),
+    pants('3rdparty:specs_2.9.2'),
+    pants('3rdparty/com/twitter/common:net-util'),
+    pants('3rdparty/com/twitter/common:service-thrift'),
+    pants('3rdparty/com/twitter/common/zookeeper:client'),
+    pants('3rdparty/com/twitter/common/zookeeper:server-set'),
+    pants('util/util-core/src/main/scala'),
+    pants('util/util-zk-common/src/main/scala'),
+  ],
+  sources=rglobs('*.scala')
+)

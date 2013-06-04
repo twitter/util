@@ -948,6 +948,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
     }
   }
 
+  // TODO(John Sirois):  Kill this mvn test hack when pants takes over.
   "Java" should {
     "work" in {
       val test = new FutureTest()

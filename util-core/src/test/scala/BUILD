@@ -1,0 +1,12 @@
+junit_tests(name='scala',
+  dependencies=[
+    pants('3rdparty:junit'),
+    pants('3rdparty:mockito-all'),
+    pants('3rdparty:scalatest_2.9.2'),
+    pants('3rdparty:specs_2.9.2'),
+    pants('3rdparty/com/twitter/common:objectsize'),
+    pants('util/util-core/src/main/scala'),
+    pants('util/util-core/src/test/java'),
+  ],
+  sources=rglobs('*.scala')
+)
