@@ -2,12 +2,12 @@ package com.twitter.jvm
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
-import com.twitter.util.{Timer, Duration, Time, StorageUnit, Future, Stopwatch}
+import com.twitter.util.{Timer, Duration, Time, StorageUnit, Future, Stopwatch, NonFatal}
 import java.lang.management.ManagementFactory
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import java.util.logging.Logger
-import scala.collection.mutable
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 case class Heap(
   // Estimated number of bytes allocated so far (into eden)
@@ -187,17 +187,10 @@ object Jvm {
   private lazy val executor =
     Executors.newScheduledThreadPool(1, new NamedPoolThreadFactory("util-jvm-timer", true))
 
-  private lazy val _jvm = {
-    val name = ManagementFactory.getRuntimeMXBean.getVmName
-    // Is there a better way to detect HotSpot?
-    //
-    // TODO: also check that we can _actually_ create a Hotspot
-    // instance without exceptions
-    if (name startsWith "Java HotSpot(TM)")
-      new Hotspot
-    else
-      NilJvm
-  }
+  private lazy val _jvm =
+    try new Hotspot catch {
+      case NonFatal(_) => NilJvm
+    }
 
   def apply(): Jvm = _jvm
 }
