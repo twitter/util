@@ -121,7 +121,7 @@ object CpuProfile {
         next += period
       }
 
-      val sleep = math.max(elapsed().inMilliseconds, 0)
+      val sleep = math.max((next - Time.now).inMilliseconds, 0)
       Thread.sleep(sleep)
     }
 
