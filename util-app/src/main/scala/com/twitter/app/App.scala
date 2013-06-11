@@ -72,7 +72,7 @@ trait App {
     for (f <- inits) f()
 
     try {
-      val rem = flag.parse(args)
+      val rem = flag.parse(args, undefOk = true)
       _args = rem.toArray
     } catch {
       case FlagUsageError(usage) =>
