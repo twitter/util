@@ -1,3 +1,11 @@
+6.3.6  2013-06-11
+
+  * util: Update owners files
+  * util-jvm: CpuProfile: sleep the right amount of time for the recording thread
+  * util-jvm: always try to construct hotspot instance Detection by VM name is unreliable.
+  * util: util/* compiling, testing and benchmarking with pants.
+  * util-eval: Gizzard: Some followup deps alignment to fix deployment classpath issues
+
 6.3.5  2013-05-31
 
   * util-core: add Time.fromMicroseconds to util.Time
