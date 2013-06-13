@@ -141,6 +141,9 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
     if (buckets.last.isEmpty)
       buckets = compactChain()
 
+    if (buckets.isEmpty)
+      return None
+
     val oldestBucket = buckets.last
     if (d < oldestBucket.age())
       oldestBucket.headOption

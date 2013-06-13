@@ -120,4 +120,17 @@ class GenerationalQueueTest extends FunSuite {
   genericGenerationalQueueTest(
     "BucketGenerationalQueue",
     bucketQueue, timeout)
+
+  test("BucketGenerationalQueue check removals") {
+    var t = Time.now
+    Time.withTimeFunction(t) { _ =>
+      val queue = bucketQueue()
+      queue.add("1")
+      queue.add("2")
+      queue.remove("1")
+      queue.remove("2")
+      t += timeout * 3
+      assert(queue.collect(timeout).isEmpty)
+    }
+  }
 }
