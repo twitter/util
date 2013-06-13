@@ -19,7 +19,7 @@ package config
 
 import java.net.InetAddress
 import com.twitter.conversions.time._
-import com.twitter.util.{Config, Duration}
+import com.twitter.util.{NetUtil, Config, Duration}
 
 @deprecated("use LoggerFactory")
 class LoggerConfig extends Config[Logger] {
@@ -111,7 +111,7 @@ class SyslogFormatterConfig extends FormatterConfig {
   /**
    * Hostname to prepend to log lines.
    */
-  var hostname: String = InetAddress.getLocalHost().getHostName()
+  var hostname: String = NetUtil.getLocalHostName()
 
   /**
    * Optional server name to insert before log entries.

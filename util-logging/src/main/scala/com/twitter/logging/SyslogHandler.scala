@@ -18,6 +18,7 @@ package com.twitter.logging
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.string._
+import com.twitter.util.NetUtil
 import java.net.{DatagramPacket, DatagramSocket, InetAddress, InetSocketAddress, SocketAddress}
 import java.text.SimpleDateFormat
 import java.util.concurrent.Executors
@@ -136,7 +137,7 @@ class SyslogHandler(
  * Truncate stack traces in exception logging (line count).
  */
 class SyslogFormatter(
-    val hostname: String = InetAddress.getLocalHost().getHostName(),
+    val hostname: String = NetUtil.getLocalHostName(),
     val serverName: Option[String] = None,
     val useIsoDateFormat: Boolean = true,
     val priority: Int = SyslogHandler.PRIORITY_USER,

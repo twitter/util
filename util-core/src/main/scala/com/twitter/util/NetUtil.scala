@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.net.{InetAddress, Inet4Address}
+import java.net.{UnknownHostException, InetAddress, Inet4Address}
 
 object NetUtil {
   def isIpv4Address(ip: String): Boolean =
@@ -140,4 +140,20 @@ object NetUtil {
 
   def isInetAddressInBlocks(inetAddress: InetAddress, ipBlocks: Iterable[(Int, Int)]): Boolean =
     isIpInBlocks(inetAddressToInt(inetAddress), ipBlocks)
+
+  def getLocalHostName(): String = {
+    try {
+      InetAddress.getLocalHost().getHostName()
+    } catch {
+      case uhe: UnknownHostException =>
+        Option(uhe.getMessage) match {
+          case Some(host) =>
+            host.split(":") match {
+              case Array(hostName, _) => hostName
+              case _ => "unknown_host"
+            }
+          case None => "unknown_host"
+        }
+    }
+  }
 }
