@@ -141,5 +141,6 @@ class FlagTest extends FunSuite {
     assert(MyGlobalFlag() === "okay")
     MyGlobalFlag.reset()
     assert(MyGlobalFlag() === "not okay")
+    System.clearProperty("com.twitter.app.MyGlobalFlag")
   }
 }
