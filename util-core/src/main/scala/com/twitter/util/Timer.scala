@@ -1,12 +1,10 @@
 package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.concurrent.Serialized
-import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CancellationException, ExecutorService, RejectedExecutionHandler,
-  ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
+import java.util.concurrent._
 import scala.collection.mutable.ArrayBuffer
+import scala.Unit
 
 trait TimerTask {
   def cancel()
@@ -172,11 +170,49 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 }
 
+trait ScheduledExecutorServiceTimerSupport extends Timer {
+
+  def underlying: ScheduledExecutorService
+
+  def schedule(when: Time)(f: => Unit): TimerTask = {
+    val runnable = new Runnable { def run = f }
+    val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
+
+    RunnableTimerTask(runnable, javaFuture)
+  }
+
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+    schedule(when.sinceNow, period)(f)
+
+  def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
+    val runnable = new Runnable { def run = f }
+    val javaFuture = underlying.scheduleAtFixedRate(runnable,
+      wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
+
+    RunnableTimerTask(runnable, javaFuture)
+  }
+
+  def stop() = underlying.shutdown()
+
+  /**
+   * Hook to be overridden by subclasses that wish to be notified of task cancellation
+   */
+  protected def taskCancelled(runnable: Runnable) {} // nothing to see here, move along
+
+  case class RunnableTimerTask(runnable: Runnable, javaFuture: ScheduledFuture[_]) extends TimerTask {
+    def cancel() {
+      javaFuture.cancel(true)
+      taskCancelled(runnable)
+    }
+  }
+
+}
+
 class ScheduledThreadPoolTimer(
   poolSize: Int,
   threadFactory: ThreadFactory,
-  rejectedExecutionHandler: Option[RejectedExecutionHandler])
-extends Timer {
+  rejectedExecutionHandler: Option[RejectedExecutionHandler]) extends ScheduledExecutorServiceTimerSupport {
+
   def this(poolSize: Int, threadFactory: ThreadFactory) =
     this(poolSize, threadFactory, None)
 
@@ -187,40 +223,18 @@ extends Timer {
   def this(poolSize: Int = 2, name: String = "timer", makeDaemons: Boolean = false) =
     this(poolSize, new NamedPoolThreadFactory(name, makeDaemons), None)
 
-  private[this] val underlying = rejectedExecutionHandler match {
+  val underlying = rejectedExecutionHandler match {
     case None =>
       new ScheduledThreadPoolExecutor(poolSize, threadFactory)
     case Some(h: RejectedExecutionHandler) =>
       new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
   }
 
-  def schedule(when: Time)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run = f }
-    val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask {
-      def cancel() {
-        javaFuture.cancel(true)
-        underlying.remove(runnable)
-      }
-    }
+  override protected def taskCancelled(runnable: Runnable) {
+    // this removes the runnable from the queue immediately to prevent retention of tasks with long delay, which could
+    // cause memory leaks
+    underlying.remove(runnable)
   }
-
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
-    schedule(when.sinceNow, period)(f)
-
-  def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run = f }
-    val javaFuture = underlying.scheduleAtFixedRate(runnable,
-      wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
-    new TimerTask {
-      def cancel() {
-        javaFuture.cancel(true)
-        underlying.remove(runnable)
-      }
-    }
-  }
-
-  def stop() = underlying.shutdown()
 }
 
 // Exceedingly useful for writing well-behaved tests.
