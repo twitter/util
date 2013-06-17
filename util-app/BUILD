@@ -2,8 +2,8 @@ maven_layout()
 
 jar_library(name='util-app',
   dependencies=[
-    pants('util/util-app/src/main/scala'),
-    pants('util/util-app/src/main/java')
+    pants('util/util-app/src/main/java'),
+    pants('util/util-app/src/main/scala')
   ]
 )
 

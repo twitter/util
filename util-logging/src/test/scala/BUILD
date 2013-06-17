@@ -1,8 +1,8 @@
 junit_tests(name='scala',
   dependencies=[
-    pants('3rdparty/:junit'),
-    pants('3rdparty/:mockito-all'),
-    pants('3rdparty/:specs_2.9.2'),
+    pants('3rdparty:junit'),
+    pants('3rdparty:mockito-all'),
+    pants('3rdparty:specs'),
     pants('util/util-core/src/main/scala'),
     pants('util/util-logging/src/main/scala'),
   ],
