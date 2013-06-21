@@ -112,7 +112,7 @@ class FlagUndefinedException extends Exception("flag undefined")
  *
  * @see [[com.twitter.app.Flags]]
  */
-class Flag[T: Flaggable] private[app](val name: String, val help: String, val default: T) {
+class Flag[T: Flaggable] private[app](val name: String, val help: String, default: => T) {
   protected val flaggable = implicitly[Flaggable[T]]
   @volatile private[this] var value: Option[T] = None
   protected def getValue: Option[T] = value
@@ -256,7 +256,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     remaining
   }
 
-  def apply[T: Flaggable](name: String, default: T, help: String) = {
+  def apply[T: Flaggable](name: String, default: => T, help: String) = {
     val f = new Flag[T](name, help, default)
     add(f)
     f
