@@ -1,3 +1,11 @@
+6.3.7  2013-06-24
+
+  * util-app: flags use by-name default values
+  * util-app: Make the global flag test idempotent
+  * util-collection: guard against missing element exception in BGQ
+  * util: Deal with UnknownHostException thrown by InetAddress.getLocalHost
+  * util: update version in README
+
 6.3.6  2013-06-11
 
   * util: Update owners files
