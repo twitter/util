@@ -30,6 +30,7 @@ object Flaggable {
 
   implicit val ofString = mandatory(identity)
   implicit val ofInt = mandatory(_.toInt)
+  implicit val ofLong = mandatory(_.toLong)
   implicit val ofFloat = mandatory(_.toFloat)
   implicit val ofDouble = mandatory(_.toDouble)
   implicit val ofDuration = mandatory(Duration.parse(_))
@@ -305,7 +306,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
  *
  */
 @GlobalFlagVisible
-class GlobalFlag[T: Flaggable](default: T, help: String) 
+class GlobalFlag[T: Flaggable](default: T, help: String)
     extends Flag[T](null, help, default) {
 
   // Unfortunately, `getClass` in the the extends... above
