@@ -197,8 +197,8 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "thrift" % "libthrift" % "0.5.0",
       "org.slf4j" % "slf4j-nop" % "1.5.8" % "provided",
-      "org.codehaus.jackson" % "jackson-core-asl"   % "1.8.1",
-      "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.1"
+      "com.fasterxml.jackson.core" % "jackson-core"   % "2.1.3",
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.1.3"
     )
   ).dependsOn(utilCodec)
 

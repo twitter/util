@@ -5,7 +5,7 @@ import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory,
   TSimpleJSONProtocol}
 import org.apache.thrift.transport.TIOStreamTransport
-import org.codehaus.jackson.map.MappingJsonFactory
+import com.fasterxml.jackson.databind.MappingJsonFactory
 
 trait ThriftSerializer extends StringEncoder {
   def protocolFactory: TProtocolFactory
