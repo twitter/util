@@ -116,8 +116,14 @@ class Formatter(
    * formatted date string, and package name.
    */
   def formatPrefix(level: javalog.Level, date: String, name: String): String = {
-    val levelName = level match {
-      // if it maps to one of our levels, use our name.
+    FORMAT.format(formatLevelName(level), name, date)
+  }
+
+  /**
+   * Return the string representation of a given log level's name
+   */
+  def formatLevelName(level: javalog.Level) = {
+    level match {
       case x: Level =>
         x.name
       case x: javalog.Level =>
@@ -126,8 +132,6 @@ class Formatter(
           case Some(level) => level.name
         }
     }
-
-    FORMAT.format(levelName, name, date)
   }
 
   /**
@@ -135,6 +139,23 @@ class Formatter(
    * message.
    */
   def lineTerminator: String = "\n"
+
+  def formatMessageLines(record: javalog.LogRecord): Array[String] = {
+    var message = truncateText(formatText(record))
+
+    var lines = new mutable.ArrayBuffer[String]
+    lines ++= message.split("\n")
+
+    if (record.getThrown ne null) {
+      val traceLines = Formatter.formatStackTrace(record.getThrown, truncateStackTracesAt)
+      if (traceLines.size > 0) {
+        lines += record.getThrown.toString
+        lines ++= traceLines
+      }
+    }
+
+    lines.toArray
+  }
 
   /**
    * Return formatted text from a java LogRecord.
@@ -158,7 +179,16 @@ class Formatter(
   }
 
   override def format(record: javalog.LogRecord): String = {
-    val name = record.getLoggerName match {
+    val name = formatName(record)
+    val prefix = formatPrefix(record.getLevel, dateFormat.format(new Date(record.getMillis)), name)
+    formatMessageLines(record).mkString(prefix, lineTerminator + prefix, lineTerminator)
+  }
+
+  /**
+   * Returns the formatted name of the node given a LogRecord
+   */
+  def formatName(record: javalog.LogRecord): String = {
+    record.getLoggerName match {
       case null => "(root)"
       case "" => "(root)"
       case n => {
@@ -174,26 +204,18 @@ class Formatter(
         }
       }
     }
+  }
 
-    var message = formatText(record)
-
+  /**
+   * Truncates the text from a java LogRecord, if necessary
+   */
+  def truncateText(message: String) = {
     if ((truncateAt > 0) && (message.length > truncateAt)) {
-      message = message.substring(0, truncateAt) + "..."
+      message.substring(0, truncateAt) + "..."
     }
-
-    // allow multi-line log entries to be atomic:
-    var lines = new mutable.ArrayBuffer[String]
-    lines ++= message.split("\n")
-
-    if (record.getThrown ne null) {
-      val traceLines = Formatter.formatStackTrace(record.getThrown, truncateStackTracesAt)
-      if (traceLines.size > 0) {
-        lines += record.getThrown.toString
-        lines ++= traceLines
-      }
+    else{
+      message
     }
-    val prefix = formatPrefix(record.getLevel, dateFormat.format(new Date(record.getMillis)), name)
-    lines.mkString(prefix, lineTerminator + prefix, lineTerminator)
   }
 }
 
