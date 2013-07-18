@@ -207,7 +207,10 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     while (i < args.size) {
       val a = args(i)
       i += 1
-      if (a startsWith "-") {
+      if (a == "--") {
+        remaining ++= args.slice(i, args.size)
+        i = args.size
+      } else if (a startsWith "-") {
         a drop 1 split("=", 2) match {
           // There seems to be a bug Scala's pattern matching
           // optimizer that leaves `v' dangling in the last case if

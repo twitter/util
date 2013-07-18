@@ -107,6 +107,12 @@ class FlagTest extends FunSuite {
     assert(flag.parse(Array("arg0", "-foo", "333", "arg1")) === Seq("arg0", "arg1"))
   }
 
+  test("Flag: stop parsing at '--'") {
+    val ctx = new Ctx
+    import ctx._
+    assert(flag.parse(Array("arg0", "--", "-foo", "333")) === Seq("arg0", "-foo", "333"))
+  }
+
   test("Flag: give nice parse errors") {
     val ctx = new Ctx
     import ctx._
