@@ -937,6 +937,24 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
     }
   }
 
+  "Future.True" should {
+    "always be defined" in {
+      Future.True.isDefined must beTrue
+    }
+    "but still True" in {
+      Await.result(Future.True) must beTrue
+    }
+  }
+
+  "Future.False" should {
+    "always be defined" in {
+      Future.False.isDefined must beTrue
+    }
+    "but still False" in {
+      Await.result(Future.False) must beFalse
+    }
+  }
+
   "Future.never" should {
     "must be undefined" in {
       Future.never.isDefined must beFalse

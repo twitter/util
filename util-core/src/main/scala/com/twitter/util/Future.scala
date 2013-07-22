@@ -16,6 +16,8 @@ object Future {
   val Done = Unit
   val None: Future[Option[Nothing]] = new ConstFuture(Return(Option.empty))
   val Nil: Future[Seq[Nothing]] = new ConstFuture(Return(Seq.empty))
+  val True: Future[Boolean] = new ConstFuture(Return(true))
+  val False: Future[Boolean] = new ConstFuture(Return(false))
 
   /**
    * Makes a Future with a constant result.
