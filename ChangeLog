@@ -1,3 +1,9 @@
+6.3.8  2013-07-22
+
+  * util-core: Add Future.True and Future.False constants
+  * util-app: Treat '--' as end of flags indicator
+  * util-app: Add support for long flags
+
 6.3.7  2013-06-24
 
   * util-app: flags use by-name default values
