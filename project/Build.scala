@@ -10,7 +10,7 @@ object Util extends Build {
   )
 
   val sharedSettings = Seq(
-    version := "6.3.7",
+    version := "6.3.8",
     organization := "com.twitter",
     crossScalaVersions := Seq("2.9.2", "2.10.0"),
     // Workaround for a scaladoc bug which causes it to choke on
