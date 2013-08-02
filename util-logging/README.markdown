@@ -51,7 +51,7 @@ methods. You may also use `log` directly:
 
 An advantage to using sprintf ("%s", etc) conversion, as opposed to:
 
-    log(Lovel.DEBUG, "Logging " + name + " at debug level.")
+    log(Level.DEBUG, "Logging " + name + " at debug level.")
 
 is that java & scala perform string concatenation at runtime, even if nothing
 will be logged because the logfile isn't writing debug messages right now.
