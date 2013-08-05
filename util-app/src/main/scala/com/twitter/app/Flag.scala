@@ -1,8 +1,8 @@
 package com.twitter.app
 
 import com.twitter.util._
-import scala.collection.JavaConverters._
-import scala.collection.mutable.{HashMap, ArrayBuffer}
+import scala.collection.mutable.{ArrayBuffer, HashMap}
+import scala.collection.immutable.TreeSet
 import java.net.InetSocketAddress
 
 /**
@@ -133,6 +133,14 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   /** String representation of this flag's default value */
   def defaultString = flaggable.show(default)
 
+  /**
+   * String representation of this flag in -foo='bar' format,
+   * suitable for being used on the command line.
+   */
+  override def toString = {
+    "-" + name + "='" + flaggable.show(apply()).replaceAll("'", "'\"'\"'") + "'"
+  }
+
   /** Parse value `raw` into this flag. */
   def parse(raw: String) {
     value = Some(flaggable.parse(raw))
@@ -168,7 +176,7 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
  * }}}
  *
  * Global flags, detached from a particular `Flags` instance, but
- * accessible to all, are defined by [[com.twitter.util.app.GlobalFlag]].
+ * accessible to all, are defined by [[com.twitter.app.GlobalFlag]].
  */
 class Flags(argv0: String, includeGlobal: Boolean) {
   def this(argv0: String) = this(argv0, false)
@@ -280,6 +288,60 @@ class Flags(argv0: String, includeGlobal: Boolean) {
       if (globalLines.isEmpty) "" else "\nglobal flags:\n"+(globalLines mkString "\n")
     )
   }
+
+  /**
+   * Get all the flags known to this this Flags instance
+   *
+   * @param includeGlobal defaults to the includeGlobal settings of this instance
+   * @param classLoader   needed to find global flags, defaults to this instance's class loader
+   * @return all the flags known to this this Flags instance
+   */
+  def getAll(includeGlobal: Boolean = this.includeGlobal,
+             classLoader: ClassLoader = this.getClass.getClassLoader): Iterable[Flag[_]] = synchronized {
+
+    var flags = TreeSet[Flag[_]]()(Ordering.by(_.name)) ++ this.flags.valuesIterator
+
+    if (includeGlobal) {
+      flags ++= GlobalFlag.getAll(classLoader).iterator
+    }
+
+    flags
+  }
+
+  /**
+   * Formats all the values of all flags known to this instance into a format suitable for logging
+   *
+   * @param includeGlobal see getAll above
+   * @param classLoader   see getAll above
+   * @return all the flag values in alphabetical order, grouped into (set, unset)
+   */
+  def formattedFlagValues(includeGlobal: Boolean = this.includeGlobal,
+                          classLoader: ClassLoader = this.getClass.getClassLoader):
+                          (Iterable[String], Iterable[String]) = {
+
+    val (set, unset) = getAll(includeGlobal, classLoader).partition { _.get.isDefined }
+
+    (set.map { _ + " \\" }, unset.map { _ + " \\" })
+  }
+
+  /**
+   * Creates a string containing all the values of all flags known to this instance into a format suitable for logging
+   *
+   * @param includeGlobal set getAll above
+   * @param classLoader   set getAll above
+   * @return A string suitable for logging
+   */
+  def formattedFlagValuesString(includeGlobal: Boolean = this.includeGlobal,
+                                classLoader: ClassLoader = this.getClass.getClassLoader): String = {
+    val (set, unset) = formattedFlagValues(includeGlobal, classLoader)
+    val lines = Seq("Set flags:") ++
+      set ++
+      Seq("Unset flags:") ++
+      unset
+
+    lines.mkString("\n")
+  }
+
 }
 
 /**

@@ -149,4 +149,45 @@ class FlagTest extends FunSuite {
     assert(MyGlobalFlag() === "not okay")
     System.clearProperty("com.twitter.app.MyGlobalFlag")
   }
+
+  test("formatFlagValues") {
+
+    val flagWithGlobal = new Flags("my", includeGlobal = true)
+    flagWithGlobal("unset.local.flag", "a flag!", "this is a local flag")
+    flagWithGlobal("set.local.flag", "a flag!", "this is a local flag")
+    flagWithGlobal("flag.with.single.quote", "i'm so cool", "why would you do this?")
+    flagWithGlobal.parse(Array("-set.local.flag=hi"))
+
+    val flagWithoutGlobal = new Flags("my", includeGlobal = false)
+    flagWithoutGlobal("unset.local.flag", "a flag!", "this is a local flag")
+    flagWithoutGlobal("set.local.flag", "a flag!", "this is a local flag")
+    flagWithoutGlobal("flag.with.single.quote", "i'm so cool", "why would you do this?")
+    flagWithoutGlobal.parse(Array("-set.local.flag=hi"))
+
+    val localAndGlobal =
+      """|Set flags:
+         |-set.local.flag='hi' \
+         |Unset flags:
+         |-com.twitter.app.MyGlobalFlag='a test flag' \
+         |-flag.with.single.quote='i'"'"'m so cool' \
+         |-help='false' \
+         |-unset.local.flag='a flag!' \""".stripMargin
+
+    val localOnly =
+      """|Set flags:
+         |-set.local.flag='hi' \
+         |Unset flags:
+         |-flag.with.single.quote='i'"'"'m so cool' \
+         |-help='false' \
+         |-unset.local.flag='a flag!' \""".stripMargin
+
+    assert(flagWithGlobal.formattedFlagValuesString(true) === localAndGlobal)
+    assert(flagWithoutGlobal.formattedFlagValuesString(true) === localAndGlobal)
+
+    assert(flagWithGlobal.formattedFlagValuesString(false) === localOnly)
+    assert(flagWithoutGlobal.formattedFlagValuesString(false) === localOnly)
+
+    assert(flagWithGlobal.formattedFlagValuesString() === localAndGlobal)
+    assert(flagWithoutGlobal.formattedFlagValuesString() === localOnly)
+  }
 }
