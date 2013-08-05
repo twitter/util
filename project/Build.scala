@@ -2,6 +2,7 @@ import sbt._
 import Keys._
 
 object Util extends Build {
+  val libVersion = "6.3.8"
   val zkVersion = "3.3.4"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
@@ -10,7 +11,7 @@ object Util extends Build {
   )
 
   val sharedSettings = Seq(
-    version := "6.3.8",
+    version := libVersion,
     organization := "com.twitter",
     crossScalaVersions := Seq("2.9.2", "2.10.0"),
     // Workaround for a scaladoc bug which causes it to choke on
