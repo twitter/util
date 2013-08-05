@@ -141,7 +141,7 @@ class Formatter(
   def lineTerminator: String = "\n"
 
   def formatMessageLines(record: javalog.LogRecord): Array[String] = {
-    var message = truncateText(formatText(record))
+    val message = truncateText(formatText(record))
 
     var lines = new mutable.ArrayBuffer[String]
     lines ++= message.split("\n")
