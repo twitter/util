@@ -65,6 +65,12 @@ class FormatterSpec extends SpecificationWithJUnit {
         "WAR [20080329-05:53:16.722] (root): "
     }
 
+    "format a log level name" in {
+      basicFormatter.formatLevelName(Level.ERROR) mustEqual "ERROR"
+      basicFormatter.formatLevelName(Level.DEBUG) mustEqual "DEBUG"
+      basicFormatter.formatLevelName(Level.WARNING) mustEqual "WARNING"
+    }
+
     "format text" in {
       val record = new LogRecord(Level.ERROR, "error %s")
       basicFormatter.formatText(record) mustEqual "error %s"
