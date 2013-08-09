@@ -209,10 +209,11 @@ class Formatter(
   /**
    * Truncates the text from a java LogRecord, if necessary
    */
-  def truncateText(message: String) = {
-    if (truncateAt > 0) message.take(truncateAt) + "..."
-    else message
-  }
+  def truncateText(message: String) =
+    if ((truncateAt > 0) && (message.length > truncateAt))
+      message.take(truncateAt) + "..."
+    else
+      message
 }
 
 /**
