@@ -4,6 +4,7 @@ import TimeConversions._
 import java.io.{ByteArrayOutputStream, ByteArrayInputStream, 
   ObjectOutputStream, ObjectInputStream}
 import java.util.concurrent.TimeUnit
+import java.util.Locale
 import org.specs.SpecificationWithJUnit
 
 trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
@@ -303,6 +304,18 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
         case Nanoseconds(ns) => ns == millis*1e6
       }
       fromMilliseconds(millis-1) must be_==(Bottom)
+    }
+  }
+}
+
+class TimeFormatSpec extends SpecificationWithJUnit {
+  "TimeFormat" should {
+    "format correctly with non US locale" in {
+      val locale = Locale.GERMAN
+      val format = "EEEE"
+      val timeFormat = new TimeFormat(format, Some(locale))
+      val day = "Donnerstag"
+      timeFormat.parse(day).format(format, locale) mustEqual day
     }
   }
 }

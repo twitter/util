@@ -18,7 +18,7 @@ package com.twitter.util
 
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.{Date, TimeZone}
+import java.util.{Locale, Date, TimeZone}
 import java.util.concurrent.TimeUnit
 
 trait TimeLikeOps[This <: TimeLike[This]] {
@@ -409,9 +409,17 @@ trait TimeControl {
  *
  * The timezone used will be UTC.
  */
-class TimeFormat(pattern: String) {
-  private val format = new SimpleDateFormat(pattern)
+class TimeFormat(pattern: String, locale: Option[Locale]) {
+  private[this] val format = locale map {
+    new SimpleDateFormat(pattern, _)
+  } getOrElse new SimpleDateFormat(pattern)
   format.setTimeZone(TimeZone.getTimeZone("UTC"))
+
+  // jdk6 and jdk7 pick up the default locale differently in SimpleDateFormat
+  // so we can't rely on Locale.getDefault here.
+  // instead we let SimpleDateFormat do the work for us above
+  /** Create a new TimeFormat with the default locale. **/
+  def this(pattern: String) = this(pattern, None)
 
   def parse(str: String): Time = {
     // SimpleDateFormat is not thread-safe
@@ -455,6 +463,11 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    * Formats this Time according to the given SimpleDateFormat pattern.
    */
   def format(pattern: String) = new TimeFormat(pattern).format(this)
+
+  /**
+   * Formats this Time according to the given SimpleDateFormat pattern and locale.
+   */
+  def format(pattern: String, locale: Locale) = new TimeFormat(pattern, Some(locale)).format(this)
 
   /**
    * Creates a duration between two times.
