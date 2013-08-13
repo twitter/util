@@ -3,9 +3,10 @@ package com.twitter.util
 import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
-import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
+import org.specs.SpecificationWithJUnit
 import scala.collection.JavaConverters._
+import scala.util.control.ControlThrowable
 
 class FutureSpec extends SpecificationWithJUnit with Mockito {
   implicit def futureMatcher[A](future: Future[A]) = new {
@@ -18,6 +19,8 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
       }
     }
   }
+
+  class FatalException extends ControlThrowable
 
   trait MkConst {
     def apply[A](result: Try[A]): Future[A]
@@ -510,6 +513,15 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
             case Return(v) => const.value(throw e)
             case Throw(t) => const.value(0)
           } mustProduce(Throw(e))
+        }
+
+        "fatal exceptions thrown during transformation" in {
+          val e = new FatalException()
+
+          const.value(1).transform {
+            case Return(v) => const.value(throw e)
+            case Throw(t) => const.value(0)
+          } must throwThis(e) 
         }
       }
 

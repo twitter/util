@@ -65,7 +65,7 @@ object Promise {
     private[this] def k(r: Try[A]) = {
       promise.become(
         try f(r) catch {
-          case e => Future.exception(e)
+          case NonFatal(e) => Future.exception(e)
         }
       )
     }
