@@ -14,10 +14,10 @@ object Future {
   val Unit = apply(())
   val Void = apply[Void](null)
   val Done = Unit
-  val None: Future[Option[Nothing]] = new ConstFuture(Return(Option.empty))
-  val Nil: Future[Seq[Nothing]] = new ConstFuture(Return(Seq.empty))
-  val True: Future[Boolean] = new ConstFuture(Return(true))
-  val False: Future[Boolean] = new ConstFuture(Return(false))
+  val None: Future[Option[Nothing]] = new ConstFuture(Return.None)
+  val Nil: Future[Seq[Nothing]] = new ConstFuture(Return.Nil)
+  val True: Future[Boolean] = new ConstFuture(Return.True)
+  val False: Future[Boolean] = new ConstFuture(Return.False)
 
   /**
    * Makes a Future with a constant result.
@@ -123,7 +123,7 @@ object Future {
       for (f <- fs) {
         f onSuccess { _ =>
           if (count.decrementAndGet() == 0)
-            p.update(Return(()))
+            p.update(Return.Unit)
         } onFailure { cause =>
           p.updateIfEmpty(Throw(cause))
         }
@@ -872,7 +872,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   }
 
   def poll: Option[Try[A]] = Some(result)
-  
+
   // Awaitable
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
@@ -890,7 +890,7 @@ class NoFuture extends Future[Nothing] {
   def transform[B](f: Try[Nothing] => Future[B]): Future[B] = this
 
   def raise(interrupt: Throwable) {}
-  
+
   // Awaitable
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
@@ -949,13 +949,13 @@ private[util] object FutureBenchmark {
     run("respond") {
       val promise = new Promise[Unit]
       promise respond { res => () }
-      promise() = Return(())
+      promise() = Return.Unit
     }
 
     run("flatMaps") {
       val promise = new Promise[Unit]
       promise flatMap { _ => Future.value(()) }
-      promise() = Return(())
+      promise() = Return.Unit
     }
   }
 }

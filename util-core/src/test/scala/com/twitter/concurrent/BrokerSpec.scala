@@ -35,10 +35,10 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       r0.isDefined must beFalse
       r1.isDefined must beFalse
       val s = br.send(123)
-      s.sync().poll must beSome(Return(()))
+      s.sync().poll must beSome(Return.Unit)
       r0.poll must beSome(Return(123))
       r1.isDefined must beFalse
-      s.sync().poll must beSome(Return(()))
+      s.sync().poll must beSome(Return.Unit)
       r1.poll must beSome(Return(123))
       s.sync().isDefined must beFalse
     }
@@ -50,10 +50,10 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       s1.isDefined must beFalse
       val r = br.recv
       r.sync().poll must beSome(Return(123))
-      s0.poll must beSome(Return(()))
+      s0.poll must beSome(Return.Unit)
       s1.isDefined must beFalse
       r.sync().poll must beSome(Return(123))
-      s1.poll must beSome(Return(()))
+      s1.poll must beSome(Return.Unit)
       r.sync().isDefined must beFalse
     }
 
@@ -100,7 +100,7 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
         f.poll must beSome(Return(32))
 
         o.sync().poll must beSome(Return(12))
-        sendf0.poll must beSome(Return(()))
+        sendf0.poll must beSome(Return.Unit)
       }
     }
 
@@ -112,7 +112,7 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
       val item = br.recv.sync()
       item.isDefined must beFalse
 
-      br.send(123).sync().poll must beSome(Return(()))
+      br.send(123).sync().poll must beSome(Return.Unit)
       item.poll must beSome(Return(123))
     }
   }

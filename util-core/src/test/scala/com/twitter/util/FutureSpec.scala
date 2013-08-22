@@ -443,13 +443,13 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           inner1Size must be_<(sSize)
         }
       }
-      
+
       "get(deprecated)" in {
         val e = new Exception
         val v = 123
         Future.exception[Int](e).get(0.seconds) must be_==(Throw(e))
         Future.value(v).get(0.seconds) must be_==(Return(v))
-        
+
         // Including fatal ones:
         val e2 = new java.lang.IllegalAccessError
         Future.exception[Int](e2).get(0.seconds)  must be_==(Throw(e2))
@@ -521,7 +521,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           const.value(1).transform {
             case Return(v) => const.value(throw e)
             case Throw(t) => const.value(0)
-          } must throwThis(e) 
+          } must throwThis(e)
         }
       }
 
@@ -800,7 +800,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           m {
             p ensure { throw exc }
           }
-          
+
           m.handled must beNull
           p.update(Return(1)) mustNot throwA[Throwable]
           m.handled must be_==(exc)
@@ -833,9 +833,9 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         }
 
         local() = 123
-        promise0() = Return(())
+        promise0() = Return.Unit
         local() = 321
-        promise1() = Return(())
+        promise1() = Return.Unit
 
         both.isDefined must beTrue
         Await.result(both) must be_==((Some(1010), Some(1010)))
@@ -903,7 +903,7 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           implicit val timer = new Timer {
             def schedule(when: Time)(f: => Unit): TimerTask =
               throw new Exception("schedule called")
-            def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = 
+            def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
               throw new Exception("schedule called")
             def stop() = ()
           }
@@ -989,4 +989,3 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
     }
   }
 }
-

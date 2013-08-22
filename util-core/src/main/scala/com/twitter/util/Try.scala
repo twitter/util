@@ -166,6 +166,15 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
     }
 }
 
+object Return {
+  val Unit = Return(())
+  val Void = Return[Void](null)
+  val None: Return[Option[Nothing]] = Return(Option.empty)
+  val Nil: Return[Seq[Nothing]] = Return(Seq.empty)
+  val True: Return[Boolean] = Return(true)
+  val False: Return[Boolean] = Return(false)
+}
+
 final case class Return[+R](r: R) extends Try[R] {
   def isThrow = false
   def isReturn = true

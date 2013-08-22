@@ -25,9 +25,9 @@ class CloseAwaitablyTest extends FunSuite {
     assert(c.n == 1)
     assert(f.poll == None)
     c.p.setValue(())
-    assert(f.poll == Some(Return(())))
+    assert(f.poll == Some(Return.Unit))
   }
-  
+
   test("Await.ready") {
     val c = make()
     val t = new Thread {
@@ -36,7 +36,7 @@ class CloseAwaitablyTest extends FunSuite {
         Await.ready(c)
       }
     }
-     
+
     c.close(Time.now)
     assert(t.isAlive)
     c.p.setValue(())
