@@ -576,6 +576,8 @@ abstract class Future[+A] extends Awaitable[A] {
   /**
    * Returns a new Future that will error if this Future does not return in time.
    *
+   * ''Note'': On timeout, the underlying future is not interrupted.
+   *
    * @param timeout indicates how long you are willing to wait for the result to be available.
    */
   def within(timer: Timer, timeout: Duration): Future[A] = {
