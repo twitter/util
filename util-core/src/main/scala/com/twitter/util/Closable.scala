@@ -42,4 +42,14 @@ object Closable {
 
     def close(deadline: Time) = closeSeq(deadline, closables)
   }
+
+  /** A Closable that does nothing immediately. */
+  val nop: Closable = new Closable {
+    def close(deadline: Time) = Future.Done
+  }
+  
+  /** Make a new Closable whose close method invokes f. */
+  def make(f: Time => Future[Unit]): Closable = new Closable {
+    def close(deadline: Time) = f(deadline)
+  }
 }
