@@ -1,3 +1,13 @@
+6.4.0  2013-08-28
+
+  * util-core: Add Return constants
+  * util-core: Make ConstFuture.transform consistent with Promise.transform
+  * util-core: Make it possible to explicitly set a locale on TimeFormat
+  * util-logging: Refactored formatter to decrease coupling
+  * util-core: Add NoSuchMethodException as fatal exception in NonFatal
+  * util-app: Add some logging helpers to Flags
+  * util-core: Introduce Buf, Reader, and Writer: Zerocopy, buffered I/O
+
 6.3.8  2013-07-22
 
   * util-core: Add Future.True and Future.False constants
