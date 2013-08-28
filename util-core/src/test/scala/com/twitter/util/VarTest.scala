@@ -103,4 +103,21 @@ class VarTest extends FunSuite {
     v() = 100
     assert(cur === 111)
   }
+  
+  test("multiple observers at the same level") {
+    val v = Var(2)
+    val a = v map(_*2)
+    val b = v map(_*3)
+    
+    var x, y = 0
+    a observe { x = _ }
+    b observe { y = _ }
+
+    assert(x === 4)
+    assert(y === 6)
+    
+    v() = 1
+    assert(x === 2)
+    assert(y === 3)
+  }
 }

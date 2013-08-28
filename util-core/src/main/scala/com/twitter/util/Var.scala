@@ -103,7 +103,16 @@ private object UpdatableVar {
   ) extends (T => Unit) {
     def apply(t: T) = k(t)
   }
-  implicit def byDepth[T]: Ordering[Observer[T]] = Ordering.by(_.depth)
+
+  implicit def observerOrdering[T] = new Ordering[Observer[T]] {
+    // This is safe because observers are compared
+    // only from the same source of versions.
+    def compare(a: Observer[T], b: Observer[T]): Int = {
+      val c1 = a.depth compare b.depth
+      if (c1 != 0) return c1
+      a.version compare b.version
+    }
+  }
 }
 
 private class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] {
