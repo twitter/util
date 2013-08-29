@@ -89,6 +89,24 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         }
       }
 
+      "when" in {
+        var i = 0
+
+        Await.result {
+          Future.when(false) {
+            Future { i += 1 }
+          }
+        }
+        i must be_==(0)
+
+        Await.result {
+          Future.when(true) {
+            Future { i += 1 }
+          }
+        }
+        i must be_==(1)
+      }
+
       "whileDo" in {
         var i = 0
         val queue = new ConcurrentLinkedQueue[HandledPromise[Unit]]

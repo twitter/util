@@ -384,6 +384,13 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   }
 
   /**
+   * Perform the effects of the supplied Future only when the provided
+   * flag is true.
+   */
+  def when[A](p: Boolean)(f: => Future[A]): Future[Unit] =
+    if (p) f.unit else Future.Unit
+
+  /**
    * Repeat a computation that returns a Future while some predicate obtains,
    * after each computation completes.
    */
