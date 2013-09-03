@@ -1,6 +1,9 @@
 package com.twitter.concurrent
 
 import java.util.ArrayDeque
+import management.ManagementFactory
+import scala.util.Random
+
 
 trait Scheduler {
   /**
@@ -13,23 +16,64 @@ trait Scheduler {
    * work to do.
    */
   def flush()
+  
+  // A note on Hotspot's ThreadMXBean's CPU time. On Linux, this
+  // uses clock_gettime[1] which should both be fast and accurate.
+  //
+  // On OSX, the Mach thread_info call is used.
+  //
+  // [1] http://linux.die.net/man/3/clock_gettime
+
+  /** The amount of User time that's been scheduled as per ThreadMXBean. */
+  def usrTime: Long
+  
+  /** The amount of CPU time that's been scheduled as per ThreadMXBean */
+  def cpuTime: Long
+  
+  /** Number of dispatches performed by this scheduler. */
+  def numDispatches: Long
 }
 
 /**
  * An efficient thread-local continuation scheduler.
  */
 object Scheduler extends Scheduler {
+  private val SampleScale = 50
+
+  private[this] val bean = ManagementFactory.getThreadMXBean()
+
+  @volatile var schedulers = Set[Scheduler]()
+
   private val local = new ThreadLocal[Scheduler] {
-    override def initialValue = new LocalScheduler
+    override def initialValue = null
+  }
+  
+  def apply(): Scheduler = {
+    val s = local.get()
+    if (s != null)
+      return s
+    
+    local.set(new LocalScheduler)
+    synchronized { schedulers += local.get() }
+    local.get()
   }
 
-  def submit(r: Runnable) = local.get().submit(r)
-  def flush() = local.get().flush()
+  def submit(r: Runnable) = Scheduler().submit(r)
+  def flush() = Scheduler().flush()
+  def usrTime = Scheduler().usrTime
+  def cpuTime = Scheduler().cpuTime
+  def numDispatches = Scheduler().numDispatches
 
   private class LocalScheduler extends Scheduler {
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
+    private[this] val rng = new Random
+
+    // This is safe: there's only one updater.
+    @volatile var usrTime = 0L
+    @volatile var cpuTime = 0L
+    @volatile var numDispatches = 0L
 
     def submit(r: Runnable) {
       assert(r != null)
@@ -37,7 +81,18 @@ object Scheduler extends Scheduler {
       else if (r1 == null) r1 = r
       else if (r2 == null) r2 = r
       else rs.addLast(r)
-      if (!running) run()
+      if (!running) {
+        if (rng.nextInt(SampleScale) == 0) {
+          numDispatches += SampleScale
+          val cpu0 = bean.getCurrentThreadCpuTime()
+          val usr0 = bean.getCurrentThreadUserTime()
+          run()
+          cpuTime += (bean.getCurrentThreadCpuTime() - cpu0)*SampleScale
+          usrTime += (bean.getCurrentThreadUserTime() - usr0)*SampleScale
+        } else {
+          run()
+        }
+      }
     }
 
     def flush() {
