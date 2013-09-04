@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
 import java.util.ArrayDeque
+import java.util.concurrent.Executors
 import management.ManagementFactory
 import scala.util.Random
-
 
 trait Scheduler {
   /**
@@ -35,46 +35,52 @@ trait Scheduler {
 }
 
 /**
- * An efficient thread-local continuation scheduler.
+ * A global scheduler.
  */
 object Scheduler extends Scheduler {
-  private val SampleScale = 50
+  @volatile private var self: Scheduler = new LocalScheduler
+  
+  def apply(): Scheduler = self
 
+  // Note: This can be unsafe since some schedulers may be active,
+  // and flush() can be invoked on the wrong scheduler.
+  //
+  // This can happen, for example, if a LocalScheduler is used while
+  // a future is resolved via Await.
+  def setUnsafe(sched: Scheduler) {
+    self = sched
+  }
+
+  def submit(r: Runnable) = self.submit(r)
+  def flush() = self.flush()
+  def usrTime = self.usrTime
+  def cpuTime = self.cpuTime
+  def numDispatches = self.numDispatches
+}
+
+
+/**
+ * An efficient thread-local, direct-dispatch scheduler.
+ */
+private class LocalScheduler extends Scheduler {
+  private[this] val SampleScale = 50
   private[this] val bean = ManagementFactory.getThreadMXBean()
-
-  @volatile var schedulers = Set[Scheduler]()
-
-  private val local = new ThreadLocal[Scheduler] {
+  @volatile private[this] var activations = Set[Activation]()
+  private[this] val local = new ThreadLocal[Activation] {
     override def initialValue = null
   }
-  
-  def apply(): Scheduler = {
-    val s = local.get()
-    if (s != null)
-      return s
-    
-    local.set(new LocalScheduler)
-    synchronized { schedulers += local.get() }
-    local.get()
-  }
 
-  def submit(r: Runnable) = Scheduler().submit(r)
-  def flush() = Scheduler().flush()
-  def usrTime = Scheduler().usrTime
-  def cpuTime = Scheduler().cpuTime
-  def numDispatches = Scheduler().numDispatches
-
-  private class LocalScheduler extends Scheduler {
+  private class Activation extends Scheduler {  
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
     private[this] val rng = new Random
-
+  
     // This is safe: there's only one updater.
     @volatile var usrTime = 0L
     @volatile var cpuTime = 0L
     @volatile var numDispatches = 0L
-
+  
     def submit(r: Runnable) {
       assert(r != null)
       if (r0 == null) r0 = r
@@ -119,4 +125,72 @@ object Scheduler extends Scheduler {
       }
     }
   }
+
+  private[this] def get(): Activation = {
+    val a = local.get()
+    if (a != null)
+      return a
+
+    local.set(new Activation)
+    synchronized { activations += local.get() }
+    local.get()
+  }
+
+  // Scheduler implementation:
+  def submit(r: Runnable) = get().submit(r)
+  def flush() = get().flush()
+  
+  def usrTime = (activations map (_.usrTime)).sum
+  def cpuTime = (activations map (_.cpuTime)).sum
+  def numDispatches = (activations map (_.numDispatches)).sum
+}
+
+/**
+ * A scheduler that dispatches directly to an underlying Java
+ * cached threadpool executor.
+ */
+class ThreadPoolScheduler(name: String) extends Scheduler {
+  private[this] val bean = ManagementFactory.getThreadMXBean()
+  @volatile private[this] var threads = Set[Thread]()
+
+  private[this] val threadFactory = 
+    new NamedPoolThreadFactory(name, true/*daemons*/) {
+      override def newThread(r: Runnable) = {
+        super.newThread(new Runnable {
+          def run() {
+            val t = Thread.currentThread()
+            synchronized { threads += t }
+            try r.run() finally {
+              synchronized { threads -= t }
+            }
+          }
+        })
+      }
+    }
+
+  private[this] val executor =
+    Executors.newCachedThreadPool(threadFactory)
+
+  def shutdown() { executor.shutdown() }
+  def submit(r: Runnable) { executor.submit(r) }
+  def flush() = ()
+  def usrTime = {
+    var sum = 0L
+    for (t <- threads) {
+      val time = bean.getThreadUserTime(t.getId())
+      if (time > 0) sum += time
+    }
+    sum
+  }
+
+  def cpuTime = {
+    var sum = 0L
+    for (t <- threads) {
+      val time = bean.getThreadCpuTime(t.getId())
+      if (time > 0) sum += time
+    }
+    sum
+  }
+
+  def numDispatches = -1L  // Unsupported
 }

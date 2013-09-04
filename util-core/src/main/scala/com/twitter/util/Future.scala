@@ -535,6 +535,14 @@ abstract class Future[+A] extends Awaitable[A] {
    * Is the result of the Future available yet?
    */
   def isDefined: Boolean = poll.isDefined
+  
+  /**
+   * Checks whether a Unit-typed Future is done. By
+   * convention, futures of type Future[Unit] are used
+   * for signalling.
+   */
+  def isDone(implicit ev: this.type <:< Future[Unit]) = 
+    ev(this).poll == Some(Return.Unit)
 
   /**
    * Demands that the result of the future be available within

@@ -463,6 +463,13 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    * @throws ImmutableResult if the Promise is already populated
    */
   def setException(throwable: Throwable) { update(Throw(throwable)) }
+  
+  /**
+   * Sets a Unit-typed future. By convention, futures of type
+   * Future[Unit] are used for signalling.
+   */
+  def setDone()(implicit ev: this.type <:< Promise[Unit]): Boolean =
+    ev(this).updateIfEmpty(Return.Unit)
 
   /**
    * Populate the Promise with the given Try. The try can either be a
