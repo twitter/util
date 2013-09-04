@@ -213,7 +213,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "commons-codec" % "commons-codec" % "1.5" % "test"
     )
-  ).dependsOn(utilCore)
+  ).dependsOn(utilCore % "test")
 
   lazy val utilJvm = Project(
     id = "util-jvm",

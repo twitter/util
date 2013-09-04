@@ -22,11 +22,11 @@
       <version>1.5</version>
       <scope>test</scope>
     </dependency>
-    <!-- project dependencies -->
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core</artifactId>
       <version>6.4.1-SNAPSHOT</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
