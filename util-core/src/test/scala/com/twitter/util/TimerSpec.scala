@@ -53,45 +53,47 @@ class TimerSpec extends SpecificationWithJUnit with Mockito {
     }
   }
 
-  "ScheduledThreadPoolTimer" should {
-    "initialize and stop" in {
-      val timer = new ScheduledThreadPoolTimer(1)
-      timer must notBeNull
-      timer.stop()
-    }
-
-    "increment a counter" in {
-      val timer = new ScheduledThreadPoolTimer
-      val counter = new AtomicInteger(0)
-      timer.schedule(0.millis, 20.millis) {
-        counter.incrementAndGet()
+  if (!Option(System.getProperty("SKIP_FLAKY")).isDefined) {
+    "ScheduledThreadPoolTimer" should {
+      "initialize and stop" in {
+        val timer = new ScheduledThreadPoolTimer(1)
+        timer must notBeNull
+        timer.stop()
       }
-      Thread.sleep(40.milliseconds.inMilliseconds)
-      counter.get() must eventually(be_>=(2))
-      timer.stop()
-    }
 
-    "schedule(when)" in {
-      val timer = new ScheduledThreadPoolTimer
-      val counter = new AtomicInteger(0)
-      timer.schedule(Time.now + 20.millis) {
-        counter.incrementAndGet()
+      "increment a counter" in {
+        val timer = new ScheduledThreadPoolTimer
+        val counter = new AtomicInteger(0)
+        timer.schedule(0.millis, 20.millis) {
+          counter.incrementAndGet()
+        }
+        Thread.sleep(40.milliseconds.inMilliseconds)
+        counter.get() must eventually(be_>=(2))
+        timer.stop()
       }
-      Thread.sleep(40.milliseconds.inMilliseconds)
-      counter.get() must eventually(be_==(1))
-      timer.stop()
-    }
 
-    "cancel schedule(when)" in {
-      val timer = new ScheduledThreadPoolTimer
-      val counter = new AtomicInteger(0)
-      val task = timer.schedule(Time.now + 20.millis) {
-        counter.incrementAndGet()
+      "schedule(when)" in {
+        val timer = new ScheduledThreadPoolTimer
+        val counter = new AtomicInteger(0)
+        timer.schedule(Time.now + 20.millis) {
+          counter.incrementAndGet()
+        }
+        Thread.sleep(40.milliseconds.inMilliseconds)
+        counter.get() must eventually(be_==(1))
+        timer.stop()
       }
-      task.cancel()
-      Thread.sleep(40.milliseconds.inMilliseconds)
-      counter.get() must not(eventually(be_==(1)))
-      timer.stop()
+
+      "cancel schedule(when)" in {
+        val timer = new ScheduledThreadPoolTimer
+        val counter = new AtomicInteger(0)
+        val task = timer.schedule(Time.now + 20.millis) {
+          counter.incrementAndGet()
+        }
+        task.cancel()
+        Thread.sleep(40.milliseconds.inMilliseconds)
+        counter.get() must not(eventually(be_==(1)))
+        timer.stop()
+      }
     }
   }
 
