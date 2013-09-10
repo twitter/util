@@ -1,3 +1,12 @@
+6.5.0  2013-09-10
+
+  * util-hashing: removed dependency on util-core
+  * util-core: Introduce swappable schedulers, ThreadPool scheduler.
+  * util-core: Scheduler - "productivity" stats, dispatches.
+  * util-core: Add Future.when
+  * util-core: introduced Var - composable variables
+  * util-core: adding short note on Future 'within'
+
 6.4.0  2013-08-28
 
   * util-core: Add Return constants
