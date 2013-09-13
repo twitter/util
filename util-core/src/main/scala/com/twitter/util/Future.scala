@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import com.twitter.concurrent.{Offer, IVar, Tx, Scheduler}
+import com.twitter.concurrent.{Offer, Tx, Scheduler}
 import java.util.concurrent.atomic.{
   AtomicBoolean, AtomicInteger, AtomicReference,
   AtomicReferenceArray}
@@ -44,7 +44,7 @@ object Future {
   /**
    * A new future that can never complete.
    */
-  def never: Future[Nothing] = new NoFuture
+  val never: Future[Nothing] = new NoFuture
 
   @deprecated("Prefer static Future.Void.", "5.x")
   def void(): Future[Void] = value[Void](null)
@@ -535,13 +535,13 @@ abstract class Future[+A] extends Awaitable[A] {
    * Is the result of the Future available yet?
    */
   def isDefined: Boolean = poll.isDefined
-  
+
   /**
    * Checks whether a Unit-typed Future is done. By
    * convention, futures of type Future[Unit] are used
    * for signalling.
    */
-  def isDone(implicit ev: this.type <:< Future[Unit]) = 
+  def isDone(implicit ev: this.type <:< Future[Unit]) =
     ev(this).poll == Some(Return.Unit)
 
   /**
