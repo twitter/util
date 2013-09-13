@@ -15,22 +15,24 @@ object Logging {
 
 /**
  * A [[com.twitter.app.App]] mixin to use for logging. Defines flags
- * to configure the (default) logger setup.
+ * to configure the (default) logger setup.  When adding logging to a
+ * twitter-server, mix in a trait that extends Logging but overrides factories.
  */
 trait Logging { self: App =>
   import Logging._
 
   lazy val log = Logger(name)
   def defaultLogLevel: Level = Level.INFO
-  private val levelFlag = flag("log.level", defaultLogLevel, "Log level")
-  private val outputFlag = flag("log.output", "/dev/stderr", "Output file")
+  protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
+  protected[this] val outputFlag = flag("log.output", "/dev/stderr", "Output file")
+
+  def loggerFactories: List[LoggerFactory] = LoggerFactory(
+    node = "",
+    level = Some(levelFlag()),
+    handlers = FileHandler(outputFlag()) :: Nil
+  ) :: Nil
 
   premain {
-    val factory = LoggerFactory(
-      node = "",
-      level = Some(levelFlag()),
-      handlers = FileHandler(outputFlag()) :: Nil
-    )
-    Logger.configure(factory :: Nil)
+    Logger.configure(loggerFactories)
   }
 }
