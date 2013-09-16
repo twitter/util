@@ -22,7 +22,7 @@ import org.specs.util.TimeConversions._
 
 
 class QueueingHandlerSpec extends SpecificationWithJUnit {
-  class NullHandler extends Handler(BareFormatter, None) {
+  class MockHandler extends Handler(BareFormatter, None) {
     def publish(record: javalog.LogRecord) {}
     def close() {}
     def flush() {}
@@ -35,7 +35,6 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
     logger.setUseParentHandlers(false)
     logger
   }
-
 
   "QueueingHandler" should {
     "publish" in {
@@ -51,7 +50,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
 
     "publish, drop on overflow" in {
       val logger = freshLogger()
-      val blockingHandler = new NullHandler {
+      val blockingHandler = new MockHandler {
         override def publish(record: javalog.LogRecord) {
           Thread.sleep(100000)
         }
@@ -74,7 +73,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
     "flush" in {
       val logger = freshLogger()
       var wasFlushed = false
-      val handler = new NullHandler {
+      val handler = new MockHandler {
         override def flush() { wasFlushed = true }
       }
       var queueHandler = new QueueingHandler(handler, 1)
@@ -89,7 +88,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
     "close" in {
       val logger = freshLogger()
       var wasClosed = false
-      val handler = new NullHandler {
+      val handler = new MockHandler {
         override def close() { wasClosed = true }
       }
       var queueHandler = new QueueingHandler(handler)
@@ -105,7 +104,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
       val logger = freshLogger()
       var shouldError = true
       var didLog = false
-      val handler = new NullHandler {
+      val handler = new MockHandler {
         override def publish(record: javalog.LogRecord) {
           if (shouldError) {
             shouldError = false

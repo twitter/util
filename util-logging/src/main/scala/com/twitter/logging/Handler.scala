@@ -33,6 +33,12 @@ abstract class Handler(val formatter: Formatter, val level: Option[Level]) exten
   }
 }
 
+object NullHandler extends Handler(BareFormatter, None) {
+  def publish(record: javalog.LogRecord) {}
+  def close() {}
+  def flush() {}
+}
+
 object StringHandler {
   /**
    * Generates a HandlerFactory that returns a StringHandler
