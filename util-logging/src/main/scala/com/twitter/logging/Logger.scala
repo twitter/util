@@ -65,7 +65,7 @@ class LoggingException(reason: String) extends Exception(reason)
 /**
  * Scala wrapper for logging.
  */
-class Logger private(val name: String, private val wrapped: javalog.Logger) {
+class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   // wrapped methods:
   def addHandler(handler: javalog.Handler) = wrapped.addHandler(handler)
   def getFilter() = wrapped.getFilter()
@@ -185,6 +185,15 @@ class Logger private(val name: String, private val wrapped: javalog.Logger) {
     }
   }
 }
+
+object NullLogger extends Logger(
+  "null",
+  {
+    val jLog = javalog.Logger.getLogger("null")
+    jLog.setLevel(Level.OFF)
+    jLog
+  }
+)
 
 object Logger extends Iterable[Logger] {
   private[logging] val levelNamesMap = new mutable.HashMap[String, Level]
