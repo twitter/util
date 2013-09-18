@@ -95,7 +95,7 @@ object Tx {
             throw AlreadyAckd
 
           case Nackd(_) =>
-            throw AlreadyAckd
+            throw AlreadyNackd
 
           case Done =>
             throw AlreadyDone

@@ -42,6 +42,12 @@ class TxSpec extends SpecificationWithJUnit {
       rtx.nack() must throwA(Tx.AlreadyAckd)
     }
 
+    "complain on nack ack" in {
+      val (stx, rtx) = Tx.twoParty(123)
+      rtx.nack() mustNot throwAn[Exception]
+      rtx.ack() must throwA(Tx.AlreadyNackd)
+    }
+
     "complain on nack nack" in {
       val (stx, rtx) = Tx.twoParty(123)
       rtx.nack() mustNot throwAn[Exception]
