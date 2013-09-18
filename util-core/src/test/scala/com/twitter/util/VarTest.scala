@@ -10,7 +10,9 @@ import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
 class VarTest extends FunSuite {
-  private case class U[T](init: T) extends UpdatableVar[T](init) {
+  private case class U[T](init: T) extends UpdatableVar[T] {
+    value = init
+
     var n = 0
     var count = 0
 
@@ -119,5 +121,37 @@ class VarTest extends FunSuite {
     v() = 1
     assert(x === 2)
     assert(y === 3)
+  }
+  
+  test("Var.memo") {
+    val u = U(0)
+    assert(u.count === 0)
+    val m = u.memo()
+    assert(u.count === 0)
+    
+    var i1, i2: Int = -1
+
+    val o1 = m.observe { i1 = _ }
+    assert(u.count === 1)
+    assert(u.n === 1)
+    val o2 = m.observe { i2 = _ }
+    assert(u.count === 1)
+    assert(u.n === 1)
+    
+    u() = 123
+    assert(i1 === 123)
+    assert(i2 === 123)
+    
+    Await.result(o2.close())
+    assert(u.count === 1)
+    assert(u.n === 1)
+    
+    Await.result(o1.close())
+    assert(u.count === 1)
+    assert(u.n === 0)
+    
+    assert(u() === 123)
+    assert(u.count === 2)
+    assert(u.n === 0)
   }
 }

@@ -77,6 +77,38 @@ trait Var[+T] { self =>
       )
     }
   }
+
+  /**
+   * Memoize this Var.
+   */
+  def memo(): Var[T] = new UpdatableVar[T] {
+    private[this] var n = 0
+    private[this] var observer: Closable = Closable.nop
+    private[this] val decr = Closable.make { deadline =>
+      val obs = synchronized {
+        n -= 1
+        if (n == 0) observer
+        else Closable.nop
+      }
+
+      obs.close(deadline)
+    }
+
+    private[this] def incr() = synchronized {
+      n += 1
+      if (n == 1)
+        observer = self.observe(this.update(_))
+    }
+
+    override protected def observe(depth: Int, k: T => Unit): Closable = {
+      val inner = synchronized {
+        incr()
+        super.observe(depth, k)
+      }
+
+      Closable.sequence(inner, decr)
+    }
+  }
 }
 
 object Var {
@@ -85,8 +117,9 @@ object Var {
    * such Vars independent -- derived Vars being dependent
    * on these.
    */
-  def apply[T](init: T): Var[T] with Updatable[T] =
-    new UpdatableVar(init)
+  def apply[T](init: T): Var[T] with Updatable[T] = new UpdatableVar[T] {
+    value = init
+  }
 }
 
 /** Denotes an updatable container. */
@@ -115,11 +148,11 @@ private object UpdatableVar {
   }
 }
 
-private class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] {
+private trait UpdatableVar[T] extends Var[T] with Updatable[T] {
   import UpdatableVar._
   
   private[this] var version = 0L
-  @volatile private[this] var value = init
+  @volatile protected var value: T = _
   @volatile private[this] var observers =
     immutable.SortedSet.empty[Observer[T]]
 
@@ -154,4 +187,3 @@ private class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] {
   
   override def toString = "Var("+value+")"
 }
-
