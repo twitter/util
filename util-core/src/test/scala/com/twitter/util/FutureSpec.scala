@@ -901,9 +901,10 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
       "within" in {
         "when we run out of time" in {
           implicit val timer = new JavaTimer
-          val p = new Promise[Int]
+          val p = new HandledPromise[Int]
           Await.result(p.within(50.milliseconds)) must throwA[TimeoutException]
           timer.stop()
+          p.handled must beNone
         }
 
         "when everything is chill" in {
@@ -933,6 +934,71 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           implicit val timer = new MockTimer
           val p = new HandledPromise[Int]
           val f = p.within(50.milliseconds)
+          p.handled must beNone
+          f.raise(new Exception)
+          p.handled must beSomething
+        }
+      }
+
+      "raiseWithin" in {
+        "when we run out of time" in {
+          implicit val timer = new JavaTimer
+          val p = new HandledPromise[Int]
+          Await.result(p.raiseWithin(50.milliseconds)) must throwA[TimeoutException]
+          timer.stop()
+          p.handled must beSomething
+        }
+
+        "when we run out of time, throw our stuff" in {
+          implicit val timer = new JavaTimer
+          class SkyFallException extends Exception("let the skyfall")
+          val skyFall = new SkyFallException
+          val p = new HandledPromise[Int]
+          Await.result(p.raiseWithin(50.milliseconds, skyFall)) must throwA[SkyFallException]
+          timer.stop()
+          p.handled must beSomething
+          p.handled must be_==(Some(skyFall))
+        }
+
+        "when we are within timeout, but inner throws TimeoutException, we don't raise" in {
+          implicit val timer = new JavaTimer
+          class SkyFallException extends Exception("let the skyfall")
+          val skyFall = new SkyFallException
+          val p = new HandledPromise[Int]
+          Await.result(
+            p.within(20.milliseconds).raiseWithin(50.milliseconds, skyFall)
+          ) must throwA[TimeoutException]
+          timer.stop()
+          p.handled must beNone
+        }
+
+        "when everything is chill" in {
+          implicit val timer = new JavaTimer
+          val p = new Promise[Int]
+          p.setValue(1)
+          Await.result(p.raiseWithin(50.milliseconds)) mustBe 1
+          timer.stop()
+        }
+
+        "when timeout is forever" in {
+          // We manage to throw an exception inside
+          // the scala compiler if we use MockTimer
+          // here. Sigh.
+          implicit val timer = new Timer {
+            def schedule(when: Time)(f: => Unit): TimerTask =
+              throw new Exception("schedule called")
+            def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+              throw new Exception("schedule called")
+            def stop() = ()
+          }
+          val p = new Promise[Int]
+          p.raiseWithin(Duration.Top) must be(p)
+        }
+
+        "interruption" in Time.withCurrentTimeFrozen { tc =>
+          implicit val timer = new MockTimer
+          val p = new HandledPromise[Int]
+          val f = p.raiseWithin(50.milliseconds)
           p.handled must beNone
           f.raise(new Exception)
           p.handled must beSomething
