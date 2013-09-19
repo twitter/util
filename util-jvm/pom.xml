@@ -25,6 +25,11 @@
     <!-- project dependencies -->
     <dependency>
       <groupId>com.twitter</groupId>
+      <artifactId>util-app</artifactId>
+      <version>6.5.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.twitter</groupId>
       <artifactId>util-core</artifactId>
       <version>6.5.1-SNAPSHOT</version>
     </dependency>
