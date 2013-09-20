@@ -1,5 +1,9 @@
 package com.twitter.io
 
+import java.util.Arrays
+import java.nio.ByteBuffer
+import java.nio.charset.Charset
+
 /**
  * Buf represents a fixed, immutable byte buffer. Buffers may be
  * sliced and concatenated, and thus be used to implement
@@ -45,6 +49,11 @@ trait Buf { outer =>
 
     def length = left.length + right.length
   }
+
+  override def equals(other: Any): Boolean = other match {
+    case other: Buf => Buf.equals(this, other)
+    case _ => false
+  }
 }
 
 object Buf {
@@ -70,7 +79,7 @@ object Buf {
   /**
    * A buffer representing an array of bytes.
    */
-  class ByteArray(bytes: Array[Byte], begin: Int, end: Int) extends Buf {
+  class ByteArray(val bytes: Array[Byte], val begin: Int, val end: Int) extends Buf {
 
     def write(buf: Array[Byte], off: Int): Unit =
       System.arraycopy(bytes, begin, buf, off, length)
@@ -83,6 +92,16 @@ object Buf {
     }
 
     val length = end-begin
+    
+    override def toString = "ByteArray("+length+")"
+    
+    override def equals(other: Any): Boolean = other match {
+      case other: ByteArray
+          if other.begin == 0 && other.end == other.bytes.length &&
+          begin == 0 && end == bytes.length =>
+        Arrays.equals(bytes, other.bytes)
+      case other => super.equals(other)
+    }
   }
 
   object ByteArray {
@@ -104,5 +123,60 @@ object Buf {
      */
     def apply(bytes: Byte*): Buf =
       apply(Array[Byte](bytes:_*))
+      
+    def unapply(buf: Buf): Option[(Array[Byte], Int, Int)] = buf match {
+      case ba: ByteArray => Some(ba.bytes, ba.begin, ba.end)
+      case _ => None
+    }
+  }
+  
+  /**
+   * Convert the Buf to a Java NIO ByteBuffer.
+   */
+  def toByteBuffer(buf: Buf): ByteBuffer = buf match {
+    case ByteArray(bytes, i, j) =>
+      ByteBuffer.wrap(bytes, i, j-i)
+    case buf =>
+      val bytes = new Array[Byte](buf.length)
+      buf.write(bytes, 0)
+      ByteBuffer.wrap(bytes)
+  }
+
+  /** Byte equality between two buffers. Requires copies. */
+  def equals(x: Buf, y: Buf): Boolean = {
+    if (x.length != y.length) return false
+    val a, b = new Array[Byte](x.length)
+    x.write(a, 0)
+    y.write(b, 0)
+    Arrays.equals(a, b)
+  }
+  
+  /**
+   * Return a string representing the buffer 
+   * contents in hexadecimal.
+   */
+  def slowHexString(buf: Buf): java.lang.String = {
+    val bytes = new Array[Byte](buf.length)
+    buf.write(bytes, 0)
+    val digits = for (b <- bytes) yield "%02x".format(b)
+    digits mkString ""
+  }
+
+  /**
+   * Create and deconstruct Utf-8 encoded buffers.
+   */
+  object Utf8 {
+    private val utf8 = Charset.forName("UTF-8")
+  
+    def apply(s: String): Buf = ByteArray(s.getBytes(utf8))
+
+    def unapply(buf: Buf): Option[String] = buf match {
+      case ba: ByteArray =>
+        val s = new String(ba.bytes, ba.begin, ba.end-ba.begin, utf8)
+        Some(s)
+      case buf =>
+        val bytes = new Array[Byte](buf.length)
+        Some(new String(bytes, utf8))
+    }
   }
 }

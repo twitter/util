@@ -13,7 +13,7 @@ package com.twitter.util
 import collection.mutable.ArrayBuffer
 import java.util.Arrays
 
-private[util] final object Local {
+final object Local {
   type Context = Array[Option[_]]
   private[this] val localCtx = new ThreadLocal[Context]
   @volatile private[this] var size: Int = 0

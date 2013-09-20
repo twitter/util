@@ -39,4 +39,33 @@ class BufTest extends FunSuite {
       assert(w.toSeq === arr.slice(i, j).toSeq)
     }
   }
+  
+  test("Buf.Utf8: English") {
+    val buf = Buf.Utf8("Hello, world!")
+    assert(buf.length === 13)
+    val bytes = new Array[Byte](13)
+    buf.write(bytes, 0)
+    assert("Hello, world!".toSeq === bytes.toSeq.map(_.toChar))
+    
+    val Buf.Utf8(s) = buf
+    assert(s === "Hello, world!")
+  }
+  
+  test("Buf.Utf8: Japanese") {
+    val buf = Buf.Utf8("￼￼￼￼￼￼￼")
+    assert(buf.length === 21)
+    val bytes = new Array[Byte](21)
+    buf.write(bytes, 0)
+    
+    val expected = Array[Byte](
+      -17, -65, -68, -17, -65, -68, -17, 
+      -65, -68, -17, -65, -68, -17, -65, -68, 
+      -17, -65, -68, -17, -65, -68)
+      
+    assert(bytes.toSeq === expected.toSeq)
+
+    val Buf.Utf8(s) = buf
+    assert(s === "￼￼￼￼￼￼￼")
+  }
 }
+
