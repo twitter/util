@@ -1,7 +1,4 @@
-package com.twitter.util.exp
-
-// Remove when moving out of exp:
-import com.twitter.util.{Await, Closable, Future, Time}
+package com.twitter.util
 
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -153,5 +150,19 @@ class VarTest extends FunSuite {
     assert(u() === 123)
     assert(u.count === 2)
     assert(u.n === 0)
+  }
+  
+  test("Var.unapply") {
+    val v = Var(123)
+    v match {
+      case Var(123) =>
+      case _ => fail()
+    }
+    
+    v() = 333
+    v match {
+      case Var(333) =>
+      case _ => fail
+    }
   }
 }

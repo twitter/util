@@ -1,7 +1,4 @@
-package com.twitter.util.exp
-
-// Remove when moving out of exp:
-import com.twitter.util.{Closable, Future, Time}
+package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
 import scala.collection.immutable
@@ -120,6 +117,8 @@ object Var {
   def apply[T](init: T): Var[T] with Updatable[T] = new UpdatableVar[T] {
     value = init
   }
+
+  def unapply[T](v: Var[T]): Option[T] = Some(v())
 }
 
 /** Denotes an updatable container. */
