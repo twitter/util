@@ -287,7 +287,14 @@ object Time extends TimeLikeOps[Time] {
     private def writeReplace(): Object = TimeBox.Undefined()
   }
 
-  def now: Time = fn()
+  def now: Time = {
+    localGetTime() match {
+      case None =>
+        Time.fromMilliseconds(System.currentTimeMillis())
+      case Some(f) =>
+        f()
+    }
+  }
 
   /**
    * The unix epoch. Times are measured relative to this.
@@ -315,10 +322,8 @@ object Time extends TimeLikeOps[Time] {
 
   /**
    * Note, this should only ever be updated by methods used for testing.
-   * Even there, since this is shared global state, there are risks about memory visibility
-   * with multi-threaded tests.
    */
-  private[Time] var fn: () => Time = () => Time.fromMilliseconds(System.currentTimeMillis())
+  private[Time] val localGetTime = new Local[()=>Time]
 
   @deprecated("use Time.fromMilliseconds(...) instead", "2011-09-12") // date is a guess
   def apply(millis: Long) = fromMilliseconds(millis)
@@ -328,25 +333,29 @@ object Time extends TimeLikeOps[Time] {
 
   /**
    * Execute body with the time function replaced by `timeFunction`
-   * WARNING: This functionality isn't thread safe, as Time.fn is a global!
-   *          It must be used only for testing purpose.
+   * WARNING: This is only meant for testing purposes.  You can break it
+   * with nested calls if you have an outstanding Future executing in a worker pool.
    */
   def withTimeFunction[A](timeFunction: => Time)(body: TimeControl => A): A = {
-    val prevFn = Time.fn
+    @volatile var tf = () => timeFunction
+    val save = Local.save()
     try {
       val timeControl = new TimeControl {
         def set(time: Time) {
-          Time.fn = () => time
+          tf = () => time
         }
         def advance(delta: Duration) {
-          val newTime = Time.now + delta
-          Time.fn = () => newTime
+          val newTime = tf() + delta
+          /* Modifying the var here instead of resetting the local allows this method
+            to work inside filters or between the creation and fulfillment of Promises.
+            See BackupRequestFilterTest in Finagle for an example. */
+          tf = () => newTime
         }
       }
-      Time.fn = () => timeFunction
+      Time.localGetTime() = () => tf()
       body(timeControl)
     } finally {
-      Time.fn = prevFn
+      Local.restore(save)
     }
   }
 

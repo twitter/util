@@ -358,6 +358,30 @@ class TimeSpec extends  { val ops = Time } with TimeLikeSpec[Time] {
       (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)
     }
 
+    "withTimeAt threaded" in {
+      val t0 = new Time(314159L)
+      val t1 = new Time(314160L)
+      Time.withTimeAt(t0) { tc =>
+        Time.now mustEqual t0
+        Thread.sleep(50)
+        Time.now mustEqual t0
+        tc.advance(Duration.fromNanoseconds(1))
+        Time.now mustEqual t1
+        tc.set(t0)
+        Time.now mustEqual t0
+        @volatile var threadTime: Option[Time] = None
+        val thread = new Thread {
+          override def run() {
+            threadTime = Some(Time.now)
+          }
+        }
+        thread.start()
+        thread.join()
+        threadTime.get mustNotEq t0
+      }
+      (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)
+    }
+
     "withTimeFunction" in {
       val t0 = Time.now
       var t = t0

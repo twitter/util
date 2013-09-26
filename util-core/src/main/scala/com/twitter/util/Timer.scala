@@ -254,8 +254,17 @@ class MockTimer extends Timer {
     task
   }
 
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
-    throw new Exception("periodic scheduling not supported")
+  /**
+   * Pay attention that ticking frozen time forward more than 1x duration will result in only one
+   * invocation of your task.
+   */
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
+    def runAndReschedule() {
+      schedule(Time.now + period) { runAndReschedule() }
+      f
+    }
+    schedule(when) { runAndReschedule() }
+  }
 
   def stop() { isStopped = true }
 }
