@@ -640,7 +640,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * @param timeout indicates how long you are willing to wait for the result to be available.
    * @param exc exception to throw.
    */
-  def within(timer: Timer, timeout: Duration, exc: Throwable): Future[A] = {
+  def within(timer: Timer, timeout: Duration, exc: => Throwable): Future[A] = {
     if (timeout == Duration.Top)
       return this
 
