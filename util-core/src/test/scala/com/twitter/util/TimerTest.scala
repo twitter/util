@@ -66,44 +66,42 @@ class TimerTest extends FunSuite with MockitoSugar {
     verify(underlying).stop()
   }
 
-  if (!Option(System.getProperty("SKIP_FLAKY")).isDefined) {
-    test("ScheduledThreadPoolTimer should initialize and stop") {
-      val timer = new ScheduledThreadPoolTimer(1)
-      assert(timer != null)
-      timer.stop()
-    }
+  test("ScheduledThreadPoolTimer should initialize and stop") {
+    val timer = new ScheduledThreadPoolTimer(1)
+    assert(timer != null)
+    timer.stop()
+  }
 
-    test("ScheduledThreadPoolTimer should increment a counter") {
-      val timer = new ScheduledThreadPoolTimer
-      val counter = new AtomicInteger(0)
-      timer.schedule(100.millis, 200.millis) {
-        counter.incrementAndGet()
-      }
-      eventually(Timeout(Span(4, Seconds))) { assert(counter.get() >= 2) }
-      timer.stop()
+  test("ScheduledThreadPoolTimer should increment a counter") {
+    val timer = new ScheduledThreadPoolTimer
+    val counter = new AtomicInteger(0)
+    timer.schedule(100.millis, 200.millis) {
+      counter.incrementAndGet()
     }
+    eventually(Timeout(Span(4, Seconds))) { assert(counter.get() >= 2) }
+    timer.stop()
+  }
 
-    test("ScheduledThreadPoolTimer should schedule(when)") {
-      val timer = new ScheduledThreadPoolTimer
-      val counter = new AtomicInteger(0)
-      timer.schedule(Time.now + 200.millis) {
-        counter.incrementAndGet()
-      }
-      eventually(Timeout(Span(4, Seconds))) { assert(counter.get() == 1) }
-      timer.stop()
+  test("ScheduledThreadPoolTimer should schedule(when)") {
+    val timer = new ScheduledThreadPoolTimer
+    val counter = new AtomicInteger(0)
+    timer.schedule(Time.now + 200.millis) {
+      counter.incrementAndGet()
     }
+    eventually(Timeout(Span(4, Seconds))) { assert(counter.get() === 1) }
+    timer.stop()
+  }
 
-    test("ScheduledThreadPoolTimer should cancel schedule(when)") {
-      val timer = new ScheduledThreadPoolTimer
-      val counter = new AtomicInteger(0)
-      val task = timer.schedule(Time.now + 200.millis) {
-        counter.incrementAndGet()
-      }
-      task.cancel()
-      Thread.sleep(1.seconds.inMilliseconds)
-      assert(counter.get() != 1)
-      timer.stop()
+  test("ScheduledThreadPoolTimer should cancel schedule(when)") {
+    val timer = new ScheduledThreadPoolTimer
+    val counter = new AtomicInteger(0)
+    val task = timer.schedule(Time.now + 200.millis) {
+      counter.incrementAndGet()
     }
+    task.cancel()
+    Thread.sleep(1.seconds.inMilliseconds)
+    assert(counter.get() != 1)
+    timer.stop()
   }
 
   test("JavaTimer should not stop working when an exception is thrown") {
