@@ -1,7 +1,8 @@
 package com.twitter.app
 
-import scala.collection.mutable
 import com.twitter.util.{Try, Throw, Return}
+import java.lang.reflect.InvocationTargetException
+import scala.collection.mutable
 
 /**
  * A composable application trait that includes flag parsing as well
@@ -96,6 +97,8 @@ trait App {
     } catch {
       case _: NoSuchMethodException =>
         // This is OK. It's possible to define traits that only use pre/post mains.
+
+      case e: InvocationTargetException => throw e.getCause
     }
     for (f <- postmains) f()
   }
