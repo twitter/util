@@ -118,6 +118,16 @@ object Var {
     value = init
   }
 
+  /**
+   * Create a new, constant, v-valued Var.
+   */
+  def value[T](v: T): Var[T] = new Var[T] {
+    protected def observe(depth: Int, f: T => Unit): Closable = {
+      f(v)
+      Closable.nop
+    }    
+  }
+
   def unapply[T](v: Var[T]): Option[T] = Some(v())
 }
 
