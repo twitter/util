@@ -1,3 +1,19 @@
+6.6.0  2013-10-09
+
+  * util-app: Properly propagate underlying exceptions.
+  * util-core: Add a `Var.value` function. (835a043)
+  * util-core: Augment Var and Local in support of Finagle's request context feature. (b2d689a)
+  * util-core: Avoid instantiating TimeoutException until it is needed (CSL-592)
+  * util-core: Make Future.never a val instead of a def
+  * util-core: Move Var to core util, add Var.unapply
+  * util-core: Testing function Time.withTimeAt now uses Locals.
+  * util-core: Throw AlreadyNackd on nack-ack.
+  * util-core: raiseWithin, alternative to within, that raise interrupt.
+  * util-jvm: Add a GlobalFlag for a machine's number of logical cores. (dc20fbf1)
+  * util-logging: Add a NullLogger object.
+  * util-logging: makes Logging more flexible for easy extension of twitter-server
+  * util-zk: Add ShardCoordinator and ZkAsyncSemaphore classes. (c57b2a9)
+
 6.5.0  2013-09-10
 
   * util-hashing: removed dependency on util-core
@@ -386,4 +402,3 @@
   creates a circular of config objects.
   * Make Duration hashable.
   * Promise.on{Success, Failure}: returned chained future.
-
