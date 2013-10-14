@@ -20,7 +20,12 @@ import scala.collection.immutable
  * exceptions thrown while computing derived Vars.
  */
 trait Var[+T] { self =>
-  /** Extract the current value of the Var */
+  /**
+   * Extract the current value of the Var
+   * Calling this method is discouraged outside of testing.  A more idiomatically correct
+   * technique is to call `observe` to both retrieve the current value, and react to
+   * future changes.
+   */
   def apply(): T = {
     var opt: Option[T] = None
     observe(v => opt = Some(v)).close()
@@ -51,15 +56,19 @@ trait Var[+T] { self =>
    * Create a derived variable by applying `f` to the contained
    * value.
    */
-  def map[U](f: T => U): Var[U] = flatMap(t => Var(f(t)))
+  def map[U](f: T => U): Var[U] = flatMap(t => Var.value(f(t)))
 
   /**
    * Create a dependent Var which behaves as `f` applied to the
    * current value of this Var. FlatMap manages a dynamic dependency
    * graph: the dependent Var is detached and recomputed  whenever
-   * the outer Var changes.
+   * the outer Var changes, but only if there are any observers.  An
+   * unobserved Var returned by flatMap will not invoke `f`
    */
   def flatMap[U](f: T => Var[U]): Var[U] = new Var[U] {
+
+    override def apply(): U = f(self())()
+
     def observe(depth: Int, o: U => Unit) = {
       val inner = new AtomicReference(Closable.nop)
       val outer = self.observe(depth, { t =>
@@ -72,38 +81,6 @@ trait Var[+T] { self =>
           inner.getAndSet(Closable.nop).close(deadline)
         }
       )
-    }
-  }
-
-  /**
-   * Memoize this Var.
-   */
-  def memo(): Var[T] = new UpdatableVar[T] {
-    private[this] var n = 0
-    private[this] var observer: Closable = Closable.nop
-    private[this] val decr = Closable.make { deadline =>
-      val obs = synchronized {
-        n -= 1
-        if (n == 0) observer
-        else Closable.nop
-      }
-
-      obs.close(deadline)
-    }
-
-    private[this] def incr() = synchronized {
-      n += 1
-      if (n == 1)
-        observer = self.observe(this.update(_))
-    }
-
-    override protected def observe(depth: Int, k: T => Unit): Closable = {
-      val inner = synchronized {
-        incr()
-        super.observe(depth, k)
-      }
-
-      Closable.sequence(inner, decr)
     }
   }
 }
@@ -122,6 +99,9 @@ object Var {
    * Create a new, constant, v-valued Var.
    */
   def value[T](v: T): Var[T] = new Var[T] {
+
+    override def apply(): T = v
+
     protected def observe(depth: Int, f: T => Unit): Closable = {
       f(v)
       Closable.nop
@@ -164,6 +144,8 @@ private trait UpdatableVar[T] extends Var[T] with Updatable[T] {
   @volatile protected var value: T = _
   @volatile private[this] var observers =
     immutable.SortedSet.empty[Observer[T]]
+
+  override def apply(): T = value
 
   def update(t: T) {
     val obs = synchronized {
