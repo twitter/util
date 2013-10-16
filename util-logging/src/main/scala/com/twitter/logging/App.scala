@@ -22,15 +22,26 @@ trait Logging { self: App =>
   import Logging._
 
   lazy val log = Logger(name)
+  def defaultOutput: String = "/dev/stderr"
   def defaultLogLevel: Level = Level.INFO
   protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
-  protected[this] val outputFlag = flag("log.output", "/dev/stderr", "Output file")
+  protected[this] val outputFlag = flag("log.output", defaultOutput, "Output file")
 
-  def loggerFactories: List[LoggerFactory] = LoggerFactory(
-    node = "",
-    level = Some(levelFlag()),
-    handlers = FileHandler(outputFlag()) :: Nil
-  ) :: Nil
+  def loggerFactories: List[LoggerFactory] = {
+    val output = outputFlag()
+    val level = Some(levelFlag())
+    val handler =
+      if (output == "/dev/stderr")
+        ConsoleHandler(level = level)
+      else
+        FileHandler(output, level = level)
+
+    LoggerFactory(
+      node = "",
+      level = level,
+      handlers = handler :: Nil
+    ) :: Nil
+  }
 
   premain {
     Logger.configure(loggerFactories)
