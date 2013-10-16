@@ -1,11 +1,16 @@
 package com.twitter.io
 
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{verify, when}
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.mock.MockitoSugar
 import org.junit.runner.RunWith
 
 @RunWith(classOf[JUnitRunner])
-class BufTest extends FunSuite {
+class BufTest extends FunSuite with MockitoSugar {
   test("Buf.ByteArray.slice") {
     val arr = Array.range(0, 16).map(_.toByte)
     val buf = Buf.ByteArray(arr)
@@ -39,33 +44,51 @@ class BufTest extends FunSuite {
       assert(w.toSeq === arr.slice(i, j).toSeq)
     }
   }
-  
+
   test("Buf.Utf8: English") {
     val buf = Buf.Utf8("Hello, world!")
     assert(buf.length === 13)
     val bytes = new Array[Byte](13)
     buf.write(bytes, 0)
     assert("Hello, world!".toSeq === bytes.toSeq.map(_.toChar))
-    
+
     val Buf.Utf8(s) = buf
     assert(s === "Hello, world!")
   }
-  
+
   test("Buf.Utf8: Japanese") {
     val buf = Buf.Utf8("￼￼￼￼￼￼￼")
     assert(buf.length === 21)
     val bytes = new Array[Byte](21)
     buf.write(bytes, 0)
-    
+
     val expected = Array[Byte](
-      -17, -65, -68, -17, -65, -68, -17, 
-      -65, -68, -17, -65, -68, -17, -65, -68, 
+      -17, -65, -68, -17, -65, -68, -17,
+      -65, -68, -17, -65, -68, -17, -65, -68,
       -17, -65, -68, -17, -65, -68)
-      
+
     assert(bytes.toSeq === expected.toSeq)
 
     val Buf.Utf8(s) = buf
     assert(s === "￼￼￼￼￼￼￼")
   }
-}
 
+  test("Buf.Utf8.unapply with a Buf.ByteArray") {
+    val str = "Hello, world!"
+    val buf = Buf.Utf8(str)
+    assert(Buf.Utf8.unapply(buf) === Some(str))
+  }
+
+  test("Buf.Utf8.unapply with a non-Buf.ByteArray") {
+    val buf = mock[Buf]
+    when(buf.length) thenReturn(12)
+    when(buf.write(any[Array[Byte]], any[Int])) thenAnswer(
+      new Answer[Unit]() {
+        def answer(invocation: InvocationOnMock) = {}
+      }
+    )
+
+    Buf.Utf8.unapply(buf)
+    verify(buf).write(any[Array[Byte]], any[Int])
+  }
+}

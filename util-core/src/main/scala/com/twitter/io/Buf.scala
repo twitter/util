@@ -22,7 +22,7 @@ trait Buf { outer =>
    * The number of bytes in the buffer
    */
   def length: Int
-  
+
   /**
    * Returns a new buffer representing a slice of this buffer, delimited
    * by the indices `i` inclusive and `j` exclusive: `[i, j)`. Out of bounds
@@ -70,7 +70,7 @@ object Buf {
    * A buffer representing "end-of-file".
    */
   val Eof: Buf = new NoopBuf
-  
+
   /**
    * An empty buffer.
    */
@@ -92,9 +92,9 @@ object Buf {
     }
 
     val length = end-begin
-    
+
     override def toString = "ByteArray("+length+")"
-    
+
     override def equals(other: Any): Boolean = other match {
       case other: ByteArray
           if other.begin == 0 && other.end == other.bytes.length &&
@@ -123,13 +123,13 @@ object Buf {
      */
     def apply(bytes: Byte*): Buf =
       apply(Array[Byte](bytes:_*))
-      
+
     def unapply(buf: Buf): Option[(Array[Byte], Int, Int)] = buf match {
       case ba: ByteArray => Some(ba.bytes, ba.begin, ba.end)
       case _ => None
     }
   }
-  
+
   /**
    * Convert the Buf to a Java NIO ByteBuffer.
    */
@@ -150,9 +150,9 @@ object Buf {
     y.write(b, 0)
     Arrays.equals(a, b)
   }
-  
+
   /**
-   * Return a string representing the buffer 
+   * Return a string representing the buffer
    * contents in hexadecimal.
    */
   def slowHexString(buf: Buf): java.lang.String = {
@@ -167,7 +167,7 @@ object Buf {
    */
   object Utf8 {
     private val utf8 = Charset.forName("UTF-8")
-  
+
     def apply(s: String): Buf = ByteArray(s.getBytes(utf8))
 
     def unapply(buf: Buf): Option[String] = buf match {
@@ -176,6 +176,7 @@ object Buf {
         Some(s)
       case buf =>
         val bytes = new Array[Byte](buf.length)
+        buf.write(bytes, 0)
         Some(new String(bytes, utf8))
     }
   }
