@@ -1,3 +1,11 @@
+6.7.0  2013-10-18
+
+  * util-core: Introduce Try.collect(), analagous to Future.collect
+  * util-core: Add some empirically useful add-ons to Var
+  * util-logging: Use ConsoleHandler when outputFlag is /dev/null
+  * util-core: Fix broken string-deserialization in Buf.Utf8.unapply
+  * util-core: Improve gc profile around Var
+
 6.6.0  2013-10-09
 
   * util-app: Properly propagate underlying exceptions.
