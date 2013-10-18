@@ -116,5 +116,19 @@ class TrySpec extends SpecificationWithJUnit {
         }
       }
     }
+
+    "collect" in {
+      "with an empty Seq" in {
+        Try.collect(Seq.empty) mustEqual Return(Seq.empty)
+      }
+
+      "with a Throw" in {
+        Try.collect(Seq(Return(1), Throw(e))) mustEqual Throw(e)
+      }
+
+      "with Returns" in {
+        Try.collect(Seq(Return(1), Return(2))) mustEqual Return(Seq(1, 2))
+      }
+    }
   }
 }

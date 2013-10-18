@@ -14,6 +14,14 @@ object Try {
       case NonFatal(e) => Throw(e)
     }
   }
+
+  /**
+   * Collect the results from the given Trys into a new Try. The result will be a Throw if any of
+   * the argument Trys are Throws. The first Throw in the Seq is the one which is surfaced.
+   */
+  def collect[A](ts: Seq[Try[A]]): Try[Seq[A]] = {
+    if (ts.isEmpty) Return(Seq.empty[A]) else Try { ts map { t => t() } }
+  }
 }
 
 /**
