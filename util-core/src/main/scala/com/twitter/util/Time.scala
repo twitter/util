@@ -177,7 +177,9 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def compare(that: This) =
     if ((that eq Top) || (that eq Undefined)) -1
     else if (that eq Bottom) 1
-    else inNanoseconds compare that.inNanoseconds
+    else if (inNanoseconds < that.inNanoseconds) -1
+    else if (inNanoseconds > that.inNanoseconds) 1
+    else 0
 
   /** Equality within `maxDelta` */
   def moreOrLessEquals(other: This, maxDelta: Duration) =
@@ -185,7 +187,7 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
 }
 
 /**
- * Boxes for serialization. This has to be its own 
+ * Boxes for serialization. This has to be its own
  * toplevel object to remain serializable
  */
 private[util] object TimeBox {
@@ -247,7 +249,7 @@ object Time extends TimeLikeOps[Time] {
     }
 
     override def isFinite = false
-    
+
     private def writeReplace(): Object = TimeBox.Top()
   }
 
@@ -272,7 +274,7 @@ object Time extends TimeLikeOps[Time] {
     }
 
     override def isFinite = false
-    
+
     private def writeReplace(): Object = TimeBox.Bottom()
   }
 
@@ -283,7 +285,7 @@ object Time extends TimeLikeOps[Time] {
     override def +(delta: Duration) = this
     override def diff(that: Time) = Duration.Undefined
     override def isFinite = false
-    
+
     private def writeReplace(): Object = TimeBox.Undefined()
   }
 
@@ -538,6 +540,6 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    * Converts this Time object to a java.util.Date
    */
   def toDate = new Date(inMillis)
-  
+
   private def writeReplace(): Object = TimeBox.Finite(inNanoseconds)
 }

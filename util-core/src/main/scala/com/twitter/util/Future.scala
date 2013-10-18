@@ -121,11 +121,12 @@ object Future {
       val count = new AtomicInteger(fs.size)
       val p = Promise.interrupts[Unit](fs:_*)
       for (f <- fs) {
-        f onSuccess { _ =>
-          if (count.decrementAndGet() == 0)
-            p.update(Return.Unit)
-        } onFailure { cause =>
-          p.updateIfEmpty(Throw(cause))
+        f respond {
+          case Return(_) =>
+            if (count.decrementAndGet() == 0)
+              p.update(Return.Unit)
+          case Throw(cause) =>
+            p.updateIfEmpty(Throw(cause))
         }
       }
       p
@@ -306,15 +307,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
       val p = Promise.interrupts[Seq[A]](fs:_*)
       for (i <- 0 until fs.size) {
         val f = fs(i)
-        f onSuccess { x =>
-          results.set(i, x)
-          if (count.decrementAndGet() == 0) {
-            val resultsArray = new mutable.ArrayBuffer[A](fs.size)
-            for (j <- 0 until fs.size) resultsArray += results.get(j)
-            p.setValue(resultsArray)
-          }
-        } onFailure { cause =>
-          p.updateIfEmpty(Throw(cause))
+        f respond {
+          case Return(x) =>
+            results.set(i, x)
+            if (count.decrementAndGet() == 0) {
+              val resultsArray = new mutable.ArrayBuffer[A](fs.size)
+              for (j <- 0 until fs.size) resultsArray += results.get(j)
+              p.setValue(resultsArray)
+            }
+          case Throw(cause) =>
+            p.updateIfEmpty(Throw(cause))
         }
       }
       p
