@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
+import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
 
 /**
@@ -83,6 +84,38 @@ trait Var[+T] { self =>
       )
     }
   }
+
+  /**
+   * Observe this Var into the given AtomicReference.
+   * Observation stops when the returned closable is closed.
+   */
+  def observeTo[U >: T](ref: AtomicReference[U]): Closable =
+    this observe { newv => ref.set(newv) }
+
+  /**
+   * A one-shot predicate observation. The returned future
+   * is satisfied with the first observed value of Var that obtains
+   * the predicate `pred`. Observation stops when the future is 
+   * satisfied.
+   *
+   * Interrupting the future will also satisfy the future (with the
+   * interrupt exception) and close the observation.
+   */
+  def observeUntil(pred: T => Boolean): Future[T] = {
+    val p = Promise[T]()
+    p.setInterruptHandler {
+      case exc => p.updateIfEmpty(Throw(exc))
+    }
+    
+    val o = observe { 
+      case el if pred(el) => p.updateIfEmpty(Return(el))
+      case _ => 
+    }
+
+    p ensure {
+      o.close()
+    }
+  }
 }
 
 object Var {
@@ -99,9 +132,7 @@ object Var {
    * Create a new, constant, v-valued Var.
    */
   def value[T](v: T): Var[T] = new Var[T] {
-
     override def apply(): T = v
-
     protected def observe(depth: Int, f: T => Unit): Closable = {
       f(v)
       Closable.nop
@@ -109,6 +140,105 @@ object Var {
   }
 
   def unapply[T](v: Var[T]): Option[T] = Some(v())
+
+  /** 
+   * Collect a collection of Vars into a Var of collection.
+   */
+  def collect[T, CC[X] <: Traversable[X]](vars: CC[Var[T]])
+      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassManifest[T])
+      : Var[CC[T]] = async(newBuilder().result) { v =>
+    val N = vars.size
+    val cur = new Array[T](N)
+    var filling = true
+    def build() = {
+      val b = newBuilder()
+      b ++= cur
+      b.result()
+    }
+
+    def publish(i: Int, newi: T) = synchronized {
+      cur(i) = newi
+      if (!filling) v() = build()
+    }
+
+    val closes = new Array[Closable](N)
+    var i = 0
+    for (u <- vars) {
+      val j = i
+      closes(j) = u observe { newj => publish(j, newj) }
+      i += 1
+    }
+
+    synchronized {
+      filling = false
+      v() = build()
+    }
+
+    Closable.all(closes:_*)
+  }
+
+  private object create {
+    sealed trait State[+T]
+    object Idle extends State[Nothing]
+    case class Observing[T](n: Int, v: Var[T], c: Closable) extends State[T]
+  }
+
+  /**
+   * Create a new Var whose values are provided asynchronously by
+   * `update`. The returned Var is dormant until it is observed:
+   * `update` is called by-need. Such observations are also reference
+   * counted so that simultaneous observervations do not result in
+   * multiple invocations of `update`. When the last observer stops
+   * observing, the [[com.twitter.util.Closable Closable]] returned
+   * from `update` is closed. Subsequent observations result in a new
+   * call to `update`.
+   *
+   * `empty` is used to fill the returned Var until `update` has
+   * provided a value. The first observation of the returned Var is
+   * synchronous with the call to `update`--it is guaranteed the the
+   * opportunity to fill the Var before the observer sees any value
+   * at all.
+   *
+   * Updates from `update` are ignored after the returned
+   * [[com.twitter.util.Closable Closable]] is closed.
+   */
+  def async[T](empty: T)(update: Updatable[T] => Closable): Var[T] = new Var[T] {
+    import create._
+    private var state: State[T] = Idle
+    
+    private val closable = Closable.make { deadline =>
+      synchronized {
+        state match {
+          case Idle =>
+            Future.Done
+          case Observing(1, _, c) =>
+            state = Idle
+            c.close(deadline)
+          case Observing(n, v, c) =>
+            state = Observing(n-1, v, c)
+            Future.Done
+        }
+      }
+    }
+
+    protected def observe(depth: Int, f: T => Unit): Closable = {
+      val v = synchronized {
+        state match {
+          case Idle =>
+            val v = Var(empty)
+            val c = update(v)
+            state = Observing(1, v, c)
+            v
+          case Observing(n, v, c) =>
+            state = Observing(n+1, v, c)
+            v
+        }
+      }
+
+      val c = v.observe(depth, f)
+      Closable.sequence(c, closable)
+    }
+  }
 }
 
 /** Denotes an updatable container. */

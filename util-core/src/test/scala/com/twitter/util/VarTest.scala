@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import scala.collection.mutable
+import java.util.concurrent.atomic.AtomicReference
 
 @RunWith(classOf[JUnitRunner])
 class VarTest extends FunSuite {
@@ -174,6 +175,94 @@ class VarTest extends FunSuite {
       case Var(333) =>
       case _ => fail
     }
+  }
+
+
+  test("Var.async") {
+    val x = Var[Int](333)
+    val p = new Promise[Unit]
+    var closed: Time = Time.Zero
+    var called = 0
+    val c = Closable.make { t =>
+      closed = t
+      p
+    }
+    val v = Var.async(123) { v =>
+      called += 1
+      x observe { v() = _ }
+      c
+    }
+    
+    assert(called === 0)
+    var vv: Int = 0
+    val o = v observe { vv = _ }
+    assert(called === 1)
+    assert(vv === 333)
+    assert(closed === Time.Zero)
+    
+    x() = 111
+    assert(vv === 111)
+    assert(closed === Time.Zero)
+    
+    val o1 = v observe { v => () }
+
+    val t = Time.now
+    val f = o.close(t)
+    assert(called === 1)
+    assert(closed === Time.Zero)
+    assert(f.isDone)
+
+    val f1 = o1.close(t)
+    assert(closed === t)
+    assert(!f1.isDone)
+    p.setDone()
+    assert(f1.isDone)
+  }
+  
+  test("Var.collect[Seq]") {
+    val vars = Seq(
+      Var(1),
+      Var(2),
+      Var(3))
+    
+    val coll = Var.collect(vars: Seq[Var[Int]])
+    val ref = new AtomicReference[Seq[Int]]
+    coll.observeTo(ref)
+    assert(ref.get === Seq(1,2,3))
+    
+    vars(1).update(999)
+    assert(ref.get === Seq(1,999,3))
+  }
+  
+  // This is either very neat or very horrendous, 
+  // depending on your point of view.
+  test("Var.collect[Set]") {
+    val vars = Seq(
+      Var(1),
+      Var(2),
+      Var(3))
+
+    val coll = Var.collect(vars map (v => v: Var[Int]) toSet)
+    val ref = new AtomicReference[Set[Int]]
+    coll.observeTo(ref)
+    assert(ref.get === Set(1,2,3))
+    
+    vars(1).update(1)
+    assert(ref.get === Set(1,3))
+    
+    vars(1).update(999)
+    assert(ref.get === Set(1,999,3))
+  }
+
+  test("Var.observeUntil") {
+    val v = Var[Int](123)
+    val f = v.observeUntil(_%2 == 0)
+    assert(!f.isDefined)
+    v() = 333
+    assert(!f.isDefined)
+    v() = 332
+    assert(f.isDefined)
+    assert(Await.result(f) === 332)
   }
 
   /**
