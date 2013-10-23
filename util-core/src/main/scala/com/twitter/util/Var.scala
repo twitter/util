@@ -10,29 +10,16 @@ import scala.collection.immutable
  * recomputed automatically when independent variables change -- they
  * implement a form of self-adjusting computation.
  *
- * Vars may also be observed, notifying users whenever the variable
- * changes.
+ * Vars are observed, notifying users whenever the variable changes.
  *
  * @note Vars do not always perform the minimum amount of
  * re-computation.
  *
- * @note There are no well-defined error semantics for Var. Vars
- * are computed lazily, and the updating thread will receive any
+ * @note There are no well-defined error semantics for Var. Vars are
+ * computed lazily, and the updating thread will receive any
  * exceptions thrown while computing derived Vars.
  */
 trait Var[+T] { self =>
-  /**
-   * Extract the current value of the Var
-   * Calling this method is discouraged outside of testing.  A more idiomatically correct
-   * technique is to call `observe` to both retrieve the current value, and react to
-   * future changes.
-   */
-  def apply(): T = {
-    var opt: Option[T] = None
-    observe(v => opt = Some(v)).close()
-    opt.get
-  }
-
   /** 
    * Observe this Var. `f` is invoked each time the variable changes.
    */
@@ -67,9 +54,6 @@ trait Var[+T] { self =>
    * unobserved Var returned by flatMap will not invoke `f`
    */
   def flatMap[U](f: T => Var[U]): Var[U] = new Var[U] {
-
-    override def apply(): U = f(self())()
-
     def observe(depth: Int, o: U => Unit) = {
       val inner = new AtomicReference(Closable.nop)
       val outer = self.observe(depth, { t =>
@@ -120,26 +104,41 @@ trait Var[+T] { self =>
 
 object Var {
   /**
+   * Sample the current value of this Var. Note that this may lead to
+   * surprising results for lazily defined Vars: the act of observing
+   * a Var may be kick off a process to populate it; the value
+   * returned from sample may then reflect an intermediate value.
+   */
+  def sample[T](v: Var[T]): T = {
+    var opt: Option[T] = None
+    v.observe(v => opt = Some(v)).close()
+    opt.get
+  }
+  
+  object Sampled {
+    def apply[T](v: T): Var[T] = value(v)
+    def unapply[T](v: Var[T]): Option[T] = Some(sample(v))
+  }
+
+  /**
    * Create a new, updatable Var with an initial value. We call
    * such Vars independent -- derived Vars being dependent
    * on these.
    */
-  def apply[T](init: T): Var[T] with Updatable[T] = new UpdatableVar[T] {
-    value = init
-  }
+  def apply[T](init: T): Var[T] with Updatable[T] with Extractable[T] =
+    new UpdatableVar[T] {
+      value = init
+    }
 
   /**
    * Create a new, constant, v-valued Var.
    */
   def value[T](v: T): Var[T] = new Var[T] {
-    override def apply(): T = v
     protected def observe(depth: Int, f: T => Unit): Closable = {
       f(v)
       Closable.nop
     }    
   }
-
-  def unapply[T](v: Var[T]): Option[T] = Some(v())
 
   /** 
    * Collect a collection of Vars into a Var of collection.
@@ -247,6 +246,10 @@ trait Updatable[T] {
   def update(t: T)
 }
 
+trait Extractable[T] {
+  def apply(): T
+}
+
 private object UpdatableVar {
   case class Observer[T](
       depth: Int, 
@@ -267,15 +270,15 @@ private object UpdatableVar {
   }
 }
 
-private trait UpdatableVar[T] extends Var[T] with Updatable[T] {
+private trait UpdatableVar[T] extends Var[T] with Updatable[T] with Extractable[T] {
   import UpdatableVar._
   
   private[this] var version = 0L
   @volatile protected var value: T = _
   @volatile private[this] var observers =
     immutable.SortedSet.empty[Observer[T]]
-
-  override def apply(): T = value
+    
+  def apply(): T = value
 
   def update(t: T) {
     val obs = synchronized {
@@ -305,6 +308,6 @@ private trait UpdatableVar[T] extends Var[T] with Updatable[T] {
       Future.Done
     }
   }
-  
+
   override def toString = "Var("+value+")"
 }

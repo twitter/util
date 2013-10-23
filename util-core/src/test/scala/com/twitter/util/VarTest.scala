@@ -14,11 +14,6 @@ class VarTest extends FunSuite {
     var observerCount = 0
     var accessCount = 0
 
-    override def apply(): T = {
-      accessCount += 1
-      super.apply()
-    }
-
     override def observe(d: Int, o: T => Unit) = {
       accessCount += 1
       observerCount += 1
@@ -34,9 +29,9 @@ class VarTest extends FunSuite {
   test("Var.map") {
     val v = Var(123)
     val s = v map (_.toString)
-    assert(s() === "123")
+    assert(Var.sample(s) === "123")
     v() = 8923
-    assert(s() === "8923")
+    assert(Var.sample(s) === "8923")
     
     var buf = mutable.Buffer[String]()
     s observe { v => buf += v }
@@ -95,15 +90,15 @@ class VarTest extends FunSuite {
     }
 
     val s = short(us)
-    assert(s() === -1)
+    assert(Var.sample(s) === -1)
     assert(us forall (_.accessCount == 1), us map(_.accessCount) mkString ",")
 
-    s(); s()
+    Var.sample(s); Var.sample(s)
     assert(us forall (_.accessCount == 3))
     assert(us forall (_.observerCount == 0), us map(_.observerCount.toString) mkString(","))
 
     // Now maintain a subscription.
-    var cur = s()
+    var cur = Var.sample(s)
     val sub = s.observe { cur = _ }
     assert(cur === -1)
 
@@ -133,7 +128,7 @@ class VarTest extends FunSuite {
   
   test("Var(init)") {
     val v = Var(123)
-    var cur = v()
+    var cur = Var.sample(v)
     val sub = v observe { cur = _ }
     v() = 333
     assert(cur === 333)
@@ -162,21 +157,6 @@ class VarTest extends FunSuite {
     assert(x === 2)
     assert(y === 3)
   }
-
-  test("Var.unapply") {
-    val v = Var(123)
-    v match {
-      case Var(123) =>
-      case _ => fail()
-    }
-    
-    v() = 333
-    v match {
-      case Var(333) =>
-      case _ => fail
-    }
-  }
-
 
   test("Var.async") {
     val x = Var[Int](333)
@@ -271,7 +251,7 @@ class VarTest extends FunSuite {
   test("Var.value") {
     val contents = List(1,2,3,4)
     val v1 = Var.value(contents)
-    assert(v1.apply() eq contents)
+    assert(Var.sample(v1) eq contents)
     v1.observe { l => assert(contents eq l) }
   }
 
@@ -298,8 +278,8 @@ class VarTest extends FunSuite {
     var observed = 3
     val c3 = f.observe { i => observed = i }
 
-    assert(f() === 44)
-    assert(v() === 22)
+    assert(Var.sample(f) === 44)
+    assert(Var.sample(v) === 22)
     assert(observed === 44)
   }
 
@@ -324,8 +304,22 @@ class VarTest extends FunSuite {
     x() = 0 // this should not throw an exception because there are no observers
     x() = 1
 
-    assert(result() === 1) // invertX is observed briefly
+    assert(Var.sample(result) === 1) // invertX is observed briefly
     x() = 0
-    assert(result() === 0) // but invertX is not being observed here so we're ok
+    assert(Var.sample(result) === 0) // but invertX is not being observed here so we're ok
+  }
+
+  test("Var.Sampled") {
+    val v = Var(123)
+    v match {
+      case Var.Sampled(123) =>
+      case _ => fail()
+    }
+    
+    v() = 333
+    v match {
+      case Var.Sampled(333) =>
+      case _ => fail
+    }
   }
 }
