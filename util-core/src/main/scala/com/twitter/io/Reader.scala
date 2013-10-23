@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import com.twitter.util.{Future, Promise}
+import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
 
 /**
  * A Reader represents a stream of bytes, read in chunks. Readers
@@ -114,6 +115,18 @@ object Reader {
       state = Failing(cause)
     }
   }
+
+  /**
+   * Create a new Reader for a File
+   */
+  @throws(classOf[FileNotFoundException])
+  @throws(classOf[SecurityException])
+  def fromFile(f: File): Reader = fromStream(new FileInputStream(f))
+
+  /**
+   * Wrap InputStream s in with a Reader
+   */
+  def fromStream(s: InputStream): Reader = InputStreamReader(s)
 }
 
 /**
