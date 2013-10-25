@@ -1044,6 +1044,29 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           p.handled must beSomething
         }
       }
+
+      "masked" in {
+        "unconditional interruption" in {
+          val p = new HandledPromise[Unit]
+          val f = p.masked
+          f.raise(new Exception())
+          p.handled must beNone
+        }
+
+        "conditional interruption" in {
+          val p = new HandledPromise[Unit]
+          val f1 = p.mask {
+            case _: TimeoutException => true
+          }
+          val f2 = p.mask {
+            case _: TimeoutException => true
+          }
+          f1.raise(new TimeoutException("bang!"))
+          p.handled must beNone
+          f2.raise(new Exception())
+          p.handled must beSomething
+        }
+      }
     }
 
     "FutureTask (%s)".format(name) should {

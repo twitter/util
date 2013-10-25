@@ -908,6 +908,25 @@ abstract class Future[+A] extends Awaitable[A] {
     flatMap[B] { x => x }
 
   /**
+   * Returns an identical future except that it ignores interrupts which match a predicate
+   */
+  def mask(pred: PartialFunction[Throwable, Boolean]): Future[A] = {
+    val p = Promise[A]()
+    p.setInterruptHandler {
+      case t if !PartialFunction.cond(t)(pred) => this.raise(t)
+    }
+    this.proxyTo(p)
+    p
+  }
+
+  /**
+   * Returns an identical future that ignores all interrupts
+   */
+  def masked: Future[A] = mask {
+    case _ => true
+  }
+
+  /**
    * Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
    * Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
    */
