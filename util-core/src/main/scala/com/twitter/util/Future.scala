@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.{
   AtomicBoolean, AtomicInteger, AtomicReference,
   AtomicReferenceArray}
 import java.util.concurrent.{Future => JavaFuture, TimeUnit}
-import scala.annotation.tailrec
 import scala.collection.JavaConversions.{asScalaBuffer, seqAsJavaList}
 import scala.collection.mutable
 
@@ -344,20 +343,37 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
       Future.exception(new IllegalArgumentException("empty future list!"))
     } else {
       val p = Promise.interrupts[(Try[A], Seq[Future[A]])](fs:_*)
-      @tailrec
-      def stripe(heads: Seq[Future[A]], elem: Future[A], tail: Seq[Future[A]]) {
-        elem respond { res =>
+      fs foreach { f =>
+        f respond { res =>
           if (!p.isDefined) {
-            p.updateIfEmpty(Return((res, heads ++ tail)))
+            val others = fs filterNot { _ eq f }
+            p.updateIfEmpty(Return((res, others)))
           }
         }
-
-        if (!tail.isEmpty)
-          stripe(heads ++ Seq(elem), tail.head, tail.tail)
       }
+      p
+    }
+  }
 
-      stripe(Seq(), fs.head, fs.tail)
-
+  /**
+   * Select the index into `fs` of the first future to be satisfied.
+   *
+   * @param fs cannot be empty
+   */
+  def selectIndex[A](fs: IndexedSeq[Future[A]]): Future[Int] = {
+    if (fs.isEmpty) {
+      Future.exception(new IllegalArgumentException("empty future list"))
+    } else {
+      val p = Promise.interrupts[Int](fs:_*)
+      var i = 0
+      while (i < fs.size) {
+        val ii = i
+        fs(i) respond { res =>
+          if (!p.isDefined)
+            p.updateIfEmpty(Return(ii))
+        }
+        i += 1
+      }
       p
     }
   }

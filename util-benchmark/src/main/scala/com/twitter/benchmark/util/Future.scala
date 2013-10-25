@@ -1,6 +1,6 @@
 package com.twitter.benchmark.util
 
-import com.google.caliper.{SimpleBenchmark, Runner}
+import com.google.caliper.SimpleBenchmark
 import com.twitter.util.{Future, Promise, Try}
 
 class FutureBenchmark extends SimpleBenchmark {
@@ -53,4 +53,34 @@ class FutureBenchmark extends SimpleBenchmark {
       i += 1
     }
   }
+
+  def timeSelect(reps: Int) {
+    val numToSelect = 5
+    val done = new Promise[Unit]
+    done.setValue(())
+
+    val fs: Seq[Future[Unit]] =
+      Seq.fill(numToSelect - 1) { new Promise[Unit] } :+ done
+
+    var i = 0
+    while (i < reps) {
+      Future.select(fs)
+      i += 1
+    }
+  }
+
+  def timeSelectIndex(reps: Int) {
+    val numToSelect = 5
+    val done = new Promise[Unit]
+    done.setValue(())
+    val fs: IndexedSeq[Future[Unit]] =
+      IndexedSeq.fill(numToSelect - 1) { new Promise[Unit] } :+ done
+
+    var i = 0
+    while (i < reps) {
+      Future.selectIndex(fs)
+      i += 1
+    }
+  }
+
 }

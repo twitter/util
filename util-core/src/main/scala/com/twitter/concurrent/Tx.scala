@@ -52,6 +52,11 @@ object Tx {
     def nack() {}
   }
 
+  /**
+   * A constant `Tx` with the value of `Unit`.
+   */
+  val Unit = const(())
+
   object AlreadyDone extends Exception("Tx is already done")
   object AlreadyAckd extends Exception("Tx was already ackd")
   object AlreadyNackd extends Exception("Tx was already nackd")

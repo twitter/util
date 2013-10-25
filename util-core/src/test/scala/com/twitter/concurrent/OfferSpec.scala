@@ -1,14 +1,12 @@
 package com.twitter.concurrent
 
-import scala.collection.mutable.ArrayBuffer
-
 import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
-import org.mockito.{Matchers, ArgumentCaptor}
 
 import com.twitter.util.{Future, Return, Promise, Await}
 import com.twitter.util.{Time, MockTimer}
 import com.twitter.conversions.time._
+import scala.util.Random
 
 class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
   def this(fut: Future[Tx[T]]) = this(Stream.continually(fut))
@@ -105,16 +103,16 @@ class OfferSpec extends SpecificationWithJUnit with Mockito {
       }
 
       "shuffle winner" in Time.withTimeAt(Time.epoch) { tc =>
+        val shuffledOffer = Offer.choose(new Random(Time.now.inNanoseconds), offers)
         val histo = new Array[Int](3)
         for (_ <- 0 until 1000) {
-          tc.advance(1.nanosecond)
-          for (tx <- offer.prepare())
+          for (tx <- shuffledOffer.prepare())
             histo(txs.indexOf(tx)) += 1
         }
 
-        histo(0) must be_==(327)
-        histo(1) must be_==(332)
-        histo(2) must be_==(341)
+        histo(0) must be_==(311)
+        histo(1) must be_==(346)
+        histo(2) must be_==(343)
       }
 
       "nack losers" in {

@@ -244,6 +244,46 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         }
       }
 
+      "selectIndex" in {
+        "return the first result" in {
+          def tryBothForIndex(i: Int) = {
+            "success (%d)".format(i) in {
+              val fs = Seq.fill(10) { new Promise[Int] } toArray
+              val fPos = Future.selectIndex(fs)
+              fPos.isDefined must beFalse
+              fs(i).setValue(1)
+              fPos.isDefined must beTrue
+              Await.result(fPos) must be(i)
+            }
+
+            "failure (%d)".format(i) in {
+              val fs = Seq.fill(10) { new Promise[Int] } toArray
+              val fPos = Future.selectIndex(fs)
+              fPos.isDefined must beFalse
+              val e = new Exception("sad panda")
+              fs(i).setException(e)
+              fPos.isDefined must beTrue
+              Await.result(fPos) must be(i)
+            }
+          }
+
+          // Ensure this works for all indices:
+          0 until 10 foreach { tryBothForIndex(_) }
+        }
+
+        "fail if we attempt to select an empty future sequence" in {
+          val f = Future.selectIndex(IndexedSeq())
+          f.isDefined must beTrue
+          Await.result(f) must throwA(new IllegalArgumentException("empty future list"))
+        }
+
+        "propagate interrupts" in {
+          val fs = Array.fill(10) { new HandledPromise[Int] }
+          Future.selectIndex(fs).raise(new Exception)
+          fs forall (_.handled.isDefined) must beTrue
+        }
+      }
+
       "propagate locals, restoring original context" in {
         val local = new Local[Int]
         val f = const.value(111)
