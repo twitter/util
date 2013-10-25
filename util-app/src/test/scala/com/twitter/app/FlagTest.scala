@@ -164,14 +164,6 @@ class FlagTest extends FunSuite {
     flagWithoutGlobal("flag.with.single.quote", "i'm so cool", "why would you do this?")
     flagWithoutGlobal.parse(Array("-set.local.flag=hi"))
 
-    val localAndGlobal =
-      """|Set flags:
-         |-set.local.flag='hi' \
-         |Unset flags:
-         |-com.twitter.app.MyGlobalFlag='a test flag' \
-         |-flag.with.single.quote='i'"'"'m so cool' \
-         |-help='false' \
-         |-unset.local.flag='a flag!' \""".stripMargin
 
     val localOnly =
       """|Set flags:
@@ -181,13 +173,34 @@ class FlagTest extends FunSuite {
          |-help='false' \
          |-unset.local.flag='a flag!' \""".stripMargin
 
-    assert(flagWithGlobal.formattedFlagValuesString(true) === localAndGlobal)
-    assert(flagWithoutGlobal.formattedFlagValuesString(true) === localAndGlobal)
+    val WithGlobal = true
+    val WithoutGlobal = false
 
-    assert(flagWithGlobal.formattedFlagValuesString(false) === localOnly)
-    assert(flagWithoutGlobal.formattedFlagValuesString(false) === localOnly)
+    /**
+     * This is done because global flags from other code can pollute the global flag space
+     */
+    def matchesGlobal(flagString: String): Boolean = {
+      val localAndGlobal = Seq(
+        """Set flags:""",
+        """-set.local.flag='hi'""",
+        """Unset flags:""",
+        """-com.twitter.app.MyGlobalFlag='a test flag'""",
+        """-flag.with.single.quote='i'"'"'m so cool'""",
+        """-help='false'""",
+        """-unset.local.flag='a flag!' \"""
+      )
 
-    assert(flagWithGlobal.formattedFlagValuesString() === localAndGlobal)
+      // make sure every line in localAndGlobal exists in the flagString
+      localAndGlobal map { flagString.contains } reduce { _ && _ }
+    }
+
+    assert(matchesGlobal(flagWithGlobal.formattedFlagValuesString(WithGlobal)))
+    assert(matchesGlobal(flagWithoutGlobal.formattedFlagValuesString(WithGlobal)))
+
+    assert(flagWithGlobal.formattedFlagValuesString(WithoutGlobal) === localOnly)
+    assert(flagWithoutGlobal.formattedFlagValuesString(WithoutGlobal) === localOnly)
+
+    assert(matchesGlobal(flagWithGlobal.formattedFlagValuesString()))
     assert(flagWithoutGlobal.formattedFlagValuesString() === localOnly)
   }
 }
