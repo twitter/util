@@ -17,6 +17,13 @@ trait Closable { self =>
    * up other tasks.
    */
   def close(deadline: Time): Future[Unit]
+
+  /**
+   * Close the resource with the given timeout. This timeout is advisory,
+   * giving the callee some leeway, for example to drain clients or finish
+   * up other tasks.
+   */
+  def close(after: Duration): Future[Unit] = close(after.fromNow)
 }
 
 object Closable {
