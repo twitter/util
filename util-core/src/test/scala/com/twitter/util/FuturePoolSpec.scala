@@ -107,24 +107,27 @@ class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
       source.setValue(1)
     }
 
-    "interrupt threads when interruptible = true" in {
-      val started = new Promise[Unit]
-      val interrupted = new Promise[Unit]
-      val ipool = FuturePool(executor, interruptible = true)
+    if (!sys.props.contains("SKIP_FLAKY")) {
 
-      val f = ipool {
-        started.setDone()
-        try {
-          Thread.sleep(Long.MaxValue)
-        } catch { case exc: InterruptedException =>
-          interrupted.setDone()
+      "interrupt threads when interruptible = true" in {
+        val started = new Promise[Unit]
+        val interrupted = new Promise[Unit]
+        val ipool = FuturePool(executor, interruptible = true)
+
+        val f = ipool {
+          started.setDone()
+          try {
+            Thread.sleep(Long.MaxValue)
+          } catch { case exc: InterruptedException =>
+              interrupted.setDone()
+          }
         }
-      }
 
-      Await.result(started)
-      f.raise(new RuntimeException("foo"))
-      Await.result(f) must throwA[RuntimeException]
-      Await.result(interrupted) mustEqual ()
+        Await.result(started)
+        f.raise(new RuntimeException("foo"))
+        Await.result(f) must throwA[RuntimeException]
+        Await.result(interrupted) mustEqual ()
+      }
     }
 
     "not interrupt threads when interruptible = false" in {
