@@ -50,10 +50,12 @@ object Flaggable {
     }
 
     override def show(addr: InetSocketAddress) =
-      if (addr.getAddress.isAnyLocalAddress)
-        ":%d".format(addr.getPort)
-      else
-        "%s:%s".format(addr.getHostName, addr.getPort)
+      "%s:%d".format(
+        Option(addr.getAddress) match {
+          case Some(a) if a.isAnyLocalAddress => ""
+          case _ => addr.getHostName
+        },
+        addr.getPort)
   }
 
   implicit def ofTuple[T: Flaggable, U: Flaggable] = new Flaggable[(T, U)] {
