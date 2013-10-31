@@ -89,7 +89,7 @@ class ExecutorServiceFuturePool(
         Local.restore(saved)
 
         try
-          p.update(Try(f))
+          p.updateIfEmpty(Try(f))
         finally
           Local.restore(current)
       }
@@ -112,7 +112,7 @@ class ExecutorServiceFuturePool(
           javaFuture.cancel(true)
           val exc = new CancellationException
           exc.initCause(cause)
-          p.setException(exc)
+          p.updateIfEmpty(Throw(exc))
         }
     }
 
