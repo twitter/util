@@ -16,6 +16,10 @@ trait FuturePool {
 object FuturePool {
   /**
    * Creates a FuturePool backed by an ExecutorService.
+   *
+   * Note: for consumers from Java, there is not a java friendly api
+   * for using FuturePool.apply.  However, you can directly construct
+   * an ExecutorServiceFuturePool without problems.
    */
   def apply(executor: ExecutorService, interruptible: Boolean = false) =
     new ExecutorServiceFuturePool(executor, interruptible)
