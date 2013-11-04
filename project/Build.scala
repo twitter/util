@@ -85,7 +85,8 @@ object Util extends Build {
     id = "util",
     base = file("."),
     settings = Project.defaultSettings ++
-      sharedSettings
+      sharedSettings ++
+      Unidoc.settings
   ) aggregate(
     utilCore, utilEval, utilCodec, utilCollection, utilReflect,
     utilLogging, utilThrift, utilHashing, utilJvm, utilZk,

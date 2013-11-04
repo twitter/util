@@ -131,8 +131,8 @@ class WindowedMeans(N: Int, windows: Seq[(Int, Int)]) extends Estimator[Double] 
 /**
  * Unix-like load average, an exponentially weighted moving average,
  * smoothed to the given interval (counted in number of
- * measurements). See:
- * 	http://web.mit.edu/saltzer/www/publications/instrumentation.html
+ * measurements).
+ * See: http://web.mit.edu/saltzer/www/publications/instrumentation.html
  */
 class LoadAverage(interval: Double) extends Estimator[Double] {
   private[this] val a = math.exp(-1D/interval)
@@ -152,7 +152,7 @@ class LoadAverage(interval: Double) extends Estimator[Double] {
  * Take a GC log produced by:
  *
  * {{{
- * $ jstat -gc $PID 250 ...
+ * $ jstat -gc \$PID 250 ...
  * }}}
  *
  * And report on GC prediction accuracy. Time is

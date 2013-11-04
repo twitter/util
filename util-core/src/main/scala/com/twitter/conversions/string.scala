@@ -28,9 +28,9 @@ object string {
      * substring will be replaced by the function's result.
      *
      * For example, this call:
-     *
-     *     "ohio".regexSub("""h.""".r) { m => "n" }
-     *
+     * {{{
+     * "ohio".regexSub("""h.""".r) { m => "n" }
+     * }}}
      * will return the string `"ono"`.
      *
      * The matches are found using `Matcher.find()` and so
@@ -66,9 +66,9 @@ object string {
     /**
      * Quote a string so that unprintable chars (in ASCII) are represented by
      * C-style backslash expressions. For example, a raw linefeed will be
-     * translated into <code>"\n"</code>. Control codes (anything below 0x20)
+     * translated into `"\n"`. Control codes (anything below 0x20)
      * and unprintables (anything above 0x7E) are turned into either
-     * <code>"\xHH"</code> or <code>"\\uHHHH"</code> expressions, depending on
+     * `"\xHH"` or `"\\uHHHH"` expressions, depending on
      * their range. Embedded backslashes and double-quotes are also quoted.
      *
      * @return a quoted string, suitable for ASCII display
@@ -97,9 +97,9 @@ object string {
     /**
      * Unquote an ASCII string that has been quoted in a style like
      * {@link #quoteC} and convert it into a standard unicode string.
-     * <code>"\\uHHHH"</code> and <code>"\xHH"</code> expressions are unpacked
-     * into unicode characters, as well as <code>"\r"</code>, <code>"\n"<code>,
-     * <code>"\t"</code>, <code>"\\"<code>, and <code>'\"'</code>.
+     * `"\\uHHHH"` and `"\xHH"` expressions are unpacked
+     * into unicode characters, as well as `"\r"`, `"\n"`,
+     * `"\t"`, `"\\"`, and `'\"'`.
      *
      * @return an unquoted unicode string
      */
@@ -146,7 +146,7 @@ object string {
 
   final class RichByteArray(wrapped: Array[Byte]) {
     /**
-     * Turn an Array[Byte] into a string of hex digits.
+     * Turn an `Array[Byte]` into a string of hex digits.
      */
     def hexlify: String = string.hexlify(wrapped, 0, wrapped.length)
   }

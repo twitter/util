@@ -188,7 +188,7 @@ object Var {
    * `update` is called by-need. Such observations are also reference
    * counted so that simultaneous observervations do not result in
    * multiple invocations of `update`. When the last observer stops
-   * observing, the [[com.twitter.util.Closable Closable]] returned
+   * observing, the [[com.twitter.util.Closable]] returned
    * from `update` is closed. Subsequent observations result in a new
    * call to `update`.
    *
@@ -199,7 +199,7 @@ object Var {
    * at all.
    *
    * Updates from `update` are ignored after the returned
-   * [[com.twitter.util.Closable Closable]] is closed.
+   * [[com.twitter.util.Closable]] is closed.
    */
   def async[T](empty: T)(update: Updatable[T] => Closable): Var[T] = new Var[T] {
     import create._
