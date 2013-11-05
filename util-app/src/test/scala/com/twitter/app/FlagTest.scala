@@ -5,6 +5,7 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 
 object MyGlobalFlag extends GlobalFlag("a test flag", "a global test flag")
+object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
 
 @RunWith(classOf[JUnitRunner])
 class FlagTest extends FunSuite {
@@ -136,6 +137,21 @@ class FlagTest extends FunSuite {
     import ctx._
     val thr = intercept[FlagParseException] { flag.parse(Array("-undefined")) }
     assert(flag.parse(Array("-undefined"), true) === Seq("-undefined"))
+  }
+
+  class Dctx extends Ctx {
+    val quuxFlag = flag[Int]("quux", "an int")
+  }
+
+  test("Flag: no default usage") {
+    val ctx = new Dctx
+    import ctx._
+    assert(quuxFlag.usageString === "  -quux=<Int>: an int")
+  }
+
+  test("GlobalFlag: no default usage") {
+    assert(MyGlobalFlagNoDefault.usageString ===
+      "  -com.twitter.app.MyGlobalFlagNoDefault=<Int>: a global test flag with no default")
   }
 
   test("GlobalFlag") {

@@ -115,16 +115,23 @@ class FlagUndefinedException extends Exception("flag undefined")
  *
  * @see [[com.twitter.app.Flags]]
  */
-class Flag[T: Flaggable] private[app](val name: String, val help: String, default: => T) {
+class Flag[T: Flaggable] private[app](val name: String, val help: String, defaultOrUsage: Either[() => T, String]) {
+
+  private[app] def this(name: String, help: String, default: => T) = this(name, help, Left(() => default))
+  private[app] def this(name: String, help: String, usage: String) = this(name, help, Right(usage))
+
   protected val flaggable = implicitly[Flaggable[T]]
   @volatile private[this] var value: Option[T] = None
   protected def getValue: Option[T] = value
+
+  private def default: Option[T] = defaultOrUsage.left.toOption map { d => d() }
+  private def valueOrDefault: Option[T] = getValue orElse default
 
   /**
    * Return this flag's current value. The default value is returned
    * when the flag has not otherwise been set.
    */
-  def apply(): T = get getOrElse default
+  def apply(): T = valueOrDefault getOrElse { throw new IllegalArgumentException }
 
   /** Reset this flag's value */
   def reset() { value = None }
@@ -133,14 +140,23 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   /** Get the value if it has been set */
   def get: Option[T] = getValue
   /** String representation of this flag's default value */
-  def defaultString = flaggable.show(default)
+  def defaultString = flaggable.show(default getOrElse { throw new IllegalArgumentException })
+
+  def usageString =
+    defaultOrUsage match {
+      case Left(_) => "  -%s='%s': %s".format(name, defaultString, help)
+      case Right(usage) => "  -%s=<%s>: %s".format(name, usage, help)
+    }
 
   /**
    * String representation of this flag in -foo='bar' format,
    * suitable for being used on the command line.
    */
   override def toString = {
-    "-" + name + "='" + flaggable.show(apply()).replaceAll("'", "'\"'\"'") + "'"
+    valueOrDefault match {
+      case None => "-" + name + "=<unset>"
+      case Some(v) => "-" + name + "='" + flaggable.show(v).replaceAll("'", "'\"'\"'") + "'"
+    }
   }
 
   /** Parse value `raw` into this flag. */
@@ -276,14 +292,19 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     f
   }
 
+  def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = {
+    val f = new Flag[T](name, help, m.toString)
+    add(f)
+    f
+  }
+
   def usage: String = synchronized {
-    val lines = for (k <- flags.keys.toArray.sorted) yield {
-      val f = flags(k)
-      "  -%s='%s': %s".format(k, f.defaultString, f.help)
-    }
+    val lines =
+      for (k <- flags.keys.toArray.sorted)
+      yield flags(k).usageString
     val globalLines = if (!includeGlobal) Seq() else {
       for (f <- GlobalFlag.getAll(getClass.getClassLoader))
-        yield "  -%s='%s': %s".format(f.name, f.defaultString, f.help)
+      yield f.usageString
     }
 
     argv0+"\n"+(lines mkString "\n")+(
@@ -373,8 +394,11 @@ class Flags(argv0: String, includeGlobal: Boolean) {
  *
  */
 @GlobalFlagVisible
-class GlobalFlag[T: Flaggable](default: T, help: String)
-    extends Flag[T](null, help, default) {
+class GlobalFlag[T] private[app](defaultOrUsage: Either[() => T, String], help: String)(implicit _f: Flaggable[T])
+    extends Flag[T](null, help, defaultOrUsage) {
+
+  def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
+  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
 
   // Unfortunately, `getClass` in the the extends... above
   // doesn't give the right answer.
