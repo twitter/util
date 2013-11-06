@@ -325,7 +325,7 @@ object Time extends TimeLikeOps[Time] {
   /**
    * Note, this should only ever be updated by methods used for testing.
    */
-  private[Time] val localGetTime = new Local[()=>Time]
+  private[util] val localGetTime = new Local[()=>Time]
 
   @deprecated("use Time.fromMilliseconds(...) instead", "2011-09-12") // date is a guess
   def apply(millis: Long) = fromMilliseconds(millis)

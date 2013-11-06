@@ -18,8 +18,10 @@ trait Stopwatch {
  * using [[System.nanoTime]].
  */
 object Stopwatch extends Stopwatch {
+
   def start(): Elapsed = {
-    val off = System.nanoTime()
-    () => Duration.fromNanoseconds(System.nanoTime() - off)
+    val timeFn = Time.localGetTime().getOrElse(() => Time.fromNanoseconds(System.nanoTime()))
+    val off = timeFn()
+      () => timeFn() - off
   }
 }
