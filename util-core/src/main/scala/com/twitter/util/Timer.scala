@@ -8,8 +8,9 @@ import java.util.concurrent.{CancellationException, ExecutorService, RejectedExe
   ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
 import scala.collection.mutable.ArrayBuffer
 
-trait TimerTask {
+trait TimerTask extends Closable {
   def cancel()
+  def close(deadline: Time) = Future(cancel())
 }
 
 trait Timer {
