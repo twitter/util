@@ -1,3 +1,17 @@
+6.8.0  2013-11-12
+
+  * util-app: Fix null error for Flaggable[InetSocketAddress].
+  * util-app: Flag, easier usage of default.
+  * util-core: adds closable.close(Duration)
+  * util-core: Adds com.twitter.io.exp.VarSource
+  * util-core: adds comment re using FuturePool from java.
+  * util-core: buffers requests until Var[Addr] is in a ready state
+  * util-core: Fix Promise update race when interrupting FuturePool threads.
+  * util-core: improve allocation/perf in Offer.choose and Future.select
+  * util-core: Var: remove Var.apply; introduce Var.sample
+  * util-zk-common: update pom com.twitter.common.zookeeper dependencies
+  * util: scaladoc warning cleanup.
+
 6.7.0  2013-10-18
 
   * util-core: Introduce Try.collect(), analagous to Future.collect
