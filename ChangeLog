@@ -1,3 +1,7 @@
+6.8.1  2013-11-15
+
+  * util-core: Break apart interruptible FuturePool for java backcompat
+
 6.8.0  2013-11-12
 
   * util-app: Fix null error for Flaggable[InetSocketAddress].
