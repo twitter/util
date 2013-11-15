@@ -21,8 +21,15 @@ object FuturePool {
    * for using FuturePool.apply.  However, you can directly construct
    * an ExecutorServiceFuturePool without problems.
    */
-  def apply(executor: ExecutorService, interruptible: Boolean = false) =
-    new ExecutorServiceFuturePool(executor, interruptible)
+  def apply(executor: ExecutorService) =
+    new ExecutorServiceFuturePool(executor)
+
+  /**
+   * Creates a FuturePool backed by an ExecutorService which propagates
+   * cancellation.
+   */
+  def interruptible(executor: ExecutorService) =
+    new InterruptibleExecutorServiceFuturePool(executor)
 
   /**
    * A FuturePool that really isn't; it executes tasks immediately
@@ -53,7 +60,7 @@ object FuturePool {
    * is raised on a returned Future and the work has started, the worker
    * thread will not be interrupted.
    */
-  lazy val unboundedPool = new ExecutorServiceFuturePool(defaultExecutor, false)
+  lazy val unboundedPool = new ExecutorServiceFuturePool(defaultExecutor)
 
   /**
    * The default future pool, using a cached threadpool, provided by
@@ -63,20 +70,28 @@ object FuturePool {
    * is raised on a returned Future and the work has started, an attempt
    * will will be made to interrupt the worker thread.
    */
-  lazy val interruptibleUnboundedPool = new ExecutorServiceFuturePool(defaultExecutor, true)
+  lazy val interruptibleUnboundedPool = new InterruptibleExecutorServiceFuturePool(defaultExecutor)
 }
+
+class InterruptibleExecutorServiceFuturePool(
+  executor: ExecutorService
+) extends ExecutorServiceFuturePool(executor, true)
 
 /**
  * A FuturePool implementation backed by an ExecutorService.
  *
  * If a piece of work has started, it cannot be cancelled and will not propagate
  * cancellation unless interruptible is true.
+ *
+ * If you want to propagate cancellation, use 
  */
-class ExecutorServiceFuturePool(
+class ExecutorServiceFuturePool protected[this](
   val executor: ExecutorService,
-  val interruptible: Boolean = false
+  val interruptible: Boolean
 ) extends FuturePool
 {
+  def this(executor: ExecutorService) = this(executor, false)
+
   def apply[T](f: => T): Future[T] = {
     val runOk = new AtomicBoolean(true)
     val p = new Promise[T]

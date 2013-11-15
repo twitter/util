@@ -107,10 +107,10 @@ class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
       source.setValue(1)
     }
 
-    "interrupt threads when interruptible = true" in {
+    "interrupt threads when interruptible" in {
       val started = new Promise[Unit]
       val interrupted = new Promise[Unit]
-      val ipool = FuturePool(executor, interruptible = true)
+      val ipool = FuturePool.interruptible(executor)
 
       val f = ipool {
         try {
@@ -127,10 +127,10 @@ class FuturePoolSpec extends SpecificationWithJUnit with Mockito {
       Await.result(interrupted) mustEqual ()
     }
 
-    "not interrupt threads when interruptible = false" in {
+    "not interrupt threads when not interruptible" in {
       val a = new Promise[Unit]
       val b = new Promise[Unit]
-      val nipool = FuturePool(executor, interruptible = false)
+      val nipool = FuturePool(executor)
 
       val f = nipool {
         a.setDone()
