@@ -3,6 +3,7 @@ package com.twitter.util
 import java.util.concurrent.atomic.AtomicReference
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
+import scala.collection.mutable
 
 /**
  * Trait Var represents a variable. It is a reference cell which is
@@ -20,10 +21,12 @@ import scala.collection.immutable
  * exceptions thrown while computing derived Vars.
  */
 trait Var[+T] { self =>
+  import Var.Observer
+
   /** 
    * Observe this Var. `f` is invoked each time the variable changes.
    */
-  final def observe(f: T => Unit): Closable = observe(0, f)
+  final def observe(f: T => Unit): Closable = observe(0, Observer(f))
 
   /**
    * Concrete implementations of Var implement observe. This is
@@ -35,7 +38,7 @@ trait Var[+T] { self =>
    * topological order so that every input variable is fully resolved
    * before recomputing a derived variable.
    */
-  protected def observe(depth: Int, f: T => Unit): Closable
+  protected def observe(depth: Int, obs: Observer[T]): Closable
 
   /** Synonymous with observe */
   def foreach(f: T => Unit) = observe(f)
@@ -54,11 +57,11 @@ trait Var[+T] { self =>
    * unobserved Var returned by flatMap will not invoke `f`
    */
   def flatMap[U](f: T => Var[U]): Var[U] = new Var[U] {
-    def observe(depth: Int, o: U => Unit) = {
+    def observe(depth: Int, obs: Observer[U]) = {
       val inner = new AtomicReference(Closable.nop)
-      val outer = self.observe(depth, { t =>
-        inner.getAndSet(f(t).observe(depth+1, o)).close()
-      })
+      val outer = self.observe(depth, Observer(t =>
+        inner.getAndSet(f(t).observe(depth+1, obs)).close()
+      ))
 
       Closable.sequence(
         outer,
@@ -104,6 +107,51 @@ trait Var[+T] { self =>
 
 object Var {
   /**
+   * A Var observer. Observers are owned by exactly one producer,
+   * enforced by a leasing mechanism. Updates are propagated only
+   * when the lease is valid.
+   *
+   * Note: The API is awkward and subtle, but happily limited.
+   * Ownership must overlap in order for Vars to not miss updates:
+   * the handover process is for the new owner to call 'lease' before
+   * the previous observation is closed.
+   */
+  private[util] class Observer[-T](o: T => Unit) {
+    private[this] var owner: Object = null
+    
+    /**
+     * Lease this observer. Returns true when this represents a new
+     * owner.
+     */
+    def lease(who: Object): Boolean = synchronized {
+      val newOwner = owner ne who
+      owner = who
+      newOwner
+    }
+    
+    /**
+     * Release the lease possibly held by who.
+     */
+    def relinquish(who: Object): Unit = synchronized {
+      if (owner eq who)
+        owner = null
+    }
+    
+    /**
+     * Update the observer, conditionally on who being 
+     * the current lease holder.
+     */
+    def update(newt: T, who: Object): Unit = synchronized {
+      if (owner eq who)
+        o(newt)
+    }
+  }
+
+  private[util] object Observer {
+    def apply[T](k: T => Unit) = new Observer(k)
+  }
+
+  /**
    * Sample the current value of this Var. Note that this may lead to
    * surprising results for lazily defined Vars: the act of observing
    * a Var may be kick off a process to populate it; the value
@@ -126,18 +174,39 @@ object Var {
    * on these.
    */
   def apply[T](init: T): Var[T] with Updatable[T] with Extractable[T] =
-    new UpdatableVar[T] {
-      value = init
-    }
+    new UpdatableVar(init)
 
   /**
    * Create a new, constant, v-valued Var.
    */
   def value[T](v: T): Var[T] = new Var[T] {
-    protected def observe(depth: Int, f: T => Unit): Closable = {
-      f(v)
-      Closable.nop
-    }    
+    // We maintain a map of an observer's current closer for this
+    // Var. This allows us to make sure that we own an observer
+    // exactly once; overlapping observations will replace the
+    // current closable.
+    private[this] val observers = mutable.Map[Observer[T], Closable]()
+
+    private[this] def newCloser(obs: Observer[T]) = new Closable {
+      def close(deadline: Time) = Var.this.synchronized {
+        observers.get(obs) match {
+          case Some(closer) if closer eq this =>
+            observers -= obs
+            obs.relinquish(Var.this)
+          case _ =>
+        }
+
+        Future.Done
+      }
+    }
+
+    protected def observe(depth: Int, obs: Observer[T]): Closable = synchronized {
+      if (obs.lease(this))
+        obs.update(v, this)
+
+      val closer = newCloser(obs)
+      observers(obs) = closer
+      closer
+    }
   }
 
   /** 
@@ -220,7 +289,7 @@ object Var {
       }
     }
 
-    protected def observe(depth: Int, f: T => Unit): Closable = {
+    protected def observe(depth: Int, obs: Observer[T]): Closable = {
       val v = synchronized {
         state match {
           case Idle =>
@@ -234,7 +303,7 @@ object Var {
         }
       }
 
-      val c = v.observe(depth, f)
+      val c = v.observe(depth, obs)
       Closable.sequence(c, closable)
     }
   }
@@ -251,18 +320,18 @@ trait Extractable[T] {
 }
 
 private object UpdatableVar {
-  case class Observer[T](
-      depth: Int, 
-      k: T => Unit, 
-      version: Long
-  ) extends (T => Unit) {
-    def apply(t: T) = k(t)
-  }
+  import Var.Observer
 
-  implicit def observerOrdering[T] = new Ordering[Observer[T]] {
+  case class O[T](
+      obs: Observer[T],
+      depth: Int,
+      version: Long
+  )
+
+  implicit def order[T] = new Ordering[O[T]] {
     // This is safe because observers are compared
     // only from the same source of versions.
-    def compare(a: Observer[T], b: Observer[T]): Int = {
+    def compare(a: O[T], b: O[T]): Int = {
       val c1 = a.depth compare b.depth
       if (c1 != 0) return c1
       a.version compare b.version
@@ -270,40 +339,49 @@ private object UpdatableVar {
   }
 }
 
-private trait UpdatableVar[T] extends Var[T] with Updatable[T] with Extractable[T] {
+private class UpdatableVar[T](init: T) 
+    extends Var[T] 
+    with Updatable[T] 
+    with Extractable[T] {
   import UpdatableVar._
-  
+  import Var.Observer
+
+  @volatile protected var value: T = init
   private[this] var version = 0L
-  @volatile protected var value: T = _
-  @volatile private[this] var observers =
-    immutable.SortedSet.empty[Observer[T]]
-    
+  private[this] var observers = 
+    immutable.SortedSet.empty[O[T]]
+
   def apply(): T = value
 
-  def update(t: T) {
-    val obs = synchronized {
-      if (value == t) return
-      value = t
-      observers
-    }
-
-    for (o <- obs if observers contains o)
-      o(t)
+  def update(t: T): Unit = synchronized {
+    if (value == t) return
+    value = t
+    for (O(obs, _, _) <- observers)
+      obs.update(t, this)
   }
 
-  protected def observe(depth: Int, k: T => Unit): Closable = {
-    val (o, v) = synchronized {
-      val o = Observer(depth, k, version)
-      version += 1
-      observers += o
-      (o, value)
+  protected def observe(depth: Int, obs: Observer[T]): Closable = synchronized {
+    val newOwner = obs.lease(this)
+    if (!newOwner) {
+      val Some(old) = observers.find(_.obs eq obs)
+      observers -= old
     }
 
-    o(v)
+    version += 1
+    val o = O(obs, depth, version)
+    observers += o
 
-    Closable.make { deadline =>
-      synchronized {
+    if (newOwner)
+      obs.update(value, this)
+
+    newCloser(o)
+  }
+
+  private[this] def newCloser(o: O[T]) = new Closable {
+    def close(deadline: Time) = UpdatableVar.this.synchronized {
+      if (observers contains o) {
         observers -= o
+        o.obs.relinquish(UpdatableVar.this)
       }
       Future.Done
     }

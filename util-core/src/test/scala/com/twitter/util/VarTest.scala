@@ -8,17 +8,17 @@ import java.util.concurrent.atomic.AtomicReference
 
 @RunWith(classOf[JUnitRunner])
 class VarTest extends FunSuite {
-  private case class U[T](init: T) extends UpdatableVar[T] {
-    value = init
+  private case class U[T](init: T) extends UpdatableVar[T](init) {
+    import Var.Observer
 
     var observerCount = 0
     var accessCount = 0
 
-    override def observe(d: Int, o: T => Unit) = {
+    override def observe(d: Int, obs: Observer[T]) = {
       accessCount += 1
       observerCount += 1
       Closable.all(
-        super.observe(d, o),
+        super.observe(d, obs),
         Closable.make { deadline =>
           observerCount -= 1
           Future.Done
@@ -321,5 +321,80 @@ class VarTest extends FunSuite {
       case Var.Sampled(333) =>
       case _ => fail
     }
+  }
+  
+  def testPropagation(typ: String, newVar: Int => Var[Int]) {
+    test("Don't propagate up-to-date "+typ+"-valued Var observations") {
+      val v = Var(123)
+      val w = newVar(333)
+      val x = v flatMap { _ => w }
+      var buf = mutable.Buffer[Int]()
+      x observe { v => buf += v }
+      
+      assert(buf === Seq(333))
+      v() = 333
+      assert(buf === Seq(333))
+    }
+
+    test("Do propagate out-of-date "+typ+"-valued observations") {
+      val v = Var(123)
+      val w1 = newVar(333)
+      val w2 = newVar(444)
+      val x = v flatMap {
+        case 123 => w1
+        case _ => w2
+      }
+  
+      var buf = mutable.Buffer[Int]()
+      x observe { v => buf += v }
+  
+      assert(buf === Seq(333))
+      v() = 333
+      assert(buf === Seq(333, 444))
+      v() = 123
+      assert(buf === Seq(333, 444, 333))
+      v() = 333
+      assert(buf === Seq(333, 444, 333, 444))
+      v() = 334
+      assert(buf === Seq(333, 444, 333, 444))
+    }
+  }
+
+  testPropagation("constant", Var.value)
+  testPropagation("variable", Var.apply)
+
+  test("Race-a-Var") {
+    class Counter(n: Int, u: Updatable[Int]) extends Thread {
+      override def run() {
+        var i = 0
+        while (i < n) {
+          u() = i
+          i += 1
+        }
+      }
+    }
+
+    val N = 10000
+    val a, b = Var(0)
+    val c = a flatMap { _ => b }
+    
+    @volatile var j = -1
+    @volatile var n = 0
+    @volatile var ok = true
+    c observe { i =>
+      ok &&= i == j+1
+      j = i
+    }
+    
+    val ac = new Counter(N, a)
+    val bc = new Counter(N, b)
+    
+    ac.start()
+    bc.start()
+    ac.join()
+    bc.join()
+    
+    assert(ok)
+    assert(j === N-1)
   }
 }
