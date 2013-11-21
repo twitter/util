@@ -179,7 +179,7 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
       for (handler <- handlers) {
         try {
           handler.close()
-        } catch { case _ => () }
+        } catch { case _: Throwable => () }
         removeHandler(handler)
       }
     }

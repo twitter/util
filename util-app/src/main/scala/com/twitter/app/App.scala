@@ -83,7 +83,7 @@ trait App {
         System.err.println("Error parsing flag %s: %s".format(k, cause.getMessage))
         System.err.println(flag.usage)
         System.exit(1)
-      case e =>
+      case e: Throwable =>
         System.err.println("Error parsing flags: %s".format(e.getMessage))
         System.err.println(flag.usage)
         System.exit(1)

@@ -272,7 +272,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
           // Mandatory k=v
           case Array(k, v) =>
             try flag(k).parse(v) catch {
-              case e => throw FlagParseException(k, e)
+              case e: Throwable => throw FlagParseException(k, e)
             }
         }
       } else {

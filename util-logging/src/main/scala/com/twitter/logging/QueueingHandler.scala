@@ -64,7 +64,7 @@ class QueueingHandler(val handler: Handler, val maxQueueSize: Int = Int.MaxValue
           } catch {
             case e: InterruptedException =>
               throw e // re-raise
-            case e =>
+            case e: Throwable =>
               e.printStackTrace()
           }
 

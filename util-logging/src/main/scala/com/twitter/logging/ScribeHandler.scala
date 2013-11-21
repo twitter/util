@@ -233,7 +233,7 @@ class ScribeHandler(
         try {
           s.close()
         } catch {
-          case _ =>
+          case _: Throwable =>
         }
       }
       socket = None

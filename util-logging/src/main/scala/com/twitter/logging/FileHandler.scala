@@ -115,7 +115,7 @@ class FileHandler(
       try {
         oldStream.close()
       } catch {
-        case e => handleThrowable(e)
+        case e: Throwable => handleThrowable(e)
       }
     }
   }
@@ -132,7 +132,7 @@ class FileHandler(
       try {
         stream.close()
       } catch {
-        case e => handleThrowable(e)
+        case e: Throwable => handleThrowable(e)
       }
     }
   }
@@ -262,7 +262,7 @@ class FileHandler(
         bytesWrittenToFile += lineSizeBytes
       }
     } catch {
-      case e => handleThrowable(e)
+      case e: Throwable => handleThrowable(e)
     }
   }
 

@@ -574,7 +574,7 @@ abstract class Future[+A] extends Awaitable[A] {
     } catch {
       // For legacy reasons, we catch even
       // fatal exceptions.
-      case e => Throw(e)
+      case e: Throwable => Throw(e)
     }
 
   /**
