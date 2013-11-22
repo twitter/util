@@ -25,9 +25,8 @@ object Try {
 }
 
 /**
- * This trait represents a computation that can succeed or fail. Its two current
- * specializations are Try (a computation that has succeeded or failed) and Future
- * (a computation that will succeed or fail).
+ * This class represents a computation that can succeed or fail. It has two
+ * concrete implementations, Return (for success) and Throw (for failure)
  */
 sealed abstract class Try[+R] {
   /**

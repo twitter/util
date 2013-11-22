@@ -292,7 +292,8 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
   /**
    * Collect the results from the given futures into a new future of
-   * Seq[A].
+   * Seq[A]. If one or of the given Futures is exceptional, the resulting
+   * Future result will be the first exception encountered.
    *
    * @param fs a sequence of Futures
    * @return a Future[Seq[A]] containing the collected values from fs.
@@ -324,13 +325,32 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
   /**
    * Collect the results from the given futures into a new future of
-   * Seq[A].
+   * Seq[A]. If one or of the given futures is exceptional, the resulting
+   * future result will be the first exception encountered.
    *
    * @param fs a java.util.List of Futures
    * @return a Future[java.util.List[A]] containing the collected values from fs.
    */
   def collect[A](fs: java.util.List[Future[A]]): Future[java.util.List[A]] =
     collect(asScalaBuffer(fs)) map(seqAsJavaList(_))
+
+  /**
+   * Collect the results from the given futures into a new future of Seq[Try[A]]
+   *
+   * @param fs a sequence of Futures
+   * @return a Future[Seq[Try[A]]] containing the collected values from fs.
+   */
+  def collectToTry[A](fs: Seq[Future[A]]): Future[Seq[Try[A]]] =
+    Future.collect(fs map(_.liftToTry))
+
+  /**
+   * Collect the results from the given futures into a new future of Seq[Try[A]]
+   *
+   * @param fs a java.util.List of Futures
+   * @return a Future[java.util.List[Try[A]]] containing the collected values from fs.
+   */
+  def collectToTry[A](fs: java.util.List[Future[A]]): Future[java.util.List[Try[A]]] =
+    collectToTry(asScalaBuffer(fs)) map(seqAsJavaList(_))
 
   /**
    * "Select" off the first future to be satisfied.  Return this as a
@@ -494,9 +514,6 @@ abstract class FutureTransformer[-A, +B] {
  * A computation evaluated asynchronously. This implementation of
  * Future does not assume any concrete implementation; in particular,
  * it does not couple the user to a specific executor or event loop.
- *
- * Note that this class extends Try[_] indicating that the results of
- * the computation may succeed or fail.
  *
  * Futures are also [[com.twitter.util.Cancellable]], but with
  * special semantics: the cancellation signal is only guaranteed to
@@ -940,6 +957,10 @@ abstract class Future[+A] extends Awaitable[A] {
     areEqual
   }
 
+  /**
+   * Returns the result of the computation as a Future[Try[A]].
+   */
+  def liftToTry: Future[Try[A]] = transform(Future.value)
 }
 
 /**

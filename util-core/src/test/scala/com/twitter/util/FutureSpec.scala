@@ -192,6 +192,40 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
         }
       }
 
+      "collectToTry" in {
+        val p0, p1 = new HandledPromise[Int]
+        val f = Future.collectToTry(Seq(p0, p1))
+        f.isDefined must beFalse
+
+        "only return when both futures complete" in {
+          p0() = Return(1)
+          f.isDefined must beFalse
+          p1() = Return(2)
+          f.isDefined must beTrue
+          Await.result(f) must be_==(Seq(Return(1), Return(2)))
+        }
+
+        "be undefined if the first future throws and the second is undefined" in {
+          p0() = Throw(new Exception)
+          f.isDefined must beFalse
+        }
+
+        "return both results if the first is defined second future throws" in {
+          val ex = new Exception
+          p0() = Return(1)
+          f.isDefined must beFalse
+          p1() = Throw(ex)
+          Await.result(f) must be_==(Seq(Return(1), Throw(ex)))
+        }
+
+        "propagate interrupts" in {
+          val ps = Seq(p0, p1)
+          ps.count(_.handled.isDefined) must be_==(0)
+          f.raise(new Exception)
+          ps.count(_.handled.isDefined) must be_==(2)
+        }
+      }
+
       "select" in {
         "return the first result" in {
           def tryBothForIndex(i: Int) = {
@@ -1064,6 +1098,25 @@ class FutureSpec extends SpecificationWithJUnit with Mockito {
           f1.raise(new TimeoutException("bang!"))
           p.handled must beNone
           f2.raise(new Exception())
+          p.handled must beSomething
+        }
+      }
+
+      "liftToTry" in {
+        "success" in {
+          val p = Future.value(3)
+          Await.result(p.liftToTry) mustEqual Return(3)
+        }
+
+        "failure" in {
+          val ex = new Exception()
+          val p = Future.exception(ex)
+          Await.result(p.liftToTry) mustEqual Throw(ex)
+        }
+
+        "propagates interrupt" in {
+          val p = new HandledPromise[Unit]
+          p.liftToTry.raise(new Exception())
           p.handled must beSomething
         }
       }
