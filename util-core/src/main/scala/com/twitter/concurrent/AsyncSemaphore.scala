@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import java.util.concurrent.RejectedExecutionException
 import java.util.ArrayDeque
-import com.twitter.util.{Promise, Future}
+import com.twitter.util.{Future, Promise, Throw}
 
 /**
  * An AsyncSemaphore is a traditional semaphore but with asynchronous
@@ -39,6 +39,9 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
    * Acquire a Permit, asynchronously. Be sure to permit.release() in a 'finally'
    * block of your onSuccess() callback.
    *
+   * Interrupting this future is only advisory, and will not release the permit
+   * if the future has already been satisfied.
+   *
    * @return a Future[Permit] when the Future is satisfied, computation can proceed,
    * or a Future.Exception[RejectedExecutionException] if the configured maximum number of waitq
    * would be exceeded.
@@ -54,6 +57,12 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
             MaxWaitersExceededException
           case _ =>
             val promise = new Promise[Permit]
+            promise.setInterruptHandler { case t: Throwable =>
+                AsyncSemaphore.this.synchronized {
+                  if (promise.updateIfEmpty(Throw(t)))
+                    waitq.remove(promise)
+                }
+            }
             waitq.addLast(promise)
             promise
         }
