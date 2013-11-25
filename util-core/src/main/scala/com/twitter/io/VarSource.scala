@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * A VarSource provides access to observerable named variables.
  */
-trait VarSource[T] {
+trait VarSource[+T] {
   def get(varName: String): Var[VarSource.Result[T]]
 }
 
