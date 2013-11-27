@@ -24,7 +24,8 @@ trait Var[+T] { self =>
   import Var.Observer
 
   /** 
-   * Observe this Var. `f` is invoked each time the variable changes.
+   * Observe this Var. `f` is invoked each time the variable changes,
+   * and synchronously with the first call to this method.
    */
   final def observe(f: T => Unit): Closable = observe(0, Observer(f))
 
