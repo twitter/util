@@ -1,3 +1,12 @@
+6.9.0  2013-12-02
+
+  * util-core: 2.10 pattern matching strictness
+  * util-core: Gives Var single-owner semantics
+  * util-core: Seq[Future[A]] => Future[Seq[Try[A]]]
+  * util-core: Adds a comment explicitly describing synchronous callback on observe for Var
+  * util-core: async semaphore cancellation
+  * util: sbt version in `build.properties'
+
 6.8.1  2013-11-15
 
   * util-core: Break apart interruptible FuturePool for java backcompat
