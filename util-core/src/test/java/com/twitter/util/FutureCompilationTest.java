@@ -6,7 +6,7 @@ import junit.framework.TestCase;
  * Tests are not currently run for java, but for our purposes, if the test compiles at all, it's
  * a success.
  */
-public class FutureTest extends TestCase {
+public class FutureCompilationTest extends TestCase {
   public void testFutureCastMap() throws Exception {
     Future<String> f = Future.value("23");
     Future<Integer> f2 = f.map(new Function<String, Integer>() {
