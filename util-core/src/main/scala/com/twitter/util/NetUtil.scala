@@ -25,7 +25,7 @@ object NetUtil {
 
   def ipToInt(ip: String): Int = {
     ipToOptionInt(ip) getOrElse {
-      throw new IllegalArgumentException("invalid IPv4 address")
+      throw new IllegalArgumentException("invalid IPv4 address: " + ip)
     }
   }
 
