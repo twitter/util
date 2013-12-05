@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import java.util.concurrent.RejectedExecutionException
 import java.util.ArrayDeque
-import com.twitter.util.{Future, Promise, Throw}
+import com.twitter.util.{Future, Promise, Throw, NonFatal}
 
 /**
  * An AsyncSemaphore is a traditional semaphore but with asynchronous
@@ -70,6 +70,48 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
     }
   }
 
+  /**
+   * Execute the function asynchronously when a permit becomes available.
+   *
+   * If the function throws a non-fatal exception, the exception is returned as part of the Future.
+   * For all exceptions, the permit would be released before returning.
+   *
+   * @return a Future[T] equivalent to the return value of the input function. If the configured
+   *         maximum value of waitq is reached, Future.Exception[RejectedExecutionException] is
+   *         returned.
+   */
+  def acquireAndRun[T](func: => Future[T]): Future[T] = {
+    acquire() flatMap { permit =>
+      val f = try func catch {
+        case NonFatal(e) =>
+          Future.exception(e)
+        case e =>
+          permit.release()
+          throw e
+      }
+      f ensure {
+        permit.release()
+      }
+    }
+  }
+
+  /**
+   * Execute the function when a permit becomes available.
+   *
+   * If the function throws an exception, the exception is returned as part of the Future.
+   * For all exceptions, the permit would be released before returning.
+   *
+   * @return a Future[T] equivalent to the return value of the input function. If the configured
+   *         maximum value of waitq is reached, Future.Exception[RejectedExecutionException] is
+   *         returned.
+   */
+  def acquireAndRunSync[T](func: => T): Future[T] = {
+    acquire() flatMap { permit =>
+      Future(func) ensure {
+        permit.release()
+      }
+    }
+  }
 }
 
 object AsyncSemaphore {
