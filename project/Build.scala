@@ -18,14 +18,14 @@ object Util extends Build {
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
-      "junit" % "junit" % "4.8.1" % "test" withSources(),
+      "junit" % "junit" % "4.8.1" % "test",
       "org.scalatest" %% "scalatest" %"1.9.1" % "test",
-      "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" withSources() cross CrossVersion.binaryMapped {
+      "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" cross CrossVersion.binaryMapped {
         case "2.9.2" => "2.9.1"
         case "2.10.0" => "2.10"
         case x => x
       },
-      "org.mockito" % "mockito-all" % "1.8.5" % "test" withSources()
+      "org.mockito" % "mockito-all" % "1.8.5" % "test"
     ),
 
     resolvers += "twitter repo" at "http://maven.twttr.com",
