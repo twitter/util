@@ -1,9 +1,11 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.atomic.{AtomicReference, AtomicInteger}
+import java.util.concurrent.locks.{Lock, ReentrantLock}
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
 import scala.collection.mutable
+import scala.annotation.tailrec
 
 /**
  * Trait Var represents a variable. It is a reference cell which is
@@ -119,25 +121,31 @@ object Var {
    */
   private[util] class Observer[-T](o: T => Unit) {
     private[this] var owner: Object = null
-    
+    private[this] var ownerVersion = -1L
+
     /**
      * Lease this observer. Returns true when this represents a new
-     * owner.
+     * owner. The owner passes in a monotonically increasing integer
+     * to simplify state management for owners: relinquishing happens
+     * only when version numbers also match. This allows the lessee
+     * to maintain overlapping leases, while safely calling
+     * relinquish.
      */
-    def lease(who: Object): Boolean = synchronized {
+    def lease(who: Object, version: Long): Boolean = synchronized {
       val newOwner = owner ne who
       owner = who
+      ownerVersion = version
       newOwner
     }
     
     /**
-     * Release the lease possibly held by who.
+     * Release the lease possibly held by `who` at `version`.
      */
-    def relinquish(who: Object): Unit = synchronized {
-      if (owner eq who)
+    def relinquish(who: Object, version: Long): Unit = synchronized {
+      if ((owner eq who) && ownerVersion == version)
         owner = null
     }
-    
+
     /**
      * Update the observer, conditionally on who being 
      * the current lease holder.
@@ -192,7 +200,7 @@ object Var {
         observers.get(obs) match {
           case Some(closer) if closer eq this =>
             observers -= obs
-            obs.relinquish(Var.this)
+            obs.relinquish(Var.this, 0)
           case _ =>
         }
 
@@ -201,7 +209,7 @@ object Var {
     }
 
     protected def observe(depth: Int, obs: Observer[T]): Closable = synchronized {
-      if (obs.lease(this))
+      if (obs.lease(this, 0))
         obs.update(v, this)
 
       val closer = newCloser(obs)
@@ -328,6 +336,12 @@ private object UpdatableVar {
       depth: Int,
       version: Long
   )
+  
+  case class State[T](v: T, os: immutable.SortedSet[O[T]]) {
+    def -(o: O[T]) = copy(os=os-o)
+    def +(o: O[T]) = copy(os=os+o)
+    def :=(newv: T) = copy(v=newv)
+  }
 
   implicit def order[T] = new Ordering[O[T]] {
     // This is safe because observers are compared
@@ -347,46 +361,47 @@ private class UpdatableVar[T](init: T)
   import UpdatableVar._
   import Var.Observer
 
-  @volatile protected var value: T = init
-  private[this] var version = 0L
-  private[this] var observers = 
-    immutable.SortedSet.empty[O[T]]
-
-  def apply(): T = value
-
-  def update(t: T): Unit = synchronized {
-    if (value == t) return
-    value = t
-    for (O(obs, _, _) <- observers)
-      obs.update(t, this)
+  private[this] val version = new AtomicInteger(0)
+  private[this] val state = new AtomicReference(State[T](init, immutable.SortedSet.empty))
+  
+  @tailrec
+  private[this] def cas(next: State[T] => State[T]): State[T] = {
+    val from = state.get
+    val to = next(from)
+    if (state.compareAndSet(from, to)) to else cas(next)
   }
 
-  protected def observe(depth: Int, obs: Observer[T]): Closable = synchronized {
-    val newOwner = obs.lease(this)
-    if (!newOwner) {
-      val Some(old) = observers.find(_.obs eq obs)
-      observers -= old
+  def apply(): T = state.get.v
+
+  // TODO: Synchronize here to enforce single-writer?
+  def update(t: T): Unit = {
+    val s = cas(_ := t)
+    for (o <- s.os)
+      o.obs.update(t, this)
+  }
+
+  protected def observe(depth: Int, obs: Observer[T]): Closable = {
+    val o = O(obs, depth, version.getAndIncrement())
+    val newOwner = obs.lease(this, o.version)
+
+    if (newOwner) {
+      obs.update(state.get.v, this)
+      cas(_ + o)
+    } else {
+      val Some(old) = state.get.os.find(_.obs eq obs)
+      cas { s => s + o - old }
     }
-
-    version += 1
-    val o = O(obs, depth, version)
-    observers += o
-
-    if (newOwner)
-      obs.update(value, this)
 
     newCloser(o)
   }
 
   private[this] def newCloser(o: O[T]) = new Closable {
-    def close(deadline: Time) = UpdatableVar.this.synchronized {
-      if (observers contains o) {
-        observers -= o
-        o.obs.relinquish(UpdatableVar.this)
-      }
+    def close(deadline: Time) = {
+      cas(_ - o)
+      o.obs.relinquish(UpdatableVar.this, o.version)
       Future.Done
     }
   }
 
-  override def toString = "Var("+value+")"
+  override def toString = "Var("+state.get.v+")"
 }

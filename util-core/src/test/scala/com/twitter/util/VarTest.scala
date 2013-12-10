@@ -366,7 +366,7 @@ class VarTest extends FunSuite {
   test("Race-a-Var") {
     class Counter(n: Int, u: Updatable[Int]) extends Thread {
       override def run() {
-        var i = 0
+        var i = 1
         while (i < n) {
           u() = i
           i += 1
@@ -380,21 +380,19 @@ class VarTest extends FunSuite {
     
     @volatile var j = -1
     @volatile var n = 0
-    @volatile var ok = true
     c observe { i =>
-      ok &&= i == j+1
+      assert(i === j+1)
       j = i
     }
-    
+
     val ac = new Counter(N, a)
     val bc = new Counter(N, b)
-    
+
     ac.start()
     bc.start()
     ac.join()
     bc.join()
     
-    assert(ok)
     assert(j === N-1)
   }
 }
