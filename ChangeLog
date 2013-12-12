@@ -1,3 +1,10 @@
+6.10.0  2013-12-12
+
+  * `util-core`: Add functionality to AsyncSemaphore for executing functions as permits become available.
+  * `util-core`: Fine-grained locking to prevent deadlocks in Var.
+  * `util-core`: Introduce com.twitter.io.BufInputStream - wraps a Buf and exposes a java.io.InputStream interface.
+  * `util-core`: Introduce com.twitter.util.Memoize - thread-safe memoization of a function.
+
 6.9.0  2013-12-02
 
   * util-core: 2.10 pattern matching strictness
