@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.CountDownLatch
+import java.util.concurrent.{CountDownLatch => JCountDownLatch}
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 
@@ -33,7 +33,7 @@ object Memoize {
    */
   def apply[A, B](f: A => B): A => B =
     new Function1[A, B] {
-      private[this] var memo = Map.empty[A, Either[CountDownLatch, B]]
+      private[this] var memo = Map.empty[A, Either[JCountDownLatch, B]]
 
       /**
        * What to do if we do not find the value already in the memo
@@ -47,7 +47,7 @@ object Memoize {
               // If it's missing, then claim the slot by putting in a
               // CountDownLatch that will be completed when the value is
               // available.
-              val latch = new CountDownLatch(1)
+              val latch = new JCountDownLatch(1)
               memo = memo + (a -> Left(latch))
 
               // The latch wrapped in Left indicates that the value
