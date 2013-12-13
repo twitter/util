@@ -690,6 +690,19 @@ abstract class Future[+A] extends Awaitable[A] {
     p
   }
 
+  /**
+   * Delay the completion of this Future for at least
+   * `howlong` from now.
+   */
+  def delayed(howlong: Duration)(implicit timer: Timer): Future[A] = {
+    if (howlong == Duration.Zero)
+      return this
+
+    val p = Promise.interrupts[A](this)
+    timer.schedule(howlong.fromNow) { p.become(this) }
+    p
+  }
+
   def transform[B](f: Try[A] => Future[B]): Future[B]
 
   /**

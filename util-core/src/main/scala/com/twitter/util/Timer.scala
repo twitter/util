@@ -59,6 +59,10 @@ trait Timer {
   def stop()
 }
 
+object Timer {
+  val Nil: Timer = new NullTimer
+}
+
 /**
  * A NullTimer is not a timer at all: it invokes all tasks immediately
  * and inline.
