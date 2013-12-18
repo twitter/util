@@ -27,6 +27,16 @@ abstract class Function[-T1, +R] extends PartialFunction[T1, R] {
 
   override def isDefinedAt(x: T1) = true
 }
+
+object Function {
+  /**
+   * Compose a function with a monitor; all invocations of the 
+   * returned function are synchronized with the given monitor `m`.
+   */
+  def synchronizeWith[T, R](m: Object)(f: T => R): T => R =
+    t => m.synchronized { f(t) }
+}
+
 abstract class ExceptionalFunction[-T1, R] extends Function[T1, R] {
   /**
    * Implements apply in terms of abstract applyE, to allow Java code to throw checked exceptions.

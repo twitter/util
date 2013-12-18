@@ -29,6 +29,7 @@ trait Var[+T] { self =>
    * Observe this Var. `f` is invoked each time the variable changes,
    * and synchronously with the first call to this method.
    */
+  @deprecated("Use changes (Event)", "6.8.2")
   final def observe(f: T => Unit): Closable = observe(0, Observer(f))
 
   /**
@@ -44,6 +45,7 @@ trait Var[+T] { self =>
   protected def observe(depth: Int, obs: Observer[T]): Closable
 
   /** Synonymous with observe */
+  @deprecated("Use changes (Event)", "6.8.2")
   def foreach(f: T => Unit) = observe(f)
 
   /** 
@@ -66,12 +68,7 @@ trait Var[+T] { self =>
         inner.getAndSet(f(t).observe(depth+1, obs)).close()
       ))
 
-      Closable.sequence(
-        outer,
-        Closable.make { deadline =>
-          inner.getAndSet(Closable.nop).close(deadline)
-        }
-      )
+      Closable.sequence(outer, Closable.ref(inner))
     }
   }
 
@@ -79,8 +76,17 @@ trait Var[+T] { self =>
    * Observe this Var into the given AtomicReference.
    * Observation stops when the returned closable is closed.
    */
+  @deprecated("Use changes (Event)", "6.8.2")
   def observeTo[U >: T](ref: AtomicReference[U]): Closable =
     this observe { newv => ref.set(newv) }
+
+  /**
+   * An Event where changes in Var are emitted. The current value
+   * of this Var is emitted synchronously upon subscription.
+   */
+  lazy val changes: Event[T] = new Event[T] {
+    def register(s: Witness[T]) = observe { newv => s.notify(newv) }
+  }
 
   /**
    * A one-shot predicate observation. The returned future
@@ -91,12 +97,13 @@ trait Var[+T] { self =>
    * Interrupting the future will also satisfy the future (with the
    * interrupt exception) and close the observation.
    */
+  @deprecated("Use changes (Event)", "6.8.2")
   def observeUntil(pred: T => Boolean): Future[T] = {
     val p = Promise[T]()
     p.setInterruptHandler {
       case exc => p.updateIfEmpty(Throw(exc))
     }
-    
+
     val o = observe { 
       case el if pred(el) => p.updateIfEmpty(Return(el))
       case _ => 
@@ -184,6 +191,17 @@ object Var {
    */
   def apply[T](init: T): Var[T] with Updatable[T] with Extractable[T] =
     new UpdatableVar(init)
+
+  /**
+   * Constructs a Var from an initial value plus an event stream of
+   * changes. Note that this eagerly subscribes to the event stream;
+   * it is unsubscribed whenever the returned Var is collected.
+   */
+  def apply[T](init: T, e: Event[T]): Var[T] = {
+    val v = Var(init)
+    Closable.closeOnCollect(e.register(Witness(v)), v)
+    v
+  }
 
   /**
    * Create a new, constant, v-valued Var.

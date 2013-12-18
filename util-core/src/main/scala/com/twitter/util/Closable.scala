@@ -1,5 +1,10 @@
 package com.twitter.util
 
+import java.lang.ref.{ReferenceQueue, PhantomReference, Reference}
+import java.util.HashMap
+import java.util.concurrent.atomic.AtomicReference
+import java.util.logging.{Logger, Level}
+
 /**
  * Closable is a mixin trait to describe a closable ``resource``.
  */
@@ -58,5 +63,44 @@ object Closable {
   /** Make a new Closable whose close method invokes f. */
   def make(f: Time => Future[Unit]): Closable = new Closable {
     def close(deadline: Time) = f(deadline)
+  }
+  
+  def ref(r: AtomicReference[Closable]): Closable = new Closable {
+    def close(deadline: Time) = r.getAndSet(nop).close(deadline)
+  }
+  
+  private val refs = new HashMap[Reference[Object], Closable]
+  private val refq = new ReferenceQueue[Object]
+
+  private val collectorThread = new Thread("CollectClosables") {
+    override def run() {
+        while(true) {
+          try {
+            val ref = refq.remove()
+            val closable = refs.synchronized(refs.remove(ref))
+            if (closable != null)
+              closable.close()
+            ref.clear()
+          } catch {
+            case NonFatal(exc) =>
+              Logger.getLogger("").log(Level.SEVERE,
+                "com.twitter.util.Closable collector threw exception", exc)
+            case fatal =>
+              Logger.getLogger("").log(Level.SEVERE,
+                "com.twitter.util.Closable collector fatal threw exception", fatal)
+              throw fatal
+          }
+        }
+    }
+
+    setDaemon(true)
+    start()
+  }
+
+  /**
+   * Close the given closable when `obj` is collected.
+   */
+  def closeOnCollect(closable: Closable, obj: Object): Unit = refs.synchronized {
+    refs.put(new PhantomReference(obj, refq), closable)
   }
 }

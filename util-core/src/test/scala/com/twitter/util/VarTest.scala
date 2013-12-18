@@ -236,6 +236,8 @@ class VarTest extends FunSuite {
 
   test("Var.observeUntil") {
     val v = Var[Int](123)
+    // Now: Future.event(Event(v) filter(_%2 == 0))
+    // 	v.changes.filter(_%2==0).toFuture
     val f = v.observeUntil(_%2 == 0)
     assert(!f.isDefined)
     v() = 333
@@ -361,7 +363,7 @@ class VarTest extends FunSuite {
   }
 
   testPropagation("constant", Var.value)
-  testPropagation("variable", Var.apply)
+  testPropagation("variable", Var.apply(_))
 
   test("Race-a-Var") {
     class Counter(n: Int, u: Updatable[Int]) extends Thread {

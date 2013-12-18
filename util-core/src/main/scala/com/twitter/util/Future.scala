@@ -11,7 +11,7 @@ import scala.collection.mutable
 object Future {
   val DEFAULT_TIMEOUT = Duration.Top
   val Unit = apply(())
-  val Void = apply[Void](null)
+  val Void = apply[Void](null: Void)
   val Done = Unit
   val None: Future[Option[Nothing]] = new ConstFuture(Return.None)
   val Nil: Future[Seq[Nothing]] = new ConstFuture(Return.Nil)
