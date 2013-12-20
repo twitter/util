@@ -72,6 +72,9 @@ trait Var[+T] { self =>
     }
   }
 
+  def join[U](other: Var[U]): Var[(T, U)] = 
+    for { t <- self; u <- other } yield (t, u)
+
   /**
    * Observe this Var into the given AtomicReference.
    * Observation stops when the returned closable is closed.
