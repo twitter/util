@@ -90,7 +90,7 @@ object Reader {
 
         case Writing(buf, p) if buf.length <= n =>
           state = Idle
-          p.setValue(())
+          p.setDone()
           Future.value(buf)
 
         case Writing(buf, p) =>

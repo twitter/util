@@ -24,7 +24,7 @@ class CloseAwaitablyTest extends FunSuite {
     assert(c.close(Time.now) == f)
     assert(c.n == 1)
     assert(f.poll == None)
-    c.p.setValue(())
+    c.p.setDone()
     assert(f.poll == Some(Return.Unit))
   }
 
@@ -39,7 +39,7 @@ class CloseAwaitablyTest extends FunSuite {
 
     c.close(Time.now)
     assert(t.isAlive)
-    c.p.setValue(())
+    c.p.setDone()
     t.join(10000)
     assert(!t.isAlive)
   }

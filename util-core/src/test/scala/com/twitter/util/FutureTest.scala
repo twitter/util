@@ -67,15 +67,15 @@ class FutureTest extends WordSpec {
 
         "when everything succeeds" in {
           new TimesHelper {
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === false)
             assert(failure === false)
 
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === false)
             assert(failure === false)
 
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === true)
             assert(failure === false)
           }
@@ -83,7 +83,7 @@ class FutureTest extends WordSpec {
 
         "when some succeed and some fail" in {
           new TimesHelper {
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === false)
             assert(failure === false)
 
@@ -99,7 +99,7 @@ class FutureTest extends WordSpec {
             iteration.raise(new Exception)
             for (i <- 1 to 3) {
               assert(ninterrupt === i)
-              queue.poll().setValue(())
+              queue.poll().setDone()
             }
           }
         }
@@ -147,15 +147,15 @@ class FutureTest extends WordSpec {
 
         "when everything succeeds" in {
           new WhileDoHelper {
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === false)
             assert(failure === false)
 
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === false)
             assert(failure === false)
 
-            queue.poll().setValue(())
+            queue.poll().setDone()
 
             assert(complete === true)
             assert(failure === false)
@@ -164,7 +164,7 @@ class FutureTest extends WordSpec {
 
         "when some succeed and some fail" in {
           new WhileDoHelper {
-            queue.poll().setValue(())
+            queue.poll().setDone()
             assert(complete === false)
             assert(failure === false)
 
@@ -796,9 +796,9 @@ class FutureTest extends WordSpec {
               val f = f1 flatMap { _ => f2 flatMap { _ => f3 } }
               f.raise(exc)
               assert(didInterrupt === false)
-              f1.setValue(())
+              f1.setDone()
               assert(didInterrupt === false)
-              f2.setValue(())
+              f2.setDone()
               assert(didInterrupt === true)
             }
           }

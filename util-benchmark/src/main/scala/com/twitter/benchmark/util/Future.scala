@@ -37,7 +37,7 @@ class FutureBenchmark extends SimpleBenchmark {
     while (i < reps) {
       val p = new Promise[Unit]
       p respond f
-      p.setValue(())
+      p.setDone()
       i += 1
     }
   }
@@ -49,7 +49,7 @@ class FutureBenchmark extends SimpleBenchmark {
     while (i < reps) {
       val p =new Promise[Unit]
       p flatMap f
-      p.setValue(())
+      p.setDone()
       i += 1
     }
   }
@@ -57,7 +57,7 @@ class FutureBenchmark extends SimpleBenchmark {
   def timeSelect(reps: Int) {
     val numToSelect = 5
     val done = new Promise[Unit]
-    done.setValue(())
+    done.setDone()
 
     val fs: Seq[Future[Unit]] =
       Seq.fill(numToSelect - 1) { new Promise[Unit] } :+ done
@@ -72,7 +72,7 @@ class FutureBenchmark extends SimpleBenchmark {
   def timeSelectIndex(reps: Int) {
     val numToSelect = 5
     val done = new Promise[Unit]
-    done.setValue(())
+    done.setDone()
     val fs: IndexedSeq[Future[Unit]] =
       IndexedSeq.fill(numToSelect - 1) { new Promise[Unit] } :+ done
 
