@@ -45,6 +45,18 @@ object Future {
    */
   val never: Future[Nothing] = new NoFuture
 
+  /**
+   * A unit future that completes after `howlong`.
+   */
+  def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] = {
+    if (howlong == Duration.Zero)
+      return Future.Done
+
+    val p = new Promise[Unit]
+    timer.schedule(howlong.fromNow) { p.setDone() }
+    p
+  }
+
   @deprecated("Prefer static Future.Void.", "5.x")
   def void(): Future[Void] = value[Void](null)
 
@@ -717,6 +729,17 @@ abstract class Future[+A] extends Awaitable[A] {
   def flatMap[B](f: A => Future[B]): Future[B] =
     transform({
       case Return(v) => f(v)
+      case Throw(t) => Future.rawException(t)
+    })
+
+  /**
+   * Sequentially compose `this` with `f`. This is as `flatMap`, but
+   * discards the result of `this`. Note that this applies only
+   * `Unit`-valued  Futures -- i.e. side-effects..
+   */
+  def followedBy[B](f: => Future[B])(implicit ev: this.type <:< Future[Unit]): Future[B] =
+    transform({
+      case Return(_) => f
       case Throw(t) => Future.rawException(t)
     })
 

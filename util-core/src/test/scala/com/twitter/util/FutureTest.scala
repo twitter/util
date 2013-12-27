@@ -4,7 +4,6 @@ import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.junit.runner.RunWith
-
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import scala.collection.JavaConverters._
@@ -750,81 +749,88 @@ class FutureTest extends WordSpec {
         }
       }
 
-      "flatMap" when {
-        "successes" should {
-          val f = Future(1) flatMap { x => Future(x + 1) }
-
-          "apply" which {
-            assert(Await.result(f) === 2)
-          }
-
-          "respond" which {
-            f mustProduce Return(2)
-          }
-
-          "interruption of the produced future" which {
-            "before the antecedent Future completes, propagates back to the antecedent" in {
-              val f1, f2 = new HandledPromise[Int]
-              val f = f1 flatMap { _ => f2 }
-              assert(f1.handled === None)
-              assert(f2.handled === None)
-              f.raise(new Exception)
-              assert(f1.handled.isDefined)
-              f1() = Return(2)
-              assert(f2.handled.isDefined)
-            }
-
-            "after the antecedent Future completes, does not propagate back to the antecedent" in {
-              val f1, f2 = new HandledPromise[Int]
-              val f = f1 flatMap { _ => f2 }
-              assert(f1.handled === None)
-              assert(f2.handled === None)
-              f1() = Return(2)
-              f.raise(new Exception)
-              assert(f1.handled === None)
-              assert(f2.handled.isDefined)
-            }
-
-            "forward through chains" in {
-              val f1, f2 = new Promise[Unit]
-              val exc = new Exception
-              val f3 = new Promise[Unit]
-              var didInterrupt = false
-              f3.setInterruptHandler {
-                case `exc` => didInterrupt = true
+      def testSequence(
+          which: String, 
+          seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]) {
+        which when {
+          "successes" should {
+            "interruption of the produced future" which {
+              "before the antecedent Future completes, propagates back to the antecedent" in {
+                val f1, f2 = new HandledPromise[Unit]
+                val f = seqop(f1, () => f2)
+                assert(f1.handled === None)
+                assert(f2.handled === None)
+                f.raise(new Exception)
+                assert(f1.handled.isDefined)
+                f1() = Return(2)
+                assert(f2.handled.isDefined)
               }
-              val f = f1 flatMap { _ => f2 flatMap { _ => f3 } }
-              f.raise(exc)
-              assert(didInterrupt === false)
-              f1.setDone()
-              assert(didInterrupt === false)
-              f2.setDone()
-              assert(didInterrupt === true)
+  
+              "after the antecedent Future completes, does not propagate back to the antecedent" in {
+                val f1, f2 = new HandledPromise[Unit]
+                val f = seqop(f1, () => f2)
+                assert(f1.handled === None)
+                assert(f2.handled === None)
+                f1() = Return.Unit
+                f.raise(new Exception)
+                assert(f1.handled === None)
+                assert(f2.handled.isDefined)
+              }
+  
+              "forward through chains" in {
+                val f1, f2 = new Promise[Unit]
+                val exc = new Exception
+                val f3 = new Promise[Unit]
+                var didInterrupt = false
+                f3.setInterruptHandler {
+                  case `exc` => didInterrupt = true
+                }
+                val f = seqop(f1, () => seqop(f2, () => f3))
+                f.raise(exc)
+                assert(didInterrupt === false)
+                f1.setDone()
+                assert(didInterrupt === false)
+                f2.setDone()
+                assert(didInterrupt === true)
+              }
+            }
+          }
+  
+          "failures" should {
+            val e = new Exception
+            val g = seqop(Future[Unit](throw e), () => Future.Done)
+
+            "apply" in {
+              val actual = intercept[Exception] { Await.result(g) }
+              assert(actual === e)
+            }
+  
+            "respond" in {
+              g mustProduce Throw(e)
+            }
+  
+            "when there is an exception in the passed in function" in {
+              val e = new Exception
+              val f = seqop(Future.Done, () => throw e)
+              val actual = intercept[Exception] { Await.result(f) }
+              assert(actual === e)
             }
           }
         }
+      }
 
-        "failures" should {
-          val e = new Exception
-          val g = Future[Int](throw e) flatMap { x => Future(x + 1) }
+      testSequence("flatMap", (a, next) => a flatMap { _ => next() })
+      testSequence("followedBy", (a, next) => a followedBy next())
+      
+      "flatMap (values)" should {
+        val f = Future(1) flatMap { x => Future(x + 1) }
 
-          "apply" in {
-            val actual = intercept[Exception] { Await.result(g) }
-            assert(actual === e)
-          }
+        "apply" which {
+          assert(Await.result(f) === 2)
+        }
 
-          "respond" in {
-            g mustProduce Throw(e)
-          }
-
-          "when there is an exception in the passed in function" in {
-            val e = new Exception
-            val f = Future(1).flatMap[Int] { x =>
-              throw e
-            }
-            val actual = intercept[Exception] { Await.result(f) }
-            assert(actual === e)
-          }
+        "respond" which {
+          f mustProduce Return(2)
         }
       }
 
@@ -1316,6 +1322,22 @@ class FutureTest extends WordSpec {
 
     "always time out" in {
       intercept[TimeoutException] { Await.ready(Future.never, 0.milliseconds) }
+    }
+  }
+  
+  "Future.sleep" should {
+    "Satisfy after the given amount of time" in Time.withCurrentTimeFrozen { tc =>
+      implicit val timer = new MockTimer
+      
+      val f = Future.sleep(10.seconds)
+      assert(!f.isDefined)
+      tc.advance(5.seconds)
+      timer.tick()
+      assert(!f.isDefined)
+      tc.advance(5.seconds)
+      timer.tick()
+      assert(f.isDefined)
+      Await.result(f)
     }
   }
 
