@@ -19,10 +19,62 @@ package com.twitter.logging
 import java.util.{logging => javalog}
 
 /**
- * Wrapper around {@link java.util.logging.LogRecord}.
+ * Wrapper around {@link java.util.logging.LogRecord}. Should only be accessed from a single thread.
  *
- * The only difference is around log time where messages by Java are formatted using
- * {@link java.text.MessageFormat}, whereas this class formats using a regular
- * {@link java.text.StringFormat}.
+ * Messages are formatted by Java's LogRecord using {@link java.text.MessageFormat} whereas
+ * this class uses a regular {@link java.text.StringFormat}
+ *
+ * This class takes {@link com.twitter.logging.Logger} into account when inferring the
+ * `sourceMethod` and `sourceClass` names.
  */
-class LogRecord(level: javalog.Level, msg: String) extends javalog.LogRecord(level, msg)
+class LogRecord(level: javalog.Level, msg: String) extends javalog.LogRecord(level, msg) {
+  private[this] var inferred = false
+  private[this] var sourceClassName: String = null
+  private[this] var sourceMethodName: String = null
+
+  // May be incorrect if called lazily
+  override def getSourceClassName(): String = {
+    if (!inferred)
+      infer()
+    sourceClassName
+  }
+
+  // May be incorrect if called lazily
+  override def getSourceMethodName(): String = {
+    if (!inferred)
+      infer()
+    sourceMethodName
+  }
+
+  override def setSourceClassName(name: String) {
+    inferred = true
+    sourceClassName = name
+  }
+
+  override def setSourceMethodName(name: String) {
+    inferred = true
+    sourceMethodName = name
+  }
+
+  private[this] def infer() {
+    // TODO: there is a small optimization we can do in jdk7 with new JavaLangAccess
+    val stack = Thread.currentThread.getStackTrace()
+
+    def notTwitterString(elt: StackTraceElement): Boolean =
+      elt.getClassName != LogRecord.twitterString
+
+    // Find the first non-Logger StackTraceElement after the first occurrence of Logger.
+    val elt = stack dropWhile notTwitterString find notTwitterString
+
+    val (cName, mName) = elt match {
+      case Some(element) => (element.getClassName, element.getMethodName)
+      case None => (super.getSourceClassName, super.getSourceMethodName)
+    }
+    setSourceMethodName(mName)
+    setSourceClassName(cName)
+  }
+}
+
+object LogRecord {
+  private[logging] val twitterString = "com.twitter.logging.Logger"
+}
