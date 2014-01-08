@@ -737,7 +737,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * discards the result of `this`. Note that this applies only
    * `Unit`-valued  Futures -- i.e. side-effects..
    */
-  def followedBy[B](f: => Future[B])(implicit ev: this.type <:< Future[Unit]): Future[B] =
+  def before[B](f: => Future[B])(implicit ev: this.type <:< Future[Unit]): Future[B] =
     transform({
       case Return(_) => f
       case Throw(t) => Future.rawException(t)

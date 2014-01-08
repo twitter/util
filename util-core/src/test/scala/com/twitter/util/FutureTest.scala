@@ -820,7 +820,7 @@ class FutureTest extends WordSpec {
       }
 
       testSequence("flatMap", (a, next) => a flatMap { _ => next() })
-      testSequence("followedBy", (a, next) => a followedBy next())
+      testSequence("before", (a, next) => a before next())
       
       "flatMap (values)" should {
         val f = Future(1) flatMap { x => Future(x + 1) }
