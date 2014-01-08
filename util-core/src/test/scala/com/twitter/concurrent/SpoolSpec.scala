@@ -5,7 +5,7 @@ import java.io.EOFException
 import org.specs.SpecificationWithJUnit
 import scala.collection.mutable.ArrayBuffer
 
-import Spool.{*::, **::}
+import Spool.{*::, **::, seqToSpool}
 
 class SpoolSpec extends SpecificationWithJUnit {
   "Empty Spool" should {
@@ -117,6 +117,23 @@ class SpoolSpec extends SpecificationWithJUnit {
     "reduce left" in {
       val fold = s.reduceLeft{(x, y) => x + y}
       Await.result(fold) must be_==(3)
+    }
+
+    "be roundtrippable through toSeq/toSpool" in {
+      val seq = (0 to 10).toSeq
+      Await.result(seq.toSpool.toSeq) must be_==(seq)
+    }
+
+    "flatten via flatMap of toSpool" in {
+      val spool = Seq(1, 2) **:: Seq(3, 4) **:: Spool.empty
+      val seq = Await.result(spool.toSeq)
+
+      val flatSpool =
+        spool.flatMap { inner =>
+          Future.value(inner.toSpool)
+        }
+
+      Await.result(flatSpool.flatMap(_.toSeq)) must be_==(seq.flatten)
     }
   }
 
@@ -247,6 +264,17 @@ class SpoolSpec extends SpecificationWithJUnit {
       p1() = Return(Spool.empty)
       f.isDefined must beTrue
       Await.result(f) must be_==(3)
+    }
+
+    "be lazy" in {
+      def mkSpool(i: Int = 0): Future[Spool[Int]] =
+        Future.value {
+          if (i < 3)
+            i *:: mkSpool(i + 1)
+          else
+            throw new AssertionError("Should not have produced " + i)
+        }
+      mkSpool() must not(throwA[AssertionError])
     }
   }
 }

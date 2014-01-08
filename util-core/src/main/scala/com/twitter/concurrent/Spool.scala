@@ -5,14 +5,15 @@ import java.io.EOFException
 import scala.collection.mutable.ArrayBuffer
 
 /**
- * A spool is an asynchronous stream. It more or less
- * mimics the scala {{Stream}} collection, but with cons
- * cells that have deferred tails.
+ * A spool is an asynchronous stream. It more or less mimics the scala
+ * {{Stream}} collection, but with cons cells that have either eager or
+ * deferred tails.
  *
- * Construction is done with Spool.cons, Spool.empty.  Convenience
- * syntax like that of [[scala.Stream]] is provided.  In order to use
- * these operators for deconstruction, they must be imported
- * explicitly ({{import Spool.{*::, **::}}})
+ * Construction of eager Spools is done with either Spool.cons or
+ * the {{**::}} operator. To construct a lazy/deferred Spool which
+ * materializes its tail on demand, use the {{*::}} operator. In order
+ * to use these operators for deconstruction, they must be imported
+ * explicitly (ie: {{import Spool.{*::, **::}}})
  *
  * {{{
  *   def fill(rest: Promise[Spool[Int]]) {
@@ -149,6 +150,21 @@ object Spool {
     override def toString = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
   }
 
+  private class LazyCons[A](val head: A, next: => Future[Spool[A]])
+    extends Spool[A]
+  {
+    def isEmpty = false
+    lazy val tail = next
+    def collect[B](f: PartialFunction[A, B]) = {
+      val next_ = tail flatMap { _.collect(f) }
+      if (f.isDefinedAt(head)) Future.value(Cons(f(head), next_))
+      else next_
+    }
+
+    // NB: not touching tail, to avoid forcing unnecessarily
+    override def toString = "Cons(%s, ?)".format(head)
+  }
+
   object Empty extends Spool[Nothing] {
     def isEmpty = true
     def head = throw new NoSuchElementException("spool is empty")
@@ -158,7 +174,8 @@ object Spool {
   }
 
   /**
-   * Cons a value & (possibly deferred) tail to a new {{Spool}}.
+   * Cons a value & tail to a new {{Spool}}. To defer the tail of the Spool, use
+   * the {{*::}} operator instead.
    */
   def cons[A](value: A, next: Future[Spool[A]]): Spool[A] = Cons(value, next)
   def cons[A](value: A, nextSpool: Spool[A]): Spool[A] = Cons(value, Future.value(nextSpool))
@@ -169,6 +186,18 @@ object Spool {
   def empty[A]: Spool[A] = Empty
 
   /**
+   * Adds an implicit method to efficiently convert a Seq[A] to a Spool[A]
+   */
+  class ToSpool[A](s: Seq[A]) {
+    def toSpool: Spool[A] =
+      s.reverse.foldLeft(Spool.empty: Spool[A]) {
+        case (tail, head) => cons(head, tail)
+      }
+  }
+
+  implicit def seqToSpool[A](s: Seq[A]) = new ToSpool(s)
+
+  /**
    * Syntax support.  We retain different constructors for future
    * resolving vs. not.
    *
@@ -177,10 +206,10 @@ object Spool {
    */
 
   class Syntax[A](tail: => Future[Spool[A]]) {
-    def *::(head: A) = cons(head, tail)
+    def *::(head: A): Spool[A] = new LazyCons(head, tail)
   }
 
-  implicit def syntax[A](s: Future[Spool[A]]) = new Syntax(s)
+  implicit def syntax[A](s: => Future[Spool[A]]) = new Syntax(s)
 
   object *:: {
     def unapply[A](s: Spool[A]): Option[(A, Future[Spool[A]])] = {
@@ -188,7 +217,7 @@ object Spool {
       else Some((s.head, s.tail))
     }
   }
-  class Syntax1[A](tail: => Spool[A]) {
+  class Syntax1[A](tail: Spool[A]) {
     def **::(head: A) = cons(head, tail)
   }
 
