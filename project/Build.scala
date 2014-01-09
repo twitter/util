@@ -153,7 +153,7 @@ object Util extends Build {
   ).settings(
     name := "util-collection",
     libraryDependencies ++= Seq(
-      "com.google.guava" % "guava" % "11.0.2",
+      "com.google.guava" % "guava" % "15.0",
       "commons-collections" % "commons-collections" % "3.2.1"
     )
   ).dependsOn(utilCore)
