@@ -16,7 +16,6 @@
 
 package com.twitter.logging
 
-import com.twitter.conversions.string._
 import java.text.{MessageFormat, SimpleDateFormat}
 import java.util.regex.Pattern
 import java.util.{Date, GregorianCalendar, TimeZone, logging => javalog}
@@ -143,18 +142,25 @@ class Formatter(
   def formatMessageLines(record: javalog.LogRecord): Array[String] = {
     val message = truncateText(formatText(record))
 
-    val lines = new mutable.ArrayBuffer[String]
-    lines ++= message.split("\n")
+    val containsNewLine = message.indexOf('\n') >= 0
+    if (!containsNewLine && record.getThrown == null) {
+      Array(message)
+    } else {
+      val splitOnNewlines = message.split("\n")
+      val numThrowLines = if (record.getThrown == null) 0 else 20
 
-    if (record.getThrown ne null) {
-      val traceLines = Formatter.formatStackTrace(record.getThrown, truncateStackTracesAt)
-      if (!traceLines.isEmpty) {
-        lines += record.getThrown.toString
-        lines ++= traceLines
+      val lines = new mutable.ArrayBuffer[String](splitOnNewlines.length + numThrowLines)
+      lines ++= splitOnNewlines
+
+      if (record.getThrown ne null) {
+        val traceLines = Formatter.formatStackTrace(record.getThrown, truncateStackTracesAt)
+        if (!traceLines.isEmpty) {
+          lines += record.getThrown.toString
+          lines ++= traceLines
+        }
       }
+      lines.toArray
     }
-
-    lines.toArray
   }
 
   /**

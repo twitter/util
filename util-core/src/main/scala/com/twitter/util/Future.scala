@@ -1029,6 +1029,8 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def poll: Option[Try[A]] = Some(result)
 
+  override def isDefined = true
+
   // Awaitable
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])

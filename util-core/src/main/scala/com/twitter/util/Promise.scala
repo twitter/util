@@ -141,7 +141,7 @@ object Promise {
   /** A future that is chained from a parent promise with a certain depth. */
   private class Chained[A](val parent: Promise[A], val depth: Short) extends Future[A] with Responder[A] {
     assert(depth < Short.MaxValue, "Future chains cannot be longer than 32766!")
-    
+
     // Awaitable
     @throws(classOf[TimeoutException])
     @throws(classOf[InterruptedException])
@@ -149,12 +149,15 @@ object Promise {
       parent.ready(timeout)
       this
     }
-  
+
     @throws(classOf[Exception])
     def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A =
       parent.result(timeout)
 
     def poll = parent.poll
+
+    override def isDefined = parent.isDefined
+
     def raise(interrupt: Throwable) = parent.raise(interrupt)
 
     protected[util] def continue(k: K[A]) = parent.continue(k)
@@ -383,11 +386,11 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
 
     case Done(_) =>
   }
-  
+
   // Awaitable
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
-  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = 
+  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type =
     state match {
       case Linked(p) =>
         p.ready(timeout)
@@ -463,7 +466,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    * @throws ImmutableResult if the Promise is already populated
    */
   def setException(throwable: Throwable) { update(Throw(throwable)) }
-  
+
   /**
    * Sets a Unit-typed future. By convention, futures of type
    * Future[Unit] are used for signalling.
@@ -619,4 +622,13 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     case Done(res) => Some(res)
     case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => None
   }
+
+  override def isDefined: Boolean = state match {
+    // Note: the basic implementation is the same as `poll()`, but we want to avoid doing
+    // object allocations for `Some`s when the caller does not need the result.
+    case Linked(p) => p.isDefined
+    case Done(res) => true
+    case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => false
+  }
+
 }
