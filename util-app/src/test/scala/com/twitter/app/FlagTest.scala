@@ -95,6 +95,14 @@ class FlagTest extends FunSuite {
     assert(flag.parse(Array("-yes=false")).isEmpty)
     assert(!yesFlag())
   }
+  
+  test("Boolean: -yes ARG") {
+    val ctx = new Bctx
+    import ctx._
+    val rem = flag.parse(Array("-yes", "ARG"))
+    assert(yesFlag())
+    assert(rem === Seq("ARG"))
+  }
 
   test("Flag: handle remainders (sequential)") {
     val ctx = new Ctx
