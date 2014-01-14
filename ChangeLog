@@ -1,3 +1,18 @@
+6.11.0  2014-01-14
+
+  * util-core: Add BridgedThreadPoolScheduler.
+  * util-core: Add Events, discrete-time values.
+  * util-core: Add Future.delayed, Timer.Nil.
+  * util-core: Add Var.join.
+  * util-core: Add utilities for composing Future side effects.
+  * util-core: Allocation improvements to Future.isDefined, Promise.isDefined, Promise.interrupts.
+  * util-core: Fix forcing issues with Spool.*::.
+  * util-core: Future.followedBy->Future.before
+  * util-core: s/setValue(())/setDone()/g
+  * util-logging: Allocation improvements to Formatter.formatMessageLines.
+  * util-logging: Get correct method and class name in c.t.u.LogRecord
+  * util-zk-common: Fix finagle-serversets dependencies discrepancy.
+
 6.10.0  2013-12-12
 
   * `util-core`: Add functionality to AsyncSemaphore for executing functions as permits become available.
