@@ -4,13 +4,18 @@ import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.junit.runner.RunWith
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{never, verify, when}
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.mock.MockitoSugar
 import scala.collection.JavaConverters._
 import scala.util.control.ControlThrowable
 
 @RunWith(classOf[JUnitRunner])
-class FutureTest extends WordSpec {
+class FutureTest extends WordSpec with MockitoSugar {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       expected match {
@@ -179,6 +184,170 @@ class FutureTest extends WordSpec {
             iteration.raise(new Exception)
             assert((queue.asScala forall ( _.handled.isDefined)) === true)
           }
+        }
+      }
+
+      "batched" should {
+        implicit val timer = new MockTimer
+        val result = Seq(4, 5, 6)
+
+        "execute after threshold is reached" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3)(f)
+
+          when(f.apply(Seq(1,2,3))) thenReturn(Future.value(result))
+          batcher(1)
+          verify(f, never()).apply(any[Seq[Int]])
+          batcher(2)
+          verify(f, never()).apply(any[Seq[Int]])
+          batcher(3)
+          verify(f).apply(Seq(1,2,3))
+        }
+
+        "execute after bufSizeFraction threshold is reached" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3, sizePercentile = 0.67f)(f)
+
+          when(f.apply(Seq(1,2,3))) thenReturn(Future.value(result))
+          batcher(1)
+          verify(f, never()).apply(any[Seq[Int]])
+          batcher(2)
+          verify(f).apply(Seq(1,2))
+        }
+
+        "treat bufSizeFraction return value < 0.0f as 1" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3, sizePercentile = 0.4f)(f)
+
+          when(f.apply(Seq(1,2,3))) thenReturn(Future.value(result))
+          batcher(1)
+          verify(f).apply(Seq(1))
+        }
+
+        "treat bufSizeFraction return value > 1.0f should return maxSizeThreshold" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3, sizePercentile = 1.3f)(f)
+
+          when(f.apply(Seq(1,2,3))) thenReturn(Future.value(result))
+          batcher(1)
+          verify(f, never()).apply(any[Seq[Int]])
+          batcher(2)
+          verify(f, never()).apply(any[Seq[Int]])
+          batcher(3)
+          verify(f).apply(Seq(1,2,3))
+        }
+
+        "execute after time threshold" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3, 3.seconds)(f)
+
+          Time.withCurrentTimeFrozen { control =>
+            when(f(Seq(1))) thenReturn(Future.value(Seq(4)))
+            batcher(1)
+            verify(f, never()).apply(any[Seq[Int]])
+
+            control.advance(1.second)
+            timer.tick()
+            verify(f, never()).apply(any[Seq[Int]])
+
+            control.advance(1.second)
+            timer.tick()
+            verify(f, never()).apply(any[Seq[Int]])
+
+            control.advance(1.second)
+            timer.tick()
+            verify(f).apply(Seq(1))
+          }
+        }
+
+        "only execute once if both are reached" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3)(f)
+
+          Time.withCurrentTimeFrozen { control =>
+            when(f(Seq(1,2,3))) thenReturn(Future.value(result))
+            batcher(1)
+            batcher(2)
+            batcher(3)
+            control.advance(10.seconds)
+            timer.tick()
+
+            verify(f).apply(Seq(1,2,3))
+          }
+        }
+
+        "propagates results" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3)(f)
+
+          Time.withCurrentTimeFrozen { control =>
+            when(f(Seq(1,2,3))) thenReturn(Future.value(result))
+            val res1 = batcher(1)
+            assert(res1.isDefined === false)
+            val res2 = batcher(2)
+            assert(res2.isDefined === false)
+            val res3 = batcher(3)
+            assert(res1.isDefined === true)
+            assert(res2.isDefined === true)
+            assert(res3.isDefined === true)
+
+            assert(Await.result(res1) === 4)
+            assert(Await.result(res2) === 5)
+            assert(Await.result(res3) === 6)
+
+            verify(f).apply(Seq(1,2,3))
+          }
+        }
+
+        "not block other batches" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3)(f)
+
+          Time.withCurrentTimeFrozen { control =>
+            val blocker = new Promise[Unit]
+            val thread = new Thread {
+              override def run() {
+                when(f(result)) thenReturn(Future.value(Seq(7,8,9)))
+                batcher(4)
+                batcher(5)
+                batcher(6)
+                verify(f).apply(result)
+                blocker.setValue(())
+              }
+            }
+
+            when(f(Seq(1,2,3))) thenAnswer {
+              new Answer[Future[Seq[Int]]] {
+                def answer(invocation: InvocationOnMock) = {
+                  thread.start()
+                  Await.result(blocker)
+                  Future.value(result)
+                }
+              }
+            }
+
+            batcher(1)
+            batcher(2)
+            batcher(3)
+            verify(f).apply(Seq(1,2,3))
+          }
+        }
+
+        "swallow exceptions" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(3)(f)
+
+          when(f(Seq(1, 2, 3))) thenAnswer {
+            new Answer[Unit] {
+              def answer(invocation: InvocationOnMock) = {
+                throw new Exception
+              }
+            }
+          }
+
+          batcher(1)
+          batcher(2)
+          batcher(3) // Success here implies no exception was thrown.
         }
       }
 
@@ -750,7 +919,7 @@ class FutureTest extends WordSpec {
       }
 
       def testSequence(
-          which: String, 
+          which: String,
           seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]) {
         which when {
           "successes" should {
@@ -765,7 +934,7 @@ class FutureTest extends WordSpec {
                 f1() = Return(2)
                 assert(f2.handled.isDefined)
               }
-  
+
               "after the antecedent Future completes, does not propagate back to the antecedent" in {
                 val f1, f2 = new HandledPromise[Unit]
                 val f = seqop(f1, () => f2)
@@ -776,7 +945,7 @@ class FutureTest extends WordSpec {
                 assert(f1.handled === None)
                 assert(f2.handled.isDefined)
               }
-  
+
               "forward through chains" in {
                 val f1, f2 = new Promise[Unit]
                 val exc = new Exception
@@ -795,7 +964,7 @@ class FutureTest extends WordSpec {
               }
             }
           }
-  
+
           "failures" should {
             val e = new Exception
             val g = seqop(Future[Unit](throw e), () => Future.Done)
@@ -804,11 +973,11 @@ class FutureTest extends WordSpec {
               val actual = intercept[Exception] { Await.result(g) }
               assert(actual === e)
             }
-  
+
             "respond" in {
               g mustProduce Throw(e)
             }
-  
+
             "when there is an exception in the passed in function" in {
               val e = new Exception
               val f = seqop(Future.Done, () => throw e)
@@ -821,7 +990,7 @@ class FutureTest extends WordSpec {
 
       testSequence("flatMap", (a, next) => a flatMap { _ => next() })
       testSequence("before", (a, next) => a before next())
-      
+
       "flatMap (values)" should {
         val f = Future(1) flatMap { x => Future(x + 1) }
 
@@ -1324,11 +1493,11 @@ class FutureTest extends WordSpec {
       intercept[TimeoutException] { Await.ready(Future.never, 0.milliseconds) }
     }
   }
-  
+
   "Future.sleep" should {
     "Satisfy after the given amount of time" in Time.withCurrentTimeFrozen { tc =>
       implicit val timer = new MockTimer
-      
+
       val f = Future.sleep(10.seconds)
       assert(!f.isDefined)
       tc.advance(5.seconds)

@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import com.twitter.concurrent.{Offer, Tx, Scheduler}
+import java.util.concurrent.CancellationException
 import java.util.concurrent.atomic.{
   AtomicBoolean, AtomicInteger, AtomicReference,
   AtomicReferenceArray}
@@ -455,6 +456,48 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
     (0 until n) map { i => f }
+  }
+
+  /**
+   * Creates a "batched" Future that, given a function
+   * `Seq[In] => Future[Seq[Out]]`, returns a `In => Future[Out]` interface
+   * that batches the underlying asynchronous operations. Thus, one can
+   * incrementally submit tasks to be performed when the criteria for batch
+   * flushing is met.
+   *
+   * Example:
+   *
+   *     val timer = new JavaTimer(true)
+   *     def processBatch(reqs: Seq[Request]): Future[Seq[Response]]
+   *     val batcher = Future.batched(sizeThreshold = 10) {
+   *       processBatch
+   *     }
+   *     val response: Future[Response] = batcher(new Request)
+   *
+   * `batcher` will wait until 10 requests have been submitted, then delegate
+   * to the `processBatch` method to compute the responses.
+   *
+   * Batchers can be constructed with both size- or time-based thresholds:
+   *
+   *     val batcher = Future.batched(sizeThreshold = 10, timeThreshold = 10.milliseconds) {
+   *       ...
+   *     }
+   *
+   * A batcher's size can be controlled at runtime with the `sizePercentile`
+   * function argument. This function returns a float between 0.0 and 1.0,
+   * representing the fractional size of the `sizeThreshold` that should be
+   * used for the next batch to be collected.
+   */
+  def batched[In, Out](
+    sizeThreshold: Int,
+    timeThreshold: Duration = Duration.Top,
+    sizePercentile: => Float = 1.0f
+  )(
+    f: Seq[In] => Future[Seq[Out]]
+  )(
+    implicit timer: Timer
+  ): In => Future[Out] = {
+    new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f)
   }
 }
 
@@ -933,7 +976,7 @@ abstract class Future[+A] extends Awaitable[A] {
 
       override def cancel(mayInterruptIfRunning: Boolean): Boolean = {
         if (wasCancelled.compareAndSet(false, true))
-          f.raise(new java.util.concurrent.CancellationException)
+          f.raise(new CancellationException)
         true
       }
 
@@ -942,13 +985,13 @@ abstract class Future[+A] extends Awaitable[A] {
 
       override def get(): A = {
         if (isCancelled)
-          throw new java.util.concurrent.CancellationException()
+          throw new CancellationException
         Await.result(f)
       }
 
       override def get(time: Long, timeUnit: TimeUnit): A = {
         if (isCancelled)
-          throw new java.util.concurrent.CancellationException()
+          throw new CancellationException
         Await.result(f, Duration.fromTimeUnit(time, timeUnit))
       }
     }
