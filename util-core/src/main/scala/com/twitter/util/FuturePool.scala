@@ -128,10 +128,10 @@ class ExecutorServiceFuturePool protected[this](
     p.setInterruptHandler {
       case cause =>
         if (interruptible || runOk.compareAndSet(true, false)) {
-          javaFuture.cancel(true)
           val exc = new CancellationException
           exc.initCause(cause)
-          p.updateIfEmpty(Throw(exc))
+          if (p.updateIfEmpty(Throw(exc)))
+            javaFuture.cancel(true)
         }
     }
 
