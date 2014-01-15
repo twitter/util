@@ -40,12 +40,6 @@ class FutureTest extends WordSpec with MockitoSugar {
     def exception[A](exc: Throwable): Future[A] = this(Throw(exc))
   }
 
-  class HandledPromise[A] extends Promise[A] {
-    @volatile var _handled: Option[Throwable] = None
-    def handled: Option[Throwable] = _handled
-    setInterruptHandler { case e => _handled = Some(e) }
-  }
-
   def test(name: String, const: MkConst) {
     "object Future (%s)".format(name) when {
       "times" should {
@@ -1394,14 +1388,14 @@ class FutureTest extends WordSpec with MockitoSugar {
       }
 
       "masked" should {
-        "unconditional interruption" in {
+        "do unconditional interruption" in {
           val p = new HandledPromise[Unit]
           val f = p.masked
           f.raise(new Exception())
           assert(p.handled === None)
         }
 
-        "conditional interruption" in {
+        "do conditional interruption" in {
           val p = new HandledPromise[Unit]
           val f1 = p.mask {
             case _: TimeoutException => true

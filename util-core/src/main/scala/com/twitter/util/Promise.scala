@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
+import java.util.concurrent.atomic.AtomicBoolean
 import scala.annotation.tailrec
 import scala.collection.mutable
 
@@ -8,14 +9,39 @@ object Promise {
   /**
    * A continuation stored from a promise.
    */
-   private trait K[A] extends (Try[A] => Unit) {
-     /** Depth tag used for scheduling */
-     def depth: Short
-   }
+  private trait K[-A] extends (Try[A] => Unit) {
+    /** Depth tag used for scheduling */
+    protected[util] def depth: Short
+  }
 
-   private object K {
-     val depthOfK: K[_] => Short = _.depth
-   }
+  private object K {
+    val depthOfK: K[_] => Short = _.depth
+  }
+
+  /**
+   * Detach an object from another.
+   */
+  trait Detachable {
+    /**
+     * Returns true if successfully detached, will return true at most once.
+     *
+     * The contract is that non-idempotent side effects should only be done after the
+     * successful detach.
+     */
+    def detach(): Boolean
+  }
+
+  private class DetachablePromise[A](parent: Promise[_ <: A])
+      extends Promise[A] with Promise.K[A] with Detachable {
+    parent.continue(this)
+
+    def detach(): Boolean = parent.detach(this)
+
+    // This is only called after the parent has been successfully satisfied
+    def apply(result: Try[A]) {
+      update(result)
+    }
+  }
 
   /**
    * A monitored continuation.
@@ -114,7 +140,7 @@ object Promise {
   private val stateOff = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
 
   sealed trait Responder[A] extends Future[A] {
-    protected def depth: Short
+    protected[util] def depth: Short
     protected def parent: Promise[A]
     protected[util] def continue(k: K[A])
 
@@ -191,6 +217,35 @@ object Promise {
     p.forwardInterruptsTo(f)
     p
   }
+
+  /**
+   * Create a derivative promise that will be satisfied with the result of the parent.
+   * However, if the derivative promise is detached before the parent is satisfied,
+   * it can just be used as a normal Promise.
+   *
+   * The contract for Detachable is to only do non-idempotent side-effects after
+   * detaching.  Here, the pertinent side-effect is satisfying the Promise.
+   *
+   * val f: Future[Unit]
+   * val p: Promise[Unit] with Detachable = Promise.attached(f)
+   * ...
+   * if (p.detach()) p.setValue(())
+   */
+  def attached[A](parent: Future[A]): Promise[A] with Detachable = parent match {
+    case p: Promise[_] =>
+      new DetachablePromise[A](p)
+    case _ => {
+      new Promise[A] with Detachable {
+        private[this] val detached = new AtomicBoolean(false)
+
+        def detach(): Boolean = detached.compareAndSet(false, true)
+
+        parent.respond { case t =>
+          if (detach()) update(t)
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -227,7 +282,7 @@ object Promise {
 class Promise[A] extends Future[A] with Promise.Responder[A] {
   import Promise._
 
-  protected final def depth = 0
+  protected[util] final def depth = 0
   protected final def parent = this
 
   @volatile private[this] var state: Promise.State[A] = initState
@@ -385,6 +440,42 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
         raise(intr)
 
     case Done(_) =>
+  }
+
+  @tailrec protected[Promise] final def detach(k: K[A]): Boolean = {
+    state match {
+      case Linked(p) =>
+        p.detach(k)
+
+      case s@Interruptible(waitq, handler) =>
+        if (!cas(s, Interruptible(waitq filterNot (_ eq k), handler)))
+          detach(k)
+        else
+          waitq.contains(k)
+
+      case s@Transforming(waitq, other) =>
+        if (!cas(s, Transforming(waitq filterNot (_ eq k), other)))
+          detach(k)
+        else
+          waitq.contains(k)
+
+      case s@Interrupted(waitq, intr) =>
+        if (!cas(s, Interrupted(waitq filterNot (_ eq k), intr)))
+          detach(k)
+        else
+          waitq.contains(k)
+
+      case s@Waiting(first, rest)  =>
+        val waitq = if (first eq null) rest else first :: rest
+        val next = (waitq filterNot (_ eq k)) match {
+          case Nil => initState
+          case head :: tail => Waiting(head, tail)
+        }
+        if (!cas(s, next)) detach(k)
+        else waitq.contains(k)
+
+      case Done(_) => false
+    }
   }
 
   // Awaitable
