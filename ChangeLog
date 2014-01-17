@@ -1,3 +1,10 @@
+6.11.1  2014-01-16
+
+  * util-collection: Depend on jsr305.
+  * util-core: Add `Promise.attached` and Detachable.
+  * util-core: Add `Future.batched`.
+  * util-common: Fix a race condition in ExecutorServiceFuturePool.
+
 6.11.0  2014-01-14
 
   * util-core: Add BridgedThreadPoolScheduler.
