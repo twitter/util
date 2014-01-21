@@ -127,7 +127,7 @@ object Promise {
    * todo: do this sort of profiling in a production app with
    * production load.
    */
-  private sealed trait State[+A]
+  private sealed trait State[A]
   private case class Waiting[A](first: K[A], rest: List[K[A]]) extends State[A]
   private case class Interruptible[A](waitq: List[K[A]], handler: PartialFunction[Throwable, Unit]) extends State[A]
   private case class Transforming[A](waitq: List[K[A]], other: Future[_]) extends State[A]
@@ -135,7 +135,8 @@ object Promise {
   private case class Done[A](result: Try[A]) extends State[A]
   private case class Linked[A](p: Promise[A]) extends State[A]
 
-  private val initState: State[Nothing] = Waiting(null, Nil)
+  private def initState[A]: State[A] = emptyState.asInstanceOf[State[A]]
+  private val emptyState: State[Nothing] = Waiting(null, Nil)
   private val unsafe = Unsafe()
   private val stateOff = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
 
@@ -468,7 +469,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
       case s@Waiting(first, rest)  =>
         val waitq = if (first eq null) rest else first :: rest
         val next = (waitq filterNot (_ eq k)) match {
-          case Nil => initState
+          case Nil => initState[A]
           case head :: tail => Waiting(head, tail)
         }
         if (!cas(s, next)) detach(k)

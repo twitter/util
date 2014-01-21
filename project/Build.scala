@@ -13,7 +13,7 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    crossScalaVersions := Seq("2.9.2", "2.10.0"),
+    crossScalaVersions := Seq("2.9.2", "2.10.3"),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
@@ -22,7 +22,7 @@ object Util extends Build {
       "org.scalatest" %% "scalatest" %"1.9.1" % "test",
       "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" cross CrossVersion.binaryMapped {
         case "2.9.2" => "2.9.1"
-        case "2.10.0" => "2.10"
+        case x if x startsWith "2.10" => "2.10"
         case x => x
       },
       "org.mockito" % "mockito-all" % "1.8.5" % "test"
@@ -186,7 +186,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "org.scala-tools.testing" % "specs" % "1.6.9" % "provided" cross CrossVersion.binaryMapped {
         case "2.9.2" => "2.9.1"
-        case "2.10.0" => "2.10"
+        case x if x startsWith "2.10" => "2.10"
         case x => x
       }
     )
