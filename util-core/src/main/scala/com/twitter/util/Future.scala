@@ -19,6 +19,9 @@ object Future {
   val True: Future[Boolean] = new ConstFuture(Return.True)
   val False: Future[Boolean] = new ConstFuture(Return.False)
 
+  private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
+  private val toVoid: Any => Future[Void] = scala.Function.const(Void)
+
   /**
    * Makes a Future with a constant result.
    */
@@ -929,12 +932,12 @@ abstract class Future[+A] extends Awaitable[A] {
   /**
    * Convert this Future[A] to a Future[Unit] by discarding the result.
    */
-  def unit: Future[Unit] = map(_ => ())
+  def unit: Future[Unit] = flatMap(Future.toUnit)
 
   /**
    * Convert this Future[A] to a Future[Void] by discarding the result.
    */
-  def voided: Future[Void] = map(_ => null.asInstanceOf[Void])
+  def voided: Future[Void] = flatMap(Future.toVoid)
 
   @deprecated("'void' is a reserved word in javac.", "5.x")
   def void: Future[Void] = voided
