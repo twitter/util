@@ -29,9 +29,12 @@ case class PoolState(
   def -(other: PoolState) = PoolState(
     numCollections = this.numCollections - other.numCollections,
     capacity = other.capacity,
-    used = this.used + other.capacity - other.used + 
+    used = this.used + other.capacity - other.used +
       other.capacity*(this.numCollections - other.numCollections -1)
   )
+
+  override def toString = "PoolState(n=%d,remaining=%s[%s of %s])".format(
+    numCollections, capacity - used, used, capacity)
 }
 
 /**

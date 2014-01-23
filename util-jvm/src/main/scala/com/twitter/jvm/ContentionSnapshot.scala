@@ -5,11 +5,11 @@ import java.lang.Thread.State._
 import scala.collection.mutable
 
 /**
- * A thread contention summary. This provides a brief overview of threads
- * that are blocked or otherwise waiting.
+ * A thread contention summary providing a brief overview of threads
+ * that are [[http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#BLOCKED BLOCKED]], [[http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#WAITING WAITING]], or [[http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#TIMED_WAITING TIMED_WAITING]]
  *
- * While this could be an object, we use instantiation as a signal of intent
- * and enable contention monitoring.
+ * While this could be an object, we use instantiation as a signal of
+ * intent and enable contention monitoring.
  */
 class ContentionSnapshot {
   ManagementFactory.getThreadMXBean.setThreadContentionMonitoringEnabled(true)

@@ -72,22 +72,7 @@ trait App {
   final def main(args: Array[String]) {
     for (f <- inits) f()
 
-    try {
-      val rem = flag.parse(args, undefOk = true)
-      _args = rem.toArray
-    } catch {
-      case FlagUsageError(usage) =>
-        System.err.println(usage)
-        System.exit(1)
-      case e@FlagParseException(k, cause) =>
-        System.err.println("Error parsing flag %s: %s".format(k, cause.getMessage))
-        System.err.println(flag.usage)
-        System.exit(1)
-      case e: Throwable =>
-        System.err.println("Error parsing flags: %s".format(e.getMessage))
-        System.err.println(flag.usage)
-        System.exit(1)
-    }
+    _args = flag.parseOrExit1(args).toArray
 
     for (f <- premains) f()
 

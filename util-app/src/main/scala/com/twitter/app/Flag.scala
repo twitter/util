@@ -286,6 +286,24 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     remaining
   }
 
+  def parseOrExit1(args: Array[String], undefOk: Boolean = true): Seq[String] =
+    try parse(args, undefOk) catch {
+      case FlagUsageError(usage) =>
+        System.err.println(usage)
+        System.exit(1)
+        throw new IllegalStateException
+      case e@FlagParseException(k, cause) =>
+        System.err.println("Error parsing flag %s: %s".format(k, cause.getMessage))
+        System.err.println(usage)
+        System.exit(1)
+        throw new IllegalStateException
+      case e =>
+        System.err.println("Error parsing flags: %s".format(e.getMessage))
+        System.err.println(usage)
+        System.exit(1)
+        throw new IllegalStateException
+    }
+
   def apply[T: Flaggable](name: String, default: => T, help: String) = {
     val f = new Flag[T](name, help, default)
     add(f)
