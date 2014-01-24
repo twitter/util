@@ -378,8 +378,8 @@ class VarTest extends FunSuite {
 
     val N = 10000
     val a, b = Var(0)
-    val c = a flatMap { _ => b }
-    
+    val c = a.flatMap(_ => b)
+
     @volatile var j = -1
     @volatile var n = 0
     c observe { i =>
