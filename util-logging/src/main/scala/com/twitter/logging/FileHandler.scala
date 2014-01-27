@@ -16,7 +16,7 @@
 
 package com.twitter.logging
 
-import com.twitter.util.{HandleSignal, StorageUnit, Time}
+import com.twitter.util.{HandleSignal, Return, StorageUnit, Time, Try}
 import java.io.{File, FilenameFilter, FileOutputStream, OutputStream}
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
@@ -30,6 +30,32 @@ object Policy {
   case class Weekly(dayOfWeek: Int) extends Policy
   case object SigHup extends Policy
   case class MaxSize(size: StorageUnit) extends Policy
+
+
+  private[this] val singletonPolicyNames: Map[String, Policy] =
+    Map("never" -> Never, "hourly" -> Hourly, "daily" -> Daily, "sighup" -> SigHup)
+
+  // Regex object that matches "Weekly(n)" and extracts the `dayOfWeek` number.
+  private[this] val weeklyRegex = """(?i)weekly\(([1-7]+)\)""".r
+
+  /**
+   * Parse a string into a Policy object. Parsing rules are as follows:
+   *
+   * - Case-insensitive names of singleton Policy objects (e.g. Never, Hourly,
+   *   Daily) are parsed into their corresponding objects.
+   * - "Weekly(n)" is parsed into `Weekly` objects with `n` as the day-of-week
+   *   integer.
+   * - util-style data size strings (e.g. 3.megabytes, 1.gigabyte) are
+   *   parsed into `StorageUnit` objects and used to produce `MaxSize` policies.
+   *   See `StorageUnit.parse(String)` for more details.
+   */
+  def parse(s: String): Policy =
+    (s, singletonPolicyNames.get(s.toLowerCase), Try(StorageUnit.parse(s.toLowerCase))) match {
+      case (weeklyRegex(dayOfWeek), _, _) => Weekly(dayOfWeek.toInt)
+      case (_, Some(singleton), _) => singleton
+      case (_, _, Return(storageUnit)) => MaxSize(storageUnit)
+      case _ => throw new Exception("Invalid log roll policy: " + s)
+    }
 }
 
 object FileHandler {

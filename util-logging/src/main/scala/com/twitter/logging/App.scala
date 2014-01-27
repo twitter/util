@@ -11,6 +11,10 @@ object Logging {
       else
         throw new Exception("Invalid log level: "+s)
   }
+
+  implicit object PolicyFlaggable extends Flaggable[Policy] {
+    def parse(s: String) = Policy.parse(s)
+  }
 }
 
 /**
@@ -24,8 +28,21 @@ trait Logging { self: App =>
   lazy val log = Logger(name)
   def defaultOutput: String = "/dev/stderr"
   def defaultLogLevel: Level = Level.INFO
-  protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
+  def defaultRollPolicy: Policy = Policy.Never
+  def defaultAppend: Boolean = true
+  def defaultRotateCount: Int = -1
   protected[this] val outputFlag = flag("log.output", defaultOutput, "Output file")
+  protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
+
+  // FileHandler-related flags are ignored if outputFlag is not overridden.
+  protected[this] val rollPolicyFlag = flag("log.rollPolicy", defaultRollPolicy,
+    "When or how frequently to roll the logfile. " +
+      "See com.twitter.logging.Policy#parse documentation for DSL details."
+  )
+  protected[this] val appendFlag =
+    flag("log.append", defaultAppend, "If true, appends to existing logfile. Otherwise, file is truncated.")
+  protected[this] val rotateCountFlag =
+    flag("log.rotateCount", defaultRotateCount, "How many rotated logfiles to keep around")
 
   def loggerFactories: List[LoggerFactory] = {
     val output = outputFlag()
@@ -34,7 +51,13 @@ trait Logging { self: App =>
       if (output == "/dev/stderr")
         ConsoleHandler(level = level)
       else
-        FileHandler(output, level = level)
+        FileHandler(
+          output,
+          rollPolicyFlag(),
+          appendFlag(),
+          rotateCountFlag(),
+          level = level
+        )
 
     LoggerFactory(
       node = "",
