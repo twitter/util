@@ -115,11 +115,6 @@
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-eval</artifactId>
-      <version>6.11.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
       <artifactId>util-hashing</artifactId>
       <version>6.11.2-SNAPSHOT</version>
     </dependency>

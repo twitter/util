@@ -258,7 +258,7 @@ object Util extends Build {
   ).dependsOn(utilCore, utilLogging, utilZk,
     // These are dependended on to provide transitive dependencies
     // that would otherwise cause incompatibilities. See above comment.
-    utilEval, utilCollection, utilHashing
+    utilCollection, utilHashing
   )
 
   lazy val utilClassPreloader = Project(
