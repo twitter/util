@@ -89,7 +89,8 @@ private class LocalScheduler extends Scheduler {
       else if (r2 == null) r2 = r
       else rs.addLast(r)
       if (!running) {
-        if (rng.nextInt(SampleScale) == 0) {
+        if (rng.nextInt(SampleScale) == 0 &&
+          bean.isCurrentThreadCpuTimeSupported()) {
           numDispatches += SampleScale
           val cpu0 = bean.getCurrentThreadCpuTime()
           val usr0 = bean.getCurrentThreadUserTime()
