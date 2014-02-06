@@ -64,7 +64,7 @@ object Scheduler extends Scheduler {
  * An efficient thread-local, direct-dispatch scheduler.
  */
 private class LocalScheduler extends Scheduler {
-  private[this] val SampleScale = 50
+  private[this] val SampleScale = 1000
   private[this] val bean = ManagementFactory.getThreadMXBean()
   @volatile private[this] var activations = Set[Activation]()
   private[this] val local = new ThreadLocal[Activation] {
@@ -141,9 +141,9 @@ private class LocalScheduler extends Scheduler {
   def submit(r: Runnable) = get().submit(r)
   def flush() = get().flush()
 
-  def usrTime = (activations map (_.usrTime)).sum
-  def cpuTime = (activations map (_.cpuTime)).sum
-  def numDispatches = (activations map (_.numDispatches)).sum
+  def usrTime = (activations.iterator map (_.usrTime)).sum
+  def cpuTime = (activations.iterator map (_.cpuTime)).sum
+  def numDispatches = (activations.iterator map (_.numDispatches)).sum
 }
 
 trait ExecutorScheduler { self: Scheduler =>

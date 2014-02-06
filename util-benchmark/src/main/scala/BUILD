@@ -7,3 +7,10 @@ benchmark(name='scala',
   ],
   sources=rglobs('*.scala')
 )
+
+jvm_binary(name='caliper',
+  main='com.google.caliper.Runner',
+  dependencies=[
+    pants(':scala')
+  ]
+)
