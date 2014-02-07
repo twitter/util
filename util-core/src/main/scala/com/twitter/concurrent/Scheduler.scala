@@ -1,7 +1,7 @@
 package com.twitter.concurrent
 
 import java.util.ArrayDeque
-import java.util.concurrent.{Executors, ExecutorService, ThreadFactory}
+import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
 import management.ManagementFactory
 import scala.util.Random
@@ -176,7 +176,7 @@ trait ExecutorScheduler { self: Scheduler =>
   protected[this] val executor = executorFactory(threadFactory)
 
   def shutdown() { executor.shutdown() }
-  def submit(r: Runnable) { executor.submit(r) }
+  def submit(r: Runnable) { executor.execute(r) }
   def flush() = ()
   def usrTime = {
     var sum = 0L
@@ -215,6 +215,9 @@ class ThreadPoolScheduler(
 /**
  * A scheduler that will bridge tasks from outside into the executor threads,
  * while keeping all local tasks on their local threads.
+ * (Note: This scheduler is expecting an executor with unbounded capacity, not
+ * expecting any RejectedExecutionException's other than the ones caused by
+ * shutting down)
  */
 class BridgedThreadPoolScheduler(
   val name: String,
@@ -228,11 +231,15 @@ class BridgedThreadPoolScheduler(
     if (Thread.currentThread.getThreadGroup == threadGroup)
       local.submit(r)
     else
-      executor.submit(new Runnable {
-        def run() {
-          BridgedThreadPoolScheduler.this.submit(r)
-        }
-      })
+      try
+        executor.execute(new Runnable {
+          def run() {
+            BridgedThreadPoolScheduler.this.submit(r)
+          }
+        })
+      catch {
+        case _: RejectedExecutionException => local.submit(r)
+      }
   }
 }
 
