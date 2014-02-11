@@ -16,7 +16,8 @@ class ContentionSnapshot {
 
   case class Snapshot(
     blockedThreads: Seq[String],
-    lockOwners: Seq[String])
+    lockOwners: Seq[String],
+    deadlocks: Seq[String])
 
   private[this] object Blocked {
     def unapply(t: ThreadInfo): Option[ThreadInfo] = {
@@ -29,7 +30,6 @@ class ContentionSnapshot {
 
   def snap(): Snapshot = {
     val bean = ManagementFactory.getThreadMXBean
-    val lockOwners = mutable.Set[Long]()
 
     val blocked = bean.getThreadInfo(bean.getAllThreadIds, true, true)
                       .filter(_ != null)
@@ -39,8 +39,17 @@ class ContentionSnapshot {
     val owners = if (ownerIds.size == 0) Seq[String]() else
       bean.getThreadInfo(ownerIds.toArray, true, true).map(_.toString).toSeq
 
+    val deadlockThreadIds = bean.findDeadlockedThreads()
+    val deadlocks = if (deadlockThreadIds == null) Array.empty[ThreadInfo] else
+      deadlockThreadIds.flatMap { id =>
+        blocked.find { threadInfo =>
+          threadInfo.getThreadId() == id
+        }
+      }
+
     Snapshot(
       blockedThreads = blocked.map(_.toString).toSeq,
-      lockOwners = owners)
+      lockOwners = owners,
+      deadlocks = deadlocks.map(_.toString).toSeq)
   }
 }
