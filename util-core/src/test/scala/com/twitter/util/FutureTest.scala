@@ -1011,7 +1011,7 @@ class FutureTest extends WordSpec with MockitoSugar {
 
         "deep failures" in {
           val e = new Exception
-          val f: Future[Future[Int]] = const.exception(e)
+          val f: Future[Future[Int]] = const.value(const.exception(e))
           f.flatten mustProduce Throw(e)
         }
 

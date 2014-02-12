@@ -74,6 +74,12 @@ sealed abstract class Try[+R] {
   def map[X](f: R => X): Try[X]
 
   /**
+   * Returns true if this Try is a Return and the predicate p returns true when
+   * applied to its value.
+   */
+  def exists(p: R => Boolean): Boolean
+
+  /**
    * Converts this to a Throw if the predicate does not obtain.
    */
   def filter(p: R => Boolean): Try[R]
@@ -161,6 +167,7 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
   def flatMap[R2](f: R => Try[R2]) = Throw[R2](e)
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = Throw[T](e)
   def map[X](f: R => X) = Throw(e)
+  def exists(p: R => Boolean) = false
   def filter(p: R => Boolean) = this
   def withFilter(p: R => Boolean) = this
   def onFailure(rescueException: Throwable => Unit) = { rescueException(e); this }
@@ -190,6 +197,7 @@ final case class Return[+R](r: R) extends Try[R] {
   def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case NonFatal(e) => Throw(e) }
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
   def map[X](f: R => X) = Try[X](f(r))
+  def exists(p: R => Boolean) = p(r)
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
   def withFilter(p: R => Boolean) = filter(p)
   def onFailure(rescueException: Throwable => Unit) = this

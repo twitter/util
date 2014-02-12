@@ -27,11 +27,11 @@ trait Event[+T] { self =>
 
   /**
    * Build a new Event by applying the given function to each value
-   * notifyted. Event values for which the partial function `f` does
+   * notified. Event values for which the partial function `f` does
    * not apply are dropped; other values are transformed by `f`.
    */
   def collect[U](f: PartialFunction[T, U]): Event[U] = new Event[U] {
-    def register(s: Witness[U]) = 
+    def register(s: Witness[U]) =
       self register1 { t =>
         if (f.isDefinedAt(t))
           s.notify(f(t))
@@ -78,7 +78,7 @@ trait Event[+T] { self =>
     def register(s: Witness[Seq[T]]) = {
       val mu = new{}
       var q = Queue.empty[T]
-      self register1 { t => 
+      self register1 { t =>
         s.notify(mu.synchronized {
           q = q enqueue t
           while (q.length > n) {
@@ -195,13 +195,13 @@ trait Event[+T] { self =>
             state = Full(t, u)
             s.notify((t, u))
         }
-        
+
       }
 
       Closable.all(left, right)
     }
   }
-  
+
   /**
    * An event which consists of the first `howmany` values
    * in the parent Event.
@@ -312,21 +312,21 @@ object Witness {
   def apply[T](ref: AtomicReference[T]): Witness[T] = new Witness[T] {
     def notify(t: T) = ref.set(t)
   }
-  
+
   /**
    * Create a Witness from a [[com.twitter.util.Promise Promise]].
    */
   def apply[T](p: Promise[T]): Witness[T] = new Witness[T] {
     def notify(t: T) = p.updateIfEmpty(Return(t))
   }
-  
+
   /**
    * Create a Witness from a function.
    */
   def apply[T](f: T => Unit): Witness[T] = new Witness[T] {
     def notify(t: T) = f(t)
   }
-  
+
   def apply[T](u: Updatable[T]): Witness[T] = new Witness[T] {
     def notify(t: T) = u() = t
   }

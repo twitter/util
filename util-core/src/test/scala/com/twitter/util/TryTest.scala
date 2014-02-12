@@ -75,6 +75,21 @@ class TryTest extends FunSuite {
     assert(result2 == Throw(e))
   }
 
+  test("Try.exists: should return true when predicate passes for a Return value") {
+    val t = Return(4)
+    assert(t.exists(_ > 0) == true)
+  }
+
+  test("Try.exists: should return false when predicate doesn't pass for a Return value") {
+    val t = Return(4)
+    assert(t.exists(_ < 0) == false)
+  }
+
+  test("Try.exists: should return false for Throw") {
+    val t = Throw(new Exception)
+    assert(t.exists(_ => true) == false)
+  }
+
   test("Try.flatten: is a Return(Return)") {
     assert(Return(Return(1)).flatten == Return(1))
   }
