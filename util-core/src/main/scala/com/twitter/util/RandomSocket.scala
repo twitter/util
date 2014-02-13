@@ -2,10 +2,12 @@ package com.twitter.util
 
 import java.net.{InetAddress, InetSocketAddress, Socket}
 import java.io.IOException
-import java.util.Random
 
+/**
+ * A generator of random local [[java.net.InetSocketAddress]] objects with
+ * ephemeral ports.
+ */
 object RandomSocket {
-  private[this] val rng = new Random
   private[this] def localSocketOnPort(port: Int) =
     new InetSocketAddress(port)
   private[this] val ephemeralSocketAddress = localSocketOnPort(0)
@@ -32,4 +34,3 @@ object RandomSocket {
     }
   }
 }
-
