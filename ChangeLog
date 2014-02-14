@@ -1,3 +1,20 @@
+6.12.0  2014-02-14
+
+  * LocalScheduler: improve concurrency by sampling less
+  * Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException's.
+  * re-write Future.unit in terms of Future.Unit
+  * Revert "Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException's." (It's breaking the build on JDK6 machines)
+  * twitter-server: Report on deadlock conditions in admin/contentions
+  * Update 3rdpaty zookeeper client
+  * Update version of com.twitter.common*
+  * util-core: Add a Scaladoc for com.twitter.util.RandomSocket
+  * util-core: State[+A] => State[A]
+  * util-logging: Increase richness of file-logging flags
+  * util-zk: scalatest as test dep
+  * util-{app,jvm}: various small improvements from gcflow
+  * util: Drop util-eval dep from util-zk-common, which pulls in scala-compiler unnecessarily
+  * Var: fix an iatrogenic concurrency bug
+
 6.11.1  2014-01-16
 
   * util-collection: Depend on jsr305.
