@@ -95,7 +95,10 @@ class ScribeHandler(
 
   private var socket: Option[Socket] = None
   private var archaicServer = false
-  private val flusher = Executors.newSingleThreadExecutor(new NamedPoolThreadFactory("ScribeFlusher", true))
+  private val flusher =
+    Executors.newSingleThreadExecutor(
+      new NamedPoolThreadFactory("ScribeFlusher-" + category, true)
+    )
 
   // the following should be private too, make visible for testing
   @volatile private[logging] var lastTransmission = Time.epoch

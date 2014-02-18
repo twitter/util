@@ -80,6 +80,7 @@ class QueueingHandler(val handler: Handler, val maxQueueSize: Int = Int.MaxValue
   private[this] val closeLatch = new CountDownLatch(1)
 
   thread.setDaemon(true)
+  thread.setName("QueueingHandler")
   thread.start()
 
   def publish(record: javalog.LogRecord) = {
