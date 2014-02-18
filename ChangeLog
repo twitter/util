@@ -1,3 +1,7 @@
+6.12.1  2014-02-18
+
+  * Upgrade everyone to the new c.t.common.server-set
+
 6.12.0  2014-02-14
 
   * LocalScheduler: improve concurrency by sampling less
