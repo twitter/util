@@ -66,6 +66,8 @@ object Scheduler extends Scheduler {
 private class LocalScheduler extends Scheduler {
   private[this] val SampleScale = 1000
   private[this] val bean = ManagementFactory.getThreadMXBean()
+  private[this] val cpuTimeSupported = bean.isCurrentThreadCpuTimeSupported()
+
   @volatile private[this] var activations = Set[Activation]()
   private[this] val local = new ThreadLocal[Activation] {
     override def initialValue = null
@@ -89,7 +91,7 @@ private class LocalScheduler extends Scheduler {
       else if (r2 == null) r2 = r
       else rs.addLast(r)
       if (!running) {
-        if (rng.nextInt(SampleScale) == 0) {
+        if (cpuTimeSupported && rng.nextInt(SampleScale) == 0) {
           numDispatches += SampleScale
           val cpu0 = bean.getCurrentThreadCpuTime()
           val usr0 = bean.getCurrentThreadUserTime()
