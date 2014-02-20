@@ -64,6 +64,16 @@ class FlagTest extends FunSuite {
     assert(fooFlag() === 973)
     assert(barFlag() === "hello there")
   }
+
+  test("Flag: override a flag") {
+    val flag = new Flags("test")
+    val flag1 = flag("foo", 1, "")
+    val flag2 = flag("foo", 2, "")
+    val allFlags = flag.getAll().toSet
+
+    assert(!allFlags.exists(_() == 1), "original flag was not overridden")
+    assert(allFlags.exists(_() == 2), "overriding flag was not present in flags set")
+  }
   
   class Bctx extends Ctx {
     val yesFlag = flag("yes", false, "Just say yes.")
