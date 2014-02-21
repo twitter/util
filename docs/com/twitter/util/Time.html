@@ -1,0 +1,821 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.twitter.util.Time</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+      <div id="definition">
+        <a title="Go to companion" href="Time$.html"><img src="../../../lib/class_to_object_big.png" /></a>
+        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.util" class="extype" href="package.html">util</a></p>
+        <h1><a title="Go to companion" href="Time$.html">Time</a></h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Time</span><span class="result"> extends <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>] with <span name="java.io.Serializable" class="extype">Serializable</span></span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>An absolute point in time, represented as the number of
+nanoseconds since the Unix epoch.
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span name="java.io.Serializable" class="extype">Serializable</span>, <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>], <span name="scala.math.Ordered" class="extype">Ordered</span>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>], <span name="java.lang.Comparable" class="extype">Comparable</span>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+            </div>
+        <div id="ancestors">
+              <span class="filtertype">Inherited</span>
+              <ol><li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li></ol>
+              <ol id="linearization"><li name="com.twitter.util.Time" class="in"><span>Time</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="com.twitter.util.TimeLike" class="in"><span>TimeLike</span></li><li name="scala.math.Ordered" class="in"><span>Ordered</span></li><li name="java.lang.Comparable" class="in"><span>Comparable</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+            </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#+" data-isabs="false">
+      <a id="+(Duration):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $plus">+</span><span class="params">(<span name="delta">delta: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>)</span><span class="result">: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Adds <code>delta</code> to this <code>TimeLike</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Adds <code>delta</code> to this <code>TimeLike</code>. Adding <code>Duration.Top</code> results
+in the <code>TimeLike</code>'s <code>Top</code>, adding <code>Duration.Bottom</code> results in
+the <code>TimeLike</code>'s <code>Bottom</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#-" data-isabs="false">
+      <a id="-(Time):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $minus">-</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a duration between two times.</p>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#-" data-isabs="false">
+      <a id="-(Duration):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $minus">-</span><span class="params">(<span name="delta">delta: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>)</span><span class="result">: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.math.Ordered#&lt;" data-isabs="false">
+      <a id="&lt;(Time):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $less">&lt;</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Ordered</dd></dl></div>
+    </li><li visbl="pub" name="scala.math.Ordered#&lt;=" data-isabs="false">
+      <a id="&lt;=(Time):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $less$eq">&lt;=</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Ordered</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.math.Ordered#&gt;" data-isabs="false">
+      <a id="&gt;(Time):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $greater">&gt;</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Ordered</dd></dl></div>
+    </li><li visbl="pub" name="scala.math.Ordered#&gt;=" data-isabs="false">
+      <a id="&gt;=(Time):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name" title="gt4s: $greater$eq">&gt;=</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Ordered</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#compare" data-isabs="false">
+      <a id="compare(Time):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compare</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a> → Ordered</dd></dl></div>
+    </li><li visbl="pub" name="scala.math.Ordered#compareTo" data-isabs="false">
+      <a id="compareTo(Time):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compareTo</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Ordered → Comparable</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#diff" data-isabs="false">
+      <a id="diff(Time):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">diff</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The difference between the two <code>TimeLike</code>s</p><div class="fullcomment"><div class="comment cmt"><p>The difference between the two <code>TimeLike</code>s</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="other">other: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#floor" data-isabs="false">
+      <a id="floor(Duration):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">floor</span><span class="params">(<span name="x">x: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>)</span><span class="result">: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Rounds down to the nearest multiple of the given duration.</p><div class="fullcomment"><div class="comment cmt"><p>Rounds down to the nearest multiple of the given duration.  For example:
+127.seconds.floor(1.minute) =&gt; 2.minutes.  Taking the floor of a
+Time object with duration greater than 1.hour can have unexpected
+results because of timezones.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#format" data-isabs="false">
+      <a id="format(String,Locale):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">format</span><span class="params">(<span name="pattern">pattern: String</span>, <span name="locale">locale: <span name="java.util.Locale" class="extype">Locale</span></span>)</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Formats this Time according to the given SimpleDateFormat pattern and locale.</p>
+    </li><li visbl="pub" name="com.twitter.util.Time#format" data-isabs="false">
+      <a id="format(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">format</span><span class="params">(<span name="pattern">pattern: String</span>)</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Formats this Time according to the given SimpleDateFormat pattern.</p>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inDays" data-isabs="false">
+      <a id="inDays:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inDays</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inHours" data-isabs="false">
+      <a id="inHours:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inHours</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inMicroseconds" data-isabs="false">
+      <a id="inMicroseconds:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inMicroseconds</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inMillis" data-isabs="false">
+      <a id="inMillis:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inMillis</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inMilliseconds" data-isabs="false">
+      <a id="inMilliseconds:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inMilliseconds</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inMinutes" data-isabs="false">
+      <a id="inMinutes:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inMinutes</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#inNanoseconds" data-isabs="false">
+      <a id="inNanoseconds:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inNanoseconds</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The <code>TimeLike</code>'s value in nanoseconds.</p><div class="fullcomment"><div class="comment cmt"><p>The <code>TimeLike</code>'s value in nanoseconds.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inSeconds" data-isabs="false">
+      <a id="inSeconds:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inSeconds</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#inTimeUnit" data-isabs="false">
+      <a id="inTimeUnit:(Long, TimeUnit)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">inTimeUnit</span><span class="result">: (<span name="scala.Long" class="extype">Long</span>, <span name="java.util.concurrent.TimeUnit" class="extype">TimeUnit</span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a value/<code>TimeUnit</code> pair; attempting to return coarser
+grained values if possible (specifically: <code>TimeUnit.SECONDS</code> or
+<code>TimeUnit.MILLISECONDS</code>) before resorting to the default
+<code>TimeUnit.NANOSECONDS</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a value/<code>TimeUnit</code> pair; attempting to return coarser
+grained values if possible (specifically: <code>TimeUnit.SECONDS</code> or
+<code>TimeUnit.MILLISECONDS</code>) before resorting to the default
+<code>TimeUnit.NANOSECONDS</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#isFinite" data-isabs="false">
+      <a id="isFinite:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isFinite</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is this a finite TimeLike value?</p><div class="fullcomment"><div class="comment cmt"><p>Is this a finite TimeLike value?</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#max" data-isabs="false">
+      <a id="max(Time):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">max</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#min" data-isabs="false">
+      <a id="min(Time):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">min</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.TimeLike#moreOrLessEquals" data-isabs="false">
+      <a id="moreOrLessEquals(Time,Duration):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">moreOrLessEquals</span><span class="params">(<span name="other">other: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>, <span name="maxDelta">maxDelta: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Equality within <code>maxDelta</code></p><div class="fullcomment"><div class="comment cmt"><p>Equality within <code>maxDelta</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="prt" name="com.twitter.util.Time#nanos" data-isabs="false">
+      <a id="nanos:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nanos</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="prt" name="com.twitter.util.Time#ops" data-isabs="false">
+      <a id="ops:com.twitter.util.Time.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ops</span><span class="result">: com.twitter.util.Time.type</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#since" data-isabs="false">
+      <a id="since(Time):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">since</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Duration that has passed between the given time and the current time.</p>
+    </li><li visbl="pub" name="com.twitter.util.Time#sinceEpoch" data-isabs="false">
+      <a id="sinceEpoch:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sinceEpoch</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Duration that has passed between the epoch and the current time.</p>
+    </li><li visbl="pub" name="com.twitter.util.Time#sinceNow" data-isabs="false">
+      <a id="sinceNow:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sinceNow</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Gets the current time as Duration since now
+</p>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#toDate" data-isabs="false">
+      <a id="toDate:Date"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toDate</span><span class="result">: <span name="java.util.Date" class="extype">Date</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Converts this Time object to a java.</p><div class="fullcomment"><div class="comment cmt"><p>Converts this Time object to a java.util.Date
+</p></div></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Renders this time using the default format.</p><div class="fullcomment"><div class="comment cmt"><p>Renders this time using the default format.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Time" class="extype" href="">Time</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Time#until" data-isabs="false">
+      <a id="until(Time):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">until</span><span class="params">(<span name="that">that: <a name="com.twitter.util.Time" class="extype" href="">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Duration between current time and the givne time.</p>
+    </li><li visbl="pub" name="com.twitter.util.Time#untilEpoch" data-isabs="false">
+      <a id="untilEpoch:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">untilEpoch</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Gets the duration between this time and the epoch.</p>
+    </li><li visbl="pub" name="com.twitter.util.Time#untilNow" data-isabs="false">
+      <a id="untilNow:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">untilNow</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Gets the duration between this time and now.</p>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="com.twitter.util.Time#fromEpoch" data-isabs="false">
+      <a id="fromEpoch:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2011-05-23) use sinceEpoch">fromEpoch</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Duration that has passed between the epoch and the current time.</p><div class="fullcomment"><div class="comment cmt"><p>Duration that has passed between the epoch and the current time.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2011-05-23)</i> use sinceEpoch</p></dd></dl></div>
+    </li></ol>
+            </div>
+        </div>
+
+        <div id="inheritedMembers">
+        <div name="java.io.Serializable" class="parent">
+              <h3>Inherited from <span name="java.io.Serializable" class="extype">Serializable</span></h3>
+            </div><div name="com.twitter.util.TimeLike" class="parent">
+              <h3>Inherited from <a name="com.twitter.util.TimeLike" class="extype" href="TimeLike.html">TimeLike</a>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>]</h3>
+            </div><div name="scala.math.Ordered" class="parent">
+              <h3>Inherited from <span name="scala.math.Ordered" class="extype">Ordered</span>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>]</h3>
+            </div><div name="java.lang.Comparable" class="parent">
+              <h3>Inherited from <span name="java.lang.Comparable" class="extype">Comparable</span>[<a name="com.twitter.util.Time" class="extype" href="">Time</a>]</h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

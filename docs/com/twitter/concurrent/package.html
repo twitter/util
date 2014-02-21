@@ -1,0 +1,445 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.twitter.concurrent</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <h1>concurrent</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">concurrent</span>
+      </span>
+      </h4>
+      
+      <div class="fullcommenttop" id="comment"></div>
+    
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="com.twitter.concurrent.AsyncMutex" data-isabs="false">
+      <a id="AsyncMutex:AsyncMutex"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncMutex.html"><span class="name">AsyncMutex</span></a><span class="result"> extends AsyncSemaphore</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.AsyncQueue" data-isabs="false">
+      <a id="AsyncQueue:AsyncQueue[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An asynchronous FIFO queue.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.AsyncSemaphore" data-isabs="false">
+      <a id="AsyncSemaphore:AsyncSemaphore"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An AsyncSemaphore is a traditional semaphore but with asynchronous
+execution.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.BridgedThreadPoolScheduler" data-isabs="false">
+      <a id="BridgedThreadPoolScheduler:BridgedThreadPoolScheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BridgedThreadPoolScheduler.html"><span class="name">BridgedThreadPoolScheduler</span></a><span class="result"> extends Scheduler with ExecutorScheduler</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A scheduler that will bridge tasks from outside into the executor threads,
+while keeping all local tasks on their local threads.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.Broker" data-isabs="false">
+      <a id="Broker:Broker[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An unbuffered FIFO queue, brokered by <code>Offer</code>s.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.ConcurrentBijection" data-isabs="false">
+      <a id="ConcurrentBijection:ConcurrentBijection[A, B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends Map[A, B]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.ExecutorScheduler" data-isabs="true">
+      <a id="ExecutorScheduler:ExecutorScheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.IVar" data-isabs="false">
+      <a id="IVar:IVar[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="IVar.html"><span class="name">IVar</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends IVarField[A]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.IVarField" data-isabs="false">
+      <a id="IVarField:IVarField[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="IVarField.html"><span class="name">IVarField</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.NamedPoolThreadFactory" data-isabs="false">
+      <a id="NamedPoolThreadFactory:NamedPoolThreadFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NamedPoolThreadFactory.html"><span class="name">NamedPoolThreadFactory</span></a><span class="result"> extends ThreadFactory</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A ThreadFactory which creates non-daemon threads with a name indicating which pool they came
+from.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.Offer" data-isabs="true">
+      <a id="Offer:Offer[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An offer to communicate with another process.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.OfferBenchmark" data-isabs="false">
+      <a id="OfferBenchmark:OfferBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OfferBenchmark.html"><span class="name">OfferBenchmark</span></a><span class="result"> extends SimpleBenchmark</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.Permit" data-isabs="true">
+      <a id="Permit:Permit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.Scheduler" data-isabs="true">
+      <a id="Scheduler:Scheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.SchedulerBenchmark" data-isabs="false">
+      <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SchedulerBenchmark.html"><span class="name">SchedulerBenchmark</span></a><span class="result"> extends SimpleBenchmark</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Measure Scheduler.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.Serialized" data-isabs="true">
+      <a id="Serialized:Serialized"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Efficient ordered <i>serialization</i> of operations.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool" data-isabs="true">
+      <a id="Spool:Spool[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A spool is an asynchronous stream.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource" data-isabs="false">
+      <a id="SpoolSource:SpoolSource[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.ThreadPoolScheduler" data-isabs="false">
+      <a id="ThreadPoolScheduler:ThreadPoolScheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ThreadPoolScheduler.html"><span class="name">ThreadPoolScheduler</span></a><span class="result"> extends Scheduler with ExecutorScheduler</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A scheduler that dispatches directly to an underlying Java
+cached threadpool executor.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.Tx" data-isabs="true">
+      <a id="Tx:Tx[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
+protocol:</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.ConcurrentMultiMap" data-isabs="false">
+      <a id="ConcurrentMultiMap:ConcurrentMultiMap[K, V]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConcurrentMultiMap.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> use guava's Multimaps.synchronizedMultimap</p></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.ConcurrentPool" data-isabs="false">
+      <a id="ConcurrentPool:ConcurrentPool[K, V]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConcurrentPool.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use finagle's BufferingPool">ConcurrentPool</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The ConcurrentPool provides a concurrent object pool on top of the
+java.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="com.twitter.concurrent.AsyncQueue" data-isabs="false">
+      <a id="AsyncQueue:AsyncQueue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncQueue$.html"><span class="name">AsyncQueue</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.AsyncSemaphore" data-isabs="false">
+      <a id="AsyncSemaphore:AsyncSemaphore"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncSemaphore$.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.IVar" data-isabs="false">
+      <a id="IVar:IVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IVar$.html"><span class="name">IVar</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.Offer" data-isabs="false">
+      <a id="Offer:Offer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Offer$.html"><span class="name">Offer</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.Scheduler" data-isabs="false">
+      <a id="Scheduler:Scheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Scheduler$.html"><span class="name">Scheduler</span></a><span class="result"> extends Scheduler</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A global scheduler.</p>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool" data-isabs="false">
+      <a id="Spool:Spool"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Spool$.html"><span class="name">Spool</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.Tx" data-isabs="false">
+      <a id="Tx:Tx"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Tx$.html"><span class="name">Tx</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.ivar" data-isabs="false">
+      <a id="ivar:ivar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="ivar/package.html"><span class="name">ivar</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
