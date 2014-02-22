@@ -1502,6 +1502,21 @@ class FutureTest extends WordSpec with MockitoSugar {
       assert(f.isDefined)
       Await.result(f)
     }
+
+    "Be interruptible" in {
+      implicit val timer = new MockTimer
+
+      // sleep forever and grab the task that's created
+      val f = Future.sleep(Duration.Top)(timer)
+      val task = timer.tasks(0)
+      // then raise a known exception
+      val e = new Exception("expected")
+      f.raise(e)
+
+      // we were immediately satisfied with the exception and the task was canceled
+      f mustProduce Throw(e)
+      assert(task.isCancelled)
+    }
   }
 
   // TODO(John Sirois):  Kill this mvn test hack when pants takes over.

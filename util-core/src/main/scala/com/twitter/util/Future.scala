@@ -57,7 +57,12 @@ object Future {
       return Future.Done
 
     val p = new Promise[Unit]
-    timer.schedule(howlong.fromNow) { p.setDone() }
+    val task = timer.schedule(howlong.fromNow) { p.setDone() }
+    p.setInterruptHandler {
+      case e =>
+        if (p.updateIfEmpty(Throw(e)))
+          task.cancel()
+    }
     p
   }
 
