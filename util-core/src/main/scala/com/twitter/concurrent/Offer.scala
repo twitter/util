@@ -186,10 +186,12 @@ object Offer {
     if (evs.isEmpty) Offer.never else new Offer[T] {
       def prepare(): Future[Tx[T]] = {
         // to avoid unnecessary allocations we do a bunch of manual looping and shuffling
-        val prepd = new Array[Future[Tx[T]]](evs.size)
+        val inputSize = evs.size
+        val prepd = new Array[Future[Tx[T]]](inputSize)
+        val iter = evs.iterator
         var i = 0
-        while (i < evs.size) {
-          prepd(i) = evs(i).prepare()
+        while (i < inputSize) {
+          prepd(i) = iter.next().prepare()
           i += 1
         }
         while (i > 1) { // i starts at evs.size
