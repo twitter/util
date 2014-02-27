@@ -63,7 +63,15 @@ trait Var[+T] { self =>
     def observe(depth: Int, obs: Observer[U]) = {
       val inner = new AtomicReference(Closable.nop)
       val outer = self.observe(depth, Observer(t =>
-        inner.getAndSet(f(t).observe(depth+1, obs)).close()
+        // TODO: Right now we rely on synchronous propagation; and
+        // thus also synchronous closes. We should instead perform
+        // asynchronous propagation so that it is is safe &
+        // predicatable to have asynchronously closing Vars, for
+        // example. Currently the only source of potentially
+        // asynchronous closing is Var.async; here we have modified
+        // the external process to close asynchronously with the Var
+        // itself so that it is safe to Await here.
+        Await.ready(inner.getAndSet(f(t).observe(depth+1, obs)).close())
       ))
 
       Closable.sequence(outer, Closable.ref(inner))
@@ -278,7 +286,11 @@ object Var {
             Future.Done
           case Observing(1, _, c) =>
             state = Idle
+            // We close the external process asynchronously from the
+            // async Var so that it is safe to Await Var.close() in
+            // flatMap. (See the TODO there.)
             c.close(deadline)
+            Future.Done
           case Observing(n, v, c) =>
             state = Observing(n-1, v, c)
             Future.Done
@@ -319,7 +331,9 @@ trait Extractable[T] {
 private object UpdatableVar {
   import Var.Observer
 
-  case class Party[T](obs: Observer[T], depth: Int, n: Long)
+  case class Party[T](obs: Observer[T], depth: Int, n: Long) {
+    @volatile var active = true
+  }
 
   case class State[T](value: T, version: Long, parties: immutable.SortedSet[Party[T]]) {
     def -(p: Party[T]) = copy(parties=parties-p)
@@ -360,8 +374,13 @@ private class UpdatableVar[T](init: T)
 
   def update(newv: T): Unit = synchronized {
     val State(value, version, parties) = cas(_ := newv)
-    for (Party(obs, _, _) <- parties)
-      obs.publish(this, value, version)
+    for (p@Party(obs, _, _) <- parties) {
+      // An antecedent update may have closed the current
+      // party (e.g. flatMap does this); we need to check that
+      // the party is active here in order to prevent stale updates.
+      if (p.active)
+        obs.publish(this, value, version)
+    }
   }
 
   protected def observe(depth: Int, obs: Observer[T]): Closable = {
@@ -372,6 +391,7 @@ private class UpdatableVar[T](init: T)
 
     new Closable {
       def close(deadline: Time) = {
+        party.active = false
         cas(_ - party)
         Future.Done
       }

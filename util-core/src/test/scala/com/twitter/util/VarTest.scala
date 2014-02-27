@@ -191,11 +191,11 @@ class VarTest extends FunSuite {
     assert(called === 1)
     assert(closed === Time.Zero)
     assert(f.isDone)
-
+    
+    // Closing the Var.async process is asynchronous with closing
+    // the Var itself.
     val f1 = o1.close(t)
     assert(closed === t)
-    assert(!f1.isDone)
-    p.setDone()
     assert(f1.isDone)
   }
   
@@ -396,5 +396,16 @@ class VarTest extends FunSuite {
     bc.join()
     
     assert(j === N-1)
+  }
+
+  test("Don't allow stale updates") {
+    val a = Var(0)
+
+    val ref = new AtomicReference[Seq[(Int, Int)]]
+    (a join a).changes.build.register(Witness(ref))
+
+    assert(ref.get === Seq((0, 0)))
+    a() = 1
+    assert(ref.get === Seq((0, 0), (1, 1)))
   }
 }
