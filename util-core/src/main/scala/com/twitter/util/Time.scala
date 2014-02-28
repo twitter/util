@@ -105,7 +105,12 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
 
   def inMicroseconds: Long = inNanoseconds / Duration.NanosPerMicrosecond
   def inMilliseconds: Long = inNanoseconds / Duration.NanosPerMillisecond
-  def inSeconds: Int       = (inNanoseconds / Duration.NanosPerSecond) toInt
+  def inLongSeconds: Long  = inNanoseconds / Duration.NanosPerSecond
+  def inSeconds: Int       =
+    if (inLongSeconds > Int.MaxValue) Int.MaxValue
+    else if (inLongSeconds < Int.MinValue) Int.MinValue
+    else inLongSeconds.toInt
+  // Units larger than seconds safely fit into 32-bits when converting from a 64-bit nanosecond basis
   def inMinutes: Int       = (inNanoseconds / Duration.NanosPerMinute) toInt
   def inHours: Int         = (inNanoseconds / Duration.NanosPerHour) toInt
   def inDays: Int          = (inNanoseconds / Duration.NanosPerDay) toInt

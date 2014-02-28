@@ -231,6 +231,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
   "values" should {
     "reflect their underlying value" in {
       val nss = Seq(
+        2592000000000000000L, // 30000.days
         1040403005001003L,  // 12.days+1.hour+3.seconds+5.milliseconds+1.microsecond+3.nanoseconds
         123000000000L,  // 123.seconds
         1L
@@ -241,11 +242,30 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends SpecificationWithJUnit {
         t.inNanoseconds must be_==(ns)
         t.inMicroseconds must be_==(ns/1000L)
         t.inMilliseconds must be_==(ns/1000000L)
-        t.inSeconds must be_==(ns/1000000000L)
+        t.inLongSeconds must be_==(ns/1000000000L)
         t.inMinutes must be_==(ns/60000000000L)
         t.inHours must be_==(ns/3600000000000L)
         t.inDays must be_==(ns/86400000000000L)
       }
+    }
+  }
+
+  "inSeconds" should {
+    "equal inLongSeconds when in 32-bit range" in {
+      val nss = Seq(
+        315370851000000000L, // 3650.days+3.hours+51.seconds
+        1040403005001003L,  // 12.days+1.hour+3.seconds+5.milliseconds+1.microsecond+3.nanoseconds
+        1L
+      )
+      for (ns <- nss) {
+        val t = fromNanoseconds(ns)
+        t.inLongSeconds must be_==(t.inSeconds)
+      }
+    }
+    "clamp value to Int.MinValue or MaxValue when out of range" in {
+      val longNs = 2160000000000000000L // 25000.days
+      fromNanoseconds(longNs).inSeconds must be_==(Int.MaxValue)
+      fromNanoseconds(-longNs).inSeconds must be_==(Int.MinValue)
     }
   }
 
