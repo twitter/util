@@ -31,6 +31,13 @@ class FutureBenchmark extends SimpleBenchmark {
   def timeCallback2(nreps: Int) = doCallback(nreps, 2)
   def timeCallback3(nreps: Int) = doCallback(nreps, 3)
 
+  def timeCollect(reps: Int) {
+    (0 until reps).foreach { _ =>
+      val stream: Stream[Future[Int]] = (0 until N*100).map { Future.value(_) }.toStream
+      Future.collect(stream)
+    }
+  }
+
   def timeRespond(reps: Int) {
     var i = 0
     val f = { _: Try[Unit] => () }

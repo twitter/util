@@ -323,17 +323,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     if (fs.isEmpty) {
       Future(Seq[A]())
     } else {
-      val results = new AtomicReferenceArray[A](fs.size)
-      val count = new AtomicInteger(fs.size)
+      val fsSize = fs.size
+      val results = new AtomicReferenceArray[A](fsSize)
+      val count = new AtomicInteger(fsSize)
       val p = Promise.interrupts[Seq[A]](fs:_*)
-      for (i <- 0 until fs.size) {
-        val f = fs(i)
+      for ((f,i) <- fs.iterator.zipWithIndex) {
         f respond {
           case Return(x) =>
             results.set(i, x)
             if (count.decrementAndGet() == 0) {
-              val resultsArray = new mutable.ArrayBuffer[A](fs.size)
-              for (j <- 0 until fs.size) resultsArray += results.get(j)
+              val resultsArray = for (j <- 0 until fsSize) yield results.get(j)
               p.setValue(resultsArray)
             }
           case Throw(cause) =>
