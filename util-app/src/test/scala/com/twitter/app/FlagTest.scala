@@ -21,7 +21,7 @@ class FlagTest extends FunSuite {
     assert(Flaggable.ofString.parse("blah") === "blah")
   }
 
-
+  if (!sys.props.contains("SKIP_FLAKY")) {  // See AWESOME-7746
   test("Flaggable: parse/show inet addresses") {
     val local8080 = Flaggable.ofInetSocketAddress.parse(":8080")
     assert(local8080.getAddress.isAnyLocalAddress)
@@ -33,6 +33,7 @@ class FlagTest extends FunSuite {
 
     assert(Flaggable.ofInetSocketAddress.show(local8080) === ":8080")
     assert(Flaggable.ofInetSocketAddress.show(ip8080) ==="141.211.133.111:8080")
+  }
   }
 
   test("Flaggable: parse seqs") {
