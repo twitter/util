@@ -1,8 +1,10 @@
 package com.twitter.app
 
+import com.twitter.util.RandomSocket
+import java.net.InetSocketAddress
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
 
 object MyGlobalFlag extends GlobalFlag("a test flag", "a global test flag")
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
@@ -12,28 +14,30 @@ class FlagTest extends FunSuite {
   test("Flaggable: parse booleans") {
     assert(Flaggable.ofBoolean.parse("true"))
     assert(!Flaggable.ofBoolean.parse("false"))
-    
+
     intercept[Throwable] { Flaggable.ofBoolean.parse("") }
     intercept[Throwable] { Flaggable.ofBoolean.parse("gibberish") }
   }
-  
+
   test("Flaggable: parse strings") {
     assert(Flaggable.ofString.parse("blah") === "blah")
   }
 
-  if (!sys.props.contains("SKIP_FLAKY")) {  // See AWESOME-7746
   test("Flaggable: parse/show inet addresses") {
-    val local8080 = Flaggable.ofInetSocketAddress.parse(":8080")
-    assert(local8080.getAddress.isAnyLocalAddress)
-    assert(local8080.getPort === 8080)
+    val port = RandomSocket.nextPort
+    val local = Flaggable.ofInetSocketAddress.parse(":" + port)
+    assert(local.getAddress.isAnyLocalAddress)
+    assert(local.getPort === port)
 
-    val ip8080 = Flaggable.ofInetSocketAddress.parse("141.211.133.111:8080")
-    assert(ip8080.getHostName === "141.211.133.111")
-    assert(ip8080.getPort === 8080)
+    val ip = "141.211.133.111"
+    val expectedRemote = new InetSocketAddress(ip, port)
+    val remote = Flaggable.ofInetSocketAddress.parse(ip + ":" + port)
 
-    assert(Flaggable.ofInetSocketAddress.show(local8080) === ":8080")
-    assert(Flaggable.ofInetSocketAddress.show(ip8080) ==="141.211.133.111:8080")
-  }
+    assert(remote.getHostName === remote.getHostName)
+    assert(remote.getPort === port)
+
+    assert(Flaggable.ofInetSocketAddress.show(local) === ":" + port)
+    assert(Flaggable.ofInetSocketAddress.show(remote) === remote.getHostName + ":" + port)
   }
 
   test("Flaggable: parse seqs") {
@@ -44,7 +48,7 @@ class FlagTest extends FunSuite {
     assert(Flaggable.ofTuple[Int, String].parse("1,hello") === (1, "hello"))
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
   }
-  
+
   class Ctx {
     val flag = new Flags("test")
     val fooFlag = flag("foo", 123, "The foo value")
@@ -75,7 +79,7 @@ class FlagTest extends FunSuite {
     assert(!allFlags.exists(_() == 1), "original flag was not overridden")
     assert(allFlags.exists(_() == 2), "overriding flag was not present in flags set")
   }
-  
+
   class Bctx extends Ctx {
     val yesFlag = flag("yes", false, "Just say yes.")
   }
@@ -106,7 +110,7 @@ class FlagTest extends FunSuite {
     assert(flag.parse(Array("-yes=false")).isEmpty)
     assert(!yesFlag())
   }
-  
+
   test("Boolean: -yes ARG") {
     val ctx = new Bctx
     import ctx._
