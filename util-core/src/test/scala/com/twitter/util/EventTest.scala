@@ -70,18 +70,18 @@ class EventTest extends FunSuite {
     e.notify(4)
     assert(ref.get === Seq(2,3,4))
   }
-  
-  test("Event.flatMap") {
+
+  test("Event.mergeMap") {
     val e = Event[Int]()
     val inners = new mutable.ArrayBuffer[Witness[String]]
-    val e2 = e flatMap { i => 
+    val e2 = e mergeMap { i => 
       val e = Event[String]()
       inners += e
       e
     }
     val ref = new AtomicReference[String]("")
-    e2.register(Witness(ref))
-    
+    val closable = e2.register(Witness(ref))
+
     assert(inners.isEmpty)
     e.notify(1)
     assert(inners.size === 1)
@@ -93,11 +93,32 @@ class EventTest extends FunSuite {
     assert(inners.size === 2)
     assert(ref.get === "okay")
     inners(0).notify("notokay")
-    assert(ref.get === "okay")
+    assert(ref.get === "notokay")
     inners(1).notify("yay")
     assert(ref.get === "yay")
   }
   
+  test("Event.mergeMap closes constituent witnesses") {
+    @volatile var n = 0
+
+    val e1, e2 = new Event[Int] {
+      def register(w: Witness[Int]) = {
+        n += 1
+        w.notify(1)
+        Closable.make { _ => n -= 1; Future.Done }
+      }
+    }
+    
+    val e12 = e1 mergeMap { _ => e2 }
+
+    val ref = new AtomicReference(Seq.empty[Int])
+    val closable = e12.build.register(Witness(ref))
+    assert(ref.get === Seq(1))
+    assert(n === 2)
+    Await.result(closable.close())
+    assert(n === 0)
+  }
+
   test("Event.select") {
     val e1 = Event[Int]()
     val e2 = Event[String]()

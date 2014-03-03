@@ -23,7 +23,11 @@ trait Event[+T] { self =>
    */
   def register(s: Witness[T]): Closable
 
-  protected final def register1(s: T => Unit): Closable = register(Witness(s))
+  /**
+   * Observe this event with function `f`. Equivalent to 
+   * `register(Witness(f))`.
+   */
+  final def respond(s: T => Unit): Closable = register(Witness(s))
 
   /**
    * Build a new Event by applying the given function to each value
@@ -32,7 +36,7 @@ trait Event[+T] { self =>
    */
   def collect[U](f: PartialFunction[T, U]): Event[U] = new Event[U] {
     def register(s: Witness[U]) =
-      self register1 { t =>
+      self respond { t =>
         if (f.isDefinedAt(t))
           s.notify(f(t))
       }
@@ -53,14 +57,14 @@ trait Event[+T] { self =>
 
   /**
    * Build a new Event by incrementally accumulating over events,
-   * starting with value `z`. Each intermediate aggregate is notifyted
+   * starting with value `z`. Each intermediate aggregate is notified
    * to the derived event.
    */
   def foldLeft[U](z: U)(f: (U, T) => U): Event[U] = new Event[U] {
     def register(s: Witness[U]) = {
       var a = z
       val mu = new{}
-      self register1 Function.synchronizeWith(mu) { t  =>
+      self respond Function.synchronizeWith(mu) { t  =>
         a = f(a, t)
         s.notify(a)
       }
@@ -68,17 +72,17 @@ trait Event[+T] { self =>
   }
 
   /**
-   * Transform this event into an event representing a sliding window
-   * of at-most `n`. Each event notifyted by the parent are added to a
-   * queue of size at-most `n`. This queue is in turn notifyted to
-   * registerrs of the returned event.
+   * Build a new Event representing a sliding window of at-most `n`.
+   * Each event notified by the parent are added to a queue of size
+   * at-most `n`. This queue is in turn notified to register of
+   * the returned event.
    */
   def sliding(n: Int): Event[Seq[T]] = new Event[Seq[T]] {
     require(n > 0)
     def register(s: Witness[Seq[T]]) = {
       val mu = new{}
       var q = Queue.empty[T]
-      self register1 { t =>
+      self respond { t =>
         s.notify(mu.synchronized {
           q = q enqueue t
           while (q.length > n) {
@@ -92,18 +96,19 @@ trait Event[+T] { self =>
   }
 
   /**
-   * The event which behaves as `f` applied to the latest observed
-   * Event value.
+   * The Event which merges the events resulting from `f` applied
+   * to each element in this Event.
    */
-  def flatMap[U](f: T => Event[U]): Event[U] = new Event[U] {
+  def mergeMap[U](f: T => Event[U]): Event[U] = new Event[U] {
     def register(s: Witness[U]) = {
-      val inner = new AtomicReference[Closable](Closable.nop)
-      val outer = self register1 { t =>
-        inner.getAndSet(Closable.nop).close()
-        inner.getAndSet(f(t).register(s)).close()
+      val inners = new mutable.ArrayBuffer[Closable]
+      val outer = self respond { el =>
+        inners.synchronized { inners += f(el).register(s) }
       }
 
-      Closable.sequence(outer, Closable.ref(inner))
+      Closable.sequence(
+        outer, 
+        Closable.all(inners.synchronized(inners):_*))
     }
   }
 
@@ -131,7 +136,7 @@ trait Event[+T] { self =>
       val mu = new{}
       var state: Option[Either[Queue[T], Queue[U]]] = None
 
-      val left = self register1 Function.synchronizeWith(mu) { t =>
+      val left = self respond Function.synchronizeWith(mu) { t =>
         state match {
           case None =>
             state = Some(Left(Queue(t)))
@@ -144,7 +149,7 @@ trait Event[+T] { self =>
         }
       }
 
-      val right = other register1 Function.synchronizeWith(mu) { u =>
+      val right = other respond Function.synchronizeWith(mu) { u =>
         state match {
           case None =>
             state = Some(Right(Queue(u)))
@@ -171,7 +176,7 @@ trait Event[+T] { self =>
       import JoinState._
       var state: JoinState[T, U] = Empty
       val mu = new{}
-      val left = self register1 Function.synchronizeWith(mu) { t =>
+      val left = self respond Function.synchronizeWith(mu) { t =>
         state match {
           case Empty | LeftHalf(_) =>
             state = LeftHalf(t)
@@ -184,7 +189,7 @@ trait Event[+T] { self =>
         }
       }
 
-      val right = other register1 Function.synchronizeWith(mu) { u =>
+      val right = other respond Function.synchronizeWith(mu) { u =>
         state match {
           case Empty | RightHalf(_) =>
             state = RightHalf(u)
@@ -210,7 +215,7 @@ trait Event[+T] { self =>
     def register(s: Witness[T]) = {
       val n = new AtomicInteger(0)
       val c = new AtomicReference(Closable.nop)
-      c.set(self register1 { t =>
+      c.set(self respond { t =>
         if (n.incrementAndGet() <= howmany) s.notify(t)
         else c.getAndSet(Closable.nop).close()
       })
@@ -237,12 +242,12 @@ trait Event[+T] { self =>
   /**
    * Progressively build a collection of events using the passed-in
    * builder. A value containing the current version of the collection
-   * is notifyted for each incoming event.
+   * is notified for each incoming event.
    */
   def build[U >: T, That](implicit cbf: CanBuild[U, That]) = new Event[That] {
     def register(s: Witness[That]) = {
       val b = cbf()
-      self register1 { t =>
+      self respond { t =>
         b += t
         s.notify(b.result())
       }
