@@ -1088,6 +1088,8 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = result()
+  
+  def isReady(implicit permit: Awaitable.CanAwait) = true
 }
 
 /**
@@ -1114,6 +1116,8 @@ class NoFuture extends Future[Nothing] {
   }
 
   def poll: Option[Try[Nothing]] = None
+
+  def isReady(implicit permit: Awaitable.CanAwait) = false
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {

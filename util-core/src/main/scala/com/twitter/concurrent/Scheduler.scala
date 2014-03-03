@@ -5,6 +5,7 @@ import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
 import management.ManagementFactory
 import scala.util.Random
+import com.twitter.util.Awaitable.CanAwait
 
 trait Scheduler {
   /**
@@ -33,6 +34,9 @@ trait Scheduler {
 
   /** Number of dispatches performed by this scheduler. */
   def numDispatches: Long
+  
+  // The permit may be removed in the future.
+  def blocking[T](f: => T)(implicit perm: CanAwait): T
 }
 
 /**
@@ -57,8 +61,9 @@ object Scheduler extends Scheduler {
   def usrTime = self.usrTime
   def cpuTime = self.cpuTime
   def numDispatches = self.numDispatches
+  
+  def blocking[T](f: => T)(implicit perm: CanAwait) = self.blocking(f)
 }
-
 
 /**
  * An efficient thread-local, direct-dispatch scheduler.
@@ -127,6 +132,8 @@ private class LocalScheduler extends Scheduler {
         running = save
       }
     }
+    
+    def blocking[T](f: => T)(implicit perm: CanAwait): T = f
   }
 
   private[this] def get(): Activation = {
@@ -146,6 +153,8 @@ private class LocalScheduler extends Scheduler {
   def usrTime = (activations.iterator map (_.usrTime)).sum
   def cpuTime = (activations.iterator map (_.cpuTime)).sum
   def numDispatches = (activations.iterator map (_.numDispatches)).sum
+  
+  def blocking[T](f: => T)(implicit perm: CanAwait) = f
 }
 
 trait ExecutorScheduler { self: Scheduler =>
@@ -201,6 +210,8 @@ trait ExecutorScheduler { self: Scheduler =>
   def numDispatches = -1L  // Unsupported
 
   def getExecutor = executor
+  
+  def blocking[T](f: => T)(implicit perm: CanAwait) = f
 }
 
 /**

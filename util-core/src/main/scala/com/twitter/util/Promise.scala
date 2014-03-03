@@ -180,6 +180,9 @@ object Promise {
     @throws(classOf[Exception])
     def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A =
       parent.result(timeout)
+      
+    def isReady(implicit permit: Awaitable.CanAwait): Boolean =
+      parent.isReady
 
     def poll = parent.poll
 
@@ -503,6 +506,9 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     val Done(theTry) = ready(timeout).compress().theState
     theTry()
   }
+
+  def isReady(implicit permit: Awaitable.CanAwait): Boolean =
+    isDefined
 
   /**
    * Returns this promise's interrupt if it is interrupted.

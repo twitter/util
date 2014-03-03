@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -25,6 +26,12 @@ trait Awaitable[+T] {
    */
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: CanAwait): T
+
+  /**
+   * Is this Awaitable ready? In other words: would calling
+   * [[com.twitter.util.Awaitable.ready Awaitable.ready]] block?
+   */
+  def isReady(implicit permit: CanAwait): Boolean
 }
 
 object Awaitable {
@@ -50,7 +57,7 @@ object Awaitable {
  */
 object Await {
   import Awaitable._
-  private object AwaitPermit extends CanAwait
+  private implicit object AwaitPermit extends CanAwait
 
   /** $ready */
   @throws(classOf[TimeoutException])
@@ -61,8 +68,10 @@ object Await {
   /** $ready */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
-  def ready[T <: Awaitable[_]](awaitable: T, timeout: Duration): T =
-    awaitable.ready(timeout)(AwaitPermit)
+  def ready[T <: Awaitable[_]](awaitable: T, timeout: Duration): T = {
+    if (awaitable.isReady) awaitable.ready(timeout)
+    else Scheduler.blocking { awaitable.ready(timeout) }
+  }
 
   /** $result */
   @throws(classOf[Exception])
@@ -72,7 +81,8 @@ object Await {
   /** $result */
   @throws(classOf[Exception])
   def result[T](awaitable: Awaitable[T], timeout: Duration): T =
-    awaitable.result(timeout)(AwaitPermit)
+    if (awaitable.isReady) awaitable.result(timeout)
+    else Scheduler.blocking { awaitable.result(timeout) }
 
   /** $all */
   @throws(classOf[TimeoutException])
@@ -84,7 +94,7 @@ object Await {
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   def all(awaitables: Seq[Awaitable[_]], timeout: Duration): Unit =
-    awaitables foreach { _.ready(timeout)(AwaitPermit) }
+    awaitables foreach { _.ready(timeout) }
 }
 
 /**
@@ -116,10 +126,13 @@ trait CloseAwaitably extends Awaitable[Unit] {
   }
 
   def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
-    Await.ready(onClose, timeout)
+    onClose.ready(timeout)
     this
   }
 
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): Unit =
-   Await.result(onClose, timeout)
+    onClose.result(timeout)
+  
+  def isReady(implicit permit: Awaitable.CanAwait): Boolean =
+    onClose.isReady
 }
