@@ -90,12 +90,22 @@ object Flaggable {
     assert(!kflag.default.isDefined)
     assert(!vflag.default.isDefined)
 
-    def parse(in: String): Map[K, V] = in.split(",") map { pair =>
-      pair.split("=") match {
-        case Array(k, v) => (kflag.parse(k), vflag.parse(v))
-        case _ => throw new IllegalArgumentException("not a 'k=v'")
+    def parse(in: String): Map[K, V] = {
+      val tuples = in.split(',').foldLeft(Seq.empty[String]) {
+        case (acc, s) if !s.contains('=') =>
+          // In order to support comma-separated values, we concatenate
+          // consecutive tokens that don't contain equals signs.
+          acc.init :+ (acc.last + ',' + s)
+        case (acc, s) => acc :+ s
       }
-    } toMap
+
+      tuples map { tup =>
+        tup.split("=") match {
+          case Array(k, v) => (kflag.parse(k), vflag.parse(v))
+          case _ => throw new IllegalArgumentException("not a 'k=v'")
+        }
+      } toMap
+    }
 
     override def show(out: Map[K, V]) = {
       out.toSeq map { case (k, v) => k.toString + "=" + v.toString } mkString(",")

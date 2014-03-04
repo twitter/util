@@ -44,6 +44,15 @@ class FlagTest extends FunSuite {
     assert(Flaggable.ofSeq[Int].parse("1,2,3,4") === Seq(1,2,3,4))
   }
 
+  test("Flaggable: parse maps") {
+    assert(Flaggable.ofMap[Int, Int].parse("1=2,3=4") === Map(1 -> 2, 3 -> 4))
+  }
+
+  test("Flaggable: parse maps with comma-separated values") {
+    assert(Flaggable.ofMap[String, Seq[Int]].parse("a=1,2,3,b=4,5") ===
+      Map("a" -> Seq(1,2,3), "b" -> Seq(4,5)))
+  }
+
   test("Flaggable: parse tuples") {
     assert(Flaggable.ofTuple[Int, String].parse("1,hello") === (1, "hello"))
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
