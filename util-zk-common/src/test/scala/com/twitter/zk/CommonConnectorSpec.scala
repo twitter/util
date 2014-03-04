@@ -5,14 +5,15 @@ import com.twitter.common.zookeeper.ZooKeeperClient
 import com.twitter.conversions.common.quantity._
 import com.twitter.conversions.common.zookeeper._
 import com.twitter.conversions.time._
-import com.twitter.util.{Await, FuturePool}
+import com.twitter.util.{Await, FuturePool, RandomSocket}
 import org.specs.SpecificationWithJUnit
 import java.net.InetSocketAddress
 import scala.collection.JavaConverters._
 
 class CommonConnectorSpec extends SpecificationWithJUnit {
   val timeout = 2.seconds
-  val addresses = new InetSocketAddress("localhost", 2181) :: Nil
+  val port = RandomSocket.nextPort()
+  val addresses = new InetSocketAddress("localhost", port) :: Nil
 
   "CommonConnector" should {
     "initialize" in {

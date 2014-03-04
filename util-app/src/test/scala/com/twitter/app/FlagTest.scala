@@ -24,7 +24,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flaggable: parse/show inet addresses") {
-    val port = RandomSocket.nextPort
+    val port = RandomSocket.nextPort()
     val local = Flaggable.ofInetSocketAddress.parse(":" + port)
     assert(local.getAddress.isAnyLocalAddress)
     assert(local.getPort === port)

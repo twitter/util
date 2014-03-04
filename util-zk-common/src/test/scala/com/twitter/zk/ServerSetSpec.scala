@@ -14,7 +14,8 @@ import scala.collection.{Map, Set}
 /*class ServerSetSpec extends SpecificationWithJUnit with JMocker with ClassMocker {
   "ServerSet" should {
     val pool = FuturePool.immediatePool
-    val address = new InetSocketAddress("localhost", 34245)
+    val port = RandomSocket.nextPort()
+    val address = new InetSocketAddress("localhost", port)
     val commonServerSet = mock[ServerSetImpl]
     val serverSet = ServerSet(commonServerSet, "/services", pool)
 
