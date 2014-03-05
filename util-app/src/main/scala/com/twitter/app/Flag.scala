@@ -210,6 +210,8 @@ class Flags(argv0: String, includeGlobal: Boolean) {
   def this(argv0: String) = this(argv0, false)
 
   private[this] val flags = new HashMap[String, Flag[_]]
+  
+  @volatile private[this] var cmdUsage = ""
 
   // Add a help flag by default
   private[this] val helpFlag = this("help", false, "Show this help")
@@ -325,6 +327,14 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     add(f)
     f
   }
+  
+  /**
+   * Set the flags' command usage; this is a message printed
+   * before the flag definitions in the usage string.
+   */
+  def setCmdUsage(u: String) {
+    cmdUsage = u
+  }
 
   def usage: String = synchronized {
     val lines =
@@ -334,8 +344,10 @@ class Flags(argv0: String, includeGlobal: Boolean) {
       for (f <- GlobalFlag.getAll(getClass.getClassLoader))
       yield f.usageString
     }
+    
+    val cmd = if (cmdUsage.nonEmpty) cmdUsage+"\n" else ""
 
-    argv0+"\n"+(lines mkString "\n")+(
+    cmd+argv0+"\n"+(lines mkString "\n")+(
       if (globalLines.isEmpty) "" else "\nglobal flags:\n"+(globalLines mkString "\n")
     )
   }
