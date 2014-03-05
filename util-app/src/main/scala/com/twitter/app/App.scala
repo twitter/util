@@ -1,7 +1,10 @@
 package com.twitter.app
 
-import com.twitter.util.{Try, Throw, Return}
+import com.twitter.conversions.time._
+import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
+import java.util.concurrent.ConcurrentLinkedQueue
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 /**
@@ -25,7 +28,7 @@ import scala.collection.mutable
  * Note that a missing `main` is OK: mixins may provide behavior that
  * does not require defining a custom `main` method.
  */
-trait App {
+trait App extends Closable with CloseAwaitably {
   /** The name of the application, based on the classname */
   val name = getClass.getName.reverse.dropWhile(_ == '$').reverse
   /** The [[com.twitter.app.Flags]] instance associated with this application */
@@ -34,39 +37,74 @@ trait App {
   /** The remaining, unparsed arguments */
   def args = _args
 
-  private val premains = mutable.Buffer[() => Unit]()
-  private val postmains = mutable.Buffer[() => Unit]()
-  private val inits = mutable.Buffer[() => Unit]()
+  private val inits     = mutable.Buffer[() => Unit]()
+  private val premains  = mutable.Buffer[() => Unit]()
+  private val exits     = new ConcurrentLinkedQueue[Closable]
+  private val postmains = new ConcurrentLinkedQueue[() => Unit]
+
+  /**
+   * Invoke `f` before anything else (including flag parsing).
+   */
+  protected final def init(f: => Unit) {
+    inits += (() => f)
+  }
 
   /**
    * Invoke `f` right before the user's main is invoked.
    */
-  protected def premain(f: => Unit) {
+  protected final def premain(f: => Unit) {
     premains += (() => f)
+  }
+
+  // onExit may use this pool to run hooks concurrently
+  private lazy val exitPool = FuturePool.unboundedPool
+
+  // finagle isn't available here, so no DefaultTimer
+  private val exitTimer = new JavaTimer(isDaemon = true)
+
+  /** Minimum duration to allow for exits to be processed. */
+  final val MinGrace: Duration = 1.second
+
+  /**
+   * Default amount of time to wait for shutdown.
+   * This value is not used as a default if `close()` is called without parameters. It simply
+   * provides a default value to be passed as `close(grace)`.
+   */
+  def defaultCloseGracePeriod: Duration = Duration.Top
+
+  /**
+   * Close `closable` when shutdown is requested. Closables are closed in parallel.
+   */
+  protected final def closeOnExit(closable: Closable) {
+    exits.add(closable)
+  }
+
+  /**
+   * Invoke `f` when shutdown is requested. Exit hooks run in parallel and all must complete before
+   * postmains are executed.
+   */
+  protected final def onExit(f: => Unit) {
+    closeOnExit {
+      Closable.make { deadline => // close() ensures that this deadline is sane
+        exitPool(f).within(exitTimer, deadline - Time.now)
+      }
+    }
   }
 
   /**
    * Invoke `f` after the user's main has exited.
    */
-  protected def postmain(f: => Unit) {
-    postmains += (() => f)
+  protected final def postmain(f: => Unit) {
+    postmains.add(() => f)
   }
 
   /**
-   * Invoke `f` before anything else (including flag parsing).
+   * Notify the application that it may stop running.
+   * Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
    */
-  protected def init(f: => Unit) {
-    inits += (() => f)
-  }
-
-  /**
-   * Create a new shutdown hook. As such, these will be started in
-   * no particular order and run concurrently.
-   */
-  protected def onExit(f: => Unit) {
-    Runtime.getRuntime.addShutdownHook(new Thread {
-      override def run() = f
-    })
+  final def close(deadline: Time): Future[Unit] = closeAwaitably {
+    val minDeadline = deadline max (Time.now + MinGrace)
+    Closable.all(exits.asScala.toSeq: _*).close(minDeadline)
   }
 
   final def main(args: Array[String]) {
@@ -76,15 +114,20 @@ trait App {
 
     for (f <- premains) f()
 
-    // Invoke main() if it exists.
-    try {
-      getClass.getMethod("main").invoke(this)
-    } catch {
-      case _: NoSuchMethodException =>
-        // This is OK. It's possible to define traits that only use pre/post mains.
+    // Get a main() if it's defined. It's possible to define traits that only use pre/post mains.
+    val mainMethod =
+      try Some(getClass.getMethod("main"))
+      catch { case _: NoSuchMethodException => None }
 
-      case e: InvocationTargetException => throw e.getCause
+    // Invoke main() if it exists.
+    mainMethod foreach { method =>
+      try method.invoke(this)
+      catch { case e: InvocationTargetException => throw e.getCause }
     }
-    for (f <- postmains) f()
+
+    for (f <- postmains.asScala) f()
+
+    close(defaultCloseGracePeriod)
+    Await.result(this)
   }
 }
