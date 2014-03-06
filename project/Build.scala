@@ -156,7 +156,7 @@ object Util extends Build {
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
       "com.google.code.findbugs" % "jsr305" % "1.3.9",
       "javax.inject" % "javax.inject" % "1",
-      "com.google.guava" % "guava" % "15.0",
+      "com.google.guava" % "guava" % "16.0.1",
       "commons-collections" % "commons-collections" % "3.2.1"
     )
   ).dependsOn(utilCore)
