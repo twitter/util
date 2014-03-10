@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.{AtomicReference, AtomicLong}
+import java.util.concurrent.atomic.{AtomicReference, AtomicLong, AtomicReferenceArray}
 import scala.annotation.tailrec
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
@@ -221,16 +221,20 @@ object Var {
       (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassManifest[T])
       : Var[CC[T]] = async(newBuilder().result) { v =>
     val N = vars.size
-    val cur = new Array[T](N)
-    var filling = true
+    val cur = new AtomicReferenceArray[T](N)
+    @volatile var filling = true
     def build() = {
       val b = newBuilder()
-      b ++= cur
+      var i = 0
+      while (i < N) {
+        b += cur.get(i)
+        i += 1
+      }
       b.result()
     }
 
-    def publish(i: Int, newi: T) = synchronized {
-      cur(i) = newi
+    def publish(i: Int, newi: T) = {
+      cur.set(i, newi)
       if (!filling) v() = build()
     }
 
@@ -242,10 +246,8 @@ object Var {
       i += 1
     }
 
-    synchronized {
-      filling = false
-      v() = build()
-    }
+    filling = false
+    v() = build()
 
     Closable.all(closes:_*)
   }
