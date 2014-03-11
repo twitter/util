@@ -340,9 +340,8 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     val lines =
       for (k <- flags.keys.toArray.sorted)
       yield flags(k).usageString
-    val globalLines = if (!includeGlobal) Seq() else {
-      for (f <- GlobalFlag.getAll(getClass.getClassLoader))
-      yield f.usageString
+    val globalLines = if (!includeGlobal) Seq.empty else {
+      GlobalFlag.getAll(getClass.getClassLoader).map(_.usageString).sorted
     }
     
     val cmd = if (cmdUsage.nonEmpty) cmdUsage+"\n" else ""
