@@ -5,6 +5,9 @@ import java.io.{File, FileOutputStream, FileWriter}
 import scala.io.Source
 
 import com.twitter.io.TempFile
+import scala.tools.nsc.reporters.{AbstractReporter, Reporter}
+import scala.tools.nsc.Settings
+import scala.tools.nsc.util.Position
 
 class EvalSpec extends SpecificationWithJUnit {
   "Evaluator" should {
@@ -155,6 +158,43 @@ class EvalSpec extends SpecificationWithJUnit {
       e.fileToClassName(new File("foo-bar-baz.scala")) mustEqual "foo$2dbar$2dbaz"
       // with crazy things
       e.fileToClassName(new File("foo$! -@@@")) mustEqual "foo$24$21$20$2d$40$40$40"
+    }
+
+    "allow custom error reporting" in {
+      val eval = new Eval {
+        var errors: Seq[(String, String)] = Nil
+
+        override lazy val compilerMessageHandler: Option[Reporter] = Some(new AbstractReporter {
+          override val settings: Settings = compilerSettings
+          override def displayPrompt(): Unit = ()
+          override def display(pos: Position, msg: String, severity: this.type#Severity): Unit = {
+            errors = errors :+ (msg, severity.toString)
+          }
+          override def reset() = {
+            errors = Nil
+          }
+        })
+      }
+
+      "not report errors on success" in {
+        eval[Int]("val a = 3; val b = 2; a + b", true) mustEqual 5
+        eval.errors must be empty
+      }
+
+      "report errors on bad code" in {
+        eval[Int]("val a = 3; val b = q", true) must throwA[Throwable]
+        eval.errors must not be empty
+      }
+
+      "not reset reporter when asked not to" in {
+        eval[Int]("val a = 3; val b = q; a + b", false) must throwA[Throwable]
+        eval.errors must not be empty
+      }
+
+      "reset reporter when asked to" in {
+        eval[Int]("val a = 3; val b = 2; a + b", true) mustEqual 5
+        eval.errors must be empty
+      }
     }
   }
 }

@@ -452,13 +452,13 @@ class Eval(target: Option[File]) {
   private class StringCompiler(lineOffset: Int, targetDir: Option[File], settings: Settings, messageHandler: Option[Reporter]) {
 
     val cache = new mutable.HashMap[String, Class[_]]()
-        val target = compilerOutputDir
+    val target = compilerOutputDir
 
-        trait MessageCollector {
-            val messages: Seq[List[String]]
-        }
+    trait MessageCollector {
+      val messages: Seq[List[String]]
+    }
 
-        val reporter = messageHandler getOrElse new AbstractReporter with MessageCollector {
+    val reporter = messageHandler getOrElse new AbstractReporter with MessageCollector {
       val settings = StringCompiler.this.settings
       val messages = new mutable.ListBuffer[List[String]]
 
