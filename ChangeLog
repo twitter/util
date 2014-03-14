@@ -1,3 +1,21 @@
+6.13.0  2014-03-14
+
+  * util-app: add usage string, printed before flags
+  * util-app: Handle comma-separated values in `Flaggable.ofMap`
+  * util-app: Implement application-level shutdown handling in App.
+  * util-app: Remove hardcoded ports in FlagTest
+  * util-app: sort global flags in usage
+  * util-core/Offer: Don't do indexed lookups in prepare()
+  * util-core: Add support for interrupting Future.sleep
+  * util-core: Check whether JVM supports thread measurement before measuring
+  * util-core: Create daemon threads in all stock `com.twitter.util.FuturePool`s
+  * util-core: Event: mergeMap, not flatMap
+  * util-core: Performance optimizations for Future.collect
+  * util-core: TimeLike inSeconds should not truncate
+  * util-core: Var.collect, Fix deadlock caused by oversynchronizing
+  * util-core: Var: prevent stale updates
+  * util: ForkJoin scheduler: first draft
+
 6.12.1  2014-02-18
 
   * Upgrade everyone to the new c.t.common.server-set
