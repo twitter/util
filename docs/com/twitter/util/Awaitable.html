@@ -36,7 +36,7 @@ directly, but through the <code>Await</code> object.
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a name="com.twitter.zk.AsyncCallbackPromise" class="extype" href="../zk/AsyncCallbackPromise.html">AsyncCallbackPromise</a>, <a name="com.twitter.zk.ChildrenCallbackPromise" class="extype" href="../zk/ChildrenCallbackPromise.html">ChildrenCallbackPromise</a>, <a name="com.twitter.util.CloseAwaitably" class="extype" href="CloseAwaitably.html">CloseAwaitably</a>, <a name="com.twitter.util.ConstFuture" class="extype" href="ConstFuture.html">ConstFuture</a>, <a name="com.twitter.zk.DataCallbackPromise" class="extype" href="../zk/DataCallbackPromise.html">DataCallbackPromise</a>, <a name="com.twitter.zk.EventPromise" class="extype" href="../zk/EventPromise.html">EventPromise</a>, <a name="com.twitter.zk.ExistsCallbackPromise" class="extype" href="../zk/ExistsCallbackPromise.html">ExistsCallbackPromise</a>, <a name="com.twitter.util.Future" class="extype" href="Future.html">Future</a>, <a name="com.twitter.util.FutureTask" class="extype" href="FutureTask.html">FutureTask</a>, <a name="com.twitter.io.InputStreamReader" class="extype" href="../io/InputStreamReader.html">InputStreamReader</a>, <a name="com.twitter.util.NoFuture" class="extype" href="NoFuture.html">NoFuture</a>, <a name="com.twitter.util.Promise" class="extype" href="Promise.html">Promise</a>, <a name="com.twitter.util.Promise.Responder" class="extype" href="Promise$$Responder.html">Responder</a>, <a name="com.twitter.zk.StringCallbackPromise" class="extype" href="../zk/StringCallbackPromise.html">StringCallbackPromise</a>, <a name="com.twitter.zk.UnitCallbackPromise" class="extype" href="../zk/UnitCallbackPromise.html">UnitCallbackPromise</a></div>
+          <div class="subClasses hiddenContent"><a name="com.twitter.app.App" class="extype" href="../app/App.html">App</a>, <a name="com.twitter.zk.AsyncCallbackPromise" class="extype" href="../zk/AsyncCallbackPromise.html">AsyncCallbackPromise</a>, <a name="com.twitter.zk.ChildrenCallbackPromise" class="extype" href="../zk/ChildrenCallbackPromise.html">ChildrenCallbackPromise</a>, <a name="com.twitter.util.CloseAwaitably" class="extype" href="CloseAwaitably.html">CloseAwaitably</a>, <a name="com.twitter.util.ConstFuture" class="extype" href="ConstFuture.html">ConstFuture</a>, <a name="com.twitter.zk.DataCallbackPromise" class="extype" href="../zk/DataCallbackPromise.html">DataCallbackPromise</a>, <a name="com.twitter.zk.EventPromise" class="extype" href="../zk/EventPromise.html">EventPromise</a>, <a name="com.twitter.zk.ExistsCallbackPromise" class="extype" href="../zk/ExistsCallbackPromise.html">ExistsCallbackPromise</a>, <a name="com.twitter.util.Future" class="extype" href="Future.html">Future</a>, <a name="com.twitter.util.FutureTask" class="extype" href="FutureTask.html">FutureTask</a>, <a name="com.twitter.io.InputStreamReader" class="extype" href="../io/InputStreamReader.html">InputStreamReader</a>, <a name="com.twitter.util.NoFuture" class="extype" href="NoFuture.html">NoFuture</a>, <a name="com.twitter.util.Promise" class="extype" href="Promise.html">Promise</a>, <a name="com.twitter.util.Promise.Responder" class="extype" href="Promise$$Responder.html">Responder</a>, <a name="com.twitter.zk.StringCallbackPromise" class="extype" href="../zk/StringCallbackPromise.html">StringCallbackPromise</a>, <a name="com.twitter.zk.UnitCallbackPromise" class="extype" href="../zk/UnitCallbackPromise.html">UnitCallbackPromise</a></div>
         </div></div>
     
 
@@ -66,7 +66,21 @@ directly, but through the <code>Await</code> object.
 
         <div class="values members" id="values">
               <h3>Abstract Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Awaitable#ready" data-isabs="true">
+              <ol><li visbl="pub" name="com.twitter.util.Awaitable#isReady" data-isabs="true">
+      <a id="isReady(CanAwait):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is this Awaitable ready? In other words: would calling
+com.twitter.util.Awaitable.ready block?
+</p>
+    </li><li visbl="pub" name="com.twitter.util.Awaitable#ready" data-isabs="true">
       <a id="ready(Duration)(CanAwait):Awaitable.this.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">

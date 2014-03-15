@@ -84,7 +84,23 @@ be delivered when the promise has not yet completed.
 
         <div class="values members" id="values">
               <h3>Abstract Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Future#poll" data-isabs="true">
+              <ol><li visbl="pub" name="com.twitter.util.Awaitable#isReady" data-isabs="true">
+      <a id="isReady(CanAwait):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is this Awaitable ready? In other words: would calling
+com.twitter.util.Awaitable.ready block?
+</p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
+com.twitter.util.Awaitable.ready block?
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Awaitable" class="extype" href="Awaitable.html">Awaitable</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Future#poll" data-isabs="true">
       <a id="poll:Option[Try[A]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">

@@ -174,7 +174,7 @@ deregistered by the returned <a name="com.twitter.util.Closable" class="extype" 
       <p class="shortcomment cmt">Progressively build a collection of events using the passed-in
 builder.</p><div class="fullcomment"><div class="comment cmt"><p>Progressively build a collection of events using the passed-in
 builder. A value containing the current version of the collection
-is notifyted for each incoming event.
+is notified for each incoming event.
 </p></div></div>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
@@ -259,19 +259,6 @@ the predicate <code>p</code>.</p>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.util.Event#flatMap" data-isabs="false">
-      <a id="flatMap[U]((T) ⇒ Event[U]):Event[U]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">flatMap</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (T) ⇒ <a name="com.twitter.util.Event" class="extype" href="">Event</a>[U]</span>)</span><span class="result">: <a name="com.twitter.util.Event" class="extype" href="">Event</a>[U]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">The event which behaves as <code>f</code> applied to the latest observed
-Event value.</p>
     </li><li visbl="pub" name="com.twitter.util.Event#foldLeft" data-isabs="false">
       <a id="foldLeft[U](U)((U, T) ⇒ U):Event[U]"></a>
       <h4 class="signature">
@@ -285,7 +272,7 @@ Event value.</p>
       </h4>
       <p class="shortcomment cmt">Build a new Event by incrementally accumulating over events,
 starting with value <code>z</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event by incrementally accumulating over events,
-starting with value <code>z</code>. Each intermediate aggregate is notifyted
+starting with value <code>z</code>. Each intermediate aggregate is notified
 to the derived event.
 </p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
@@ -362,6 +349,19 @@ last value in each underlying event.</p>
       </h4>
       <p class="shortcomment cmt">Merge two events; the resulting event interleaves events
 from this and <code>other</code>.</p>
+    </li><li visbl="pub" name="com.twitter.util.Event#mergeMap" data-isabs="false">
+      <a id="mergeMap[U]((T) ⇒ Event[U]):Event[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mergeMap</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (T) ⇒ <a name="com.twitter.util.Event" class="extype" href="">Event</a>[U]</span>)</span><span class="result">: <a name="com.twitter.util.Event" class="extype" href="">Event</a>[U]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The Event which merges the events resulting from <code>f</code> applied
+to each element in this Event.</p>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -398,18 +398,20 @@ from this and <code>other</code>.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="prt" name="com.twitter.util.Event#register1" data-isabs="false">
-      <a id="register1((T) ⇒ Unit):Closable"></a>
+    </li><li visbl="pub" name="com.twitter.util.Event#respond" data-isabs="false">
+      <a id="respond((T) ⇒ Unit):Closable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">register1</span><span class="params">(<span name="s">s: (T) ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Closable</a></span>
+        <span class="name">respond</span><span class="params">(<span name="s">s: (T) ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Closable</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <p class="shortcomment cmt">Observe this event with function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Observe this event with function <code>f</code>. Equivalent to
+<code>register(Witness(f))</code>.
+</p></div></div>
     </li><li visbl="pub" name="com.twitter.util.Event#select" data-isabs="false">
       <a id="select[U](Event[U]):Event[Either[T, U]]"></a>
       <h4 class="signature">
@@ -433,11 +435,10 @@ from this and <code>other</code>.</p>
         <span class="name">sliding</span><span class="params">(<span name="n">n: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <a name="com.twitter.util.Event" class="extype" href="">Event</a>[Seq[T]]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Transform this event into an event representing a sliding window
-of at-most <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Transform this event into an event representing a sliding window
-of at-most <code>n</code>. Each event notifyted by the parent are added to a
-queue of size at-most <code>n</code>. This queue is in turn notifyted to
-registerrs of the returned event.
+      <p class="shortcomment cmt">Build a new Event representing a sliding window of at-most <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event representing a sliding window of at-most <code>n</code>.
+Each event notified by the parent are added to a queue of size
+at-most <code>n</code>. This queue is in turn notified to register of
+the returned event.
 </p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>

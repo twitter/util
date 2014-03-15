@@ -25,7 +25,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">App</span><span class="result"> extends AnyRef</span>
+        <span class="name">App</span><span class="result"> extends <a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a> with <a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a></span>
       </span>
       </h4>
       
@@ -46,7 +46,7 @@ extracted into mixins.</p><pre>
 does not require defining a custom <code>main</code> method.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a>, <a name="com.twitter.util.Awaitable" class="extype" href="../util/Awaitable.html">Awaitable</a>[<span name="scala.Unit" class="extype">Unit</span>], <a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
     
 
@@ -60,7 +60,7 @@ does not require defining a custom <code>main</code> method.
               <span class="filtertype">Inherited</span>
               <ol><li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li></ol>
-              <ol id="linearization"><li name="com.twitter.app.App" class="in"><span>App</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+              <ol id="linearization"><li name="com.twitter.app.App" class="in"><span>App</span></li><li name="com.twitter.util.CloseAwaitably" class="in"><span>CloseAwaitably</span></li><li name="com.twitter.util.Awaitable" class="in"><span>Awaitable</span></li><li name="com.twitter.util.Closable" class="in"><span>Closable</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
             </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -138,6 +138,18 @@ does not require defining a custom <code>main</code> method.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.app.App#MinGrace" data-isabs="false">
+      <a id="MinGrace:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">MinGrace</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Minimum duration to allow for exits to be processed.</p>
     </li><li visbl="pub" name="com.twitter.app.App#args" data-isabs="false">
       <a id="args:Array[String]"></a>
       <h4 class="signature">
@@ -177,6 +189,92 @@ does not require defining a custom <code>main</code> method.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.app.App#close" data-isabs="false">
+      <a id="close(Time):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">(<span name="deadline">deadline: <a name="com.twitter.util.Time" class="extype" href="../util/Time.html">Time</a></span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Notify the application that it may stop running.</p><div class="fullcomment"><div class="comment cmt"><p>Notify the application that it may stop running.
+Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.app.App" class="extype" href="">App</a> → <a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Closable#close" data-isabs="false">
+      <a id="close(Duration):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">(<span name="after">after: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Close the resource with the given timeout.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given timeout. This timeout is advisory,
+giving the callee some leeway, for example to drain clients or finish
+up other tasks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Closable#close" data-isabs="false">
+      <a id="close():Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">()</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Close the resource.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource. The returned Future is completed when
+the resource has been fully relinquished.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a></dd></dl></div>
+    </li><li visbl="prt" name="com.twitter.util.CloseAwaitably#closeAwaitably" data-isabs="false">
+      <a id="closeAwaitably(⇒ Future[Unit]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closeAwaitably</span><span class="params">(<span name="f">f: ⇒ <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">closeAwaitably is intended to be used as a wrapper for
+<code>close</code>.</p><div class="fullcomment"><div class="comment cmt"><p>closeAwaitably is intended to be used as a wrapper for
+<code>close</code>. The underlying <code>f</code> will be called at most once.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a></dd></dl></div>
+    </li><li visbl="prt" name="com.twitter.app.App#closeOnExit" data-isabs="false">
+      <a id="closeOnExit(Closable):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closeOnExit</span><span class="params">(<span name="closable">closable: <a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Close <code>closable</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Close <code>closable</code> when shutdown is requested. Closables are closed in parallel.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.app.App#defaultCloseGracePeriod" data-isabs="false">
+      <a id="defaultCloseGracePeriod:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">defaultCloseGracePeriod</span><span class="result">: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Default amount of time to wait for shutdown.</p><div class="fullcomment"><div class="comment cmt"><p>Default amount of time to wait for shutdown.
+This value is not used as a default if <code>close()</code> is called without parameters. It simply
+provides a default value to be passed as <code>close(grace)</code>.
+</p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -256,7 +354,7 @@ does not require defining a custom <code>main</code> method.
       <a id="init(⇒ Unit):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -277,6 +375,22 @@ does not require defining a custom <code>main</code> method.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.CloseAwaitably#isReady" data-isabs="false">
+      <a id="isReady(CanAwait):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="../util/Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is this Awaitable ready? In other words: would calling
+com.twitter.util.Awaitable.ready block?
+</p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
+com.twitter.util.Awaitable.ready block?
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a> → <a name="com.twitter.util.Awaitable" class="extype" href="../util/Awaitable.html">Awaitable</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.App#main" data-isabs="false">
       <a id="main(Array[String]):Unit"></a>
       <h4 class="signature">
@@ -341,21 +455,21 @@ does not require defining a custom <code>main</code> method.
       <a id="onExit(⇒ Unit):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">onExit</span><span class="params">(<span name="f">f: ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Create a new shutdown hook.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new shutdown hook. As such, these will be started in
-no particular order and run concurrently.
+      <p class="shortcomment cmt">Invoke <code>f</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> when shutdown is requested. Exit hooks run in parallel and all must complete before
+postmains are executed.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li visbl="prt" name="com.twitter.app.App#postmain" data-isabs="false">
       <a id="postmain(⇒ Unit):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -368,7 +482,7 @@ no particular order and run concurrently.
       <a id="premain(⇒ Unit):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -377,6 +491,36 @@ no particular order and run concurrently.
       </h4>
       <p class="shortcomment cmt">Invoke <code>f</code> right before the user's main is invoked.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> right before the user's main is invoked.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.CloseAwaitably#ready" data-isabs="false">
+      <a id="ready(Duration)(CanAwait):App.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ready</span><span class="params">(<span name="timeout">timeout: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="../util/Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: App.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Support for <code>Await.ready</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.ready</code>. The use of the implicit permit is an
+access control mechanism: only <code>Await.ready</code> may call this
+method.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a> → <a name="com.twitter.util.Awaitable" class="extype" href="../util/Awaitable.html">Awaitable</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.CloseAwaitably#result" data-isabs="false">
+      <a id="result(Duration)(CanAwait):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">result</span><span class="params">(<span name="timeout">timeout: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="../util/Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Support for <code>Await.result</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.result</code>. The use of the implicit permit is an
+access control mechanism: only <code>Await.result</code> may call this
+method.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a> → <a name="com.twitter.util.Awaitable" class="extype" href="../util/Awaitable.html">Awaitable</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -453,7 +597,13 @@ no particular order and run concurrently.
         </div>
 
         <div id="inheritedMembers">
-        <div name="scala.AnyRef" class="parent">
+        <div name="com.twitter.util.CloseAwaitably" class="parent">
+              <h3>Inherited from <a name="com.twitter.util.CloseAwaitably" class="extype" href="../util/CloseAwaitably.html">CloseAwaitably</a></h3>
+            </div><div name="com.twitter.util.Awaitable" class="parent">
+              <h3>Inherited from <a name="com.twitter.util.Awaitable" class="extype" href="../util/Awaitable.html">Awaitable</a>[<span name="scala.Unit" class="extype">Unit</span>]</h3>
+            </div><div name="com.twitter.util.Closable" class="parent">
+              <h3>Inherited from <a name="com.twitter.util.Closable" class="extype" href="../util/Closable.html">Closable</a></h3>
+            </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">
               <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
