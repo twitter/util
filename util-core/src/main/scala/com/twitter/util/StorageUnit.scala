@@ -62,7 +62,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
   def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
   def inExabytes  = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
-  
+
   def +(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes + that.bytes)
   def -(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes - that.bytes)
   def *(scalar: Double): StorageUnit = new StorageUnit((this.bytes.toDouble*scalar).toLong)
@@ -75,6 +75,8 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
         false
     }
   }
+
+  override def hashCode: Int = bytes.hashCode
 
   override def compare(other: StorageUnit) =
     if (bytes < other.bytes) -1 else if (bytes > other.bytes) 1 else 0
