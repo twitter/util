@@ -1,3 +1,7 @@
+6.13.1  2014-03-20
+
+  * util: Update zk libraries
+
 6.13.0  2014-03-14
 
   * util-app: add usage string, printed before flags
