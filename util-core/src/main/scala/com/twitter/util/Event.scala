@@ -101,14 +101,16 @@ trait Event[+T] { self =>
    */
   def mergeMap[U](f: T => Event[U]): Event[U] = new Event[U] {
     def register(s: Witness[U]) = {
-      val inners = new mutable.ArrayBuffer[Closable]
+      @volatile var inners = Nil: List[Closable]
       val outer = self respond { el =>
-        inners.synchronized { inners += f(el).register(s) }
+        inners.synchronized { inners ::= f(el).register(s) }
       }
 
-      Closable.sequence(
-        outer, 
-        Closable.all(inners.synchronized(inners):_*))
+      Closable.make { deadline =>
+        outer.close(deadline) before {
+          Closable.all(inners:_*).close(deadline)
+        }
+      }
     }
   }
 
