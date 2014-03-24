@@ -1,3 +1,10 @@
+6.13.2  2014-03-24
+
+  * util-core: Add `StorageUnit.hashCode`
+  * util-core: Event.mergeMap: fix Closable
+  * util: Update 3rdparty library versions
+  * util: Upgrade to guava 16
+
 6.13.1  2014-03-20
 
   * util: Update zk libraries
