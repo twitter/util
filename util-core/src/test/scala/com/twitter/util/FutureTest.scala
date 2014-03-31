@@ -1294,6 +1294,13 @@ class FutureTest extends WordSpec with MockitoSugar {
           assert(p.within(Duration.Top) === p)
         }
 
+        "when future already satisfied" in {
+          implicit val timer = new NullTimer
+          val p = new Promise[Int]
+          p.setValue(3)
+          assert(p.within(1.minute) === p)
+        }
+
         "interruption" in Time.withCurrentTimeFrozen { tc =>
           implicit val timer = new MockTimer
           val p = new HandledPromise[Int]
@@ -1372,6 +1379,13 @@ class FutureTest extends WordSpec with MockitoSugar {
           }
           val p = new Promise[Int]
           assert(p.raiseWithin(Duration.Top) === p)
+        }
+
+        "when future already satisfied" in {
+          implicit val timer = new NullTimer
+          val p = new Promise[Int]
+          p.setValue(3)
+          assert(p.raiseWithin(1.minute) === p)
         }
 
         "interruption" in Time.withCurrentTimeFrozen { tc =>

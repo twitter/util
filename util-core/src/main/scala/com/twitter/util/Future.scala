@@ -701,7 +701,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * ''Note'': On timeout, the underlying future is interrupted.
    */
   def raiseWithin(timer: Timer, timeout: Duration, exc: Throwable): Future[A] = {
-    if (timeout == Duration.Top)
+    if (timeout == Duration.Top || isDefined)
       return this
 
     val priv = new Exception
@@ -738,7 +738,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * @param exc exception to throw.
    */
   def within(timer: Timer, timeout: Duration, exc: => Throwable): Future[A] = {
-    if (timeout == Duration.Top)
+    if (timeout == Duration.Top || isDefined)
       return this
 
     val p = Promise.interrupts[A](this)
@@ -1088,7 +1088,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = result()
-  
+
   def isReady(implicit permit: Awaitable.CanAwait) = true
 }
 
