@@ -74,6 +74,8 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
         sendF.poll must beNone
       }
 
+      // Flaky test, see https://jira.twitter.biz/browse/AWESOME-7926
+      if (!sys.props.contains("SKIP_FLAKY"))
       "doesn't result in space leaks" in {
         val br = new Broker[Int]
 
