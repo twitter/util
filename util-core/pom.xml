@@ -19,7 +19,7 @@
     <dependency>
       <groupId>com.twitter.common</groupId>
       <artifactId>objectsize</artifactId>
-      <version>0.0.8</version>
+      <version>0.0.10</version>
       <scope>test</scope>
     </dependency>
     <!-- project dependencies -->
