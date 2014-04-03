@@ -11,17 +11,26 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * A VarSource provides access to observerable named variables.
  */
-trait VarSource[+T] {
+trait VarSource[+T] { self =>
   def get(varName: String): Var[VarSource.Result[T]]
+
+  def flatMap[U](f: T => VarSource.Result[U]): VarSource[U] = new VarSource[U] {
+    def get(varName: String): Var[VarSource.Result[U]] =
+      self.get(varName) map { result =>
+        result flatMap { f(_) }
+      }
+  }
 }
 
 object VarSource {
   sealed trait Result[+A] {
-    def map[B](f: A => B): Result[B] = {
+    def map[B](f: A => B): Result[B] = flatMap { a => Ok(f(a)) }
+
+    def flatMap[B](f: A => Result[B]): Result[B] = {
       this match {
         case Ok(a) =>
           try {
-            Ok(f(a))
+            f(a)
           } catch {
             case NonFatal(e) => Failed(e)
           }
@@ -48,6 +57,21 @@ object VarSource {
    */
   def forClassLoaderResources(cl: ClassLoader = ClassLoader.getSystemClassLoader) =
     new CachingVarSource[Buf](new ClassLoaderVarSource(cl))
+}
+
+/**
+ * A VarSource which queries a primary underlying source, and queries
+ * a failover source only when the primary result is VarSource.Failed.
+ */
+class FailoverVarSource[+T](primary: VarSource[T], failover: VarSource[T]) extends VarSource[T] {
+  def get(varName: String): Var[VarSource.Result[T]] = {
+    primary.get(varName) flatMap {
+      case VarSource.Empty     => Var.value(VarSource.Empty)
+      case VarSource.Pending   => Var.value(VarSource.Pending)
+      case ok@VarSource.Ok(_)  => Var.value(ok)
+      case VarSource.Failed(_) => failover.get(varName)
+    }
+  }
 }
 
 /**
