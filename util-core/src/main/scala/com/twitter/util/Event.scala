@@ -31,11 +31,11 @@ trait Event[+T] { self =>
 
   /**
    * Build a new Event by applying the given function to each value
-   * notified. Event values for which the partial function `f` does
+   * observed. Event values for which the partial function `f` does
    * not apply are dropped; other values are transformed by `f`.
    */
   def collect[U](f: PartialFunction[T, U]): Event[U] = new Event[U] {
-    def register(s: Witness[U]) =
+    def register(s: Witness[U]) = 
       self respond { t =>
         if (f.isDefinedAt(t))
           s.notify(f(t))
@@ -169,7 +169,7 @@ trait Event[+T] { self =>
   }
 
   /**
-   * Join two events into a new Event which notifys a tuple of the
+   * Join two events into a new Event which notifies a tuple of the
    * last value in each underlying event.
    */
   def joinLast[U](other: Event[U]): Event[(T, U)] = new Event[(T, U)] {

@@ -24,4 +24,9 @@ object Stopwatch extends Stopwatch {
     val off = timeFn()
       () => timeFn() - off
   }
+  
+  def const(dur: Duration): Stopwatch = new Stopwatch {
+    private[this] val fn = () => dur
+    def start() = fn
+  }
 }
