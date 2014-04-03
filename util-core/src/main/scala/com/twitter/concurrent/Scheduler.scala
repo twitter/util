@@ -7,6 +7,9 @@ import management.ManagementFactory
 import scala.util.Random
 import com.twitter.util.Awaitable.CanAwait
 
+/**
+ * An interface for scheduling [[java.lang.Runnable]] tasks.
+ */
 trait Scheduler {
   /**
    * Schedule `r` to be run at some time in the future.
@@ -26,16 +29,26 @@ trait Scheduler {
   //
   // [1] http://linux.die.net/man/3/clock_gettime
 
-  /** The amount of User time that's been scheduled as per ThreadMXBean. */
+  /**
+   * The amount of User time that's been scheduled as per ThreadMXBean.
+   */
   def usrTime: Long
 
-  /** The amount of CPU time that's been scheduled as per ThreadMXBean */
+  /**
+   * The amount of CPU time that's been scheduled as per ThreadMXBean.
+   */
   def cpuTime: Long
 
-  /** Number of dispatches performed by this scheduler. */
+  /**
+   * The number of dispatches performed by this scheduler.
+   */
   def numDispatches: Long
   
-  // The permit may be removed in the future.
+  /**
+   * Executes a function `f` in a blocking fashion.
+   *
+   * Note: The permit may be removed in the future.
+   */
   def blocking[T](f: => T)(implicit perm: CanAwait): T
 }
 
@@ -47,11 +60,18 @@ object Scheduler extends Scheduler {
 
   def apply(): Scheduler = self
 
-  // Note: This can be unsafe since some schedulers may be active,
-  // and flush() can be invoked on the wrong scheduler.
-  //
-  // This can happen, for example, if a LocalScheduler is used while
-  // a future is resolved via Await.
+  /**
+   * Swap out the current globally-set scheduler with another.
+   *
+   * Note: This can be unsafe since some schedulers may be active,
+   * and flush() can be invoked on the wrong scheduler.
+   *
+   * This can happen, for example, if a LocalScheduler is used while
+   * a future is resolved via Await.
+   *
+   * @param sched the other Scheduler to swap in for the one that is
+   * currently set
+   */
   def setUnsafe(sched: Scheduler) {
     self = sched
   }
@@ -78,6 +98,9 @@ private class LocalScheduler extends Scheduler {
     override def initialValue = null
   }
 
+  /**
+   * A task-queueing, direct-dispatch scheduler
+   */
   private class Activation extends Scheduler {
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
@@ -157,6 +180,11 @@ private class LocalScheduler extends Scheduler {
   def blocking[T](f: => T)(implicit perm: CanAwait) = f
 }
 
+/**
+ * A named Scheduler mix-in that causes submitted tasks to be dispatched according to
+ * an [[java.util.concurrent.ExecutorService]] created by an abstract factory
+ * function.
+ */
 trait ExecutorScheduler { self: Scheduler =>
   val name: String
   val executorFactory: ThreadFactory => ExecutorService
@@ -226,11 +254,13 @@ class ThreadPoolScheduler(
 }
 
 /**
- * A scheduler that will bridge tasks from outside into the executor threads,
- * while keeping all local tasks on their local threads.
- * (Note: This scheduler is expecting an executor with unbounded capacity, not
- * expecting any RejectedExecutionException's other than the ones caused by
- * shutting down)
+ * A scheduler that bridges tasks submitted by external threads into local
+ * executor threads. All tasks submitted locally are executed on local threads.
+ *
+ * Note: This scheduler expects to create executors with unbounded capacity.
+ * Thus it does not expect and has undefined behavior for any
+ * `RejectedExecutionException`s other than those encountered after executor
+ * shutdown.
  */
 class BridgedThreadPoolScheduler(
   val name: String,

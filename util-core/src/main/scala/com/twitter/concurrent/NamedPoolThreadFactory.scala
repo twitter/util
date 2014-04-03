@@ -4,16 +4,23 @@ import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * A ThreadFactory which creates non-daemon threads with a name indicating which pool they came
- * from.
+ * A [[java.util.concurrent.ThreadFactory]] which creates threads with a name
+ * indicating the pool from which they originated.
  *
- * A new ThreadGroup is created with the passed-in name, as a sub-group of whichever thread
- * creates the factory. Each new thread will be a member of this group, and have a unique name
- * including the group name and an increasing number. The idea is to make it easy to identify
- * members of a thread group in debug output.
+ * A new [[java.lang.ThreadGroup]] (named `name`) is created as a sub-group of
+ * whichever group to which the thread that created the factory belongs. Each
+ * thread created by this factory will be a member of this group and have a
+ * unique name including the group name and an monotonically increasing number.
+ * The intention of this naming is to ease thread identification in debugging
+ * output.
  *
- * For example, a NamedPoolThreadFactory with the name "writer" will create a ThreadGroup named
- * "writer" and new threads will be named "writer-1", "writer-2", etc.
+ * For example, a `NamedPoolThreadFactory` with `name="writer"` will create a
+ * `ThreadGroup` named "writer" and new threads will be named "writer-1",
+ * "writer-2", etc.
+ *
+ * @param name the name of the new thread group
+ * @param makeDaemons determines whether or not this factory will creates
+ * daemon threads.
  */
 class NamedPoolThreadFactory(name: String, makeDaemons: Boolean) extends ThreadFactory {
   def this(name: String) = this(name, false)
