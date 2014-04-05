@@ -1,4 +1,4 @@
-package com.twitter.benchmark.util
+package com.twitter.util.benchmark
 
 import com.google.caliper.SimpleBenchmark
 import com.twitter.util.{Future, Promise, Try}
@@ -89,5 +89,4 @@ class FutureBenchmark extends SimpleBenchmark {
       i += 1
     }
   }
-
 }

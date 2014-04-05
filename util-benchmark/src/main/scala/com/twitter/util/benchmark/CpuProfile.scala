@@ -1,8 +1,6 @@
 package com.twitter.util.benchmark
 
-import com.google.caliper.Param
 import com.google.caliper.SimpleBenchmark
-import com.twitter.jvm.CpuProfile
 import management.ManagementFactory
 import scala.util.Random
 
@@ -26,9 +24,6 @@ class CpuProfileBenchmark extends SimpleBenchmark {
         1+dive(depth-1)  // make sure we don't tail recurse
     }
   }
-
-  // param nthreads
- // @Param()
 
   var stackMeanSize = 40
   var stackStddev = 10
