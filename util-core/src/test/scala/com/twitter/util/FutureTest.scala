@@ -772,8 +772,6 @@ class FutureTest extends WordSpec with MockitoSugar {
           }
         }
 
-        // Flaky test, see https://jira.twitter.biz/browse/AWESOME-7926
-        if (!sys.props.contains("SKIP_FLAKY"))
         "doesn't leak the underlying promise after completion" in {
           new MonitoredHelper {
             val inner1 = new Promise[String]
