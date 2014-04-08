@@ -904,7 +904,7 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * Choose the first Future to succeed.
+   * Choose the first Future to be satisfied.
    *
    * @param other another Future
    * @return a new Future whose result is that of the first of this and other to return
@@ -917,7 +917,7 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * A synonym for select(): Choose the first Future to succeed.
+   * A synonym for select(): Choose the first Future to be satisfied.
    */
   def or[U >: A](other: Future[U]): Future[U] = select(other)
 
