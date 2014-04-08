@@ -22,6 +22,10 @@ object Future {
   private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
   private val toVoid: Any => Future[Void] = scala.Function.const(Void)
 
+  // Exception used to raise on Futures.
+  private[this] val RaiseException = new Exception with NoStacktrace
+  @inline private final def raiseException = RaiseException
+
   /**
    * Makes a Future with a constant result.
    */
@@ -704,9 +708,8 @@ abstract class Future[+A] extends Awaitable[A] {
     if (timeout == Duration.Top || isDefined)
       return this
 
-    val priv = new Exception
-    within(timer, timeout, priv) rescue {
-      case e if e eq priv =>
+    within(timer, timeout, Future.raiseException) rescue {
+      case e if e eq Future.raiseException =>
         this.raise(exc)
         Future.exception(exc)
     }
