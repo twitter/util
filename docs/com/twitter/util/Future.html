@@ -690,7 +690,7 @@ successful.  Returns a chained Future as in <code>respond</code>.
         <span class="name">or</span><span class="tparams">[<span name="U">U &gt;: A</span>]</span><span class="params">(<span name="other">other: <a name="com.twitter.util.Future" class="extype" href="">Future</a>[U]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="">Future</a>[U]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A synonym for select(): Choose the first Future to succeed.</p>
+      <p class="shortcomment cmt">A synonym for select(): Choose the first Future to be satisfied.</p>
     </li><li visbl="pub" name="com.twitter.util.Future#proxyTo" data-isabs="false">
       <a id="proxyTo[B&gt;:A](Promise[B]):Unit"></a>
       <h4 class="signature">
@@ -767,7 +767,7 @@ successful.  Returns a chained Future as in <code>respond</code>.
         <span class="name">select</span><span class="tparams">[<span name="U">U &gt;: A</span>]</span><span class="params">(<span name="other">other: <a name="com.twitter.util.Future" class="extype" href="">Future</a>[U]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="">Future</a>[U]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Choose the first Future to succeed.</p><div class="fullcomment"><div class="comment cmt"><p>Choose the first Future to succeed.
+      <p class="shortcomment cmt">Choose the first Future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Choose the first Future to be satisfied.
 </p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>another Future</p></dd><dt>returns</dt><dd class="cmt"><p>a new Future whose result is that of the first of this and other to return
 </p></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">

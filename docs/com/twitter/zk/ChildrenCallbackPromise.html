@@ -697,7 +697,7 @@ successful.  Returns a chained Future as in <code>respond</code>.
         <span class="name">or</span><span class="tparams">[<span name="U">U &gt;: <a name="com.twitter.zk.ZNode.Children" class="extype" href="ZNode$$Children.html">Children</a></span>]</span><span class="params">(<span name="other">other: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[U]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[U]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A synonym for select(): Choose the first Future to succeed.</p><div class="fullcomment"><div class="comment cmt"><p>A synonym for select(): Choose the first Future to succeed.
+      <p class="shortcomment cmt">A synonym for select(): Choose the first Future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>A synonym for select(): Choose the first Future to be satisfied.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a></dd></dl></div>
     </li><li visbl="prt" name="com.twitter.util.Promise#parent" data-isabs="false">
       <a id="parent:Promise[Children]"></a>
@@ -910,7 +910,7 @@ method.
         <span class="name">select</span><span class="tparams">[<span name="U">U &gt;: <a name="com.twitter.zk.ZNode.Children" class="extype" href="ZNode$$Children.html">Children</a></span>]</span><span class="params">(<span name="other">other: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[U]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[U]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Choose the first Future to succeed.</p><div class="fullcomment"><div class="comment cmt"><p>Choose the first Future to succeed.
+      <p class="shortcomment cmt">Choose the first Future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Choose the first Future to be satisfied.
 </p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>another Future</p></dd><dt>returns</dt><dd class="cmt"><p>a new Future whose result is that of the first of this and other to return
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.util.Promise#setDone" data-isabs="false">

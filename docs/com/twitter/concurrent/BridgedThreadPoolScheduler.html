@@ -29,11 +29,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A scheduler that will bridge tasks from outside into the executor threads,
-while keeping all local tasks on their local threads.
-(Note: This scheduler is expecting an executor with unbounded capacity, not
-expecting any RejectedExecutionException's other than the ones caused by
-shutting down)
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A scheduler that bridges tasks submitted by external threads into local
+executor threads. All tasks submitted locally are executed on local threads.</p><p>Note: This scheduler expects to create executors with unbounded capacity.
+Thus it does not expect and has undefined behavior for any
+<code>RejectedExecutionException</code>s other than those encountered after executor
+shutdown.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a name="com.twitter.concurrent.ExecutorScheduler" class="extype" href="ExecutorScheduler.html">ExecutorScheduler</a>, <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>

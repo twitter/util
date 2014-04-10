@@ -159,7 +159,8 @@
         <span class="name">blocking</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="perm">perm: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="../util/Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: T</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">Executes a function <code>f</code> in a blocking fashion.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a function <code>f</code> in a blocking fashion.</p><p>Note: The permit may be removed in the future.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -186,7 +187,8 @@
         <span class="name">cpuTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The amount of CPU time that's been scheduled as per ThreadMXBean</p><div class="fullcomment"><div class="comment cmt"><p>The amount of CPU time that's been scheduled as per ThreadMXBean</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">The amount of CPU time that's been scheduled as per ThreadMXBean.</p><div class="fullcomment"><div class="comment cmt"><p>The amount of CPU time that's been scheduled as per ThreadMXBean.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -323,7 +325,8 @@ work to do.
         <span class="name">numDispatches</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Number of dispatches performed by this scheduler.</p><div class="fullcomment"><div class="comment cmt"><p>Number of dispatches performed by this scheduler.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">The number of dispatches performed by this scheduler.</p><div class="fullcomment"><div class="comment cmt"><p>The number of dispatches performed by this scheduler.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Scheduler#setUnsafe" data-isabs="false">
       <a id="setUnsafe(Scheduler):Unit"></a>
       <h4 class="signature">
@@ -335,7 +338,12 @@ work to do.
         <span class="name">setUnsafe</span><span class="params">(<span name="sched">sched: <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Swap out the current globally-set scheduler with another.</p><div class="fullcomment"><div class="comment cmt"><p>Swap out the current globally-set scheduler with another.</p><p>Note: This can be unsafe since some schedulers may be active,
+and flush() can be invoked on the wrong scheduler.</p><p>This can happen, for example, if a LocalScheduler is used while
+a future is resolved via Await.
+</p></div><dl class="paramcmts block"><dt class="param">sched</dt><dd class="cmt"><p>the other Scheduler to swap in for the one that is
+currently set
+</p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Scheduler#submit" data-isabs="false">
       <a id="submit(Runnable):Unit"></a>
       <h4 class="signature">
@@ -384,7 +392,8 @@ work to do.
         <span class="name">usrTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The amount of User time that's been scheduled as per ThreadMXBean.</p><div class="fullcomment"><div class="comment cmt"><p>The amount of User time that's been scheduled as per ThreadMXBean.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">The amount of User time that's been scheduled as per ThreadMXBean.</p><div class="fullcomment"><div class="comment cmt"><p>The amount of User time that's been scheduled as per ThreadMXBean.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Scheduler" class="extype" href="">Scheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">

@@ -48,7 +48,20 @@
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Awaitable" data-isabs="true">
+              <ol><li visbl="pub" name="com.twitter.util.Activity" data-isabs="false">
+      <a id="Activity:Activity[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Activity.html"><span class="name">Activity</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="run">run: Var[State[T]]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An Activity is a handle to a concurrently running process, producing
+T-typed values.</p>
+    </li><li visbl="pub" name="com.twitter.util.Awaitable" data-isabs="true">
       <a id="Awaitable:Awaitable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -376,7 +389,7 @@ instants in time (cf.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ExceptionalFunction.html"><span class="name">ExceptionalFunction</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">R</span>]</span><span class="result"> extends Function[T1, R]</span>
+        <a href="ExceptionalFunction.html"><span class="name">ExceptionalFunction</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends Function[T1, R]</span>
       </span>
       </h4>
       
@@ -388,7 +401,7 @@ instants in time (cf.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ExceptionalFunction0.html"><span class="name">ExceptionalFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends Function0[R]</span>
+        <a href="ExceptionalFunction0.html"><span class="name">ExceptionalFunction0</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends Function0[R]</span>
       </span>
       </h4>
       
@@ -448,7 +461,7 @@ instants in time (cf.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Function0.html"><span class="name">Function0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends () ⇒ R</span>
+        <a href="Function0.html"><span class="name">Function0</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends () ⇒ R</span>
       </span>
       </h4>
       
@@ -460,7 +473,7 @@ instants in time (cf.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Function2.html"><span class="name">Function2</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="T2">-T2</span>, <span name="R">R</span>]</span><span class="result"> extends (T1, T2) ⇒ R</span>
+        <a href="Function2.html"><span class="name">Function2</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="T2">-T2</span>, <span name="R">+R</span>]</span><span class="result"> extends (T1, T2) ⇒ R</span>
       </span>
       </h4>
       
@@ -635,7 +648,7 @@ pairs.</p>
         <a href="Local.html"><span class="name">Local</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Locals are more flexible thread-locals.</p>
     </li><li visbl="pub" name="com.twitter.util.LongOverflowException" data-isabs="false">
       <a id="LongOverflowException:LongOverflowException"></a>
       <h4 class="signature">
@@ -733,6 +746,18 @@ a monitor.</p>
       </span>
       </h4>
       <p class="comment cmt">A future with no future (never completes).</p>
+    </li><li visbl="pub" name="com.twitter.util.NoStacktrace" data-isabs="true">
+      <a id="NoStacktrace:NoStacktrace"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="NoStacktrace.html"><span class="name">NoStacktrace</span></a><span class="result"> extends Exception</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="com.twitter.util.NullTimer" data-isabs="false">
       <a id="NullTimer:NullTimer"></a>
       <h4 class="signature">
@@ -1187,7 +1212,19 @@ which turns this config into an object of type T.</p>
 
         <div class="values members" id="values">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Await" data-isabs="false">
+              <ol><li visbl="pub" name="com.twitter.util.Activity" data-isabs="false">
+      <a id="Activity:Activity"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Activity$.html"><span class="name">Activity</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.util.Await" data-isabs="false">
       <a id="Await:Await"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1533,6 +1570,18 @@ utilities.</p>
       </span>
       <span class="symbol">
         <a href="NetUtil$.html"><span class="name">NetUtil</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.util.NoStacktrace" data-isabs="false">
+      <a id="NoStacktrace:NoStacktrace"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NoStacktrace$.html"><span class="name">NoStacktrace</span></a><span class="result"> extends Serializable</span>
       </span>
       </h4>
       

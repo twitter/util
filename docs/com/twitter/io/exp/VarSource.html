@@ -30,12 +30,12 @@
       </h4>
       
       <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A VarSource provides access to observerable named variables.
-</p></div><div class="toggleContainer block">
+</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a name="com.twitter.io.exp.VarSource" class="extype" href="">VarSource</a>[T]</dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a name="com.twitter.io.exp.CachingVarSource" class="extype" href="CachingVarSource.html">CachingVarSource</a>, <a name="com.twitter.io.exp.ClassLoaderVarSource" class="extype" href="ClassLoaderVarSource.html">ClassLoaderVarSource</a>, <a name="com.twitter.io.exp.FilePollingVarSource" class="extype" href="FilePollingVarSource.html">FilePollingVarSource</a></div>
+          <div class="subClasses hiddenContent"><a name="com.twitter.io.exp.CachingVarSource" class="extype" href="CachingVarSource.html">CachingVarSource</a>, <a name="com.twitter.io.exp.ClassLoaderVarSource" class="extype" href="ClassLoaderVarSource.html">ClassLoaderVarSource</a>, <a name="com.twitter.io.exp.FailoverVarSource" class="extype" href="FailoverVarSource.html">FailoverVarSource</a>, <a name="com.twitter.io.exp.FilePollingVarSource" class="extype" href="FilePollingVarSource.html">FilePollingVarSource</a></div>
         </div></div>
     
 
@@ -208,6 +208,18 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource#flatMap" data-isabs="false">
+      <a id="flatMap[U]((T) ⇒ Result[U]):VarSource[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatMap</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (T) ⇒ <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[U]</span>)</span><span class="result">: <a name="com.twitter.io.exp.VarSource" class="extype" href="">VarSource</a>[U]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">

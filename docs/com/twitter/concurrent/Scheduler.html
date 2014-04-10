@@ -29,7 +29,8 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>An interface for scheduling java.lang.Runnable tasks.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div><div class="toggleContainer block">
@@ -75,7 +76,8 @@
         <span class="name">blocking</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="perm">perm: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="../util/Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: T</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Executes a function <code>f</code> in a blocking fashion.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a function <code>f</code> in a blocking fashion.</p><p>Note: The permit may be removed in the future.
+</p></div></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Scheduler#cpuTime" data-isabs="true">
       <a id="cpuTime:Long"></a>
       <h4 class="signature">
@@ -87,7 +89,7 @@
         <span class="name">cpuTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The amount of CPU time that's been scheduled as per ThreadMXBean</p>
+      <p class="shortcomment cmt">The amount of CPU time that's been scheduled as per ThreadMXBean.</p>
     </li><li visbl="pub" name="com.twitter.concurrent.Scheduler#flush" data-isabs="true">
       <a id="flush():Unit"></a>
       <h4 class="signature">
@@ -113,7 +115,7 @@ work to do.
         <span class="name">numDispatches</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Number of dispatches performed by this scheduler.</p>
+      <p class="shortcomment cmt">The number of dispatches performed by this scheduler.</p>
     </li><li visbl="pub" name="com.twitter.concurrent.Scheduler#submit" data-isabs="true">
       <a id="submit(Runnable):Unit"></a>
       <h4 class="signature">

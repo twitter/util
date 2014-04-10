@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.benchmark.util.StopwatchBenchmark</title>
+          <title>com.twitter.io.exp.FailoverVarSource</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link type="text/css" media="screen" rel="stylesheet" href="../../../../lib/template.css" />
@@ -15,8 +15,8 @@
         <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
       <div id="definition">
         <img src="../../../../lib/class_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../../package.html">com</a>.<a name="com.twitter" class="extype" href="../../package.html">twitter</a>.<a name="com.twitter.benchmark" class="extype" href="../package.html">benchmark</a>.<a name="com.twitter.benchmark.util" class="extype" href="package.html">util</a></p>
-        <h1>StopwatchBenchmark</h1>
+        <p id="owner"><a name="com" class="extype" href="../../../package.html">com</a>.<a name="com.twitter" class="extype" href="../../package.html">twitter</a>.<a name="com.twitter.io" class="extype" href="../package.html">io</a>.<a name="com.twitter.io.exp" class="extype" href="package.html">exp</a></p>
+        <h1>FailoverVarSource</h1>
       </div>
 
       <h4 class="signature" id="signature">
@@ -25,13 +25,15 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">StopwatchBenchmark</span><span class="result"> extends <span name="com.google.caliper.SimpleBenchmark" class="extype">SimpleBenchmark</span></span>
+        <span class="name">FailoverVarSource</span><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a>[T]</span>
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A VarSource which queries a primary underlying source, and queries
+a failover source only when the primary result is VarSource.Failed.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="com.google.caliper.SimpleBenchmark" class="extype">SimpleBenchmark</span>, <span name="com.google.caliper.Benchmark" class="extype">Benchmark</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a>[T], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
     
 
@@ -45,7 +47,7 @@
               <span class="filtertype">Inherited</span>
               <ol><li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li></ol>
-              <ol id="linearization"><li name="com.twitter.benchmark.util.StopwatchBenchmark" class="in"><span>StopwatchBenchmark</span></li><li name="com.google.caliper.SimpleBenchmark" class="in"><span>SimpleBenchmark</span></li><li name="com.google.caliper.Benchmark" class="in"><span>Benchmark</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+              <ol id="linearization"><li name="com.twitter.io.exp.FailoverVarSource" class="in"><span>FailoverVarSource</span></li><li name="com.twitter.io.exp.VarSource" class="in"><span>VarSource</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
             </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -57,15 +59,15 @@
         <div id="allMembers">
         <div class="members" id="constructors">
               <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="com.twitter.benchmark.util.StopwatchBenchmark#this" data-isabs="false">
-      <a id="this:StopwatchBenchmark"></a>
+              <ol><li visbl="pub" name="com.twitter.io.exp.FailoverVarSource#this" data-isabs="false">
+      <a id="this:FailoverVarSource[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">StopwatchBenchmark</span><span class="params">()</span>
+        <span class="name">FailoverVarSource</span><span class="params">(<span name="primary">primary: <a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a>[T]</span>, <span name="failover">failover: <a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a>[T]</span>)</span>
       </span>
       </h4>
       
@@ -138,18 +140,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.benchmark.util.StopwatchBenchmark#N" data-isabs="false">
-      <a id="N:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">N</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -162,18 +152,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#bytesToUnits" data-isabs="false">
-      <a id="bytesToUnits(Long):Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">bytesToUnits</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Double" class="extype">Double</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -189,18 +167,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#createBenchmark" data-isabs="false">
-      <a id="createBenchmark(Map[String, String]):ConfiguredBenchmark"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">createBenchmark</span><span class="params">(<span name="arg0">arg0: <span name="java.util.Map" class="extype">Map</span>[<span name="java.lang.String" class="extype">String</span>, <span name="java.lang.String" class="extype">String</span>]</span>)</span><span class="result">: <span name="com.google.caliper.ConfiguredBenchmark" class="extype">ConfiguredBenchmark</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -240,6 +206,30 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource#flatMap" data-isabs="false">
+      <a id="flatMap[U]((T) ⇒ Result[U]):VarSource[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatMap</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (T) ⇒ <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[U]</span>)</span><span class="result">: <a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a>[U]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.FailoverVarSource#get" data-isabs="false">
+      <a id="get(String):Var[Result[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="varName">varName: String</span>)</span><span class="result">: <a name="com.twitter.util.Var" class="extype" href="../../util/Var.html">Var</a>[<a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[T]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.FailoverVarSource" class="extype" href="">FailoverVarSource</a> → <a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -252,42 +242,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#getInstanceUnitNames" data-isabs="false">
-      <a id="getInstanceUnitNames():Map[String, Integer]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getInstanceUnitNames</span><span class="params">()</span><span class="result">: <span name="java.util.Map" class="extype">Map</span>[<span name="java.lang.String" class="extype">String</span>, <span name="java.lang.Integer" class="extype">Integer</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#getMemoryUnitNames" data-isabs="false">
-      <a id="getMemoryUnitNames():Map[String, Integer]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getMemoryUnitNames</span><span class="params">()</span><span class="result">: <span name="java.util.Map" class="extype">Map</span>[<span name="java.lang.String" class="extype">String</span>, <span name="java.lang.Integer" class="extype">Integer</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#getTimeUnitNames" data-isabs="false">
-      <a id="getTimeUnitNames():Map[String, Integer]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getTimeUnitNames</span><span class="params">()</span><span class="result">: <span name="java.util.Map" class="extype">Map</span>[<span name="java.lang.String" class="extype">String</span>, <span name="java.lang.Integer" class="extype">Integer</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
@@ -300,18 +254,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#instancesToUnits" data-isabs="false">
-      <a id="instancesToUnits(Long):Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">instancesToUnits</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Double" class="extype">Double</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -324,18 +266,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#nanosToUnits" data-isabs="false">
-      <a id="nanosToUnits(Double):Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">nanosToUnits</span><span class="params">(<span name="arg0">arg0: <span name="scala.Double" class="extype">Double</span></span>)</span><span class="result">: <span name="scala.Double" class="extype">Double</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -348,18 +278,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#normalizeScenario" data-isabs="false">
-      <a id="normalizeScenario(Scenario):Scenario"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">normalizeScenario</span><span class="params">(<span name="arg0">arg0: <span name="com.google.caliper.Scenario" class="extype">Scenario</span></span>)</span><span class="result">: <span name="com.google.caliper.Scenario" class="extype">Scenario</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
       <a id="notify():Unit"></a>
       <h4 class="signature">
@@ -384,45 +302,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#parameterNames" data-isabs="false">
-      <a id="parameterNames():Set[String]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">parameterNames</span><span class="params">()</span><span class="result">: <span name="java.util.Set" class="extype">Set</span>[<span name="java.lang.String" class="extype">String</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
-    </li><li visbl="pub" name="com.google.caliper.SimpleBenchmark#parameterValues" data-isabs="false">
-      <a id="parameterValues(String):Set[String]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">parameterValues</span><span class="params">(<span name="arg0">arg0: <span name="java.lang.String" class="extype">String</span></span>)</span><span class="result">: <span name="java.util.Set" class="extype">Set</span>[<span name="java.lang.String" class="extype">String</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SimpleBenchmark → Benchmark</dd></dl></div>
-    </li><li visbl="prt" name="com.google.caliper.SimpleBenchmark#setUp" data-isabs="false">
-      <a id="setUp():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">setUp</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="com.google.caliper" class="extype" href="../../../google/caliper/package.html">caliper</a>] </dd><dt>Definition Classes</dt><dd>SimpleBenchmark</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -435,45 +314,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="prt" name="com.google.caliper.SimpleBenchmark#tearDown" data-isabs="false">
-      <a id="tearDown():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tearDown</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="com.google.caliper" class="extype" href="../../../google/caliper/package.html">caliper</a>] </dd><dt>Definition Classes</dt><dd>SimpleBenchmark</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.benchmark.util.StopwatchBenchmark#timeMakeCallback" data-isabs="false">
-      <a id="timeMakeCallback(Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeMakeCallback</span><span class="params">(<span name="reps">reps: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="com.twitter.benchmark.util.StopwatchBenchmark#timeTime" data-isabs="false">
-      <a id="timeTime(Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeTime</span><span class="params">(<span name="reps">reps: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      
     </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -538,10 +378,8 @@
         </div>
 
         <div id="inheritedMembers">
-        <div name="com.google.caliper.SimpleBenchmark" class="parent">
-              <h3>Inherited from <span name="com.google.caliper.SimpleBenchmark" class="extype">SimpleBenchmark</span></h3>
-            </div><div name="com.google.caliper.Benchmark" class="parent">
-              <h3>Inherited from <span name="com.google.caliper.Benchmark" class="extype">Benchmark</span></h3>
+        <div name="com.twitter.io.exp.VarSource" class="parent">
+              <h3>Inherited from <a name="com.twitter.io.exp.VarSource" class="extype" href="VarSource.html">VarSource</a>[T]</h3>
             </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">

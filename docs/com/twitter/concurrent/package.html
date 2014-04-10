@@ -96,8 +96,8 @@ execution.</p>
         <a href="BridgedThreadPoolScheduler.html"><span class="name">BridgedThreadPoolScheduler</span></a><span class="result"> extends Scheduler with ExecutorScheduler</span>
       </span>
       </h4>
-      <p class="comment cmt">A scheduler that will bridge tasks from outside into the executor threads,
-while keeping all local tasks on their local threads.</p>
+      <p class="comment cmt">A scheduler that bridges tasks submitted by external threads into local
+executor threads.</p>
     </li><li visbl="pub" name="com.twitter.concurrent.Broker" data-isabs="false">
       <a id="Broker:Broker[T]"></a>
       <h4 class="signature">
@@ -133,7 +133,9 @@ while keeping all local tasks on their local threads.</p>
         <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">A named Scheduler mix-in that causes submitted tasks to be dispatched according to
+an java.util.concurrent.ExecutorService created by an abstract factory
+function.</p>
     </li><li visbl="pub" name="com.twitter.concurrent.IVar" data-isabs="false">
       <a id="IVar:IVar[A]"></a>
       <h4 class="signature">
@@ -169,8 +171,8 @@ while keeping all local tasks on their local threads.</p>
         <a href="NamedPoolThreadFactory.html"><span class="name">NamedPoolThreadFactory</span></a><span class="result"> extends ThreadFactory</span>
       </span>
       </h4>
-      <p class="comment cmt">A ThreadFactory which creates non-daemon threads with a name indicating which pool they came
-from.</p>
+      <p class="comment cmt">A java.util.concurrent.ThreadFactory which creates threads with a name
+indicating the pool from which they originated.</p>
     </li><li visbl="pub" name="com.twitter.concurrent.Offer" data-isabs="true">
       <a id="Offer:Offer[T]"></a>
       <h4 class="signature">
@@ -218,7 +220,7 @@ from.</p>
         <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">An interface for scheduling java.lang.Runnable tasks.</p>
     </li><li visbl="pub" name="com.twitter.concurrent.SchedulerBenchmark" data-isabs="false">
       <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
       <h4 class="signature">
