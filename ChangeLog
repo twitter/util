@@ -1,3 +1,16 @@
+6.14.0  2014-04-09
+
+  * util-benchmark: Fix caliper failures due to new guava
+  * util-core: Add Local.let
+  * util-core: Add com.twitter.io.Charsets and replace the use of org.jboss.netty.util.CharsetUtil
+  * util-core: Bump objectsize dependency to 0.0.10
+  * util-core: Comprehensive Scaladocs for Scheduler-related classes and traits
+  * util-core: Create a static Exception for use in `Future.raiseWithin`
+  * util-core: Future.select: fix inaccurate comments
+  * util-core: Make Function classes covariant
+  * util-core: Parse names into trees; introduce separate evaluation.
+  * util-core: Short-circuit `within` and `raiseWithin` if Future is already satisfied
+
 6.13.2  2014-03-24
 
   * util-core: Add `StorageUnit.hashCode`
