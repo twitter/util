@@ -88,7 +88,7 @@ object Scheduler extends Scheduler {
 /**
  * An efficient thread-local, direct-dispatch scheduler.
  */
-private class LocalScheduler extends Scheduler {
+class LocalScheduler extends Scheduler {
   private[this] val SampleScale = 1000
   private[this] val bean = ManagementFactory.getThreadMXBean()
   private[this] val cpuTimeSupported = bean.isCurrentThreadCpuTimeSupported()
@@ -101,7 +101,7 @@ private class LocalScheduler extends Scheduler {
   /**
    * A task-queueing, direct-dispatch scheduler
    */
-  private class Activation extends Scheduler {
+  private class Activation extends Scheduler with Iterator[Runnable] {
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
@@ -136,26 +136,32 @@ private class LocalScheduler extends Scheduler {
       if (running) run()
     }
 
-    private[this] def run() {
-      val save = running
-      running = true
+    @inline def hasNext: Boolean = running && r0 != null
+
+    @inline def next(): Runnable = {
       // via moderately silly benchmarking, the
       // queue unrolling gives us a ~50% speedup
       // over pure Queue usage for common
       // situations.
+
+      val r = r0
+      r0 = r1
+      r1 = r2
+      r2 = if (rs.isEmpty) null else rs.removeFirst()
+      r
+    }
+
+    private[this] def run() {
+      val save = running
+      running = true
       try {
-        while (r0 != null) {
-          val r = r0
-          r0 = r1
-          r1 = r2
-          r2 = if (rs.isEmpty) null else rs.removeFirst()
-          r.run()
-        }
+        while (hasNext)
+          next().run()
       } finally {
         running = save
       }
     }
-    
+
     def blocking[T](f: => T)(implicit perm: CanAwait): T = f
   }
 
@@ -168,6 +174,12 @@ private class LocalScheduler extends Scheduler {
     synchronized { activations += local.get() }
     local.get()
   }
+
+  /** An implementaiton of Iterator over runnable tasks */
+  @inline def hasNext: Boolean = get().hasNext
+
+  /** An implementaiton of Iterator over runnable tasks */
+  @inline def next(): Runnable = get().next()
 
   // Scheduler implementation:
   def submit(r: Runnable) = get().submit(r)
