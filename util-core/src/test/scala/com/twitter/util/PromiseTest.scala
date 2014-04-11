@@ -46,8 +46,8 @@ class PromiseTest extends FunSuite with Eventually {
   test("Promise.attached should detach properly for futures") {
     val f = Future.Unit
     val p = Promise.attached(f)
-    assert(p.detach())
     assert(!p.detach())
+    assert(p.poll === Some(Return(())))
   }
 
   test("Detached promises are no longer connected: Success") {

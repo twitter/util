@@ -239,15 +239,15 @@ object Promise {
     case p: Promise[_] =>
       new DetachablePromise[A](p)
     case _ => {
-      new Promise[A] with Detachable {
+      val p = new Promise[A] with Detachable {
         private[this] val detached = new AtomicBoolean(false)
 
         def detach(): Boolean = detached.compareAndSet(false, true)
-
-        parent.respond { case t =>
-          if (detach()) update(t)
-        }
       }
+      parent respond { case t =>
+        if (p.detach()) p.update(t)
+      }
+      p
     }
   }
 }
