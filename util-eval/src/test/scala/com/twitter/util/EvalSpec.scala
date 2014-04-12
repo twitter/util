@@ -182,16 +182,13 @@ class EvalSpec extends SpecificationWithJUnit {
       }
 
       "report errors on bad code" in {
-        eval[Int]("val a = 3; val b = q", true) must throwA[Throwable]
+        eval[Int]("val a = 3; val b = q; a + b", true) must throwA[Throwable]
         eval.errors must not be empty
       }
 
-      "not reset reporter when asked not to" in {
-        eval[Int]("val a = 3; val b = q; a + b", false) must throwA[Throwable]
+      "reset reporter between invocations" in {
+        eval[Int]("val a = 3; val b = q; a + b", true) must throwA[Throwable]
         eval.errors must not be empty
-      }
-
-      "reset reporter when asked to" in {
         eval[Int]("val a = 3; val b = 2; a + b", true) mustEqual 5
         eval.errors must be empty
       }
