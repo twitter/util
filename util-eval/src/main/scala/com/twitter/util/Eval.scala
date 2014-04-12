@@ -106,13 +106,14 @@ class Eval(target: Option[File]) {
       )
     )
 
-    /** For derived classes to provide an alternate compiler message handler. */
-    protected lazy val compilerMessageHandler: Option[Reporter] = None
-    /** For derived classes do customize or override the default compiler settings. */
-    protected lazy val compilerSettings: Settings = new EvalSettings(target)
+  /** For derived classes to provide an alternate compiler message handler. */
+  protected lazy val compilerMessageHandler: Option[Reporter] = None
 
-    private[this] val STYLE_INDENT = 2
-    private[this] lazy val compiler = new StringCompiler(STYLE_INDENT, target, compilerSettings, compilerMessageHandler)
+  /** For derived classes do customize or override the default compiler settings. */
+  protected lazy val compilerSettings: Settings = new EvalSettings(target)
+
+  /* Primary encapsulation around native Scala compiler. */
+  private[this] lazy val compiler = new StringCompiler(codeWrapperLineOffset, target, compilerSettings, compilerMessageHandler)
 
   /**
    * run preprocessors on our string, returning a String that is the processed source
@@ -293,15 +294,23 @@ class Eval(target: Option[File]) {
   }
 
   /*
-   * Wrap source code in a new class with an apply method.
+   * Wraps source code in a new class with an apply method.
+   * NB: If this method is changed, make sure `codeWrapperLineOffset` is correct.
    */
-  private def wrapCodeInClass(className: String, code: String) = {
+  private[this] def wrapCodeInClass(className: String, code: String) = {
     "class " + className + " extends (() => Any) {\n" +
     "  def apply() = {\n" +
     code + "\n" +
     "  }\n" +
     "}\n"
   }
+
+  /*
+   * Defines the number of code lines that proceed evaluated code.
+   * Used to ensure compile error messages report line numbers aligned with user's code.
+   * NB: If `wrapCodeInClass(String,String)` is changed, make sure this remains correct.
+   */
+  private[this] val codeWrapperLineOffset = 2
 
   /*
    * For a given FQ classname, trick the resource finder into telling us the containing jar.
@@ -432,24 +441,25 @@ class Eval(target: Option[File]) {
     }
   }
 
-    lazy val compilerOutputDir = target match {
-        case Some(dir) => AbstractFile.getDirectory(dir)
-        case None => new VirtualDirectory("(memory)", None)
-    }
+  lazy val compilerOutputDir = target match {
+      case Some(dir) => AbstractFile.getDirectory(dir)
+      case None => new VirtualDirectory("(memory)", None)
+  }
 
-    class EvalSettings(targetDir: Option[File]) extends Settings {
-        nowarnings.value = true // warnings are exceptions, so disable
-        outputDirs.setSingleOutput(compilerOutputDir)
-        private[this] val pathList = compilerPath ::: libPath
-        bootclasspath.value = pathList.mkString(File.pathSeparator)
-        classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
-    }
+  class EvalSettings(targetDir: Option[File]) extends Settings {
+      nowarnings.value = true // warnings are exceptions, so disable
+      outputDirs.setSingleOutput(compilerOutputDir)
+      private[this] val pathList = compilerPath ::: libPath
+      bootclasspath.value = pathList.mkString(File.pathSeparator)
+      classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
+  }
 
   /**
    * Dynamic scala compiler. Lots of (slow) state is created, so it may be advantageous to keep
    * around one of these and reuse it.
    */
-  private class StringCompiler(lineOffset: Int, targetDir: Option[File], settings: Settings, messageHandler: Option[Reporter]) {
+  private class StringCompiler(
+    lineOffset: Int, targetDir: Option[File], settings: Settings, messageHandler: Option[Reporter]) {
 
     val cache = new mutable.HashMap[String, Class[_]]()
     val target = compilerOutputDir
@@ -565,14 +575,13 @@ class Eval(target: Option[File]) {
       compiler.compileSources(sourceFiles)
 
       if (reporter.hasErrors || reporter.WARNING.count > 0) {
-                val msgs: List[List[String]] = reporter match {
-                    case collector: MessageCollector =>
-                        collector.messages.toList
-                    case _ =>
-                        // Should we do something else?
-                        List(List(reporter.toString))
-                }
-                throw new CompilerException(msgs)
+        val msgs: List[List[String]] = reporter match {
+            case collector: MessageCollector =>
+              collector.messages.toList
+            case _ =>
+              List(List(reporter.toString))
+        }
+        throw new CompilerException(msgs)
       }
     }
 
