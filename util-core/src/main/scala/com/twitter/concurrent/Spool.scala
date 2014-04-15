@@ -33,7 +33,9 @@ import scala.collection.mutable.ArrayBuffer
  * }}}
  */
 sealed trait Spool[+A] {
-  import Spool.{cons, empty}
+  // NB: Spools are always lazy internally in order to provide the expected behavior
+  // during concatenation of two Spools, regardless of how they were constructed
+  import Spool.{LazyCons,empty}
 
   def isEmpty: Boolean
 
@@ -41,6 +43,13 @@ sealed trait Spool[+A] {
    * The first element of the spool. Invalid for empty spools.
    */
   def head: A
+
+  /**
+   * The first element of the spool if it is non-empty.
+   */
+  def headOption: Option[A] =
+    if (isEmpty) None
+    else Some(head)
 
   /**
    * The (deferred) tail of the spool. Invalid for empty spools.
@@ -51,7 +60,7 @@ sealed trait Spool[+A] {
    * Apply {{f}} for each item in the spool, until the end.  {{f}} is
    * applied as the items become available.
    */
-  def foreach[B](f: A => B) = foreachElem { _ foreach(f) }
+  def foreach[B](f: A => B) = foreachElem (_ foreach f)
 
   /**
    * A version of {{foreach}} that wraps each element in an
@@ -93,7 +102,13 @@ sealed trait Spool[+A] {
    * know whether the first element exists until we have applied its
    * filter.
    */
-  def collect[B](f: PartialFunction[A, B]): Future[Spool[B]]
+  def collect[B](f: PartialFunction[A, B]): Future[Spool[B]] =
+    if (isEmpty) Future.value(empty[B])
+    else {
+      def _tail = tail flatMap (_.collect(f))
+      if (f.isDefinedAt(head)) Future.value(new LazyCons(f(head), _tail))
+      else _tail
+    }
 
   def map[B](f: A => B): Spool[B] = {
     val s = collect { case x => f(x) }
@@ -105,24 +120,47 @@ sealed trait Spool[+A] {
   }
 
   /**
+   * Take elements from the head of the Spool (lazily), while the given condition is true.
+   */
+  def takeWhile(f: A => Boolean): Spool[A] =
+    if (isEmpty) {
+      this
+    } else if (f(head)) {
+      new LazyCons(head, tail map (_ takeWhile f))
+    } else {
+      empty[A]
+    }
+
+  /**
    * Concatenates two spools.
    */
   def ++[B >: A](that: Spool[B]): Spool[B] =
-    if (isEmpty) that else cons(head: B, tail map { _ ++ that })
+    if (isEmpty) that else new LazyCons(head: B, tail map (_ ++ that))
 
   /**
    * Concatenates two spools.
    */
   def ++[B >: A](that: Future[Spool[B]]): Future[Spool[B]] =
-    if (isEmpty) that else Future.value(cons(head: B, tail flatMap { _ ++ that }))
+    if (isEmpty) that else Future.value(new LazyCons(head: B, tail flatMap (_ ++ that)))
 
   /**
    * Applies a function that generates a spool to each element in this spool,
    * flattening the result into a single spool.
    */
   def flatMap[B](f: A => Future[Spool[B]]): Future[Spool[B]] =
-    if (isEmpty) Future.value(empty[B])
-    else f(head) flatMap { _ ++ (tail flatMap { _ flatMap f }) }
+    if (isEmpty) {
+      Future.value(empty[B])
+    } else {
+      f(head) flatMap { headSpool =>
+        // NB: this is a form of `++` that makes the append lazily
+        def _tail = tail flatMap (_ flatMap f)
+        if (headSpool.isEmpty) {
+          _tail
+        } else {
+          Future.value(new LazyCons(headSpool.head: B, headSpool.tail flatMap (_ ++ _tail)))
+        }
+      }
+    }
 
   /**
    * Fully buffer the spool to a {{Seq}}.  The returned future is
@@ -132,21 +170,19 @@ sealed trait Spool[+A] {
     val as = new ArrayBuffer[A]
     foreach { a => as += a } map { _ => as }
   }
+
+  /**
+   * Eagerly executes all computation represented by this Spool (presumably for
+   * sideeffects), and returns a Future representing its completion.
+   */
+  def force: Future[Unit] = foreach { _ => () }
 }
 
 object Spool {
-  case class Cons[A](value: A, next: Future[Spool[A]])
+  case class Cons[A](val head: A, val tail: Future[Spool[A]])
     extends Spool[A]
   {
     def isEmpty = false
-    def head = value
-    def tail = next
-    def collect[B](f: PartialFunction[A, B]) = {
-      val next_ = next flatMap { _.collect(f) }
-      if (f.isDefinedAt(head)) Future.value(Cons(f(head), next_))
-      else next_
-    }
-
     override def toString = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
   }
 
@@ -155,12 +191,6 @@ object Spool {
   {
     def isEmpty = false
     lazy val tail = next
-    def collect[B](f: PartialFunction[A, B]) = {
-      val next_ = tail flatMap { _.collect(f) }
-      if (f.isDefinedAt(head)) Future.value(Cons(f(head), next_))
-      else next_
-    }
-
     // NB: not touching tail, to avoid forcing unnecessarily
     override def toString = "Cons(%s, ?)".format(head)
   }
@@ -169,15 +199,19 @@ object Spool {
     def isEmpty = true
     def head = throw new NoSuchElementException("spool is empty")
     def tail = Future.exception(new NoSuchElementException("spool is empty"))
-    def collect[B](f: PartialFunction[Nothing, B]) = Future.value(this)
     override def toString = "Empty"
   }
 
   /**
    * Cons a value & tail to a new {{Spool}}. To defer the tail of the Spool, use
    * the {{*::}} operator instead.
+   *
+   * @deprecated Both forms of cons are deprecated in favor of {{*::}}. They will eventually
+   * be changed in an ABI-breaking fashion in order to act lazily on the tail.
    */
+  @deprecated("Use *:: instead: the ABI for this method will be changing.", "6.14.1")
   def cons[A](value: A, next: Future[Spool[A]]): Spool[A] = Cons(value, next)
+  @deprecated("Use *:: instead: the ABI for this method will be changing.", "6.14.1")
   def cons[A](value: A, nextSpool: Spool[A]): Spool[A] = Cons(value, Future.value(nextSpool))
 
   /**
@@ -209,7 +243,7 @@ object Spool {
     def *::(head: A): Spool[A] = new LazyCons(head, tail)
   }
 
-  implicit def syntax[A](s: => Future[Spool[A]]) = new Syntax(s)
+  implicit def syntax[A](s: => Future[Spool[A]]) = new Syntax[A](s)
 
   object *:: {
     def unapply[A](s: Spool[A]): Option[(A, Future[Spool[A]])] = {
@@ -218,6 +252,10 @@ object Spool {
     }
   }
   class Syntax1[A](tail: Spool[A]) {
+    /**
+     * @deprecated Deprecated in favor of {{*::}}. This will eventually be removed.
+     */
+    @deprecated("Use *:: instead.", "6.14.1")
     def **::(head: A) = cons(head, tail)
   }
 

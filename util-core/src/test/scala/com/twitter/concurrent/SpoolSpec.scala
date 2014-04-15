@@ -7,6 +7,10 @@ import scala.collection.mutable.ArrayBuffer
 
 import Spool.{*::, **::, seqToSpool}
 
+/**
+ * These tests make heavy use of **:: and cons, which are currently marked deprecated, and which
+ * will eventually be removed and altered (respectively). Until then, we need to test them.
+ */
 class SpoolSpec extends SpecificationWithJUnit {
   "Empty Spool" should {
     val s = Spool.empty[Int]
@@ -266,15 +270,93 @@ class SpoolSpec extends SpecificationWithJUnit {
       Await.result(f) must be_==(3)
     }
 
-    "be lazy" in {
-      def mkSpool(i: Int = 0): Future[Spool[Int]] =
-        Future.value {
-          if (i < 3)
-            i *:: mkSpool(i + 1)
-          else
-            throw new AssertionError("Should not have produced " + i)
+    "take while" in {
+      val taken = s.takeWhile(_ < 3)
+      taken.isEmpty must beFalse
+      val f = taken.toSeq
+
+      f.isDefined must beFalse
+      p() = Return(2 *:: p1)
+      f.isDefined must beFalse
+      p1() = Return(3 *:: p2)
+      // despite the Spool having an unfulfilled tail, the takeWhile is satisfied
+      f.isDefined must beTrue
+      Await.result(f) must be_==(Seq(1, 2))
+    }
+  }
+
+  "Lazily evaluated Spool" should {
+    "be constructed lazily" in {
+      applyLazily(Future.value _)
+    }
+
+    "collect lazily" in {
+      applyLazily { spool =>
+        spool.collect {
+          case x if x % 2 == 0 => x
         }
-      mkSpool() must not(throwA[AssertionError])
+      }
+    }
+
+    "map lazily" in {
+      applyLazily { spool =>
+        Future.value(spool.map(_ + 1))
+      }
+    }
+
+    "flatMap lazily" in {
+      applyLazily { spool =>
+        spool.flatMap { item =>
+          Future.value((item to (item + 5)).toSpool)
+        }
+      }
+    }
+
+    "takeWhile lazily" in {
+      applyLazily { spool =>
+        Future.value {
+          spool.takeWhile(_ < Int.MaxValue)
+        }
+      }
+    }
+
+    "++ lazily" in {
+      val prefix = -2 **:: -1 **:: Spool.empty[Int]
+      applyLazily { spool =>
+        Future.value(prefix ++ spool)
+      }
+    }
+
+    "act eagerly when forced" in {
+      val (spool, tailReached) =
+        applyLazily { spool =>
+          Future.value(spool.map(_ + 1))
+        }
+      Await.ready { spool map (_ force) }
+      tailReached.isDefined must beTrue
+    }
+
+    /**
+     * Confirms that the given operation does not consume an entire Spool, and then
+     * returns the resulting Spool and tail check for further validation.
+     */
+    def applyLazily(f: Spool[Int]=>Future[Spool[Int]]): (Future[Spool[Int]], Future[Unit]) = {
+      val tailReached = new Promise[Unit]
+      def poisonedSpool(i: Int = 0): Future[Spool[Int]] =
+        Future.value {
+          if (i < 10) {
+            i *:: poisonedSpool(i + 1)
+          } else {
+            tailReached() = Return.Unit
+            throw new AssertionError("Should not have produced " + i)
+          }
+        }
+
+      // create, apply, poll
+      val s = poisonedSpool().flatMap(f)
+      s.poll
+      tailReached.isDefined must beFalse
+      (s, tailReached)
     }
   }
 }
