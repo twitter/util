@@ -24,8 +24,16 @@ trait VarSource[+T] { self =>
 
 object VarSource {
   sealed trait Result[+A] {
+    /**
+     * Returns a Result containing the result of applying `f` to this
+     * Result's value if this Result is Ok.
+     */
     def map[B](f: A => B): Result[B] = flatMap { a => Ok(f(a)) }
 
+    /**
+     * Returns the result of applying `f` to this Result's value if this
+     * result is Ok.
+     */
     def flatMap[B](f: A => Result[B]): Result[B] = {
       this match {
         case Ok(a) =>
@@ -39,11 +47,47 @@ object VarSource {
         case Empty => Empty
       }
     }
+
+    /**
+     * Returns true if the result is Pending, false otherwise.
+     */
+    def isPending: Boolean = (this == Pending)
+
+    /**
+     * Returns true if the result is Empty, false otherwise.
+     */
+    def isEmpty: Boolean = (this == Empty)
+
+    /**
+     * Returns true if the result is Ok, false otherwise.
+     */
+    def isOk: Boolean = this match {
+      case Ok(_) => true
+      case _ => false
+    }
+
+    /**
+     * Returns true if the result is Failed, false otherwise.
+     */
+    def isFailed: Boolean = this match {
+      case Failed(_) => true
+      case _ => false
+    }
+
+    /**
+     * Returns the result's value.
+     *
+     * ''Note:'' The result must be Ok.
+     */
+    def get: A = this match {
+      case Ok(a) => a
+      case _ => throw new java.util.NoSuchElementException(toString)
+    }
   }
   object Pending extends Result[Nothing]
   object Empty extends Result[Nothing]
   case class Failed(cause: Throwable) extends Result[Nothing]
-  case class Ok[T](t: T) extends Result[T]
+  case class Ok[T](value: T) extends Result[T]
 
   /**
    * A VarSource for observing file contents. Once observed,

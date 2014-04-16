@@ -3,7 +3,9 @@ package com.twitter.util
 import java.util.concurrent.atomic.{AtomicReference, AtomicLong, AtomicReferenceArray}
 import scala.annotation.tailrec
 import scala.collection.generic.CanBuildFrom
+import scala.collection.JavaConverters._
 import scala.collection.immutable
+import scala.collection.mutable.Buffer
 
 /**
  * Trait Var represents a variable. It is a reference cell which is
@@ -255,6 +257,18 @@ object Var {
     v() = build()
 
     Closable.all(closes:_*)
+  }
+
+  /**
+   * Collect a List of Vars into a new Var of List.
+   *
+   * @param vars a java.util.List of Vars
+   * @return a Var[java.util.List[A]] containing the collected values from vars.
+   */
+  def collect[T <: Object](vars: java.util.List[Var[T]]): Var[java.util.List[T]] = {
+    // we cast to Object and back because we need a ClassManifest[T]
+    val svars = vars.asScala.asInstanceOf[Buffer[Var[Object]]]
+    collect(svars).map(_.asJava).asInstanceOf[Var[java.util.List[T]]]
   }
 
   private object create {
