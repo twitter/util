@@ -50,6 +50,8 @@ trait Buf { outer =>
     def length = left.length + right.length
   }
 
+  override def hashCode = Buf.hash(this)
+
   override def equals(other: Any): Boolean = other match {
     case other: Buf => Buf.equals(this, other)
     case _ => false
@@ -149,6 +151,28 @@ object Buf {
     x.write(a, 0)
     y.write(b, 0)
     Arrays.equals(a, b)
+  }
+  
+  /** The 32-bit FNV-1 of Buf */
+  def hash(buf: Buf): Int = buf match {
+    case ByteArray(bytes, begin, end) => hashBytes(bytes, begin, end)
+    case buf =>
+      val bytes = new Array[Byte](buf.length)
+      buf.write(bytes, 0)
+      hashBytes(bytes, 0, bytes.length)
+  }
+
+  // Adapted from util-hashing.
+  private[this] val UintMax: Long = 0xFFFFFFFFL
+  private[this] val Fnv1a32Prime: Int = 16777619
+  private def hashBytes(bytes: Array[Byte], begin: Int, end: Int): Int = {
+    var i = begin
+    var h = 0x811c9dc5L
+    while (i < end) {
+      h = (h ^ (bytes(i)&0xff)) * Fnv1a32Prime
+      i += 1
+    }
+    (h & UintMax).toInt
   }
 
   /**

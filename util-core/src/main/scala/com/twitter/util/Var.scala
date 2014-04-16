@@ -206,16 +206,18 @@ object Var {
     v
   }
 
-  /**
-   * Create a new, constant, v-valued Var.
-   */
-  def value[T](v: T): Var[T] = new Var[T] {
+  private case class Value[T](v: T) extends Var[T] {
     protected def observe(depth: Int, obs: Observer[T]): Closable = {
       obs.claim(this)
       obs.publish(this, v, 0)
       Closable.nop
     }
   }
+
+  /**
+   * Create a new, constant, v-valued Var.
+   */
+  def value[T](v: T): Var[T] = Value(v)
 
   /** 
    * Collect a collection of Vars into a Var of collection.

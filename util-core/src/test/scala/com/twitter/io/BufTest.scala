@@ -1,5 +1,6 @@
 package com.twitter.io
 
+import org.junit.runner.RunWith
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.mockito.invocation.InvocationOnMock
@@ -7,7 +8,7 @@ import org.mockito.stubbing.Answer
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import org.junit.runner.RunWith
+import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
 class BufTest extends FunSuite with MockitoSugar {
@@ -91,4 +92,21 @@ class BufTest extends FunSuite with MockitoSugar {
     Buf.Utf8.unapply(buf)
     verify(buf).write(any[Array[Byte]], any[Int])
   }
+  
+  test("hash code, equals") {
+    def ae(a: Buf, b: Buf) {
+      assert(a === b)
+      assert(a.hashCode === b.hashCode)
+    }
+
+    val string = "okthen"
+    val bytes = Array[Byte](111, 107, 116, 104, 101, 110)
+
+    ae(Buf.Utf8(string), Buf.ByteArray(bytes))
+    
+    val shifted = new Array[Byte](bytes.length + 3)
+    System.arraycopy(bytes, 0, shifted, 3, bytes.length)
+    ae(Buf.Utf8(string), Buf.ByteArray(shifted, 3, 3+bytes.length))
+  }
 }
+
