@@ -70,7 +70,12 @@ trait App extends Closable with CloseAwaitably {
    * This value is not used as a default if `close()` is called without parameters. It simply
    * provides a default value to be passed as `close(grace)`.
    */
-  def defaultCloseGracePeriod: Duration = Duration.Top
+  def defaultCloseGracePeriod: Duration = Duration.Zero
+  
+  /**
+   * The actual close grace period.
+   */
+  @volatile private[this] var closeDeadline = Time.Top
 
   /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
@@ -103,8 +108,8 @@ trait App extends Closable with CloseAwaitably {
    * Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
    */
   final def close(deadline: Time): Future[Unit] = closeAwaitably {
-    val minDeadline = deadline max (Time.now + MinGrace)
-    Closable.all(exits.asScala.toSeq: _*).close(minDeadline)
+    closeDeadline = deadline max (Time.now + MinGrace)
+    Closable.all(exits.asScala.toSeq: _*).close(closeDeadline)
   }
 
   final def main(args: Array[String]) {
@@ -128,6 +133,8 @@ trait App extends Closable with CloseAwaitably {
     for (f <- postmains.asScala) f()
 
     close(defaultCloseGracePeriod)
-    Await.result(this)
+
+    // The deadline to 'close' is advisory; we enforce it here.
+    Await.result(this, closeDeadline - Time.now)
   }
 }
