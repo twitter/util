@@ -88,7 +88,9 @@ object Scheduler extends Scheduler {
 /**
  * An efficient thread-local, direct-dispatch scheduler.
  */
-class LocalScheduler extends Scheduler {
+class LocalScheduler(lifo: Boolean) extends Scheduler {
+  def this() = this(false)
+
   private[this] val SampleScale = 1000
   private[this] val bean = ManagementFactory.getThreadMXBean()
   private[this] val cpuTimeSupported = bean.isCurrentThreadCpuTimeSupported()
@@ -114,10 +116,24 @@ class LocalScheduler extends Scheduler {
 
     def submit(r: Runnable) {
       assert(r != null)
-      if (r0 == null) r0 = r
+
+      if (lifo) {
+        if (r2 != null) {
+          rs.addFirst(r2) 
+          r2 = r1
+          r1 = r0
+        } else if (r1 != null) {
+          r2 = r1
+          r1 = r0
+        } else if (r0 != null) {
+          r1 = r0
+        }
+        r0 = r
+      } else if (r0 == null) r0 = r
       else if (r1 == null) r1 = r
       else if (r2 == null) r2 = r
       else rs.addLast(r)
+
       if (!running) {
         if (cpuTimeSupported && rng.nextInt(SampleScale) == 0) {
           numDispatches += SampleScale
