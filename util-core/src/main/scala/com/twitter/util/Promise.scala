@@ -273,7 +273,7 @@ object Promise {
  *
  * `Promise.become` merges two promises: they are declared equivalent.
  * `become` merges the states of the two promises, and links one to the
- * other. Thus promises support the analog to tail-call eliminination: no
+ * other. Thus promises support the analog to tail-call elimination: no
  * space leak is incurred from `flatMap` in the tail position since
  * intermediate promises are merged into the root promise.
  *
