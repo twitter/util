@@ -119,7 +119,7 @@ object Util extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "objectsize" % "0.0.7" % "test"
+      "com.twitter.common" % "objectsize" % "0.0.10" % "test"
     ),
     testOptions in Test <<= scalaVersion map {
       // There seems to be an issue with mockito spies,
@@ -268,9 +268,9 @@ object Util extends Build {
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % "0.0.51",
-      "com.twitter.common.zookeeper" % "group"      % "0.0.64",
-      "com.twitter.common.zookeeper" % "server-set" % "1.0.69",
+      "com.twitter.common.zookeeper" % "client"     % "0.0.53",
+      "com.twitter.common.zookeeper" % "group"      % "0.0.67",
+      "com.twitter.common.zookeeper" % "server-set" % "1.0.72",
       zkDependency
     )
   ).dependsOn(utilCore, utilLogging, utilZk,
