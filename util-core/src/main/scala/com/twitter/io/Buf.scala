@@ -89,7 +89,8 @@ object Buf {
     def slice(i: Int, j: Int): Buf = {
       require(i >=0 && j >= 0, "Index out of bounds")
 
-      if (j <= i || i > length) Buf.Empty
+      if (j <= i || i >= length) Buf.Empty
+      else if (i == 0 && j >= length) this
       else ByteArray(bytes, begin+i, (begin+j) min end)
     }
 
