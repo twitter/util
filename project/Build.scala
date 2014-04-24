@@ -22,7 +22,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "junit"         %  "junit"       % "4.8.1"  % "test",
       "org.scalatest" %% "scalatest"   % "2.1.3"  % "test",
-      "org.mockito"   %  "mockito-all" % "1.8.5"  % "test"
+      "org.mockito"   %  "mockito-all" % "1.9.5"  % "test"
     ),
 
     libraryDependencies := {
