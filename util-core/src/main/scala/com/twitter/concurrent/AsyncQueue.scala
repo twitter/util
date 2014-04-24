@@ -10,7 +10,7 @@ object AsyncQueue {
   private case object Idle extends State[Nothing]
   private case class Offering[T](q: Queue[T]) extends State[T]
   private case class Polling[T](q: Queue[Promise[T]]) extends State[T]
-  private case class Excepting(exc: Throwable) extends State[Nothing]
+  private case class Excepting[T](q: Queue[T], exc: Throwable) extends State[T]
 }
 
 /**
@@ -47,8 +47,13 @@ class AsyncQueue[T] {
       val nextState = if (nextq.nonEmpty) Offering(nextq) else Idle
       if (state.compareAndSet(s, nextState)) Future.value(elem) else poll()
 
-    case Excepting(exc) =>
+    case Excepting(q, exc) if q.isEmpty =>
       Future.exception(exc)
+      
+    case s@Excepting(q, exc) =>
+      val (elem, nextq) = q.dequeue
+      val nextState = Excepting(nextq, exc)
+      if (state.compareAndSet(s, nextState)) Future.value(elem) else poll()
   }
 
   /**
@@ -72,29 +77,39 @@ class AsyncQueue[T] {
       else
         offer(elem)
 
-    case Excepting(_) =>
+    case Excepting(_, _) =>
       // Drop.
   }
 
   /**
    * Fail the queue: current and subsequent pollers will be completed
-   * with the given exception.
+   * with the given exception; any outstanding messages are discarded.
+   */
+  final def fail(exc: Throwable): Unit = fail(exc, true)
+
+  /**
+   * Fail the queue. When ``discard`` is true, the queue contents is discarded
+   * and all pollers are failed immediately. When this flag is false, subsequent
+   * pollers are not failed until the queue becomes empty.
+   *
+   * No new elements are admitted to the queue after it has been failed.
    */
   @tailrec
-  final def fail(exc: Throwable): Unit = state.get match {
+  final def fail(exc: Throwable, discard: Boolean): Unit = state.get match {
     case s@Idle =>
-      if (!state.compareAndSet(s, Excepting(exc)))
-        fail(exc)
+      if (!state.compareAndSet(s, Excepting(Queue.empty, exc)))
+        fail(exc, discard)
 
     case s@Polling(q) =>
-      if (!state.compareAndSet(s, Excepting(exc))) fail(exc) else
+      if (!state.compareAndSet(s, Excepting(Queue.empty, exc))) fail(exc, discard) else
         q foreach(_.setException(exc))
 
-    case s@Offering(_) =>
-      if (!state.compareAndSet(s, Excepting(exc))) fail(exc)
+    case s@Offering(q) =>
+      val nextq = if (discard) Queue.empty else q
+      if (!state.compareAndSet(s, Excepting(nextq, exc))) fail(exc, discard)
 
-    case Excepting(_) => // Just take the first one.
+    case Excepting(_, _) => // Just take the first one.
   }
-  
+
   override def toString = "AsyncQueue<%s>".format(state.get)
 }
