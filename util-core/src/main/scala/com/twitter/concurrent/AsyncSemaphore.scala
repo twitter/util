@@ -85,7 +85,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
       val f = try func catch {
         case NonFatal(e) =>
           Future.exception(e)
-        case e =>
+        case e: Throwable =>
           permit.release()
           throw e
       }

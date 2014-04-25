@@ -23,9 +23,10 @@ import com.twitter.conversions.storage._
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 
-class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
+
+class FileHandlerSpec extends WordSpec with Matchers with TempFolder {
   def reader(filename: String) = {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))
   }
@@ -34,7 +35,7 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
     new OutputStreamWriter(new FileOutputStream(new File(folderName, filename)), "UTF-8")
   }
 
-  "FileHandler" should {
+  "FileHandler" should  {
     val record1 = new javalog.LogRecord(Level.INFO, "first post!")
     val record2 = new javalog.LogRecord(Level.INFO, "second post")
 
@@ -54,7 +55,7 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         handler.publish(record1)
 
         val f2 = reader("test.log")
-        f2.readLine mustEqual "hello!"
+        f2.readLine shouldEqual "hello!"
       }
 
       withTempFolder {
@@ -72,7 +73,7 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         handler.publish(record1)
 
         val f2 = reader("test.log")
-        f2.readLine mustEqual "first post!"
+        f2.readLine shouldEqual "first post!"
       }
     }
 
@@ -99,21 +100,21 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
     //       raiseMethod.invoke(null, sighup)
 
     //       val newLogFile = new File(folderName, "new.log")
-    //       newLogFile.exists() must eventually(be_==(true))
+    //       newLogFile.exists() should eventually(be_==(true))
 
     //       handler.publish(record2)
 
     //       val oldReader = reader("old.log")
-    //       oldReader.readLine mustEqual "first post!"
+    //       oldReader.readLine shouldEqual "first post!"
     //       val newReader = reader("new.log")
-    //       newReader.readLine mustEqual "second post"
+    //       newReader.readLine shouldEqual "second post"
     //     }
     //   } catch {
     //     case ex: ClassNotFoundException =>
     //   }
     // }
 
-    "roll logs on time" in {
+    "roll logs on time" should {
       "hourly" in {
         withTempFolder {
           val handler = FileHandler(
@@ -122,9 +123,9 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
             append = true,
             formatter = BareFormatter
           ).apply()
-          handler.computeNextRollTime(1206769996722L) mustEqual Some(1206770400000L)
-          handler.computeNextRollTime(1206770400000L) mustEqual Some(1206774000000L)
-          handler.computeNextRollTime(1206774000001L) mustEqual Some(1206777600000L)
+          handler.computeNextRollTime(1206769996722L) shouldEqual Some(1206770400000L)
+          handler.computeNextRollTime(1206770400000L) shouldEqual Some(1206774000000L)
+          handler.computeNextRollTime(1206774000001L) shouldEqual Some(1206777600000L)
         }
       }
 
@@ -136,11 +137,11 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
             append = true,
             formatter = new Formatter(timezone = Some("GMT-7:00"))
           ).apply()
-          handler.computeNextRollTime(1250354734000L) mustEqual Some(1250406000000L)
-          handler.computeNextRollTime(1250404734000L) mustEqual Some(1250406000000L)
-          handler.computeNextRollTime(1250406001000L) mustEqual Some(1251010800000L)
-          handler.computeNextRollTime(1250486000000L) mustEqual Some(1251010800000L)
-          handler.computeNextRollTime(1250496000000L) mustEqual Some(1251010800000L)
+          handler.computeNextRollTime(1250354734000L) shouldEqual Some(1250406000000L)
+          handler.computeNextRollTime(1250404734000L) shouldEqual Some(1250406000000L)
+          handler.computeNextRollTime(1250406001000L) shouldEqual Some(1251010800000L)
+          handler.computeNextRollTime(1250486000000L) shouldEqual Some(1251010800000L)
+          handler.computeNextRollTime(1250496000000L) shouldEqual Some(1251010800000L)
         }
       }
     }
@@ -158,15 +159,15 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
           handler.publish(record2)
           handler.close()
 
-          reader("test-" + handler.timeSuffix(date) + ".log").readLine mustEqual "first post!"
-          reader("test.log").readLine mustEqual "second post"
+          reader("test-" + handler.timeSuffix(date) + ".log").readLine shouldEqual "first post!"
+          reader("test.log").readLine shouldEqual "second post"
         }
       }
     }
 
     "keep no more than N log files around" in {
       withTempFolder {
-        new File(folderName).list().length mustEqual 0
+        new File(folderName).list().length shouldEqual 0
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
@@ -177,24 +178,24 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         ).apply()
 
         handler.publish(record1)
-        new File(folderName).list().length mustEqual 1
+        new File(folderName).list().length shouldEqual 1
         handler.roll()
 
         handler.publish(record1)
-        new File(folderName).list().length mustEqual 2
+        new File(folderName).list().length shouldEqual 2
         handler.roll()
 
         handler.publish(record1)
-        new File(folderName).list().length mustEqual 2
+        new File(folderName).list().length shouldEqual 2
         handler.close()
       }
     }
 
     "ignores the target filename despite shorter filenames" in {
       // even if the sort order puts the target filename before `rotateCount` other
-      // files, it should not be removed
+      // files, it should  not be removed
       withTempFolder {
-        new File(folderName).list().length mustEqual 0
+        new File(folderName).list().length shouldEqual 0
         val namePrefix = "test"
         val name = namePrefix + ".log"
 
@@ -212,14 +213,14 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         def flush() = {
           handler.publish(record1)
           handler.roll()
-          new File(folderName).list().length mustEqual 3
+          new File(folderName).list().length shouldEqual 3
         }
 
-        // the target, 1 rotated file, and the short file should all remain
+        // the target, 1 rotated file, and the short file should  all remain
         (1 to 5).foreach { _ => flush() }
-        new File(folderName).list().toSet must beLike {
-          case x => x.contains(name) && x.contains(namePrefix)
-        }
+        val fileSet = new File(folderName).list().toSet
+        fileSet.contains(name) shouldBe true
+        fileSet.contains(namePrefix) shouldBe true
       }
     }
 
@@ -241,15 +242,15 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
           ).apply()
 
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 1
+          new File(folderName).list().length shouldEqual 1
           handler.roll()
 
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 2
+          new File(folderName).list().length shouldEqual 2
           handler.roll()
 
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 2
+          new File(folderName).list().length shouldEqual 2
           handler.close()
         }
         finally {
@@ -265,7 +266,7 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         // roll the log on the 3rd write.
         val maxSize = record1.getMessage.length * 3 - 1
 
-        new File(folderName).list().length mustEqual 0
+        new File(folderName).list().length shouldEqual 0
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
@@ -278,21 +279,21 @@ class FileHandlerSpec extends SpecificationWithJUnit with TempFolder {
         Time.withCurrentTimeFrozen { time =>
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 1
+          new File(folderName).list().length shouldEqual 1
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 1
+          new File(folderName).list().length shouldEqual 1
 
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 2
+          new File(folderName).list().length shouldEqual 2
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 2
+          new File(folderName).list().length shouldEqual 2
 
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length mustEqual 3
+          new File(folderName).list().length shouldEqual 3
         }
 
         handler.close()

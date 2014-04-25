@@ -23,7 +23,7 @@ class AsyncSemaphoreSpec extends FunSpec {
 
   type FixtureParam = AsyncSemaphoreHelper
 
-  override def withFixture(test: OneArgTest) {
+  override def withFixture(test: OneArgTest) = {
     val sem = new AsyncSemaphore(2)
     val helper = new AsyncSemaphoreHelper(sem, 0, new ConcurrentLinkedQueue[Permit])
     withFixture(test.toNoArgTest(helper))
@@ -39,7 +39,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       fPermit
     }
 
-    it("should execute immediately while permits are available") { semHelper =>
+    it("should  execute immediately while permits are available") { semHelper =>
       assert(semHelper.sem.numPermitsAvailable === (2))
       acquire(semHelper)
       assert(semHelper.count === (1))
@@ -54,7 +54,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(semHelper.sem.numPermitsAvailable === (0))
     }
 
-    it("should execute deferred computations when permits are released") { semHelper =>
+    it("should  execute deferred computations when permits are released") { semHelper =>
       acquire(semHelper)
       acquire(semHelper)
       acquire(semHelper)
@@ -73,7 +73,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(semHelper.count === (4))
     }
 
-    it("should bound the number of waiters") { semHelper =>
+    it("should  bound the number of waiters") { semHelper =>
       val semHelper2 = semHelper.copy(sem = new AsyncSemaphore(2, 3))
 
       // The first two acquires obtain a permit.
@@ -90,20 +90,20 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(semHelper2.count === (2))
       assert(semHelper2.sem.numWaiters === (3))
 
-      // The next acquire should be rejected.
+      // The next acquire should  be rejected.
       val permit = acquire(semHelper2)
       assert(semHelper2.sem.numWaiters === (3))
       intercept[RejectedExecutionException] {
         Await.result(permit)
       }
 
-      // Waiting tasks should still execute once permits are available.
+      // Waiting tasks should  still execute once permits are available.
       semHelper2.permits.poll().release()
       semHelper2.permits.poll().release()
       semHelper2.permits.poll().release()
       assert(semHelper2.count === (5))
     }
-    it("should satisfy futures with exceptions if they are interrupted") { semHelper =>
+    it("should  satisfy futures with exceptions if they are interrupted") { semHelper =>
       val p1 = acquire(semHelper)
       val p2 = acquire(semHelper)
       val p3 = acquire(semHelper)
@@ -118,7 +118,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       Await.result(p1).release()
     }
 
-    it("should execute queued up async functions as permits become available") { semHelper =>
+    it("should  execute queued up async functions as permits become available") { semHelper =>
       var counter = 0
       val queue = new mutable.Queue[Promise[Unit]]()
       val func = new (() => Future[Unit]) {
@@ -154,7 +154,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(semHelper.sem.numPermitsAvailable == 2)
     }
 
-    it("should release permit even if queued up function throws an exception") { semHelper =>
+    it("should  release permit even if queued up function throws an exception") { semHelper =>
       val badFunc = new Function0[Future[Unit]] {
         def apply(): Future[Unit] = throw new RuntimeException("bad func calling")
       }
@@ -162,7 +162,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(semHelper.sem.numPermitsAvailable == 2)
     }
 
-    it("should execute queued up sync functions as permits become available") { semHelper =>
+    it("should  execute queued up sync functions as permits become available") { semHelper =>
       var counter = 0
       val queue = new mutable.Queue[Promise[Unit]]()
       val funcFuture = new (() => Future[Unit]) {
@@ -193,7 +193,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(counter == 2)
       assert(semHelper.sem.numPermitsAvailable == 0)
       // sync func is blocked at this point.
-      // But it should be executed as soon as one of the queued up future functions finish
+      // But it should  be executed as soon as one of the queued up future functions finish
 
       queue.dequeue().setValue(Unit)
       assert(counter == 3)
@@ -202,7 +202,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(semHelper.sem.numPermitsAvailable == 1)
     }
 
-    it("should handle queued up sync functions which throw exception") { semHelper =>
+    it("should  handle queued up sync functions which throw exception") { semHelper =>
       var counter = 0
       val queue = new mutable.Queue[Promise[Unit]]()
       val funcFuture = new (() => Future[Unit]) {
@@ -232,7 +232,7 @@ class AsyncSemaphoreSpec extends FunSpec {
       assert(counter == 2)
       assert(semHelper.sem.numPermitsAvailable == 0)
       // sync func is blocked at this point.
-      // But it should be executed as soon as one of the queued up future functions finish
+      // But it should  be executed as soon as one of the queued up future functions finish
 
       queue.dequeue().setValue(Unit)
       assert(counter == 2)

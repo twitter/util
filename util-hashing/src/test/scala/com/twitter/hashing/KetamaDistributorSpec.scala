@@ -1,14 +1,14 @@
 package com.twitter.hashing
 
-import org.specs.mock.Mockito
-import org.specs.SpecificationWithJUnit
+import org.mockito.Mockito._
+import org.scalatest.{WordSpec, Matchers}
 import scala.collection.mutable
 import _root_.java.io.{BufferedReader, InputStreamReader}
 
 
 
-class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
-  "KetamaDistributor" should {
+class KetamaDistributorSpec extends WordSpec with Matchers {
+  "KetamaDistributor" should  {
     val nodes = Seq(
       KetamaNode("10.0.1.1", 600, 1),
       KetamaNode("10.0.1.2", 300, 2),
@@ -35,11 +35,11 @@ class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
         line = reader.readLine
         if (line != null) {
           val segments = line.split(" ")
-          segments.length mustEqual 4
+          segments.length shouldEqual 4
           expected += segments
         }
       } while (line != null)
-      expected.size mustEqual 99
+      expected.size shouldEqual 99
 
       // Test that ketamaClient.clientOf(key) == expected IP
       val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
@@ -50,8 +50,8 @@ class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
         val handle2 = ketamaDistributorInoldLibMemcachedVersionComplianceMode.nodeForHash(hash)
         val resultIp = handleToIp(handle)
         val resultIp2 = handleToIp(handle2)
-        testcase(3) must be_==(resultIp)
-        testcase(3) must be_==(resultIp2)
+        testcase(3) shouldEqual(resultIp)
+        testcase(3) shouldEqual(resultIp2)
       }
     }
 
@@ -66,7 +66,7 @@ class KetamaDistributorSpec extends SpecificationWithJUnit with Mockito {
 
       knownGoodValues foreach { case (key, node) =>
         val handle = ketamaDistributor.nodeForHash(key)
-        handle mustEqual node
+        handle shouldEqual node
       }
     }
   }

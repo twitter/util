@@ -13,10 +13,10 @@ class ThriftCodec[T <: TBase[_,_]: Manifest, P <: TProtocolFactory:Manifest]
 extends Codec[T, Array[Byte]] with ThriftSerializer {
 
   protected lazy val prototype: T =
-    manifest[T].erasure.asInstanceOf[Class[T]].newInstance
+    manifest[T].runtimeClass.asInstanceOf[Class[T]].newInstance
 
   override lazy val protocolFactory =
-    manifest[P].erasure.asInstanceOf[Class[P]].newInstance
+    manifest[P].runtimeClass.asInstanceOf[Class[P]].newInstance
 
   override def encode(item: T) = toBytes(item)
 

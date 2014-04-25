@@ -1,88 +1,89 @@
 package com.twitter.concurrent
 
-import org.specs.SpecificationWithJUnit
-import org.specs.mock.Mockito
-import org.mockito.{Matchers, ArgumentCaptor}
+
+import org.scalatest.{WordSpec, Matchers}
+import org.scalatest.mock.MockitoSugar
+import org.mockito.ArgumentCaptor
 import com.twitter.util.{Await, Return}
 import com.twitter.common.objectsize.ObjectSizeCalculator
 
-class BrokerSpec extends SpecificationWithJUnit with Mockito {
-  "Broker" should {
+class BrokerSpec extends WordSpec with Matchers with MockitoSugar {
+  "Broker" should  {
     "send data (send, recv)" in {
       val br = new Broker[Int]
       val sendF = br.send(123).sync()
-      sendF.isDefined must beFalse
+      sendF.isDefined shouldBe false
       val recvF = br.recv.sync()
-      recvF.isDefined must beTrue
-      Await.result(recvF) must be_==(123)
-      sendF.isDefined must beTrue
+      recvF.isDefined shouldBe true
+      Await.result(recvF) shouldEqual(123)
+      sendF.isDefined shouldBe true
     }
 
     "send data (recv, send)" in {
       val br = new Broker[Int]
       val recvF = br.recv.sync()
-      recvF.isDefined must beFalse
+      recvF.isDefined shouldBe false
       val sendF = br.send(123).sync()
-      sendF.isDefined must beTrue
-      recvF.isDefined must beTrue
+      sendF.isDefined shouldBe true
+      recvF.isDefined shouldBe true
 
-      Await.result(recvF) must be_==(123)
+      Await.result(recvF) shouldEqual(123)
     }
 
     "queue receivers (recv, recv, send, send)" in {
       val br = new Broker[Int]
       val r0, r1 = br.recv.sync()
-      r0.isDefined must beFalse
-      r1.isDefined must beFalse
+      r0.isDefined shouldBe false
+      r1.isDefined shouldBe false
       val s = br.send(123)
-      s.sync().poll must beSome(Return.Unit)
-      r0.poll must beSome(Return(123))
-      r1.isDefined must beFalse
-      s.sync().poll must beSome(Return.Unit)
-      r1.poll must beSome(Return(123))
-      s.sync().isDefined must beFalse
+      s.sync().poll shouldEqual Some(Return.Unit)
+      r0.poll shouldEqual Some(Return(123))
+      r1.isDefined shouldBe false
+      s.sync().poll shouldEqual Some(Return.Unit)
+      r1.poll shouldEqual Some(Return(123))
+      s.sync().isDefined shouldBe false
     }
 
     "queue senders (send, send, recv, recv)" in {
       val br = new Broker[Int]
       val s0, s1 = br.send(123).sync()
-      s0.isDefined must beFalse
-      s1.isDefined must beFalse
+      s0.isDefined shouldBe false
+      s1.isDefined shouldBe false
       val r = br.recv
-      r.sync().poll must beSome(Return(123))
-      s0.poll must beSome(Return.Unit)
-      s1.isDefined must beFalse
-      r.sync().poll must beSome(Return(123))
-      s1.poll must beSome(Return.Unit)
-      r.sync().isDefined must beFalse
+      r.sync().poll shouldEqual Some(Return(123))
+      s0.poll shouldEqual Some(Return.Unit)
+      s1.isDefined shouldBe false
+      r.sync().poll shouldEqual Some(Return(123))
+      s1.poll shouldEqual Some(Return.Unit)
+      r.sync().isDefined shouldBe false
     }
 
-    "interrupts" in {
+    "interrupts" should {
       "removes queued receiver" in {
         val br = new Broker[Int]
         val recvF = br.recv.sync()
         recvF.raise(new Exception)
-        br.send(123).sync().poll must beNone
-        recvF.poll must beNone
+        br.send(123).sync().poll shouldEqual None
+        recvF.poll shouldEqual None
       }
 
       "removes queued sender" in {
         val br = new Broker[Int]
         val sendF = br.send(123).sync()
         sendF.raise(new Exception)
-        br.recv.sync().poll must beNone
-        sendF.poll must beNone
+        br.recv.sync().poll shouldEqual None
+        sendF.poll shouldEqual None
       }
 
       "doesn't result in space leaks" in {
         val br = new Broker[Int]
 
-        Offer.select(Offer.const(1), br.recv).poll must beSome(Return(1))
+        Offer.select(Offer.const(1), br.recv).poll shouldEqual Some(Return(1))
         val initial = ObjectSizeCalculator.getObjectSize(br)
 
         for (_ <- 0 until 1000) {
-          Offer.select(Offer.const(1), br.recv).poll must beSome(Return(1))
-          ObjectSizeCalculator.getObjectSize(br) must be_==(initial)
+          Offer.select(Offer.const(1), br.recv).poll shouldEqual Some(Return(1))
+          ObjectSizeCalculator.getObjectSize(br) shouldEqual(initial)
         }
       }
 
@@ -91,29 +92,29 @@ class BrokerSpec extends SpecificationWithJUnit with Mockito {
 
         val o = b0.recv orElse b1.recv
         val f = o.sync()
-        f.isDefined must beFalse
+        f.isDefined shouldBe false
 
         val sendf0 = b0.send(12).sync()
-        sendf0.isDefined must beFalse
+        sendf0.isDefined shouldBe false
         val sendf1 = b1.send(32).sync()
-        sendf1.isDefined must beTrue
-        f.poll must beSome(Return(32))
+        sendf1.isDefined shouldBe true
+        f.poll shouldEqual Some(Return(32))
 
-        o.sync().poll must beSome(Return(12))
-        sendf0.poll must beSome(Return.Unit)
+        o.sync().poll shouldEqual Some(Return(12))
+        sendf0.poll shouldEqual Some(Return.Unit)
       }
     }
 
     "integrate" in {
       val br = new Broker[Int]
       val offer = Offer.choose(br.recv, Offer.const(999))
-      offer.sync().poll must beSome(Return(999))
+      offer.sync().poll shouldEqual Some(Return(999))
 
       val item = br.recv.sync()
-      item.isDefined must beFalse
+      item.isDefined shouldBe false
 
-      br.send(123).sync().poll must beSome(Return.Unit)
-      item.poll must beSome(Return(123))
+      br.send(123).sync().poll shouldEqual Some(Return.Unit)
+      item.poll shouldEqual Some(Return(123))
     }
   }
 }

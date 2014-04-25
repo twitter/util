@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import org.apache.commons.collections.map.LRUMap
-import scala.collection.JavaConversions.JMapWrapper
+import scala.collection.convert.Wrappers.JMapWrapper
 import scala.collection.mutable.SynchronizedMap
 import java.util
 

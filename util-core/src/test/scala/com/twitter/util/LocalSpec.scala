@@ -1,18 +1,18 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 
-class LocalSpec extends SpecificationWithJUnit {
-  "Local" should {
+class LocalSpec extends WordSpec with Matchers {
+  "Local" should  {
     val local = new Local[Int]
 
     "be undefined by default" in {
-      local() must beNone
+      local() shouldEqual None
     }
 
     "hold on to values" in {
       local() = 123
-      local() must beSome(123)
+      local() shouldEqual Some(123)
     }
 
     "restore saved values" in {
@@ -21,7 +21,7 @@ class LocalSpec extends SpecificationWithJUnit {
       local() = 321
 
       Local.restore(saved)
-      local() must beSome(123)
+      local() shouldEqual Some(123)
     }
 
     "have a per-thread definition" in {
@@ -31,7 +31,7 @@ class LocalSpec extends SpecificationWithJUnit {
 
       val t = new Thread {
         override def run() = {
-          local() must beNone
+          local() shouldEqual None
           local() = 333
           threadValue = local()
         }
@@ -40,8 +40,8 @@ class LocalSpec extends SpecificationWithJUnit {
       t.start()
       t.join()
 
-      local() must beSome(123)
-      threadValue must beSome(333)
+      local() shouldEqual Some(123)
+      threadValue shouldEqual Some(333)
     }
 
     "unset undefined variables when restoring" in {
@@ -51,7 +51,7 @@ class LocalSpec extends SpecificationWithJUnit {
       local() = 123
       Local.restore(saved)
 
-      local() must beNone
+      local() shouldEqual None
     }
 
     "not restore cleared variables" in {
@@ -61,7 +61,7 @@ class LocalSpec extends SpecificationWithJUnit {
       Local.save()  // to trigger caching
       local.clear()
       Local.restore(Local.save())
-      local() must beNone
+      local() shouldEqual None
     }
 
     "maintain value definitions when other locals change" in {
@@ -69,18 +69,18 @@ class LocalSpec extends SpecificationWithJUnit {
       l0() = 123
       val save0 = Local.save()
       val l1 = new Local[Int]
-      l0() must beSome(123)
+      l0() shouldEqual Some(123)
       l1() = 333
-      l1() must beSome(333)
+      l1() shouldEqual Some(333)
 
       val save1 = Local.save()
       Local.restore(save0)
-      l0() must beSome(123)
-      l1() must beNone
+      l0() shouldEqual Some(123)
+      l1() shouldEqual None
 
       Local.restore(save1)
-      l0() must beSome(123)
-      l1() must beSome(333)
+      l0() shouldEqual Some(123)
+      l1() shouldEqual Some(333)
     }
 
     "make a copy when clearing" in {
@@ -88,9 +88,9 @@ class LocalSpec extends SpecificationWithJUnit {
       l() = 1
       val save0 = Local.save()
       l.clear()
-      l() must beNone
+      l() shouldEqual None
       Local.restore(save0)
-      l() must beSome(1)
+      l() shouldEqual Some(1)
     }
   }
 }

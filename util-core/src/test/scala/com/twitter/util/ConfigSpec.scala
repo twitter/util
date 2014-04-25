@@ -1,14 +1,15 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
-import org.specs.mock.Mockito
+
+import org.scalatest.{WordSpec, Matchers}
+import org.scalatest.mock.MockitoSugar
 import com.twitter.conversions.time._
 
-class ConfigSpec extends SpecificationWithJUnit with Mockito {
+class ConfigSpec extends WordSpec with Matchers with MockitoSugar {
   import Config._
 
-  "Config" should {
-    "computed should delay evaluation" in {
+  "Config" should  {
+    "computed should  delay evaluation" in {
       class Foo extends Config.Nothing {
         var didIt = false
         var x = 10
@@ -19,9 +20,9 @@ class ConfigSpec extends SpecificationWithJUnit with Mockito {
       }
 
       val foo = new Foo
-      foo.didIt must beFalse
-      (foo.y: Int) mustEqual 25 // use type annotation to force implicit conversion
-      foo.didIt must beTrue
+      foo.didIt shouldBe false
+      (foo.y: Int) shouldEqual 25 // use type annotation to force implicit conversion
+      foo.didIt shouldBe true
     }
 
     "subclass can override indepedent var for use in dependent var" in {
@@ -32,10 +33,10 @@ class ConfigSpec extends SpecificationWithJUnit with Mockito {
       val bar = new Foo {
         x = 20
       }
-      (bar.y: Int) mustEqual 45 // use type annotation to force implicit conversion
+      (bar.y: Int) shouldEqual 45 // use type annotation to force implicit conversion
     }
 
-    "missingValues" in {
+    "missingValues" should {
       class Bar extends Config.Nothing {
         var z = required[Int]
       }
@@ -56,19 +57,19 @@ class ConfigSpec extends SpecificationWithJUnit with Mockito {
             z = 10
           }
         }
-        foo.missingValues must beEmpty
+        foo.missingValues shouldBe empty
       }
 
       "must find top-level missing values" in {
         val foo = new Foo
-        foo.missingValues must haveSameElementsAs(Seq("x", "bar"))
+        foo.missingValues should contain theSameElementsAs(Seq("x", "bar"))
       }
 
       "must find top-level and nested missing values" in {
         val foo = new Foo {
           bar = new Bar
         }
-        foo.missingValues must haveSameElementsAs(Seq("x", "bar.z"))
+        foo.missingValues should contain theSameElementsAs(Seq("x", "bar.z"))
       }
 
       "must find nested missing values in optional sub-configs" in {
@@ -79,7 +80,7 @@ class ConfigSpec extends SpecificationWithJUnit with Mockito {
           }
           baz = new Baz
         }
-        foo.missingValues must haveSameElementsAs(Seq("baz.w"))
+        foo.missingValues should contain theSameElementsAs(Seq("baz.w"))
       }
     }
   }

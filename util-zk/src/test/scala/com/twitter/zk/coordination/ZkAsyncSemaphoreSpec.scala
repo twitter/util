@@ -9,7 +9,7 @@ import scala.collection.JavaConverters._
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import com.twitter.zk.{RetryPolicy, NativeConnector, ZkClient}
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.WordSpec
+import org.scalatest.{WordSpec, Matchers}
 import org.scalatest.matchers.MustMatchers
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -17,9 +17,9 @@ import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
 
 @RunWith(classOf[JUnitRunner])
-class ZkAsyncSemaphoreSpec extends WordSpec with MustMatchers with MockitoSugar with AsyncAssertions {
+class ZkAsyncSemaphoreSpec extends WordSpec with Matchers with MockitoSugar with AsyncAssertions {
 
-  "ZkAsyncSemaphore" should {
+  "ZkAsyncSemaphore" should  {
 
     val path = "/testing/twitter/service/charm/semaphore/test"
     val permits = new ConcurrentLinkedQueue[Permit]
@@ -41,30 +41,30 @@ class ZkAsyncSemaphoreSpec extends WordSpec with MustMatchers with MockitoSugar 
         }
       }
 
-      "provide a shared 2-permit semaphore and" should {
+      "provide a shared 2-permit semaphore and" should  {
         withClient { zk =>
           val sem1 = new ZkAsyncSemaphore(zk, path, 2)
           val sem2 = new ZkAsyncSemaphore(zk, path, 2)
 
           "have correct initial values" in {
-            sem1.numPermitsAvailable must equal(2)
-            sem1.numWaiters must equal(0)
-            sem2.numPermitsAvailable must equal(2)
-            sem2.numWaiters must equal(0)
+            sem1.numPermitsAvailable should equal(2)
+            sem1.numWaiters should equal(0)
+            sem2.numPermitsAvailable should equal(2)
+            sem2.numWaiters should equal(0)
           }
 
           "execute immediately while permits are available" in {
             Await.result(acquire(sem1) within(new JavaTimer(true), 2.second))
-            sem1.numPermitsAvailable must equal(1)
-            sem1.numWaiters must equal(0)
-            sem2.numPermitsAvailable must equal(1)
-            sem2.numWaiters must equal(0)
+            sem1.numPermitsAvailable should equal(1)
+            sem1.numWaiters should equal(0)
+            sem2.numPermitsAvailable should equal(1)
+            sem2.numWaiters should equal(0)
 
             Await.result(acquire(sem2) within(new JavaTimer(true), 2.second))
-            sem1.numPermitsAvailable must equal(0)
-            sem1.numWaiters must equal(0)
-            sem2.numPermitsAvailable must equal(0)
-            sem2.numWaiters must equal(0)
+            sem1.numPermitsAvailable should equal(0)
+            sem1.numWaiters should equal(0)
+            sem2.numPermitsAvailable should equal(0)
+            sem2.numWaiters should equal(0)
           }
 
           var awaiting1: Future[Permit] = null
@@ -75,23 +75,23 @@ class ZkAsyncSemaphoreSpec extends WordSpec with MustMatchers with MockitoSugar 
               PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
 
             awaiting1 = acquire(sem1)
-            awaiting1.poll must be (None)
-            awaiting1.isDefined must be (false)
+            awaiting1.poll should be (None)
+            awaiting1.isDefined should be (false)
             eventually {
-              sem1.numPermitsAvailable must equal(0)
-              sem1.numWaiters must equal(1)
-              sem2.numPermitsAvailable must equal(0)
-              sem2.numWaiters must equal(1)
+              sem1.numPermitsAvailable should equal(0)
+              sem1.numWaiters should equal(1)
+              sem2.numPermitsAvailable should equal(0)
+              sem2.numWaiters should equal(1)
             }
 
             awaiting2 = acquire(sem2)
-            awaiting2.poll must be (None)
-            awaiting2.isDefined must be (false)
+            awaiting2.poll should be (None)
+            awaiting2.isDefined should be (false)
             eventually {
-              sem1.numPermitsAvailable must equal(0)
-              sem1.numWaiters must equal(2)
-              sem2.numPermitsAvailable must equal(0)
-              sem2.numWaiters must equal(2)
+              sem1.numPermitsAvailable should equal(0)
+              sem1.numWaiters should equal(2)
+              sem2.numPermitsAvailable should equal(0)
+              sem2.numWaiters should equal(2)
             }
           }
 
@@ -99,44 +99,44 @@ class ZkAsyncSemaphoreSpec extends WordSpec with MustMatchers with MockitoSugar 
             implicit val config =
               PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
 
-            permits.size must equal (2)
+            permits.size should equal (2)
 
             permits.poll().release()
             Await.result(awaiting1 within(new JavaTimer(true), 2.second))
 
             eventually {
-              sem1.numPermitsAvailable must equal(0)
-              sem1.numWaiters must equal(1)
-              sem2.numPermitsAvailable must equal(0)
-              sem2.numWaiters must equal(1)
+              sem1.numPermitsAvailable should equal(0)
+              sem1.numWaiters should equal(1)
+              sem2.numPermitsAvailable should equal(0)
+              sem2.numWaiters should equal(1)
             }
 
             permits.poll().release()
             Await.result(awaiting2 within(new JavaTimer(true), 2.second))
 
             eventually {
-              sem1.numPermitsAvailable must equal(0)
-              sem1.numWaiters must equal(0)
-              sem2.numPermitsAvailable must equal(0)
-              sem2.numWaiters must equal(0)
+              sem1.numPermitsAvailable should equal(0)
+              sem1.numWaiters should equal(0)
+              sem2.numPermitsAvailable should equal(0)
+              sem2.numWaiters should equal(0)
             }
 
             permits.poll().release()
 
             eventually {
-              sem1.numPermitsAvailable must equal(1)
-              sem1.numWaiters must equal(0)
-              sem2.numPermitsAvailable must equal(1)
-              sem2.numWaiters must equal(0)
+              sem1.numPermitsAvailable should equal(1)
+              sem1.numWaiters should equal(0)
+              sem2.numPermitsAvailable should equal(1)
+              sem2.numWaiters should equal(0)
             }
 
             permits.poll().release()
 
             eventually {
-              sem1.numPermitsAvailable must equal(2)
-              sem1.numWaiters must equal(0)
-              sem2.numPermitsAvailable must equal(2)
-              sem2.numWaiters must equal(0)
+              sem1.numPermitsAvailable should equal(2)
+              sem1.numWaiters should equal(0)
+              sem2.numPermitsAvailable should equal(2)
+              sem2.numWaiters should equal(0)
             }
           }
         }

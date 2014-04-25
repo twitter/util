@@ -20,7 +20,7 @@ trait Scheduler {
   def flush()
 
   // A note on Hotspot's ThreadMXBean's CPU time. On Linux, this
-  // uses clock_gettime[1] which should both be fast and accurate.
+  // uses clock_gettime[1] which should  both be fast and accurate.
   //
   // On OSX, the Mach thread_info call is used.
   //

@@ -309,7 +309,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
         System.err.println(usage)
         System.exit(1)
         throw new IllegalStateException
-      case e =>
+      case e: Throwable =>
         System.err.println("Error parsing flags: %s".format(e.getMessage))
         System.err.println(usage)
         System.exit(1)

@@ -106,7 +106,7 @@ class SyslogHandler(
       try {
         socket.send(packet)
       } catch {
-        case e =>
+        case e: Throwable =>
           System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
       }
     }
@@ -128,7 +128,7 @@ class SyslogHandler(
  *
  * @param timezone
  * Should dates in log messages be reported in a different time zone rather than local time?
- * If set, the time zone name must be one known by the java `TimeZone` class.
+ * If set, the time zone name should be one known by the java `TimeZone` class.
  *
  * @param truncateAt
  * Truncate log messages after N characters. 0 = don't truncate (the default).

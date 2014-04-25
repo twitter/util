@@ -19,12 +19,13 @@ package logging
 
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers, BeforeAndAfter}
+
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{Time, Duration}
 
-class ScribeHandlerSpec extends SpecificationWithJUnit {
+class ScribeHandlerSpec extends WordSpec with Matchers with BeforeAndAfter {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")
@@ -34,8 +35,8 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
 
   val portWithoutListener = 50506
 
-  "ScribeHandler" should {
-    doBefore {
+  "ScribeHandler" should  {
+    before {
       Logger.reset()
       Logger.get("").setLevel(Logger.FATAL)
     }
@@ -57,8 +58,8 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
         ).apply()
         scribe.publish(record1)
         scribe.publish(record2)
-        scribe.queue.size must be_==(2)
-        scribe.makeBuffer(2).array.hexlify mustEqual (
+        scribe.queue.size shouldEqual(2)
+        scribe.makeBuffer(2).array.hexlify shouldEqual (
           "000000b080010001000000034c6f67000000000f0001" +
           "0c000000020b000100000004746573740b0002000000" +
           "36494e46205b32303038303332392d30353a35333a31" +
@@ -87,7 +88,7 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
 
       scribe.publish(bytes)
 
-      scribe.queue.peek() mustEqual bytes
+      scribe.queue.peek() shouldEqual bytes
     }
 
     "throw away log messages if scribe is too busy" in {
@@ -103,8 +104,8 @@ class ScribeHandlerSpec extends SpecificationWithJUnit {
       scribe.lastTransmission = Time.now
       scribe.publish(record1)
       scribe.publish(record2)
-      scribe.droppedRecords.get() must be_==(1)
-      scribe.sentRecords.get() must be_==(0)
+      scribe.droppedRecords.get() shouldEqual(1)
+      scribe.sentRecords.get() shouldEqual(0)
     }
   }
 }

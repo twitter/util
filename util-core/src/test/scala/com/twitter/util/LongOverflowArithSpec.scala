@@ -1,10 +1,10 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 import scala.util.Random
 
-class LongOverflowArithSpec extends SpecificationWithJUnit {
-  "LongOverflowArith" should {
+class LongOverflowArithSpec extends WordSpec with Matchers {
+  "LongOverflowArith" should  {
     val random = new Random
     val maxSqrt = 3037000499L
 
@@ -19,9 +19,11 @@ class LongOverflowArithSpec extends SpecificationWithJUnit {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) + BigInt(b)
         if (bigC.abs > Long.MaxValue)
-          LongOverflowArith.add(a, b) must throwA[LongOverflowException]
+          intercept[LongOverflowException] {
+          LongOverflowArith.add(a, b)
+          }
         else
-          LongOverflowArith.add(a, b) mustEqual bigC.toLong
+          LongOverflowArith.add(a, b) shouldEqual bigC.toLong
       }
 
       for (i <- 0 until 1000) {
@@ -33,9 +35,11 @@ class LongOverflowArithSpec extends SpecificationWithJUnit {
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) - BigInt(b)
         if (bigC.abs > Long.MaxValue)
-          LongOverflowArith.sub(a, b) must throwA[LongOverflowException]
+          intercept[LongOverflowException] {
+            LongOverflowArith.sub(a, b)
+          }
         else
-          LongOverflowArith.sub(a, b) mustEqual bigC.toLong
+          LongOverflowArith.sub(a, b) shouldEqual bigC.toLong
       }
 
       for (i <- 0 until 1000) {
@@ -44,34 +48,55 @@ class LongOverflowArithSpec extends SpecificationWithJUnit {
     }
 
     "mul" in {
-      LongOverflowArith.mul(0L, 10L) mustEqual 0L
-      LongOverflowArith.mul(1L, 11L) mustEqual 11L
-      LongOverflowArith.mul(-1L, -11L) mustEqual 11L
-      LongOverflowArith.mul(-1L, 22L) mustEqual -22L
-      LongOverflowArith.mul(22L, -1L) mustEqual -22L
+      LongOverflowArith.mul(0L, 10L) shouldEqual 0L
+      LongOverflowArith.mul(1L, 11L) shouldEqual 11L
+      LongOverflowArith.mul(-1L, -11L) shouldEqual 11L
+      LongOverflowArith.mul(-1L, 22L) shouldEqual -22L
+      LongOverflowArith.mul(22L, -1L) shouldEqual -22L
 
-      LongOverflowArith.mul(3456116450671355229L, -986247066L) must throwA[LongOverflowException]
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(3456116450671355229L, -986247066L)
+      }
 
-      LongOverflowArith.mul(Long.MaxValue, 1L) mustEqual Long.MaxValue
-      LongOverflowArith.mul(Long.MaxValue - 1L, 9L) must throwA[LongOverflowException]
+      LongOverflowArith.mul(Long.MaxValue, 1L) shouldEqual Long.MaxValue
 
-      LongOverflowArith.mul(Long.MinValue, 2L) must throwA[LongOverflowException]
-      LongOverflowArith.mul(Long.MinValue, -2L) must throwA[LongOverflowException]
-      LongOverflowArith.mul(Long.MinValue, 3L) must throwA[LongOverflowException]
-      LongOverflowArith.mul(Long.MinValue, -3L) must throwA[LongOverflowException]
-      LongOverflowArith.mul(Long.MinValue, 1L) mustEqual Long.MinValue
-      LongOverflowArith.mul(Long.MinValue, -1L) must throwA[LongOverflowException]
-      LongOverflowArith.mul(1L, Long.MinValue) mustEqual Long.MinValue
-      LongOverflowArith.mul(-1L, Long.MinValue) must throwA[LongOverflowException]
-      LongOverflowArith.mul(Long.MinValue, 0L) mustEqual 0L
-      LongOverflowArith.mul(Long.MinValue + 1L, 2L) must throwA[LongOverflowException]
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MaxValue - 1L, 9L)
+      }
+
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MinValue, 2L)
+      }
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MinValue, -2L)
+      }
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MinValue, 3L)
+      }
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MinValue, -3L)
+      }
+      LongOverflowArith.mul(Long.MinValue, 1L) shouldBe Long.MinValue
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MinValue, -1L)
+      }
+      LongOverflowArith.mul(1L, Long.MinValue) shouldBe Long.MinValue
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(-1L, Long.MinValue)
+      }
+      LongOverflowArith.mul(Long.MinValue, 0L) shouldBe 0L
+      intercept[LongOverflowException] {
+        LongOverflowArith.mul(Long.MinValue + 1L, 2L)
+      }
 
       def test(a: Long, b: Long) {
         val bigC = BigInt(a) * BigInt(b)
         if (bigC.abs > Long.MaxValue)
-          LongOverflowArith.mul(a, b) must throwA[LongOverflowException]
+          intercept[LongOverflowException] {
+            LongOverflowArith.mul(a, b)
+          }
         else
-          LongOverflowArith.mul(a, b) mustEqual bigC.toLong
+          LongOverflowArith.mul(a, b) shouldEqual bigC.toLong
       }
 
       for (i <- 0 until 1000) {
@@ -80,7 +105,7 @@ class LongOverflowArithSpec extends SpecificationWithJUnit {
         try {
           test(a, b)
         } catch {
-          case x => {
+          case x: Throwable => {
             println(a + " * " + b + " failed")
             throw x
           }

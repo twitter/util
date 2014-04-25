@@ -27,7 +27,7 @@ extends Connector with Serialized {
   }
 
   /*
-   * Access to connection must be serialized, i.e. enqueued to be processed asynchronously and
+   * Access to connection should be serialized, i.e. enqueued to be processed asynchronously and
    * serially, in order to prevent race conditions between invocations of apply() and release()
    * since both of these operations may read and write to this variable.  This helps to ensure that
    * at most one connection is active.
@@ -83,7 +83,7 @@ object NativeConnector {
    * Maintains connection and ensures all session events are published.
    * Once a connection is released, it may not be re-opened.
    *
-   * apply() and release() must not be called concurrently. This is enforced by NativeConnector.
+   * apply() and release() should not be called concurrently. This is enforced by NativeConnector.
    */
   protected class Connection(
       connectString: String,
@@ -129,7 +129,7 @@ object NativeConnector {
     /**
      * Obtain a ZooKeeper connection
      *
-     * There must not be concurrent calls to this method and/or release();  this is enforced by
+     * There should not be concurrent calls to this method and/or release();  this is enforced by
      * NativeConnector.
      */
     def apply(): Future[ZooKeeper] = {

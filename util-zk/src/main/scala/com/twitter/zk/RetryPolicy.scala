@@ -36,8 +36,8 @@ object RetryPolicy {
   /**
    *  Retries an operation indefinitely until success, with a delay that increases exponentially.
    *
-   *  @param base   initial value that is multiplied by factor every time; must be > 0
-   *  @param factor must be >= 1 so the retries do not become more aggressive
+   *  @param base   initial value that is multiplied by factor every time; should be > 0
+   *  @param factor should be >= 1 so the retries do not become more aggressive
    */
   case class Exponential(
     base: Duration,

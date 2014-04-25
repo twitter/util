@@ -6,13 +6,12 @@ import com.twitter.common.zookeeper.{ServerSet => CommonServerSet, ServerSetImpl
 import com.twitter.thrift.{Endpoint, ServiceInstance, Status}
 import com.twitter.util.{Future, FuturePool, JavaTimer, Promise}
 import java.net.InetSocketAddress
-import org.specs.SpecificationWithJUnit
-import org.specs.mock.{ClassMocker, JMocker}
+
 import scala.collection.JavaConverters._
 import scala.collection.{Map, Set}
 
-/*class ServerSetSpec extends SpecificationWithJUnit with JMocker with ClassMocker {
-  "ServerSet" should {
+/*class ServerSetSpec extends WordSpec with Matchers with JMocker with ClassMocker {
+  "ServerSet" should  {
     val pool = FuturePool.immediatePool
     val port = RandomSocket.nextPort()
     val address = new InetSocketAddress("localhost", port)
@@ -28,14 +27,14 @@ import scala.collection.{Map, Set}
         one(commonEndpointStatus).update(equal(Status.DEAD))
       }
       val endpointStatus = serverSet.join(address).apply()
-      endpointStatus must be[ServerSet.EndpointStatus]
+      endpointStatus shouldBe a[ServerSet.EndpointStatus]
       endpointStatus.update(ServerSet.Status.Dead).apply()
     }
 
     "monitor" in {
       val timeout = 2.seconds
       implicit val timer = new JavaTimer
-      doAfter { timer.stop() }
+      after { timer.stop() }
 
       val basePort = 20000
       val instances = 1 to 5 map { i =>
@@ -61,10 +60,10 @@ import scala.collection.{Map, Set}
 
       promises(0).setValue(instances(0))
       val offer = serverSet.monitor().apply(timeout)
-      offer().apply(timeout) mustEqual instances(0)
+      offer().apply(timeout) shouldEqual instances(0)
 
       val fin = Future.collect {
-        instances.tail map { i => offer() onSuccess { _ mustEqual i } }
+        instances.tail map { i => offer() onSuccess { _ shouldEqual i } }
       }
       instances.tail zip(promises.tail) foreach { case (i, p) => p.setValue(i) }
       fin apply(timeout)

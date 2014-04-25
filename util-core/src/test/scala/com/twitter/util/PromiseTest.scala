@@ -8,7 +8,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class PromiseTest extends FunSuite with Eventually {
-  test("Promise.attached should detach via interruption") {
+  test("Promise.attached should  detach via interruption") {
     val p = new HandledPromise[Unit]()
     val f = Promise.attached(p)
     f.setInterruptHandler { case t: Throwable =>
@@ -23,7 +23,7 @@ class PromiseTest extends FunSuite with Eventually {
     }
   }
 
-  test("Promise.attached should validate success") {
+  test("Promise.attached should  validate success") {
     val p = Promise[Unit]()
     val f = Promise.attached(p)
     p.setValue(())
@@ -31,7 +31,7 @@ class PromiseTest extends FunSuite with Eventually {
     assert(Await.result(f) === ())
   }
 
-  test("Promise.attached should validate failure") {
+  test("Promise.attached should  validate failure") {
     val p = Promise[Unit]()
     val f = Promise.attached(p)
     val e = new Exception
@@ -43,7 +43,7 @@ class PromiseTest extends FunSuite with Eventually {
     assert(actual === e)
   }
 
-  test("Promise.attached should detach properly for futures") {
+  test("Promise.attached should  detach properly for futures") {
     val f = Future.Unit
     val p = Promise.attached(f)
     assert(p.detach())
@@ -79,7 +79,7 @@ class PromiseTest extends FunSuite with Eventually {
   }
 
   // System.gc is advisory, and isn't guaranteed to run
-  if (!Option(System.getProperty("SKIP_FLAKY")).isDefined) test("Promise.attached should properly detach on gc") {
+  if (!Option(System.getProperty("SKIP_FLAKY")).isDefined) test("Promise.attached should  properly detach on gc") {
     val p = Promise[Unit]
     val attachedRef: WeakReference[Promise[Unit] with Promise.Detachable] =
       new WeakReference(Promise.attached(p))

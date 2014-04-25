@@ -53,7 +53,7 @@ private[logging] object Formatter {
  *
  * @param timezone
  * Should dates in log messages be reported in a different time zone rather than
- * local time? If set, the time zone name must be one known by the java `TimeZone` class.
+ * local time? If set, the time zone name should be one known by the java `TimeZone` class.
  *
  * @param truncateAt
  * Truncate log messages after N characters. 0 = don't truncate (the default).

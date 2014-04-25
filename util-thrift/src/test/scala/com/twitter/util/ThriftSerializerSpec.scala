@@ -16,10 +16,9 @@
 
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
-import org.specs.specification.PendingUntilFixed
+import org.scalatest.{WordSpec, Matchers}
 
-class ThriftSerializerSpec extends SpecificationWithJUnit with PendingUntilFixed {
+class ThriftSerializerSpec extends WordSpec with Matchers {
   val aString = "me gustan los tacos y los burritos"
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)
@@ -33,22 +32,23 @@ class ThriftSerializerSpec extends SpecificationWithJUnit with PendingUntilFixed
     val bytes = serializer.toBytes(original)
     var obj = new TestThriftStructure()
     serializer.fromBytes(obj, bytes)
-    obj.aString mustEqual original.aString
-    obj.aNumber mustEqual original.aNumber
+    obj.aString shouldEqual original.aString
+    obj.aNumber shouldEqual original.aNumber
 
     stringVersion match {
       case None =>
       case Some(str) =>
-        serializer.toString(original) mustEqual str
+        serializer.toString(original) shouldEqual str
         obj = new TestThriftStructure()
         serializer.fromString(obj, str)
-        obj.aString mustEqual original.aString
-        obj.aNumber mustEqual original.aNumber
+        obj.aString shouldEqual original.aString
+        obj.aNumber shouldEqual original.aNumber
       }
+    true
   }
 
 
-  "ThriftSerializer" should {
+  "ThriftSerializer" should  {
     "encode and decode json" in {
       testSerializer(new JsonThriftSerializer, Some(json))
     }

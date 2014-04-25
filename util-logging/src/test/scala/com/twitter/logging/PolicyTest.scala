@@ -34,7 +34,7 @@ class PolicyTest extends FunSuite {
     assert(parse(size) == MaxSize(StorageUnit.parse(size)))
   }
 
-  test("Policy.parse: should be case-insensitive") {
+  test("Policy.parse: should  be case-insensitive") {
     assert(parse("DAily") === Daily)
     assert(parse("weEkLy(3)") == Weekly(3))
     assert(parse("3.meGabYteS") == MaxSize(StorageUnit.parse("3.megabytes")))

@@ -18,18 +18,19 @@ package com.twitter.logging
 
 import com.twitter.util.{TempFolder, Time}
 import com.twitter.conversions.time._
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers, BeforeAndAfter}
 
-class ThrottledHandlerSpec extends SpecificationWithJUnit with TempFolder {
+
+class ThrottledHandlerSpec extends WordSpec with Matchers with BeforeAndAfter with TempFolder {
   private var handler: StringHandler = null
 
-  "ThrottledHandler" should {
-    doBefore {
+  "ThrottledHandler" should  {
+    before {
       Logger.clearHandlers
       handler = new StringHandler(BareFormatter, None)
     }
 
-    doAfter {
+    after {
       Logger.clearHandlers
     }
 
@@ -49,7 +50,7 @@ class ThrottledHandlerSpec extends SpecificationWithJUnit with TempFolder {
         timeCtrl.advance(2.seconds)
         log.error("apple: %s", "done.")
 
-        handler.get.split("\n").toList mustEqual List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done.")
+        handler.get.split("\n").toList shouldEqual List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done.")
       }
     }
 
@@ -67,7 +68,7 @@ class ThrottledHandlerSpec extends SpecificationWithJUnit with TempFolder {
         time.advance(2.seconds)
         log.error("hello.")
 
-        handler.get.split("\n").toList mustEqual List("apple: help!", "apple: help!", "apple: help!", "(swallowed 2 repeating messages)", "hello.")
+        handler.get.split("\n").toList shouldEqual List("apple: help!", "apple: help!", "apple: help!", "(swallowed 2 repeating messages)", "hello.")
       }
     }
   }

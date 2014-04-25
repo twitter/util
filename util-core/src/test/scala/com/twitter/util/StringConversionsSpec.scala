@@ -16,37 +16,37 @@
 
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 import com.twitter.conversions.string._
 
-class StringConversionsSpec extends SpecificationWithJUnit {
-  "string" should {
+class StringConversionsSpec extends WordSpec with Matchers {
+  "string" should  {
     "quoteC" in {
-      "nothing".quoteC mustEqual "nothing"
-      "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC mustEqual "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
-      "she said \"hello\"".quoteC mustEqual "she said \\\"hello\\\""
-      "\\backslash".quoteC  mustEqual "\\\\backslash"
+      "nothing".quoteC shouldEqual "nothing"
+      "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC shouldEqual "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
+      "she said \"hello\"".quoteC shouldEqual "she said \\\"hello\\\""
+      "\\backslash".quoteC  shouldEqual "\\\\backslash"
     }
 
     "unquoteC" in {
-      "nothing".unquoteC mustEqual "nothing"
-      "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC  mustEqual "name\tvalue\t\u20acb\u00fcllet?\u20ac"
-      "she said \\\"hello\\\"".unquoteC mustEqual "she said \"hello\""
-      "\\\\backslash".unquoteC mustEqual "\\backslash"
-      "real\\$dollar".unquoteC mustEqual "real\\$dollar"
-      "silly\\/quote".unquoteC mustEqual "silly/quote"
+      "nothing".unquoteC shouldEqual "nothing"
+      "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC  shouldEqual "name\tvalue\t\u20acb\u00fcllet?\u20ac"
+      "she said \\\"hello\\\"".unquoteC shouldEqual "she said \"hello\""
+      "\\\\backslash".unquoteC shouldEqual "\\backslash"
+      "real\\$dollar".unquoteC shouldEqual "real\\$dollar"
+      "silly\\/quote".unquoteC shouldEqual "silly/quote"
     }
 
     "hexlify" in {
-      "hello".getBytes.slice(1, 4).hexlify mustEqual "656c6c"
-      "hello".getBytes.hexlify mustEqual "68656c6c6f"
+      "hello".getBytes.slice(1, 4).hexlify shouldEqual "656c6c"
+      "hello".getBytes.hexlify shouldEqual "68656c6c6f"
     }
 
     "unhexlify" in {
-      "656c6c".unhexlify.toList mustEqual "hello".getBytes.slice(1, 4).toList
-      "68656c6c6f".unhexlify.toList mustEqual "hello".getBytes.toList
-      "5".unhexlify mustNot throwA[StringIndexOutOfBoundsException]
-      "5".unhexlify.hexlify.toInt mustEqual 5
+      "656c6c".unhexlify.toList shouldEqual "hello".getBytes.slice(1, 4).toList
+      "68656c6c6f".unhexlify.toList shouldEqual "hello".getBytes.toList
+      "5".unhexlify
+      "5".unhexlify.hexlify.toInt shouldEqual 5
     }
   }
 }

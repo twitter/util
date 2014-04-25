@@ -1,6 +1,6 @@
 package com.twitter.util.reflect
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 import com.twitter.util.{Future,Promise, Stopwatch}
 
 
@@ -33,11 +33,11 @@ object ProxySpec {
   }
 }
 
-class ProxySpec extends SpecificationWithJUnit {
+class ProxySpec extends WordSpec with Matchers {
 
   import ProxySpec._
 
-  "ProxyFactory" should {
+  "ProxyFactory" should  {
     "generate a factory for an interface" in {
       var called = 0
 
@@ -46,10 +46,10 @@ class ProxySpec extends SpecificationWithJUnit {
 
       val proxied = f1(obj)
 
-      proxied.foo    mustEqual "foo"
-      proxied.bar(2) mustEqual Some(2L)
+      proxied.foo    shouldEqual "foo"
+      proxied.bar(2) shouldEqual Some(2L)
 
-      called mustEqual 2
+      called shouldEqual 2
     }
 
     "generate a factory for a class with a default constructor" in {
@@ -60,20 +60,22 @@ class ProxySpec extends SpecificationWithJUnit {
 
       val proxied = f2(obj)
 
-      proxied.slota mustEqual "a"
-      proxied.slotb mustEqual 2.0
+      proxied.slota shouldEqual "a"
+      proxied.slotb shouldEqual 2.0
 
-      called mustEqual 2
+      called shouldEqual 2
     }
 
-    "must not throw UndeclaredThrowableException" in {
+    "should  not throw UndeclaredThrowableException" in {
       val pf      = new ProxyFactory[TestImpl](_())
       val proxied = pf(new TestImpl)
 
-      proxied.whoops must throwA(new RuntimeException("whoops"))
+      intercept[RuntimeException] {
+        proxied.whoops
+      }
     }
 
-    "MethodCall returnsUnit must be true for unit/void methods" in {
+    "MethodCall returnsUnit should  be true for unit/void methods" in {
       var unitsCalled = 0
 
       val pf = new ProxyFactory[TestImpl]({ call =>
@@ -83,16 +85,16 @@ class ProxySpec extends SpecificationWithJUnit {
 
       val proxied = pf(new TestImpl)
       proxied.foo
-      unitsCalled mustEqual 0
+      unitsCalled shouldEqual 0
 
       proxied.theVoid
-      unitsCalled mustEqual 1
+      unitsCalled shouldEqual 1
 
       proxied.theJavaVoid
-      unitsCalled mustEqual 2
+      unitsCalled shouldEqual 2
     }
 
-    "MethodCall returnsFuture must be true for methods that return a future or subclass" in {
+    "MethodCall returnsFuture should  be true for methods that return a future or subclass" in {
       var futuresCalled = 0
 
       val pf = new ProxyFactory[TestImpl]({ call =>
@@ -103,20 +105,22 @@ class ProxySpec extends SpecificationWithJUnit {
       val proxied = pf(new TestImpl)
 
       proxied.foo
-      futuresCalled mustEqual 0
+      futuresCalled shouldEqual 0
 
       proxied.aFuture
-      futuresCalled mustEqual 1
+      futuresCalled shouldEqual 1
 
       proxied.aPromise
-      futuresCalled mustEqual 2
+      futuresCalled shouldEqual 2
     }
 
     "MethodCall throws an exception when invoked without a target" in {
       val pf = new ProxyFactory[TestImpl](_())
       val targetless = pf()
 
-      targetless.foo must throwA[NonexistentTargetException]
+      intercept[NonexistentTargetException] {
+        targetless.foo
+      }
     }
 
     "MethodCall can be invoked with alternate target" in {
@@ -124,14 +128,14 @@ class ProxySpec extends SpecificationWithJUnit {
       val pf  = new ProxyFactory[TestImpl](m => m(alt))
       val targetless = pf()
 
-      targetless.foo mustEqual "alt foo"
+      targetless.foo shouldEqual "alt foo"
     }
 
     "MethodCall can be invoked with alternate arguments" in {
       val pf      = new ProxyFactory[TestInterface](m => m(Array(3.asInstanceOf[AnyRef])))
       val proxied = pf(new TestImpl)
 
-      proxied.bar(2) mustEqual Some(3L)
+      proxied.bar(2) shouldEqual Some(3L)
     }
 
     "MethodCall can be invoked with alternate target and arguments" in {
@@ -139,7 +143,7 @@ class ProxySpec extends SpecificationWithJUnit {
       val pf  = new ProxyFactory[TestImpl](m => m(alt, Array(3.asInstanceOf[AnyRef])))
       val targetless = pf()
 
-      targetless.bar(2) mustEqual Some(30L)
+      targetless.bar(2) shouldEqual Some(30L)
     }
     
     // Sigh. Benchmarking has no place in unit tests.
@@ -174,11 +178,11 @@ class ProxySpec extends SpecificationWithJUnit {
       // println(t1)
       // println(t2)
 
-      t2 must beLessThan(200L)
+      t2 should  beLessThan(200L)
     }
 */
     "maintains invocation speed" in {
-      skip("Failing on some people's computers")
+      //skipped("Failing on some people's computers")
       val repTimes = 1500000
 
       val obj = new TestImpl
@@ -195,10 +199,10 @@ class ProxySpec extends SpecificationWithJUnit {
       // println(t3)
 
       // faster than normal reflection
-      t2 must beLessThan(t1)
+      t2 should  be < t1
 
       // less than 4x raw invocation
-      t2 must beLessThan((t3 * 4))
+      t2 should  be < (t3 * 4)
     }
   }
 
@@ -206,7 +210,7 @@ class ProxySpec extends SpecificationWithJUnit {
   class ReferenceProxyFactory[I <: AnyRef : Manifest](f: (() => AnyRef) => AnyRef) {
     import java.lang.reflect
 
-    protected val interface = implicitly[Manifest[I]].erasure
+    protected val interface = implicitly[Manifest[I]].runtimeClass
 
     private val proxyConstructor = {
       reflect.Proxy

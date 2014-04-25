@@ -1,6 +1,8 @@
 package com.twitter.util
 
-class RingBuffer[A: ClassManifest](val maxSize: Int) extends Seq[A] {
+import scala.reflect.ClassTag
+
+class RingBuffer[A: ClassTag](val maxSize: Int) extends Seq[A] {
   private val array = new Array[A](maxSize)
   private var read = 0
   private var write = 0

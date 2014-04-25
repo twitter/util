@@ -70,12 +70,12 @@ class MemoizeTest extends FunSuite {
     val startUpLatch = new JavaCountDownLatch(1)
     val callCount = new AtomicInteger(0)
 
-    // A computation that should fail the first time, and then
+    // A computation that should  fail the first time, and then
     // succeed for all subsequent attempts.
     val memo = Memoize { i: Int =>
       // Ensure that all of the callers have been started
       startUpLatch.await(200, TimeUnit.MILLISECONDS)
-      // This effect should happen once per exception plus once for
+      // This effect should  happen once per exception plus once for
       // all successes
       val n = callCount.incrementAndGet()
       if (n == 1) throw TheException else i + 1
@@ -91,10 +91,10 @@ class MemoizeTest extends FunSuite {
     val (successes, failures) =
       Await.result(computation, 200.milliseconds).toList partition { _.isReturn }
 
-    // One of the times, the computation must have failed.
+    // One of the times, the computation should have failed.
     assert(failures === List(Throw(TheException)))
 
-    // Another time, it must have succeeded, and then the stored
+    // Another time, it should have succeeded, and then the stored
     // result will be reused for the other calls.
     assert(successes === List.fill(ConcurrencyLevel - 1)(Return(6)))
 

@@ -36,7 +36,7 @@ object ProxyFactory {
 class AbstractProxyFactory[I <: AnyRef : Manifest] {
   import ProxyFactory._
 
-  final val interface = implicitly[Manifest[I]].erasure
+  final val interface = implicitly[Manifest[I]].runtimeClass
 
   protected final val proto = {
     val e = new Enhancer

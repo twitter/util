@@ -68,7 +68,7 @@ class ThrottledHandler(
     override def toString = "Throttle: startTime=" + startTime + " count=" + count
 
     final def add(record: javalog.LogRecord, now: Time): Boolean = {
-      val (shouldPublish, added) = synchronized {
+      val (mustPublish, added) = synchronized {
         if (!expired) {
           count += 1
           (count <= maxToDisplay, true)
@@ -77,7 +77,7 @@ class ThrottledHandler(
         }
       }
 
-      if (shouldPublish) handler.publish(record)
+      if (mustPublish) handler.publish(record)
       added
     }
 

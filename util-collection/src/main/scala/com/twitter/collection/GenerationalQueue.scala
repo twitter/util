@@ -16,7 +16,7 @@ trait GenerationalQueue[A] {
  * Generational Queue keep track of elements based on their last activity.
  * You can refresh activity of an element by calling touch(a: A) on it.
  * There is 2 ways of retrieving old elements:
- * - collect(age: Duration) collect the oldest element (age of elem must be > age)
+ * - collect(age: Duration) collect the oldest element (age of elem should be > age)
  * - collectAll(age: Duration) collect all the elements which age > age in parameter
  */
 class ExactGenerationalQueue[A] extends GenerationalQueue[A] {

@@ -16,32 +16,32 @@ package com.twitter.util
  * limitations under the License.
  */
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 import java.lang.StringBuilder
 
 class TestBase64Encoder extends Base64StringEncoder {
 }
 
-class StringEncoderSpec extends SpecificationWithJUnit {
+class StringEncoderSpec extends WordSpec with Matchers {
   val longString = "A string that is really really really really really really long and has more than 76 characters"
   val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
   val testEncoder = new TestBase64Encoder()
 
   "strip new lines" in {
-    testEncoder.encode(longString.getBytes) mustEqual result
+    testEncoder.encode(longString.getBytes) shouldEqual result
   }
 
   "decode value with stripped new lines" in {
-    new String(testEncoder.decode(result)) mustEqual longString
+    new String(testEncoder.decode(result)) shouldEqual longString
   }
 }
 
-class GZIPStringEncoderSpec extends SpecificationWithJUnit {
-  "a gzip string encoder" should {
+class GZIPStringEncoderSpec extends WordSpec with Matchers {
+  "a gzip string encoder" should  {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {
       def testCodec(str: String) {
-        str mustMatch gse.decodeString(gse.encodeString(str))
+        str shouldEqual(gse.decodeString(gse.encodeString(str)))
       }
 
       testCodec("a")

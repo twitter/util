@@ -1,16 +1,17 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
 
-class CancellableSpec extends SpecificationWithJUnit {
-  "CancellableSink" should {
+import org.scalatest.{WordSpec, Matchers}
+
+class CancellableSpec extends WordSpec with Matchers {
+  "CancellableSink" should  {
     "cancel once" in {
       var count = 0
       val s = new CancellableSink { count += 1 }
       s.cancel()
-      count must be_==(1)
+      count shouldEqual(1)
       s.cancel()
-      count must be_==(1)
+      count shouldEqual(1)
     }
   }
 }

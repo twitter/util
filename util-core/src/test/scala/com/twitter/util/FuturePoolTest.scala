@@ -16,7 +16,7 @@ class FuturePoolTest extends FunSuite with Eventually {
   implicit override val patienceConfig =
     PatienceConfig(timeout = scaled(Span(2, Seconds)), interval = scaled(Span(5, Millis)))
 
-  test("FuturePool should dispatch to another thread") {
+  test("FuturePool should  dispatch to another thread") {
     val executor = Executors.newFixedThreadPool(1).asInstanceOf[ThreadPoolExecutor]
     val pool     = FuturePool(executor)
 

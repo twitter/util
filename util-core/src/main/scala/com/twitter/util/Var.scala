@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.{AtomicReference, AtomicLong, AtomicReference
 import scala.annotation.tailrec
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
+import scala.reflect.ClassTag
 
 /**
  * Trait Var represents a variable. It is a reference cell which is
@@ -64,7 +65,7 @@ trait Var[+T] { self =>
       val inner = new AtomicReference(Closable.nop)
       val outer = self.observe(depth, Observer(t =>
         // TODO: Right now we rely on synchronous propagation; and
-        // thus also synchronous closes. We should instead perform
+        // thus also synchronous closes. We should  instead perform
         // asynchronous propagation so that it is is safe &
         // predicatable to have asynchronously closing Vars, for
         // example. Currently the only source of potentially
@@ -218,7 +219,7 @@ object Var {
    * Collect a collection of Vars into a Var of collection.
    */
   def collect[T, CC[X] <: Traversable[X]](vars: CC[Var[T]])
-      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassManifest[T])
+      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassTag[T])
       : Var[CC[T]] = async(newBuilder().result) { v =>
     val N = vars.size
     val cur = new AtomicReferenceArray[T](N)

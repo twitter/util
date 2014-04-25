@@ -17,10 +17,10 @@
 package com.twitter.logging
 
 import java.util.{logging => javalog}
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 import com.twitter.conversions.string._
 
-class FormatterSpec extends SpecificationWithJUnit {
+class FormatterSpec extends WordSpec with Matchers {
   val basicFormatter = new Formatter
 
   val utcFormatter = new Formatter(
@@ -55,31 +55,31 @@ class FormatterSpec extends SpecificationWithJUnit {
   record3.setLoggerName("net.lag.whiskey.Train")
   record3.setMillis(1206769996722L)
 
-  "Formatter" should {
+  "Formatter" should  {
     "create a prefix" in {
-      basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") mustEqual
+      basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") shouldEqual
         "ERR [20080329-05:53:16.722] (root): "
-      basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") mustEqual
+      basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") shouldEqual
         "DEB [20080329-05:53:16.722] (root): "
-      basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") mustEqual
+      basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") shouldEqual
         "WAR [20080329-05:53:16.722] (root): "
     }
 
     "format a log level name" in {
-      basicFormatter.formatLevelName(Level.ERROR) mustEqual "ERROR"
-      basicFormatter.formatLevelName(Level.DEBUG) mustEqual "DEBUG"
-      basicFormatter.formatLevelName(Level.WARNING) mustEqual "WARNING"
+      basicFormatter.formatLevelName(Level.ERROR) shouldEqual "ERROR"
+      basicFormatter.formatLevelName(Level.DEBUG) shouldEqual "DEBUG"
+      basicFormatter.formatLevelName(Level.WARNING) shouldEqual "WARNING"
     }
 
     "format text" in {
       val record = new LogRecord(Level.ERROR, "error %s")
-      basicFormatter.formatText(record) mustEqual "error %s"
+      basicFormatter.formatText(record) shouldEqual "error %s"
       record.setParameters(Array("123"))
-      basicFormatter.formatText(record) mustEqual "error 123"
+      basicFormatter.formatText(record) shouldEqual "error 123"
     }
 
     "format a timestamp" in {
-      utcFormatter.format(record1) mustEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
+      utcFormatter.format(record1) shouldEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
     }
 
     "do lazy message evaluation" in {
@@ -91,29 +91,29 @@ class FormatterSpec extends SpecificationWithJUnit {
 
       val record = new LazyLogRecord(Level.DEBUG, "this is " + getSideEffect)
 
-      callCount mustEqual 0
-      basicFormatter.formatText(record) mustEqual "this is ok"
-      callCount mustEqual 1
-      basicFormatter.formatText(record) mustEqual "this is ok"
-      callCount mustEqual 1
+      callCount shouldEqual 0
+      basicFormatter.formatText(record) shouldEqual "this is ok"
+      callCount shouldEqual 1
+      basicFormatter.formatText(record) shouldEqual "this is ok"
+      callCount shouldEqual 1
     }
 
     "format package names" in {
-      utcFormatter.format(record1) mustEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
-      fullPackageFormatter.format(record1) mustEqual
+      utcFormatter.format(record1) shouldEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
+      fullPackageFormatter.format(record1) shouldEqual
         "ERR [20080329-05:53:16.722] com.example.jobs: boo.\n"
     }
 
     "handle other prefixes" in {
-      prefixFormatter.format(record2) mustEqual "jobs 05:53 DEBU useless info.\n"
+      prefixFormatter.format(record2) shouldEqual "jobs 05:53 DEBU useless info.\n"
     }
 
     "truncate line" in {
-      truncateFormatter.format(record3) mustEqual
+      truncateFormatter.format(record3) shouldEqual
         "CRI [20080329-05:53:16.722] whiskey: Something terrible happened th...\n"
     }
 
-    "write stack traces" in {
+    "write stack traces" should {
       object ExceptionLooper {
         def cycle(n: Int) {
           if (n == 0) {
@@ -149,7 +149,7 @@ class FormatterSpec extends SpecificationWithJUnit {
         } catch {
           case t: Throwable => t
         }
-        Formatter.formatStackTrace(exception, 5).map { scrub(_) } mustEqual List(
+        Formatter.formatStackTrace(exception, 5).map { scrub(_) } shouldEqual List(
           "    at com.twitter.logging.FormatterSpec$$.cycle(FormatterSpec.scala:NNN)",
           "    at com.twitter.logging.FormatterSpec$$.cycle(FormatterSpec.scala:NNN)",
           "    at com.twitter.logging.FormatterSpec$$.cycle(FormatterSpec.scala:NNN)",
@@ -165,14 +165,15 @@ class FormatterSpec extends SpecificationWithJUnit {
         } catch {
           case t: Throwable => t
         }
-        Formatter.formatStackTrace(exception, 2).map { scrub(_) } mustEqual List(
+        Formatter.formatStackTrace(exception, 2).map { scrub(_) } shouldEqual List(
           "    at com.twitter.logging.FormatterSpec$$.cycle2(FormatterSpec.scala:NNN)",
-          "    at com.twitter.logging.FormatterSpec$$.apply(FormatterSpec.scala:NNN)",
+          "    at com.twitter.logging.FormatterSpec$$.apply$mcV$sp(FormatterSpec.scala:NNN)",
           "    (...more...)",
           "Caused by java.lang.Exception: Aie!",
           "    at com.twitter.logging.FormatterSpec$$.cycle(FormatterSpec.scala:NNN)",
           "    at com.twitter.logging.FormatterSpec$$.cycle(FormatterSpec.scala:NNN)",
           "    (...more...)")
+
       }
     }
   }

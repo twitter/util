@@ -80,7 +80,7 @@ object Config {
  *    var something = optional[Duration]
  *
  * Fields that are dependent on other fields and have a default value computed
- * from an expression should be marked as computed:
+ * from an expression should  be marked as computed:
  *
  *    var level = required[Int]
  *    var nextLevel = computed { level + 1 }

@@ -11,13 +11,13 @@ import com.twitter.util.{Future, Promise, Return}
  *   2. If any party aborts (nack), the entire transaction is considered
  *   aborted.
  *   3. Once a transaction has been acknowledged by a party, that
- *   acknowledgment must be honored: The party cannot subsequently nack.
+ *   acknowledgment should be honored: The party cannot subsequently nack.
  */
 trait Tx[+T] {
   import Tx.Result
 
   /**
-   * Acknowledge the transaction, committing the party should the other
+   * Acknowledge the transaction, committing the party should  the other
    * parties also acknowledge. The (potentially delayed) result of the
    * complete transaction is returned upon acknowledgment. A party may not
    * `nack()` after `ack()`.

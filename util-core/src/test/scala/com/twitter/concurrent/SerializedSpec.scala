@@ -1,10 +1,11 @@
 package com.twitter.concurrent
 
 import java.util.concurrent.CountDownLatch
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 
-class SerializedSpec extends SpecificationWithJUnit with Serialized {
-  "Serialized" should {
+
+class SerializedSpec extends WordSpec with Matchers with Serialized {
+  "Serialized" should  {
     "runs blocks, one at a time, in the order received" in {
       val t1CallsSerializedFirst = new CountDownLatch(1)
       val t1FinishesWork = new CountDownLatch(1)
@@ -37,7 +38,7 @@ class SerializedSpec extends SpecificationWithJUnit with Serialized {
       t1.join()
       t2.join()
 
-      orderOfExecution.toList mustEqual List(t1, t2)
+      orderOfExecution.toList shouldEqual List(t1, t2)
     }
   }
 }

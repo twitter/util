@@ -19,9 +19,9 @@ package com.twitter.logging
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
 import com.twitter.conversions.string._
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 
-class SyslogHandlerSpec extends SpecificationWithJUnit {
+class SyslogHandlerSpec extends WordSpec with Matchers {
   val record1 = new javalog.LogRecord(Level.FATAL, "fatal message!")
   record1.setLoggerName("net.lag.whiskey.Train")
   record1.setMillis(1206769996722L)
@@ -29,7 +29,7 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
   record2.setLoggerName("net.lag.whiskey.Train")
   record2.setMillis(1206769996722L)
 
-  "SyslogHandler" should {
+  "SyslogHandler" should  {
     "write syslog entries" in {
       // start up new syslog listener
       val serverSocket = new DatagramSocket
@@ -48,9 +48,9 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
       SyslogFuture.sync
       val p = new DatagramPacket(new Array[Byte](1024), 1024)
       serverSocket.receive(p)
-      new String(p.getData, 0, p.getLength) mustEqual "<9>2008-03-29T05:53:16 raccoon.local whiskey: fatal message!"
+      new String(p.getData, 0, p.getLength) shouldEqual "<9>2008-03-29T05:53:16 raccoon.local whiskey: fatal message!"
       serverSocket.receive(p)
-      new String(p.getData, 0, p.getLength) mustEqual "<11>2008-03-29T05:53:16 raccoon.local whiskey: error message!"
+      new String(p.getData, 0, p.getLength) shouldEqual "<11>2008-03-29T05:53:16 raccoon.local whiskey: error message!"
     }
 
     "with server name" in {
@@ -71,7 +71,7 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
       SyslogFuture.sync
       val p = new DatagramPacket(new Array[Byte](1024), 1024)
       serverSocket.receive(p)
-      new String(p.getData, 0, p.getLength) mustEqual "<9>2008-03-29T05:53:16 raccoon.local [pingd] whiskey: fatal message!"
+      new String(p.getData, 0, p.getLength) shouldEqual "<9>2008-03-29T05:53:16 raccoon.local [pingd] whiskey: fatal message!"
     }
 
     "with BSD time format" in {
@@ -92,7 +92,7 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
       SyslogFuture.sync
       val p = new DatagramPacket(new Array[Byte](1024), 1024)
       serverSocket.receive(p)
-      new String(p.getData, 0, p.getLength) mustEqual "<9>Mar 29 05:53:16 raccoon.local whiskey: fatal message!"
+      new String(p.getData, 0, p.getLength) shouldEqual "<9>Mar 29 05:53:16 raccoon.local whiskey: fatal message!"
     }
   }
 }

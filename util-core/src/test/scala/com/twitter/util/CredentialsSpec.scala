@@ -16,13 +16,14 @@
 
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
 
-class CredentialsSpec extends SpecificationWithJUnit {
-  "Credentials" should {
+import org.scalatest.{WordSpec, Matchers}
+
+class CredentialsSpec extends WordSpec with Matchers {
+  "Credentials" should  {
     "parse a simple auth file" in {
       val content = "username: root\npassword: hellokitty\n"
-      Credentials(content) mustEqual Map("username" -> "root", "password" -> "hellokitty")
+      Credentials(content) shouldEqual Map("username" -> "root", "password" -> "hellokitty")
     }
 
     "parse a more complex auth file" in {
@@ -34,7 +35,7 @@ password  : last_0f-the/international:playboys
    moar :ok
 
         """
-      Credentials(content) mustEqual Map(
+      Credentials(content) shouldEqual Map(
         "username" -> "root",
         "password" -> "last_0f-the/international:playboys",
         "moar" -> "ok"
@@ -44,9 +45,9 @@ password  : last_0f-the/international:playboys
     "work for java peeps too" in {
       val content = "username: root\npassword: hellokitty\n"
       val jmap = new Credentials().read(content)
-      jmap.size() mustEqual 2
-      jmap.get("username") mustEqual "root"
-      jmap.get("password") mustEqual "hellokitty"
+      jmap.size() shouldEqual 2
+      jmap.get("username") shouldEqual "root"
+      jmap.get("password") shouldEqual "hellokitty"
     }
   }
 }

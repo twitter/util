@@ -17,11 +17,10 @@
 package com.twitter.logging
 
 import java.util.{logging => javalog}
-import org.specs.SpecificationWithJUnit
-import org.specs.util.TimeConversions._
+import org.scalatest.{WordSpec, Matchers}
 
 
-class QueueingHandlerSpec extends SpecificationWithJUnit {
+class QueueingHandlerSpec extends WordSpec with Matchers {
   class MockHandler extends Handler(BareFormatter, None) {
     def publish(record: javalog.LogRecord) {}
     def close() {}
@@ -36,7 +35,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
     logger
   }
 
-  "QueueingHandler" should {
+  "QueueingHandler" should  {
     "publish" in {
       val logger = freshLogger()
       val stringHandler = new StringHandler(BareFormatter, Some(Logger.INFO))
@@ -45,7 +44,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
 
       logger.warning("oh noes!")
       Thread.sleep(100) // let thread log
-      stringHandler.get must_== "oh noes!\n"
+      stringHandler.get should be ("oh noes!\n")
     }
 
     "publish, drop on overflow" in {
@@ -67,7 +66,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
       logger.warning("2")
       logger.warning("3")
       Thread.sleep(100) // let thread log and block
-      droppedCount must be_>=(1) // either 1 or 2, depending on race
+      droppedCount should be >=(1) // either 1 or 2, depending on race
     }
 
     "flush" in {
@@ -82,7 +81,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
       // smoke test: thread might write it, flush might write it
       logger.warning("oh noes!")
       queueHandler.flush()
-      wasFlushed must beTrue
+      wasFlushed shouldBe true
     }
 
     "close" in {
@@ -97,17 +96,17 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
       logger.warning("oh noes!")
       Thread.sleep(100) // let thread log
       queueHandler.close()
-      wasClosed must beTrue
+      wasClosed shouldBe true
     }
 
     "handle exceptions in the underlying handler" in {
       val logger = freshLogger()
-      var shouldError = true
+      var mustError = true
       var didLog = false
       val handler = new MockHandler {
         override def publish(record: javalog.LogRecord) {
-          if (shouldError) {
-            shouldError = false
+          if (mustError) {
+            mustError = false
             throw new Exception("Unable to log for whatever reason.")
           } else {
             didLog = true
@@ -121,7 +120,7 @@ class QueueingHandlerSpec extends SpecificationWithJUnit {
       logger.info("fizz")
       logger.info("buzz")
       Thread.sleep(100) // let thread log
-      didLog must beTrue
+      didLog shouldBe true
     }
   }
 }

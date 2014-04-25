@@ -85,7 +85,7 @@ object Closable {
             case NonFatal(exc) =>
               Logger.getLogger("").log(Level.SEVERE,
                 "com.twitter.util.Closable collector threw exception", exc)
-            case fatal =>
+            case fatal: Throwable =>
               Logger.getLogger("").log(Level.SEVERE,
                 "com.twitter.util.Closable collector fatal threw exception", fatal)
               throw fatal

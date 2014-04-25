@@ -1,29 +1,38 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 
-class StateMachineSpec extends SpecificationWithJUnit {
-  "StateMachine" should {
-    val stateMachine = new StateMachine {
-      case class State1() extends State
-      case class State2() extends State
-      state = State1()
+class StateMachineSpec extends WordSpec with Matchers {
+  "StateMachine" should  {
+    class StateMachineHelper {
+      val stateMachine = new StateMachine {
+        case class State1() extends State
+        case class State2() extends State
+        state = State1()
 
-      def command1() {
-        transition("command1") {
-          case State1() => "ok"
-            state = State2()
+        def command1() {
+          transition("command1") {
+            case State1() => state = State2()
+          }
         }
       }
     }
 
     "allows transitions that are permitted" in {
-      stateMachine.command1() mustNot throwA[StateMachine.InvalidStateTransition]
+      val h = new StateMachineHelper
+      import h._
+
+      stateMachine.command1()
     }
 
     "throws exceptions when a transition is not permitted" in {
-      stateMachine.command1() mustNot throwA[StateMachine.InvalidStateTransition]
-      stateMachine.command1() must throwA[StateMachine.InvalidStateTransition]
+      val h = new StateMachineHelper
+      import h._
+
+      stateMachine.command1()
+      intercept[StateMachine.InvalidStateTransition] {
+        stateMachine.command1()
+      }
     }
   }
 }

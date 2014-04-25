@@ -1,49 +1,53 @@
 package com.twitter.util
 
-import org.specs.SpecificationWithJUnit
+import org.scalatest.{WordSpec, Matchers}
 
-class BoundedStackSpec extends SpecificationWithJUnit {
-  "BoundedStack" should {
+class BoundedStackSpec extends WordSpec with Matchers {
+  "BoundedStack" should  {
     "empty" in {
       val buf = new BoundedStack[String](4)
-      buf.length mustEqual 0
-      buf.size mustEqual 0
-      buf.isEmpty mustEqual true
-      buf(0) must throwA[IndexOutOfBoundsException]
-      buf.pop must throwA[NoSuchElementException]
-      buf.iterator.hasNext mustEqual false
+      buf.length shouldEqual 0
+      buf.size shouldEqual 0
+      buf.isEmpty shouldEqual true
+      intercept[IndexOutOfBoundsException] {
+      buf(0)
+      }
+      intercept[NoSuchElementException] {
+      buf.pop
+      }
+      buf.iterator.hasNext shouldEqual false
     }
 
     "handle single element" in {
       val buf = new BoundedStack[String](4)
       buf += "a"
-      buf.size mustEqual 1
-      buf(0) mustEqual "a"
-      buf.toList mustEqual List("a")
+      buf.size shouldEqual 1
+      buf(0) shouldEqual "a"
+      buf.toList shouldEqual List("a")
     }
 
     "handle multiple element" in {
       val buf = new BoundedStack[String](4)
       buf ++= List("a", "b", "c")
-      buf.size mustEqual 3
-      buf(0) mustEqual "c"
-      buf(1) mustEqual "b"
-      buf(2) mustEqual "a"
-      buf.toList mustEqual List("c", "b", "a")
-      buf.pop mustEqual "c"
-      buf.size mustEqual 2
-      buf.pop mustEqual "b"
-      buf.size mustEqual 1
-      buf.pop mustEqual "a"
-      buf.size mustEqual 0
+      buf.size shouldEqual 3
+      buf(0) shouldEqual "c"
+      buf(1) shouldEqual "b"
+      buf(2) shouldEqual "a"
+      buf.toList shouldEqual List("c", "b", "a")
+      buf.pop shouldEqual "c"
+      buf.size shouldEqual 2
+      buf.pop shouldEqual "b"
+      buf.size shouldEqual 1
+      buf.pop shouldEqual "a"
+      buf.size shouldEqual 0
     }
 
     "handle overwrite/rollover" in {
       val buf = new BoundedStack[String](4)
       buf ++= List("a", "b", "c", "d", "e", "f")
-      buf.size mustEqual 4
-      buf(0) mustEqual "f"
-      buf.toList mustEqual List("f", "e", "d", "c")
+      buf.size shouldEqual 4
+      buf(0) shouldEqual "f"
+      buf.toList shouldEqual List("f", "e", "d", "c")
     }
     
     "handle update" in {
@@ -53,24 +57,24 @@ class BoundedStackSpec extends SpecificationWithJUnit {
         val old = buf(i)
         val updated = old + "2"
         buf(i) = updated
-        buf(i) mustEqual updated
+        buf(i) shouldEqual updated
       }
-      buf.toList mustEqual List("f2", "e2", "d2", "c2")
+      buf.toList shouldEqual List("f2", "e2", "d2", "c2")
     }
     
     "insert at 0 is same as +=" in {
       val buf = new BoundedStack[String](3)
       buf.insert(0, "a")
-      buf.size mustEqual 1
-      buf(0) mustEqual "a"
+      buf.size shouldEqual 1
+      buf(0) shouldEqual "a"
       buf.insert(0, "b")
-      buf.size mustEqual 2
-      buf(0) mustEqual "b"
-      buf(1) mustEqual "a"
+      buf.size shouldEqual 2
+      buf(0) shouldEqual "b"
+      buf(1) shouldEqual "a"
       buf.insert(0, "c")
-      buf(0) mustEqual "c"
-      buf(1) mustEqual "b"
-      buf(2) mustEqual "a"
+      buf(0) shouldEqual "c"
+      buf(1) shouldEqual "b"
+      buf(2) shouldEqual "a"
       buf.insert(0, "d")
     }
     
@@ -79,16 +83,20 @@ class BoundedStackSpec extends SpecificationWithJUnit {
       buf.insert(0, "a")
       buf.insert(1, "b")
       buf.insert(2, "c")
-      buf(0) mustEqual "a"
-      buf(1) mustEqual "b"
-      buf(2) mustEqual "c"
+      buf(0) shouldEqual "a"
+      buf(1) shouldEqual "b"
+      buf(2) shouldEqual "c"
     }
     
     "insert > count throws exception" in {
       val buf = new BoundedStack[String](3)
-      buf.insert(1, "a") must throwA[IndexOutOfBoundsException]
+      intercept[IndexOutOfBoundsException] {
+        buf.insert(1, "a")
+      }
       buf.insert(0, "a")
-      buf.insert(2, "b") must throwA[IndexOutOfBoundsException]
+      intercept[IndexOutOfBoundsException] {
+        buf.insert(2, "b")
+      }
     }
   }
 }
