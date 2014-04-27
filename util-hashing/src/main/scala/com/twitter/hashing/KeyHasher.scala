@@ -3,7 +3,7 @@ package com.twitter.hashing
 /**
  * Hashes a key into a 32-bit or 64-bit number (depending on the algorithm).
  */
-@deprecated("Prefer Hashable[Array[Byte],Long]")
+@deprecated("Prefer Hashable[Array[Byte],Long]", "6.12.1")
 trait KeyHasher {
   def hashKey(key: Array[Byte]): Long
 }
