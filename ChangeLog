@@ -1,3 +1,13 @@
+6.15.0  2014-04-29
+
+  * util-app: enforce close grace period
+  * util-core: special case buf.slice(0, buf.length)
+  * util-core: add LIFO option to LocalScheduler
+  * util-core: improves usability of Var and VarSource from java
+  * util-core: Make spool lazier
+  * util-core: Fixes detachable semantics with ConstFuture
+  * util-core: make LocalScheduler non-private for custom schedulers
+
 6.14.0  2014-04-09
 
   * util-benchmark: Fix caliper failures due to new guava
