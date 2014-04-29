@@ -125,11 +125,22 @@ object Activity {
     val stateVar: Var[Traversable[State[T]]] = Var.collect(states)
 
     def flip(states: Traversable[State[T]]): State[CC[T]] = {
+      val notOk = states find {
+        case Pending | Failed(_) => true
+        case Ok(_) => false
+      }
+      
+      notOk match {
+        case None =>
+        case Some(Pending) => return Pending
+        case Some(f@Failed(_)) => return f
+        case Some(_) => assert(false)
+      }
+
       val ts = newBuilder()
       states foreach {
         case Ok(t) => ts += t
-        case Pending => return Pending
-        case f@Failed(_) => return f
+        case _ => assert(false)
       }
 
       Ok(ts.result)
