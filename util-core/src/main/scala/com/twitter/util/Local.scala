@@ -51,13 +51,20 @@ final object Local {
 }
 
 /**
- * Locals are more flexible thread-locals. They allow for saving and
- * restoring the state of *all* Locals. This is useful for threading
- * Locals through execution contexts. In this manner they are
- * propagated in delayed computations in [[com.twitter.util.Promise]].
+ * A Local is a ThreadLocal whose scope is flexible. The state of all Locals may
+ * be saved or restored onto the current thread by the user. This is useful for
+ * threading Locals through execution contexts.
  *
- * Note: the implementation is optimized for situations in which
- * save and restore optimizations are dominant.
+ * Promises pass locals through control dependencies, not through data
+ * dependencies.  This means that Locals have exactly the same semantics as
+ * ThreadLocals, if you think of `continue` (the asynchronous sequence operator)
+ * as semicolon (the synchronous sequence operator).
+ *
+ * Because it's not meaningful to inherit control from two places, Locals don't
+ * have to worry about having to merge two [[com.twitter.util.Local$.Context]]s.
+ *
+ * Note: the implementation is optimized for situations in which save and
+ * restore optimizations are dominant.
  */
 final class Local[T] {
   private[this] val me = Local.add()
