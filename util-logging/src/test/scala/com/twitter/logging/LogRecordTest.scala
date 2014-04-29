@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class LogRecordTest extends FunSuite {
-  test("LogRecord should  getMethod properly") {
+  test("LogRecord should getMethod properly") {
     Logger.withLoggers(Nil) {
       new LogRecordTestHelper({ r: JRecord => r.getSourceMethodName() }) {
         def makingLogRecord() {
@@ -19,7 +19,7 @@ class LogRecordTest extends FunSuite {
     }
   }
 
-  test("LogRecord should  getClass properly") {
+  test("LogRecord should getClass properly") {
     Logger.withLoggers(Nil) {
       new Foo {
         assert(handler.get === "com.twitter.logging.Foo")

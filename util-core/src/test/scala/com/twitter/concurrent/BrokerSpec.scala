@@ -8,7 +8,7 @@ import com.twitter.util.{Await, Return}
 import com.twitter.common.objectsize.ObjectSizeCalculator
 
 class BrokerSpec extends WordSpec with Matchers with MockitoSugar {
-  "Broker" should  {
+  "Broker" should {
     "send data (send, recv)" in {
       val br = new Broker[Int]
       val sendF = br.send(123).sync()

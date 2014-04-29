@@ -42,7 +42,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
 
   def test(name: String, const: MkConst) {
     "object Future (%s)".format(name) when {
-      "times" should  {
+      "times" should {
         trait TimesHelper {
           val queue = new ConcurrentLinkedQueue[Promise[Unit]]
           var complete = false
@@ -121,7 +121,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         assert(i === 1)
       }
 
-      "whileDo" should  {
+      "whileDo" should {
         trait WhileDoHelper {
           var i = 0
           val queue = new ConcurrentLinkedQueue[HandledPromise[Unit]]
@@ -181,7 +181,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "batched" should  {
+      "batched" should {
         implicit val timer = new MockTimer
         val result = Seq(4, 5, 6)
 
@@ -218,7 +218,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
           verify(f).apply(Seq(1))
         }
 
-        "treat bufSizeFraction return value > 1.0f should  return maxSizeThreshold" in {
+        "treat bufSizeFraction return value > 1.0f should return maxSizeThreshold" in {
           val f = mock[Seq[Int] => Future[Seq[Int]]]
           val batcher = Future.batched(3, sizePercentile = 1.3f)(f)
 
@@ -345,7 +345,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "collect" should  {
+      "collect" should {
         trait CollectHelper {
           val p0, p1 = new HandledPromise[Int]
           val f = Future.collect(Seq(p0, p1))
@@ -388,7 +388,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "collectToTry" should  {
+      "collectToTry" should {
 
         trait CollectToTryHelper {
           val p0, p1 = new HandledPromise[Int]
@@ -433,7 +433,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "select" should  {
+      "select" should {
         "return the first result" which {
           def tryBothForIndex(i: Int) = {
             "success (%d)".format(i) in {
@@ -489,7 +489,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "selectIndex" should  {
+      "selectIndex" should {
         "return the first result" when {
           def tryBothForIndex(i: Int) = {
             "success (%d)".format(i) in {
@@ -586,7 +586,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
       }
     }
 
-    "Future (%s)".format(name) should  {
+    "Future (%s)".format(name) should {
       "select" which {
         trait SelectHelper {
           var nhandled = 0
@@ -622,7 +622,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
       }
 
       def testJoin(label: String, joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])) {
-        "join(%s)".format(label) should  {
+        "join(%s)".format(label) should {
           trait JoinHelper {
             val p0 = new HandledPromise[Int]
             val p1 = new HandledPromise[Int]
@@ -671,7 +671,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
       testJoin("f join g", _ join _)
       testJoin("Future.join(f, g)", Future.join(_, _))
 
-      "toJavaFuture" should  {
+      "toJavaFuture" should {
         "return the same thing as our Future when initialized" which {
           val f = const.value(1)
           val jf = f.toJavaFuture
@@ -695,7 +695,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
           }
         }
 
-        "java future should  throw an exception" in {
+        "java future should throw an exception" in {
           val f = new Promise[Int]
           val jf = f.toJavaFuture
           val e = new RuntimeException()
@@ -716,7 +716,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "monitored" should  {
+      "monitored" should {
         trait MonitoredHelper {
           val inner = new HandledPromise[Int]
           val exc = new Exception("some exception")
@@ -804,7 +804,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
       }
     }
 
-    "Promise (%s)".format(name) should  {
+    "Promise (%s)".format(name) should {
       "apply" which {
         "when we're inside of a respond block (without deadlocking)" in {
           val f = Future(1)
@@ -836,7 +836,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "transform" should  {
+      "transform" should {
         val e = new Exception("rdrr")
 
         "values" in {
@@ -873,7 +873,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "transformedBy" should  {
+      "transformedBy" should {
         val e = new Exception("rdrr")
 
         "flatMap" in {
@@ -916,7 +916,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
           which: String,
           seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]) {
         which when {
-          "successes" should  {
+          "successes" should {
             "interruption of the produced future" which {
               "before the antecedent Future completes, propagates back to the antecedent" in {
                 val f1, f2 = new HandledPromise[Unit]
@@ -959,7 +959,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
             }
           }
 
-          "failures" should  {
+          "failures" should {
             val e = new Exception
             val g = seqop(Future[Unit](throw e), () => Future.Done)
 
@@ -985,7 +985,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
       testSequence("flatMap", (a, next) => a flatMap { _ => next() })
       testSequence("before", (a, next) => a before next())
 
-      "flatMap (values)" should  {
+      "flatMap (values)" should {
         val f = Future(1) flatMap { x => Future(x + 1) }
 
         "apply" which {
@@ -997,7 +997,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "flatten" should  {
+      "flatten" should {
         "successes" in {
           val f = Future(Future(1))
           f.flatten mustProduce Return(1)
@@ -1035,7 +1035,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "rescue" should  {
+      "rescue" should {
         val e = new Exception
 
         "successes" which {
@@ -1112,7 +1112,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         assert(wasCalledWith === Some(1))
       }
 
-      "respond" should  {
+      "respond" should {
         "when the result has arrived" in {
           var wasCalledWith: Option[Int] = None
           val f = Future(1)
@@ -1236,7 +1236,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         assert(Await.result(done) === (Some(1010), Some(123)))
       }
 
-      "poll" should  {
+      "poll" should {
         trait PollHelper {
           val p = new Promise[Int]
         }
@@ -1262,7 +1262,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "within" should  {
+      "within" should {
         "when we run out of time" in {
           implicit val timer = new JavaTimer
           val p = new HandledPromise[Int]
@@ -1307,7 +1307,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "raiseWithin" should  {
+      "raiseWithin" should {
         "when we run out of time" in {
           implicit val timer = new JavaTimer
           val p = new HandledPromise[Int]
@@ -1387,7 +1387,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "masked" should  {
+      "masked" should {
         "do unconditional interruption" in {
           val p = new HandledPromise[Unit]
           val f = p.masked
@@ -1410,7 +1410,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
         }
       }
 
-      "liftToTry" should  {
+      "liftToTry" should {
         "success" in {
           val p = Future.value(3)
           assert(Await.result(p.liftToTry) === Return(3))
@@ -1430,7 +1430,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
       }
     }
 
-    "FutureTask (%s)".format(name) should  {
+    "FutureTask (%s)".format(name) should {
       "return result" in {
         val task = new FutureTask("hello")
         task.run()
@@ -1450,7 +1450,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
   test("ConstFuture", new MkConst { def apply[A](r: Try[A]) = Future.const(r) })
   test("Promise", new MkConst { def apply[A](r: Try[A]) = new Promise(r) })
 
-  "Future.None" should  {
+  "Future.None" should {
     "always be defined" in {
       assert(Future.None.isDefined === true)
     }
@@ -1459,7 +1459,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Future.True" should  {
+  "Future.True" should {
     "always be defined" in {
       assert(Future.True.isDefined === true)
     }
@@ -1468,7 +1468,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Future.False" should  {
+  "Future.False" should {
     "always be defined" in {
       assert(Future.False.isDefined === true)
     }
@@ -1477,7 +1477,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Future.never" should  {
+  "Future.never" should {
     "must be undefined" in {
       assert(Future.never.isDefined === false)
       assert(Future.never.poll === None)
@@ -1488,7 +1488,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Future.sleep" should  {
+  "Future.sleep" should {
     "Satisfy after the given amount of time" in Time.withCurrentTimeFrozen { tc =>
       implicit val timer = new MockTimer
 
@@ -1520,7 +1520,7 @@ class FutureTest extends WordSpec with Matchers with MockitoSugar {
   }
 
   // TODO(John Sirois):  Kill this mvn test hack when pants takes over.
-  "Java" should  {
+  "Java" should {
     "work" in {
       val test = new FutureCompilationTest()
       test.testFutureCastMap()

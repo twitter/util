@@ -3,7 +3,7 @@ package com.twitter.util
 import org.scalatest.{WordSpec, Matchers}
 
 class StateMachineSpec extends WordSpec with Matchers {
-  "StateMachine" should  {
+  "StateMachine" should {
     class StateMachineHelper {
       val stateMachine = new StateMachine {
         case class State1() extends State

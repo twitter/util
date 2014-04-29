@@ -3,7 +3,7 @@ package com.twitter.util
 /**
  * ==Resource Management==
  *
- * [[com.twitter.util.Disposable]] represents a live resource that should be disposed after use.
+ * [[com.twitter.util.Disposable]] represents a live resource that must be disposed after use.
  * [[com.twitter.util.Managed]] is a factory for creating and composing such resources.
  * Managed resources are composed together so their lifetimes are synchronized.
  *
@@ -43,8 +43,8 @@ package com.twitter.util
  *
  * =Disposable/Managed Semantics=
  *
- * [[com.twitter.util.Disposable]]: get can be called multiple times and should  return same instance;
- * dispose can be called only once and should  release resource that get is returning;
+ * [[com.twitter.util.Disposable]]: get can be called multiple times and should return same instance;
+ * dispose can be called only once and should release resource that get is returning;
  * calling get after dispose is undefined.
  *
  * [[com.twitter.util.Managed]]: multiple calls to make could return
@@ -52,7 +52,7 @@ package com.twitter.util
  *  b) ref counted instance of the underlying resource or
  *  c) same instance when resource doesn't need to be actually disposed, etc.
  *
- * Disposable is a container for a resource that should be explicitly disposed when
+ * Disposable is a container for a resource that must be explicitly disposed when
  * no longer needed. After this, the resource is no longer available.
  */
 trait Disposable[+T] {

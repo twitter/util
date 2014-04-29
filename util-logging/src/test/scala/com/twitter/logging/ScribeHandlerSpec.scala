@@ -35,7 +35,7 @@ class ScribeHandlerSpec extends WordSpec with Matchers with BeforeAndAfter {
 
   val portWithoutListener = 50506
 
-  "ScribeHandler" should  {
+  "ScribeHandler" should {
     before {
       Logger.reset()
       Logger.get("").setLevel(Logger.FATAL)

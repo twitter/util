@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
 import scala.collection.{Map, Set}
 
 /*class ServerSetSpec extends WordSpec with Matchers with JMocker with ClassMocker {
-  "ServerSet" should  {
+  "ServerSet" should {
     val pool = FuturePool.immediatePool
     val port = RandomSocket.nextPort()
     val address = new InetSocketAddress("localhost", port)

@@ -46,7 +46,7 @@ object Eval extends Eval {
  * Evaluates files, strings, or input streams as Scala code, and returns the result.
  *
  * If `target` is `None`, the results are compiled to memory (and are therefore ephemeral). If
- * `target` is `Some(path)`, the path should point to a directory, and classes will be saved into
+ * `target` is `Some(path)`, the path must point to a directory, and classes will be saved into
  * that directory.
  *
  * Eval also supports a limited set of preprocessors. Currently, "limited" means "exactly one":

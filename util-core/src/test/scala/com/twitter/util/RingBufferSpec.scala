@@ -3,7 +3,7 @@ package com.twitter.util
 import org.scalatest.{WordSpec, Matchers}
 
 class RingBufferSpec extends WordSpec with Matchers {
-  "RingBuffer" should  {
+  "RingBuffer" should {
     "empty" in {
       val buf = new RingBuffer[String](4)
       buf.length shouldEqual 0

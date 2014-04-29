@@ -37,7 +37,7 @@ class StringEncoderSpec extends WordSpec with Matchers {
 }
 
 class GZIPStringEncoderSpec extends WordSpec with Matchers {
-  "a gzip string encoder" should  {
+  "a gzip string encoder" should {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {
       def testCodec(str: String) {

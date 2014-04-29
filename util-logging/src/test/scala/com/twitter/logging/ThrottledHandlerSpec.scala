@@ -24,7 +24,7 @@ import org.scalatest.{WordSpec, Matchers, BeforeAndAfter}
 class ThrottledHandlerSpec extends WordSpec with Matchers with BeforeAndAfter with TempFolder {
   private var handler: StringHandler = null
 
-  "ThrottledHandler" should  {
+  "ThrottledHandler" should {
     before {
       Logger.clearHandlers
       handler = new StringHandler(BareFormatter, None)

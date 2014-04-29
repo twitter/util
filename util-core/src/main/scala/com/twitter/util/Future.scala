@@ -492,7 +492,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    *
    * A batcher's size can be controlled at runtime with the `sizePercentile`
    * function argument. This function returns a float between 0.0 and 1.0,
-   * representing the fractional size of the `sizeThreshold` that should  be
+   * representing the fractional size of the `sizeThreshold` that should be
    * used for the next batch to be collected.
    */
   def batched[In, Out](
@@ -535,7 +535,7 @@ trait FutureEventListener[T] {
  * creating many small Function objects. It is used in conjunction
  * with `transformedBy`.
  *
- * You should override one of `{map, flatMap}`. If you override both
+ * You must override one of `{map, flatMap}`. If you override both
  * `map` and `flatMap`, `flatMap` takes precedence. If you fail to
  * override one of `{map, flatMap}`, an `AbstractMethodError` will be
  * thrown at Runtime.
@@ -884,7 +884,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * `transformedBy` and `addEventListener` are not mutually
    * exclusive and may be profitably combined.
    *
-   * ''Note'': The FutureTransformer should implement either `flatMap`
+   * ''Note'': The FutureTransformer must implement either `flatMap`
    * or `map` and may optionally implement `handle`. Failing to
    * implement a method will result in a run-time (AbstractMethod)
    * error.
@@ -948,7 +948,7 @@ abstract class Future[+A] extends Awaitable[A] {
 
   /**
    * Send updates from this Future to the other.
-   * ``other'' should not yet be satisfied.
+   * ``other'' must not yet be satisfied.
    */
   def proxyTo[B >: A](other: Promise[B]) {
     respond { other() = _ }
@@ -970,7 +970,7 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * Convert a Twitter Future to a Java native Future. This should 
+   * Convert a Twitter Future to a Java native Future. This should
    * match the semantics of a Java Future as closely as possible to
    * avoid issues with the way another API might use them. See:
    *

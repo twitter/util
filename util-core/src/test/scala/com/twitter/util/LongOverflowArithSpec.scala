@@ -4,7 +4,7 @@ import org.scalatest.{WordSpec, Matchers}
 import scala.util.Random
 
 class LongOverflowArithSpec extends WordSpec with Matchers {
-  "LongOverflowArith" should  {
+  "LongOverflowArith" should {
     val random = new Random
     val maxSqrt = 3037000499L
 

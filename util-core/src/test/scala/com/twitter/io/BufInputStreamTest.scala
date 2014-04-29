@@ -152,18 +152,18 @@ class BufInputStreamTest extends FunSuite {
     assert(s1.equals(s2), "Failed to skip to correct position")
   }
 
-  test("read len=0 from non-empty stream should  return 0") {
+  test("read len=0 from non-empty stream should return 0") {
     val is = new BufInputStream(fileBuf)
     val array = new Array[Byte](1)
     assert(is.read(array, 0, 0) == 0)
   }
 
-  test("read len >= 0 from exhausted stream should  return -1") {
+  test("read len >= 0 from exhausted stream should return -1") {
     val is = new BufInputStream(fileBuf)
     val array = new Array[Byte](10000)
     val c = is.read(array, 0, array.length)
-    assert(c == fileBuf.length, "Stream should  have been exhausted")
-    assert(is.read(array, c, 0) == -1, "Stream should  have repored exhaustion")
-    assert(is.read(array, c, array.length - c) == -1, "Stream should  have repored exhaustion")
+    assert(c == fileBuf.length, "Stream should have been exhausted")
+    assert(is.read(array, c, 0) == -1, "Stream should have repored exhaustion")
+    assert(is.read(array, c, array.length - c) == -1, "Stream should have repored exhaustion")
   }
 }

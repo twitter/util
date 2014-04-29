@@ -59,7 +59,7 @@ import scala.annotation.tailrec
  * only has pointers to `a` and `d`, all intermediate objects can be
  * freed by the garbage collector. Note that certain sequences of
  * operations can have the topology diverge from a star, but these
- * should  be infrequent.
+ * should be infrequent.
  */
 package ivar {
   // State laws:
@@ -112,7 +112,7 @@ final class IVar[A] extends IVarField[A] {
   ) = Scheduler.submit(new Runnable {
     def run() {
       // todo: exceptions stop execution
-      // here, but should  they?
+      // here, but should they?
       var waitq = _waitq
       while (waitq.nonEmpty) {
         waitq.head(value)
@@ -143,7 +143,7 @@ final class IVar[A] extends IVarField[A] {
    * will leave other IVars pointing to the recursive IVar
    * unmolested, so we will diverge from a pure star-topology (we
    * will have a chain). This causes a minor space-leak. But this
-   * should  be very rare, and such chains should  be very short.
+   * should be very rare, and such chains should be very short.
    *
    * Note that we require `this` != `other` (transitively).
    * Furthermore, IVars do not provide protection against linking
@@ -152,7 +152,7 @@ final class IVar[A] extends IVarField[A] {
    *  a merge b
    *  b merge a
    *
-   * is undefined.  Thus, linking/merging should  be used only in
+   * is undefined.  Thus, linking/merging should be used only in
    * scenarios where such races can be guaranteed not to occur.
    */
   @tailrec private[IVar]

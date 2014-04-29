@@ -70,7 +70,7 @@ class VarTest extends FunSuite {
     assert(result === 18) // ensure those three things happened in sequence
 
     result=1 // just reset for sanity
-    v1() = 3 // this should  invoke o1-o3 in order:
+    v1() = 3 // this should invoke o1-o3 in order:
     // result = 1 + 3 = 4
     // result = 4 * 3 * 3 = 36
     // result = 36 + 36 + 3 = 75
@@ -274,7 +274,7 @@ class VarTest extends FunSuite {
     c1.close()
     c2.close()
 
-    v() = 10 // this should  not assert because it's unobserved
+    v() = 10 // this should not assert because it's unobserved
     v() = 22 // now it's safe to re-observe
 
     var observed = 3
@@ -303,7 +303,7 @@ class VarTest extends FunSuite {
     }
 
     x() = 42
-    x() = 0 // this should  not throw an exception because there are no observers
+    x() = 0 // this should not throw an exception because there are no observers
     x() = 1
 
     assert(Var.sample(result) === 1) // invertX is observed briefly

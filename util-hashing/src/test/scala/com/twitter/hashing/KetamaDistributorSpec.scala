@@ -8,7 +8,7 @@ import _root_.java.io.{BufferedReader, InputStreamReader}
 
 
 class KetamaDistributorSpec extends WordSpec with Matchers {
-  "KetamaDistributor" should  {
+  "KetamaDistributor" should {
     val nodes = Seq(
       KetamaNode("10.0.1.1", 600, 1),
       KetamaNode("10.0.1.2", 300, 2),

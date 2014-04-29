@@ -55,7 +55,7 @@ class FormatterSpec extends WordSpec with Matchers {
   record3.setLoggerName("net.lag.whiskey.Train")
   record3.setMillis(1206769996722L)
 
-  "Formatter" should  {
+  "Formatter" should {
     "create a prefix" in {
       basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") shouldEqual
         "ERR [20080329-05:53:16.722] (root): "

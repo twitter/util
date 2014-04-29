@@ -9,7 +9,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AsyncMutexSpec extends FlatSpec {
-  "AsyncMutex" should  "admit only one operation at a time" in {
+  "AsyncMutex" should "admit only one operation at a time" in {
     val m = new AsyncMutex
 
     val a0 = m.acquire()

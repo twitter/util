@@ -4,7 +4,7 @@ import java.net.InetAddress
 import org.scalatest.{WordSpec, Matchers}
 
 class NetUtilSpec extends WordSpec with Matchers {
-  "NetUtil" should  {
+  "NetUtil" should {
     "isIpv4Address" in {
       for (i <- 0.to(255)) {
         NetUtil.isIpv4Address("%d.0.0.0".format(i)) shouldBe true

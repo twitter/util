@@ -35,7 +35,7 @@ class QueueingHandlerSpec extends WordSpec with Matchers {
     logger
   }
 
-  "QueueingHandler" should  {
+  "QueueingHandler" should {
     "publish" in {
       val logger = freshLogger()
       val stringHandler = new StringHandler(BareFormatter, Some(Logger.INFO))

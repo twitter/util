@@ -65,7 +65,7 @@ class MonitorSpec extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Monitor#andThen" should  {
+  "Monitor#andThen" should {
     class MonitorAndThenHelper {
       val m0, m1 = spy(new MockMonitor)
       when(m0.handle(any[Throwable])).thenReturn(true)
@@ -120,7 +120,7 @@ class MonitorSpec extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Monitor.get, Monitor.set()" should  {
+  "Monitor.get, Monitor.set()" should {
     val m = spy(new MockMonitor)
 
     "maintain current monitor" in Monitor.restoring {
@@ -130,7 +130,7 @@ class MonitorSpec extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Monitor.handle" should  {
+  "Monitor.handle" should {
     val m = spy(new MockMonitor)
 
     "dispatch to current monitor" in Monitor.restoring {
@@ -142,7 +142,7 @@ class MonitorSpec extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Monitor.restore" should  {
+  "Monitor.restore" should {
     "restore current configuration" in {
       val orig = Monitor.get
       Monitor.restoring {
@@ -152,7 +152,7 @@ class MonitorSpec extends WordSpec with Matchers with MockitoSugar {
     }
   }
 
-  "Monitor.mk" should  {
+  "Monitor.mk" should {
     class MonitorMkHelper {
       class E1 extends Exception
       class E2 extends E1

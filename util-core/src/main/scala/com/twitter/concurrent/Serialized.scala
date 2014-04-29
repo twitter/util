@@ -7,7 +7,7 @@ import com.twitter.util.{Try, Future, Promise}
 /**
  * Efficient ordered ''serialization'' of operations.
  *
- * '''Note:''' This should  not be used in place of Scala's
+ * '''Note:''' This should not be used in place of Scala's
  * `synchronized`, but rather only when serialization semantics are
  * required.
  */

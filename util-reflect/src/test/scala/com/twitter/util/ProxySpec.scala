@@ -37,7 +37,7 @@ class ProxySpec extends WordSpec with Matchers {
 
   import ProxySpec._
 
-  "ProxyFactory" should  {
+  "ProxyFactory" should {
     "generate a factory for an interface" in {
       var called = 0
 
@@ -66,7 +66,7 @@ class ProxySpec extends WordSpec with Matchers {
       called shouldEqual 2
     }
 
-    "should  not throw UndeclaredThrowableException" in {
+    "must not throw UndeclaredThrowableException" in {
       val pf      = new ProxyFactory[TestImpl](_())
       val proxied = pf(new TestImpl)
 
@@ -75,7 +75,7 @@ class ProxySpec extends WordSpec with Matchers {
       }
     }
 
-    "MethodCall returnsUnit should  be true for unit/void methods" in {
+    "MethodCall returnsUnit must be true for unit/void methods" in {
       var unitsCalled = 0
 
       val pf = new ProxyFactory[TestImpl]({ call =>
@@ -94,7 +94,7 @@ class ProxySpec extends WordSpec with Matchers {
       unitsCalled shouldEqual 2
     }
 
-    "MethodCall returnsFuture should  be true for methods that return a future or subclass" in {
+    "MethodCall returnsFuture must be true for methods that return a future or subclass" in {
       var futuresCalled = 0
 
       val pf = new ProxyFactory[TestImpl]({ call =>
@@ -178,7 +178,7 @@ class ProxySpec extends WordSpec with Matchers {
       // println(t1)
       // println(t2)
 
-      t2 should  beLessThan(200L)
+      t2 should beLessThan(200L)
     }
 */
     "maintains invocation speed" in {
@@ -199,10 +199,10 @@ class ProxySpec extends WordSpec with Matchers {
       // println(t3)
 
       // faster than normal reflection
-      t2 should  be < t1
+      t2 should be < t1
 
       // less than 4x raw invocation
-      t2 should  be < (t3 * 4)
+      t2 should be < (t3 * 4)
     }
   }
 

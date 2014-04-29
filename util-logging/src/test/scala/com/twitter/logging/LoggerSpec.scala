@@ -47,7 +47,7 @@ class LoggerSpec extends WordSpec with Matchers with TempFolder with TestLogging
     }
   }
 
-  "Logger" should  {
+  "Logger" should {
     val h = new LoggerSpecHelper
     import h._
 

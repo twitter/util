@@ -9,12 +9,12 @@ class TryTest extends FunSuite {
   class MyException extends Exception
   val e = new Exception("this is an exception")
 
-  test("Try.apply(): should  catch exceptions and lift into the Try type") {
+  test("Try.apply(): should catch exceptions and lift into the Try type") {
     assert(Try[Int](1) == Return(1))
     assert(Try[Int] { throw e } == Throw(e))
   }
 
-  test("Try.apply(): should  propagate fatal exceptions") {
+  test("Try.apply(): should propagate fatal exceptions") {
     intercept[AbstractMethodError] {
       Try[Int] { throw new AbstractMethodError }
     }
@@ -75,17 +75,17 @@ class TryTest extends FunSuite {
     assert(result2 == Throw(e))
   }
 
-  test("Try.exists: should  return true when predicate passes for a Return value") {
+  test("Try.exists: should return true when predicate passes for a Return value") {
     val t = Return(4)
     assert(t.exists(_ > 0) == true)
   }
 
-  test("Try.exists: should  return false when predicate doesn't pass for a Return value") {
+  test("Try.exists: should return false when predicate doesn't pass for a Return value") {
     val t = Return(4)
     assert(t.exists(_ < 0) == false)
   }
 
-  test("Try.exists: should  return false for Throw") {
+  test("Try.exists: should return false for Throw") {
     val t = Throw(new Exception)
     assert(t.exists(_ => true) == false)
   }

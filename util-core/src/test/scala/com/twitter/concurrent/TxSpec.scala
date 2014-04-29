@@ -5,7 +5,7 @@ import org.scalatest.{WordSpec, Matchers}
 import com.twitter.util.Return
 
 class TxSpec extends WordSpec with Matchers {
-  "Tx.twoParty" should  {
+  "Tx.twoParty" should {
     "commit when everything goes dandy" in {
       val (stx, rtx) = Tx.twoParty(123)
       val sf = stx.ack()

@@ -6,7 +6,7 @@ import java.io.File
 import org.scalatest.{WordSpec, Matchers}
 
 class FilesSpec extends WordSpec with Matchers with TempFolder {
-  "Files" should  {
+  "Files" should {
 
     "delete" in withTempFolder {
       val tempFolder = new File(canonicalFolderName)

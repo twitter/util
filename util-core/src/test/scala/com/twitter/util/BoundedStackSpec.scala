@@ -3,7 +3,7 @@ package com.twitter.util
 import org.scalatest.{WordSpec, Matchers}
 
 class BoundedStackSpec extends WordSpec with Matchers {
-  "BoundedStack" should  {
+  "BoundedStack" should {
     "empty" in {
       val buf = new BoundedStack[String](4)
       buf.length shouldEqual 0

@@ -6,7 +6,7 @@ import scala.util.Random
 import org.scalatest.{WordSpec, Matchers}
 
 class StreamIOSpec extends WordSpec with Matchers {
-  "StreamIO.copy" should  {
+  "StreamIO.copy" should {
     "copy the entire stream" in {
       val buf = new Array[Byte](2048)
       (new Random).nextBytes(buf)

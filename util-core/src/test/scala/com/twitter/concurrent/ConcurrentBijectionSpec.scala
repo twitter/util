@@ -27,14 +27,14 @@ class ConcurrentBijectionSpec extends WordSpec with Matchers {
     b.get(1)        shouldEqual Some(2)
     b.getReverse(2) shouldEqual Some(1)
 
-    // Introduce a new forward mapping. This should  delete the old
+    // Introduce a new forward mapping. This should delete the old
     // one.
     b += (1 -> 3)
     b.getReverse(2) shouldEqual None
     b.get(1)        shouldEqual Some(3)
     b.getReverse(3) shouldEqual Some(1)
     
-    // Now, introduce a new reverse mapping for 3, which should  kill
+    // Now, introduce a new reverse mapping for 3, which should kill
     // the existing 1 -> 3 mapping.
     b += (100 -> 3)
     b.getReverse(3) shouldEqual Some(100)

@@ -12,7 +12,7 @@ import scala.collection.mutable.ArrayBuffer
  * Construction of eager Spools is done with either Spool.cons or
  * the {{**::}} operator. To construct a lazy/deferred Spool which
  * materializes its tail on demand, use the {{*::}} operator. In order
- * to use these operators for deconstruction, they should be imported
+ * to use these operators for deconstruction, they must be imported
  * explicitly (ie: {{import Spool.{*::, **::}}})
  *
  * {{{

@@ -7,7 +7,7 @@ import scala.collection.mutable
 import _root_.java.io.{BufferedReader, InputStreamReader}
 
 class DiagnosticsSpec extends WordSpec with Matchers {
-  "Diagnostics" should  {
+  "Diagnostics" should {
     "print distribution" in {
       val hosts = 1 until 500 map { "10.1.1." + _ + ":11211:4" }
 

@@ -16,7 +16,7 @@ class CommonConnectorSpec extends WordSpec with Matchers with BeforeAndAfter {
   val port = RandomSocket.nextPort()
   val addresses = new InetSocketAddress("localhost", port) :: Nil
 
-  "CommonConnector" should  {
+  "CommonConnector" should {
     "initialize" should {
       "with addresses" in {
         implicit val pool = FuturePool.immediatePool
@@ -36,7 +36,7 @@ class CommonConnectorSpec extends WordSpec with Matchers with BeforeAndAfter {
   Option { System.getProperty("com.twitter.zk.TEST_CONNECT") } foreach { connectString =>
     val address = InetSocketAddressHelper.parse(connectString)
 
-    "A live server @ %s".format(connectString) should  {
+    "A live server @ %s".format(connectString) should {
       val commonClient: ZooKeeperClient = new ZooKeeperClient(timeout.toIntAmount, address)
       val zkClient = commonClient.toZkClient(timeout)(FuturePool.immediatePool)
 

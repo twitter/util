@@ -35,7 +35,7 @@ class FileHandlerSpec extends WordSpec with Matchers with TempFolder {
     new OutputStreamWriter(new FileOutputStream(new File(folderName, filename)), "UTF-8")
   }
 
-  "FileHandler" should  {
+  "FileHandler" should {
     val record1 = new javalog.LogRecord(Level.INFO, "first post!")
     val record2 = new javalog.LogRecord(Level.INFO, "second post")
 
@@ -193,7 +193,7 @@ class FileHandlerSpec extends WordSpec with Matchers with TempFolder {
 
     "ignores the target filename despite shorter filenames" in {
       // even if the sort order puts the target filename before `rotateCount` other
-      // files, it should  not be removed
+      // files, it should not be removed
       withTempFolder {
         new File(folderName).list().length shouldEqual 0
         val namePrefix = "test"
@@ -216,7 +216,7 @@ class FileHandlerSpec extends WordSpec with Matchers with TempFolder {
           new File(folderName).list().length shouldEqual 3
         }
 
-        // the target, 1 rotated file, and the short file should  all remain
+        // the target, 1 rotated file, and the short file should all remain
         (1 to 5).foreach { _ => flush() }
         val fileSet = new File(folderName).list().toSet
         fileSet.contains(name) shouldBe true

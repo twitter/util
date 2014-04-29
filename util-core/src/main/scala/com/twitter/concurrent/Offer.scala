@@ -17,14 +17,14 @@ import scala.util.Random
  *
  * Synchronization is performed via a two-phase commit process.
  * `prepare()` commenses the transaction, and when the other party is
- * ready, it returns with a transaction object, `Tx[T]`. This should then
+ * ready, it returns with a transaction object, `Tx[T]`. This must then
  * be ackd or nackd. If both parties acknowledge, `Tx.ack()` returns
  * with a commit object, containing the value. This finalizes the
  * transaction. Please see the `Tx` documentation for more details on
  * that phase of the protocol.
  *
- * Note that a user should  never perform this protocol themselves --
- * synchronization should  always be done with `sync()`.
+ * Note that a user should never perform this protocol themselves --
+ * synchronization should always be done with `sync()`.
  *
  * Future interrupts are propagated, and failure is passed through. It
  * is up to the implementor of the Offer to decide on failure semantics,

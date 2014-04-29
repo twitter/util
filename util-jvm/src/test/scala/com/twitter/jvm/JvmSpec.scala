@@ -11,7 +11,7 @@ import org.scalatest.{WordSpec, Matchers}
 import scala.collection.mutable
 
 class JvmSpec extends WordSpec with Matchers with TestLogging {
-  "Jvm" should  {
+  "Jvm" should {
     class JvmHelper {
       object jvm extends Jvm {
         @volatile private[this] var currentSnap: Snapshot =

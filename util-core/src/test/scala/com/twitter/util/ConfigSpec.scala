@@ -8,8 +8,8 @@ import com.twitter.conversions.time._
 class ConfigSpec extends WordSpec with Matchers with MockitoSugar {
   import Config._
 
-  "Config" should  {
-    "computed should  delay evaluation" in {
+  "Config" should {
+    "computed should delay evaluation" in {
       class Foo extends Config.Nothing {
         var didIt = false
         var x = 10

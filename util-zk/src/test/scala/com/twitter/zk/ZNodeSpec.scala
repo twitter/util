@@ -9,7 +9,7 @@ import org.scalatest.{WordSpec, Matchers}
 import org.scalatest.mock.MockitoSugar
 
 class ZNodeSpec extends WordSpec with Matchers with MockitoSugar {
-  "ZNode" should  {
+  "ZNode" should {
     class ZNodeSpecHelper {
       val zk = mock[ZkClient]
     }

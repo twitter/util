@@ -62,7 +62,7 @@ class SpoolSpec extends WordSpec with Matchers {
     }
   }
 
-  "Simple resolved Spool" should  {
+  "Simple resolved Spool" should {
     val s = 1 **:: 2 **:: Spool.empty
 
     "iterate over all elements" in {
@@ -139,7 +139,7 @@ class SpoolSpec extends WordSpec with Matchers {
     }
   }
 
-  "Simple resolved spool with EOFException" should  {
+  "Simple resolved spool with EOFException" should {
     val p = new Promise[Spool[Int]](Throw(new EOFException("sad panda")))
     val s = 1 **:: 2 *:: p
 
@@ -150,7 +150,7 @@ class SpoolSpec extends WordSpec with Matchers {
     }
   }
 
-  "Simple resolved spool with error" should  {
+  "Simple resolved spool with error" should {
     val p = new Promise[Spool[Int]](Throw(new Exception("sad panda")))
     val s = 1 **:: 2 *:: p
 
@@ -179,7 +179,7 @@ class SpoolSpec extends WordSpec with Matchers {
     }
   }
 
-  "Simple delayed Spool" should  {
+  "Simple delayed Spool" should {
     class SimpleDelayedSpoolHelper {
       val p = new Promise[Spool[Int]]
       val p1 = new Promise[Spool[Int]]

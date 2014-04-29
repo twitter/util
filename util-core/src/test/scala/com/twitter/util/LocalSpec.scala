@@ -3,7 +3,7 @@ package com.twitter.util
 import org.scalatest.{WordSpec, Matchers}
 
 class LocalSpec extends WordSpec with Matchers {
-  "Local" should  {
+  "Local" should {
     val local = new Local[Int]
 
     "be undefined by default" in {

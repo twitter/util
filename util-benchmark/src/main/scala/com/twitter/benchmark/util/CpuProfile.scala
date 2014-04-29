@@ -72,7 +72,7 @@ class CpuProfileBenchmark extends SimpleBenchmark {
     }
   }
 
-  // Note: we should  actually simulate some contention, too.
+  // Note: we should actually simulate some contention, too.
   def timeThreadInfoFull(nreps: Int) {
     val bean = ManagementFactory.getThreadMXBean()
     var i = 0

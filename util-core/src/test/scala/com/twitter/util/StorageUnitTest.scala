@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class StorageUnitTest extends FunSuite {
-  test("StorageUnit: should  convert whole numbers into storage units (back and forth)") {
+  test("StorageUnit: should convert whole numbers into storage units (back and forth)") {
     assert(1.byte.inBytes === 1)
     assert(1.kilobyte.inBytes === 1024)
     assert(1.megabyte.inMegabytes === 1.0)
@@ -15,7 +15,7 @@ class StorageUnitTest extends FunSuite {
     assert(1.gigabyte.inKilobytes === 1024.0 * 1024.0)
   }
 
-  test("StorageUnit: should  confer an essential humanity") {
+  test("StorageUnit: should confer an essential humanity") {
     assert(900.bytes.toHuman === "900 B")
     assert(1.kilobyte.toHuman === "1024 B")
     assert(2.kilobytes.toHuman === "2.0 KiB")
@@ -23,7 +23,7 @@ class StorageUnitTest extends FunSuite {
     assert(Long.MaxValue.bytes.toHuman === "8.0 EiB")
   }
 
-  test("StorageUnit: should  accept humanity") {
+  test("StorageUnit: should accept humanity") {
     assert(StorageUnit.parse("142.bytes") === 142.bytes)
     assert(StorageUnit.parse("78.kilobytes") === 78.kilobytes)
     assert(StorageUnit.parse("1.megabyte") === 1.megabyte)
@@ -33,17 +33,17 @@ class StorageUnitTest extends FunSuite {
     assert(StorageUnit.parse("-3.megabytes") === -3.megabytes)
   }
 
-  test("StorageUnit: should  reject soulless robots") {
+  test("StorageUnit: should reject soulless robots") {
     intercept[NumberFormatException] { StorageUnit.parse("100.bottles") }
     intercept[NumberFormatException] { StorageUnit.parse("100 bytes") }
   }
 
-  test("StorageUnit: should  deal with negative values") {
+  test("StorageUnit: should deal with negative values") {
     assert(-123.bytes.inBytes === -123)
     assert(-2.kilobytes.toHuman === "-2.0 KiB")
   }
 
-  test("StorageUnit: should  adhere to company-issued serial number") {
+  test("StorageUnit: should adhere to company-issued serial number") {
     val i = 4.megabytes
     val j = 4.megabytes
     assert(i.hashCode === j.hashCode)

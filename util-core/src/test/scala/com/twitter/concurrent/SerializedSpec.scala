@@ -5,7 +5,7 @@ import org.scalatest.{WordSpec, Matchers}
 
 
 class SerializedSpec extends WordSpec with Matchers with Serialized {
-  "Serialized" should  {
+  "Serialized" should {
     "runs blocks, one at a time, in the order received" in {
       val t1CallsSerializedFirst = new CountDownLatch(1)
       val t1FinishesWork = new CountDownLatch(1)

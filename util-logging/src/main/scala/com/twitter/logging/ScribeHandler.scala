@@ -100,7 +100,7 @@ class ScribeHandler(
       new NamedPoolThreadFactory("ScribeFlusher-" + category, true)
     )
 
-  // the following should  be private too, make visible for testing
+  // the following should be private too, make visible for testing
   @volatile private[logging] var lastTransmission = Time.epoch
   private[logging] val queue = new LinkedBlockingQueue[Array[Byte]](maxMessagesToBuffer)
   private[logging] val sentRecords = new AtomicLong()
@@ -199,7 +199,7 @@ class ScribeHandler(
     })
   }
 
-  // should  be private, make it visible to tests
+  // should be private, make it visible to tests
   private[logging] def makeBuffer(count: Int): ByteBuffer = {
     val texts = for (i <- 0 until count) yield queue.poll()
 

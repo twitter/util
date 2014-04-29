@@ -12,7 +12,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
   val ops: TimeLikeOps[T]
   import ops._
 
-  "Top, Bottom, Undefined, Nanoseconds(_), Finite(_)" should  {
+  "Top, Bottom, Undefined, Nanoseconds(_), Finite(_)" should {
     val easyVs = Seq(Zero, Top, Bottom, Undefined,
       fromNanoseconds(1), fromNanoseconds(-1))
     val vs = easyVs ++ Seq(
@@ -107,7 +107,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "Top" should  {
+  "Top" should {
     "be impermeable to finite arithmetic" in {
       Top - 0.seconds shouldEqual(Top)
       Top - 100.seconds shouldEqual(Top)
@@ -152,7 +152,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "Bottom" should  {
+  "Bottom" should {
     "be impermeable to finite arithmetic" in {
       Bottom + 0.seconds shouldEqual(Bottom)
       Bottom + 100.seconds shouldEqual(Bottom)
@@ -198,7 +198,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "Undefined" should  {
+  "Undefined" should {
     "be impermeable to any arithmetic" in {
       Undefined + 0.seconds shouldEqual(Undefined)
       Undefined + 100.seconds shouldEqual(Undefined)
@@ -241,7 +241,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "values" should  {
+  "values" should {
     "reflect their underlying value" in {
       val nss = Seq(
         2592000000000000000L, // 30000.days
@@ -263,7 +263,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "inSeconds" should  {
+  "inSeconds" should {
     "equal inLongSeconds when in 32-bit range" in {
       val nss = Seq(
         315370851000000000L, // 3650.days+3.hours+51.seconds
@@ -282,7 +282,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "floor" should  {
+  "floor" should {
     "round down" in {
       fromSeconds(60).floor(1.minute) shouldEqual(fromSeconds(60))
       fromSeconds(100).floor(1.minute) shouldEqual(fromSeconds(60))
@@ -314,7 +314,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
     }
   }
 
-  "from*" should  {
+  "from*" should {
     "never over/under flow nanos" in {
       for (v <- Seq(Long.MinValue, Long.MaxValue)) {
         fromNanoseconds(v) match {
@@ -342,7 +342,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with Matchers {
 }
 
 class TimeFormatSpec extends WordSpec with Matchers {
-  "TimeFormat" should  {
+  "TimeFormat" should {
     "format correctly with non US locale" in {
       val locale = Locale.GERMAN
       val format = "EEEE"
@@ -354,7 +354,7 @@ class TimeFormatSpec extends WordSpec with Matchers {
 }
 
 class TimeSpec extends  { val ops = Time } with TimeLikeSpec[Time] {
-  "Time" should  {
+  "Time" should {
     "work in collections" in {
       val t0 = Time.fromSeconds(100)
       val t1 = Time.fromSeconds(100)
@@ -364,7 +364,7 @@ class TimeSpec extends  { val ops = Time } with TimeLikeSpec[Time] {
       pairs.groupBy { case (time: Time, value: String) => time } shouldEqual Map(t0 -> pairs)
     }
 
-    "now should  be now" in {
+    "now should be now" in {
       (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
     }
 

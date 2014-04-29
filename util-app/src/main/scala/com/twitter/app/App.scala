@@ -11,8 +11,8 @@ import scala.collection.mutable
  * A composable application trait that includes flag parsing as well
  * as basic application lifecycle (pre- and post- main). Flag parsing
  * is done via [[com.twitter.app.Flags]], an instance of which is
- * defined in the member `flag`. Applications should  be constructed
- * with modularity in mind, and common functionality should  be
+ * defined in the member `flag`. Applications should be constructed
+ * with modularity in mind, and common functionality should be
  * extracted into mixins.
  *
  * {{{
@@ -80,7 +80,7 @@ trait App extends Closable with CloseAwaitably {
   }
 
   /**
-   * Invoke `f` when shutdown is requested. Exit hooks run in parallel and all should complete before
+   * Invoke `f` when shutdown is requested. Exit hooks run in parallel and all must complete before
    * postmains are executed.
    */
   protected final def onExit(f: => Unit) {

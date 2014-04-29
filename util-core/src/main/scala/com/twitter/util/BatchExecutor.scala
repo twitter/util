@@ -14,7 +14,7 @@ import scala.collection.mutable
  *
  * A batcher's size can be controlled at runtime with the `sizePercentile`
  * function argument. This function returns a float between 0.0 and 1.0,
- * representing the fractional size of the `sizeThreshold` that should  be
+ * representing the fractional size of the `sizeThreshold` that should be
  * used for the next batch to be collected.
  *
  * TODO: Possible future improvements:
@@ -104,7 +104,7 @@ private[util] class BatchExecutor[In, Out](
   }
 
   def flushBatch(): () => Unit = {
-    // this should be executed within a `synchronized` block.
+    // this must be executed within a `synchronized` block.
     val prevBatch = new mutable.ArrayBuffer[(In, Promise[Out])](buf.length)
     buf.copyToBuffer(prevBatch)
     buf.clear()

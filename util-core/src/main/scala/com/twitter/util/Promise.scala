@@ -25,7 +25,7 @@ object Promise {
     /**
      * Returns true if successfully detached, will return true at most once.
      *
-     * The contract is that non-idempotent side effects should  only be done after the
+     * The contract is that non-idempotent side effects should only be done after the
      * successful detach.
      */
     def detach(): Boolean
@@ -527,7 +527,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    * and `this` becomes canonical. The same is true of interrupt
    * handlers: `other`'s interrupt handler becomes active, but is
    * stored canonically by `this` - further references are forwarded.
-   * Note that `this` should be unsatisfied at the time of the call,
+   * Note that `this` must be unsatisfied at the time of the call,
    * and not race with any other setters. `become` is a form of
    * satisfying the promise.
    *

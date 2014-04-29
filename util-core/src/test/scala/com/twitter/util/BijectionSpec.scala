@@ -16,7 +16,7 @@ class BijectionSpec extends WordSpec with Matchers {
     case _          => "not a foo"
   }
 
-  "Bijection" should  {
+  "Bijection" should {
     "return the original when inverting the inverse" in {
       assert(fooject.inverse.inverse == fooject)
     }

@@ -20,7 +20,7 @@ import org.scalatest.{WordSpec, Matchers}
 import com.twitter.conversions.string._
 
 class StringConversionsSpec extends WordSpec with Matchers {
-  "string" should  {
+  "string" should {
     "quoteC" in {
       "nothing".quoteC shouldEqual "nothing"
       "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC shouldEqual "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"

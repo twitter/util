@@ -23,7 +23,7 @@ import com.twitter.conversions.time._
 class DurationSpec extends { val ops = Duration } with TimeLikeSpec[Duration] {
   import ops._
 
-  "Duration" should  {
+  "Duration" should {
     "*" in {
       1.second * 2 shouldEqual 2.seconds
       500.milliseconds * 4 shouldEqual 2.seconds
@@ -227,7 +227,7 @@ class DurationSpec extends { val ops = Duration } with TimeLikeSpec[Duration] {
     }
   }
 
-  "Top" should  {
+  "Top" should {
     "Be scaling resistant" in {
       Top / 100 shouldEqual(Top)
       Top * 100 shouldEqual(Top)

@@ -13,9 +13,9 @@ import com.twitter.zk.{StateEvent, ZNode, ZkClient}
  * can permit and returns a Future[Permit]. If consensus on the number of permits
  * is lost, an exception is raised when acquiring a permit (so expect it).
  *
- * Care should be taken to handle zookeeper client session expiry. A ZkAsyncSemaphore cannot
+ * Care must be taken to handle zookeeper client session expiry. A ZkAsyncSemaphore cannot
  * be used after the zookeeper session has expired. Likewise, any permits acquired
- * via the session should be considered invalid. Additionally, it is the client's responsibility
+ * via the session must be considered invalid. Additionally, it is the client's responsibility
  * to determine if a permit is still valid in the case that the zookeeper client becomes
  * disconnected.
  *
@@ -211,7 +211,7 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
   }
 
   /**
-   * Reject all waiting requests for permits. This should be done when the zookeeper client session
+   * Reject all waiting requests for permits. This must be done when the zookeeper client session
    * has expired.
    */
   private[this] def rejectWaitQueue() = {
@@ -224,7 +224,7 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
   }
 
   /**
-   * Determine what the consensus of clients believe numPermits should  be. The '''data''' section for
+   * Determine what the consensus of clients believe numPermits should be. The '''data''' section for
    * each node in {{{permits}}} should contain a UTF-8 string representation of an integer, specifying
    * the value of numPermits the client's semaphore instance was created with. These are considered
    * votes for the consensus on numPermits. An exception is thrown if there is no consensus (two leading

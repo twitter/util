@@ -7,7 +7,7 @@ object TempFile {
    * Create a temporary file from the given (resource) path. The
    * tempfile is deleted on JVM exit.
    *
-   * Note, due to the usage of `File.deleteOnExit()` callers should 
+   * Note, due to the usage of `File.deleteOnExit()` callers should
    * be careful using this as it can leak memory.
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4513817 for
    * example.
@@ -21,7 +21,7 @@ object TempFile {
    * Create a temporary file from the given (resource) path. The
    * tempfile is deleted on JVM exit.
    *
-   * Note, due to the usage of `File.deleteOnExit()` callers should 
+   * Note, due to the usage of `File.deleteOnExit()` callers should
    * be careful using this as it can leak memory.
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4513817 for
    * example.

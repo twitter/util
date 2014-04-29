@@ -48,7 +48,7 @@ class ThriftSerializerSpec extends WordSpec with Matchers {
   }
 
 
-  "ThriftSerializer" should  {
+  "ThriftSerializer" should {
     "encode and decode json" in {
       testSerializer(new JsonThriftSerializer, Some(json))
     }

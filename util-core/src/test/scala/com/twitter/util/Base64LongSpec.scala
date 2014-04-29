@@ -5,7 +5,7 @@ import com.twitter.util.Base64Long.toBase64
 import util.Random
 
 class Base64LongSpec extends WordSpec with Matchers {
-  "toBase64" should  {
+  "toBase64" should {
     "properly convert zero" in {
       assert(toBase64(0) == "A")
     }

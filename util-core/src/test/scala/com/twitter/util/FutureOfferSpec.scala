@@ -6,7 +6,7 @@ import org.scalatest.mock.MockitoSugar
 import com.twitter.util.{Promise, Return, Try}
 
 class FutureOfferSpec extends WordSpec with Matchers with MockitoSugar {
-  "Future.toOffer" should  {
+  "Future.toOffer" should {
     "activate when future is satisfied (poll)" in {
       val p = new Promise[Int]
       val o = p.toOffer

@@ -79,7 +79,7 @@ trait TimeLikeOps[This <: TimeLike[This]] {
 
 /**
  * A common trait for time-like values. It requires a companion
- * `TimeLikeOps` module. `TimeLike`s are finite, but they should always
+ * `TimeLikeOps` module. `TimeLike`s are finite, but they must always
  * have two sentinels: `Top` and `Bottom`. These act like positive
  * and negative infinities: Arithmetic involving them preserves their
  * values, and so on.
@@ -328,7 +328,7 @@ object Time extends TimeLikeOps[Time] {
   val nanoTimeOffset = (System.currentTimeMillis * 1000000) - System.nanoTime
 
   /**
-   * Note, this should  only ever be updated by methods used for testing.
+   * Note, this should only ever be updated by methods used for testing.
    */
   private[util] val localGetTime = new Local[()=>Time]
 

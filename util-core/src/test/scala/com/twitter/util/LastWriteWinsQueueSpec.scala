@@ -3,7 +3,7 @@ package com.twitter.util
 import org.scalatest.{WordSpec, Matchers}
 
 class LastWriteWinsQueueSpec extends WordSpec with Matchers {
-  "LastWriteWinsQueue" should  {
+  "LastWriteWinsQueue" should {
     val queue = new LastWriteWinsQueue[String]
 
     "add & remove items" in {

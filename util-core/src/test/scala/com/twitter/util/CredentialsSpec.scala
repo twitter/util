@@ -20,7 +20,7 @@ package com.twitter.util
 import org.scalatest.{WordSpec, Matchers}
 
 class CredentialsSpec extends WordSpec with Matchers {
-  "Credentials" should  {
+  "Credentials" should {
     "parse a simple auth file" in {
       val content = "username: root\npassword: hellokitty\n"
       Credentials(content) shouldEqual Map("username" -> "root", "password" -> "hellokitty")

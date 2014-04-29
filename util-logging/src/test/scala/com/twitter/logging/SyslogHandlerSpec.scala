@@ -29,7 +29,7 @@ class SyslogHandlerSpec extends WordSpec with Matchers {
   record2.setLoggerName("net.lag.whiskey.Train")
   record2.setMillis(1206769996722L)
 
-  "SyslogHandler" should  {
+  "SyslogHandler" should {
     "write syslog entries" in {
       // start up new syslog listener
       val serverSocket = new DatagramSocket

@@ -19,7 +19,7 @@ import org.scalatest.concurrent.Eventually._
 @RunWith(classOf[JUnitRunner])
 class ZkAsyncSemaphoreSpec extends WordSpec with Matchers with MockitoSugar with AsyncAssertions {
 
-  "ZkAsyncSemaphore" should  {
+  "ZkAsyncSemaphore" should {
 
     val path = "/testing/twitter/service/charm/semaphore/test"
     val permits = new ConcurrentLinkedQueue[Permit]
@@ -41,7 +41,7 @@ class ZkAsyncSemaphoreSpec extends WordSpec with Matchers with MockitoSugar with
         }
       }
 
-      "provide a shared 2-permit semaphore and" should  {
+      "provide a shared 2-permit semaphore and" should {
         withClient { zk =>
           val sem1 = new ZkAsyncSemaphore(zk, path, 2)
           val sem2 = new ZkAsyncSemaphore(zk, path, 2)

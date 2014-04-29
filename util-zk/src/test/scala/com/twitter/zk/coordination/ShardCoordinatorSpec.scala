@@ -16,7 +16,7 @@ import org.scalatest.mock.MockitoSugar
 @RunWith(classOf[JUnitRunner])
 class ShardCoordinatorSpec extends WordSpec with Matchers with MockitoSugar {
 
-  "ShardCoordinator" should  {
+  "ShardCoordinator" should {
 
     val path = "/testing/twitter/service/charm/shards/test"
 

@@ -63,7 +63,7 @@ object ServerSet {
     object Warning  extends Status(CommonStatus.WARNING)
   }
 
-  /** Asynchronous wrapper for a common EndpointStatus.  A FuturePool should be provided. */
+  /** Asynchronous wrapper for a common EndpointStatus.  A FuturePool must be provided. */
   class EndpointStatus(val underlying: CommonServerSet.EndpointStatus, pool: FuturePool) {
     def update(status: Status): Future[Unit] = pool { underlying.update(status()) }
   }

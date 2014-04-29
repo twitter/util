@@ -18,7 +18,7 @@ class KeyHasherSpec extends WordSpec with Matchers {
   def testHasher(name: String, hasher: KeyHasher) = {
     val sources = readResource(name + "_source") map { decode(_) }
     val hashes = readResource(name + "_hashes")
-    sources.size should  be > 0
+    sources.size should be > 0
 
     sources zip hashes foreach { case (source, hashAsString) =>
       val hash = BigInt(hashAsString).toLong
@@ -26,7 +26,7 @@ class KeyHasherSpec extends WordSpec with Matchers {
     }
   }
 
-  "KeyHasher" should  {
+  "KeyHasher" should {
     "correctly hash fnv1_32" in {
       testHasher("fnv1_32", KeyHasher.FNV1_32)
     }

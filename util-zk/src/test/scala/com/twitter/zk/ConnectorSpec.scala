@@ -7,7 +7,7 @@ import org.mockito.Mockito._
 import com.twitter.util.Future
 
 class ConnectorSpec extends WordSpec with Matchers with MockitoSugar {
-  "Connector.RoundRobin" should  {
+  "Connector.RoundRobin" should {
     "require underlying connections" in {
       intercept[Exception] {
         Connector.RoundRobin()

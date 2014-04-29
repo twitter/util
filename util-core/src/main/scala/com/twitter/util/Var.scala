@@ -65,7 +65,7 @@ trait Var[+T] { self =>
       val inner = new AtomicReference(Closable.nop)
       val outer = self.observe(depth, Observer(t =>
         // TODO: Right now we rely on synchronous propagation; and
-        // thus also synchronous closes. We should  instead perform
+        // thus also synchronous closes. We should instead perform
         // asynchronous propagation so that it is is safe &
         // predicatable to have asynchronously closing Vars, for
         // example. Currently the only source of potentially
