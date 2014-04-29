@@ -7,11 +7,10 @@ import java.util.concurrent.ConcurrentSkipListMap
 @deprecated("use guava's Multimaps.synchronizedMultimap", "6.2.x")
 class ConcurrentMultiMap[K <% Ordered[K], V <% Ordered[V]] {
   class Container(k: K, v: Option[V])
-  extends Tuple2[K, Option[V]](k, v)
-  with Comparable[Container]
+  extends Comparable[Container]
   {
-    def key   = _1
-    def value = _2
+    def key   = k
+    def value = v
 
     def isDefined = value.isDefined
 

@@ -27,7 +27,7 @@ import java.util.jar.JarFile
 import scala.collection.mutable
 import scala.io.Source
 import scala.tools.nsc.{Global, Settings}
-import scala.tools.nsc.interpreter.AbstractFileClassLoader
+import scala.reflect.internal.util.AbstractFileClassLoader
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.reflect.internal.util.{BatchSourceFile, Position}
@@ -301,7 +301,7 @@ class Eval(target: Option[File]) {
   /*
    * For a given FQ classname, trick the resource finder into telling us the containing jar.
    */
-  private def classPathOfClass(className: String) = try {
+  private def classPathOfClass(className: String) = {
     val resource = className.split('.').mkString("/", "/", ".class")
     val path = getClass.getResource(resource).getPath
     if (path.indexOf("file:") >= 0) {
@@ -467,7 +467,7 @@ class Eval(target: Option[File]) {
           }
         messages += (severityName + lineMessage + ": " + message) ::
           (if (pos.isDefined) {
-            pos.inUltimateSource(pos.source).lineContent.stripLineEnd ::
+            pos.finalPosition.lineContent.stripLineEnd ::
               (" " * (pos.column - 1) + "^") ::
               Nil
           } else {
