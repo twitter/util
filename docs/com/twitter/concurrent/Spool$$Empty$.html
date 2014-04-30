@@ -176,21 +176,21 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.concurrent.Spool.Empty#collect" data-isabs="false">
-      <a id="collect[B](PartialFunction[Nothing, B]):Future[com.twitter.concurrent.Spool.Empty.type]"></a>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#collect" data-isabs="false">
+      <a id="collect[B](PartialFunction[Nothing, B]):Future[Spool[B]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">collect</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Nothing" class="extype">Nothing</span>, B]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[com.twitter.concurrent.Spool.Empty.type]</span>
+        <span class="name">collect</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<span name="scala.Nothing" class="extype">Nothing</span>, B]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[B]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">The standard Scala collect, in order to implement map &amp; filter.</p><div class="fullcomment"><div class="comment cmt"><p>The standard Scala collect, in order to implement map &amp; filter.</p><p>It may seem unnatural to return a Future[…] here, but we cannot
 know whether the first element exists until we have applied its
 filter.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool.Empty" class="extype" href="">Empty</a> → <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -269,6 +269,21 @@ flattening the result into a single spool.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#force" data-isabs="false">
+      <a id="force:Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">force</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Eagerly executes all computation represented by this Spool (presumably for
+sideeffects), and returns a Future representing its completion.</p><div class="fullcomment"><div class="comment cmt"><p>Eagerly executes all computation represented by this Spool (presumably for
+sideeffects), and returns a Future representing its completion.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Spool#foreach" data-isabs="false">
       <a id="foreach[B]((Nothing) ⇒ B):Future[Unit]"></a>
       <h4 class="signature">
@@ -337,6 +352,19 @@ applied as the items become available.
       </h4>
       <p class="shortcomment cmt">The first element of the spool.</p><div class="fullcomment"><div class="comment cmt"><p>The first element of the spool. Invalid for empty spools.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool.Empty" class="extype" href="">Empty</a> → <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#headOption" data-isabs="false">
+      <a id="headOption:Option[Nothing]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">headOption</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Nothing" class="extype">Nothing</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The first element of the spool if it is non-empty.</p><div class="fullcomment"><div class="comment cmt"><p>The first element of the spool if it is non-empty.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Spool.Empty#isEmpty" data-isabs="false">
       <a id="isEmpty:Boolean"></a>
       <h4 class="signature">
@@ -446,6 +474,19 @@ applied as the items become available.
       </h4>
       <p class="shortcomment cmt">The (deferred) tail of the spool.</p><div class="fullcomment"><div class="comment cmt"><p>The (deferred) tail of the spool. Invalid for empty spools.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool.Empty" class="extype" href="">Empty</a> → <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#takeWhile" data-isabs="false">
+      <a id="takeWhile((Nothing) ⇒ Boolean):Spool[Nothing]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">takeWhile</span><span class="params">(<span name="f">f: (<span name="scala.Nothing" class="extype">Nothing</span>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[<span name="scala.Nothing" class="extype">Nothing</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Take elements from the head of the Spool (lazily), while the given condition is true.</p><div class="fullcomment"><div class="comment cmt"><p>Take elements from the head of the Spool (lazily), while the given condition is true.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Spool#toSeq" data-isabs="false">
       <a id="toSeq:Future[Seq[Nothing]]"></a>
       <h4 class="signature">

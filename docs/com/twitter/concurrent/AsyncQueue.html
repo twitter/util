@@ -193,6 +193,24 @@ pollers.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.AsyncQueue#fail" data-isabs="false">
+      <a id="fail(Throwable,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fail</span><span class="params">(<span name="exc">exc: Throwable</span>, <span name="discard">discard: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Fail the queue.</p><div class="fullcomment"><div class="comment cmt"><p>Fail the queue. When <code><code>discard</code></code> is true, the queue contents is discarded
+and all pollers are failed immediately. When this flag is false, subsequent
+pollers are not failed until the queue becomes empty.</p><p>No new elements are admitted to the queue after it has been failed.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@tailrec</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.AsyncQueue#fail" data-isabs="false">
       <a id="fail(Throwable):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -204,12 +222,7 @@ pollers.
       </span>
       </h4>
       <p class="shortcomment cmt">Fail the queue: current and subsequent pollers will be completed
-with the given exception.</p><div class="fullcomment"><div class="comment cmt"><p>Fail the queue: current and subsequent pollers will be completed
-with the given exception.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@tailrec</span><span class="args">()</span>
-              
-        </dd></dl></div>
+with the given exception; any outstanding messages are discarded.</p>
     </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
       <a id="finalize():Unit"></a>
       <h4 class="signature">

@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.io.Buf.ByteArray</title>
+          <title>com.twitter.concurrent.LocalScheduler</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
@@ -14,9 +14,9 @@
         </head>
         <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
       <div id="definition">
-        <a title="Go to companion" href="Buf$$ByteArray$.html"><img src="../../../lib/class_to_object_big.png" /></a>
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.io" class="extype" href="package.html">io</a>.<a name="com.twitter.io.Buf" class="extype" href="Buf$.html">Buf</a></p>
-        <h1><a title="Go to companion" href="Buf$$ByteArray$.html">ByteArray</a></h1>
+        <img src="../../../lib/class_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.concurrent" class="extype" href="package.html">concurrent</a></p>
+        <h1>LocalScheduler</h1>
       </div>
 
       <h4 class="signature" id="signature">
@@ -25,14 +25,14 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">ByteArray</span><span class="result"> extends <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>
+        <span class="name">LocalScheduler</span><span class="result"> extends <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></span>
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A buffer representing an array of bytes.
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>An efficient thread-local, direct-dispatch scheduler.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
     
 
@@ -46,7 +46,7 @@
               <span class="filtertype">Inherited</span>
               <ol><li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li></ol>
-              <ol id="linearization"><li name="com.twitter.io.Buf.ByteArray" class="in"><span>ByteArray</span></li><li name="com.twitter.io.Buf" class="in"><span>Buf</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+              <ol id="linearization"><li name="com.twitter.concurrent.LocalScheduler" class="in"><span>LocalScheduler</span></li><li name="com.twitter.concurrent.Scheduler" class="in"><span>Scheduler</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
             </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -58,15 +58,27 @@
         <div id="allMembers">
         <div class="members" id="constructors">
               <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="com.twitter.io.Buf.ByteArray#this" data-isabs="false">
-      <a id="this:ByteArray"></a>
+              <ol><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#this" data-isabs="false">
+      <a id="this:LocalScheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ByteArray</span><span class="params">(<span name="bytes">bytes: <span name="scala.Array" class="extype">Array</span>[<span name="scala.Byte" class="extype">Byte</span>]</span>, <span name="begin">begin: <span name="scala.Int" class="extype">Int</span></span>, <span name="end">end: <span name="scala.Int" class="extype">Int</span></span>)</span>
+        <span class="name">LocalScheduler</span><span class="params">()</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#this" data-isabs="false">
+      <a id="this:LocalScheduler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">LocalScheduler</span><span class="params">(<span name="lifo">lifo: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span>
       </span>
       </h4>
       
@@ -151,30 +163,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#begin" data-isabs="false">
-      <a id="begin:Int"></a>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#blocking" data-isabs="false">
+      <a id="blocking[T](⇒ T)(CanAwait):T"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">begin</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+        <span class="name">blocking</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: ⇒ T</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="perm">perm: <a name="com.twitter.util.Awaitable.CanAwait" class="extype" href="../util/Awaitable$$CanAwait.html">CanAwait</a></span>)</span><span class="result">: T</span>
       </span>
       </h4>
-      
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#bytes" data-isabs="false">
-      <a id="bytes:Array[Byte]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">bytes</span><span class="result">: <span name="scala.Array" class="extype">Array</span>[<span name="scala.Byte" class="extype">Byte</span>]</span>
-      </span>
-      </h4>
-      
+      <p class="shortcomment cmt">Executes a function <code>f</code> in a blocking fashion.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a function <code>f</code> in a blocking fashion.</p><p>Note: The permit may be removed in the future.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.LocalScheduler" class="extype" href="">LocalScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -190,31 +191,19 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf#concat" data-isabs="false">
-      <a id="concat(Buf):Buf"></a>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#cpuTime" data-isabs="false">
+      <a id="cpuTime:Long"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">concat</span><span class="params">(<span name="right">right: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>)</span><span class="result">: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>
+        <span class="name">cpuTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Concatenate this buffer with the given buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Concatenate this buffer with the given buffer.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#end" data-isabs="false">
-      <a id="end:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">end</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      
+      <p class="shortcomment cmt">The amount of CPU time that's been scheduled as per ThreadMXBean.</p><div class="fullcomment"><div class="comment cmt"><p>The amount of CPU time that's been scheduled as per ThreadMXBean.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.LocalScheduler" class="extype" href="">LocalScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -227,7 +216,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#equals" data-isabs="false">
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -235,10 +224,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="other">other: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
       <a id="finalize():Unit"></a>
       <h4 class="signature">
@@ -254,6 +243,20 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#flush" data-isabs="false">
+      <a id="flush():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flush</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Flush the schedule.</p><div class="fullcomment"><div class="comment cmt"><p>Flush the schedule. Returns when there is no more
+work to do.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.LocalScheduler" class="extype" href="">LocalScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -266,7 +269,22 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf#hashCode" data-isabs="false">
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#hasNext" data-isabs="false">
+      <a id="hasNext:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hasNext</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">An implementaiton of Iterator over runnable tasks</p><div class="fullcomment"><div class="comment cmt"><p>An implementaiton of Iterator over runnable tasks</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -277,7 +295,7 @@
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -290,20 +308,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#length" data-isabs="false">
-      <a id="length:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">length</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">The number of bytes in the buffer
-</p><div class="fullcomment"><div class="comment cmt"><p>The number of bytes in the buffer
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -316,6 +320,21 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#next" data-isabs="false">
+      <a id="next():Runnable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">next</span><span class="params">()</span><span class="result">: <span name="java.lang.Runnable" class="extype">Runnable</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">An implementaiton of Iterator over runnable tasks</p><div class="fullcomment"><div class="comment cmt"><p>An implementaiton of Iterator over runnable tasks</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
       <a id="notify():Unit"></a>
       <h4 class="signature">
@@ -340,22 +359,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#slice" data-isabs="false">
-      <a id="slice(Int,Int):Buf"></a>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#numDispatches" data-isabs="false">
+      <a id="numDispatches:Long"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">slice</span><span class="params">(<span name="i">i: <span name="scala.Int" class="extype">Int</span></span>, <span name="j">j: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>
+        <span class="name">numDispatches</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns a new buffer representing a slice of this buffer, delimited
-by the indices <code>i</code> inclusive and <code>j</code> exclusive: <code>[i, j)</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new buffer representing a slice of this buffer, delimited
-by the indices <code>i</code> inclusive and <code>j</code> exclusive: <code>[i, j)</code>. Out of bounds
-indices are truncated. Negative indices are not accepted.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd></dl></div>
+      <p class="shortcomment cmt">The number of dispatches performed by this scheduler.</p><div class="fullcomment"><div class="comment cmt"><p>The number of dispatches performed by this scheduler.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.LocalScheduler" class="extype" href="">LocalScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#submit" data-isabs="false">
+      <a id="submit(Runnable):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">submit</span><span class="params">(<span name="r">r: <span name="java.lang.Runnable" class="extype">Runnable</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Schedule <code>r</code> to be run at some time in the future.</p><div class="fullcomment"><div class="comment cmt"><p>Schedule <code>r</code> to be run at some time in the future.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.LocalScheduler" class="extype" href="">LocalScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -368,7 +397,7 @@ indices are truncated. Negative indices are not accepted.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#toString" data-isabs="false">
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -379,7 +408,20 @@ indices are truncated. Negative indices are not accepted.
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler#usrTime" data-isabs="false">
+      <a id="usrTime:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">usrTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The amount of User time that's been scheduled as per ThreadMXBean.</p><div class="fullcomment"><div class="comment cmt"><p>The amount of User time that's been scheduled as per ThreadMXBean.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.LocalScheduler" class="extype" href="">LocalScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">
@@ -425,23 +467,6 @@ indices are truncated. Negative indices are not accepted.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray#write" data-isabs="false">
-      <a id="write(Array[Byte],Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">write</span><span class="params">(<span name="buf">buf: <span name="scala.Array" class="extype">Array</span>[<span name="scala.Byte" class="extype">Byte</span>]</span>, <span name="off">off: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Write the entire contents of the buffer into the given array at
-the given offset.</p><div class="fullcomment"><div class="comment cmt"><p>Write the entire contents of the buffer into the given array at
-the given offset. Partial writes aren't supported directly
-through this API; they easily performed by first slicing the
-buffer.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd></dl></div>
     </li></ol>
             </div>
 
@@ -449,8 +474,8 @@ buffer.
         </div>
 
         <div id="inheritedMembers">
-        <div name="com.twitter.io.Buf" class="parent">
-              <h3>Inherited from <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></h3>
+        <div name="com.twitter.concurrent.Scheduler" class="parent">
+              <h3>Inherited from <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></h3>
             </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">

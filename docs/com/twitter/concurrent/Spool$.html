@@ -67,7 +67,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Spool$$Cons.html"><span class="name">Cons</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: A</span>, <span name="next">next: Future[Spool[A]]</span>)</span><span class="result"> extends Spool[A] with Product with Serializable</span>
+        <a href="Spool$$Cons.html"><span class="name">Cons</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="head">head: A</span>, <span name="tail">tail: Future[Spool[A]]</span>)</span><span class="result"> extends Spool[A] with Product with Serializable</span>
       </span>
       </h4>
       
@@ -238,32 +238,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.concurrent.Spool#cons" data-isabs="false">
-      <a id="cons[A](A,Spool[A]):Spool[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">cons</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: A</span>, <span name="nextSpool">nextSpool: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>)</span><span class="result">: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="com.twitter.concurrent.Spool#cons" data-isabs="false">
-      <a id="cons[A](A,Future[Spool[A]]):Spool[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">cons</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: A</span>, <span name="next">next: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]]</span>)</span><span class="result">: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Cons a value &amp; tail to a new {{Spool}}.</p><div class="fullcomment"><div class="comment cmt"><p>Cons a value &amp; tail to a new {{Spool}}. To defer the tail of the Spool, use
-the {{*::}} operator instead.
-</p></div></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Spool#empty" data-isabs="false">
       <a id="empty[A]:Spool[A]"></a>
       <h4 class="signature">
@@ -495,7 +469,42 @@ the {{*::}} operator instead.
     </li></ol>
             </div>
 
-        
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="com.twitter.concurrent.Spool#cons" data-isabs="false">
+      <a id="cons[A](A,Spool[A]):Spool[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.14.1) Use *:: instead: the ABI for this method will be changing.">cons</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: A</span>, <span name="nextSpool">nextSpool: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>)</span><span class="result">: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.14.1)</i> Use *:: instead: the ABI for this method will be changing.</p></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#cons" data-isabs="false">
+      <a id="cons[A](A,Future[Spool[A]]):Spool[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.14.1) Use *:: instead: the ABI for this method will be changing.">cons</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: A</span>, <span name="next">next: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]]</span>)</span><span class="result">: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Cons a value &amp; tail to a new {{Spool}}.</p><div class="fullcomment"><div class="comment cmt"><p>Cons a value &amp; tail to a new {{Spool}}. To defer the tail of the Spool, use
+the {{*::}} operator instead.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.14.1)</i> Use *:: instead: the ABI for this method will be changing.</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

@@ -25,7 +25,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Ok</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="t">t: T</span>)</span><span class="result"> extends <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[T] with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="name">Ok</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="value">value: T</span>)</span><span class="result"> extends <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[T] with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
       </span>
       </h4>
       
@@ -65,7 +65,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Ok</span><span class="params">(<span name="t">t: T</span>)</span>
+        <span class="name">Ok</span><span class="params">(<span name="value">value: T</span>)</span>
       </span>
       </h4>
       
@@ -227,7 +227,23 @@
         <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (T) ⇒ <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[B]</span>)</span><span class="result">: <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[B]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns the result of applying <code>f</code> to this Result's value if this
+result is Ok.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the result of applying <code>f</code> to this Result's value if this
+result is Ok.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Result#get" data-isabs="false">
+      <a id="get:T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="result">: T</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the result's value.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the result's value.</p><p><i>Note:</i> The result must be Ok.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -252,6 +268,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Ok" class="extype" href="">Ok</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Result#isEmpty" data-isabs="false">
+      <a id="isEmpty:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isEmpty</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns true if the result is Empty, false otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if the result is Empty, false otherwise.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Result#isFailed" data-isabs="false">
+      <a id="isFailed:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isFailed</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns true if the result is Failed, false otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if the result is Failed, false otherwise.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -264,6 +306,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Result#isOk" data-isabs="false">
+      <a id="isOk:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isOk</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns true if the result is Ok, false otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if the result is Ok, false otherwise.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Result#isPending" data-isabs="false">
+      <a id="isPending:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isPending</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns true if the result is Pending, false otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if the result is Pending, false otherwise.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Result#map" data-isabs="false">
       <a id="map[B]((T) ⇒ B):Result[B]"></a>
       <h4 class="signature">
@@ -275,7 +343,10 @@
         <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (T) ⇒ B</span>)</span><span class="result">: <a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a>[B]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a Result containing the result of applying <code>f</code> to this
+Result's value if this Result is Ok.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a Result containing the result of applying <code>f</code> to this
+Result's value if this Result is Ok.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Result" class="extype" href="VarSource$$Result.html">Result</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -372,18 +443,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Ok#t" data-isabs="false">
-      <a id="t:T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">t</span><span class="result">: T</span>
-      </span>
-      </h4>
-      
     </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Ok#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -396,6 +455,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.exp.VarSource.Ok" class="extype" href="">Ok</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.exp.VarSource.Ok#value" data-isabs="false">
+      <a id="value:T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">value</span><span class="result">: T</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">

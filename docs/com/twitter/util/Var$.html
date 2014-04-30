@@ -220,6 +220,20 @@ at all.</p><p>Updates from <code>update</code> are ignored after the returned
               
         </dd></dl></div>
     </li><li visbl="pub" name="com.twitter.util.Var#collect" data-isabs="false">
+      <a id="collect[T&lt;:AnyRef](List[Var[T]]):Var[List[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collect</span><span class="tparams">[<span name="T">T &lt;: AnyRef</span>]</span><span class="params">(<span name="vars">vars: <span name="java.util.List" class="extype">List</span>[<a name="com.twitter.util.Var" class="extype" href="Var.html">Var</a>[T]]</span>)</span><span class="result">: <a name="com.twitter.util.Var" class="extype" href="Var.html">Var</a>[<span name="java.util.List" class="extype">List</span>[T]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Collect a List of Vars into a new Var of List.</p><div class="fullcomment"><div class="comment cmt"><p>Collect a List of Vars into a new Var of List.
+</p></div><dl class="paramcmts block"><dt class="param">vars</dt><dd class="cmt"><p>a java.util.List of Vars</p></dd><dt>returns</dt><dd class="cmt"><p>a Var[java.util.List[A]] containing the collected values from vars.
+</p></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Var#collect" data-isabs="false">
       <a id="collect[T, CC&lt;:Traversable[X]](CC[Var[T]])(CanBuildFrom[CC[T], T, CC[T]],ClassManifest[T]):Var[CC[T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
