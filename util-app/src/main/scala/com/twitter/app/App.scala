@@ -115,7 +115,7 @@ trait App extends Closable with CloseAwaitably {
   final def main(args: Array[String]) {
     for (f <- inits) f()
 
-    _args = flag.parseOrExit1(args).toArray
+    _args = flag.parseOrExit1(args, false).toArray
 
     for (f <- premains) f()
 
