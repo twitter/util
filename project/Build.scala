@@ -9,21 +9,25 @@ object Util extends Build {
     ExclusionRule("com.sun.jmx", "jmxri"),
     ExclusionRule("javax.jms", "jms")
   )
+  val scalatest = scalaVersion(sv => sv match {
+    case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2"
+    case _       => "org.scalatest" %% "scalatest" % "2.1.3"
+  })
 
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.10.4",
-    crossScalaVersions := Seq("2.10.4", "2.11.0"),
+    crossScalaVersions := Seq("2.9.2", "2.10.4", "2.11.0"),
     incOptions := incOptions.value.withNameHashing(true),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit"         %  "junit"       % "4.8.1"  % "test",
-      "org.scalatest" %% "scalatest"   % "2.1.3"  % "test",
       "org.mockito"   %  "mockito-all" % "1.9.5"  % "test"
     ),
+    libraryDependencies <+= scalatest(_ % "test"),
 
     libraryDependencies := {
       CrossVersion.partialVersion(scalaVersion.value) match {
@@ -76,16 +80,6 @@ object Util extends Build {
       else
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
     }
-  )
-
-  val jmockSettings = Seq(
-    libraryDependencies ++= Seq(
-      "org.jmock"     % "jmock"        % "2.4.0" % "test",
-      "cglib"         % "cglib"        % "2.1_3" % "test",
-      "asm"           % "asm"          % "1.5.3" % "test",
-      "org.objenesis" % "objenesis"    % "1.1"   % "test",
-      "org.hamcrest"  % "hamcrest-all" % "1.1"   % "test"
-    )
   )
 
   lazy val util = Project(
@@ -152,6 +146,10 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-collection",
+    // Because of different imports for wrappers in 2.9 and 2.11
+    unmanagedSourceDirectories in Compile <++= (scalaBinaryVersion, baseDirectory) { (sv, bd) =>
+      Seq(bd / "src" / "main" / ("scala-" + sv))
+    },
     libraryDependencies ++= Seq(
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
       "com.google.code.findbugs" % "jsr305"              % "1.3.9",
@@ -183,9 +181,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-logging",
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.1.3"
-    )
+    libraryDependencies <+= scalatest
   ).dependsOn(utilCore, utilApp)
 
   lazy val utilThrift = Project(
@@ -228,8 +224,7 @@ object Util extends Build {
     id = "util-zk",
     base = file("util-zk"),
     settings = Project.defaultSettings ++
-      sharedSettings ++
-      jmockSettings
+      sharedSettings
   ).settings(
     name := "util-zk",
     libraryDependencies ++= Seq(
@@ -241,8 +236,7 @@ object Util extends Build {
     id = "util-zk-common",
     base = file("util-zk-common"),
     settings = Project.defaultSettings ++
-      sharedSettings ++
-      jmockSettings
+      sharedSettings
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(

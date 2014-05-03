@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.{AtomicReference, AtomicLong, AtomicReference
 import scala.annotation.tailrec
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
-import scala.reflect.ClassTag
 
 /**
  * Trait Var represents a variable. It is a reference cell which is
@@ -219,7 +218,7 @@ object Var {
    * Collect a collection of Vars into a Var of collection.
    */
   def collect[T, CC[X] <: Traversable[X]](vars: CC[Var[T]])
-      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassTag[T])
+      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassManifest[T])
       : Var[CC[T]] = async(newBuilder().result) { v =>
     val N = vars.size
     val cur = new AtomicReferenceArray[T](N)

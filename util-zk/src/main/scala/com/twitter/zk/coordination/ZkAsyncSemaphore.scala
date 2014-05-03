@@ -225,7 +225,7 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
 
   /**
    * Determine what the consensus of clients believe numPermits should be. The '''data''' section for
-   * each node in {{{permits}}} should contain a UTF-8 string representation of an integer, specifying
+   * each node in {{{permits}}} must contain a UTF-8 string representation of an integer, specifying
    * the value of numPermits the client's semaphore instance was created with. These are considered
    * votes for the consensus on numPermits. An exception is thrown if there is no consensus (two leading
    * groups with the same cardinality).

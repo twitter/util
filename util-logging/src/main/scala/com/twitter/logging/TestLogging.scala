@@ -17,12 +17,13 @@
 package com.twitter.logging
 
 import java.util.{logging => jlogging}
-import org.scalatest.{WordSpec, Matchers, BeforeAndAfter}
+import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{WordSpec, BeforeAndAfter}
 
 /**
  * Specify logging during unit tests via system property, defaulting to FATAL only.
  */
-trait TestLogging extends BeforeAndAfter { self: WordSpec with Matchers =>
+trait TestLogging extends BeforeAndAfter { self: WordSpec with ShouldMatchers =>
   val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
   private val logger = Logger.get("")
