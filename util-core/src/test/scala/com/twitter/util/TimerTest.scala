@@ -18,8 +18,6 @@ import org.scalatest.time.{Span, Seconds}
 class TimerTest extends FunSuite with MockitoSugar {
 
   test("ThreadStoppingTimer should stop timers in a different thread") {
-    // For some reason proper type inference fails here.
-    type R = org.specs.specification.Result[java.util.concurrent.Future[_]]
     val executor = mock[ExecutorService]
     val underlying = mock[Timer]
     val timer = new ThreadStoppingTimer(underlying, executor)
