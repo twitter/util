@@ -43,6 +43,12 @@ class StorageUnitTest extends FunSuite {
     assert(-2.kilobytes.toHuman === "-2.0 KiB")
   }
 
+  test("StorageUnit: should min properly") {
+    assert((1.bytes min 2.bytes) === 1.bytes)
+    assert((2.bytes min 1.bytes) === 1.bytes)
+    assert((2.bytes min 2.bytes) === 2.bytes)
+  }
+
   test("StorageUnit: should adhere to company-issued serial number") {
     val i = 4.megabytes
     val j = 4.megabytes

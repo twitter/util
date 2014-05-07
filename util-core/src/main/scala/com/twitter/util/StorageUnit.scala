@@ -18,6 +18,7 @@ package com.twitter.util
 
 object StorageUnit {
   val infinite = new StorageUnit(Long.MaxValue)
+  val zero = new StorageUnit(0)
 
   private def factor(s: String) = {
     var lower = s.toLowerCase
@@ -66,6 +67,8 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def +(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes + that.bytes)
   def -(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes - that.bytes)
   def *(scalar: Double): StorageUnit = new StorageUnit((this.bytes.toDouble*scalar).toLong)
+  def *(scalar: Long): StorageUnit = new StorageUnit(this.bytes * scalar)
+  def /(scalar: Long): StorageUnit = new StorageUnit(this.bytes / scalar)
 
   override def equals(other: Any) = {
     other match {
@@ -80,6 +83,9 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
 
   override def compare(other: StorageUnit) =
     if (bytes < other.bytes) -1 else if (bytes > other.bytes) 1 else 0
+
+  def min(other: StorageUnit): StorageUnit =
+    if (this < other) this else other
 
   override def toString() = inBytes + ".bytes"
 
