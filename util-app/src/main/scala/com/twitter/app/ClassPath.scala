@@ -26,12 +26,12 @@ private object ClassPath {
    * Information about a classpath entry.
    */
   case class Info(path: String, loader: ClassLoader) {
-    val name = (path take (path.length - 6)).replace('/', '.')
-    val packageName = {
-      val i = name.lastIndexOf('.')
-      if (i < 0) "" else name.substring(0, i)
-    }
-    
+    val name =
+      if (path.endsWith(".class"))
+        (path take (path.length - 6)).replace('/', '.')
+      else
+        path.replace('/', '.')
+
     /**
      * Load the classpath described by this entry.
      */
