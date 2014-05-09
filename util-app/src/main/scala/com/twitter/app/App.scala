@@ -37,6 +37,9 @@ trait App extends Closable with CloseAwaitably {
   /** The remaining, unparsed arguments */
   def args = _args
 
+  /** Whether or not to accept undefined flags */
+  protected def allowUndefinedFlags = false
+
   private val inits     = mutable.Buffer[() => Unit]()
   private val premains  = mutable.Buffer[() => Unit]()
   private val exits     = new ConcurrentLinkedQueue[Closable]
@@ -115,7 +118,8 @@ trait App extends Closable with CloseAwaitably {
   final def main(args: Array[String]) {
     for (f <- inits) f()
 
-    _args = flag.parseOrExit1(args).toArray
+    println("allowUndefinedFlags: " + allowUndefinedFlags)
+    _args = flag.parseOrExit1(args, allowUndefinedFlags).toArray
 
     for (f <- premains) f()
 
