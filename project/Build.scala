@@ -146,10 +146,6 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-collection",
-    // Because of different imports for wrappers in 2.9 and 2.11
-    unmanagedSourceDirectories in Compile <++= (scalaBinaryVersion, baseDirectory) { (sv, bd) =>
-      Seq(bd / "src" / "main" / ("scala-" + sv))
-    },
     libraryDependencies ++= Seq(
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
       "com.google.code.findbugs" % "jsr305"              % "1.3.9",
