@@ -436,6 +436,26 @@ class TimeSpec extends  { val ops = Time } with TimeLikeSpec[Time] {
       (Time.now.inMillis - System.currentTimeMillis).abs must beLessThan(20L)
     }
 
+    "sleep" in {
+      Time.withCurrentTimeFrozen { ctl =>
+        val ctx = Local.save()
+        val r = new Runnable {
+          def run() {
+            Local.restore(ctx)
+            Time.sleep(5.seconds)
+          }
+        }
+        @volatile var x = 0
+        val t = new Thread(r)
+        t.start()
+        t.isAlive must beTrue
+        t.getState must eventually(beEqualTo(Thread.State.TIMED_WAITING))
+        ctl.advance(5.seconds)
+        t.join()
+        t.isAlive must beFalse
+      }
+    }
+
     "compare" in {
       10.seconds.afterEpoch must be_<(11.seconds.afterEpoch)
       10.seconds.afterEpoch must be_==(10.seconds.afterEpoch)

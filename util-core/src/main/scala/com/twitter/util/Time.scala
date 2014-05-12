@@ -331,6 +331,7 @@ object Time extends TimeLikeOps[Time] {
    * Note, this should only ever be updated by methods used for testing.
    */
   private[util] val localGetTime = new Local[()=>Time]
+  private[util] val localGetTimer = new Local[MockTimer]
 
   @deprecated("use Time.fromMilliseconds(...) instead", "2011-09-12") // date is a guess
   def apply(millis: Long) = fromMilliseconds(millis)
@@ -345,11 +346,13 @@ object Time extends TimeLikeOps[Time] {
    */
   def withTimeFunction[A](timeFunction: => Time)(body: TimeControl => A): A = {
     @volatile var tf = () => timeFunction
+    val tmr = new MockTimer
     val save = Local.save()
     try {
       val timeControl = new TimeControl {
         def set(time: Time) {
           tf = () => time
+          tmr.tick()
         }
         def advance(delta: Duration) {
           val newTime = tf() + delta
@@ -357,9 +360,11 @@ object Time extends TimeLikeOps[Time] {
             to work inside filters or between the creation and fulfillment of Promises.
             See BackupRequestFilterTest in Finagle for an example. */
           tf = () => newTime
+          tmr.tick()
         }
       }
       Time.localGetTime() = () => tf()
+      Time.localGetTimer() = tmr
       body(timeControl)
     } finally {
       Local.restore(save)
@@ -389,6 +394,21 @@ object Time extends TimeLikeOps[Time] {
    */
   def withCurrentTimeFrozen[A](body: TimeControl => A): A = {
     withTimeAt(Time.now)(body)
+  }
+
+  /**
+   * Puts the currently executing thread to sleep for the given duration,
+   * according to object Time.
+   *
+   * This is useful for testing.
+   */
+  def sleep(duration: Duration) {
+    localGetTimer() match {
+      case None =>
+        Thread.sleep(duration.inMilliseconds)
+      case Some(timer) =>
+        Await.result(Future.sleep(duration)(timer))
+    }
   }
 
   @deprecated("Use Stopwatch", "5.4.0")
