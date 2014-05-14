@@ -1,3 +1,9 @@
+6.16.0  2014-05-13
+
+  * util-app: Add flag for configuring acceptance of undefined flags
+  * util-app: Minor c.t.app.ClassPath/c.t.f.util.LoadService cleanup
+  * util-core: Adds Time.sleep for testing sleeping code
+
 6.15.0  2014-04-29
 
   * util-app: enforce close grace period
