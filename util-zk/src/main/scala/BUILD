@@ -4,5 +4,8 @@ scala_library(name='scala',
     pants('util/util-core/src/main/scala'),
     pants('util/util-logging/src/main/scala')
   ],
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  provides=artifact(org='com.twitter',
+                    name='util-zk',
+                    repo='pants-support/ivy:internal',),
 )

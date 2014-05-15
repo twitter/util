@@ -6,5 +6,8 @@ scala_library(name='scala',
     pants('3rdparty:cglib'),
     pants('util/util-core/src/main/scala')
   ],
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  provides=artifact(org='com.twitter',
+                    name='util-reflect',
+                    repo='pants-support/ivy:internal',),
 )

@@ -5,5 +5,8 @@ scala_library(name='scala',
     pants('3rdparty:slf4j-api'),
     pants('util/util-codec')
   ],
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  provides=artifact(org='com.twitter',
+                    name='util-thrift',
+                    repo='pants-support/ivy:internal',),
 )

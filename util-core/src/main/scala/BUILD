@@ -2,5 +2,8 @@ scala_library(name='scala',
   sources=rglobs('*.scala'),
   java_sources=[
     pants('util/util-core/src/main/java')
-  ]
+  ],
+  provides=artifact(org='com.twitter',
+                    name='util-core',
+                    repo='pants-support/ivy:internal',),
 )

@@ -4,5 +4,8 @@ scala_library(name='scala',
     pants('3rdparty:guava'),
     pants('util/util-core/src/main/scala'),
   ],
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  provides=artifact(org='com.twitter',
+                    name='util-collection',
+                    repo='pants-support/ivy:internal',),
 )
