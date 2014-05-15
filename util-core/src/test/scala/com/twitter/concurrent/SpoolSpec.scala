@@ -25,6 +25,11 @@ class SpoolSpec extends SpecificationWithJUnit {
       (s map { _ * 2 } ) must be_==(Spool.empty[Int])
     }
 
+    "mapFuture" in {
+      val mapFuture = s mapFuture { Future.value(_) }
+      mapFuture.poll must be_==(Some(Return(s)))
+    }
+
     "deconstruct" in {
       s must beLike {
         case x **:: rest => false
@@ -79,6 +84,11 @@ class SpoolSpec extends SpecificationWithJUnit {
 
     "map" in {
       Await.result(s map { _ * 2 } toSeq) must be_==(Seq(2, 4))
+    }
+
+    "mapFuture" in {
+      val f = s.mapFuture { Future.value(_) }.flatMap { _.toSeq }.poll
+      f must be_==(Some(Return(Seq(1, 2))))
     }
 
     "deconstruct" in {
@@ -301,6 +311,12 @@ class SpoolSpec extends SpecificationWithJUnit {
     "map lazily" in {
       applyLazily { spool =>
         Future.value(spool.map(_ + 1))
+      }
+    }
+
+    "mapFuture lazily" in {
+      applyLazily { spool =>
+        spool.mapFuture(Future.value(_))
       }
     }
 

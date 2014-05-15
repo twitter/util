@@ -115,6 +115,19 @@ sealed trait Spool[+A] {
     Await.result(s, Duration.Zero)
   }
 
+  /**
+   * Applies a function that generates a Future[B] to each element of this spool
+   * The returned future is satisfied with the head of the resulting spool is available
+   */
+  def mapFuture[B](f: A => Future[B]): Future[Spool[B]] = {
+    if (isEmpty) Future.value(empty[B])
+    else {
+      f(head) map { h =>
+        new LazyCons(h, tail flatMap (_ mapFuture f))
+      }
+    }
+  }
+
   def filter(f: A => Boolean): Future[Spool[A]] = collect {
     case x if f(x) => x
   }
