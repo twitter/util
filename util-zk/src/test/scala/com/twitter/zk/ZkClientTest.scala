@@ -24,178 +24,184 @@ import org.scalatest.junit.JUnitRunner
 class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
   Logger.get("").setLevel(Level.FATAL)
 
-  val zk = mock[ZooKeeper]
-  class TestZkClient extends ZkClient {
-    val connector = new Connector {
-      def apply() = Future(zk)
-      def release() = Future.Done
-    }
-  }
-  def zkClient = new TestZkClient
-
   implicit val javaTimer = new JavaTimer(true)
 
-  def answer[A](idx: Int)(res: A => Unit) = new Answer[Unit] {
-    override def answer(invocation: InvocationOnMock): Unit = {
-      val value = invocation.getArguments()(idx).asInstanceOf[A]
-      res(value)
-    }
-  }
-
-  def answer[A, B](idx1: Int, idx2: Int)(res: (A, B) => Unit) = new Answer[Unit] {
-    override def answer(invocation: InvocationOnMock): Unit = {
-      val left = invocation.getArguments()(idx1).asInstanceOf[A]
-      val right = invocation.getArguments()(idx2).asInstanceOf[B]
-      res(left, right)
-    }
-  }
-
-  /*
-   * ZooKeeper expectation wrappers
-   */
-  def create(path: String,
-             data: Array[Byte] = "".getBytes,
-             acls: Seq[ACL] = zkClient.acl,
-             mode: CreateMode = zkClient.mode)
-            (wait: => Future[String]) {
-    when(
-      zk.create(
-        meq(path),
-        meq(data),
-        meq(acls.asJava),
-        meq(mode),
-        any[AsyncCallback.StringCallback],
-        meq(null)
-      )
-    ) thenAnswer answer[AsyncCallback.StringCallback](4) { cbValue =>
-      wait onSuccess { newPath =>
-        cbValue.processResult(0, path, null, newPath)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null, null)
+  class ZkClientHelper {
+    val zk = mock[ZooKeeper]
+    class TestZkClient extends ZkClient {
+      val connector = new Connector {
+        def apply() = Future(zk)
+        def release() = Future.Done
       }
     }
-  }
+    def zkClient = new TestZkClient
 
-  def delete(path: String, version: Int)(wait: => Future[Unit]) {
-    when(zk.delete(meq(path), meq(version), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[AsyncCallback.VoidCallback](2) { cbValue =>
-      wait onSuccess { _ =>
-        cbValue.processResult(0, path, null)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null)
+
+    def answer[A](idx: Int)(res: A => Unit) = new Answer[Unit] {
+      override def answer(invocation: InvocationOnMock): Unit = {
+        val value = invocation.getArguments()(idx).asInstanceOf[A]
+        res(value)
       }
     }
-  }
 
-  def exists(path: String)(stat: => Future[Stat]) {
-    when(
-      zk.exists(
-        meq(path),
-        meq(false),
-        any[AsyncCallback.StatCallback],
-        meq(null)
-      )
-    ) thenAnswer answer[AsyncCallback.StatCallback](2) { cbValue =>
-      stat onSuccess {
-        cbValue.processResult(0, path, null, _)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null, null)
+    def answer[A, B](idx1: Int, idx2: Int)(res: (A, B) => Unit) = new Answer[Unit] {
+      override def answer(invocation: InvocationOnMock): Unit = {
+        val left = invocation.getArguments()(idx1).asInstanceOf[A]
+        val right = invocation.getArguments()(idx2).asInstanceOf[B]
+        res(left, right)
       }
     }
-  }
 
-  def watch(path: String)(stat: => Future[Stat])(update: => Future[WatchedEvent]) {
-    val watcher = ArgumentCaptor.forClass(classOf[Watcher])
-    val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.StatCallback])
-    when(zk.exists(meq(path), watcher.capture(), cb.capture(),
-        meq(null))
-    ) thenAnswer answer[Watcher, AsyncCallback.StatCallback](1, 2) { case (watcher: Watcher, cbValue: AsyncCallback.StatCallback) =>
+    /*
+     * ZooKeeper expectation wrappers
+     */
+    def create(path: String,
+               data: Array[Byte] = "".getBytes,
+               acls: Seq[ACL] = zkClient.acl,
+               mode: CreateMode = zkClient.mode)
+              (wait: => Future[String]) {
+      when(
+        zk.create(
+          meq(path),
+          meq(data),
+          meq(acls.asJava),
+          meq(mode),
+          any[AsyncCallback.StringCallback],
+          meq(null)
+        )
+      ) thenAnswer answer[AsyncCallback.StringCallback](4) { cbValue =>
+        wait onSuccess { newPath =>
+          cbValue.processResult(0, path, null, newPath)
+        } onFailure { case ke: KeeperException =>
+            cbValue.processResult(ke.code.intValue, path, null, null)
+        }
+      }
+    }
+
+    def delete(path: String, version: Int)(wait: => Future[Unit]) {
+      when(zk.delete(meq(path), meq(version), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[AsyncCallback.VoidCallback](2) { cbValue =>
+        wait onSuccess { _ =>
+          cbValue.processResult(0, path, null)
+        } onFailure { case ke: KeeperException =>
+            cbValue.processResult(ke.code.intValue, path, null)
+        }
+      }
+    }
+
+    def exists(path: String)(stat: => Future[Stat]) {
+      when(
+        zk.exists(
+          meq(path),
+          meq(false),
+          any[AsyncCallback.StatCallback],
+          meq(null)
+        )
+      ) thenAnswer answer[AsyncCallback.StatCallback](2) { cbValue =>
         stat onSuccess {
           cbValue.processResult(0, path, null, _)
         } onFailure { case ke: KeeperException =>
             cbValue.processResult(ke.code.intValue, path, null, null)
         }
-        update onSuccess { watcher.process(_) }
+      }
     }
-  }
 
-  def getChildren(path: String)(children: => Future[ZNode.Children]) {
-    val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
-    when(zk.getChildren(meq(path),
+    def watch(path: String)(stat: => Future[Stat])(update: => Future[WatchedEvent]) {
+      val watcher = ArgumentCaptor.forClass(classOf[Watcher])
+      val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.StatCallback])
+      when(zk.exists(meq(path), watcher.capture(), cb.capture(),
+        meq(null))
+      ) thenAnswer answer[Watcher, AsyncCallback.StatCallback](1, 2) { case (watcher: Watcher, cbValue: AsyncCallback.StatCallback) =>
+          stat onSuccess {
+            cbValue.processResult(0, path, null, _)
+          } onFailure { case ke: KeeperException =>
+              cbValue.processResult(ke.code.intValue, path, null, null)
+          }
+          update onSuccess { watcher.process(_) }
+      }
+    }
+
+    def getChildren(path: String)(children: => Future[ZNode.Children]) {
+      val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
+      when(zk.getChildren(meq(path),
         meq(false), any[AsyncCallback.Children2Callback],
         meq(null))) thenAnswer answer[AsyncCallback.Children2Callback](2) { cbValue =>
-      children onSuccess { znode =>
-        cbValue.processResult(0, path, null, znode.children.map { _.name }.toList.asJava, znode.stat)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null, null, null)
+        children onSuccess { znode =>
+          cbValue.processResult(0, path, null, znode.children.map { _.name }.toList.asJava, znode.stat)
+        } onFailure { case ke: KeeperException =>
+            cbValue.processResult(ke.code.intValue, path, null, null, null)
+        }
       }
     }
-  }
 
-  def watchChildren(path: String)
-                   (children: => Future[ZNode.Children])
-                   (update: => Future[WatchedEvent]) {
-    val w = ArgumentCaptor.forClass(classOf[Watcher])
-    val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
-    when(zk.getChildren(meq(path), w.capture(), cb.capture(),
+    def watchChildren(path: String)
+                     (children: => Future[ZNode.Children])
+                     (update: => Future[WatchedEvent]) {
+      val w = ArgumentCaptor.forClass(classOf[Watcher])
+      val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
+      when(zk.getChildren(meq(path), w.capture(), cb.capture(),
         meq(null))) thenAnswer answer[Watcher, AsyncCallback.Children2Callback](1, 2) { case(watcher: Watcher, cbValue: AsyncCallback.Children2Callback) =>
-      children onSuccess { case ZNode.Children(znode, stat, children) =>
-        cbValue.processResult(0, path, null, children.map { _.name }.toList.asJava, stat)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null, null, null)
-      }
-      update onSuccess { watcher.process(_) }
-    }
-  }
-
-  def getData(path: String)(result: => Future[ZNode.Data]) {
-    when(zk.getData(meq(path), meq(false), any[AsyncCallback.DataCallback], meq(null))) thenAnswer answer[AsyncCallback.DataCallback](2) { cbValue =>
-      result onSuccess { z =>
-        cbValue.processResult(0, path, null, z.bytes, z.stat)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null, null, null)
+          children onSuccess { case ZNode.Children(znode, stat, children) =>
+            cbValue.processResult(0, path, null, children.map { _.name }.toList.asJava, stat)
+          } onFailure { case ke: KeeperException =>
+              cbValue.processResult(ke.code.intValue, path, null, null, null)
+          }
+          update onSuccess { watcher.process(_) }
       }
     }
-  }
 
-  def watchData(path: String)(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]) {
-    val w = ArgumentCaptor.forClass(classOf[Watcher])
-    val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.DataCallback])
-    when(zk.getData(meq(path),
+    def getData(path: String)(result: => Future[ZNode.Data]) {
+      when(zk.getData(meq(path), meq(false), any[AsyncCallback.DataCallback], meq(null))) thenAnswer answer[AsyncCallback.DataCallback](2) { cbValue =>
+        result onSuccess { z =>
+          cbValue.processResult(0, path, null, z.bytes, z.stat)
+        } onFailure { case ke: KeeperException =>
+            cbValue.processResult(ke.code.intValue, path, null, null, null)
+        }
+      }
+    }
+
+    def watchData(path: String)(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]) {
+      val w = ArgumentCaptor.forClass(classOf[Watcher])
+      val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.DataCallback])
+      when(zk.getData(meq(path),
         w.capture(), cb.capture(),
         meq(null))) thenAnswer answer[Watcher, AsyncCallback.DataCallback](1, 2) { case (watcher: Watcher, cbValue: AsyncCallback.DataCallback) =>
-      result onSuccess { z =>
-        cbValue.processResult(0, path, null, z.bytes, z.stat)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null, null, null)
-      }
-      update onSuccess { watcher.process(_) }
-    }
-  }
-
-  def setData(path: String, data: Array[Byte], version: Int)(waiting: => Future[Stat]) {
-    when(zk.setData(meq(path), meq(data), meq(version),
-      any[AsyncCallback.StatCallback], meq(null))) thenAnswer answer[AsyncCallback.StatCallback](3) { cbValue =>
-      waiting onSuccess { stat =>
-        cbValue.processResult(0, path, null, stat)
-      } onFailure { case ke: KeeperException =>
-          cbValue.processResult(ke.code.intValue, path, null, null)
+          result onSuccess { z =>
+            cbValue.processResult(0, path, null, z.bytes, z.stat)
+          } onFailure { case ke: KeeperException =>
+              cbValue.processResult(ke.code.intValue, path, null, null, null)
+          }
+          update onSuccess { watcher.process(_) }
       }
     }
-  }
 
-  def sync(path: String)
-          (wait: Future[Unit]) {
-    val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.VoidCallback])
-    when(zk.sync(meq(path), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[AsyncCallback.VoidCallback](1) { cbValue =>
-      wait onSuccess { _ =>
-        cbValue.processResult(0, path, null)
-      } onFailure { case ke: KeeperException =>
-        cbValue.processResult(ke.code.intValue, path, null)
+    def setData(path: String, data: Array[Byte], version: Int)(waiting: => Future[Stat]) {
+      when(zk.setData(meq(path), meq(data), meq(version),
+        any[AsyncCallback.StatCallback], meq(null))) thenAnswer answer[AsyncCallback.StatCallback](3) { cbValue =>
+        waiting onSuccess { stat =>
+          cbValue.processResult(0, path, null, stat)
+        } onFailure { case ke: KeeperException =>
+            cbValue.processResult(ke.code.intValue, path, null, null)
+        }
+      }
+    }
+
+    def sync(path: String)
+            (wait: Future[Unit]) {
+      val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.VoidCallback])
+      when(zk.sync(meq(path), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[AsyncCallback.VoidCallback](1) { cbValue =>
+        wait onSuccess { _ =>
+          cbValue.processResult(0, path, null)
+        } onFailure { case ke: KeeperException =>
+            cbValue.processResult(ke.code.intValue, path, null)
+        }
       }
     }
   }
 
   "ZkClient" should {
+    val h = new ZkClientHelper
+    import h._
+
     "apply" in {
       val path = "/root/path/to/a/node"
       val znode = zkClient(path)
@@ -326,11 +332,17 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
 
   "ZNode" should {
     "apply a relative path to a ZNode" in {
+      val h = new ZkClientHelper
+      import h._
+
       val znode = zkClient("/some/path")
       znode("to/child").path shouldEqual "/some/path/to/child"
     }
 
     "create" should {
+      val h = new ZkClientHelper
+      import h._
+
       val path = "/root/path/to/a/node"
 
       "with data" in {
@@ -397,6 +409,9 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "delete" should {
+      val h = new ZkClientHelper
+      import h._
+
       val version = 0
       val path = "/path"
       "ok" in {
@@ -417,10 +432,15 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "exist" should {
-      val znode = zkClient("/maybe/exists")
-      val result = ZNode.Exists(znode, new Stat)
+      class ExistHelper extends ZkClientHelper {
+        val znode = zkClient("/maybe/exists")
+        val result = ZNode.Exists(znode, new Stat)
+      }
 
       "apply" should {
+        val h = new ExistHelper
+        import h._
+
         "ok" in {
           exists(znode.path)(Future(result.stat))
           Await.result(znode.exists()) shouldEqual result
@@ -437,6 +457,9 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
       }
 
       "watch" in {
+        val h = new ExistHelper
+        import h._
+
         val event = NodeEvent.Deleted(znode.path)
         watch(znode.path)(Future(result.stat))(Future(event))
         Await.ready(znode.exists.watch() onSuccess { case ZNode.Watch(r, update) =>
@@ -451,55 +474,74 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
       }
 
       "monitor" should {
-        val deleted = NodeEvent.Deleted(znode.path)
-        def expectZNodes(n: Int) {
-          val results = 0 until n map { _ => ZNode.Exists(znode, new Stat) }
-          results foreach { r =>
-            watch(znode.path)(Future(r.stat))(Future(deleted))
-          }
-          val update = znode.exists.monitor()
-          results foreach { result =>
-            update syncWait() get() shouldEqual result
+        class MonitorHelper extends ExistHelper {
+          val deleted = NodeEvent.Deleted(znode.path)
+          def expectZNodes(n: Int) {
+            val results = 0 until n map { _ => ZNode.Exists(znode, new Stat) }
+            results foreach { r =>
+              watch(znode.path)(Future(r.stat))(Future(deleted))
+            }
+            val update = znode.exists.monitor()
+            results foreach { result =>
+              update syncWait() get() shouldEqual result
+            }
           }
         }
 
         "that updates several times" in {
+          val h = new MonitorHelper
+          import h._
+
           expectZNodes(3)
         }
 
         "handles session events properly" should {
           "AuthFailed" in {
-            // this case is somewhat unrealistic
-            watch(znode.path)(Future(new Stat))(Future(StateEvent.AuthFailed()))
+            val h = new MonitorHelper
+            import h._
+
             // does not reset
+            watch(znode.path)(Future(new Stat))(Future(StateEvent.AuthFailed()))
+            // this case is somewhat unrealistic
             val offer = znode.exists.monitor()
             offer syncWait() get() shouldEqual result
           }
 
-          "Disconnected" ignore {
+          "Disconnected" in {
+            val h = new MonitorHelper
+            import h._
+
             val update = new Promise[WatchedEvent]
+
             watch(znode.path)(Future(new Stat))(Future(StateEvent.Disconnected()))
-            watch(znode.path)(Future(new Stat))(Future(NodeEvent.Deleted(znode.path)))
-            watch(znode.path)(Future.exception(new KeeperException.NoNodeException(znode.path)))(update)
             val offer = znode.exists.monitor()
             offer syncWait() get() shouldEqual result
+
+            watch(znode.path)(Future(new Stat))(Future(NodeEvent.Deleted(znode.path)))
             offer syncWait() get() shouldEqual result
+
+            watch(znode.path)(Future.exception(new KeeperException.NoNodeException(znode.path)))(update)
+            offer.sync()
             intercept[KeeperException.NoNodeException] {
               offer syncWait() get()
             }
             offer.sync().isDefined shouldEqual false
           }
 
-          "SessionExpired" ignore {
+          "SessionExpired" in {
+            val h = new MonitorHelper
+            import h._
+
             watch(znode.path)(Future(new Stat))(Future(StateEvent.Disconnected()))
+            val offer = znode.exists.monitor()
+            offer.syncWait().get shouldEqual result
+
             watch(znode.path) {
               Future.exception(new KeeperException.SessionExpiredException)
             } {
               Future(StateEvent.Expired())
             }
-
-            val offer = znode.exists.monitor()
-            offer.syncWait().get shouldEqual result
+            offer.sync()
             offer.sync().isDefined shouldEqual false
           }
         }
@@ -511,6 +553,9 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "getChildren" should {
+      val h = new ZkClientHelper
+      import h._
+
       val znode = zkClient("/parent")
       val result = ZNode.Children(znode, new Stat, "doe" :: "ray" :: "me" :: Nil)
 
@@ -566,7 +611,8 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "getData" should {
-      class GetDataHelper {
+
+      class GetDataHelper extends ZkClientHelper {
         val znode = zkClient("/giles")
         val result = ZNode.Data(znode, new Stat, "good show, indeed".getBytes)
       }
@@ -650,6 +696,9 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "monitorTree" should {
+      val h = new ZkClientHelper
+      import h._
+
       // Lay out a tree of ZNode.Children
       val treeRoot = ZNode.Children(zkClient("/arboreal"), new Stat, 'a' to 'e' map { _.toString })
 
@@ -685,9 +734,6 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
         treeChildren foreach { z =>
           watchChildren(z.path)(Future(z))(updatePromises(z.path))
         }
-        updateTree foreach { z =>
-          watchChildren(z.path)(Future(z))(new Promise[WatchedEvent])  // nohollaback
-        }
 
         val offer = treeRoot.monitorTree()
         treeChildren foreach { _ =>
@@ -695,23 +741,28 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
           val e = expectedByPath(ztu.parent.path)
           ztu.parent.path shouldEqual e.parent.path
           ztu.added.map { _.path } shouldEqual e.added.map { _.path }.toSet
-          ztu.removed shouldEqual List()
+          ztu.removed shouldEqual Set()
         }
+
+        updateTree foreach { z =>
+          watchChildren(z.path)(Future(z))(new Promise[WatchedEvent])  // nohollaback
+        }
+
         updateTree foreach { z =>
           updatePromises get(z.path) foreach { _.setValue(event(z.path)) }
           val ztu = Await.result(offer sync(), 1.second)
           val e = updatesByPath(z.path)
-          ztu.parent shouldEqual e.parent
+          ztu.parent.path shouldEqual e.parent.path
           ztu.added.map { _.path } shouldEqual e.added.map { _.path }.toSet
-          ztu.removed shouldEqual List()
+          ztu.removed shouldEqual Set()
         }
         intercept[TimeoutException] {
           Await.result(offer.sync(), 1.second)
         }
       }
 
-      "ok" ignore okUpdates { NodeEvent.ChildrenChanged(_) }
-      "be resilient to disconnect" ignore okUpdates { _ => StateEvent.Disconnected() }
+      "ok" in okUpdates { NodeEvent.ChildrenChanged(_) }
+      "be resilient to disconnect" in okUpdates { _ => StateEvent.Disconnected() }
 
       "stop on session expiration" in {
         treeChildren foreach { z =>
@@ -736,6 +787,9 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "set data" should {
+      val h = new ZkClientHelper
+      import h._
+
       val znode = zkClient("/empty/node")
       val result = ZNode.Exists(znode, new Stat)
       val data = "word to your mother.".getBytes
@@ -756,6 +810,9 @@ class ZkClientTest extends WordSpec with ShouldMatchers with MockitoSugar {
     }
 
     "sync" should {
+      val h = new ZkClientHelper
+      import h._
+
       val znode = zkClient("/sync")
 
       "ok" in {
