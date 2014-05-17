@@ -31,11 +31,11 @@ object Promise {
     def detach(): Boolean
   }
 
-  private class DetachablePromise[A](prent: Promise[_ <: A])
+  private class DetachablePromise[A](underlying: Promise[_ <: A])
       extends Promise[A] with Promise.K[A] with Detachable {
-    prent.continue(this)
+    underlying.continue(this)
 
-    def detach(): Boolean = prent.detach(this)
+    def detach(): Boolean = underlying.detach(this)
 
     // This is only called after the parent has been successfully satisfied
     def apply(result: Try[A]) {

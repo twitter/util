@@ -29,13 +29,13 @@ object Util extends Build {
     ),
     libraryDependencies <+= scalatest(_ % "test"),
 
-    libraryDependencies := {
+    libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, scalaMajor)) if scalaMajor >= 11 =>
-          libraryDependencies.value ++ Seq(
+          Seq(
             "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.1"
           )
-        case _ => libraryDependencies.value
+        case _ => Seq.empty
       }
     },
 
