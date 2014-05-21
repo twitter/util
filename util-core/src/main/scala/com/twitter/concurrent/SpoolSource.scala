@@ -1,14 +1,28 @@
 package com.twitter.concurrent
 
 import com.twitter.util.{Future, Promise, Return}
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
+import scala.collection.JavaConverters._
+
+object SpoolSource {
+  private object DefaultInterruptHandler extends PartialFunction[Any, Nothing] {
+    def isDefinedAt(x: Any) = false
+    def apply(x: Any) = throw new MatchError(x)
+  }
+}
 
 /**
  * A SpoolSource is a simple object for creating and populating a Spool-chain.  apply()
  * returns a Future[Spool] that is populated by calls to offer().  This class is thread-safe.
+ * @param interruptHandler attached to every Promise in the produced Spool.
  */
-class SpoolSource[A] {
+class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
+  def this() = this(SpoolSource.DefaultInterruptHandler)
+
+  private val closedp = new Promise[Unit]
+
   // a reference to the current outstanding promise for the next Future[Spool[A]] result
   private val promiseRef = new AtomicReference[Promise[Spool[A]]]
 
@@ -17,7 +31,11 @@ class SpoolSource[A] {
   private val emptyPromise = new Promise(Return(Spool.empty[A]))
 
   // set the first promise to be fulfilled by the first call to offer()
-  promiseRef.set(new Promise[Spool[A]])
+  promiseRef.set({
+    val p = new Promise[Spool[A]]
+    p.setInterruptHandler(interruptHandler)
+    p
+  })
 
   /**
    * Gets the current outstanding Future for the next Spool value.  The returned Spool
@@ -30,13 +48,30 @@ class SpoolSource[A] {
    * Puts a value into the spool.  Unless this SpoolSource has been closed, the current
    * Future[Spool[A]] value will be fulfilled with a Spool that contains the
    * provided value.  If the SpoolSource has been closed, then this value is ignored.
-   * If multiple threads call offer simultaneously, the operation is thread-safe but
+   * If multiple threads call `offer` simultaneously, the operation is thread-safe but
    * the resulting order of values in the spool is non-deterministic.
    */
   final def offer(value: A) {
     val nextPromise = new Promise[Spool[A]]
+    nextPromise.setInterruptHandler(interruptHandler)
     updatingTailCall(nextPromise) { currentPromise =>
       currentPromise.setValue(Spool.cons(value, nextPromise))
+    }
+  }
+
+  /**
+   * Puts a value into the spool and closes this SpoolSource.  Unless
+   * this SpoolSource has been closed, the current Future[Spool[A]]
+   * value will be fulfilled with Spool.cons(value, Spool.empty[A]).
+   * If the SpoolSource has been closed, then this value is ignored.
+   * If multiple threads call offer simultaneously, the operation is
+   * thread-safe but the resulting order of values in the spool is
+   * non-deterministic.
+   */
+  final def offerAndClose(value: A) {
+    updatingTailCall(emptyPromise) { currentPromise =>
+      currentPromise.setValue(Spool.cons(value, Spool.empty[A]))
+      closedp.setDone()
     }
   }
 
@@ -47,8 +82,15 @@ class SpoolSource[A] {
   final def close() {
     updatingTailCall(emptyPromise) { currentPromise =>
       currentPromise.setValue(Spool.empty[A])
+      closedp.setDone()
     }
   }
+
+  /**
+   * Fulfilled when this SpoolSource has been closed or an exception
+   * is raised.
+   */
+  val closed: Future[Unit] = closedp
 
   /**
    * Raises exception on this SpoolSource, which also terminates the generated Spool.  This method
@@ -57,6 +99,7 @@ class SpoolSource[A] {
   final def raise(e: Throwable) {
     updatingTailCall(emptyPromise) { currentPromise =>
       currentPromise.setException(e)
+      closedp.setException(e)
     }
   }
 
