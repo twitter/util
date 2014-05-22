@@ -442,16 +442,16 @@ class Eval(target: Option[File]) {
   }
 
   lazy val compilerOutputDir = target match {
-      case Some(dir) => AbstractFile.getDirectory(dir)
-      case None => new VirtualDirectory("(memory)", None)
+    case Some(dir) => AbstractFile.getDirectory(dir)
+    case None => new VirtualDirectory("(memory)", None)
   }
 
   class EvalSettings(targetDir: Option[File]) extends Settings {
-      nowarnings.value = true // warnings are exceptions, so disable
-      outputDirs.setSingleOutput(compilerOutputDir)
-      private[this] val pathList = compilerPath ::: libPath
-      bootclasspath.value = pathList.mkString(File.pathSeparator)
-      classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
+    nowarnings.value = true // warnings are exceptions, so disable
+    outputDirs.setSingleOutput(compilerOutputDir)
+    private[this] val pathList = compilerPath ::: libPath
+    bootclasspath.value = pathList.mkString(File.pathSeparator)
+    classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
   }
 
   /**
@@ -576,10 +576,10 @@ class Eval(target: Option[File]) {
 
       if (reporter.hasErrors || reporter.WARNING.count > 0) {
         val msgs: List[List[String]] = reporter match {
-            case collector: MessageCollector =>
-              collector.messages.toList
-            case _ =>
-              List(List(reporter.toString))
+          case collector: MessageCollector =>
+            collector.messages.toList
+          case _ =>
+            List(List(reporter.toString))
         }
         throw new CompilerException(msgs)
       }
