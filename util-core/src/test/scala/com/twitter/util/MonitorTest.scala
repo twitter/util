@@ -4,7 +4,7 @@ package com.twitter.util
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.mock.MockitoSugar
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -18,7 +18,7 @@ object MonitorSpec {
 }
 
 @RunWith(classOf[JUnitRunner])
-class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
+class MonitorTest extends WordSpec with MockitoSugar {
   import MonitorSpec._
 
   "Monitor#orElse" should {
@@ -33,7 +33,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val h = new MonitorOrElseHelper
       import h._
 
-      m.handle(exc) shouldEqual true
+      assert(m.handle(exc) === true)
 
       verify(m0).handle(exc)
       verify(m1, never()).handle(exc)
@@ -41,7 +41,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
 
       when(m0.handle(any[Throwable])).thenReturn(false)
 
-      m.handle(exc) shouldEqual true
+      assert(m.handle(exc) === true)
       verify(m0, times(2)).handle(exc)
       verify(m1).handle(exc)
       verify(m2, never()).handle(exc)
@@ -52,7 +52,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       import h._
 
       Seq(m0, m1, m2) foreach { m => when(m.handle(any[Throwable]))thenReturn(false) }
-      m.handle(exc) shouldEqual false
+      assert(m.handle(exc) === false)
       Seq(m0, m1, m2) foreach { m => verify(m).handle(exc) }
     }
 
@@ -63,7 +63,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val rte = new RuntimeException("really bad news")
       when(m0.handle(any[Throwable])).thenThrow(rte)
 
-      m.handle(exc) shouldEqual true
+      assert(m.handle(exc) === true)
       verify(m0).handle(exc)
       verify(m1).handle(MonitorException(exc, rte))
     }
@@ -85,7 +85,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       when(m0.handle(any[Throwable])).thenReturn(true)
       when(m1.handle(any[Throwable])).thenReturn(true)
 
-      m.handle(exc) shouldEqual true
+      assert(m.handle(exc) === true)
       verify(m0).handle(exc)
       verify(m1).handle(exc)
     }
@@ -95,9 +95,9 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       import h._
 
       when(m0.handle(any[Throwable])).thenReturn(false)
-      m.handle(exc) shouldEqual true
+      assert(m.handle(exc) === true)
       when(m1.handle(any[Throwable])).thenReturn(false)
-      m.handle(exc) shouldEqual false
+      assert(m.handle(exc) === false)
     }
 
     "wrap Monitor exceptions and pass them on" in {
@@ -107,7 +107,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val rte = new RuntimeException("really bad news")
       when(m0.handle(any[Throwable])).thenThrow(rte)
 
-      m.handle(exc) shouldEqual true
+      assert(m.handle(exc) === true)
       verify(m0).handle(exc)
       verify(m1).handle(MonitorException(exc, rte))
     }
@@ -120,7 +120,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       when(m0.handle(any[Throwable])).thenThrow(rte)
       when(m1.handle(any[Throwable])).thenThrow(rte)
 
-      m.handle(exc) shouldEqual false
+      assert(m.handle(exc) === false)
     }
   }
 
@@ -130,7 +130,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
     "maintain current monitor" in Monitor.restoring {
       when(m.handle(any[Throwable])).thenReturn(true)
       Monitor.set(m)
-      Monitor.get shouldEqual m
+      assert(Monitor.get === m)
     }
   }
 
@@ -152,7 +152,7 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       Monitor.restoring {
         Monitor.set(mock[Monitor])
       }
-      Monitor.get shouldEqual orig
+      assert(Monitor.get === orig)
     }
   }
 
@@ -174,24 +174,24 @@ class MonitorTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val h = new MonitorMkHelper
       import h._
 
-      m.handle(new E1) shouldEqual true
-      ran shouldEqual true
+      assert(m.handle(new E1) === true)
+      assert(ran === true)
     }
 
     "handle E2" in {
       val h = new MonitorMkHelper
       import h._
 
-      m.handle(new E2) shouldEqual true
-      ran shouldEqual true
+      assert(m.handle(new E2) === true)
+      assert(ran === true)
     }
 
     "not handle F1" in {
       val h = new MonitorMkHelper
       import h._
 
-      m.handle(new F1) shouldEqual false
-      ran shouldEqual false
+      assert(m.handle(new F1) === false)
+      assert(ran === false)
     }
   }
 }

@@ -3,24 +3,24 @@
 package com.twitter.concurrent
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ConcurrentBijectionTest extends WordSpec with ShouldMatchers {
+class ConcurrentBijectionTest extends WordSpec {
   "maintain a bijective map" in {
     val b = new ConcurrentBijection[Int, Int]
     b ++= (1 -> 1) :: (2 -> 3) :: (100 -> 2) :: Nil
 
-    b.get(1)        shouldEqual Some(1)
-    b.getReverse(1) shouldEqual Some(1)
+    assert(b.get(1)        === Some(1))
+    assert(b.getReverse(1) === Some(1))
 
-    b.get(2)        shouldEqual Some(3)
-    b.getReverse(3) shouldEqual Some(2)
+    assert(b.get(2)        === Some(3))
+    assert(b.getReverse(3) === Some(2))
 
-    b.get(100)      shouldEqual Some(2)
-    b.getReverse(2) shouldEqual Some(100)
+    assert(b.get(100)      === Some(2))
+    assert(b.getReverse(2) === Some(100))
   }
 
   "maintain the bijective property" in {
@@ -28,22 +28,22 @@ class ConcurrentBijectionTest extends WordSpec with ShouldMatchers {
 
     b += (1 -> 2)
 
-    b.get(1)        shouldEqual Some(2)
-    b.getReverse(2) shouldEqual Some(1)
+    assert(b.get(1)        === Some(2))
+    assert(b.getReverse(2) === Some(1))
 
     // Introduce a new forward mapping. This should delete the old
     // one.
     b += (1 -> 3)
-    b.getReverse(2) shouldEqual None
-    b.get(1)        shouldEqual Some(3)
-    b.getReverse(3) shouldEqual Some(1)
+    assert(b.getReverse(2) === None)
+    assert(b.get(1)        === Some(3))
+    assert(b.getReverse(3) === Some(1))
     
     // Now, introduce a new reverse mapping for 3, which should kill
     // the existing 1 -> 3 mapping.
     b += (100 -> 3)
-    b.getReverse(3) shouldEqual Some(100)
-    b.get(1)        shouldEqual None  // the old forward mapping was killed.
-    b.get(100)      shouldEqual Some(3)
+    assert(b.getReverse(3) === Some(100))
+    assert(b.get(1)        === None)  // the old forward mapping was killed.
+    assert(b.get(100)      === Some(3))
 
   }
 
@@ -52,9 +52,9 @@ class ConcurrentBijectionTest extends WordSpec with ShouldMatchers {
 
     b += (1 -> 2)
 
-    b.isEmpty shouldEqual false
+    assert(b.isEmpty === false)
     b -= 1
-    b.isEmpty shouldEqual true
+    assert(b.isEmpty === true)
   }
 
   "iterate over mappings" in {
@@ -63,6 +63,6 @@ class ConcurrentBijectionTest extends WordSpec with ShouldMatchers {
     for (i <- 0 until 100)
       b += (i -> i)
 
-    b.toSet shouldEqual (for (i <- 0 until 100) yield (i, i)).toSet
+    assert(b.toSet === (for (i <- 0 until 100) yield (i, i)).toSet)
   }
 }

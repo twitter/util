@@ -2,7 +2,7 @@ package com.twitter.hashing
 
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import scala.collection.mutable
 import _root_.java.io.{BufferedReader, InputStreamReader}
 import org.junit.runner.RunWith
@@ -10,7 +10,7 @@ import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class KetamaDistributorTest extends WordSpec with ShouldMatchers {
+class KetamaDistributorTest extends WordSpec {
   "KetamaDistributor" should {
     val nodes = Seq(
       KetamaNode("10.0.1.1", 600, 1),
@@ -38,11 +38,11 @@ class KetamaDistributorTest extends WordSpec with ShouldMatchers {
         line = reader.readLine
         if (line != null) {
           val segments = line.split(" ")
-          segments.length shouldEqual 4
+          assert(segments.length === 4)
           expected += segments
         }
       } while (line != null)
-      expected.size shouldEqual 99
+      assert(expected.size === 99)
 
       // Test that ketamaClient.clientOf(key) == expected IP
       val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
@@ -53,8 +53,8 @@ class KetamaDistributorTest extends WordSpec with ShouldMatchers {
         val handle2 = ketamaDistributorInoldLibMemcachedVersionComplianceMode.nodeForHash(hash)
         val resultIp = handleToIp(handle)
         val resultIp2 = handleToIp(handle2)
-        testcase(3) shouldEqual(resultIp)
-        testcase(3) shouldEqual(resultIp2)
+        assert(testcase(3) === resultIp)
+        assert(testcase(3) === resultIp2)
       }
     }
 
@@ -69,7 +69,7 @@ class KetamaDistributorTest extends WordSpec with ShouldMatchers {
 
       knownGoodValues foreach { case (key, node) =>
         val handle = ketamaDistributor.nodeForHash(key)
-        handle shouldEqual node
+        assert(handle === node)
       }
     }
   }

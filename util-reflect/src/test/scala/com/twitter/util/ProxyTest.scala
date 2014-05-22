@@ -1,7 +1,7 @@
 package com.twitter.util.reflect
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import com.twitter.util.{Future,Promise, Stopwatch}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -37,7 +37,7 @@ object ProxySpec {
 }
 
 @RunWith(classOf[JUnitRunner])
-class ProxyTest extends WordSpec with ShouldMatchers {
+class ProxyTest extends WordSpec {
 
   import ProxySpec._
 
@@ -50,10 +50,10 @@ class ProxyTest extends WordSpec with ShouldMatchers {
 
       val proxied = f1(obj)
 
-      proxied.foo    shouldEqual "foo"
-      proxied.bar(2) shouldEqual Some(2L)
+      assert(proxied.foo    === "foo")
+      assert(proxied.bar(2) === Some(2L))
 
-      called shouldEqual 2
+      assert(called === 2)
     }
 
     "generate a factory for a class with a default constructor" in {
@@ -64,10 +64,10 @@ class ProxyTest extends WordSpec with ShouldMatchers {
 
       val proxied = f2(obj)
 
-      proxied.slota shouldEqual "a"
-      proxied.slotb shouldEqual 2.0
+      assert(proxied.slota === "a")
+      assert(proxied.slotb === 2.0)
 
-      called shouldEqual 2
+      assert(called === 2)
     }
 
     "must not throw UndeclaredThrowableException" in {
@@ -89,13 +89,13 @@ class ProxyTest extends WordSpec with ShouldMatchers {
 
       val proxied = pf(new TestImpl)
       proxied.foo
-      unitsCalled shouldEqual 0
+      assert(unitsCalled === 0)
 
       proxied.theVoid
-      unitsCalled shouldEqual 1
+      assert(unitsCalled === 1)
 
       proxied.theJavaVoid
-      unitsCalled shouldEqual 2
+      assert(unitsCalled === 2)
     }
 
     "MethodCall returnsFuture must be true for methods that return a future or subclass" in {
@@ -109,13 +109,13 @@ class ProxyTest extends WordSpec with ShouldMatchers {
       val proxied = pf(new TestImpl)
 
       proxied.foo
-      futuresCalled shouldEqual 0
+      assert(futuresCalled === 0)
 
       proxied.aFuture
-      futuresCalled shouldEqual 1
+      assert(futuresCalled === 1)
 
       proxied.aPromise
-      futuresCalled shouldEqual 2
+      assert(futuresCalled === 2)
     }
 
     "MethodCall throws an exception when invoked without a target" in {
@@ -132,14 +132,14 @@ class ProxyTest extends WordSpec with ShouldMatchers {
       val pf  = new ProxyFactory[TestImpl](m => m(alt))
       val targetless = pf()
 
-      targetless.foo shouldEqual "alt foo"
+      assert(targetless.foo === "alt foo")
     }
 
     "MethodCall can be invoked with alternate arguments" in {
       val pf      = new ProxyFactory[TestInterface](m => m(Array(3.asInstanceOf[AnyRef])))
       val proxied = pf(new TestImpl)
 
-      proxied.bar(2) shouldEqual Some(3L)
+      assert(proxied.bar(2) === Some(3L))
     }
 
     "MethodCall can be invoked with alternate target and arguments" in {
@@ -147,7 +147,7 @@ class ProxyTest extends WordSpec with ShouldMatchers {
       val pf  = new ProxyFactory[TestImpl](m => m(alt, Array(3.asInstanceOf[AnyRef])))
       val targetless = pf()
 
-      targetless.bar(2) shouldEqual Some(30L)
+      assert(targetless.bar(2) === Some(30L))
     }
     
     // Sigh. Benchmarking has no place in unit tests.
@@ -202,10 +202,10 @@ class ProxyTest extends WordSpec with ShouldMatchers {
       // println(t3)
 
       // faster than normal reflection
-      t2 should be <(t1)
+      assert(t2 < t1)
 
       // less than 4x raw invocation
-      t2 should be <(t3 * 4)
+      assert(t2 < t3 * 4)
     }
   }
 

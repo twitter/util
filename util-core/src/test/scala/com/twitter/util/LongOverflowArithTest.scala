@@ -1,13 +1,13 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import scala.util.Random
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class LongOverflowArithTest extends WordSpec with ShouldMatchers {
+class LongOverflowArithTest extends WordSpec {
   "LongOverflowArith" should {
     val random = new Random
     val maxSqrt = 3037000499L
@@ -27,7 +27,7 @@ class LongOverflowArithTest extends WordSpec with ShouldMatchers {
           LongOverflowArith.add(a, b)
           }
         else
-          LongOverflowArith.add(a, b) shouldEqual bigC.toLong
+          assert(LongOverflowArith.add(a, b) === bigC.toLong)
       }
 
       for (i <- 0 until 1000) {
@@ -43,7 +43,7 @@ class LongOverflowArithTest extends WordSpec with ShouldMatchers {
             LongOverflowArith.sub(a, b)
           }
         else
-          LongOverflowArith.sub(a, b) shouldEqual bigC.toLong
+          assert(LongOverflowArith.sub(a, b) === bigC.toLong)
       }
 
       for (i <- 0 until 1000) {
@@ -52,17 +52,17 @@ class LongOverflowArithTest extends WordSpec with ShouldMatchers {
     }
 
     "mul" in {
-      LongOverflowArith.mul(0L, 10L) shouldEqual 0L
-      LongOverflowArith.mul(1L, 11L) shouldEqual 11L
-      LongOverflowArith.mul(-1L, -11L) shouldEqual 11L
-      LongOverflowArith.mul(-1L, 22L) shouldEqual -22L
-      LongOverflowArith.mul(22L, -1L) shouldEqual -22L
+      assert(LongOverflowArith.mul(0L, 10L) === 0L)
+      assert(LongOverflowArith.mul(1L, 11L) === 11L)
+      assert(LongOverflowArith.mul(-1L, -11L) === 11L)
+      assert(LongOverflowArith.mul(-1L, 22L) === -22L)
+      assert(LongOverflowArith.mul(22L, -1L) === -22L)
 
       intercept[LongOverflowException] {
         LongOverflowArith.mul(3456116450671355229L, -986247066L)
       }
 
-      LongOverflowArith.mul(Long.MaxValue, 1L) shouldEqual Long.MaxValue
+      assert(LongOverflowArith.mul(Long.MaxValue, 1L) === Long.MaxValue)
 
       intercept[LongOverflowException] {
         LongOverflowArith.mul(Long.MaxValue - 1L, 9L)
@@ -80,15 +80,15 @@ class LongOverflowArithTest extends WordSpec with ShouldMatchers {
       intercept[LongOverflowException] {
         LongOverflowArith.mul(Long.MinValue, -3L)
       }
-      LongOverflowArith.mul(Long.MinValue, 1L) shouldEqual Long.MinValue
+      assert(LongOverflowArith.mul(Long.MinValue, 1L) === Long.MinValue)
       intercept[LongOverflowException] {
         LongOverflowArith.mul(Long.MinValue, -1L)
       }
-      LongOverflowArith.mul(1L, Long.MinValue) shouldEqual Long.MinValue
+      assert(LongOverflowArith.mul(1L, Long.MinValue) === Long.MinValue)
       intercept[LongOverflowException] {
         LongOverflowArith.mul(-1L, Long.MinValue)
       }
-      LongOverflowArith.mul(Long.MinValue, 0L) shouldEqual 0L
+      assert(LongOverflowArith.mul(Long.MinValue, 0L) === 0L)
       intercept[LongOverflowException] {
         LongOverflowArith.mul(Long.MinValue + 1L, 2L)
       }
@@ -100,7 +100,7 @@ class LongOverflowArithTest extends WordSpec with ShouldMatchers {
             LongOverflowArith.mul(a, b)
           }
         else
-          LongOverflowArith.mul(a, b) shouldEqual bigC.toLong
+          assert(LongOverflowArith.mul(a, b) === bigC.toLong)
       }
 
       for (i <- 0 until 1000) {

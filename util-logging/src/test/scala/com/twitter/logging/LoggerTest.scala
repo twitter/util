@@ -24,14 +24,14 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.TempFolder
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import org.mockito.Mockito._
 
 @RunWith(classOf[JUnitRunner])
-class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestLogging {
+class LoggerTest extends WordSpec with TempFolder with TestLogging {
   class LoggerSpecHelper {
     var myHandler: Handler = null
     var log: Logger = null
@@ -65,7 +65,7 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
     }
 
     "provide level name and value maps" in {
-      Logger.levels shouldEqual Map(
+      assert(Logger.levels === Map(
         Level.ALL.value -> Level.ALL,
         Level.TRACE.value -> Level.TRACE,
         Level.DEBUG.value -> Level.DEBUG,
@@ -74,8 +74,8 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
         Level.ERROR.value -> Level.ERROR,
         Level.CRITICAL.value -> Level.CRITICAL,
         Level.FATAL.value -> Level.FATAL,
-        Level.OFF.value -> Level.OFF)
-      Logger.levelNames shouldEqual Map(
+        Level.OFF.value -> Level.OFF))
+      assert(Logger.levelNames === Map(
         "ALL" -> Level.ALL,
         "TRACE" -> Level.TRACE,
         "DEBUG" -> Level.DEBUG,
@@ -84,12 +84,12 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
         "ERROR" -> Level.ERROR,
         "CRITICAL" -> Level.CRITICAL,
         "FATAL" -> Level.FATAL,
-        "OFF" -> Level.OFF)
+        "OFF" -> Level.OFF))
     }
 
     "figure out package names" in {
       val log1 = Logger(this.getClass)
-      log1.name shouldEqual "com.twitter.logging.LoggerTest"
+      assert(log1.name === "com.twitter.logging.LoggerTest")
     }
 
     "log & trace a message" in {
@@ -105,15 +105,15 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
       myHandler = timeFrozenHandler
       log.addHandler(timeFrozenHandler)
       log.error("error!")
-      parse() shouldEqual List("ERR [20080329-05:53:16.722] (root): error!")
+      assert(parse() === List("ERR [20080329-05:53:16.722] (root): error!"))
     }
 
     "get single-threaded return the same value" in {
       val loggerFirst = Logger.get("getTest")
-      loggerFirst should not be null
+      assert(loggerFirst !== null)
 
       val loggerSecond = Logger.get("getTest")
-      loggerSecond should be(loggerFirst)
+      assert(loggerSecond === loggerFirst)
     }
 
     "get multi-threaded return the same value" in {
@@ -135,13 +135,13 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
       executorService.shutdown
       // let them rip, and then wait for em to finish
       latch.countDown
-      executorService.awaitTermination(10, TimeUnit.SECONDS) shouldEqual true
+      assert(executorService.awaitTermination(10, TimeUnit.SECONDS) === true)
 
       // now make sure they are all the same reference
       val expected = futureResults(0).get
       for (i <- 1.until(numThreads)) {
         val result = futureResults(i).get
-        result should be(expected)
+        assert(result === expected)
       }
     }
 
@@ -150,11 +150,11 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
       val otherFactories = List(LoggerFactory(node = "", level = Some(Level.INFO)))
       Logger.configure(initialFactories)
 
-      Logger.get("").getLevel shouldEqual Level.DEBUG
+      assert(Logger.get("").getLevel === Level.DEBUG)
       Logger.withLoggers(otherFactories) {
-        Logger.get("").getLevel() shouldEqual Level.INFO
+        assert(Logger.get("").getLevel() === Level.INFO)
       }
-      Logger.get("").getLevel shouldEqual Level.DEBUG
+      assert(Logger.get("").getLevel === Level.DEBUG)
     }
 
     "configure logging" should {
@@ -180,17 +180,17 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
             ) :: Nil
           ).apply()
 
-          log.getLevel shouldEqual Level.DEBUG
-          log.getHandlers().length shouldEqual 1
+          assert(log.getLevel === Level.DEBUG)
+          assert(log.getHandlers().length === 1)
           val handler = log.getHandlers()(0).asInstanceOf[FileHandler]
-          handler.filename shouldEqual folderName + "/test.log"
-          handler.append shouldEqual false
-          handler.getLevel shouldEqual Level.INFO
+          assert(handler.filename === folderName + "/test.log")
+          assert(handler.append === false)
+          assert(handler.getLevel === Level.INFO)
           val formatter = handler.formatter
-          formatter.formatPrefix(javalog.Level.WARNING, "10:55", "hello") shouldEqual "WARNING 10:55 hello"
-          log.name shouldEqual "com.twitter"
-          formatter.truncateAt shouldEqual 1024
-          formatter.useFullPackageNames shouldEqual true
+          assert(formatter.formatPrefix(javalog.Level.WARNING, "10:55", "hello") === "WARNING 10:55 hello")
+          assert(log.name === "com.twitter")
+          assert(formatter.truncateAt === 1024)
+          assert(formatter.useFullPackageNames === true)
         }
       }
 
@@ -208,13 +208,13 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
             ) :: Nil
           ).apply()
 
-          log.getHandlers.length shouldEqual 1
+          assert(log.getHandlers.length === 1)
           val h = log.getHandlers()(0).asInstanceOf[SyslogHandler]
-          h.dest.asInstanceOf[InetSocketAddress].getHostName shouldEqual "example.com"
-          h.dest.asInstanceOf[InetSocketAddress].getPort shouldEqual 212
+          assert(h.dest.asInstanceOf[InetSocketAddress].getHostName === "example.com")
+          assert(h.dest.asInstanceOf[InetSocketAddress].getPort === 212)
           val formatter = h.formatter.asInstanceOf[SyslogFormatter]
-          formatter.serverName shouldEqual Some("elmo")
-          formatter.priority shouldEqual 128
+          assert(formatter.serverName === Some("elmo"))
+          assert(formatter.priority === 128)
         }
       }
 
@@ -257,10 +257,10 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
           ) :: Nil
 
           Logger.configure(factories)
-          Logger.get("").getLevel shouldEqual Level.INFO
-          Logger.get("w3c").getLevel shouldEqual Level.OFF
-          Logger.get("stats").getLevel shouldEqual Level.INFO
-          Logger.get("bad_jobs").getLevel shouldEqual Level.INFO
+          assert(Logger.get("").getLevel === Level.INFO)
+          assert(Logger.get("w3c").getLevel === Level.OFF)
+          assert(Logger.get("stats").getLevel === Level.INFO)
+          assert(Logger.get("bad_jobs").getLevel === Level.INFO)
           try {
           Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler]
           } catch {
@@ -271,7 +271,7 @@ class LoggerTest extends WordSpec with ShouldMatchers with TempFolder with TestL
           } catch {
             case _: ClassCastException => fail("not a FileHandler")
           }
-          Logger.get("w3c").getHandlers().size shouldEqual 0
+          assert(Logger.get("w3c").getHandlers().size === 0)
           try {
             Logger.get("stats").getHandlers()(0).asInstanceOf[ScribeHandler]
           } catch {

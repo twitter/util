@@ -20,7 +20,7 @@ package logging
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
 import org.scalatest.{WordSpec, BeforeAndAfter}
-import org.scalatest.matchers.ShouldMatchers
+
 
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
@@ -29,7 +29,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ScribeHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAfter {
+class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")
@@ -62,8 +62,8 @@ class ScribeHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAfter
         ).apply()
         scribe.publish(record1)
         scribe.publish(record2)
-        scribe.queue.size shouldEqual(2)
-        scribe.makeBuffer(2).array.hexlify shouldEqual (
+        assert(scribe.queue.size === 2)
+        assert(scribe.makeBuffer(2).array.hexlify === (
           "000000b080010001000000034c6f67000000000f0001" +
           "0c000000020b000100000004746573740b0002000000" +
           "36494e46205b32303038303332392d30353a35333a31" +
@@ -72,7 +72,7 @@ class ScribeHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAfter
           "740b00020000003c494e46205b32303038303332392d" +
           "30353a35333a31362e3732325d2068656c6c6f3a2054" +
           "68697320697320616e6f74686572206d657373616765" +
-          "2e0a0000")
+          "2e0a0000"))
       }
     }
 
@@ -92,7 +92,7 @@ class ScribeHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAfter
 
       scribe.publish(bytes)
 
-      scribe.queue.peek() shouldEqual bytes
+      assert(scribe.queue.peek() === bytes)
     }
 
     "throw away log messages if scribe is too busy" in {
@@ -108,8 +108,8 @@ class ScribeHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAfter
       scribe.lastTransmission = Time.now
       scribe.publish(record1)
       scribe.publish(record2)
-      scribe.droppedRecords.get() shouldEqual(1)
-      scribe.sentRecords.get() shouldEqual(0)
+      assert(scribe.droppedRecords.get() === 1)
+      assert(scribe.sentRecords.get() === 0)
     }
   }
 }

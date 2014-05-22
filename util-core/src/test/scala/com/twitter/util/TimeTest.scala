@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit
 import java.util.Locale
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
+trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec {
   val ops: TimeLikeOps[T]
   import ops._
 
@@ -23,23 +23,23 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
       fromNanoseconds(Long.MinValue+1))
 
     "behave like boxed doubles" in {
-      Top compare Undefined should be <(0)
-      Bottom compare Top should be <(0)
-      Undefined compare Undefined shouldEqual(0)
-      Top compare Top shouldEqual(0)
-      Bottom compare Bottom shouldEqual(0)
+      assert((Top compare Undefined) < 0)
+      assert((Bottom compare Top) < 0)
+      assert((Undefined compare Undefined) === 0)
+      assert((Top compare Top) === 0)
+      assert((Bottom compare Bottom) === 0)
 
-      Top + Duration.Top shouldEqual(Top)
-      Bottom - Duration.Bottom shouldEqual(Undefined)
-      Top - Duration.Top shouldEqual(Undefined)
-      Bottom + Duration.Bottom shouldEqual(Bottom)
+      assert(Top + Duration.Top === Top)
+      assert(Bottom - Duration.Bottom === Undefined)
+      assert(Top - Duration.Top === Undefined)
+      assert(Bottom + Duration.Bottom === Bottom)
     }
 
     "complementary diff" in {
       // Note that this doesn't always hold because of two's
       // complement arithmetic.
       for (a <- easyVs; b <- easyVs)
-        a diff b shouldEqual(-(b diff a))
+        assert((a diff b) === -(b diff a))
 
     }
 
@@ -47,28 +47,28 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
       for (a <- vs; b <- vs) {
         val x = a compare b
         val y = b compare a
-        (x == 0 && y == 0) || (x < 0 != y < 0) shouldEqual true
+        assert((x == 0 && y == 0) || (x < 0 != y < 0) === true)
       }
     }
 
     "commutative max" in {
       for (a <- vs; b <- vs)
-        a max b shouldEqual(b max a)
+        assert((a max b) === (b max a))
     }
 
     "commutative min" in {
       for (a <- vs; b <- vs)
-        a min b shouldEqual(b min a)
+        assert((a min b) === (b min a))
     }
 
     "handle underflows" in {
-      fromNanoseconds(Long.MinValue) - 1.nanosecond shouldEqual(Bottom)
-      fromMicroseconds(Long.MinValue) - 1.nanosecond shouldEqual(Bottom)
+      assert(fromNanoseconds(Long.MinValue) - 1.nanosecond === Bottom)
+      assert(fromMicroseconds(Long.MinValue) - 1.nanosecond === Bottom)
     }
 
     "handle overflows" in {
-      fromNanoseconds(Long.MaxValue) + 1.nanosecond shouldEqual(Top)
-      fromMicroseconds(Long.MaxValue) + 1.nanosecond shouldEqual(Top)
+      assert(fromNanoseconds(Long.MaxValue) + 1.nanosecond === Top)
+      assert(fromMicroseconds(Long.MaxValue) + 1.nanosecond === Top)
     }
 
     "Nanoseconds(_) extracts only finite values, in nanoseconds" in {
@@ -105,142 +105,142 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
         val out = new ObjectOutputStream(bytes)
         out.writeObject(v)
         val in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray))
-        in.readObject() shouldEqual(v)
+        assert(in.readObject() === v)
       }
     }
   }
 
   "Top" should {
     "be impermeable to finite arithmetic" in {
-      Top - 0.seconds shouldEqual(Top)
-      Top - 100.seconds shouldEqual(Top)
-      Top - Duration.fromNanoseconds(Long.MaxValue) shouldEqual(Top)
+      assert(Top - 0.seconds === Top)
+      assert(Top - 100.seconds === Top)
+      assert(Top - Duration.fromNanoseconds(Long.MaxValue) === Top)
     }
 
     "become undefined when subtracted from itself, or added to bottom" in {
-      Top - Duration.Top shouldEqual(Undefined)
-      Top + Duration.Bottom shouldEqual(Undefined)
+      assert(Top - Duration.Top === Undefined)
+      assert(Top + Duration.Bottom === Undefined)
     }
 
     "not be equal to the maximum value" in {
-      fromNanoseconds(Long.MaxValue) should not be (Top)
+      assert(fromNanoseconds(Long.MaxValue) !== Top)
     }
 
     "always be max" in {
-      Top max fromSeconds(1) shouldEqual(Top)
-      Top max fromNanoseconds(Long.MaxValue) shouldEqual(Top)
-      Top max Bottom shouldEqual(Top)
+      assert((Top max fromSeconds(1)) === Top)
+      assert((Top max fromNanoseconds(Long.MaxValue)) === Top)
+      assert((Top max Bottom) === Top)
     }
 
     "greater than everything else" in {
-      fromSeconds(0) should be <(Top)
-      fromNanoseconds(Long.MaxValue) should be <(Top)
+      assert(fromSeconds(0) < Top)
+      assert(fromNanoseconds(Long.MaxValue) < Top)
     }
 
     "equal to itself" in {
-      Top shouldEqual(Top)
+      assert(Top === Top)
     }
 
     "more or less equals only to itself" in {
-      Top.moreOrLessEquals(Top, Duration.Top) shouldEqual true
-      Top.moreOrLessEquals(Top, Duration.Zero) shouldEqual true
-      Top.moreOrLessEquals(Bottom, Duration.Top) shouldEqual true
-      Top.moreOrLessEquals(Bottom, Duration.Zero) shouldEqual false
-      Top.moreOrLessEquals(fromSeconds(0), Duration.Top) shouldEqual true
-      Top.moreOrLessEquals(fromSeconds(0), Duration.Bottom) shouldEqual false
+      assert(Top.moreOrLessEquals(Top, Duration.Top) === true)
+      assert(Top.moreOrLessEquals(Top, Duration.Zero) === true)
+      assert(Top.moreOrLessEquals(Bottom, Duration.Top) === true)
+      assert(Top.moreOrLessEquals(Bottom, Duration.Zero) === false)
+      assert(Top.moreOrLessEquals(fromSeconds(0), Duration.Top) === true)
+      assert(Top.moreOrLessEquals(fromSeconds(0), Duration.Bottom) === false)
     }
 
     "Undefined diff to Top" in {
-      Top diff Top shouldEqual(Duration.Undefined)
+      assert((Top diff Top) === Duration.Undefined)
     }
   }
 
   "Bottom" should {
     "be impermeable to finite arithmetic" in {
-      Bottom + 0.seconds shouldEqual(Bottom)
-      Bottom + 100.seconds shouldEqual(Bottom)
-      Bottom + Duration.fromNanoseconds(Long.MaxValue) shouldEqual(Bottom)
+      assert(Bottom + 0.seconds === Bottom)
+      assert(Bottom + 100.seconds === Bottom)
+      assert(Bottom + Duration.fromNanoseconds(Long.MaxValue) === Bottom)
     }
 
     "become undefined when added with Top or subtracted by bottom" in {
-      Bottom + Duration.Top shouldEqual(Undefined)
-      Bottom - Duration.Bottom shouldEqual(Undefined)
+      assert(Bottom + Duration.Top === Undefined)
+      assert(Bottom - Duration.Bottom === Undefined)
     }
 
     "always be min" in {
-      Bottom min Top shouldEqual(Bottom)
-      Bottom min fromNanoseconds(0) shouldEqual(Bottom)
+      assert((Bottom min Top) === Bottom)
+      assert((Bottom min fromNanoseconds(0)) === Bottom)
     }
 
     "less than everything else" in {
-      Bottom should be <(fromSeconds(0))
-      Bottom should be <(fromNanoseconds(Long.MaxValue))
-      Bottom should be <(fromNanoseconds(Long.MinValue))
+      assert(Bottom < fromSeconds(0))
+      assert(Bottom < fromNanoseconds(Long.MaxValue))
+      assert(Bottom < fromNanoseconds(Long.MinValue))
     }
 
     "less than Top" in {
-      Bottom should be <(Top)
+      assert(Bottom < Top)
     }
 
     "equal to itself" in {
-      Bottom shouldEqual(Bottom)
+      assert(Bottom === Bottom)
     }
 
     "more or less equals only to itself" in {
-      Bottom.moreOrLessEquals(Bottom, Duration.Top) shouldEqual true
-      Bottom.moreOrLessEquals(Bottom, Duration.Zero) shouldEqual true
-      Bottom.moreOrLessEquals(Top, Duration.Bottom) shouldEqual false
-      Bottom.moreOrLessEquals(Top, Duration.Zero) shouldEqual false
-      Bottom.moreOrLessEquals(fromSeconds(0), Duration.Top) shouldEqual true
-      Bottom.moreOrLessEquals(fromSeconds(0), Duration.Bottom) shouldEqual false
+      assert(Bottom.moreOrLessEquals(Bottom, Duration.Top) === true)
+      assert(Bottom.moreOrLessEquals(Bottom, Duration.Zero) === true)
+      assert(Bottom.moreOrLessEquals(Top, Duration.Bottom) === false)
+      assert(Bottom.moreOrLessEquals(Top, Duration.Zero) === false)
+      assert(Bottom.moreOrLessEquals(fromSeconds(0), Duration.Top) === true)
+      assert(Bottom.moreOrLessEquals(fromSeconds(0), Duration.Bottom) === false)
     }
 
 
     "Undefined diff to Bottom" in {
-      Bottom diff Bottom shouldEqual(Duration.Undefined)
+      assert((Bottom diff Bottom) === Duration.Undefined)
     }
   }
 
   "Undefined" should {
     "be impermeable to any arithmetic" in {
-      Undefined + 0.seconds shouldEqual(Undefined)
-      Undefined + 100.seconds shouldEqual(Undefined)
-      Undefined + Duration.fromNanoseconds(Long.MaxValue) shouldEqual(Undefined)
+      assert(Undefined + 0.seconds === Undefined)
+      assert(Undefined + 100.seconds === Undefined)
+      assert(Undefined + Duration.fromNanoseconds(Long.MaxValue) === Undefined)
     }
 
     "become undefined when added with Top or subtracted by bottom" in {
-      Undefined + Duration.Top shouldEqual(Undefined)
-      Undefined - Duration.Undefined shouldEqual(Undefined)
+      assert(Undefined + Duration.Top === Undefined)
+      assert(Undefined - Duration.Undefined === Undefined)
     }
 
     "always be max" in {
-      Undefined max Top shouldEqual(Undefined)
-      Undefined max fromNanoseconds(0) shouldEqual(Undefined)
+      assert((Undefined max Top) === Undefined)
+      assert((Undefined max fromNanoseconds(0)) === Undefined)
     }
 
     "greater than everything else" in {
-      fromSeconds(0) should be <(Undefined)
-      Top should be <(Undefined)
-      fromNanoseconds(Long.MaxValue) should be <(Undefined)
+      assert(fromSeconds(0) < Undefined)
+      assert(Top < Undefined)
+      assert(fromNanoseconds(Long.MaxValue) < Undefined)
     }
 
     "equal to itself" in {
-      Undefined shouldEqual(Undefined)
+      assert(Undefined === Undefined)
     }
 
     "not more or less equal to anything" in {
-      Undefined.moreOrLessEquals(Undefined, Duration.Top) shouldEqual false
-      Undefined.moreOrLessEquals(Undefined, Duration.Zero) shouldEqual false
-      Undefined.moreOrLessEquals(Top, Duration.Undefined) shouldEqual true
-      Undefined.moreOrLessEquals(Top, Duration.Zero) shouldEqual false
-      Undefined.moreOrLessEquals(fromSeconds(0), Duration.Top) shouldEqual false
-      Undefined.moreOrLessEquals(fromSeconds(0), Duration.Undefined) shouldEqual true
+      assert(Undefined.moreOrLessEquals(Undefined, Duration.Top) === false)
+      assert(Undefined.moreOrLessEquals(Undefined, Duration.Zero) === false)
+      assert(Undefined.moreOrLessEquals(Top, Duration.Undefined) === true)
+      assert(Undefined.moreOrLessEquals(Top, Duration.Zero) === false)
+      assert(Undefined.moreOrLessEquals(fromSeconds(0), Duration.Top) === false)
+      assert(Undefined.moreOrLessEquals(fromSeconds(0), Duration.Undefined) === true)
     }
 
     "Undefined on diff" in {
-      Undefined diff Top shouldEqual(Duration.Undefined)
-      Undefined diff Bottom shouldEqual(Duration.Undefined)
-      Undefined diff fromNanoseconds(123) shouldEqual(Duration.Undefined)
+      assert((Undefined diff Top) === Duration.Undefined)
+      assert((Undefined diff Bottom) === Duration.Undefined)
+      assert((Undefined diff fromNanoseconds(123)) === Duration.Undefined)
     }
   }
 
@@ -255,13 +255,13 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
 
       for (ns <- nss) {
         val t = fromNanoseconds(ns)
-        t.inNanoseconds shouldEqual(ns)
-        t.inMicroseconds shouldEqual(ns/1000L)
-        t.inMilliseconds shouldEqual(ns/1000000L)
-        t.inLongSeconds shouldEqual(ns/1000000000L)
-        t.inMinutes shouldEqual(ns/60000000000L)
-        t.inHours shouldEqual(ns/3600000000000L)
-        t.inDays shouldEqual(ns/86400000000000L)
+        assert(t.inNanoseconds === ns)
+        assert(t.inMicroseconds === ns/1000L)
+        assert(t.inMilliseconds === ns/1000000L)
+        assert(t.inLongSeconds === ns/1000000000L)
+        assert(t.inMinutes === ns/60000000000L)
+        assert(t.inHours === ns/3600000000000L)
+        assert(t.inDays === ns/86400000000000L)
       }
     }
   }
@@ -275,45 +275,45 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
       )
       for (ns <- nss) {
         val t = fromNanoseconds(ns)
-        t.inLongSeconds shouldEqual(t.inSeconds)
+        assert(t.inLongSeconds === t.inSeconds)
       }
     }
     "clamp value to Int.MinValue or MaxValue when out of range" in {
       val longNs = 2160000000000000000L // 25000.days
-      fromNanoseconds(longNs).inSeconds shouldEqual(Int.MaxValue)
-      fromNanoseconds(-longNs).inSeconds shouldEqual(Int.MinValue)
+      assert(fromNanoseconds(longNs).inSeconds === Int.MaxValue)
+      assert(fromNanoseconds(-longNs).inSeconds === Int.MinValue)
     }
   }
 
   "floor" should {
     "round down" in {
-      fromSeconds(60).floor(1.minute) shouldEqual(fromSeconds(60))
-      fromSeconds(100).floor(1.minute) shouldEqual(fromSeconds(60))
-      fromSeconds(119).floor(1.minute) shouldEqual(fromSeconds(60))
-      fromSeconds(120).floor(1.minute) shouldEqual(fromSeconds(120))
+      assert(fromSeconds(60).floor(1.minute) === fromSeconds(60))
+      assert(fromSeconds(100).floor(1.minute) === fromSeconds(60))
+      assert(fromSeconds(119).floor(1.minute) === fromSeconds(60))
+      assert(fromSeconds(120).floor(1.minute) === fromSeconds(120))
     }
 
     "maintain top and bottom" in {
-      Top.floor(1.hour) shouldEqual(Top)
+      assert(Top.floor(1.hour) === Top)
     }
 
     "divide by zero" in {
-      Zero.floor(Duration.Zero) shouldEqual(Undefined)
-      fromSeconds(1).floor(Duration.Zero) shouldEqual(Top)
-      fromSeconds(-1).floor(Duration.Zero) shouldEqual(Bottom)
+      assert(Zero.floor(Duration.Zero) === Undefined)
+      assert(fromSeconds(1).floor(Duration.Zero) === Top)
+      assert(fromSeconds(-1).floor(Duration.Zero) === Bottom)
     }
 
     "deal with undefineds" in {
-      Bottom.floor(1.second) shouldEqual(Bottom)
-      Undefined.floor(0.seconds) shouldEqual(Undefined)
-      Undefined.floor(Duration.Top) shouldEqual(Undefined)
-      Undefined.floor(Duration.Bottom) shouldEqual(Undefined)
-      Undefined.floor(Duration.Undefined) shouldEqual(Undefined)
+      assert(Bottom.floor(1.second) === Bottom)
+      assert(Undefined.floor(0.seconds) === Undefined)
+      assert(Undefined.floor(Duration.Top) === Undefined)
+      assert(Undefined.floor(Duration.Bottom) === Undefined)
+      assert(Undefined.floor(Duration.Undefined) === Undefined)
     }
 
     "floor itself" in {
       for (s <- Seq(Long.MinValue, -1, 1, Long.MaxValue); t = fromNanoseconds(s))
-        t.floor(Duration.fromNanoseconds(t.inNanoseconds)) shouldEqual(t)
+        assert(t.floor(Duration.fromNanoseconds(t.inNanoseconds)) === t)
     }
   }
 
@@ -331,7 +331,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
       fromMilliseconds(millis) match {
         case Nanoseconds(ns) => assert(ns == millis*1e6)
       }
-      fromMilliseconds(millis+1) shouldEqual(Top)
+      assert(fromMilliseconds(millis+1) === Top)
     }
 
     "underflow millis" in {
@@ -339,20 +339,20 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ShouldMatchers {
       fromMilliseconds(millis) match {
         case Nanoseconds(ns) => assert(ns == millis*1e6)
       }
-      fromMilliseconds(millis-1) shouldEqual(Bottom)
+      assert(fromMilliseconds(millis-1) === Bottom)
     }
   }
 }
 
 @RunWith(classOf[JUnitRunner])
-class TimeFormatTest extends WordSpec with ShouldMatchers {
+class TimeFormatTest extends WordSpec {
   "TimeFormat" should {
     "format correctly with non US locale" in {
       val locale = Locale.GERMAN
       val format = "EEEE"
       val timeFormat = new TimeFormat(format, Some(locale))
       val day = "Donnerstag"
-      timeFormat.parse(day).format(format, locale) shouldEqual day
+      assert(timeFormat.parse(day).format(format, locale) === day)
     }
   }
 }
@@ -363,50 +363,50 @@ class TimeTest extends  { val ops = Time } with TimeLikeSpec[Time] {
     "work in collections" in {
       val t0 = Time.fromSeconds(100)
       val t1 = Time.fromSeconds(100)
-      t0 shouldEqual t1
-      t0.hashCode shouldEqual t1.hashCode
+      assert(t0 === t1)
+      assert(t0.hashCode === t1.hashCode)
       val pairs = List((t0, "foo"), (t1, "bar"))
-      pairs.groupBy { case (time: Time, value: String) => time } shouldEqual Map(t0 -> pairs)
+      assert(pairs.groupBy { case (time: Time, value: String) => time } === Map(t0 -> pairs))
     }
 
     "now should be now" in {
-      (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
+      assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }
 
     "withTimeAt" in {
       val t0 = new Time(123456789L)
       Time.withTimeAt(t0) { _ =>
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         Thread.sleep(50)
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
       }
-      (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
+      assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }
 
     "withTimeAt nested" in {
       val t0 = new Time(123456789L)
       val t1 = t0 + 10.minutes
       Time.withTimeAt(t0) { _ =>
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         Time.withTimeAt(t1) { _ =>
-          Time.now shouldEqual t1
+          assert(Time.now === t1)
         }
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
       }
-      (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
+      assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }
 
     "withTimeAt threaded" in {
       val t0 = new Time(314159L)
       val t1 = new Time(314160L)
       Time.withTimeAt(t0) { tc =>
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         Thread.sleep(50)
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         tc.advance(Duration.fromNanoseconds(1))
-        Time.now shouldEqual t1
+        assert(Time.now === t1)
         tc.set(t0)
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         @volatile var threadTime: Option[Time] = None
         val thread = new Thread {
           override def run() {
@@ -415,21 +415,21 @@ class TimeTest extends  { val ops = Time } with TimeLikeSpec[Time] {
         }
         thread.start()
         thread.join()
-        threadTime.get should not be t0
+        assert(threadTime.get !== t0)
       }
-      (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
+      assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }
 
     "withTimeFunction" in {
       val t0 = Time.now
       var t = t0
       Time.withTimeFunction(t) { _ =>
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         Thread.sleep(50)
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         val delta = 100.milliseconds
         t += delta
-        Time.now shouldEqual t0 + delta
+        assert(Time.now === t0 + delta)
       }
     }
 
@@ -438,133 +438,133 @@ class TimeTest extends  { val ops = Time } with TimeLikeSpec[Time] {
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now
         Thread.sleep(50)
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
       }
-      (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
+      assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }
 
     "advance" in {
       val t0 = new Time(123456789L)
       val delta = 5.seconds
       Time.withTimeAt(t0) { tc =>
-        Time.now shouldEqual t0
+        assert(Time.now === t0)
         tc.advance(delta)
-        Time.now shouldEqual (t0 + delta)
+        assert(Time.now === (t0 + delta))
       }
-      (Time.now.inMillis - System.currentTimeMillis).abs should be <(20L)
+      assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }
 
     "compare" in {
-      10.seconds.afterEpoch should be <(11.seconds.afterEpoch)
-      10.seconds.afterEpoch shouldEqual(10.seconds.afterEpoch)
-      11.seconds.afterEpoch should be >(10.seconds.afterEpoch)
-      Time.fromMilliseconds(Long.MaxValue) should be >(Time.now)
+      assert(10.seconds.afterEpoch < 11.seconds.afterEpoch)
+      assert(10.seconds.afterEpoch === 10.seconds.afterEpoch)
+      assert(11.seconds.afterEpoch > 10.seconds.afterEpoch)
+      assert(Time.fromMilliseconds(Long.MaxValue) > Time.now)
     }
 
     "+ delta" in {
-      10.seconds.afterEpoch + 5.seconds shouldEqual 15.seconds.afterEpoch
+      assert(10.seconds.afterEpoch + 5.seconds === 15.seconds.afterEpoch)
     }
 
     "- delta" in {
-      10.seconds.afterEpoch - 5.seconds shouldEqual 5.seconds.afterEpoch
+      assert(10.seconds.afterEpoch - 5.seconds === 5.seconds.afterEpoch)
     }
 
     "- time" in {
-      10.seconds.afterEpoch - 5.seconds.afterEpoch shouldEqual 5.seconds
+      assert(10.seconds.afterEpoch - 5.seconds.afterEpoch === 5.seconds)
     }
 
     "max" in {
-      10.seconds.afterEpoch max 5.seconds.afterEpoch shouldEqual 10.seconds.afterEpoch
-      5.seconds.afterEpoch max 10.seconds.afterEpoch shouldEqual 10.seconds.afterEpoch
+      assert((10.seconds.afterEpoch max 5.seconds.afterEpoch) === 10.seconds.afterEpoch)
+      assert((5.seconds.afterEpoch max 10.seconds.afterEpoch) === 10.seconds.afterEpoch)
     }
 
     "min" in {
-      10.seconds.afterEpoch min 5.seconds.afterEpoch shouldEqual 5.seconds.afterEpoch
-      5.seconds.afterEpoch min 10.seconds.afterEpoch shouldEqual 5.seconds.afterEpoch
+      assert((10.seconds.afterEpoch min 5.seconds.afterEpoch) === 5.seconds.afterEpoch)
+      assert((5.seconds.afterEpoch min 10.seconds.afterEpoch) === 5.seconds.afterEpoch)
     }
 
     "moreOrLessEquals" in {
       val now = Time.now
-      now.moreOrLessEquals(now + 1.second, 1.second) shouldEqual true
-      now.moreOrLessEquals(now - 1.seconds, 1.second) shouldEqual true
-      now.moreOrLessEquals(now + 2.seconds, 1.second) shouldEqual false
-      now.moreOrLessEquals(now - 2.seconds, 1.second) shouldEqual false
+      assert(now.moreOrLessEquals(now + 1.second, 1.second) === true)
+      assert(now.moreOrLessEquals(now - 1.seconds, 1.second) === true)
+      assert(now.moreOrLessEquals(now + 2.seconds, 1.second) === false)
+      assert(now.moreOrLessEquals(now - 2.seconds, 1.second) === false)
     }
 
     "floor" in {
       val format = new TimeFormat("yyyy-MM-dd HH:mm:ss.SSS")
       val t0 = format.parse("2010-12-24 11:04:07.567")
-      t0.floor(1.millisecond) shouldEqual t0
-      t0.floor(10.milliseconds) shouldEqual format.parse("2010-12-24 11:04:07.560")
-      t0.floor(1.second) shouldEqual format.parse("2010-12-24 11:04:07.000")
-      t0.floor(5.second) shouldEqual format.parse("2010-12-24 11:04:05.000")
-      t0.floor(1.minute) shouldEqual format.parse("2010-12-24 11:04:00.000")
-      t0.floor(1.hour) shouldEqual format.parse("2010-12-24 11:00:00.000")
+      assert(t0.floor(1.millisecond) === t0)
+      assert(t0.floor(10.milliseconds) === format.parse("2010-12-24 11:04:07.560"))
+      assert(t0.floor(1.second) === format.parse("2010-12-24 11:04:07.000"))
+      assert(t0.floor(5.second) === format.parse("2010-12-24 11:04:05.000"))
+      assert(t0.floor(1.minute) === format.parse("2010-12-24 11:04:00.000"))
+      assert(t0.floor(1.hour) === format.parse("2010-12-24 11:00:00.000"))
     }
 
     "since" in {
       val t0 = Time.now
       val t1 = t0 + 10.seconds
-      t1.since(t0) shouldEqual 10.seconds
-      t0.since(t1) shouldEqual (-10).seconds
+      assert(t1.since(t0) === 10.seconds)
+      assert(t0.since(t1) === (-10).seconds)
     }
 
     "sinceEpoch" in {
       val t0 = Time.epoch + 100.hours
-      t0.sinceEpoch shouldEqual 100.hours
+      assert(t0.sinceEpoch === 100.hours)
     }
 
     "sinceNow" in {
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now + 100.hours
-        t0.sinceNow shouldEqual 100.hours
+        assert(t0.sinceNow === 100.hours)
       }
     }
 
     "fromMicroseconds" in {
-      Time.fromMicroseconds(0).inNanoseconds shouldEqual 0L
-      Time.fromMicroseconds(-1).inNanoseconds shouldEqual -1L * 1000L
+      assert(Time.fromMicroseconds(0).inNanoseconds === 0L)
+      assert(Time.fromMicroseconds(-1).inNanoseconds === -1L * 1000L)
 
-      Time.fromMicroseconds(Long.MaxValue).inNanoseconds shouldEqual Long.MaxValue
-      Time.fromMicroseconds(Long.MaxValue-1) shouldEqual(Time.Top)
+      assert(Time.fromMicroseconds(Long.MaxValue).inNanoseconds === Long.MaxValue)
+      assert(Time.fromMicroseconds(Long.MaxValue-1) === Time.Top)
 
-      Time.fromMicroseconds(Long.MinValue) shouldEqual(Time.Bottom)
-      Time.fromMicroseconds(Long.MinValue+1) shouldEqual(Time.Bottom)
+      assert(Time.fromMicroseconds(Long.MinValue) === Time.Bottom)
+      assert(Time.fromMicroseconds(Long.MinValue+1) === Time.Bottom)
 
       val currentTimeMicros = System.currentTimeMillis()*1000
-      Time.fromMicroseconds(currentTimeMicros).inNanoseconds shouldEqual(currentTimeMicros.microseconds.inNanoseconds)
+      assert(Time.fromMicroseconds(currentTimeMicros).inNanoseconds === currentTimeMicros.microseconds.inNanoseconds)
     }
 
     "fromMillis" in {
-      Time.fromMilliseconds(0).inNanoseconds shouldEqual 0L
-      Time.fromMilliseconds(-1).inNanoseconds shouldEqual -1L * 1000000L
+      assert(Time.fromMilliseconds(0).inNanoseconds === 0L)
+      assert(Time.fromMilliseconds(-1).inNanoseconds === -1L * 1000000L)
 
-      Time.fromMilliseconds(Long.MaxValue).inNanoseconds shouldEqual Long.MaxValue
-      Time.fromMilliseconds(Long.MaxValue-1) shouldEqual(Time.Top)
+      assert(Time.fromMilliseconds(Long.MaxValue).inNanoseconds === Long.MaxValue)
+      assert(Time.fromMilliseconds(Long.MaxValue-1) === Time.Top)
 
-      Time.fromMilliseconds(Long.MinValue) shouldEqual(Time.Bottom)
-      Time.fromMilliseconds(Long.MinValue+1) shouldEqual(Time.Bottom)
+      assert(Time.fromMilliseconds(Long.MinValue) === Time.Bottom)
+      assert(Time.fromMilliseconds(Long.MinValue+1) === Time.Bottom)
 
       val currentTimeMs = System.currentTimeMillis
-      Time.fromMilliseconds(currentTimeMs).inNanoseconds shouldEqual(currentTimeMs * 1000000L)
+      assert(Time.fromMilliseconds(currentTimeMs).inNanoseconds === currentTimeMs * 1000000L)
     }
 
     "until" in {
       val t0 = Time.now
       val t1 = t0 + 10.seconds
-      t0.until(t1) shouldEqual 10.seconds
-      t1.until(t0) shouldEqual (-10).seconds
+      assert(t0.until(t1) === 10.seconds)
+      assert(t1.until(t0) === (-10).seconds)
     }
 
     "untilEpoch" in {
       val t0 = Time.epoch - 100.hours
-      t0.untilEpoch shouldEqual 100.hours
+      assert(t0.untilEpoch === 100.hours)
     }
 
     "untilNow" in {
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now - 100.hours
-        t0.untilNow shouldEqual 100.hours
+        assert(t0.untilNow === 100.hours)
       }
     }
   }

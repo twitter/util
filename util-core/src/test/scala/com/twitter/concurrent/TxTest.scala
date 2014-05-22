@@ -2,73 +2,73 @@ package com.twitter.concurrent
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import com.twitter.util.Return
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class TxTest extends WordSpec with ShouldMatchers {
+class TxTest extends WordSpec {
   "Tx.twoParty" should {
     "commit when everything goes dandy" in {
       val (stx, rtx) = Tx.twoParty(123)
       val sf = stx.ack()
-      sf.poll shouldEqual None
+      assert(sf.poll === None)
       val rf = rtx.ack()
-      sf.poll shouldEqual Some(Return(Tx.Commit(())))
-      rf.poll shouldEqual Some(Return(Tx.Commit(123)))
+      assert(sf.poll === Some(Return(Tx.Commit(()))))
+      assert(rf.poll === Some(Return(Tx.Commit(123))))
     }
 
     "abort when receiver nacks" in {
       val (stx, rtx) = Tx.twoParty(123)
       val sf = stx.ack()
-      sf.poll shouldEqual None
+      assert(sf.poll === None)
       rtx.nack()
-      sf.poll shouldEqual Some(Return(Tx.Abort))
+      assert(sf.poll === Some(Return(Tx.Abort)))
     }
 
     "abort when sender nacks" in {
       val (stx, rtx) = Tx.twoParty(123)
       val rf = rtx.ack()
-      rf.poll shouldEqual None
+      assert(rf.poll === None)
       stx.nack()
-      rf.poll shouldEqual Some(Return(Tx.Abort))
+      assert(rf.poll === Some(Return(Tx.Abort)))
     }
 
     "complain on ack ack" in {
       val (stx, rtx) = Tx.twoParty(123)
       rtx.ack()
 
-      intercept[Exception] {
+      assert(intercept[Exception] {
         rtx.ack()
-      } shouldEqual Tx.AlreadyAckd
+      } === Tx.AlreadyAckd)
     }
 
     "complain on ack nack" in {
       val (stx, rtx) = Tx.twoParty(123)
       rtx.ack()
 
-      intercept[Exception] {
+      assert(intercept[Exception] {
         rtx.nack()
-      } shouldEqual Tx.AlreadyAckd
+      } === Tx.AlreadyAckd)
     }
 
     "complain on nack ack" in {
       val (stx, rtx) = Tx.twoParty(123)
       rtx.nack()
 
-      intercept[Exception] {
+      assert(intercept[Exception] {
         rtx.ack()
-      } shouldEqual Tx.AlreadyNackd
+      } === Tx.AlreadyNackd)
     }
 
     "complain on nack nack" in {
       val (stx, rtx) = Tx.twoParty(123)
       rtx.nack()
 
-      intercept[Exception] {
+      assert(intercept[Exception] {
         rtx.nack()
-      } shouldEqual Tx.AlreadyNackd
+      } === Tx.AlreadyNackd)
     }
 
     "complain when already done" in {
@@ -76,9 +76,9 @@ class TxTest extends WordSpec with ShouldMatchers {
       stx.ack()
       rtx.ack()
 
-      intercept[Exception] {
+      assert(intercept[Exception] {
         stx.ack()
-      } shouldEqual Tx.AlreadyDone
+      } === Tx.AlreadyDone)
     }
   }
 }

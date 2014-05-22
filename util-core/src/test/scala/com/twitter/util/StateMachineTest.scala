@@ -1,12 +1,12 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class StateMachineTest extends WordSpec with ShouldMatchers {
+class StateMachineTest extends WordSpec {
   "StateMachine" should {
     class StateMachineHelper {
       val stateMachine = new StateMachine {

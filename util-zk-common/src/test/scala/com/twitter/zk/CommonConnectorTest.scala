@@ -10,12 +10,12 @@ import com.twitter.util.{Await, FuturePool, RandomSocket}
 import java.net.InetSocketAddress
 import scala.collection.JavaConverters._
 import org.scalatest.{WordSpec, BeforeAndAfter}
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class CommonConnectorTest extends WordSpec with ShouldMatchers with BeforeAndAfter {
+class CommonConnectorTest extends WordSpec with BeforeAndAfter {
   val timeout = 2.seconds
   val port = RandomSocket.nextPort()
   val addresses = new InetSocketAddress("localhost", port) :: Nil
@@ -24,14 +24,14 @@ class CommonConnectorTest extends WordSpec with ShouldMatchers with BeforeAndAft
     "initialize" should {
       "with addresses" in {
         implicit val pool = FuturePool.immediatePool
-        CommonConnector(addresses, timeout) should not be (null)
+        assert(CommonConnector(addresses, timeout) !== null)
       }
 
       "with a ZooKeeperClient instance" in {
         implicit val pool = FuturePool.immediatePool
         val zookeeper = new ZooKeeperClient(timeout.toIntAmount, addresses.asJava)
         val connector = CommonConnector(zookeeper, timeout)
-        connector.underlying shouldEqual zookeeper
+        assert(connector.underlying === zookeeper)
       }
     }
   }
@@ -49,7 +49,7 @@ class CommonConnectorTest extends WordSpec with ShouldMatchers with BeforeAndAft
       }
 
       "have 'zookeeper' in '/'" in {
-        Await.result(zkClient("/").getChildren(), timeout).children map { _.name } should contain("zookeeper")
+        assert(Await.result(zkClient("/").getChildren(), timeout).children map { _.name } contains("zookeeper"))
       }
     }
   }

@@ -1,22 +1,22 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class LocalTest extends WordSpec with ShouldMatchers {
+class LocalTest extends WordSpec {
   "Local" should {
     val local = new Local[Int]
 
     "be undefined by default" in {
-      local() shouldEqual None
+      assert(local() === None)
     }
 
     "hold on to values" in {
       local() = 123
-      local() shouldEqual Some(123)
+      assert(local() === Some(123))
     }
 
     "restore saved values" in {
@@ -25,7 +25,7 @@ class LocalTest extends WordSpec with ShouldMatchers {
       local() = 321
 
       Local.restore(saved)
-      local() shouldEqual Some(123)
+      assert(local() === Some(123))
     }
 
     "have a per-thread definition" in {
@@ -35,7 +35,7 @@ class LocalTest extends WordSpec with ShouldMatchers {
 
       val t = new Thread {
         override def run() = {
-          local() shouldEqual None
+          assert(local() === None)
           local() = 333
           threadValue = local()
         }
@@ -44,8 +44,8 @@ class LocalTest extends WordSpec with ShouldMatchers {
       t.start()
       t.join()
 
-      local() shouldEqual Some(123)
-      threadValue shouldEqual Some(333)
+      assert(local() === Some(123))
+      assert(threadValue === Some(333))
     }
 
     "unset undefined variables when restoring" in {
@@ -55,7 +55,7 @@ class LocalTest extends WordSpec with ShouldMatchers {
       local() = 123
       Local.restore(saved)
 
-      local() shouldEqual None
+      assert(local() === None)
     }
 
     "not restore cleared variables" in {
@@ -65,7 +65,7 @@ class LocalTest extends WordSpec with ShouldMatchers {
       Local.save()  // to trigger caching
       local.clear()
       Local.restore(Local.save())
-      local() shouldEqual None
+      assert(local() === None)
     }
 
     "maintain value definitions when other locals change" in {
@@ -73,18 +73,18 @@ class LocalTest extends WordSpec with ShouldMatchers {
       l0() = 123
       val save0 = Local.save()
       val l1 = new Local[Int]
-      l0() shouldEqual Some(123)
+      assert(l0() === Some(123))
       l1() = 333
-      l1() shouldEqual Some(333)
+      assert(l1() === Some(333))
 
       val save1 = Local.save()
       Local.restore(save0)
-      l0() shouldEqual Some(123)
-      l1() shouldEqual None
+      assert(l0() === Some(123))
+      assert(l1() === None)
 
       Local.restore(save1)
-      l0() shouldEqual Some(123)
-      l1() shouldEqual Some(333)
+      assert(l0() === Some(123))
+      assert(l1() === Some(333))
     }
 
     "make a copy when clearing" in {
@@ -92,9 +92,9 @@ class LocalTest extends WordSpec with ShouldMatchers {
       l() = 1
       val save0 = Local.save()
       l.clear()
-      l() shouldEqual None
+      assert(l() === None)
       Local.restore(save0)
-      l() shouldEqual Some(1)
+      assert(l() === Some(1))
     }
   }
 }

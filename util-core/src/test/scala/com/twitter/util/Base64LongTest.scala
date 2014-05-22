@@ -1,14 +1,14 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import com.twitter.util.Base64Long.toBase64
 import util.Random
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class Base64LongTest extends WordSpec with ShouldMatchers {
+class Base64LongTest extends WordSpec {
   "toBase64" should {
     "properly convert zero" in {
       assert(toBase64(0) == "A")

@@ -10,7 +10,7 @@ import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import com.twitter.zk.{RetryPolicy, NativeConnector, ZkClient}
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.matchers.MustMatchers
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -18,7 +18,7 @@ import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
 
 @RunWith(classOf[JUnitRunner])
-class ZkAsyncSemaphoreTest extends WordSpec with ShouldMatchers with MockitoSugar with AsyncAssertions {
+class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
 
   "ZkAsyncSemaphore" should {
 
@@ -48,24 +48,24 @@ class ZkAsyncSemaphoreTest extends WordSpec with ShouldMatchers with MockitoSuga
           val sem2 = new ZkAsyncSemaphore(zk, path, 2)
 
           "have correct initial values" in {
-            sem1.numPermitsAvailable shouldEqual(2)
-            sem1.numWaiters shouldEqual(0)
-            sem2.numPermitsAvailable shouldEqual(2)
-            sem2.numWaiters shouldEqual(0)
+            assert(sem1.numPermitsAvailable === 2)
+            assert(sem1.numWaiters === 0)
+            assert(sem2.numPermitsAvailable === 2)
+            assert(sem2.numWaiters === 0)
           }
 
           "execute immediately while permits are available" in {
             Await.result(acquire(sem1) within(new JavaTimer(true), 2.second))
-            sem1.numPermitsAvailable shouldEqual(1)
-            sem1.numWaiters shouldEqual(0)
-            sem2.numPermitsAvailable shouldEqual(1)
-            sem2.numWaiters shouldEqual(0)
+            assert(sem1.numPermitsAvailable === 1)
+            assert(sem1.numWaiters === 0)
+            assert(sem2.numPermitsAvailable === 1)
+            assert(sem2.numWaiters === 0)
 
             Await.result(acquire(sem2) within(new JavaTimer(true), 2.second))
-            sem1.numPermitsAvailable shouldEqual(0)
-            sem1.numWaiters shouldEqual(0)
-            sem2.numPermitsAvailable shouldEqual(0)
-            sem2.numWaiters shouldEqual(0)
+            assert(sem1.numPermitsAvailable === 0)
+            assert(sem1.numWaiters === 0)
+            assert(sem2.numPermitsAvailable === 0)
+            assert(sem2.numWaiters === 0)
           }
 
           var awaiting1: Future[Permit] = null
@@ -76,23 +76,23 @@ class ZkAsyncSemaphoreTest extends WordSpec with ShouldMatchers with MockitoSuga
               PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
 
             awaiting1 = acquire(sem1)
-            awaiting1.poll shouldEqual (None)
-            awaiting1.isDefined shouldEqual (false)
+            assert(awaiting1.poll === (None))
+            assert(awaiting1.isDefined === (false))
             eventually {
-              sem1.numPermitsAvailable shouldEqual(0)
-              sem1.numWaiters shouldEqual(1)
-              sem2.numPermitsAvailable shouldEqual(0)
-              sem2.numWaiters shouldEqual(1)
+              assert(sem1.numPermitsAvailable === 0)
+              assert(sem1.numWaiters === 1)
+              assert(sem2.numPermitsAvailable === 0)
+              assert(sem2.numWaiters === 1)
             }
 
             awaiting2 = acquire(sem2)
-            awaiting2.poll shouldEqual (None)
-            awaiting2.isDefined shouldEqual (false)
+            assert(awaiting2.poll === (None))
+            assert(awaiting2.isDefined === (false))
             eventually {
-              sem1.numPermitsAvailable shouldEqual(0)
-              sem1.numWaiters shouldEqual(2)
-              sem2.numPermitsAvailable shouldEqual(0)
-              sem2.numWaiters shouldEqual(2)
+              assert(sem1.numPermitsAvailable === 0)
+              assert(sem1.numWaiters === 2)
+              assert(sem2.numPermitsAvailable === 0)
+              assert(sem2.numWaiters === 2)
             }
           }
 
@@ -100,44 +100,44 @@ class ZkAsyncSemaphoreTest extends WordSpec with ShouldMatchers with MockitoSuga
             implicit val config =
               PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
 
-            permits.size shouldEqual (2)
+            assert(permits.size === (2))
 
             permits.poll().release()
             Await.result(awaiting1 within(new JavaTimer(true), 2.second))
 
             eventually {
-              sem1.numPermitsAvailable shouldEqual(0)
-              sem1.numWaiters shouldEqual(1)
-              sem2.numPermitsAvailable shouldEqual(0)
-              sem2.numWaiters shouldEqual(1)
+              assert(sem1.numPermitsAvailable === 0)
+              assert(sem1.numWaiters === 1)
+              assert(sem2.numPermitsAvailable === 0)
+              assert(sem2.numWaiters === 1)
             }
 
             permits.poll().release()
             Await.result(awaiting2 within(new JavaTimer(true), 2.second))
 
             eventually {
-              sem1.numPermitsAvailable shouldEqual(0)
-              sem1.numWaiters shouldEqual(0)
-              sem2.numPermitsAvailable shouldEqual(0)
-              sem2.numWaiters shouldEqual(0)
+              assert(sem1.numPermitsAvailable === 0)
+              assert(sem1.numWaiters === 0)
+              assert(sem2.numPermitsAvailable === 0)
+              assert(sem2.numWaiters === 0)
             }
 
             permits.poll().release()
 
             eventually {
-              sem1.numPermitsAvailable shouldEqual(1)
-              sem1.numWaiters shouldEqual(0)
-              sem2.numPermitsAvailable shouldEqual(1)
-              sem2.numWaiters shouldEqual(0)
+              assert(sem1.numPermitsAvailable === 1)
+              assert(sem1.numWaiters === 0)
+              assert(sem2.numPermitsAvailable === 1)
+              assert(sem2.numWaiters === 0)
             }
 
             permits.poll().release()
 
             eventually {
-              sem1.numPermitsAvailable shouldEqual(2)
-              sem1.numWaiters shouldEqual(0)
-              sem2.numPermitsAvailable shouldEqual(2)
-              sem2.numWaiters shouldEqual(0)
+              assert(sem1.numPermitsAvailable === 2)
+              assert(sem1.numWaiters === 0)
+              assert(sem2.numPermitsAvailable === 2)
+              assert(sem2.numWaiters === 0)
             }
           }
         }

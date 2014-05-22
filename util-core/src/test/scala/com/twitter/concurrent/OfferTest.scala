@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.mockito.Matchers._
@@ -26,7 +26,7 @@ class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
 }
 
 @RunWith(classOf[JUnitRunner])
-class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
+class OfferTest extends WordSpec with MockitoSugar {
   import Tx.{Commit, Abort}
 
   "Offer.map" should {
@@ -36,7 +36,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val result = Future.value(Commit(123))
       when(tx.ack()).thenReturn(result)
 
-      tx.ack() shouldEqual (result)
+      assert(tx.ack() === (result))
       val offer = spy(new SimpleOffer(tx))
 
       val mapped = offer map { i => (i - 100).toString }
@@ -66,7 +66,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         import h._
 
         offers foreach { of => verify(of, never()).prepare() }
-        offer.prepare().isDefined shouldEqual true
+        assert(offer.prepare().isDefined === true)
         offers foreach { of => verify(of).prepare() }
       }
 
@@ -101,7 +101,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         import h._
 
         val tx = offer.prepare()
-        tx.isDefined shouldEqual false
+        assert(tx.isDefined === false)
         val tx0 = mock[Tx[Int]]
         pendingTxs(0).setValue(tx0)
         tx match {
@@ -144,9 +144,9 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
             histo(txs.indexOf(tx)) += 1
         }
 
-        histo(0) shouldEqual(311)
-        histo(1) shouldEqual(346)
-        histo(2) shouldEqual(343)
+        assert(histo(0) === 311)
+        assert(histo(1) === 346)
+        assert(histo(2) === 343)
       }
 
       "nack losers" in {
@@ -167,7 +167,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
       import h._
 
       val of = Offer.choose()
-      of.sync().poll shouldEqual None
+      assert(of.sync().poll === None)
     }
   }
 
@@ -180,7 +180,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val result = Future.value(Commit(123))
         when(tx.ack()).thenReturn(result)
 
-        tx.ack() shouldEqual (result)
+        assert(tx.ack() === (result))
         txp.setValue(tx)
         offer.sync() match {
           case Future(Return(123)) => assert(true)
@@ -196,12 +196,12 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val result = Future.value(Abort)
         when(badTx.ack()).thenReturn(result)
 
-        badTx.ack() shouldEqual (result)
+        assert(badTx.ack() === (result))
         txps(0).setValue(badTx)
 
         val syncd = offer.sync()
 
-        syncd.poll shouldEqual None
+        assert(syncd.poll === None)
         verify(badTx, times(2)).ack()
         verify(offer, times(2)).prepare()
 
@@ -209,10 +209,10 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val okResult = Future.value(Commit(333))
         when(okTx.ack()).thenReturn(okResult)
 
-        okTx.ack() shouldEqual (okResult)
+        assert(okTx.ack() === (okResult))
         txps(1).setValue(okTx)
 
-        syncd.poll shouldEqual Some(Return(333))
+        assert(syncd.poll === Some(Return(333)))
 
         verify(okTx, times(2)).ack()
         verify(offer, times(2)).prepare()
@@ -224,7 +224,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val tx = mock[Tx[Int]]
         val result = Future.value(Commit(123))
         when(tx.ack()).thenReturn(result)
-        tx.ack() shouldEqual (result)
+        assert(tx.ack() === (result))
         val offer = spy(new SimpleOffer(tx))
 
         offer.sync() match {
@@ -241,15 +241,15 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
     "always provide the same result" in {
       val offer = Offer.const(123)
 
-      offer.sync().poll shouldEqual Some(Return(123))
-      offer.sync().poll shouldEqual Some(Return(123))
+      assert(offer.sync().poll === Some(Return(123)))
+      assert(offer.sync().poll === Some(Return(123)))
     }
 
     "evaluate argument for each prepare()" in {
       var i = 0
       val offer = Offer.const { i = i + 1; i }
-      offer.sync().poll shouldEqual Some(Return(1))
-      offer.sync().poll shouldEqual Some(Return(2))
+      assert(offer.sync().poll === Some(Return(1)))
+      assert(offer.sync().poll === Some(Return(2)))
     }
   }
 
@@ -266,7 +266,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
 
         val e1 = Offer.const(123)
         val offer = e0 orElse e1
-        offer.sync().poll shouldEqual Some(Return(123))
+        assert(offer.sync().poll === Some(Return(123)))
         verify(e0).prepare()
         val tx = mock[Tx[Int]]
         txp.setValue(tx)
@@ -284,9 +284,9 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val result = Future.value(Commit(321))
         when(tx.ack()).thenReturn(result)
 
-        tx.ack() shouldEqual (result)
+        assert(tx.ack() === (result))
         txp.setValue(tx)
-        offer.sync().poll shouldEqual Some(Return(321))
+        assert(offer.sync().poll === Some(Return(321)))
         verify(e0).prepare()
         verify(tx, times(2)).ack()
         verify(tx, never()).nack()
@@ -309,10 +309,10 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val result = Future.value(Commit(321))
         when(tx.ack()).thenReturn(result)
 
-        tx.ack() shouldEqual (result)
+        assert(tx.ack() === (result))
         tx2.setValue(tx)
 
-        offer.sync().poll shouldEqual Some(Return(321))
+        assert(offer.sync().poll === Some(Return(321)))
         verify(e0, times(2)).prepare()
         verify(tx, times(2)).ack()
         verify(tx, never()).nack()
@@ -322,7 +322,7 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
         val h = new SyncIntegrationHelper
         import h._
 
-        offer.sync().poll shouldEqual Some(Return(123))
+        assert(offer.sync().poll === Some(Return(123)))
         verify(e0, times(2)).prepare()
 
         val tx = mock[Tx[Int]]
@@ -337,11 +337,11 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val b = new Broker[Int]
       var count = 0
       b.recv foreach { _ => count += 1 }
-      count shouldEqual(0)
-      b.send(1).sync().isDefined shouldEqual true
-      count shouldEqual(1)
-      b.send(1).sync().isDefined shouldEqual true
-      count shouldEqual(2)
+      assert(count === 0)
+      assert(b.send(1).sync().isDefined === true)
+      assert(count === 1)
+      assert(b.send(1).sync().isDefined === true)
+      assert(count === 2)
     }
   }
 
@@ -349,13 +349,13 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
     "be available after timeout (prepare)" in Time.withTimeAt(Time.epoch) { tc =>
       implicit val timer = new MockTimer
       val e = Offer.timeout(10.seconds)
-      e.prepare().isDefined shouldEqual false
+      assert(e.prepare().isDefined === false)
       tc.advance(9.seconds)
       timer.tick()
-      e.prepare().isDefined shouldEqual false
+      assert(e.prepare().isDefined === false)
       tc.advance(1.second)
       timer.tick()
-      e.prepare().isDefined shouldEqual true
+      assert(e.prepare().isDefined === true)
     }
 
     "cancel timer tasks when losing" in Time.withTimeAt(Time.epoch) { tc =>
@@ -364,16 +364,16 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val e5 = Offer.timeout(5.seconds) map { _ => 5 }
 
       val item = Offer.select(e5, e10)
-      item.poll shouldEqual None
-      timer.tasks should have size (2)
-      timer.nCancelled shouldEqual(0)
+      assert(item.poll === None)
+      assert(timer.tasks.size === 2)
+      assert(timer.nCancelled === 0)
 
       tc.advance(6.seconds)
       timer.tick()
 
-      item.poll shouldEqual Some(Return(5))
-      timer.tasks should have size (0)
-      timer.nCancelled shouldEqual(1)
+      assert(item.poll === Some(Return(5)))
+      assert(timer.tasks.size === 0)
+      assert(timer.nCancelled === 1)
     }
   }
 
@@ -388,21 +388,21 @@ class OfferTest extends WordSpec with ShouldMatchers with MockitoSugar {
       )
 
       val f = o.sync()
-      f.isDefined shouldEqual false
-      b1.send("hey").sync().isDefined shouldEqual true
-      f.isDefined shouldEqual true
-      Await.result(f) shouldEqual("hey")
+      assert(f.isDefined === false)
+      assert(b1.send("hey").sync().isDefined === true)
+      assert(f.isDefined === true)
+      assert(Await.result(f) === "hey")
 
       val gf = b0.recv.sync()
-      gf.isDefined shouldEqual false
+      assert(gf.isDefined === false)
       val of = o.sync()
-      of.isDefined shouldEqual true
-      Await.result(of) shouldEqual("put!")
-      gf.isDefined shouldEqual true
-      Await.result(gf) shouldEqual(123)
+      assert(of.isDefined === true)
+      assert(Await.result(of) === "put!")
+      assert(gf.isDefined === true)
+      assert(Await.result(gf) === 123)
 
       // syncing again fails.
-      o.sync().isDefined shouldEqual false
+      assert(o.sync().isDefined === false)
     }
   }
 }

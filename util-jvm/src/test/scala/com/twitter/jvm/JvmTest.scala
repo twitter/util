@@ -7,14 +7,14 @@ import java.util.concurrent.{ScheduledExecutorService, ScheduledFuture, TimeUnit
 import org.mockito.ArgumentCaptor
 import org.mockito.{Mockito => Mock}
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
-class JvmTest extends WordSpec with ShouldMatchers with TestLogging {
+class JvmTest extends WordSpec with TestLogging {
   "Jvm" should {
     class JvmHelper {
       object jvm extends Jvm {
@@ -48,34 +48,34 @@ class JvmTest extends WordSpec with ShouldMatchers with TestLogging {
         val h = new JvmHelper
         import h._
         val b = mutable.Buffer[Gc]()
-        jvm.executor.schedules shouldEqual List()
+        assert(jvm.executor.schedules === List())
         jvm foreachGc { b += _ }
-        jvm.executor.schedules should have size (1)
+        assert(jvm.executor.schedules.size === 1)
         val Seq((r, _, _, _)) = jvm.executor.schedules
         r.run()
-        b shouldEqual List()
+        assert(b === List())
         val gc = Gc(0, "pcopy", Time.now, 1.millisecond)
         jvm.pushGc(gc)
         r.run()
-        b should have size (1)
-        b(0) shouldEqual(gc)
+        assert(b.size === 1)
+        assert(b(0) === gc)
         r.run()
-        b should have size (1)
+        assert(b.size === 1)
         val gc1 = gc.copy(name="CMS")
         jvm.pushGc(gc1)
         r.run()
-        b should have size (2)
-        b(1) shouldEqual(gc1)
+        assert(b.size === 2)
+        assert(b(1) === gc1)
         r.run()
         r.run()
         r.run()
-        b should have size (2)
+        assert(b.size === 2)
         jvm.pushGc(gc1.copy(count=1))
         jvm.pushGc(gc.copy(count=1))
         r.run()
-        b should have size (4)
-        b(2) shouldEqual(gc.copy(count=1))
-        b(3) shouldEqual(gc1.copy(count=1))
+        assert(b.size === 4)
+        assert(b(2) === gc.copy(count=1))
+        assert(b(3) === gc1.copy(count=1))
       }
 
       "Complain when sampling rate is too low, every 30 minutes" in Time.withCurrentTimeFrozen { tc =>
@@ -85,7 +85,7 @@ class JvmTest extends WordSpec with ShouldMatchers with TestLogging {
         traceLogger(Level.WARNING)
 
         jvm foreachGc { _ => /*ignore*/}
-        jvm.executor.schedules should have size (1)
+        assert(jvm.executor.schedules.size === 1)
         val Seq((r, _, _, _)) = jvm.executor.schedules
         val gc = Gc(0, "pcopy", Time.now, 1.millisecond)
         r.run()
@@ -93,17 +93,17 @@ class JvmTest extends WordSpec with ShouldMatchers with TestLogging {
         r.run()
         jvm.pushGc(gc.copy(count=2))
         r.run()
-        logLines() shouldEqual(Seq("Missed 1 collections for pcopy due to sampling"))
+        assert(logLines() === Seq("Missed 1 collections for pcopy due to sampling"))
         jvm.pushGc(gc.copy(count=10))
-        logLines() shouldEqual(Seq("Missed 1 collections for pcopy due to sampling"))
+        assert(logLines() === Seq("Missed 1 collections for pcopy due to sampling"))
         r.run()
         tc.advance(29.minutes)
         r.run()
-        logLines() shouldEqual(Seq("Missed 1 collections for pcopy due to sampling"))
+        assert(logLines() === Seq("Missed 1 collections for pcopy due to sampling"))
         tc.advance(2.minutes)
         jvm.pushGc(gc.copy(count=12))
         r.run()
-        logLines() shouldEqual(Seq(
+        assert(logLines() === Seq(
           "Missed 1 collections for pcopy due to sampling",
           "Missed 8 collections for pcopy due to sampling"
         ))
@@ -116,7 +116,7 @@ class JvmTest extends WordSpec with ShouldMatchers with TestLogging {
         import h._
 
         val query = jvm.monitorGcs(10.seconds)
-        jvm.executor.schedules should have size (1)
+        assert(jvm.executor.schedules.size === 1)
         val Seq((r, _, _, _)) = jvm.executor.schedules
         val gc0 = Gc(0, "pcopy", Time.now, 1.millisecond)
         val gc1 = Gc(1, "CMS", Time.now, 1.millisecond)
@@ -127,12 +127,12 @@ class JvmTest extends WordSpec with ShouldMatchers with TestLogging {
         val gc2 = Gc(1, "pcopy", Time.now, 2.milliseconds)
         jvm.pushGc(gc2)
         r.run()
-        query(10.seconds.ago) shouldEqual(Seq(gc2, gc1, gc0))
+        assert(query(10.seconds.ago) === Seq(gc2, gc1, gc0))
         tc.advance(2.seconds)
         val gc3 = Gc(2, "CMS", Time.now, 1.second)
         jvm.pushGc(gc3)
         r.run()
-        query(10.seconds.ago) shouldEqual(Seq(gc3, gc2))
+        assert(query(10.seconds.ago) === Seq(gc3, gc2))
       }
     }
   }

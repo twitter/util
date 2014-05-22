@@ -2,7 +2,7 @@ package com.twitter.hashing
 
 import com.twitter.util.Time
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.mockito.Mockito._
 import scala.collection.mutable
 import _root_.java.io.{BufferedReader, InputStreamReader}
@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class DiagnosticsTest extends WordSpec with ShouldMatchers {
+class DiagnosticsTest extends WordSpec {
   "Diagnostics" should {
     "print distribution" in {
       val hosts = 1 until 500 map { "10.1.1." + _ + ":11211:4" }

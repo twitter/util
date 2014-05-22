@@ -18,13 +18,13 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class QueueingHandlerTest extends WordSpec with ShouldMatchers {
+class QueueingHandlerTest extends WordSpec {
   class MockHandler extends Handler(BareFormatter, None) {
     def publish(record: javalog.LogRecord) {}
     def close() {}
@@ -48,7 +48,7 @@ class QueueingHandlerTest extends WordSpec with ShouldMatchers {
 
       logger.warning("oh noes!")
       Thread.sleep(100) // let thread log
-      stringHandler.get shouldEqual ("oh noes!\n")
+      assert(stringHandler.get === ("oh noes!\n"))
     }
 
     "publish, drop on overflow" in {
@@ -70,7 +70,7 @@ class QueueingHandlerTest extends WordSpec with ShouldMatchers {
       logger.warning("2")
       logger.warning("3")
       Thread.sleep(100) // let thread log and block
-      droppedCount should be >=(1) // either 1 or 2, depending on race
+      assert(droppedCount >= 1) // either 1 or 2, depending on race
     }
 
     "flush" in {
@@ -85,7 +85,7 @@ class QueueingHandlerTest extends WordSpec with ShouldMatchers {
       // smoke test: thread might write it, flush might write it
       logger.warning("oh noes!")
       queueHandler.flush()
-      wasFlushed shouldEqual true
+      assert(wasFlushed === true)
     }
 
     "close" in {
@@ -100,7 +100,7 @@ class QueueingHandlerTest extends WordSpec with ShouldMatchers {
       logger.warning("oh noes!")
       Thread.sleep(100) // let thread log
       queueHandler.close()
-      wasClosed shouldEqual true
+      assert(wasClosed === true)
     }
 
     "handle exceptions in the underlying handler" in {
@@ -124,7 +124,7 @@ class QueueingHandlerTest extends WordSpec with ShouldMatchers {
       logger.info("fizz")
       logger.info("buzz")
       Thread.sleep(100) // let thread log
-      didLog shouldEqual true
+      assert(didLog === true)
     }
   }
 }

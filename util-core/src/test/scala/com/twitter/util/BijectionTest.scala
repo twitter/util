@@ -2,12 +2,12 @@ package com.twitter.util
 
 import com.twitter.util._
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class BijectionTest extends WordSpec with ShouldMatchers {
+class BijectionTest extends WordSpec {
   case class Foo(i: Int)
 
   val fooject = new Bijection[Foo, Int] {

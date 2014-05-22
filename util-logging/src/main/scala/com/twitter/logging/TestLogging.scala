@@ -17,13 +17,12 @@
 package com.twitter.logging
 
 import java.util.{logging => jlogging}
-import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{WordSpec, BeforeAndAfter}
 
 /**
  * Specify logging during unit tests via system property, defaulting to FATAL only.
  */
-trait TestLogging extends BeforeAndAfter { self: WordSpec with ShouldMatchers =>
+trait TestLogging extends BeforeAndAfter { self: WordSpec =>
   val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
   private val logger = Logger.get("")
@@ -72,6 +71,6 @@ trait TestLogging extends BeforeAndAfter { self: WordSpec with ShouldMatchers =>
    * substring somewhere inside it.
    */
   def mustLog(substring: String) = {
-    logLines().filter { _ contains substring }.size should be >(0)
+    assert(logLines().filter { _ contains substring }.size > 0)
   }
 }

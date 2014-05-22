@@ -1,7 +1,7 @@
 package com.twitter.hashing
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.codec.binary.Base64
 import com.twitter.io.TempFile
@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class KeyHasherTest extends WordSpec with ShouldMatchers {
+class KeyHasherTest extends WordSpec {
   def readResource(name: String) = {
     var lines = new ListBuffer[String]()
     val src = scala.io.Source.fromFile(TempFile.fromResourcePath(getClass, "/"+name))
@@ -22,11 +22,11 @@ class KeyHasherTest extends WordSpec with ShouldMatchers {
   def testHasher(name: String, hasher: KeyHasher) = {
     val sources = readResource(name + "_source") map { decode(_) }
     val hashes = readResource(name + "_hashes")
-    sources.size should be >(0)
+    assert(sources.size > 0)
 
     sources zip hashes foreach { case (source, hashAsString) =>
       val hash = BigInt(hashAsString).toLong
-      hasher.hashKey(source) shouldEqual hash
+      assert(hasher.hashKey(source) === hash)
     }
   }
 

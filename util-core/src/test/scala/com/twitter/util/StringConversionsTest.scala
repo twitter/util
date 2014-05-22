@@ -17,40 +17,40 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import com.twitter.conversions.string._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class StringConversionsTest extends WordSpec with ShouldMatchers {
+class StringConversionsTest extends WordSpec {
   "string" should {
     "quoteC" in {
-      "nothing".quoteC shouldEqual "nothing"
-      "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC shouldEqual "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
-      "she said \"hello\"".quoteC shouldEqual "she said \\\"hello\\\""
-      "\\backslash".quoteC  shouldEqual "\\\\backslash"
+      assert("nothing".quoteC === "nothing")
+      assert("name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC === "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac")
+      assert("she said \"hello\"".quoteC === "she said \\\"hello\\\"")
+      assert("\\backslash".quoteC  === "\\\\backslash")
     }
 
     "unquoteC" in {
-      "nothing".unquoteC shouldEqual "nothing"
-      "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC  shouldEqual "name\tvalue\t\u20acb\u00fcllet?\u20ac"
-      "she said \\\"hello\\\"".unquoteC shouldEqual "she said \"hello\""
-      "\\\\backslash".unquoteC shouldEqual "\\backslash"
-      "real\\$dollar".unquoteC shouldEqual "real\\$dollar"
-      "silly\\/quote".unquoteC shouldEqual "silly/quote"
+      assert("nothing".unquoteC === "nothing")
+      assert("name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC  === "name\tvalue\t\u20acb\u00fcllet?\u20ac")
+      assert("she said \\\"hello\\\"".unquoteC === "she said \"hello\"")
+      assert("\\\\backslash".unquoteC === "\\backslash")
+      assert("real\\$dollar".unquoteC === "real\\$dollar")
+      assert("silly\\/quote".unquoteC === "silly/quote")
     }
 
     "hexlify" in {
-      "hello".getBytes.slice(1, 4).hexlify shouldEqual "656c6c"
-      "hello".getBytes.hexlify shouldEqual "68656c6c6f"
+      assert("hello".getBytes.slice(1, 4).hexlify === "656c6c")
+      assert("hello".getBytes.hexlify === "68656c6c6f")
     }
 
     "unhexlify" in {
-      "656c6c".unhexlify.toList shouldEqual "hello".getBytes.slice(1, 4).toList
-      "68656c6c6f".unhexlify.toList shouldEqual "hello".getBytes.toList
+      assert("656c6c".unhexlify.toList === "hello".getBytes.slice(1, 4).toList)
+      assert("68656c6c6f".unhexlify.toList === "hello".getBytes.toList)
       "5".unhexlify
-      "5".unhexlify.hexlify.toInt shouldEqual 5
+      assert("5".unhexlify.hexlify.toInt === 5)
     }
   }
 }

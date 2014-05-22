@@ -24,13 +24,13 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
+class FileHandlerTest extends WordSpec with TempFolder {
   def reader(filename: String) = {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))
   }
@@ -59,7 +59,7 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
         handler.publish(record1)
 
         val f2 = reader("test.log")
-        f2.readLine shouldEqual "hello!"
+        assert(f2.readLine === "hello!")
       }
 
       withTempFolder {
@@ -77,7 +77,7 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
         handler.publish(record1)
 
         val f2 = reader("test.log")
-        f2.readLine shouldEqual "first post!"
+        assert(f2.readLine === "first post!")
       }
     }
 
@@ -109,9 +109,9 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
     //       handler.publish(record2)
 
     //       val oldReader = reader("old.log")
-    //       oldReader.readLine shouldEqual "first post!"
+    //       assert(oldReader.readLine === "first post!")
     //       val newReader = reader("new.log")
-    //       newReader.readLine shouldEqual "second post"
+    //       assert(newReader.readLine === "second post")
     //     }
     //   } catch {
     //     case ex: ClassNotFoundException =>
@@ -127,9 +127,9 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
             append = true,
             formatter = BareFormatter
           ).apply()
-          handler.computeNextRollTime(1206769996722L) shouldEqual Some(1206770400000L)
-          handler.computeNextRollTime(1206770400000L) shouldEqual Some(1206774000000L)
-          handler.computeNextRollTime(1206774000001L) shouldEqual Some(1206777600000L)
+          assert(handler.computeNextRollTime(1206769996722L) === Some(1206770400000L))
+          assert(handler.computeNextRollTime(1206770400000L) === Some(1206774000000L))
+          assert(handler.computeNextRollTime(1206774000001L) === Some(1206777600000L))
         }
       }
 
@@ -141,11 +141,11 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
             append = true,
             formatter = new Formatter(timezone = Some("GMT-7:00"))
           ).apply()
-          handler.computeNextRollTime(1250354734000L) shouldEqual Some(1250406000000L)
-          handler.computeNextRollTime(1250404734000L) shouldEqual Some(1250406000000L)
-          handler.computeNextRollTime(1250406001000L) shouldEqual Some(1251010800000L)
-          handler.computeNextRollTime(1250486000000L) shouldEqual Some(1251010800000L)
-          handler.computeNextRollTime(1250496000000L) shouldEqual Some(1251010800000L)
+          assert(handler.computeNextRollTime(1250354734000L) === Some(1250406000000L))
+          assert(handler.computeNextRollTime(1250404734000L) === Some(1250406000000L))
+          assert(handler.computeNextRollTime(1250406001000L) === Some(1251010800000L))
+          assert(handler.computeNextRollTime(1250486000000L) === Some(1251010800000L))
+          assert(handler.computeNextRollTime(1250496000000L) === Some(1251010800000L))
         }
       }
     }
@@ -163,15 +163,15 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
           handler.publish(record2)
           handler.close()
 
-          reader("test-" + handler.timeSuffix(date) + ".log").readLine shouldEqual "first post!"
-          reader("test.log").readLine shouldEqual "second post"
+          assert(reader("test-" + handler.timeSuffix(date) + ".log").readLine === "first post!")
+          assert(reader("test.log").readLine === "second post")
         }
       }
     }
 
     "keep no more than N log files around" in {
       withTempFolder {
-        new File(folderName).list().length shouldEqual 0
+        assert(new File(folderName).list().length === 0)
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
@@ -182,15 +182,15 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
         ).apply()
 
         handler.publish(record1)
-        new File(folderName).list().length shouldEqual 1
+        assert(new File(folderName).list().length === 1)
         handler.roll()
 
         handler.publish(record1)
-        new File(folderName).list().length shouldEqual 2
+        assert(new File(folderName).list().length === 2)
         handler.roll()
 
         handler.publish(record1)
-        new File(folderName).list().length shouldEqual 2
+        assert(new File(folderName).list().length === 2)
         handler.close()
       }
     }
@@ -199,7 +199,7 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
       // even if the sort order puts the target filename before `rotateCount` other
       // files, it should not be removed
       withTempFolder {
-        new File(folderName).list().length shouldEqual 0
+        assert(new File(folderName).list().length === 0)
         val namePrefix = "test"
         val name = namePrefix + ".log"
 
@@ -217,14 +217,14 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
         def flush() = {
           handler.publish(record1)
           handler.roll()
-          new File(folderName).list().length shouldEqual 3
+          assert(new File(folderName).list().length === 3)
         }
 
         // the target, 1 rotated file, and the short file should all remain
         (1 to 5).foreach { _ => flush() }
         val fileSet = new File(folderName).list().toSet
-        fileSet.contains(name) shouldEqual true
-        fileSet.contains(namePrefix) shouldEqual true
+        assert(fileSet.contains(name) === true)
+        assert(fileSet.contains(namePrefix) === true)
       }
     }
 
@@ -246,15 +246,15 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
           ).apply()
 
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 1
+          assert(new File(folderName).list().length === 1)
           handler.roll()
 
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 2
+          assert(new File(folderName).list().length === 2)
           handler.roll()
 
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 2
+          assert(new File(folderName).list().length === 2)
           handler.close()
         }
         finally {
@@ -270,7 +270,7 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
         // roll the log on the 3rd write.
         val maxSize = record1.getMessage.length * 3 - 1
 
-        new File(folderName).list().length shouldEqual 0
+        assert(new File(folderName).list().length === 0)
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
@@ -283,21 +283,21 @@ class FileHandlerTest extends WordSpec with ShouldMatchers with TempFolder {
         Time.withCurrentTimeFrozen { time =>
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 1
+          assert(new File(folderName).list().length === 1)
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 1
+          assert(new File(folderName).list().length === 1)
 
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 2
+          assert(new File(folderName).list().length === 2)
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 2
+          assert(new File(folderName).list().length === 2)
 
           time.advance(1.second)
           handler.publish(record1)
-          new File(folderName).list().length shouldEqual 3
+          assert(new File(folderName).list().length === 3)
         }
 
         handler.close()

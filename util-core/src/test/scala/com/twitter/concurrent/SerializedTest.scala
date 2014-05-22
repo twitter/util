@@ -2,13 +2,13 @@ package com.twitter.concurrent
 
 import java.util.concurrent.CountDownLatch
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class SerializedTest extends WordSpec with ShouldMatchers with Serialized {
+class SerializedTest extends WordSpec with Serialized {
   "Serialized" should {
     "runs blocks, one at a time, in the order received" in {
       val t1CallsSerializedFirst = new CountDownLatch(1)
@@ -42,7 +42,7 @@ class SerializedTest extends WordSpec with ShouldMatchers with Serialized {
       t1.join()
       t2.join()
 
-      orderOfExecution.toList shouldEqual List(t1, t2)
+      assert(orderOfExecution.toList === List(t1, t2))
     }
   }
 }

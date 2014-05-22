@@ -3,7 +3,7 @@ package com.twitter.concurrent
 import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import scala.collection.mutable.ArrayBuffer
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -11,18 +11,18 @@ import org.scalatest.junit.JUnitRunner
 import Spool.{*::, **::, seqToSpool}
 
 @RunWith(classOf[JUnitRunner])
-class SpoolTest extends WordSpec with ShouldMatchers {
+class SpoolTest extends WordSpec {
   "Empty Spool" should {
     val s = Spool.empty[Int]
 
     "iterate over all elements" in {
       val xs = new ArrayBuffer[Int]
       s foreach { xs += _ }
-      xs.size shouldEqual(0)
+      assert(xs.size === 0)
     }
 
     "map" in {
-      (s map { _ * 2 } ) shouldEqual(Spool.empty[Int])
+      assert((s map { _ * 2 } ) === Spool.empty[Int])
     }
 
     "deconstruct" in {
@@ -33,29 +33,29 @@ class SpoolTest extends WordSpec with ShouldMatchers {
     }
 
     "append via ++"  in {
-      (s ++ Spool.empty[Int]) shouldEqual(Spool.empty[Int])
-      (Spool.empty[Int] ++ s) shouldEqual(Spool.empty[Int])
+      assert((s ++ Spool.empty[Int]) === Spool.empty[Int])
+      assert((Spool.empty[Int] ++ s) === Spool.empty[Int])
 
       val s2 = s ++ (3 **:: 4 **:: Spool.empty[Int])
-      Await.result(s2.toSeq) shouldEqual(Seq(3, 4))
+      assert(Await.result(s2.toSeq) === Seq(3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      Await.result(s ++ Future(Spool.empty[Int])) shouldEqual(Spool.empty[Int])
-      Await.result(Spool.empty[Int] ++ Future(s)) shouldEqual(Spool.empty[Int])
+      assert(Await.result(s ++ Future(Spool.empty[Int])) === Spool.empty[Int])
+      assert(Await.result(Spool.empty[Int] ++ Future(s)) === Spool.empty[Int])
 
       val s2 = s ++ Future(3 **:: 4 **:: Spool.empty[Int])
-      Await.result(s2 flatMap (_.toSeq)) shouldEqual(Seq(3, 4))
+      assert(Await.result(s2 flatMap (_.toSeq)) === Seq(3, 4))
     }
 
     "flatMap" in {
       val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
-      Await.result(s flatMap f) shouldEqual(Spool.empty[Int])
+      assert(Await.result(s flatMap f) === Spool.empty[Int])
     }
 
     "fold left" in {
       val fold = s.foldLeft(0){(x, y) => x + y}
-      Await.result(fold) shouldEqual(0)
+      assert(Await.result(fold) === 0)
     }
 
     "reduce left" in {
@@ -72,21 +72,21 @@ class SpoolTest extends WordSpec with ShouldMatchers {
     "iterate over all elements" in {
       val xs = new ArrayBuffer[Int]
       s foreach { xs += _ }
-      xs.toSeq shouldEqual(Seq(1,2))
+      assert(xs.toSeq === Seq(1,2))
     }
 
     "buffer to a sequence" in {
-      Await.result(s.toSeq) shouldEqual(Seq(1, 2))
+      assert(Await.result(s.toSeq) === Seq(1, 2))
     }
 
     "map" in {
-      Await.result(s map { _ * 2 } toSeq) shouldEqual(Seq(2, 4))
+      assert(Await.result(s map { _ * 2 } toSeq) === Seq(2, 4))
     }
 
     "deconstruct" in {
       assert(s match {
         case x **:: rest =>
-          x shouldEqual(1)
+          assert(x === 1)
           rest match {
             case y **:: rest if y == 2 && rest.isEmpty => true
           }
@@ -94,40 +94,40 @@ class SpoolTest extends WordSpec with ShouldMatchers {
     }
 
     "append via ++"  in {
-      Await.result((s ++ Spool.empty[Int]).toSeq) shouldEqual(Seq(1, 2))
-      Await.result((Spool.empty[Int] ++ s).toSeq) shouldEqual(Seq(1, 2))
+      assert(Await.result((s ++ Spool.empty[Int]).toSeq) === Seq(1, 2))
+      assert(Await.result((Spool.empty[Int] ++ s).toSeq) === Seq(1, 2))
 
       val s2 = s ++ (3 **:: 4 **:: Spool.empty)
-      Await.result(s2.toSeq) shouldEqual(Seq(1, 2, 3, 4))
+      assert(Await.result(s2.toSeq) === Seq(1, 2, 3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      Await.result(s ++ Future(Spool.empty[Int]) flatMap (_.toSeq)) shouldEqual(Seq(1, 2))
-      Await.result(Spool.empty[Int] ++ Future(s) flatMap (_.toSeq)) shouldEqual(Seq(1, 2))
+      assert(Await.result(s ++ Future(Spool.empty[Int]) flatMap (_.toSeq)) === Seq(1, 2))
+      assert(Await.result(Spool.empty[Int] ++ Future(s) flatMap (_.toSeq)) === Seq(1, 2))
 
       val s2 = s ++ Future(3 **:: 4 **:: Spool.empty)
-      Await.result(s2 flatMap (_.toSeq)) shouldEqual(Seq(1, 2, 3, 4))
+      assert(Await.result(s2 flatMap (_.toSeq)) === Seq(1, 2, 3, 4))
     }
 
     "flatMap" in {
       val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
       val s2 = s flatMap f
-      Await.result(s2 flatMap (_.toSeq)) shouldEqual(Seq("1", "2", "2", "4"))
+      assert(Await.result(s2 flatMap (_.toSeq)) === Seq("1", "2", "2", "4"))
     }
 
     "fold left" in {
       val fold = s.foldLeft(0){(x, y) => x + y}
-      Await.result(fold) shouldEqual(3)
+      assert(Await.result(fold) === 3)
     }
 
     "reduce left" in {
       val fold = s.reduceLeft{(x, y) => x + y}
-      Await.result(fold) shouldEqual(3)
+      assert(Await.result(fold) === 3)
     }
 
     "be roundtrippable through toSeq/toSpool" in {
       val seq = (0 to 10).toSeq
-      Await.result(seq.toSpool.toSeq) shouldEqual(seq)
+      assert(Await.result(seq.toSpool.toSeq) === seq)
     }
 
     "flatten via flatMap of toSpool" in {
@@ -139,7 +139,7 @@ class SpoolTest extends WordSpec with ShouldMatchers {
           Future.value(inner.toSpool)
         }
 
-      Await.result(flatSpool.flatMap(_.toSeq)) shouldEqual(seq.flatten)
+      assert(Await.result(flatSpool.flatMap(_.toSeq)) === seq.flatten)
     }
   }
 
@@ -150,7 +150,7 @@ class SpoolTest extends WordSpec with ShouldMatchers {
     "EOF iteration on EOFException" in {
         val xs = new ArrayBuffer[Option[Int]]
         s foreachElem { xs += _ }
-        xs.toSeq shouldEqual(Seq(Some(1), Some(2), None))
+        assert(xs.toSeq === Seq(Some(1), Some(2), None))
     }
   }
 
@@ -197,11 +197,11 @@ class SpoolTest extends WordSpec with ShouldMatchers {
 
       val xs = new ArrayBuffer[Int]
       s foreach { xs += _ }
-      xs.toSeq shouldEqual(Seq(1))
+      assert(xs.toSeq === Seq(1))
       p() = Return(2 *:: p1)
-      xs.toSeq shouldEqual(Seq(1, 2))
+      assert(xs.toSeq === Seq(1, 2))
       p1() = Return(Spool.empty)
-      xs.toSeq shouldEqual(Seq(1, 2))
+      assert(xs.toSeq === Seq(1, 2))
     }
 
     "EOF iteration on EOFException" in {
@@ -210,9 +210,9 @@ class SpoolTest extends WordSpec with ShouldMatchers {
 
       val xs = new ArrayBuffer[Option[Int]]
       s foreachElem { xs += _ }
-      xs.toSeq shouldEqual(Seq(Some(1)))
+      assert(xs.toSeq === Seq(Some(1)))
       p() = Throw(new EOFException("sad panda"))
-      xs.toSeq shouldEqual(Seq(Some(1), None))
+      assert(xs.toSeq === Seq(Some(1), None))
     }
 
     "return with exception on error" in {
@@ -221,7 +221,7 @@ class SpoolTest extends WordSpec with ShouldMatchers {
 
       val xs = new ArrayBuffer[Option[Int]]
       s foreachElem { xs += _ }
-      xs.toSeq shouldEqual(Seq(Some(1)))
+      assert(xs.toSeq === Seq(Some(1)))
       p() = Throw(new Exception("sad panda"))
       intercept[Exception] {
         Await.result(s.toSeq)
@@ -257,12 +257,12 @@ class SpoolTest extends WordSpec with ShouldMatchers {
       import h._
 
       val f = s.toSeq
-      f.isDefined shouldEqual false
+      assert(f.isDefined === false)
       p() = Return(2 *:: p1)
-      f.isDefined shouldEqual false
+      assert(f.isDefined === false)
       p1() = Return(Spool.empty)
-      f.isDefined shouldEqual true
-      Await.result(f) shouldEqual(Seq(1,2))
+      assert(f.isDefined === true)
+      assert(Await.result(f) === Seq(1,2))
     }
 
     "deconstruct" in {
@@ -283,9 +283,9 @@ class SpoolTest extends WordSpec with ShouldMatchers {
         case x if x % 2 == 0 => x * 2
       }
 
-      f.isDefined shouldEqual false  // 1 != 2 mod 0
+      assert(f.isDefined === false)  // 1 != 2 mod 0
       p() = Return(2 *:: p1)
-      f.isDefined shouldEqual true
+      assert(f.isDefined === true)
       val s1 = Await.result(f)
       assert(s1 match {
         case x *:: rest if x == 4 && !rest.isDefined => true
@@ -298,8 +298,8 @@ class SpoolTest extends WordSpec with ShouldMatchers {
       })
       p2() = Return(4 **:: Spool.empty)
       val s1s = s1.toSeq
-      s1s.isDefined shouldEqual true
-      Await.result(s1s) shouldEqual(Seq(4, 8))
+      assert(s1s.isDefined === true)
+      assert(Await.result(s1s) === Seq(4, 8))
     }
 
     "fold left" in {
@@ -308,12 +308,12 @@ class SpoolTest extends WordSpec with ShouldMatchers {
 
       val f = s.foldLeft(0){(x, y) => x + y}
 
-      f.isDefined shouldEqual false
+      assert(f.isDefined === false)
       p() = Return(2 *:: p1)
-      f.isDefined shouldEqual false
+      assert(f.isDefined === false)
       p1() = Return(Spool.empty)
-      f.isDefined shouldEqual true
-      Await.result(f) shouldEqual(3)
+      assert(f.isDefined === true)
+      assert(Await.result(f) === 3)
     }
 
     "be lazy" in {

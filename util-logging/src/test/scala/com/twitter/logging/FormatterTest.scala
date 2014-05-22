@@ -18,13 +18,13 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import com.twitter.conversions.string._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class FormatterTest extends WordSpec with ShouldMatchers {
+class FormatterTest extends WordSpec {
   val basicFormatter = new Formatter
 
   val utcFormatter = new Formatter(
@@ -61,29 +61,29 @@ class FormatterTest extends WordSpec with ShouldMatchers {
 
   "Formatter" should {
     "create a prefix" in {
-      basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") shouldEqual
-        "ERR [20080329-05:53:16.722] (root): "
-      basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") shouldEqual
-        "DEB [20080329-05:53:16.722] (root): "
-      basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") shouldEqual
-        "WAR [20080329-05:53:16.722] (root): "
+      assert(basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") ===
+        "ERR [20080329-05:53:16.722] (root): ")
+      assert(basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") ===
+        "DEB [20080329-05:53:16.722] (root): ")
+      assert(basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") ===
+        "WAR [20080329-05:53:16.722] (root): ")
     }
 
     "format a log level name" in {
-      basicFormatter.formatLevelName(Level.ERROR) shouldEqual "ERROR"
-      basicFormatter.formatLevelName(Level.DEBUG) shouldEqual "DEBUG"
-      basicFormatter.formatLevelName(Level.WARNING) shouldEqual "WARNING"
+      assert(basicFormatter.formatLevelName(Level.ERROR) === "ERROR")
+      assert(basicFormatter.formatLevelName(Level.DEBUG) === "DEBUG")
+      assert(basicFormatter.formatLevelName(Level.WARNING) === "WARNING")
     }
 
     "format text" in {
       val record = new LogRecord(Level.ERROR, "error %s")
-      basicFormatter.formatText(record) shouldEqual "error %s"
+      assert(basicFormatter.formatText(record) === "error %s")
       record.setParameters(Array("123"))
-      basicFormatter.formatText(record) shouldEqual "error 123"
+      assert(basicFormatter.formatText(record) === "error 123")
     }
 
     "format a timestamp" in {
-      utcFormatter.format(record1) shouldEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
+      assert(utcFormatter.format(record1) === "ERR [20080329-05:53:16.722] jobs: boo.\n")
     }
 
     "do lazy message evaluation" in {
@@ -95,26 +95,26 @@ class FormatterTest extends WordSpec with ShouldMatchers {
 
       val record = new LazyLogRecord(Level.DEBUG, "this is " + getSideEffect)
 
-      callCount shouldEqual 0
-      basicFormatter.formatText(record) shouldEqual "this is ok"
-      callCount shouldEqual 1
-      basicFormatter.formatText(record) shouldEqual "this is ok"
-      callCount shouldEqual 1
+      assert(callCount === 0)
+      assert(basicFormatter.formatText(record) === "this is ok")
+      assert(callCount === 1)
+      assert(basicFormatter.formatText(record) === "this is ok")
+      assert(callCount === 1)
     }
 
     "format package names" in {
-      utcFormatter.format(record1) shouldEqual "ERR [20080329-05:53:16.722] jobs: boo.\n"
-      fullPackageFormatter.format(record1) shouldEqual
-        "ERR [20080329-05:53:16.722] com.example.jobs: boo.\n"
+      assert(utcFormatter.format(record1) === "ERR [20080329-05:53:16.722] jobs: boo.\n")
+      assert(fullPackageFormatter.format(record1) ===
+        "ERR [20080329-05:53:16.722] com.example.jobs: boo.\n")
     }
 
     "handle other prefixes" in {
-      prefixFormatter.format(record2) shouldEqual "jobs 05:53 DEBU useless info.\n"
+      assert(prefixFormatter.format(record2) === "jobs 05:53 DEBU useless info.\n")
     }
 
     "truncate line" in {
-      truncateFormatter.format(record3) shouldEqual
-        "CRI [20080329-05:53:16.722] whiskey: Something terrible happened th...\n"
+      assert(truncateFormatter.format(record3) ===
+        "CRI [20080329-05:53:16.722] whiskey: Something terrible happened th...\n")
     }
 
     "write stack traces" should {
@@ -153,13 +153,13 @@ class FormatterTest extends WordSpec with ShouldMatchers {
         } catch {
           case t: Throwable => t
         }
-        Formatter.formatStackTrace(exception, 5).map { scrub(_) } shouldEqual List(
+        assert(Formatter.formatStackTrace(exception, 5).map { scrub(_) } === List(
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
-          "    (...more...)")
+          "    (...more...)"))
       }
 
       "nested" in {
@@ -169,14 +169,14 @@ class FormatterTest extends WordSpec with ShouldMatchers {
         } catch {
           case t: Throwable => t
         }
-        Formatter.formatStackTrace(exception, 2).map { scrub(_) } shouldEqual List(
+        assert(Formatter.formatStackTrace(exception, 2).map { scrub(_) } === List(
           "    at com.twitter.logging.FormatterTest$$.cycle2(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.apply$mcV$sp(FormatterTest.scala:NNN)",
           "    (...more...)",
           "Caused by java.lang.Exception: Aie!",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
-          "    (...more...)")
+          "    (...more...)"))
 
       }
     }

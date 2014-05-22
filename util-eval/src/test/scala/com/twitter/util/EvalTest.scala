@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import java.io.{File, FileOutputStream, FileWriter}
 import scala.io.Source
 
@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class EvalTest extends WordSpec with ShouldMatchers {
+class EvalTest extends WordSpec {
   "Evaluator" should {
 
     "apply('expression')" in {
@@ -111,8 +111,8 @@ class EvalTest extends WordSpec with ShouldMatchers {
       // New class API fails
       // val eval = new Eval
       // eval.compile("object Doubler { def apply(n: Int) = n * 2 }")
-      // eval.inPlace[Int]("Doubler(2)") shouldEqual 4
-      // eval.inPlace[Int]("Doubler(14)") shouldEqual 28
+      // assert(eval.inPlace[Int]("Doubler(2)") === 4)
+      // assert(eval.inPlace[Int]("Doubler(14)") === 28)
     }
 
     "check" in {

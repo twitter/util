@@ -10,12 +10,12 @@ import com.twitter.util.Future
 import com.twitter.zk.{RetryPolicy, NativeConnector, ZkClient}
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.matchers.MustMatchers
 import org.scalatest.mock.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
-class ShardCoordinatorTest extends WordSpec with ShouldMatchers with MockitoSugar {
+class ShardCoordinatorTest extends WordSpec with MockitoSugar {
 
   "ShardCoordinator" should {
 
@@ -42,25 +42,25 @@ class ShardCoordinatorTest extends WordSpec with ShouldMatchers with MockitoSuga
           val coord = new ShardCoordinator(zk, path, 5)
 
           val shard0 = Await.result(acquire(coord))
-          shard0.id shouldEqual(0)
+          assert(shard0.id === 0)
 
           val shard1 = Await.result(acquire(coord))
-          shard1.id shouldEqual(1)
+          assert(shard1.id === 1)
 
           val shard2 = Await.result(acquire(coord))
-          shard2.id shouldEqual(2)
+          assert(shard2.id === 2)
 
           val shard3 = Await.result(acquire(coord))
-          shard3.id shouldEqual(3)
+          assert(shard3.id === 3)
 
           val shard4 = Await.result(acquire(coord))
-          shard4.id shouldEqual(4)
+          assert(shard4.id === 4)
 
           val fshard5 = acquire(coord)
-          fshard5.isDefined shouldEqual (false)
+          assert(fshard5.isDefined === (false))
           shard3.release
           val shard5 = Await.result(fshard5)
-          shard5.id shouldEqual(3)
+          assert(shard5.id === 3)
 
           shard0.release
           shard1.release

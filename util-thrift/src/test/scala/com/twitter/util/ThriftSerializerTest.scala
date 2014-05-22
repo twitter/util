@@ -17,12 +17,12 @@
 package com.twitter.util
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ThriftSerializerTest extends WordSpec with ShouldMatchers {
+class ThriftSerializerTest extends WordSpec {
   val aString = "me gustan los tacos y los burritos"
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)
@@ -36,17 +36,17 @@ class ThriftSerializerTest extends WordSpec with ShouldMatchers {
     val bytes = serializer.toBytes(original)
     var obj = new TestThriftStructure()
     serializer.fromBytes(obj, bytes)
-    obj.aString shouldEqual original.aString
-    obj.aNumber shouldEqual original.aNumber
+    assert(obj.aString === original.aString)
+    assert(obj.aNumber === original.aNumber)
 
     stringVersion match {
       case None =>
       case Some(str) =>
-        serializer.toString(original) shouldEqual str
+        assert(serializer.toString(original) === str)
         obj = new TestThriftStructure()
         serializer.fromString(obj, str)
-        obj.aString shouldEqual original.aString
-        obj.aNumber shouldEqual original.aNumber
+        assert(obj.aString === original.aString)
+        assert(obj.aNumber === original.aNumber)
       }
     true
   }

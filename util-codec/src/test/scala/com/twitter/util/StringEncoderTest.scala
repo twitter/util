@@ -17,7 +17,7 @@ package com.twitter.util
  */
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import java.lang.StringBuilder
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -26,27 +26,27 @@ class TestBase64Encoder extends Base64StringEncoder {
 }
 
 @RunWith(classOf[JUnitRunner])
-class StringEncoderTest extends WordSpec with ShouldMatchers {
+class StringEncoderTest extends WordSpec {
   val longString = "A string that is really really really really really really long and has more than 76 characters"
   val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
   val testEncoder = new TestBase64Encoder()
 
   "strip new lines" in {
-    testEncoder.encode(longString.getBytes) shouldEqual result
+    assert(testEncoder.encode(longString.getBytes) === result)
   }
 
   "decode value with stripped new lines" in {
-    new String(testEncoder.decode(result)) shouldEqual longString
+    assert(new String(testEncoder.decode(result)) === longString)
   }
 }
 
 @RunWith(classOf[JUnitRunner])
-class GZIPStringEncoderTest extends WordSpec with ShouldMatchers {
+class GZIPStringEncoderTest extends WordSpec {
   "a gzip string encoder" should {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {
       def testCodec(str: String) {
-        str shouldEqual(gse.decodeString(gse.encodeString(str)))
+        assert(str === gse.decodeString(gse.encodeString(str)))
       }
 
       testCodec("a")

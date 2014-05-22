@@ -6,13 +6,13 @@ package com.twitter.zk
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.mock.MockitoSugar
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ZNodeTest extends WordSpec with ShouldMatchers with MockitoSugar {
+class ZNodeTest extends WordSpec with MockitoSugar {
   "ZNode" should {
     class ZNodeSpecHelper {
       val zk = mock[ZkClient]
@@ -23,8 +23,8 @@ class ZNodeTest extends WordSpec with ShouldMatchers with MockitoSugar {
 
       val znode = ZNode(zk, path)
       path should {
-        "parentPath" in { znode.parentPath shouldEqual parent }
-        "name"       in { znode.name       shouldEqual name   }
+        "parentPath" in { assert(znode.parentPath === parent) }
+        "name"       in { assert(znode.name       === name  ) }
       }
     }
 
@@ -38,8 +38,8 @@ class ZNodeTest extends WordSpec with ShouldMatchers with MockitoSugar {
 
       val zs = (0 to 1) map { _ => ZNode(zk, "/some/path") }
       val table = Map(zs(0) -> true)
-      table should contain key (zs(0))
-      table should contain key (zs(1))
+      assert(table.keys.toList.contains(zs(0)))
+      assert(table.keys.toList.contains(zs(1)))
     }
   }
 }

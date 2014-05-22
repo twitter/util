@@ -2,14 +2,14 @@ package com.twitter.util
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.mock.MockitoSugar
 import com.twitter.conversions.time._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ConfigTest extends WordSpec with ShouldMatchers with MockitoSugar {
+class ConfigTest extends WordSpec with MockitoSugar {
   import Config._
 
   "Config" should {
@@ -24,9 +24,9 @@ class ConfigTest extends WordSpec with ShouldMatchers with MockitoSugar {
       }
 
       val foo = new Foo
-      foo.didIt shouldEqual false
-      (foo.y: Int) shouldEqual 25 // use type annotation to force implicit conversion
-      foo.didIt shouldEqual true
+      assert(foo.didIt === false)
+      assert((foo.y: Int) === 25) // use type annotation to force implicit conversion
+      assert(foo.didIt === true)
     }
 
     "subclass can override indepedent var for use in dependent var" in {
@@ -37,7 +37,7 @@ class ConfigTest extends WordSpec with ShouldMatchers with MockitoSugar {
       val bar = new Foo {
         x = 20
       }
-      (bar.y: Int) shouldEqual 45 // use type annotation to force implicit conversion
+      assert((bar.y: Int) === 45) // use type annotation to force implicit conversion
     }
 
     "missingValues" should {
@@ -61,19 +61,19 @@ class ConfigTest extends WordSpec with ShouldMatchers with MockitoSugar {
             z = 10
           }
         }
-        foo.missingValues shouldEqual List()
+        assert(foo.missingValues === List())
       }
 
       "must find top-level missing values" in {
         val foo = new Foo
-        foo.missingValues shouldEqual Seq("x", "bar")
+        assert(foo.missingValues === Seq("x", "bar"))
       }
 
       "must find top-level and nested missing values" in {
         val foo = new Foo {
           bar = new Bar
         }
-        foo.missingValues shouldEqual Seq("x", "bar.z")
+        assert(foo.missingValues === Seq("x", "bar.z"))
       }
 
       "must find nested missing values in optional sub-configs" in {
@@ -84,7 +84,7 @@ class ConfigTest extends WordSpec with ShouldMatchers with MockitoSugar {
           }
           baz = new Baz
         }
-        foo.missingValues shouldEqual Seq("baz.w")
+        assert(foo.missingValues === Seq("baz.w"))
       }
     }
   }

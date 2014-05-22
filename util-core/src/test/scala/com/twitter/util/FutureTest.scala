@@ -9,14 +9,14 @@ import org.mockito.Mockito.{never, verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
 import scala.collection.JavaConverters._
 import scala.util.control.ControlThrowable
 
 @RunWith(classOf[JUnitRunner])
-class FutureTest extends WordSpec with ShouldMatchers with MockitoSugar {
+class FutureTest extends WordSpec with MockitoSugar {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       expected match {

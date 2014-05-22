@@ -27,7 +27,7 @@ import scala.collection.{Map, Set}
         one(commonEndpointStatus).update(equal(Status.DEAD))
       }
       val endpointStatus = serverSet.join(address).apply()
-      endpointStatus shouldEqual a[ServerSet.EndpointStatus]
+      assert(endpointStatus === a[ServerSet.EndpointStatus])
       endpointStatus.update(ServerSet.Status.Dead).apply()
     }
 
@@ -60,10 +60,10 @@ import scala.collection.{Map, Set}
 
       promises(0).setValue(instances(0))
       val offer = serverSet.monitor().apply(timeout)
-      offer().apply(timeout) shouldEqual instances(0)
+      assert(offer().apply(timeout) === instances(0))
 
       val fin = Future.collect {
-        instances.tail map { i => offer() onSuccess { _ shouldEqual i } }
+        assert(instances.tail map { i => offer() onSuccess { _ === i } })
       }
       instances.tail zip(promises.tail) foreach { case (i, p) => p.setValue(i) }
       fin apply(timeout)

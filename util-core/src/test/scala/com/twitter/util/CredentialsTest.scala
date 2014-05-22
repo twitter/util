@@ -18,16 +18,16 @@ package com.twitter.util
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class CredentialsTest extends WordSpec with ShouldMatchers {
+class CredentialsTest extends WordSpec {
   "Credentials" should {
     "parse a simple auth file" in {
       val content = "username: root\npassword: hellokitty\n"
-      Credentials(content) shouldEqual Map("username" -> "root", "password" -> "hellokitty")
+      assert(Credentials(content) === Map("username" -> "root", "password" -> "hellokitty"))
     }
 
     "parse a more complex auth file" in {
@@ -39,19 +39,19 @@ password  : last_0f-the/international:playboys
    moar :ok
 
         """
-      Credentials(content) shouldEqual Map(
+      assert(Credentials(content) === Map(
         "username" -> "root",
         "password" -> "last_0f-the/international:playboys",
         "moar" -> "ok"
-      )
+      ))
     }
 
     "work for java peeps too" in {
       val content = "username: root\npassword: hellokitty\n"
       val jmap = new Credentials().read(content)
-      jmap.size() shouldEqual 2
-      jmap.get("username") shouldEqual "root"
-      jmap.get("password") shouldEqual "hellokitty"
+      assert(jmap.size() === 2)
+      assert(jmap.get("username") === "root")
+      assert(jmap.get("password") === "hellokitty")
     }
   }
 }

@@ -2,13 +2,13 @@ package com.twitter.concurrent
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import com.twitter.util.{Promise, Return, Throw, Await}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class SpoolSourceTest extends WordSpec with ShouldMatchers {
+class SpoolSourceTest extends WordSpec {
   "SpoolSource" should {
     class SpoolSourceHelper {
       val source = new SpoolSource[Int]
@@ -25,7 +25,7 @@ class SpoolSourceTest extends WordSpec with ShouldMatchers {
       source.close()
       source.offer(4)
       source.offer(5)
-      Await.result(futureSpool flatMap (_.toSeq)) shouldEqual Seq(1, 2, 3)
+      assert(Await.result(futureSpool flatMap (_.toSeq)) === Seq(1, 2, 3))
     }
 
     "return multiple Future Spools that only see values added later" in {
@@ -40,10 +40,10 @@ class SpoolSourceTest extends WordSpec with ShouldMatchers {
       source.offer(3)
       val futureSpool4 = source()
       source.close()
-      Await.result(futureSpool1 flatMap (_.toSeq)) shouldEqual Seq(1, 2, 3)
-      Await.result(futureSpool2 flatMap (_.toSeq)) shouldEqual Seq(2, 3)
-      Await.result(futureSpool3 flatMap (_.toSeq)) shouldEqual Seq(3)
-      Await.result(futureSpool4).isEmpty shouldEqual true
+      assert(Await.result(futureSpool1 flatMap (_.toSeq)) === Seq(1, 2, 3))
+      assert(Await.result(futureSpool2 flatMap (_.toSeq)) === Seq(2, 3))
+      assert(Await.result(futureSpool3 flatMap (_.toSeq)) === Seq(3))
+      assert(Await.result(futureSpool4).isEmpty === true)
     }
 
     "throw exception and close spool when exception is raised" in {
@@ -58,7 +58,7 @@ class SpoolSourceTest extends WordSpec with ShouldMatchers {
       intercept[Exception] {
         Await.result(futureSpool1 flatMap (_.toSeq))
       }
-      Await.result(futureSpool2).isEmpty shouldEqual true
+      assert(Await.result(futureSpool2).isEmpty === true)
     }
   }
 }

@@ -1,18 +1,18 @@
 package com.twitter.concurrent
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ConcurrentPoolTest extends WordSpec with ShouldMatchers {
+class ConcurrentPoolTest extends WordSpec {
   "reserve items" in {
     val pool = new ConcurrentPool[Int, Int]
 
     pool.put(1, 2)
-    pool.get(1) shouldEqual Some(2)
-    pool.get(1) shouldEqual None
+    assert(pool.get(1) === Some(2))
+    assert(pool.get(1) === None)
   }
 
   "yield items in FIFO order" in {
@@ -22,22 +22,22 @@ class ConcurrentPoolTest extends WordSpec with ShouldMatchers {
       pool.put(1, i)
 
     for (i <- 0 until 10)    
-      pool.get(1) shouldEqual Some(i)
+      assert(pool.get(1) === Some(i))
 
-    pool.get(1) shouldEqual None
+    assert(pool.get(1) === None)
   }
 
   "kill empty lists" in {
     val pool = new ConcurrentPool[Int, Int]
 
     pool.put(1, 1)
-    pool.get(1) shouldEqual Some(1)
+    assert(pool.get(1) === Some(1))
 
-    pool.map.containsKey(1) shouldEqual false
-    pool.deathQueue.size shouldEqual(1)
+    assert(pool.map.containsKey(1) === false)
+    assert(pool.deathQueue.size === 1)
 
     pool.put(2, 1)
-    pool.deathQueue.size shouldEqual(0)
+    assert(pool.deathQueue.size === 0)
   }
 
   // Can't really test the race condition case :-/

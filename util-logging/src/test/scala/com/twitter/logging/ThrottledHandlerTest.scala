@@ -19,13 +19,13 @@ package com.twitter.logging
 import com.twitter.util.{TempFolder, Time}
 import com.twitter.conversions.time._
 import org.scalatest.{WordSpec, BeforeAndAfter}
-import org.scalatest.matchers.ShouldMatchers
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class ThrottledHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAfter with TempFolder {
+class ThrottledHandlerTest extends WordSpec with BeforeAndAfter with TempFolder {
   private var handler: StringHandler = null
 
   "ThrottledHandler" should {
@@ -54,7 +54,7 @@ class ThrottledHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAf
         timeCtrl.advance(2.seconds)
         log.error("apple: %s", "done.")
 
-        handler.get.split("\n").toList shouldEqual List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done.")
+        assert(handler.get.split("\n").toList === List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done."))
       }
     }
 
@@ -72,7 +72,7 @@ class ThrottledHandlerTest extends WordSpec with ShouldMatchers with BeforeAndAf
         time.advance(2.seconds)
         log.error("hello.")
 
-        handler.get.split("\n").toList shouldEqual List("apple: help!", "apple: help!", "apple: help!", "(swallowed 2 repeating messages)", "hello.")
+        assert(handler.get.split("\n").toList === List("apple: help!", "apple: help!", "apple: help!", "(swallowed 2 repeating messages)", "hello."))
       }
     }
   }
