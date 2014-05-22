@@ -24,7 +24,7 @@ class CommonConnectorTest extends WordSpec with BeforeAndAfter {
     "initialize" should {
       "with addresses" in {
         implicit val pool = FuturePool.immediatePool
-        assert(CommonConnector(addresses, timeout) !== null)
+        assert(CommonConnector(addresses, timeout) != null)
       }
 
       "with a ZooKeeperClient instance" in {

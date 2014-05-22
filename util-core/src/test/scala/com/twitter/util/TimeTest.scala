@@ -47,7 +47,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec {
       for (a <- vs; b <- vs) {
         val x = a compare b
         val y = b compare a
-        assert((x == 0 && y == 0) || (x < 0 != y < 0) === true)
+        assert(((x == 0 && y == 0) || (x < 0 != y < 0)) === true)
       }
     }
 
@@ -123,7 +123,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec {
     }
 
     "not be equal to the maximum value" in {
-      assert(fromNanoseconds(Long.MaxValue) !== Top)
+      assert(fromNanoseconds(Long.MaxValue) != Top)
     }
 
     "always be max" in {
@@ -415,7 +415,7 @@ class TimeTest extends  { val ops = Time } with TimeLikeSpec[Time] {
         }
         thread.start()
         thread.join()
-        assert(threadTime.get !== t0)
+        assert(threadTime.get != t0)
       }
       assert((Time.now.inMillis - System.currentTimeMillis).abs < 20L)
     }

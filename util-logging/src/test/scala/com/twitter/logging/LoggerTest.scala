@@ -110,7 +110,7 @@ class LoggerTest extends WordSpec with TempFolder with TestLogging {
 
     "get single-threaded return the same value" in {
       val loggerFirst = Logger.get("getTest")
-      assert(loggerFirst !== null)
+      assert(loggerFirst != null)
 
       val loggerSecond = Logger.get("getTest")
       assert(loggerSecond === loggerFirst)
