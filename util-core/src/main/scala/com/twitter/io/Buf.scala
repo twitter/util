@@ -15,8 +15,11 @@ trait Buf { outer =>
    * the given offset. Partial writes aren't supported directly
    * through this API; they easily performed by first slicing the
    * buffer.
+   * @throws IllegalArgumentException when `output` is too small to
+   * contain all the data.
    */
-  def write(buf: Array[Byte], off: Int)
+  @throws(classOf[IllegalArgumentException])
+  def write(output: Array[Byte], off: Int): Unit
 
   /**
    * The number of bytes in the buffer
@@ -34,21 +37,7 @@ trait Buf { outer =>
    * Concatenate this buffer with the given buffer.
    */
   def concat(right: Buf): Buf =
-    if (right == Buf.Empty) outer else new Buf {
-     private[this] val left = outer
-    def slice(i: Int, j: Int): Buf = {
-      left.slice(i min left.length, j min left.length) concat
-        right.slice((i-left.length) max 0, (j-left.length) max 0)
-    }
-
-    def write(buf: Array[Byte], off: Int) {
-      require(length <= buf.length-off)
-      left.write(buf, off)
-      right.write(buf, off+outer.length)
-    }
-
-    def length = left.length + right.length
-  }
+    if (right.isEmpty) outer else ConcatBuf(Vector(outer)).concat(right)
 
   override def hashCode = Buf.hash(this)
 
@@ -56,16 +45,54 @@ trait Buf { outer =>
     case other: Buf => Buf.equals(this, other)
     case _ => false
   }
+
+  def isEmpty = length == 0
+}
+
+private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
+  override def concat(right: Buf): Buf = right match {
+    case buf if buf.isEmpty => this
+    case ConcatBuf(rigthChain) => ConcatBuf(chain ++ rigthChain)
+    case buf => ConcatBuf(chain :+ right)
+  }
+
+  def length: Int = chain.map(_.length).sum
+
+  def write(output: Array[Byte], off: Int) = {
+    require(length <= output.length - off)
+    var offset = off
+    chain foreach { buf =>
+      buf.write(output, offset)
+      offset += buf.length
+    }
+  }
+
+  def slice(i: Int, j: Int): Buf = {
+    require(0 <= i && i <= j)
+    var begin = i
+    var end = j
+    var res = Buf.Empty
+    chain foreach { buf =>
+      val buf1 = buf.slice(begin max 0, end max 0)
+      if (!buf1.isEmpty)
+        res = res concat buf1
+      begin -= buf.length
+      end -= buf.length
+    }
+    res
+  }
 }
 
 object Buf {
   private class NoopBuf extends Buf {
     def write(buf: Array[Byte], off: Int) = ()
+    override val isEmpty = true
     def length = 0
     def slice(i: Int, j: Int): Buf = {
       require(i >=0 && j >= 0, "Index out of bounds")
       this
     }
+    override def concat(right: Buf) = right
   }
 
   /**
@@ -153,7 +180,7 @@ object Buf {
     y.write(b, 0)
     Arrays.equals(a, b)
   }
-  
+
   /** The 32-bit FNV-1 of Buf */
   def hash(buf: Buf): Int = buf match {
     case ByteArray(bytes, begin, end) => hashBytes(bytes, begin, end)

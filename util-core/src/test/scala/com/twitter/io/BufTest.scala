@@ -8,7 +8,6 @@ import org.mockito.stubbing.Answer
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
 class BufTest extends FunSuite with MockitoSugar {
@@ -25,19 +24,21 @@ class BufTest extends FunSuite with MockitoSugar {
   test("Buf.concat") {
     val a1 = Array[Byte](1,2,3)
     val a2 = Array[Byte](4,5,6)
+    val a3 = Array[Byte](7,8,9)
 
-    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2)
-    assert(buf.length === 6)
-    val x = Array.fill(6) { 0.toByte }
+    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+    assert(buf.length === 9)
+    val x = Array.fill(9) { 0.toByte }
     buf.write(x, 0)
-    assert(x.toSeq === (a1++a2).toSeq)
+    assert(x.toSeq === (a1++a2++a3).toSeq)
   }
 
   test("Buf.concat.slice") {
     val a1 = Array.range(0, 8).map(_.toByte)
     val a2 = Array.range(8, 16).map(_.toByte)
-    val arr = a1 ++ a2
-    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val arr = a1 ++ a2 ++ a3
+    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
 
     for (i <- 0 until arr.length; j <- i until arr.length) {
       val w = new Array[Byte](j-i)
@@ -92,7 +93,7 @@ class BufTest extends FunSuite with MockitoSugar {
     Buf.Utf8.unapply(buf)
     verify(buf).write(any[Array[Byte]], any[Int])
   }
-  
+
   test("hash code, equals") {
     def ae(a: Buf, b: Buf) {
       assert(a === b)
@@ -103,10 +104,51 @@ class BufTest extends FunSuite with MockitoSugar {
     val bytes = Array[Byte](111, 107, 116, 104, 101, 110)
 
     ae(Buf.Utf8(string), Buf.ByteArray(bytes))
-    
+
     val shifted = new Array[Byte](bytes.length + 3)
     System.arraycopy(bytes, 0, shifted, 3, bytes.length)
     ae(Buf.Utf8(string), Buf.ByteArray(shifted, 3, 3+bytes.length))
   }
-}
 
+  test("concat two ConcatBufs") {
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val a4 = Array.range(24, 32).map(_.toByte)
+
+    val arr = a1 ++ a2 ++ a3 ++ a4
+
+    val cbuf1 = Buf.ByteArray(a1) concat Buf.ByteArray(a2)
+    val cbuf2 = Buf.ByteArray(a3) concat Buf.ByteArray(a4)
+    val cbuf = cbuf1 concat cbuf2
+
+    for (i <- 0 until arr.length; j <- i until arr.length) {
+      val w = new Array[Byte](j-i)
+      cbuf.slice(i, j).write(w, 0)
+      assert(w.toSeq === arr.slice(i, j).toSeq)
+    }
+  }
+
+  test("highly nested concat buffer shouldn't throw StackOverflowError") {
+    val size = 50 * 1000
+    val b = 'x'.toByte
+    val bigBuf = (1 to size).foldLeft(Buf.Empty) {
+      case (buf, _) => buf concat Buf.ByteArray(b)
+    }
+
+    val expected = Array.fill(size) { 'x'.toByte }
+    val output = new Array[Byte](size)
+    bigBuf.write(output, 0)
+    assert(bigBuf.length === size)
+    assert(expected.toSeq === output.toSeq)
+
+    val sliced = bigBuf.slice(1, size - 1)
+    val size2 = size - 2
+    val expected2 = Array.fill(size2) { 'x'.toByte }
+    val output2 = new Array[Byte](size2)
+    sliced.write(output2, 0)
+    assert(sliced.length === size2)
+    assert(expected2.toSeq === output2.toSeq)
+  }
+}
