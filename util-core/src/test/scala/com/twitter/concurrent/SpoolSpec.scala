@@ -67,6 +67,10 @@ class SpoolSpec extends SpecificationWithJUnit {
       val fold = s.reduceLeft{(x, y) => x + y}
       Await.result(fold) must throwAn[UnsupportedOperationException]
     }
+
+    "take" in {
+      s.take(10) must be_==(Spool.empty[Int])
+    }
   }
 
   "Simple resolved Spool" should {
@@ -148,6 +152,14 @@ class SpoolSpec extends SpecificationWithJUnit {
         }
 
       Await.result(flatSpool.flatMap(_.toSeq)) must be_==(seq.flatten)
+    }
+
+    "take" in {
+      val ls = (1 to 4).toSeq.toSpool
+      Await.result(ls.take(2).toSeq) must be_==(Seq(1,2))
+      Await.result(ls.take(1).toSeq) must be_==(Seq(1))
+      Await.result(ls.take(0).toSeq) must be_==(Seq.empty)
+      Await.result(ls.take(-2).toSeq) must be_==(Seq.empty)
     }
   }
 
@@ -332,6 +344,14 @@ class SpoolSpec extends SpecificationWithJUnit {
       applyLazily { spool =>
         Future.value {
           spool.takeWhile(_ < Int.MaxValue)
+        }
+      }
+    }
+
+    "take lazily" in {
+      applyLazily { spool =>
+        Future.value {
+          spool.take(2)
         }
       }
     }

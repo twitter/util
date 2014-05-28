@@ -145,6 +145,19 @@ sealed trait Spool[+A] {
     }
 
   /**
+   * Take the first n elements of the Spool as another Spool (adapted from Stream.take)
+   */
+  def take(n: Int): Spool[A] = {
+    if (n <= 0 || isEmpty) {
+      empty[A]
+    } else if (n == 1) {
+      new LazyCons(head, Future.value(empty[A]))
+    } else {
+      new LazyCons(head, tail map (_ take (n - 1)))
+    }
+  }
+
+  /**
    * Concatenates two spools.
    */
   def ++[B >: A](that: Spool[B]): Spool[B] =
