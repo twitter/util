@@ -38,6 +38,11 @@ trait Scheduler {
    * The amount of CPU time that's been scheduled as per ThreadMXBean.
    */
   def cpuTime: Long
+  
+  /**
+   * Total walltime spent in the scheduler.
+   */
+  def wallTime: Long
 
   /**
    * The number of dispatches performed by this scheduler.
@@ -80,6 +85,7 @@ object Scheduler extends Scheduler {
   def flush() = self.flush()
   def usrTime = self.usrTime
   def cpuTime = self.cpuTime
+  def wallTime = self.wallTime
   def numDispatches = self.numDispatches
   
   def blocking[T](f: => T)(implicit perm: CanAwait) = self.blocking(f)
@@ -112,6 +118,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     // This is safe: there's only one updater.
     @volatile var usrTime = 0L
     @volatile var cpuTime = 0L
+    @volatile var wallTime = 0L
     @volatile var numDispatches = 0L
 
     def submit(r: Runnable) {
@@ -139,9 +146,11 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
           numDispatches += SampleScale
           val cpu0 = bean.getCurrentThreadCpuTime()
           val usr0 = bean.getCurrentThreadUserTime()
+          val wall0 = System.nanoTime()
           run()
           cpuTime += (bean.getCurrentThreadCpuTime() - cpu0)*SampleScale
           usrTime += (bean.getCurrentThreadUserTime() - usr0)*SampleScale
+          wallTime += (System.nanoTime() - wall0)*SampleScale
         } else {
           run()
         }
@@ -203,6 +212,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
 
   def usrTime = (activations.iterator map (_.usrTime)).sum
   def cpuTime = (activations.iterator map (_.cpuTime)).sum
+  def wallTime = (activations.iterator map (_.wallTime)).sum
   def numDispatches = (activations.iterator map (_.numDispatches)).sum
   
   def blocking[T](f: => T)(implicit perm: CanAwait) = f
@@ -262,6 +272,8 @@ trait ExecutorScheduler { self: Scheduler =>
     }
     sum
   }
+
+  def wallTime = -1L
 
   def numDispatches = -1L  // Unsupported
 
