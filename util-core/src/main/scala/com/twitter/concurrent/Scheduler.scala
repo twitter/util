@@ -324,5 +324,8 @@ class BridgedThreadPoolScheduler(
         case _: RejectedExecutionException => local.submit(r)
       }
   }
-}
 
+  override def flush() =
+    if (Thread.currentThread.getThreadGroup == threadGroup)
+      local.flush()
+}
