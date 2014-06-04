@@ -25,7 +25,7 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    crossScalaVersions := Seq("2.9.2", "2.10.3"),
+    crossScalaVersions := Seq("2.9.2", "2.10.4"),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
@@ -159,7 +159,7 @@ object Util extends Build {
   ).settings(
     name := "util-codec",
     libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.5"
+      "commons-codec" % "commons-codec" % "1.6"
     )
   ).dependsOn(utilCore)
 
@@ -172,9 +172,9 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305" % "1.3.9",
+      "com.google.code.findbugs" % "jsr305" % "2.0.1",
       "javax.inject" % "javax.inject" % "1",
-      "com.google.guava" % "guava" % "16.0",
+      "com.google.guava" % "guava" % "16.0.1",
       "commons-collections" % "commons-collections" % "3.2.1"
     )
   ).dependsOn(utilCore)
@@ -220,8 +220,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "thrift" % "libthrift" % "0.5.0",
       "org.slf4j" % "slf4j-nop" % "1.5.8" % "provided",
-      "com.fasterxml.jackson.core" % "jackson-core"   % "2.1.3",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.1.3"
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.1"
     )
   ).dependsOn(utilCodec)
 
@@ -233,7 +232,7 @@ object Util extends Build {
   ).settings(
     name := "util-hashing",
     libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.5" % "test"
+      "commons-codec" % "commons-codec" % "1.6" % "test"
     )
   ).dependsOn(utilCore % "test")
 
@@ -268,9 +267,9 @@ object Util extends Build {
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % "0.0.53",
-      "com.twitter.common.zookeeper" % "group"      % "0.0.67",
-      "com.twitter.common.zookeeper" % "server-set" % "1.0.72",
+      "com.twitter.common.zookeeper" % "client"     % "0.0.60",
+      "com.twitter.common.zookeeper" % "group"      % "0.0.78",
+      "com.twitter.common.zookeeper" % "server-set" % "1.0.83",
       zkDependency
     )
   ).dependsOn(utilCore, utilLogging, utilZk,

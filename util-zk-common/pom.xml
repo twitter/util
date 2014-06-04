@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.twitter.common.zookeeper</groupId>
       <artifactId>client</artifactId>
-      <version>0.0.53</version>
+      <version>0.0.60</version>
       <!-- excluded to prevent conflicts with caged finagle/util -->
       <exclusions>
         <exclusion>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.twitter.common.zookeeper</groupId>
       <artifactId>group</artifactId>
-      <version>0.0.67</version>
+      <version>0.0.78</version>
       <!-- excluded to prevent conflicts with caged finagle/util -->
       <exclusions>
         <exclusion>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>com.twitter.common.zookeeper</groupId>
       <artifactId>server-set</artifactId>
-      <version>1.0.72</version>
+      <version>1.0.83</version>
       <!-- excluded to prevent conflicts with caged finagle/util -->
       <exclusions>
         <exclusion>
