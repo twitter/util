@@ -1,3 +1,11 @@
+6.17.0  2014-06-04
+
+  * util: Upgrade dependency versions
+  * util-core: Scheduler productivity = cpuTime/wallTime
+  * util-core: Add a `take` method to `Spool`
+  * util-core: Introduce `ConcatBuf`
+  * util-core: add `Spool.collectFuture`
+
 6.16.0  2014-05-13
 
   * util-app: Add flag for configuring acceptance of undefined flags
