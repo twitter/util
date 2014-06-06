@@ -6,12 +6,58 @@ import scala.collection.immutable.TreeSet
 import java.net.InetSocketAddress
 
 /**
- * A typeclass providing evidence for parsing type `T`
- * as a flag.
+ * A type class providing evidence for parsing type `T` as a flag value.
+ *
+ * Any class that is to be provided as a flaggable value must have an
+ * accompanying implicit `Flaggable` (contained within a companion object of the
+ * class in question) for converting a string to an object of that type. For
+ * instance, to make a hypothetical type called `Foo` flaggable:
+ *
+ * {{{
+ * class Foo {
+ *   ...
+ * }
+ *
+ * object Foo {
+ *   implicit val flagOfFoo = new Flaggable[Foo] {
+ *     def parse(v: String): Foo = {
+ *       ...
+ *     }
+ *   }
+ * }
+ * }}}
+ *
+ * For simple implicit definitions based on existing `String => T` functions,
+ * use the `Flaggable.mandatory` function:
+ *
+ * {{{
+ * object Foo {
+ *   def parse(v: String: Foo = {
+ *      ...
+ *   }
+ *
+ *   implicit val ofFoo = Flaggable.mandatory(Foo.parse(_))
+ * }
+ * }}}
+ *
+ * [1] http://en.wikipedia.org/wiki/Type_class
  */
 trait Flaggable[T] {
+  /**
+   * Parse a string (i.e. a value set on the command line) into an object of
+   * type `T`.
+   */
   def parse(s: String): T
+
+  /**
+   * Create a string-representation of an object of type `T`. Used in
+   * `Flag.toString`.
+   */
   def show(t: T): String = t.toString
+
+  /**
+   * An optional default value for the Flaggable.
+   */
   def default: Option[T] = None
 }
 
@@ -120,8 +166,8 @@ class FlagValueRequiredException extends Exception("flag value is required")
 class FlagUndefinedException extends Exception("flag undefined")
 
 /**
- * A single flag, instantiated by a [[com.twitter.app.Flags]] instance.
- * Its current value is extracted with `apply()`.
+ * A single command-line flag, instantiated by a [[com.twitter.app.Flags]]
+ * instance. Its current value can be extracted via `apply()`.
  *
  * @see [[com.twitter.app.Flags]]
  */
@@ -185,7 +231,7 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
 /**
  * A simple flags implementation. We support only two formats:
  *
- *    for flags with optional values (booleans):
+ *    for flags with optional values (e.g. booleans):
  *      -flag, -flag=value
  *    for flags with required values:
  *      -flag[= ]value
@@ -195,15 +241,15 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
  * There is no support for mandatory arguments: That is not what
  * flags are for.
  *
- * Flags' `apply` adds a new flag to to the flag set, so it is idiomatic
- * to assign instances of `Flags` to a singular `flag`:
+ * `Flags.apply` adds a new flag to the flag set, so it is idiomatic
+ * to assign instances of `Flags` to a singular `flag` val:
  *
  * {{{
- *   val flag = new Flags("myapp")
- *   val i = flag("i", 123, "iteration count")
+ * val flag = new Flags("myapp")
+ * val i = flag("i", 123, "iteration count")
  * }}}
  *
- * Global flags, detached from a particular `Flags` instance, but
+ * Global flags, detached from a particular `Flags` instance but
  * accessible to all, are defined by [[com.twitter.app.GlobalFlag]].
  */
 class Flags(argv0: String, includeGlobal: Boolean) {
@@ -216,11 +262,6 @@ class Flags(argv0: String, includeGlobal: Boolean) {
   // Add a help flag by default
   private[this] val helpFlag = this("help", false, "Show this help")
 
-  def add(f: Flag[_]) = synchronized {
-    if (flags contains f.name)
-      System.err.printf("Flag %s already defined!\n", f.name)
-    flags(f.name) = f
-  }
 
   def reset() = synchronized {
     flags foreach { case (_, f) => f.reset() }
@@ -235,6 +276,15 @@ class Flags(argv0: String, includeGlobal: Boolean) {
   private[this] def hasFlag(f: String) = resolveFlag(f).isDefined
   private[this] def flag(f: String) = resolveFlag(f).get
 
+  /**
+   * Parse an array of flag strings.
+   *
+   * @param args The array of strings to parse.
+   * @param undefOk If true, undefined flags (i.e. those that are not defined
+   * in the application via a `flag.apply` invocation) are allowed. If false,
+   * undefined flags will result in a FlagParseException being thrown.
+   * @throws FlagParseException if an error occurs during flag-parsing.
+   */
   def parse(
     args: Array[String],
     undefOk: Boolean = false
@@ -298,6 +348,15 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     remaining
   }
 
+  /**
+   * Parse an array of flag strings or exit the application (with exit code 1)
+   * upon failure to do so.
+   *
+   * @param args The array of strings to parse.
+   * @param undefOk If true, undefined flags (i.e. those that are not defined
+   * in the application via a `flag.apply` invocation) are allowed. If false,
+   * undefined flags will result in a FlagParseException being thrown.
+   */
   def parseOrExit1(args: Array[String], undefOk: Boolean = true): Seq[String] =
     try parse(args, undefOk) catch {
       case FlagUsageError(usage) =>
@@ -316,18 +375,43 @@ class Flags(argv0: String, includeGlobal: Boolean) {
         throw new IllegalStateException
     }
 
+  /**
+   * Add a flag. The canonical way to do so is via `Flags#apply`, but this
+   * method is left public for any rare edge cases where it is necessary.
+   *
+   * @param f A concrete Flag to add
+   */
+  def add(f: Flag[_]) = synchronized {
+    if (flags contains f.name)
+      System.err.printf("Flag %s already defined!\n", f.name)
+    flags(f.name) = f
+  }
+
+  /**
+   * Add a named flag with a default value and a help message.
+   *
+   * @param name The name of the flag.
+   * @param default A default value, as a thunk.
+   * @param help The help string of the flag.
+   */
   def apply[T: Flaggable](name: String, default: => T, help: String) = {
     val f = new Flag[T](name, help, default)
     add(f)
     f
   }
 
+  /**
+   * Add a named flag with a help message.
+   *
+   * @param name The name of the flag.
+   * @param help The help string of the flag.
+   */
   def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = {
     val f = new Flag[T](name, help, m.toString)
     add(f)
     f
   }
-  
+
   /**
    * Set the flags' command usage; this is a message printed
    * before the flag definitions in the usage string.
@@ -352,15 +436,20 @@ class Flags(argv0: String, includeGlobal: Boolean) {
   }
 
   /**
-   * Get all the flags known to this this Flags instance
+   * Get all of the flags known to this Flags instance.
    *
-   * @param includeGlobal defaults to the includeGlobal settings of this instance
-   * @param classLoader   needed to find global flags, defaults to this instance's class loader
-   * @return all the flags known to this this Flags instance
+   * @param includeGlobal If true, all registered
+   * [[com.twitter.app.GlobalFlag GlobalFlags]] will be included
+   * in output. Defaults to the `includeGlobal` settings of this instance.
+   * @param classLoader The [[java.lang.ClassLoader]] used to fetch
+   * [[com.twitter.app.GlobalFlag GlobalFlags]], if necessary. Defaults to this
+   * instance's classloader.
+   * @return All of the flags known to this this Flags instance.
    */
-  def getAll(includeGlobal: Boolean = this.includeGlobal,
-             classLoader: ClassLoader = this.getClass.getClassLoader): Iterable[Flag[_]] = synchronized {
-
+  def getAll(
+    includeGlobal: Boolean = this.includeGlobal,
+    classLoader: ClassLoader = this.getClass.getClassLoader
+  ): Iterable[Flag[_]] = synchronized {
     var flags = TreeSet[Flag[_]]()(Ordering.by(_.name)) ++ this.flags.valuesIterator
 
     if (includeGlobal) {
@@ -371,30 +460,34 @@ class Flags(argv0: String, includeGlobal: Boolean) {
   }
 
   /**
-   * Formats all the values of all flags known to this instance into a format suitable for logging
+   * Formats all values of all flags known to this instance into a format
+   * suitable for logging.
    *
-   * @param includeGlobal see getAll above
-   * @param classLoader   see getAll above
-   * @return all the flag values in alphabetical order, grouped into (set, unset)
+   * @param includeGlobal See `getAll` above.
+   * @param classLoader   See `getAll` above.
+   * @return All of the flag values in alphabetical order, grouped into (set, unset).
    */
-  def formattedFlagValues(includeGlobal: Boolean = this.includeGlobal,
-                          classLoader: ClassLoader = this.getClass.getClassLoader):
-                          (Iterable[String], Iterable[String]) = {
-
+  def formattedFlagValues(
+    includeGlobal: Boolean = this.includeGlobal,
+    classLoader: ClassLoader = this.getClass.getClassLoader
+  ): (Iterable[String], Iterable[String]) = {
     val (set, unset) = getAll(includeGlobal, classLoader).partition { _.get.isDefined }
 
     (set.map { _ + " \\" }, unset.map { _ + " \\" })
   }
 
   /**
-   * Creates a string containing all the values of all flags known to this instance into a format suitable for logging
+   * Creates a string containing all values of all flags known to this instance
+   * into a format suitable for logging.
    *
-   * @param includeGlobal set getAll above
-   * @param classLoader   set getAll above
-   * @return A string suitable for logging
+   * @param includeGlobal See `getAll` above.
+   * @param classLoader   Set `getAll` above
+   * @return A string suitable for logging.
    */
-  def formattedFlagValuesString(includeGlobal: Boolean = this.includeGlobal,
-                                classLoader: ClassLoader = this.getClass.getClassLoader): String = {
+  def formattedFlagValuesString(
+    includeGlobal: Boolean = this.includeGlobal,
+    classLoader: ClassLoader = this.getClass.getClassLoader
+  ): String = {
     val (set, unset) = formattedFlagValues(includeGlobal, classLoader)
     val lines = Seq("Set flags:") ++
       set ++
@@ -403,21 +496,25 @@ class Flags(argv0: String, includeGlobal: Boolean) {
 
     lines.mkString("\n")
   }
-
 }
 
 /**
- * Declare a global flag by extending this class with an object.
+ * Subclasses of GlobalFlag (that are defined in libraries) are "global" in the
+ * sense that they are accessible by any application that depends on that library.
+ * Regardless of where in a library a GlobalFlag is defined, a value for it can
+ * be passed as a command-line flag by any binary that includes the library.
+ * The set of defined GlobalFlags can be enumerated (via `GlobalFlag.getAll)` by
+ * the application.
  *
  * {{{
- * object MyFlag extends GlobalFlag("my", "default value", "my global flag")
+ * object MyFlag extends GlobalFlag("my", "default value", "this is my global flag")
  * }}}
  *
- * All such global flag declarations in a given classpath are
- * visible, and are used by, [[com.twitter.app.App]].
+ * All such global flag declarations in a given classpath are visible to and
+ * used by [[com.twitter.app.App]].
  *
- * The name of the flag is the fully-qualified classname, for
- * example, the flag
+ * A flag's name (as set on the command line) is its fully-qualified classname.
+ * For example, the flag
  *
  * {{{
  * package com.twitter.server
@@ -425,16 +522,17 @@ class Flags(argv0: String, includeGlobal: Boolean) {
  * object port extends GlobalFlag(8080, "the TCP port to which we bind")
  * }}}
  *
- * is accessed by the name `com.twitter.server.port`.
+ * is settable by the command-line flag `-com.twitter.server.port`.
  *
  * Global flags may also be set by Java system properties with keys
- * named in the same way, however values supplied by flags override
+ * named in the same way. However, values supplied by flags override
  * those supplied by system properties.
- *
  */
 @GlobalFlagVisible
-class GlobalFlag[T] private[app](defaultOrUsage: Either[() => T, String], help: String)(implicit _f: Flaggable[T])
-    extends Flag[T](null, help, defaultOrUsage) {
+class GlobalFlag[T] private[app](
+  defaultOrUsage: Either[() => T, String],
+  help: String
+)(implicit _f: Flaggable[T]) extends Flag[T](null, help, defaultOrUsage) {
 
   def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
   def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
