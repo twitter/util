@@ -278,6 +278,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.Buf#isEmpty" data-isabs="false">
+      <a id="isEmpty:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isEmpty</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -440,8 +452,9 @@ indices are truncated. Negative indices are not accepted.
 the given offset.</p><div class="fullcomment"><div class="comment cmt"><p>Write the entire contents of the buffer into the given array at
 the given offset. Partial writes aren't supported directly
 through this API; they easily performed by first slicing the
-buffer.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd></dl></div>
+buffer.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.io.Buf.ByteArray" class="extype" href="">ByteArray</a> → <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt">IllegalArgumentException<p>when <code>output</code> is too small to
+contain all the data.
+</p></span></dd></dl></div>
     </li></ol>
             </div>
 

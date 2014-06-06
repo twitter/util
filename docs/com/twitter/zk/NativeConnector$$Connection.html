@@ -67,7 +67,7 @@ Once a connection is released, it may not be re-opened.</p><p>apply() and releas
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Connection</span><span class="params">(<span name="connectString">connectString: String</span>, <span name="connectTimeout">connectTimeout: <span name="scala.Option" class="extype">Option</span>[<a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a>]</span>, <span name="sessionTimeout">sessionTimeout: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>, <span name="timer">timer: <a name="com.twitter.util.Timer" class="extype" href="../util/Timer.html">Timer</a></span>, <span name="log">log: <a name="com.twitter.logging.Logger" class="extype" href="../logging/Logger.html">Logger</a></span>)</span>
+        <span class="name">Connection</span><span class="params">(<span name="connectString">connectString: String</span>, <span name="connectTimeout">connectTimeout: <span name="scala.Option" class="extype">Option</span>[<a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a>]</span>, <span name="sessionTimeout">sessionTimeout: <a name="com.twitter.util.Duration" class="extype" href="../util/Duration.html">Duration</a></span>, <span name="authenticate">authenticate: <span name="scala.Option" class="extype">Option</span>[<a name="com.twitter.zk.AuthInfo" class="extype" href="AuthInfo.html">AuthInfo</a>]</span>, <span name="timer">timer: <a name="com.twitter.util.Timer" class="extype" href="../util/Timer.html">Timer</a></span>, <span name="log">log: <a name="com.twitter.logging.Logger" class="extype" href="../logging/Logger.html">Logger</a></span>)</span>
       </span>
       </h4>
       
@@ -388,7 +388,7 @@ NativeConnector.
       </span>
       </h4>
       <p class="shortcomment cmt">Publish session events, but intercept Connected events and use them to satisfy the pending
-connection promise if possible.</p>
+connection promise if possible, and add the authentication handle.</p>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">

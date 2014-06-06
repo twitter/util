@@ -14,9 +14,9 @@
         </head>
         <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
       <div id="definition">
-        <img src="../../../lib/class_big.png" />
+        <a title="Go to companion" href="SpoolSource$.html"><img src="../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.concurrent" class="extype" href="package.html">concurrent</a></p>
-        <h1>SpoolSource</h1>
+        <h1><a title="Go to companion" href="SpoolSource$.html">SpoolSource</a></h1>
       </div>
 
       <h4 class="signature" id="signature">
@@ -30,8 +30,7 @@
       </h4>
       
       <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A SpoolSource is a simple object for creating and populating a Spool-chain.  apply()
-returns a Future[Spool] that is populated by calls to offer().  This class is thread-safe.
-</p></div><div class="toggleContainer block">
+returns a Future[Spool] that is populated by calls to offer().  This class is thread-safe.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
@@ -71,6 +70,19 @@ returns a Future[Spool] that is populated by calls to offer().  This class is th
       </span>
       </h4>
       
+    </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource#this" data-isabs="false">
+      <a id="this:SpoolSource[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">SpoolSource</span><span class="params">(<span name="interruptHandler">interruptHandler: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[Throwable, <span name="scala.Unit" class="extype">Unit</span>]</span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">interruptHandler</dt><dd class="cmt"><p>attached to every Promise in the produced Spool.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -196,6 +208,19 @@ Previous values passed to offer() will not be seen in the Spool.
       <p class="shortcomment cmt">Closes this SpoolSource, which also terminates the generated Spool.</p><div class="fullcomment"><div class="comment cmt"><p>Closes this SpoolSource, which also terminates the generated Spool.  This method
 is idempotent.
 </p></div></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource#closed" data-isabs="false">
+      <a id="closed:Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closed</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Fulfilled when this SpoolSource has been closed or an exception
+is raised.</p>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -321,8 +346,27 @@ is idempotent.
       <p class="shortcomment cmt">Puts a value into the spool.</p><div class="fullcomment"><div class="comment cmt"><p>Puts a value into the spool.  Unless this SpoolSource has been closed, the current
 Future[Spool[A]] value will be fulfilled with a Spool that contains the
 provided value.  If the SpoolSource has been closed, then this value is ignored.
-If multiple threads call offer simultaneously, the operation is thread-safe but
+If multiple threads call <code>offer</code> simultaneously, the operation is thread-safe but
 the resulting order of values in the spool is non-deterministic.
+</p></div></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource#offerAndClose" data-isabs="false">
+      <a id="offerAndClose(A):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">offerAndClose</span><span class="params">(<span name="value">value: A</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Puts a value into the spool and closes this SpoolSource.</p><div class="fullcomment"><div class="comment cmt"><p>Puts a value into the spool and closes this SpoolSource.  Unless
+this SpoolSource has been closed, the current Future[Spool[A]]
+value will be fulfilled with Spool.cons(value, Spool.empty[A]).
+If the SpoolSource has been closed, then this value is ignored.
+If multiple threads call offer simultaneously, the operation is
+thread-safe but the resulting order of values in the spool is
+non-deterministic.
 </p></div></div>
     </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource#raise" data-isabs="false">
       <a id="raise(Throwable):Unit"></a>

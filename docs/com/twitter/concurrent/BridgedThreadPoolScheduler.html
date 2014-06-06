@@ -281,7 +281,7 @@ shutdown.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.concurrent.ExecutorScheduler#flush" data-isabs="false">
+    </li><li visbl="pub" name="com.twitter.concurrent.BridgedThreadPoolScheduler#flush" data-isabs="false">
       <a id="flush():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -292,7 +292,9 @@ shutdown.
         <span class="name">flush</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.ExecutorScheduler" class="extype" href="ExecutorScheduler.html">ExecutorScheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">Flush the schedule.</p><div class="fullcomment"><div class="comment cmt"><p>Flush the schedule. Returns when there is no more
+work to do.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.BridgedThreadPoolScheduler" class="extype" href="">BridgedThreadPoolScheduler</a> → <a name="com.twitter.concurrent.ExecutorScheduler" class="extype" href="ExecutorScheduler.html">ExecutorScheduler</a> → <a name="com.twitter.concurrent.Scheduler" class="extype" href="Scheduler.html">Scheduler</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -543,6 +545,18 @@ shutdown.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.ExecutorScheduler#wallTime" data-isabs="false">
+      <a id="wallTime:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wallTime</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.ExecutorScheduler" class="extype" href="ExecutorScheduler.html">ExecutorScheduler</a></dd></dl></div>
     </li></ol>
             </div>
 

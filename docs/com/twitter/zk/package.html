@@ -60,6 +60,18 @@
       </span>
       </h4>
       <p class="comment cmt">Mix-in to make an AsyncCallback a Promise</p>
+    </li><li visbl="pub" name="com.twitter.zk.AuthInfo" data-isabs="false">
+      <a id="AuthInfo:AuthInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AuthInfo.html"><span class="name">AuthInfo</span></a><span class="params">(<span name="mode">mode: String</span>, <span name="data">data: Array[Byte]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="com.twitter.zk.ChildrenCallbackPromise" data-isabs="false">
       <a id="ChildrenCallbackPromise:ChildrenCallbackPromise"></a>
       <h4 class="signature">
@@ -164,7 +176,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="NativeConnector.html"><span class="name">NativeConnector</span></a><span class="params">(<span name="connectString">connectString: String</span>, <span name="connectTimeout">connectTimeout: Option[Duration]</span>, <span name="sessionTimeout">sessionTimeout: Duration</span>, <span name="timer">timer: Timer</span>)</span><span class="result"> extends Connector with Serialized with Product with Serializable</span>
+        <a href="NativeConnector.html"><span class="name">NativeConnector</span></a><span class="params">(<span name="connectString">connectString: String</span>, <span name="connectTimeout">connectTimeout: Option[Duration]</span>, <span name="sessionTimeout">sessionTimeout: Duration</span>, <span name="timer">timer: Timer</span>, <span name="authenticate">authenticate: Option[AuthInfo]</span>)</span><span class="result"> extends Connector with Serialized with Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">An Asynchronous ZooKeeper Client.</p>
@@ -284,7 +296,19 @@
 
         <div class="values members" id="values">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.zk.CommonConnector" data-isabs="false">
+              <ol><li visbl="pub" name="com.twitter.zk.AuthInfo" data-isabs="false">
+      <a id="AuthInfo:AuthInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AuthInfo$.html"><span class="name">AuthInfo</span></a><span class="result"> extends Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.twitter.zk.CommonConnector" data-isabs="false">
       <a id="CommonConnector:CommonConnector"></a>
       <h4 class="signature">
       <span class="modifier_kind">

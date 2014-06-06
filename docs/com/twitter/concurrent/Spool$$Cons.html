@@ -428,6 +428,22 @@ applied as the items become available.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#mapFuture" data-isabs="false">
+      <a id="mapFuture[B]((A) ⇒ Future[B]):Future[Spool[B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapFuture</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (A) ⇒ <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[B]</span>)</span><span class="result">: <a name="com.twitter.util.Future" class="extype" href="../util/Future.html">Future</a>[<a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[B]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Applies a function that generates a Future[B] to each element of this spool
+The returned future is satisfied with the head of the resulting spool is available
+</p><div class="fullcomment"><div class="comment cmt"><p>Applies a function that generates a Future[B] to each element of this spool
+The returned future is satisfied with the head of the resulting spool is available
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -549,6 +565,19 @@ applied as the items become available.
       </h4>
       <p class="shortcomment cmt">The (deferred) tail of the spool.</p><div class="fullcomment"><div class="comment cmt"><p>The (deferred) tail of the spool. Invalid for empty spools.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool.Cons" class="extype" href="">Cons</a> → <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.concurrent.Spool#take" data-isabs="false">
+      <a id="take(Int):Spool[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">take</span><span class="params">(<span name="n">n: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a>[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Take the first n elements of the Spool as another Spool (adapted from Stream.</p><div class="fullcomment"><div class="comment cmt"><p>Take the first n elements of the Spool as another Spool (adapted from Stream.take)
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.concurrent.Spool" class="extype" href="Spool.html">Spool</a></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.concurrent.Spool#takeWhile" data-isabs="false">
       <a id="takeWhile((A) ⇒ Boolean):Spool[A]"></a>
       <h4 class="signature">
