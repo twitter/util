@@ -1,5 +1,10 @@
+/**
+ * This Bijection is slated to be replaced and is deprecated in favor of
+ * com.twitter.bijection.Bijection (which lives at https://github.com/twitter/bijection).
+ */
 package com.twitter.util
 
+@deprecated("Prefer using com.twitter.bijection.Bijection", "6.17.1")
 object Bijection {
   implicit def identity[A]: Bijection[A, A] = new Bijection[A, A] {
     def apply(a: A)  = a
@@ -20,6 +25,7 @@ object Bijection {
  * can convert to and from a set of objects and their serialized form
  * is an example of a bijection.
  */
+@deprecated("Prefer using com.twitter.bijection.Bijection", "2014-06-05")
 trait Bijection[A, B] extends (A => B) { self =>
   def apply(a: A): B
   def invert(b: B): A
