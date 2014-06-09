@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.{AtomicReference, AtomicInteger}
+import scala.annotation.tailrec
 import scala.collection.generic.CanBuild
 import scala.collection.immutable.Queue
 import scala.collection.mutable
@@ -282,18 +283,24 @@ object Event {
    * A new Event of type T which is also a Witness.
    */
   def apply[T](): Event[T] with Witness[T] = new Event[T] with Witness[T] {
-    @volatile var registerrs: List[Witness[T]] = Nil
+    private type W = Witness[T]
+    private[this] val witnesses = new AtomicReference(Vector.empty[W])
 
-    def register(s: Witness[T]) = {
-      registerrs ::= s
+    @tailrec private def cas(f: Vector[W] => Vector[W]): Unit = {
+      val old = witnesses.get
+      if (!witnesses.compareAndSet(old, f(old))) cas(f)
+    }
+
+    def register(w: Witness[T]) = {
+      cas(_ :+ w)
       Closable.make { _ =>
-        registerrs = registerrs filter (_ ne s)
+        cas(_.filterNot(_ eq w))
         Future.Done
       }
     }
 
-    def notify(t: T) = synchronized {
-      for (s <- registerrs) s.notify(t)
+    def notify(t: T) = synchronized { 
+      for (w <- witnesses.get) w.notify(t) 
     }
   }
 }
