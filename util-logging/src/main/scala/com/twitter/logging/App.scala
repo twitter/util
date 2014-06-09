@@ -44,7 +44,12 @@ trait Logging { self: App =>
   protected[this] val rotateCountFlag =
     flag("log.rotateCount", defaultRotateCount, "How many rotated logfiles to keep around")
 
-  def loggerFactories: List[LoggerFactory] = {
+  /**
+   * By default, the root [[com.twitter.logging.LoggerFactory]] only has a single
+   * [[com.twitter.logging.Handler]] which is configured via command line flags.
+   * You can override this method to add additional handlers.
+   */
+  def handlers: List[() => Handler] = {
     val output = outputFlag()
     val level = Some(levelFlag())
     val handler =
@@ -58,11 +63,14 @@ trait Logging { self: App =>
           rotateCountFlag(),
           level = level
         )
+    handler :: Nil
+  }
 
+  def loggerFactories: List[LoggerFactory] = {
     LoggerFactory(
       node = "",
-      level = level,
-      handlers = handler :: Nil
+      level = Some(levelFlag()),
+      handlers = handlers
     ) :: Nil
   }
 
