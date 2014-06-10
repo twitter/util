@@ -232,4 +232,148 @@ object Buf {
         Some(new String(bytes, utf8))
     }
   }
+
+  /**
+   * Create and deconstruct unsigned 32-bit
+   * big endian encoded buffers.
+   *
+   * Deconstructing will return the value
+   * as well as the remaining buffer.
+   */
+  object U32BE {
+    def apply(i: Int): Buf = {
+      val arr = new Array[Byte](4)
+      arr(0) = ((i >> 24) & 0xff).toByte
+      arr(1) = ((i >> 16) & 0xff).toByte
+      arr(2) = ((i >>  8) & 0xff).toByte
+      arr(3) = ((i      ) & 0xff).toByte
+      ByteArray(arr)
+    }
+
+    def unapply(buf: Buf): Option[(Int, Buf)] =
+      if (buf.length < 4) None else {
+        val arr = new Array[Byte](4)
+        buf.slice(0, 4).write(arr, 0)
+        val rem = buf.slice(4, buf.length)
+
+        val value =
+          ((arr(0) & 0xff) << 24) |
+          ((arr(1) & 0xff) << 16) |
+          ((arr(2) & 0xff) <<  8) |
+          ((arr(3) & 0xff)      )
+        Some(value, rem)
+      }
+    }
+
+  /**
+   * Create and deconstruct unsigned 64-bit
+   * big endian encoded buffers.
+   *
+   * Deconstructing will return the value
+   * as well as the remaining buffer.
+   */
+  object U64BE {
+    def apply(l: Long): Buf = {
+      val arr = new Array[Byte](8)
+      arr(0) = ((l >> 56) & 0xff).toByte
+      arr(1) = ((l >> 48) & 0xff).toByte
+      arr(2) = ((l >> 40) & 0xff).toByte
+      arr(3) = ((l >> 32) & 0xff).toByte
+      arr(4) = ((l >> 24) & 0xff).toByte
+      arr(5) = ((l >> 16) & 0xff).toByte
+      arr(6) = ((l >>  8) & 0xff).toByte
+      arr(7) = ((l      ) & 0xff).toByte
+      ByteArray(arr)
+    }
+
+    def unapply(buf: Buf): Option[(Long, Buf)] =
+      if (buf.length < 8) None else {
+        val arr = new Array[Byte](8)
+        buf.slice(0, 8).write(arr, 0)
+        val rem = buf.slice(8, buf.length)
+
+        val value =
+          ((arr(0) & 0xff).toLong << 56) |
+          ((arr(1) & 0xff).toLong << 48) |
+          ((arr(2) & 0xff).toLong << 40) |
+          ((arr(3) & 0xff).toLong << 32) |
+          ((arr(4) & 0xff).toLong << 24) |
+          ((arr(5) & 0xff).toLong << 16) |
+          ((arr(6) & 0xff).toLong <<  8) |
+          ((arr(7) & 0xff).toLong      )
+        Some(value, rem)
+      }
+    }
+
+  /**
+   * Create and deconstruct unsigned 32-bit
+   * little endian encoded buffers.
+   *
+   * Deconstructing will return the value
+   * as well as the remaining buffer.
+   */
+  object U32LE {
+    def apply(i: Int): Buf = {
+      val arr = new Array[Byte](4)
+      arr(0) = ((i      ) & 0xff).toByte
+      arr(1) = ((i >>  8) & 0xff).toByte
+      arr(2) = ((i >> 16) & 0xff).toByte
+      arr(3) = ((i >> 24) & 0xff).toByte
+      ByteArray(arr)
+    }
+
+    def unapply(buf: Buf): Option[(Int, Buf)] =
+      if (buf.length < 4) None else {
+        val arr = new Array[Byte](4)
+        buf.slice(0, 4).write(arr, 0)
+        val rem = buf.slice(4, buf.length)
+
+        val value =
+          ((arr(0) & 0xff)      ) |
+          ((arr(1) & 0xff) <<  8) |
+          ((arr(2) & 0xff) << 16) |
+          ((arr(3) & 0xff) << 24)
+        Some(value, rem)
+      }
+    }
+
+  /**
+   * Create and deconstruct unsigned 64-bit
+   * little endian encoded buffers.
+   *
+   * Deconstructing will return the value
+   * as well as the remaining buffer.
+   */
+  object U64LE {
+    def apply(l: Long): Buf = {
+      val arr = new Array[Byte](8)
+      arr(0) = ((l      ) & 0xff).toByte
+      arr(1) = ((l >>  8) & 0xff).toByte
+      arr(2) = ((l >> 16) & 0xff).toByte
+      arr(3) = ((l >> 24) & 0xff).toByte
+      arr(4) = ((l >> 32) & 0xff).toByte
+      arr(5) = ((l >> 40) & 0xff).toByte
+      arr(6) = ((l >> 48) & 0xff).toByte
+      arr(7) = ((l >> 56) & 0xff).toByte
+      ByteArray(arr)
+    }
+
+    def unapply(buf: Buf): Option[(Long, Buf)] =
+      if (buf.length < 8) None else {
+        val arr = new Array[Byte](8)
+        buf.slice(0, 8).write(arr, 0)
+        val rem = buf.slice(8, buf.length)
+
+        val value =
+          ((arr(0) & 0xff).toLong      ) |
+          ((arr(1) & 0xff).toLong <<  8) |
+          ((arr(2) & 0xff).toLong << 16) |
+          ((arr(3) & 0xff).toLong << 24) |
+          ((arr(4) & 0xff).toLong << 32) |
+          ((arr(5) & 0xff).toLong << 40) |
+          ((arr(6) & 0xff).toLong << 48) |
+          ((arr(7) & 0xff).toLong << 56)
+        Some(value, rem)
+      }
+  }
 }

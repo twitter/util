@@ -119,7 +119,8 @@ object Util extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "objectsize" % "0.0.10" % "test"
+      "com.twitter.common" % "objectsize" % "0.0.10" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
     ),
     testOptions in Test <<= scalaVersion map {
       // There seems to be an issue with mockito spies,

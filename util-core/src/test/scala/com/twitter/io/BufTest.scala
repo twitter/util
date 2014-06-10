@@ -5,12 +5,14 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
+import org.scalacheck.Prop._
+import org.scalatest.prop.Checkers
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
-class BufTest extends FunSuite with MockitoSugar {
+class BufTest extends FunSuite with MockitoSugar with Checkers {
   test("Buf.ByteArray.slice") {
     val arr = Array.range(0, 16).map(_.toByte)
     val buf = Buf.ByteArray(arr)
@@ -108,6 +110,84 @@ class BufTest extends FunSuite with MockitoSugar {
     val shifted = new Array[Byte](bytes.length + 3)
     System.arraycopy(bytes, 0, shifted, 3, bytes.length)
     ae(Buf.Utf8(string), Buf.ByteArray(shifted, 3, 3+bytes.length))
+  }
+
+  check(forAll { (in: Int) =>
+    val buf = Buf.U32BE(in)
+    val Buf.U32BE(out, _) = buf
+
+    val arr = new Array[Byte](4)
+    buf.write(arr, 0)
+    val outByteBuf = java.nio.ByteBuffer.wrap(arr)
+    outByteBuf.order(java.nio.ByteOrder.BIG_ENDIAN)
+
+    out == in && outByteBuf.getInt == in
+  })
+
+  check(forAll { (in: Int) =>
+    val buf = Buf.U32LE(in)
+    val Buf.U32LE(out, _) = buf
+
+    val arr = new Array[Byte](4)
+    buf.write(arr, 0)
+    val outByteBuf = java.nio.ByteBuffer.wrap(arr)
+    outByteBuf.order(java.nio.ByteOrder.LITTLE_ENDIAN)
+
+    out == in && outByteBuf.getInt == in
+  })
+
+  check(forAll { (in: Long) =>
+    val buf = Buf.U64BE(in)
+    val Buf.U64BE(out, _) = buf
+
+    val arr = new Array[Byte](8)
+    buf.write(arr, 0)
+    val outByteBuf = java.nio.ByteBuffer.wrap(arr)
+    outByteBuf.order(java.nio.ByteOrder.BIG_ENDIAN)
+
+    out == in && outByteBuf.getLong == in
+  })
+
+  check(forAll { (in: Long) =>
+    val buf = Buf.U64LE(in)
+    val Buf.U64LE(out, _) = buf
+
+    val arr = new Array[Byte](8)
+    buf.write(arr, 0)
+    val outByteBuf = java.nio.ByteBuffer.wrap(arr)
+    outByteBuf.order(java.nio.ByteOrder.LITTLE_ENDIAN)
+
+    out == in && outByteBuf.getLong == in
+  })
+
+  test("Buf num matching") {
+    val hasMatch = Buf.Empty match {
+      case Buf.U32BE(_, _) => true
+      case Buf.U64BE(_, _) => true
+      case Buf.U32LE(_, _) => true
+      case Buf.U64LE(_, _) => true
+      case _ => false
+    }
+    assert(!hasMatch)
+
+    val buf = Buf.Empty
+      .concat(Buf.U32BE(Int.MaxValue))
+      .concat(Buf.U64BE(Long.MaxValue))
+      .concat(Buf.U32LE(Int.MinValue))
+      .concat(Buf.U64LE(Long.MinValue))
+
+    val Buf.U32BE(be32,
+        Buf.U64BE(be64,
+        Buf.U32LE(le32,
+        Buf.U64LE(le64,
+        rem
+    )))) = buf
+
+    assert(be32 === Int.MaxValue)
+    assert(be64 === Long.MaxValue)
+    assert(le32 === Int.MinValue)
+    assert(le64 === Long.MinValue)
+    assert(rem === Buf.Empty)
   }
 
   test("concat two ConcatBufs") {

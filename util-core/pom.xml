@@ -29,5 +29,11 @@
       <version>1.8</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.scalacheck</groupId>
+      <artifactId>scalacheck_2.9.2</artifactId>
+      <version>1.10.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
