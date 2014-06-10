@@ -236,14 +236,20 @@ class MockTimer extends Timer {
     extends TimerTask
   {
     var isCancelled = false
-    def cancel() { isCancelled = true; nCancelled += 1; when = Time.now; tick() }
+
+    def cancel(): Unit = MockTimer.this.synchronized {
+      isCancelled = true
+      nCancelled += 1
+      when = Time.now
+      tick()
+    }
   }
 
   var isStopped = false
   var tasks = ArrayBuffer[Task]()
   var nCancelled = 0
 
-  def tick() {
+  def tick(): Unit = synchronized {
     if (isStopped)
       throw new IllegalStateException("timer is stopped already")
 
@@ -253,23 +259,37 @@ class MockTimer extends Timer {
     toRun filter { !_.isCancelled } foreach { _.runner() }
   }
 
-  def schedule(when: Time)(f: => Unit): TimerTask = {
+  def schedule(when: Time)(f: => Unit): TimerTask = synchronized {
     val task = Task(when, () => f)
     tasks += task
     task
   }
 
   /**
-   * Pay attention that ticking frozen time forward more than 1x duration will result in only one
-   * invocation of your task.
+   * Pay attention that ticking frozen time forward more than 1x duration will
+   * result in only one invocation of your task.
    */
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
-    def runAndReschedule() {
-      schedule(Time.now + period) { runAndReschedule() }
-      f
+    var isCancelled = false
+
+    val task = new TimerTask {
+      def cancel(): Unit = MockTimer.this.synchronized {
+        isCancelled = true
+      }
     }
-    schedule(when) { runAndReschedule() }
+
+    def runAndReschedule(): Unit = MockTimer.this.synchronized {
+      if (!isCancelled) {
+        schedule(Time.now + period) { runAndReschedule() }
+        f
+      }
+    }
+
+    schedule(when) { runAndReschedule() } // discard
+    task
   }
 
-  def stop() { isStopped = true }
+  def stop(): Unit = synchronized {
+    isStopped = true
+  }
 }

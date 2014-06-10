@@ -97,7 +97,7 @@ class TimerTest extends FunSuite with MockitoSugar {
       counter.incrementAndGet()
     }
     task.cancel()
-    Thread.sleep(1.seconds.inMilliseconds)
+    Thread.sleep(1.seconds.inMillis)
     assert(counter.get() != 1)
     timer.stop()
   }
@@ -140,7 +140,7 @@ class TimerTest extends FunSuite with MockitoSugar {
     timer.schedule(Time.now + 20.millis) {
       counter.incrementAndGet()
     }
-    Thread.sleep(40.milliseconds.inMilliseconds)
+    Thread.sleep(40.milliseconds.inMillis)
     eventually(Timeout(Span(4, Seconds))) { assert(counter.get() == 1) }
     timer.stop()
   }
@@ -152,91 +152,118 @@ class TimerTest extends FunSuite with MockitoSugar {
       counter.incrementAndGet()
     }
     task.cancel()
-    Thread.sleep(1.seconds.inMilliseconds)
+    Thread.sleep(1.seconds.inMillis)
     assert(counter.get() != 1)
     timer.stop()
   }
 
   test("Timer should doLater") {
     val result = "boom"
-    val timer = new MockTimer
-    val f = timer.doLater(1.millis)(result)
-    assert(!f.isDefined)
-    Thread.sleep(2)
-    timer.tick()
-    assert(f.isDefined)
-    assert(Await.result(f) == result)
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val f = timer.doLater(1.millis)(result)
+      assert(!f.isDefined)
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(f.isDefined)
+      assert(Await.result(f) == result)
+    }
   }
 
   test("Timer should doLater throws exception") {
-    val timer = new MockTimer
-    val ex = new Exception
-    def task: String = throw ex
-    val f = timer.doLater(1.millis)(task)
-    assert(!f.isDefined)
-    Thread.sleep(2)
-    timer.tick()
-    assert(f.isDefined)
-    intercept[Throwable] { Await.result(f, 0.millis) }
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val ex = new Exception
+      def task: String = throw ex
+      val f = timer.doLater(1.millis)(task)
+      assert(!f.isDefined)
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(f.isDefined)
+      intercept[Throwable] { Await.result(f, 0.millis) }
+    }
   }
 
   test("Timer should interrupt doLater") {
     val result = "boom"
-    val timer = new MockTimer
-    val f = timer.doLater(1.millis)(result)
-    assert(!f.isDefined)
-    f.raise(new Exception)
-    Thread.sleep(2)
-    timer.tick()
-    assert(f.isDefined)
-    intercept[CancellationException] { Await.result(f) }
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val f = timer.doLater(1.millis)(result)
+      assert(!f.isDefined)
+      f.raise(new Exception)
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(f.isDefined)
+      intercept[CancellationException] { Await.result(f) }
+    }
   }
 
   test("Timer should doAt") {
     val result = "boom"
-    val timer = new MockTimer
-    val f = timer.doAt(Time.now + 1.millis)(result)
-    assert(!f.isDefined)
-    Thread.sleep(2)
-    timer.tick()
-    assert(f.isDefined)
-    assert(Await.result(f) == result)
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val f = timer.doAt(Time.now + 1.millis)(result)
+      assert(!f.isDefined)
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(f.isDefined)
+      assert(Await.result(f) == result)
+    }
   }
 
   test("Timer should cancel doAt") {
     val result = "boom"
-    val timer = new MockTimer
-    val f = timer.doAt(Time.now + 1.millis)(result)
-    assert(!f.isDefined)
-    val exc = new Exception
-    f.raise(exc)
-    Thread.sleep(2)
-    timer.tick()
-    assert {
-      f.poll match {
-        case Some(Throw(e: CancellationException)) if e.getCause eq exc => true
-        case _ => false
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val f = timer.doAt(Time.now + 1.millis)(result)
+      assert(!f.isDefined)
+      val exc = new Exception
+      f.raise(exc)
+      ctl.advance(2.millis)
+      timer.tick()
+      assert {
+        f.poll match {
+          case Some(Throw(e: CancellationException)) if e.getCause eq exc => true
+          case _ => false
+        }
       }
     }
   }
 
   test("Timer should schedule(when)") {
-    val timer = new MockTimer
-    val counter = new AtomicInteger(0)
-    timer.schedule(Time.now + 1.millis)(counter.incrementAndGet())
-    Thread.sleep(2)
-    timer.tick()
-    assert(counter.get() == 1)
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val counter = new AtomicInteger(0)
+      timer.schedule(Time.now + 1.millis)(counter.incrementAndGet())
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(counter.get() == 1)
+    }
   }
 
   test("Timer should cancel schedule(when)") {
-    val result = "boom"
-    val timer = new MockTimer
-    val counter = new AtomicInteger(0)
-    val task = timer.schedule(Time.now + 1.millis)(counter.incrementAndGet())
-    task.cancel()
-    Thread.sleep(2)
-    timer.tick()
-    assert(counter.get() == 0)
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val counter = new AtomicInteger(0)
+      val task = timer.schedule(Time.now + 1.millis)(counter.incrementAndGet())
+      task.cancel()
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(counter.get() == 0)
+    }
+  }
+
+  test("Timer should cancel schedule(duration)") {
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val counter = new AtomicInteger(0)
+      val task = timer.schedule(1.millis)(counter.incrementAndGet())
+      ctl.advance(2.millis)
+      timer.tick()
+      task.cancel()
+      ctl.advance(2.millis)
+      timer.tick()
+      assert(counter.get() == 1)
+    }
   }
 }
