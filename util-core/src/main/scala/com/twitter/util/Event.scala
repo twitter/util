@@ -286,7 +286,8 @@ object Event {
     private type W = Witness[T]
     private[this] val witnesses = new AtomicReference(Vector.empty[W])
 
-    @tailrec private def cas(f: Vector[W] => Vector[W]): Unit = {
+    @tailrec
+    private def cas(f: Vector[W] => Vector[W]): Unit = {
       val old = witnesses.get
       if (!witnesses.compareAndSet(old, f(old))) cas(f)
     }
