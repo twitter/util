@@ -300,6 +300,13 @@ object Event {
       }
     }
 
+    /**
+     * Notifies registered witnesses.
+     *
+     * @note This method in synchronized to ensure that all witnesses
+     * recieve notifications in the same order. Consequently it will block
+     * until the witnesses are notified.
+     */
     def notify(t: T) = synchronized { 
       for (w <- witnesses.get) w.notify(t) 
     }
