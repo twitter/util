@@ -268,7 +268,7 @@ class EventTest extends FunSuite {
     assert(ref.get === 20)
   }
 
-  test("Event().register race condition") {
+  test("Event.register: no races between registered witnesses") {
     val e = Event[Unit]()
     val counter = new AtomicInteger
     val n = 1000
