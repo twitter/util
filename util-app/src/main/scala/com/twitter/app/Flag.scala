@@ -159,11 +159,19 @@ object Flaggable {
   }
 }
 
-case class FlagParseException(which: String, cause: Throwable)
-  extends Exception(cause)
+/**
+ * Exception thrown upon flag-parsing failure. Should typically lead to process
+ * death, since continued execution would run the risk of unexpected behavior on
+ * account of incorrectly-interpreted or malformed flag values.
+ *
+ * @param message A string name of the flag for which parsing failed.
+ * @param cause The underlying [[java.lang.Throwable]] that caused this exception.
+ */
+case class FlagParseException(message: String, cause: Throwable = null)
+  extends Exception(message, cause)
 case class FlagUsageError(usage: String) extends Exception
-class FlagValueRequiredException extends Exception("flag value is required")
-class FlagUndefinedException extends Exception("flag undefined")
+class FlagValueRequiredException extends Exception(Flags.FlagValueRequiredMessage)
+class FlagUndefinedException extends Exception(Flags.FlagUndefinedMessage)
 
 /**
  * A single command-line flag, instantiated by a [[com.twitter.app.Flags]]
@@ -228,6 +236,31 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   def noArgumentOk = flaggable.default.isDefined
 }
 
+object Flags {
+  private[app] val FlagValueRequiredMessage = "flag value is required"
+  private[app] val FlagUndefinedMessage = "flag undefined"
+
+  sealed trait FlagParseResult
+
+  /**
+   * Indicates successful flag parsing.
+   * @param remainder A remainder list of unparsed arguments.
+   */
+  case class Ok(remainder: Seq[String]) extends FlagParseResult
+
+  /**
+   * Indicates that a help flag (i.e. -help) was encountered
+   * @param usage A string containing the application usage instructions.
+   */
+  case class Help(usage: String) extends FlagParseResult
+
+  /**
+   * Indicates that an error occurred during flag-parsing.
+   * @param reason A string explaining the error that occurred.
+   */
+  case class Error(reason: String) extends FlagParseResult
+}
+
 /**
  * A simple flags implementation. We support only two formats:
  *
@@ -251,8 +284,15 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
  *
  * Global flags, detached from a particular `Flags` instance but
  * accessible to all, are defined by [[com.twitter.app.GlobalFlag]].
+ *
+ * @param argv0 The name of the application that is to be configured via flags
+ * @param includeGlobal If true, [[com.twitter.app.GlobalFlag GlobalFlags]] will
+ * be included during flag parsing. If false, only flags defined in the
+ * application itself will be consulted.
  */
 class Flags(argv0: String, includeGlobal: Boolean) {
+  import Flags._
+
   def this(argv0: String) = this(argv0, false)
 
   private[this] val flags = new HashMap[String, Flag[_]]
@@ -280,15 +320,16 @@ class Flags(argv0: String, includeGlobal: Boolean) {
    * Parse an array of flag strings.
    *
    * @param args The array of strings to parse.
-   * @param undefOk If true, undefined flags (i.e. those that are not defined
-   * in the application via a `flag.apply` invocation) are allowed. If false,
-   * undefined flags will result in a FlagParseException being thrown.
-   * @throws FlagParseException if an error occurs during flag-parsing.
+   * @param allowUndefinedFlags If true, undefined flags (i.e. those that are
+   * not defined in the application via a `flag.apply` invocation) are allowed.
+   * If false, undefined flags will result in a FlagParseException being thrown.
+   * @return A [[com.twitter.app.Flags.FlagParseResult]] representing the
+   * result of parsing `args`.
    */
-  def parse(
+  def parseArgs(
     args: Array[String],
-    undefOk: Boolean = false
-  ): Seq[String] = synchronized {
+    allowUndefinedFlags: Boolean = false
+  ): FlagParseResult = synchronized {
     reset()
     val remaining = new ArrayBuffer[String]
     var i = 0
@@ -304,17 +345,20 @@ class Flags(argv0: String, includeGlobal: Boolean) {
           // optimizer that leaves `v' dangling in the last case if
           // we make this a wildcard (Array(k, _@_*))
           case Array(k) if !hasFlag(k) =>
-            if (undefOk)
+            if (allowUndefinedFlags)
               remaining += a
             else
-              throw FlagParseException(k, new FlagUndefinedException)
+              return Error(
+                "Error parsing flag \"%s\": %s\n%s".format(k, FlagUndefinedMessage, usage)
+              )
 
           // Flag isn't defined
           case Array(k, _) if !hasFlag(k) =>
-            if (undefOk)
+            if (allowUndefinedFlags)
               remaining += a
-            else
-              throw FlagParseException(k, new FlagUndefinedException)
+            else return Error(
+              "Error parsing flag \"%s\": %s\n%s".format(k, FlagUndefinedMessage, usage)
+            )
 
           // Optional argument without a value
           case Array(k) if flag(k).noArgumentOk =>
@@ -322,19 +366,25 @@ class Flags(argv0: String, includeGlobal: Boolean) {
 
           // Mandatory argument without a value and with no more arguments.
           case Array(k) if i == args.size =>
-            throw FlagParseException(k, new FlagValueRequiredException)
+            return Error(
+              "Error parsing flag \"%s\": %s\n%s".format(k, FlagValueRequiredMessage, usage)
+            )
 
           // Mandatory argument with another argument
           case Array(k) =>
             i += 1
             try flag(k).parse(args(i-1)) catch {
-              case NonFatal(e) => throw FlagParseException(k, e)
+              case NonFatal(e) => return Error(
+                "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
+              )
             }
 
           // Mandatory k=v
           case Array(k, v) =>
             try flag(k).parse(v) catch {
-              case e: Throwable => throw FlagParseException(k, e)
+              case e: Throwable => return Error(
+                "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
+              )
             }
         }
       } else {
@@ -343,9 +393,33 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     }
 
     if (helpFlag())
-      throw FlagUsageError(usage)
+      Help(usage)
+    else
+      Ok(remaining)
+  }
 
-    remaining
+  /**
+   * Parse an array of flag strings.
+   *
+   * @note This method has been deprecated in favor of `Flags.parseArgs`,
+   * which indicates success or failure by returning
+   * [[com.twitter.app.Flags.FlagParseResult]] rather than relying on thrown
+   * exceptions.
+   *
+   * @param args The array of strings to parse.
+   * @param undefOk If true, undefined flags (i.e. those that are not defined
+   * in the application via a `flag.apply` invocation) are allowed. If false,
+   * undefined flags will result in a FlagParseException being thrown.
+   * @throws FlagParseException if an error occurs during flag-parsing.
+   */
+  @deprecated("Prefer result-value based `Flags.parseArgs` method", "6.17.1")
+  def parse(
+    args: Array[String],
+    undefOk: Boolean = false
+  ): Seq[String] = parseArgs(args, undefOk) match {
+    case Ok(remainder) => remainder
+    case Help(usage) => throw FlagUsageError(usage)
+    case Error(reason) => throw FlagParseException(reason)
   }
 
   /**
@@ -358,19 +432,15 @@ class Flags(argv0: String, includeGlobal: Boolean) {
    * undefined flags will result in a FlagParseException being thrown.
    */
   def parseOrExit1(args: Array[String], undefOk: Boolean = true): Seq[String] =
-    try parse(args, undefOk) catch {
-      case FlagUsageError(usage) =>
+    parseArgs(args, undefOk) match {
+      case Ok(remainder) =>
+        remainder
+      case Help(usage) =>
         System.err.println(usage)
         System.exit(1)
         throw new IllegalStateException
-      case e@FlagParseException(k, cause) =>
-        System.err.println("Error parsing flag %s: %s".format(k, cause.getMessage))
-        System.err.println(usage)
-        System.exit(1)
-        throw new IllegalStateException
-      case e =>
-        System.err.println("Error parsing flags: %s".format(e.getMessage))
-        System.err.println(usage)
+      case Error(reason) =>
+        System.err.println(reason)
         System.exit(1)
         throw new IllegalStateException
     }
@@ -427,11 +497,16 @@ class Flags(argv0: String, includeGlobal: Boolean) {
     val globalLines = if (!includeGlobal) Seq.empty else {
       GlobalFlag.getAll(getClass.getClassLoader).map(_.usageString).sorted
     }
-    
-    val cmd = if (cmdUsage.nonEmpty) cmdUsage+"\n" else ""
 
-    cmd+argv0+"\n"+(lines mkString "\n")+(
-      if (globalLines.isEmpty) "" else "\nglobal flags:\n"+(globalLines mkString "\n")
+    val cmd = if (cmdUsage.nonEmpty) cmdUsage+"\n" else "usage: "
+
+    cmd+argv0+" [<flag>...]\n"+
+    "flags:\n"+
+    (lines mkString "\n")+(
+      if (globalLines.isEmpty) "" else {
+        "\nglobal flags:\n"+
+        (globalLines mkString "\n")
+      }
     )
   }
 
