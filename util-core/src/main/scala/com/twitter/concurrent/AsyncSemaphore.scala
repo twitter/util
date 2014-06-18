@@ -22,13 +22,13 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
      * Indicate that you are done with your Permit.
      */
     override def release() {
-      val run = AsyncSemaphore.this.synchronized {
+      AsyncSemaphore.this.synchronized {
         val next = waitq.pollFirst()
-        if (next == null) availablePermits += 1
-        next
+        if (next != null)
+          next.setValue(new SemaphorePermit)
+        else
+          availablePermits += 1
       }
-
-      if (run != null) run.setValue(new SemaphorePermit)
     }
   }
 
@@ -58,10 +58,10 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
           case _ =>
             val promise = new Promise[Permit]
             promise.setInterruptHandler { case t: Throwable =>
-                AsyncSemaphore.this.synchronized {
-                  if (promise.updateIfEmpty(Throw(t)))
-                    waitq.remove(promise)
-                }
+              AsyncSemaphore.this.synchronized {
+                if (promise.updateIfEmpty(Throw(t)))
+                  waitq.remove(promise)
+              }
             }
             waitq.addLast(promise)
             promise
