@@ -18,7 +18,7 @@ object Util extends Build {
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.10.4",
-    crossScalaVersions := Seq("2.9.2", "2.10.4", "2.11.0"),
+    crossScalaVersions := Seq("2.9.2", "2.10.4", "2.11.1"),
     incOptions := incOptions.value.withNameHashing(true),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
@@ -43,6 +43,7 @@ object Util extends Build {
 
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions += "-deprecation",
+    scalacOptions += "-Xfuture",
 
     javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
     javacOptions in doc := Seq("-source", "1.6"),

@@ -28,13 +28,13 @@ class ReaderTest extends FunSuite {
     val buf = Buf.ByteArray(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
-    assert(Await.result(f) === ())
+    assert(Await.result(f) === (()))
   }
   
   def assertWriteEof(w: Writer) {
     val f = w.write(Buf.Eof)
     assert(f.isDefined)
-    assert(Await.result(f) === ())
+    assert(Await.result(f) === (()))
   }
 
   test("Reader.writable") {
@@ -83,7 +83,7 @@ class ReaderTest extends FunSuite {
     assert(toSeq(Await.result(rf2)) === Seq.range(4, 6))
     
     assert(wf.isDefined)
-    assert(Await.result(wf) === ())
+    assert(Await.result(wf) === (()))
   }
   
   test("Reader.writeable - fail while reading") {

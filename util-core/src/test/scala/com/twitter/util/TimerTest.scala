@@ -115,7 +115,7 @@ class TimerTest extends FunSuite with MockitoSugar {
     }
 
     timer.schedule(Time.now) {
-      throw new scala.MatchError
+      throw new scala.MatchError(())
     }
 
     latch.await(30.seconds)

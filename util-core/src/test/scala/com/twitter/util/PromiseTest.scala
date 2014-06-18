@@ -28,7 +28,7 @@ class PromiseTest extends FunSuite with Eventually {
     val f = Promise.attached(p)
     p.setValue(())
     assert(f.isDefined)
-    assert(Await.result(f) === ())
+    assert(Await.result(f) === (()))
   }
 
   test("Promise.attached should validate failure") {
