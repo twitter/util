@@ -30,7 +30,7 @@ import scala.collection.mutable
  */
 trait App extends Closable with CloseAwaitably {
   /** The name of the application, based on the classname */
-  val name = getClass.getName.reverse.dropWhile(_ == '$').reverse
+  val name = getClass.getName stripSuffix "$"
   /** The [[com.twitter.app.Flags]] instance associated with this application */
   val flag = new Flags(name, includeGlobal = true)
   private var _args = Array[String]()
