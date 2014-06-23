@@ -32,6 +32,8 @@ trait Closable { self =>
 }
 
 object Closable {
+  private[this] val logger = Logger.getLogger("")
+
   /**
    * Concurrent composition: creates a new closable which, when
    * closed, closes all of the underlying resources simultaneously.
@@ -74,23 +76,31 @@ object Closable {
 
   private val collectorThread = new Thread("CollectClosables") {
     override def run() {
-        while(true) {
-          try {
-            val ref = refq.remove()
-            val closable = refs.synchronized(refs.remove(ref))
-            if (closable != null)
-              closable.close()
-            ref.clear()
-          } catch {
-            case NonFatal(exc) =>
-              Logger.getLogger("").log(Level.SEVERE,
-                "com.twitter.util.Closable collector threw exception", exc)
-            case fatal =>
-              Logger.getLogger("").log(Level.SEVERE,
-                "com.twitter.util.Closable collector fatal threw exception", fatal)
-              throw fatal
-          }
+      while(true) {
+        try {
+          val ref = refq.remove()
+          val closable = refs.synchronized(refs.remove(ref))
+          if (closable != null)
+            closable.close()
+          ref.clear()
+        } catch {
+          case _: InterruptedException =>
+            // Thread interrupted while blocked on `refq.remove()`. Daemon
+            // threads shouldn't be interrupted explicitly on `System.exit`, but
+            // SBT does it anyway.
+            logger.log(Level.FINE,
+              "com.twitter.util.Closable collector thread caught InterruptedException")
+
+          case NonFatal(exc) =>
+            logger.log(Level.SEVERE,
+              "com.twitter.util.Closable collector thread caught exception", exc)
+
+          case fatal =>
+            logger.log(Level.SEVERE,
+              "com.twitter.util.Closable collector thread threw fatal exception", fatal)
+            throw fatal
         }
+      }
     }
 
     setDaemon(true)
