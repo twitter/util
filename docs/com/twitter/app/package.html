@@ -72,7 +72,8 @@ as basic application lifecycle (pre- and post- main).</p>
         <a href="Flag.html"><span class="name">Flag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">A single flag, instantiated by a <a name="com.twitter.app.Flags" class="extype" href="Flags.html">Flags</a> instance.</p>
+      <p class="comment cmt">A single command-line flag, instantiated by a <a name="com.twitter.app.Flags" class="extype" href="Flags.html">Flags</a>
+instance.</p>
     </li><li visbl="pub" name="com.twitter.app.FlagParseException" data-isabs="false">
       <a id="FlagParseException:FlagParseException"></a>
       <h4 class="signature">
@@ -81,10 +82,10 @@ as basic application lifecycle (pre- and post- main).</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FlagParseException.html"><span class="name">FlagParseException</span></a><span class="params">(<span name="which">which: String</span>, <span name="cause">cause: Throwable</span>)</span><span class="result"> extends Exception with Product with Serializable</span>
+        <a href="FlagParseException.html"><span class="name">FlagParseException</span></a><span class="params">(<span name="message">message: String</span>, <span name="cause">cause: Throwable</span>)</span><span class="result"> extends Exception with Product with Serializable</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Exception thrown upon flag-parsing failure.</p>
     </li><li visbl="pub" name="com.twitter.app.FlagUndefinedException" data-isabs="false">
       <a id="FlagUndefinedException:FlagUndefinedException"></a>
       <h4 class="signature">
@@ -132,8 +133,7 @@ as basic application lifecycle (pre- and post- main).</p>
         <a href="Flaggable.html"><span class="name">Flaggable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">A typeclass providing evidence for parsing type <code>T</code>
-as a flag.</p>
+      <p class="comment cmt">A type class providing evidence for parsing type <code>T</code> as a flag value.</p>
     </li><li visbl="pub" name="com.twitter.app.Flags" data-isabs="false">
       <a id="Flags:Flags"></a>
       <h4 class="signature">
@@ -157,7 +157,8 @@ as a flag.</p>
         <a href="GlobalFlag.html"><span class="name">GlobalFlag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends Flag[T]</span>
       </span>
       </h4>
-      <p class="comment cmt">Declare a global flag by extending this class with an object.</p>
+      <p class="comment cmt">Subclasses of GlobalFlag (that are defined in libraries) are &quot;global&quot; in the
+sense that they are accessible by any application that depends on that library.</p>
     </li><li visbl="pub" name="com.twitter.app.GlobalFlagVisible" data-isabs="false">
       <a id="GlobalFlagVisible:GlobalFlagVisible"></a>
       <h4 class="signature">
@@ -189,6 +190,18 @@ as a flag.</p>
       </span>
       </h4>
       <p class="comment cmt">Default <code>Flaggable</code> implementations.</p>
+    </li><li visbl="pub" name="com.twitter.app.Flags" data-isabs="false">
+      <a id="Flags:Flags"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Flags$.html"><span class="name">Flags</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
     </li></ol>
             </div>
 

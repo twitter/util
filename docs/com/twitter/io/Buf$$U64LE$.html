@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.io.Buf</title>
+          <title>com.twitter.io.Buf.U64LE</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
@@ -14,9 +14,9 @@
         </head>
         <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
       <div id="definition">
-        <a title="Go to companion" href="Buf.html"><img src="../../../lib/object_to_trait_big.png" /></a>
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.io" class="extype" href="package.html">io</a></p>
-        <h1><a title="Go to companion" href="Buf.html">Buf</a></h1>
+        <img src="../../../lib/object_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.io" class="extype" href="package.html">io</a>.<a name="com.twitter.io.Buf" class="extype" href="Buf$.html">Buf</a></p>
+        <h1>U64LE</h1>
       </div>
 
       <h4 class="signature" id="signature">
@@ -25,11 +25,14 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Buf</span><span class="result"> extends AnyRef</span>
+        <span class="name">U64LE</span><span class="result"> extends AnyRef</span>
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Create and deconstruct unsigned 64-bit
+little endian encoded buffers.</p><p>Deconstructing will return the value
+as well as the remaining buffer.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
@@ -45,7 +48,7 @@
               <span class="filtertype">Inherited</span>
               <ol><li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li></ol>
-              <ol id="linearization"><li name="com.twitter.io.Buf" class="in"><span>Buf</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+              <ol id="linearization"><li name="com.twitter.io.Buf.U64LE" class="in"><span>U64LE</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
             </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -57,22 +60,7 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
-              <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.io.Buf.ByteArray" data-isabs="false">
-      <a id="ByteArray:ByteArray"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="Buf$$ByteArray.html"><span class="name">ByteArray</span></a><span class="result"> extends Buf</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A buffer representing an array of bytes.</p>
-    </li></ol>
-            </div>
+        
 
         
 
@@ -138,106 +126,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf.ByteArray" data-isabs="false">
-      <a id="ByteArray:ByteArray"></a>
+    </li><li visbl="pub" name="com.twitter.io.Buf.U64LE#apply" data-isabs="false">
+      <a id="apply(Long):Buf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$ByteArray$.html"><span class="name">ByteArray</span></a><span class="result"> extends AnyRef</span>
+        <span class="name">apply</span><span class="params">(<span name="l">l: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.Buf#Empty" data-isabs="false">
-      <a id="Empty:Buf"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">Empty</span><span class="result">: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">An empty buffer.</p>
-    </li><li visbl="pub" name="com.twitter.io.Buf#Eof" data-isabs="false">
-      <a id="Eof:Buf"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">Eof</span><span class="result">: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">A buffer representing &quot;end-of-file&quot;.</p>
-    </li><li visbl="pub" name="com.twitter.io.Buf.U32BE" data-isabs="false">
-      <a id="U32BE:U32BE"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Buf$$U32BE$.html"><span class="name">U32BE</span></a><span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Create and deconstruct unsigned 32-bit
-big endian encoded buffers.</p>
-    </li><li visbl="pub" name="com.twitter.io.Buf.U32LE" data-isabs="false">
-      <a id="U32LE:U32LE"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Buf$$U32LE$.html"><span class="name">U32LE</span></a><span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Create and deconstruct unsigned 32-bit
-little endian encoded buffers.</p>
-    </li><li visbl="pub" name="com.twitter.io.Buf.U64BE" data-isabs="false">
-      <a id="U64BE:U64BE"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Buf$$U64BE$.html"><span class="name">U64BE</span></a><span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Create and deconstruct unsigned 64-bit
-big endian encoded buffers.</p>
-    </li><li visbl="pub" name="com.twitter.io.Buf.U64LE" data-isabs="false">
-      <a id="U64LE:U64LE"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Buf$$U64LE$.html"><span class="name">U64LE</span></a><span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Create and deconstruct unsigned 64-bit
-little endian encoded buffers.</p>
-    </li><li visbl="pub" name="com.twitter.io.Buf.Utf8" data-isabs="false">
-      <a id="Utf8:Utf8"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Buf$$Utf8$.html"><span class="name">Utf8</span></a><span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Create and deconstruct Utf-8 encoded buffers.</p>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -277,18 +177,6 @@ little endian encoded buffers.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf#equals" data-isabs="false">
-      <a id="equals(Buf,Buf):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="x">x: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>, <span name="y">y: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Byte equality between two buffers.</p><div class="fullcomment"><div class="comment cmt"><p>Byte equality between two buffers. Requires copies.</p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
@@ -328,18 +216,6 @@ little endian encoded buffers.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf#hash" data-isabs="false">
-      <a id="hash(Buf):Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hash</span><span class="params">(<span name="buf">buf: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">The 32-bit FNV-1 of Buf</p>
     </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
@@ -400,19 +276,6 @@ little endian encoded buffers.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf#slowHexString" data-isabs="false">
-      <a id="slowHexString(Buf):String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">slowHexString</span><span class="params">(<span name="buf">buf: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>)</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Return a string representing the buffer
-contents in hexadecimal.</p>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -425,18 +288,6 @@ contents in hexadecimal.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.io.Buf#toByteBuffer" data-isabs="false">
-      <a id="toByteBuffer(Buf):ByteBuffer"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toByteBuffer</span><span class="params">(<span name="buf">buf: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>)</span><span class="result">: <span name="java.nio.ByteBuffer" class="extype">ByteBuffer</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Convert the Buf to a Java NIO ByteBuffer.</p>
     </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -449,6 +300,18 @@ contents in hexadecimal.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.io.Buf.U64LE#unapply" data-isabs="false">
+      <a id="unapply(Buf):Option[(Long, Buf)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unapply</span><span class="params">(<span name="buf">buf: <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[(<span name="scala.Long" class="extype">Long</span>, <a name="com.twitter.io.Buf" class="extype" href="Buf.html">Buf</a>)]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">

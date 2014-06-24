@@ -25,11 +25,15 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">FlagParseException</span><span class="params">(<span name="which">which: String</span>, <span name="cause">cause: Throwable</span>)</span><span class="result"> extends <span name="java.lang.Exception" class="extype">Exception</span> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="name">FlagParseException</span><span class="params">(<span name="message">message: String</span>, <span name="cause">cause: Throwable</span>)</span><span class="result"> extends <span name="java.lang.Exception" class="extype">Exception</span> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Exception thrown upon flag-parsing failure. Should typically lead to process
+death, since continued execution would run the risk of unexpected behavior on
+account of incorrectly-interpreted or malformed flag values.
+</p></div><dl class="paramcmts block"><dt class="param">message</dt><dd class="cmt"><p>A string name of the flag for which parsing failed.</p></dd><dt class="param">cause</dt><dd class="cmt"><p>The underlying java.lang.Throwable that caused this exception.
+</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, <span name="java.lang.Exception" class="extype">Exception</span>, <span name="java.lang.Throwable" class="extype">Throwable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
@@ -65,10 +69,11 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">FlagParseException</span><span class="params">(<span name="which">which: String</span>, <span name="cause">cause: Throwable</span>)</span>
+        <span class="name">FlagParseException</span><span class="params">(<span name="message">message: String</span>, <span name="cause">cause: Throwable = <span class="symbol">null</span></span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">message</dt><dd class="cmt"><p>A string name of the flag for which parsing failed.</p></dd><dt class="param">cause</dt><dd class="cmt"><p>The underlying java.lang.Throwable that caused this exception.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -185,7 +190,7 @@
         <span class="name">cause</span><span class="result">: Throwable</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The underlying java.lang.Throwable that caused this exception.</p>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -360,6 +365,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.app.FlagParseException#message" data-isabs="false">
+      <a id="message:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">message</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A string name of the flag for which parsing failed.</p>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -561,18 +578,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.FlagParseException#which" data-isabs="false">
-      <a id="which:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">which</span><span class="result">: String</span>
-      </span>
-      </h4>
-      
     </li></ol>
             </div>
 

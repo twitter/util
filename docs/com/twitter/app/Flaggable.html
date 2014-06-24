@@ -29,8 +29,31 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A typeclass providing evidence for parsing type <code>T</code>
-as a flag.
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A type class providing evidence for parsing type <code>T</code> as a flag value.</p><p>Any class that is to be provided as a flaggable value must have an
+accompanying implicit <code>Flaggable</code> (contained within a companion object of the
+class in question) for converting a string to an object of that type. For
+instance, to make a hypothetical type called <code>Foo</code> flaggable:</p><pre>
+<span class="kw">class</span> Foo {
+  ...
+}
+
+<span class="kw">object</span> Foo {
+  <span class="kw">implicit</span> <span class="kw">val</span> flagOfFoo = <span class="kw">new</span> Flaggable[Foo] {
+    <span class="kw">def</span> parse(v: <span class="std">String</span>): Foo = {
+      ...
+    }
+  }
+}
+</pre><p>For simple implicit definitions based on existing <code>String =&gt; T</code> functions,
+use the <code>Flaggable.mandatory</code> function:</p><pre>
+<span class="kw">object</span> Foo {
+  <span class="kw">def</span> parse(v: <span class="std">String</span>: Foo = {
+     ...
+  }
+
+  <span class="kw">implicit</span> <span class="kw">val</span> ofFoo = Flaggable.mandatory(Foo.parse(_))
+}
+</pre><p>[1] http://en.wikipedia.org/wiki/Type_class
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
@@ -77,7 +100,9 @@ as a flag.
         <span class="name">parse</span><span class="params">(<span name="s">s: String</span>)</span><span class="result">: T</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Parse a string (i.</p><div class="fullcomment"><div class="comment cmt"><p>Parse a string (i.e. a value set on the command line) into an object of
+type <code>T</code>.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -181,7 +206,7 @@ as a flag.
         <span class="name">default</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[T]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">An optional default value for the Flaggable.</p>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -304,7 +329,9 @@ as a flag.
         <span class="name">show</span><span class="params">(<span name="t">t: T</span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Create a string-representation of an object of type <code>T</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a string-representation of an object of type <code>T</code>. Used in
+<code>Flag.toString</code>.
+</p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">

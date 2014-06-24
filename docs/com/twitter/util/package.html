@@ -85,21 +85,6 @@ T-typed values.</p>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Bijection" data-isabs="true">
-      <a id="Bijection:Bijection[A, B]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a href="Bijection.html"><span class="name">Bijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends (A) ⇒ B</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A bijection is a function for which every value in its codomain
-(set of all possible results) is equivalent to application of the
-function on a unique value in its domain (all possible
-inputs).</p>
     </li><li visbl="pub" name="com.twitter.util.BinaryThriftCodec" data-isabs="false">
       <a id="BinaryThriftCodec:BinaryThriftCodec[T]"></a>
       <h4 class="signature">
@@ -1192,6 +1177,21 @@ nanoseconds since the Unix epoch.</p>
       </span>
       </h4>
       <p class="comment cmt">A witness is the recipient of <a name="com.twitter.util.Event" class="extype" href="Event.html">Event</a>.</p>
+    </li><li visbl="pub" name="com.twitter.util.Bijection" data-isabs="true">
+      <a id="Bijection:Bijection[A, B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Bijection.html"><span class="name deprecated" title="Deprecated: (Since version 2014-06-05) Prefer using com.twitter.bijection.Bijection">Bijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends (A) ⇒ B</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A bijection is a function for which every value in its codomain
+(set of all possible results) is equivalent to application of the
+function on a unique value in its domain (all possible
+inputs).</p>
     </li><li visbl="pub" name="com.twitter.util.Config" data-isabs="true">
       <a id="Config:Config[T]"></a>
       <h4 class="signature">
@@ -1269,18 +1269,6 @@ which turns this config into an object of type T.</p>
       </span>
       <span class="symbol">
         <a href="Base64StringEncoder$.html"><span class="name">Base64StringEncoder</span></a><span class="result"> extends Base64StringEncoder</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="com.twitter.util.Bijection" data-isabs="false">
-      <a id="Bijection:Bijection"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="Bijection$.html"><span class="name">Bijection</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
       
@@ -1573,6 +1561,19 @@ utilities.</p>
       </span>
       </h4>
       
+    </li><li visbl="pub" name="com.twitter.util.NilStopwatch" data-isabs="false">
+      <a id="NilStopwatch:NilStopwatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NilStopwatch$.html"><span class="name">NilStopwatch</span></a><span class="result"> extends Stopwatch</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A trivial implementation of <a name="com.twitter.util.Stopwatch" class="extype" href="Stopwatch.html">Stopwatch</a> for use as a null
+object.</p>
     </li><li visbl="pub" name="com.twitter.util.NoStacktrace" data-isabs="false">
       <a id="NoStacktrace:NoStacktrace"></a>
       <h4 class="signature">
@@ -1921,7 +1922,22 @@ or return a success value.</p>
 
         <div class="values members" id="values">
               <h3>Deprecated Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Config" data-isabs="false">
+              <ol><li visbl="pub" name="com.twitter.util.Bijection" data-isabs="false">
+      <a id="Bijection:Bijection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Bijection$.html"><span class="name deprecated" title="Deprecated: (Since version 6.17.1) Prefer using com.twitter.bijection.Bijection">Bijection</span></a><span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.17.1)</i> Prefer using com.twitter.bijection.Bijection</p></dd></dl></div>
+    </li><li visbl="pub" name="com.twitter.util.Config" data-isabs="false">
       <a id="Config:Config"></a>
       <h4 class="signature">
       <span class="modifier_kind">

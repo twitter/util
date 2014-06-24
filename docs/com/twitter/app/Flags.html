@@ -14,9 +14,9 @@
         </head>
         <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
       <div id="definition">
-        <img src="../../../lib/class_big.png" />
+        <a title="Go to companion" href="Flags$.html"><img src="../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.app" class="extype" href="package.html">app</a></p>
-        <h1>Flags</h1>
+        <h1><a title="Go to companion" href="Flags$.html">Flags</a></h1>
       </div>
 
       <h4 class="signature" id="signature">
@@ -29,15 +29,15 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A simple flags implementation. We support only two formats:</p><p>   for flags with optional values (booleans):
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A simple flags implementation. We support only two formats:</p><p>   for flags with optional values (e.g. booleans):
      -flag, -flag=value
    for flags with required values:
      -flag[= ]value</p><p>That's it. These can be parsed without ambiguity.</p><p>There is no support for mandatory arguments: That is not what
-flags are for.</p><p>Flags' <code>apply</code> adds a new flag to to the flag set, so it is idiomatic
-to assign instances of <code>Flags</code> to a singular <code>flag</code>:</p><pre>
-  <span class="kw">val</span> flag = <span class="kw">new</span> Flags(<span class="lit">"myapp"</span>)
-  <span class="kw">val</span> i = flag(<span class="lit">"i"</span>, <span class="num">123</span>, <span class="lit">"iteration count"</span>)
-</pre><p>Global flags, detached from a particular <code>Flags</code> instance, but
+flags are for.</p><p><code>Flags.apply</code> adds a new flag to the flag set, so it is idiomatic
+to assign instances of <code>Flags</code> to a singular <code>flag</code> val:</p><pre>
+<span class="kw">val</span> flag = <span class="kw">new</span> Flags(<span class="lit">"myapp"</span>)
+<span class="kw">val</span> i = flag(<span class="lit">"i"</span>, <span class="num">123</span>, <span class="lit">"iteration count"</span>)
+</pre><p>Global flags, detached from a particular <code>Flags</code> instance but
 accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -90,7 +90,10 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: String</span>, <span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">argv0</dt><dd class="cmt"><p>The name of the application that is to be configured via flags</p></dd><dt class="param">includeGlobal</dt><dd class="cmt"><p>If true, <a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a> will
+be included during flag parsing. If false, only flags defined in the
+application itself will be consulted.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -171,7 +174,10 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">add</span><span class="params">(<span name="f">f: com.twitter.app.Flag[_]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Add a flag.</p><div class="fullcomment"><div class="comment cmt"><p>Add a flag. The canonical way to do so is via <code>Flags#apply</code>, but this
+method is left public for any rare edge cases where it is necessary.
+</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A concrete Flag to add
+</p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.Flags#apply" data-isabs="false">
       <a id="apply[T](String,String)(Flaggable[T],Manifest[T]):Flag[T]"></a>
       <h4 class="signature">
@@ -183,7 +189,9 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: String</span>, <span name="help">help: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="_f">_f: <a name="com.twitter.app.Flaggable" class="extype" href="Flaggable.html">Flaggable</a>[T]</span>, <span name="m">m: Manifest[T]</span>)</span><span class="result">: <a name="com.twitter.app.Flag" class="extype" href="Flag.html">Flag</a>[T]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Add a named flag with a help message.</p><div class="fullcomment"><div class="comment cmt"><p>Add a named flag with a help message.
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the flag.</p></dd><dt class="param">help</dt><dd class="cmt"><p>The help string of the flag.
+</p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.Flags#apply" data-isabs="false">
       <a id="apply[T](String,⇒ T,String)(Flaggable[T]):Flag[T]"></a>
       <h4 class="signature">
@@ -195,7 +203,9 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: String</span>, <span name="default">default: ⇒ T</span>, <span name="help">help: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="com.twitter.app.Flaggable" class="extype" href="Flaggable.html">Flaggable</a>[T]</span>)</span><span class="result">: <a name="com.twitter.app.Flag" class="extype" href="Flag.html">Flag</a>[T]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Add a named flag with a default value and a help message.</p><div class="fullcomment"><div class="comment cmt"><p>Add a named flag with a default value and a help message.
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the flag.</p></dd><dt class="param">default</dt><dd class="cmt"><p>A default value, as a thunk.</p></dd><dt class="param">help</dt><dd class="cmt"><p>The help string of the flag.
+</p></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -273,9 +283,10 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">formattedFlagValues</span><span class="params">(<span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span name="java.lang.ClassLoader" class="extype">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: (Iterable[String], Iterable[String])</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Formats all the values of all flags known to this instance into a format suitable for logging
-</p><div class="fullcomment"><div class="comment cmt"><p>Formats all the values of all flags known to this instance into a format suitable for logging
-</p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>see getAll above</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>see getAll above</p></dd><dt>returns</dt><dd class="cmt"><p>all the flag values in alphabetical order, grouped into (set, unset)
+      <p class="shortcomment cmt">Formats all values of all flags known to this instance into a format
+suitable for logging.</p><div class="fullcomment"><div class="comment cmt"><p>Formats all values of all flags known to this instance into a format
+suitable for logging.
+</p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>See <code>getAll</code> above.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>See <code>getAll</code> above.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the flag values in alphabetical order, grouped into (set, unset).
 </p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.Flags#formattedFlagValuesString" data-isabs="false">
       <a id="formattedFlagValuesString(Boolean,ClassLoader):String"></a>
@@ -288,9 +299,10 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">formattedFlagValuesString</span><span class="params">(<span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span name="java.lang.ClassLoader" class="extype">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Creates a string containing all the values of all flags known to this instance into a format suitable for logging
-</p><div class="fullcomment"><div class="comment cmt"><p>Creates a string containing all the values of all flags known to this instance into a format suitable for logging
-</p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>set getAll above</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>set getAll above</p></dd><dt>returns</dt><dd class="cmt"><p>A string suitable for logging
+      <p class="shortcomment cmt">Creates a string containing all values of all flags known to this instance
+into a format suitable for logging.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a string containing all values of all flags known to this instance
+into a format suitable for logging.
+</p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>See <code>getAll</code> above.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>Set <code>getAll</code> above</p></dd><dt>returns</dt><dd class="cmt"><p>A string suitable for logging.
 </p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.Flags#getAll" data-isabs="false">
       <a id="getAll(Boolean,ClassLoader):Iterable[com.twitter.app.Flag[_]]"></a>
@@ -303,9 +315,12 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">getAll</span><span class="params">(<span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span name="java.lang.ClassLoader" class="extype">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: Iterable[com.twitter.app.Flag[_]]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Get all the flags known to this this Flags instance
-</p><div class="fullcomment"><div class="comment cmt"><p>Get all the flags known to this this Flags instance
-</p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>defaults to the includeGlobal settings of this instance</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>needed to find global flags, defaults to this instance's class loader</p></dd><dt>returns</dt><dd class="cmt"><p>all the flags known to this this Flags instance
+      <p class="shortcomment cmt">Get all of the flags known to this Flags instance.</p><div class="fullcomment"><div class="comment cmt"><p>Get all of the flags known to this Flags instance.
+</p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>If true, all registered
+<a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a> will be included
+in output. Defaults to the <code>includeGlobal</code> settings of this instance.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>The java.lang.ClassLoader used to fetch
+<a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a>, if necessary. Defaults to this
+instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the flags known to this this Flags instance.
 </p></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
@@ -379,18 +394,23 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#parse" data-isabs="false">
-      <a id="parse(Array[String],Boolean):Seq[String]"></a>
+    </li><li visbl="pub" name="com.twitter.app.Flags#parseArgs" data-isabs="false">
+      <a id="parseArgs(Array[String],Boolean):FlagParseResult"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parse</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="undefOk">undefOk: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: Seq[String]</span>
+        <span class="name">parseArgs</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="allowUndefinedFlags">allowUndefinedFlags: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a name="com.twitter.app.Flags.FlagParseResult" class="extype" href="Flags$$FlagParseResult.html">FlagParseResult</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Parse an array of flag strings.</p><div class="fullcomment"><div class="comment cmt"><p>Parse an array of flag strings.
+</p></div><dl class="paramcmts block"><dt class="param">args</dt><dd class="cmt"><p>The array of strings to parse.</p></dd><dt class="param">allowUndefinedFlags</dt><dd class="cmt"><p>If true, undefined flags (i.e. those that are
+not defined in the application via a <code>flag.apply</code> invocation) are allowed.
+If false, undefined flags will result in a FlagParseException being thrown.</p></dd><dt>returns</dt><dd class="cmt"><p>A <a name="com.twitter.app.Flags.FlagParseResult" class="extype" href="Flags$$FlagParseResult.html">FlagParseResult</a> representing the
+result of parsing <code>args</code>.
+</p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.Flags#parseOrExit1" data-isabs="false">
       <a id="parseOrExit1(Array[String],Boolean):Seq[String]"></a>
       <h4 class="signature">
@@ -402,7 +422,13 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
         <span class="name">parseOrExit1</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="undefOk">undefOk: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: Seq[String]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Parse an array of flag strings or exit the application (with exit code 1)
+upon failure to do so.</p><div class="fullcomment"><div class="comment cmt"><p>Parse an array of flag strings or exit the application (with exit code 1)
+upon failure to do so.
+</p></div><dl class="paramcmts block"><dt class="param">args</dt><dd class="cmt"><p>The array of strings to parse.</p></dd><dt class="param">undefOk</dt><dd class="cmt"><p>If true, undefined flags (i.e. those that are not defined
+in the application via a <code>flag.apply</code> invocation) are allowed. If false,
+undefined flags will result in a FlagParseException being thrown.
+</p></dd></dl></div>
     </li><li visbl="pub" name="com.twitter.app.Flags#reset" data-isabs="false">
       <a id="reset():Unit"></a>
       <h4 class="signature">
@@ -512,7 +538,33 @@ before the flag definitions in the usage string.</p>
     </li></ol>
             </div>
 
-        
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="com.twitter.app.Flags#parse" data-isabs="false">
+      <a id="parse(Array[String],Boolean):Seq[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.17.1) Prefer result-value based Flags.parseArgs method">parse</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="undefOk">undefOk: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: Seq[String]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Parse an array of flag strings.</p><div class="fullcomment"><div class="comment cmt"><p>Parse an array of flag strings.
+</p></div><dl class="paramcmts block"><dt class="param">args</dt><dd class="cmt"><p>The array of strings to parse.</p></dd><dt class="param">undefOk</dt><dd class="cmt"><p>If true, undefined flags (i.e. those that are not defined
+in the application via a <code>flag.apply</code> invocation) are allowed. If false,
+undefined flags will result in a FlagParseException being thrown.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.17.1)</i> Prefer result-value based <code>Flags.parseArgs</code> method</p></dd><dt>Exceptions thrown</dt><dd><span class="cmt">FlagParseException<p>if an error occurs during flag-parsing.
+</p></span></dd><dt>Note</dt><dd><span class="cmt"><p>This method has been deprecated in favor of <code>Flags.parseArgs</code>,
+which indicates success or failure by returning
+<a name="com.twitter.app.Flags.FlagParseResult" class="extype" href="Flags$$FlagParseResult.html">FlagParseResult</a> rather than relying on thrown
+exceptions.
+</p></span></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

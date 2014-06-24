@@ -29,17 +29,23 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Declare a global flag by extending this class with an object.</p><pre>
-<span class="kw">object</span> MyFlag <span class="kw">extends</span> GlobalFlag(<span class="lit">"my"</span>, <span class="lit">"default value"</span>, <span class="lit">"my global flag"</span>)
-</pre><p>All such global flag declarations in a given classpath are
-visible, and are used by, <a name="com.twitter.app.App" class="extype" href="App.html">App</a>.</p><p>The name of the flag is the fully-qualified classname, for
-example, the flag</p><pre>
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Subclasses of GlobalFlag (that are defined in libraries) are &quot;global&quot; in the
+sense that they are accessible by any application that depends on that library.
+Regardless of where in a library a GlobalFlag is defined, a value for it can
+be passed as a command-line flag by any binary that includes the library.
+The set of defined GlobalFlags can be enumerated (via <code>GlobalFlag.getAll)</code> by
+the application.</p><pre>
+<span class="kw">object</span> MyFlag <span class="kw">extends</span> GlobalFlag(<span class="lit">"my"</span>, <span class="lit">"default value"</span>, <span class="lit">"this is my global flag"</span>)
+</pre><p>All such global flag declarations in a given classpath are visible to and
+used by <a name="com.twitter.app.App" class="extype" href="App.html">App</a>.</p><p>A flag's name (as set on the command line) is its fully-qualified classname.
+For example, the flag</p><pre>
 <span class="kw">package</span> com.twitter.server
 
 <span class="kw">object</span> port <span class="kw">extends</span> GlobalFlag(<span class="num">8080</span>, <span class="lit">"the TCP port to which we bind"</span>)
-</pre><p>is accessed by the name <code>com.twitter.server.port</code>.</p><p>Global flags may also be set by Java system properties with keys
-named in the same way, however values supplied by flags override
-those supplied by system properties.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+</pre><p>is settable by the command-line flag <code>-com.twitter.server.port</code>.</p><p>Global flags may also be set by Java system properties with keys
+named in the same way. However, values supplied by flags override
+those supplied by system properties.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a name="com.twitter.app.GlobalFlagVisible" class="extype" href="GlobalFlagVisible.html">GlobalFlagVisible</a></span><span class="args">()</span>
               
         </dd></dl><div class="toggleContainer block">
