@@ -6,7 +6,8 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import scala.collection.mutable
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import scala.collection.immutable.VectorBuilder
 
 @RunWith(classOf[JUnitRunner])
@@ -265,5 +266,27 @@ class EventTest extends FunSuite {
     assert(ref.get === 17)
     x() = 3
     assert(ref.get === 20)
+  }
+
+  test("Event.register: no races between registered witnesses") {
+    val e = Event[Unit]()
+    val counter = new AtomicInteger
+    val n = 1000
+
+    val nThreads = 8
+    val latch = new CountDownLatch(n)
+    val ex = Executors.newFixedThreadPool(nThreads)
+    val addTask = new Runnable {
+      def run() = {
+        e.respond(_ => counter.incrementAndGet())
+        latch.countDown()
+      }
+    }
+    for (_ <- 1 to n) ex.execute(addTask)
+    latch.await()
+    ex.shutdown()
+    
+    e.notify(())
+    assert(counter.get === n)
   }
 }
