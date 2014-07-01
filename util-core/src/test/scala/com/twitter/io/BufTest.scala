@@ -1,16 +1,16 @@
 package com.twitter.io
 
+import java.util.Arrays
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalacheck.Prop._
-import org.scalatest.prop.Checkers
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import java.util.Arrays
+import org.scalatest.prop.Checkers
 
 @RunWith(classOf[JUnitRunner])
 class BufTest extends FunSuite with MockitoSugar with Checkers {

@@ -1,8 +1,10 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Await, Duration, Future, Promise, Return, Throw}
 import java.io.EOFException
+
 import scala.collection.mutable.ArrayBuffer
+
+import com.twitter.util.{Await, Duration, Future, Return, Throw}
 
 /**
  * A spool is an asynchronous stream. It more or less mimics the scala

@@ -1,7 +1,8 @@
 package com.twitter.util
 
-import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
+
+import com.twitter.concurrent.Scheduler
 
 /**
  * Wait for the result of some action. Awaitable is not used

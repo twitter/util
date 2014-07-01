@@ -1,6 +1,8 @@
 package com.twitter.app;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * An annotation to support the visibilty of global flags. Used

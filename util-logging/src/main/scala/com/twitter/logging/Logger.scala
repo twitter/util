@@ -16,12 +16,10 @@
 
 package com.twitter.logging
 
-import java.io.{File, InputStream}
-import java.util.{Calendar, logging => javalog}
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection.{JavaConversions, Map}
-import scala.collection.mutable
-import scala.io.Source
+import java.util.{logging => javalog}
+
+import scala.collection.{JavaConversions, Map, mutable}
 
 // replace java's ridiculous log levels with the standard ones.
 sealed abstract class Level(val name: String, val value: Int) extends javalog.Level(name, value) {

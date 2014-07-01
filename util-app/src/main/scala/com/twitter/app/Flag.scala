@@ -1,9 +1,11 @@
 package com.twitter.app
 
-import com.twitter.util._
-import scala.collection.mutable.{ArrayBuffer, HashMap}
-import scala.collection.immutable.TreeSet
 import java.net.InetSocketAddress
+
+import scala.collection.immutable.TreeSet
+import scala.collection.mutable.{ArrayBuffer, HashMap}
+
+import com.twitter.util._
 
 /**
  * A type class providing evidence for parsing type `T` as a flag value.

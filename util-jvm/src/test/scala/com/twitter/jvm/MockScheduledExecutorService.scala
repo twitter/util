@@ -1,10 +1,8 @@
 package com.twitter.jvm
 
-import scala.collection.mutable
+import java.util.concurrent.{AbstractExecutorService, Callable, ScheduledExecutorService, ScheduledFuture, TimeUnit}
 
-import java.util.concurrent.{
-  AbstractExecutorService, Callable, ScheduledExecutorService, ScheduledFuture,
-  TimeUnit}
+import scala.collection.mutable
 
 // A mostly empty implementation so that we can successfully
 // mock it.

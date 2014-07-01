@@ -1,9 +1,8 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Return, Throw}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
+
+import com.twitter.util.{Return, Throw}
 
 class AsyncQueueTest extends FunSuite {
   test("queue pollers") {

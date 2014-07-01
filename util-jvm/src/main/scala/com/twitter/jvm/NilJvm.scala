@@ -1,7 +1,7 @@
 package com.twitter.jvm
 
-import com.twitter.util.Time
 import com.twitter.conversions.storage._
+import com.twitter.util.Time
 
 object NilJvm extends Jvm {
   val opts: Opts = new Opts {

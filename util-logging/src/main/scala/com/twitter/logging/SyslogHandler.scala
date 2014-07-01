@@ -16,13 +16,13 @@
 
 package com.twitter.logging
 
-import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.conversions.string._
-import com.twitter.util.NetUtil
-import java.net.{DatagramPacket, DatagramSocket, InetAddress, InetSocketAddress, SocketAddress}
+import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.text.SimpleDateFormat
 import java.util.concurrent.Executors
 import java.util.{logging => javalog}
+
+import com.twitter.concurrent.NamedPoolThreadFactory
+import com.twitter.util.NetUtil
 
 object SyslogHandler {
   val DEFAULT_PORT = 514
@@ -106,7 +106,7 @@ class SyslogHandler(
       try {
         socket.send(packet)
       } catch {
-        case e =>
+        case e: Throwable =>
           System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
       }
     }

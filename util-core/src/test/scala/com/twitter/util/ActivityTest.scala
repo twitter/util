@@ -1,9 +1,10 @@
 package com.twitter.util
 
+import java.util.concurrent.atomic.AtomicReference
+
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import java.util.concurrent.atomic.AtomicReference
 
 @RunWith(classOf[JUnitRunner])
 class ActivityTest extends FunSuite {

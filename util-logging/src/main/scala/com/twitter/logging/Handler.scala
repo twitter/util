@@ -17,7 +17,6 @@
 package com.twitter.logging
 
 import java.util.{logging => javalog}
-import scala.collection.mutable
 
 /**
  * A base log handler for scala. This extends the java built-in handler and connects it with a

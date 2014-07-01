@@ -1,8 +1,9 @@
 package com.twitter.concurrent
 
-import java.util.concurrent.RejectedExecutionException
 import java.util.ArrayDeque
-import com.twitter.util.{Future, Promise, Throw, NonFatal}
+import java.util.concurrent.RejectedExecutionException
+
+import com.twitter.util.{Future, NonFatal, Promise, Throw}
 
 /**
  * An AsyncSemaphore is a traditional semaphore but with asynchronous
@@ -85,7 +86,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
       val f = try func catch {
         case NonFatal(e) =>
           Future.exception(e)
-        case e =>
+        case e: Throwable =>
           permit.release()
           throw e
       }

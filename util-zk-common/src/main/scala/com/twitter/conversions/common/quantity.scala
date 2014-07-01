@@ -1,10 +1,10 @@
 package com.twitter.conversions.common
 
-import com.twitter.common.quantity.Amount
-import com.twitter.common.quantity.{Time => CommonTime}
+import java.util.concurrent.TimeUnit
+
+import com.twitter.common.quantity.{Amount, Time => CommonTime}
 import com.twitter.conversions.time._
 import com.twitter.util.Duration
-import java.util.concurrent.TimeUnit
 
 object quantity {
   val COMMON_FOREVER: Duration = 0.millis

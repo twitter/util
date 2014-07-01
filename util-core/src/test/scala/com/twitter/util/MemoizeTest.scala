@@ -1,12 +1,14 @@
 package com.twitter.util
 
-import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.{CountDownLatch => JavaCountDownLatch, TimeUnit}
+import java.util.concurrent.{TimeUnit, CountDownLatch => JavaCountDownLatch}
+
 import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
 class MemoizeTest extends FunSuite {

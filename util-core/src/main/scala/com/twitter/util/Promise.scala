@@ -1,9 +1,11 @@
 package com.twitter.util
 
-import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
+
 import scala.annotation.tailrec
 import scala.collection.mutable
+
+import com.twitter.concurrent.Scheduler
 
 object Promise {
   /**
@@ -31,11 +33,11 @@ object Promise {
     def detach(): Boolean
   }
 
-  private class DetachablePromise[A](parent: Promise[_ <: A])
+  private class DetachablePromise[A](underlying: Promise[_ <: A])
       extends Promise[A] with Promise.K[A] with Detachable {
-    parent.continue(this)
+    underlying.continue(this)
 
-    def detach(): Boolean = parent.detach(this)
+    def detach(): Boolean = underlying.detach(this)
 
     // This is only called after the parent has been successfully satisfied
     def apply(result: Try[A]) {

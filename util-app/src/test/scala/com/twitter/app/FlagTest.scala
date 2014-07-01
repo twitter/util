@@ -1,10 +1,12 @@
 package com.twitter.app
 
-import com.twitter.util.RandomSocket
 import java.net.InetSocketAddress
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.util.RandomSocket
 
 object MyGlobalFlag extends GlobalFlag("a test flag", "a global test flag")
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")

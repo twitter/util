@@ -17,8 +17,9 @@
 package com.twitter
 package conversions
 
-import com.twitter.util.{Duration, TimeLike}
 import java.util.concurrent.TimeUnit
+
+import com.twitter.util.Duration
 
 object time {
   class RichWholeNumber(wrapped: Long) {

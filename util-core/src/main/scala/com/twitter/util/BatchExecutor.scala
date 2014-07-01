@@ -1,7 +1,8 @@
 package com.twitter.util
 
 import java.util.concurrent.CancellationException
-import java.util.logging.{Logger, Level}
+import java.util.logging.{Level, Logger}
+
 import scala.collection.mutable
 
 /**
@@ -33,7 +34,7 @@ private[util] class BatchExecutor[In, Out](
 )(
   implicit timer: Timer
 ) extends Function1[In, Future[Out]] { batcher =>
-  import Level.WARNING
+  import java.util.logging.Level.WARNING
 
   class ScheduledFlush(after: Duration, timer: Timer) {
     @volatile var cancelled = false

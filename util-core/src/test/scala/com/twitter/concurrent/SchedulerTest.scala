@@ -1,11 +1,11 @@
 package com.twitter.concurrent
 
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import com.twitter.util.{Promise, Await}
-import com.twitter.conversions.time._
+
+import com.twitter.util.Promise
 
 
 class LocalSchedulerTest(lifo: Boolean) extends FunSuite {

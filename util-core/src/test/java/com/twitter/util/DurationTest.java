@@ -2,8 +2,9 @@ package com.twitter.util;
 
 // A compilation test for common Duration usage.
 
-import junit.framework.TestCase;
 import java.util.concurrent.TimeUnit;
+
+import junit.framework.TestCase;
 
 // % gitg $sci 'Duration\.' -- '*.java' | drop 1 | 9 sed 's/.*(Duration.*)/\1/g' | 9 sed 's/(Duration\.[a-zA-Z0-9]+).*/\1/'|sort|uniq
 

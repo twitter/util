@@ -18,8 +18,8 @@ package com.twitter.util
 
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.{Locale, Date, TimeZone}
 import java.util.concurrent.TimeUnit
+import java.util.{Date, Locale, TimeZone}
 
 trait TimeLikeOps[This <: TimeLike[This]] {
   /** The top value is the greatest possible value. It is akin to an infinity. */

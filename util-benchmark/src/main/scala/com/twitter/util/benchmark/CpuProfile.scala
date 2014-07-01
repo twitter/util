@@ -1,8 +1,10 @@
 package com.twitter.util.benchmark
 
-import com.google.caliper.SimpleBenchmark
-import management.ManagementFactory
+import java.lang.management.ManagementFactory
+
 import scala.util.Random
+
+import com.google.caliper.SimpleBenchmark
 
 class CpuProfileBenchmark extends SimpleBenchmark {
 

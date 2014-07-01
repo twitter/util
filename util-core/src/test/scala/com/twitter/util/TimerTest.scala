@@ -2,20 +2,25 @@ package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{CancellationException, ExecutorService}
-import com.twitter.conversions.time._
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
-import org.scalatest.concurrent.Eventually._
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
+import org.scalatest.concurrent.Eventually
+import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.time.{Span, Seconds}
+import org.scalatest.time.{Millis, Seconds, Span}
+
+import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
-class TimerTest extends FunSuite with MockitoSugar {
+class TimerTest extends FunSuite with MockitoSugar with Eventually  {
+
+  implicit override val patienceConfig =
+    PatienceConfig(timeout = scaled(Span(4, Seconds)), interval = scaled(Span(5, Millis)))
+
 
   test("ThreadStoppingTimer should stop timers in a different thread") {
     val executor = mock[ExecutorService]
@@ -76,7 +81,7 @@ class TimerTest extends FunSuite with MockitoSugar {
     timer.schedule(100.millis, 200.millis) {
       counter.incrementAndGet()
     }
-    eventually(Timeout(Span(4, Seconds))) { assert(counter.get() >= 2) }
+    eventually { assert(counter.get() >= 2) }
     timer.stop()
   }
 
@@ -86,7 +91,7 @@ class TimerTest extends FunSuite with MockitoSugar {
     timer.schedule(Time.now + 200.millis) {
       counter.incrementAndGet()
     }
-    eventually(Timeout(Span(4, Seconds))) { assert(counter.get() === 1) }
+    eventually { assert(counter.get() === 1) }
     timer.stop()
   }
 
@@ -141,7 +146,7 @@ class TimerTest extends FunSuite with MockitoSugar {
       counter.incrementAndGet()
     }
     Thread.sleep(40.milliseconds.inMillis)
-    eventually(Timeout(Span(4, Seconds))) { assert(counter.get() == 1) }
+    eventually { assert(counter.get() == 1) }
     timer.stop()
   }
 

@@ -1,6 +1,7 @@
 package com.twitter.util.benchmark
 
 import com.google.caliper.SimpleBenchmark
+
 import com.twitter.util.Stopwatch
 
 class StopwatchBenchmark extends SimpleBenchmark {

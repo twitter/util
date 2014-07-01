@@ -1,10 +1,11 @@
 package com.twitter.util
 
-import com.twitter.util.TimeConversions.intToTimeableNumber
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.concurrent.Eventually._ 
+import org.scalatest.concurrent.Eventually._
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.util.TimeConversions.intToTimeableNumber
 
 @RunWith(classOf[JUnitRunner])
 class ClosableTest extends FunSuite {

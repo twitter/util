@@ -1,9 +1,11 @@
 package com.twitter.concurrent
 
-import com.twitter.util.Duration
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater
+
 import scala.annotation.tailrec
+
+import com.twitter.util.Duration
 
 /**
  * An IVar is an "I-structured variable". It is a mutable cell that
@@ -76,7 +78,7 @@ package ivar {
   case class Linked[A](iv: IVar[A]) extends State[A]
 }
 
-import ivar._
+import com.twitter.concurrent.ivar._
 
 object IVar {
   private val initState: State[Nothing] = Waiting(Nil, Nil)

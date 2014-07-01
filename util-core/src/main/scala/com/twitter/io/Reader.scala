@@ -1,7 +1,8 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, Promise}
 import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
+
+import com.twitter.util.{Future, Promise}
 
 /**
  * A Reader represents a stream of bytes, read in chunks. Readers

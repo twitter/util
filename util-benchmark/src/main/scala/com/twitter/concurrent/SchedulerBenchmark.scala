@@ -1,7 +1,8 @@
 package com.twitter.concurrent
 
-import com.google.caliper.SimpleBenchmark
 import java.util.concurrent.atomic.AtomicLong
+
+import com.google.caliper.SimpleBenchmark
 
 /**
  * Measure Scheduler.submit/run time when there are multiple threads.  Previous

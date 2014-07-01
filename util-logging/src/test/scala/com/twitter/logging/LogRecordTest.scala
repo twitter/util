@@ -1,6 +1,7 @@
 package com.twitter.logging
 
 import java.util.logging.{Level => JLevel, LogRecord => JRecord}
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

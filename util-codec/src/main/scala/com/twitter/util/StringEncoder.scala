@@ -1,9 +1,11 @@
 package com.twitter.util
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
-import java.io.{ByteArrayOutputStream, ByteArrayInputStream}
-import com.twitter.io.StreamIO
+
 import org.apache.commons.codec.binary.Base64
+
+import com.twitter.io.StreamIO
 
 trait StringEncoder {
   def encode(bytes: Array[Byte]): String = new String(bytes)

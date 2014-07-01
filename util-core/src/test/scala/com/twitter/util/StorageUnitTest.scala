@@ -1,9 +1,10 @@
 package com.twitter.util
 
-import com.twitter.conversions.storage._
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.conversions.storage._
 
 @RunWith(classOf[JUnitRunner])
 class StorageUnitTest extends FunSuite {

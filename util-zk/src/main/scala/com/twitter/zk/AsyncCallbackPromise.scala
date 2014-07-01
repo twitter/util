@@ -1,10 +1,13 @@
 package com.twitter.zk
 
-import com.twitter.util.{Promise, Return, Throw}
 import java.util.{List => JList}
-import org.apache.zookeeper.{AsyncCallback, KeeperException}
-import org.apache.zookeeper.data.Stat
+
 import scala.collection.JavaConverters._
+
+import org.apache.zookeeper.data.Stat
+import org.apache.zookeeper.{AsyncCallback, KeeperException}
+
+import com.twitter.util.{Promise, Return, Throw}
 
 /** Mix-in to make an AsyncCallback a Promise */
 trait AsyncCallbackPromise[T] extends Promise[T] {

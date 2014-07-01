@@ -1,11 +1,13 @@
 package com.twitter.zk
 
+import scala.collection.JavaConverters._
+
+import org.apache.zookeeper.ZooDefs.Ids.CREATOR_ALL_ACL
+import org.apache.zookeeper.data.ACL
+import org.apache.zookeeper.{CreateMode, ZooKeeper}
+
 import com.twitter.logging.Logger
 import com.twitter.util.{Duration, Future, Timer}
-import org.apache.zookeeper.{CreateMode, ZooKeeper}
-import org.apache.zookeeper.data.ACL
-import org.apache.zookeeper.ZooDefs.Ids.CREATOR_ALL_ACL
-import scala.collection.JavaConverters._
 
 /**
  * An Asynchronous ZooKeeper Client API.

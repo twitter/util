@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.{AtomicReference, AtomicInteger}
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
+
 import scala.collection.generic.CanBuild
 import scala.collection.immutable.Queue
-import scala.collection.mutable
 
 /**
  * Events are instantaneous values, defined only at particular

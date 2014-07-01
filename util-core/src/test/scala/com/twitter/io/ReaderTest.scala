@@ -1,8 +1,9 @@
 package com.twitter.io
 
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
+
 import com.twitter.util.Await
 
 @RunWith(classOf[JUnitRunner])

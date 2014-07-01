@@ -19,6 +19,7 @@ package com.twitter.logging
 import java.text.{MessageFormat, SimpleDateFormat}
 import java.util.regex.Pattern
 import java.util.{Date, GregorianCalendar, TimeZone, logging => javalog}
+
 import scala.collection.mutable
 
 private[logging] object Formatter {

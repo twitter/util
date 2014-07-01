@@ -1,10 +1,12 @@
 package com.twitter.zk.coordination
 
-import com.twitter.util.Future
-import com.twitter.concurrent.Permit
-import org.apache.zookeeper.{CreateMode, KeeperException}
 import java.util.concurrent.RejectedExecutionException
-import ZkAsyncSemaphore.{PermitNodeException, PermitMismatchException, LackOfConsensusException}
+
+import org.apache.zookeeper.{CreateMode, KeeperException}
+
+import com.twitter.concurrent.Permit
+import com.twitter.util.Future
+import com.twitter.zk.coordination.ZkAsyncSemaphore.{LackOfConsensusException, PermitMismatchException, PermitNodeException}
 import com.twitter.zk.{ZNode, ZkClient}
 
 

@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.lang.ref.WeakReference
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually

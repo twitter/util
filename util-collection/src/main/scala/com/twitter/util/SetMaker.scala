@@ -1,8 +1,8 @@
 package com.twitter.util
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable.{Map, Set}
-import java.util.concurrent.TimeUnit
-import collection.JavaConversions.JConcurrentMapWrapper
+
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 
 object SetMaker {
@@ -19,8 +19,8 @@ object SetMaker {
     def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
 
-    def apply() = new MapToSetAdapter(
-      new JConcurrentMapWrapper[A, A](mapMaker.makeMap()))
+    def apply() = new MapToSetAdapter[A](
+      mapMaker.makeMap().asScala)
   }
 }
 

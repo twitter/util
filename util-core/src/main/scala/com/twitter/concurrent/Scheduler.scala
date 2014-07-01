@@ -1,10 +1,12 @@
 package com.twitter.concurrent
 
+import java.lang.management.ManagementFactory
 import java.util.ArrayDeque
 import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
-import management.ManagementFactory
+
 import scala.util.Random
+
 import com.twitter.util.Awaitable.CanAwait
 
 /**

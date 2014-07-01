@@ -1,12 +1,14 @@
 package com.twitter.zk
 
-import com.twitter.concurrent.{Broker, Offer}
-import com.twitter.util.{Future, Return, Throw, Try}
-import org.apache.zookeeper.{CreateMode, KeeperException, WatchedEvent}
+import scala.collection.JavaConverters._
+import scala.collection.{Seq, Set}
+
 import org.apache.zookeeper.common.PathUtils
 import org.apache.zookeeper.data.{ACL, Stat}
-import scala.collection.{Seq, Set}
-import scala.collection.JavaConverters._
+import org.apache.zookeeper.{CreateMode, KeeperException, WatchedEvent}
+
+import com.twitter.concurrent.{Broker, Offer}
+import com.twitter.util.{Future, Return, Throw, Try}
 
 /**
  * A handle to a ZNode attached to a ZkClient

@@ -1,10 +1,10 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Return}
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicReference
+
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
+
+import com.twitter.util.{Future, Promise, Return}
 
 object SpoolSource {
   private object DefaultInterruptHandler extends PartialFunction[Any, Nothing] {

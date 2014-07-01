@@ -1,5 +1,5 @@
+import sbt.Keys._
 import sbt._
-import Keys._
 
 object Util extends Build {
   val libVersion = "6.18.0"
@@ -89,16 +89,6 @@ object Util extends Build {
     }
   )
 
-  val jmockSettings = Seq(
-    libraryDependencies ++= Seq(
-      "org.jmock" % "jmock" % "2.4.0" % "test",
-      "cglib" % "cglib" % "2.1_3" % "test",
-      "asm" % "asm" % "1.5.3" % "test",
-      "org.objenesis" % "objenesis" % "1.1" % "test",
-      "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
-    )
-  )
-
   lazy val util = Project(
     id = "util",
     base = file("."),
@@ -122,13 +112,6 @@ object Util extends Build {
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
       "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
     ),
-    testOptions in Test <<= scalaVersion map {
-      // There seems to be an issue with mockito spies,
-      // specs1, and scala 2.10
-      case "2.10" | "2.10.0" => Seq(Tests.Filter(s => !s.endsWith("MonitorSpec")))
-      case _ => Seq()
-    },
-
     resourceGenerators in Compile <+=
       (resourceManaged in Compile, name, version) map { (dir, name, ver) =>
         val file = dir / "com" / "twitter" / name / "build.properties"
@@ -173,10 +156,10 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305" % "2.0.1",
-      "javax.inject" % "javax.inject" % "1",
-      "com.google.guava" % "guava" % "16.0.1",
-      "commons-collections" % "commons-collections" % "3.2.1"
+      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
+      "javax.inject"             % "javax.inject"        % "1",
+      "com.google.guava"         % "guava"               % "16.0.1",
+      "commons-collections"      % "commons-collections" % "3.2.1"
     )
   ).dependsOn(utilCore)
 
@@ -188,10 +171,10 @@ object Util extends Build {
   ).settings(
     name := "util-reflect",
     libraryDependencies ++= Seq(
-      "asm" % "asm" % "3.3.1",
-      "asm" % "asm-util" % "3.3.1",
-      "asm" % "asm-commons" % "3.3.1",
-      "cglib" % "cglib" % "2.2"
+      "asm"   % "asm"         % "3.3.1",
+      "asm"   % "asm-util"    % "3.3.1",
+      "asm"   % "asm-commons" % "3.3.1",
+      "cglib" % "cglib"       % "2.2"
     )
   ).dependsOn(utilCore)
 
@@ -202,13 +185,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-logging",
-    libraryDependencies ++= Seq(
-      "org.scala-tools.testing" % "specs" % "1.6.9" % "provided" cross CrossVersion.binaryMapped {
-        case "2.9.2" => "2.9.1"
-        case x if x startsWith "2.10" => "2.10"
-        case x => x
-      }
-    )
+    libraryDependencies <+= scalatest
   ).dependsOn(utilCore, utilApp)
 
   lazy val utilThrift = Project(
@@ -219,8 +196,9 @@ object Util extends Build {
   ).settings(
     name := "util-thrift",
     libraryDependencies ++= Seq(
-      "thrift" % "libthrift" % "0.5.0",
-      "org.slf4j" % "slf4j-nop" % "1.5.8" % "provided",
+      "thrift"                     % "libthrift"        % "0.5.0",
+      "org.slf4j"                  % "slf4j-nop"        % "1.5.8" % "provided",
+      "com.fasterxml.jackson.core" % "jackson-core"     % "2.3.1",
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.1"
     )
   ).dependsOn(utilCodec)
@@ -250,8 +228,7 @@ object Util extends Build {
     id = "util-zk",
     base = file("util-zk"),
     settings = Project.defaultSettings ++
-      sharedSettings ++
-      jmockSettings
+      sharedSettings
   ).settings(
     name := "util-zk",
     libraryDependencies ++= Seq(
@@ -263,8 +240,7 @@ object Util extends Build {
     id = "util-zk-common",
     base = file("util-zk-common"),
     settings = Project.defaultSettings ++
-      sharedSettings ++
-      jmockSettings
+      sharedSettings
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(

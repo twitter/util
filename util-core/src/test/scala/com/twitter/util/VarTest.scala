@@ -1,10 +1,12 @@
 package com.twitter.util
 
+import java.util.concurrent.atomic.AtomicReference
+
+import scala.collection.mutable
+
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import scala.collection.mutable
-import java.util.concurrent.atomic.AtomicReference
 
 @RunWith(classOf[JUnitRunner])
 class VarTest extends FunSuite {

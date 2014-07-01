@@ -1,9 +1,10 @@
 package com.twitter.zk
 
+import org.apache.zookeeper.ZooKeeper
+
 import com.twitter.concurrent.{Broker, Offer, Serialized}
 import com.twitter.logging.Logger
-import com.twitter.util.{Duration, Future, Promise, TimeoutException, Timer, Return, Await}
-import org.apache.zookeeper.ZooKeeper
+import com.twitter.util.{Await, Duration, Future, Promise, Return, TimeoutException, Timer}
 
 /**
  * An Asynchronous ZooKeeper Client.

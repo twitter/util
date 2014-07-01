@@ -1,13 +1,12 @@
 package com.twitter.util
 
-import com.twitter.util._
+import java.util.concurrent.atomic.AtomicReference
 
+import scala.collection.mutable
+
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import scala.collection.mutable
-import java.util.concurrent.atomic.AtomicReference
-import scala.collection.immutable.VectorBuilder
 
 @RunWith(classOf[JUnitRunner])
 class EventTest extends FunSuite {

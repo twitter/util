@@ -1,6 +1,7 @@
 package com.twitter.io
 
-import java.nio.charset.{CharsetDecoder, CodingErrorAction, CharsetEncoder, Charset}
+import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAction}
+
 import scala.collection.mutable
 
 /**

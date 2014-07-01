@@ -1,9 +1,11 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Return, Await}
 import java.util.concurrent.atomic.AtomicReference
+
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
+
+import com.twitter.util.{Await, Future, Promise}
 
 /**
  * An unbuffered FIFO queue, brokered by `Offer`s. Note that the queue is

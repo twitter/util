@@ -1,7 +1,8 @@
 package com.twitter.util.repository
 
-import com.twitter.util.Future
 import scala.collection.mutable
+
+import com.twitter.util.Future
 
 class CachingRepository[Q, E](
   map: mutable.Map[Long, Future[Option[E]]],

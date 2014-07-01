@@ -1,9 +1,10 @@
 package com.twitter.logging
 
-import com.twitter.util.StorageUnit
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.util.StorageUnit
 
 @RunWith(classOf[JUnitRunner])
 class PolicyTest extends FunSuite {

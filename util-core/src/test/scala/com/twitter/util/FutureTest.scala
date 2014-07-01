@@ -1,8 +1,10 @@
 package com.twitter.util
 
-import com.twitter.common.objectsize.ObjectSizeCalculator
-import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
+
+import scala.collection.JavaConverters._
+import scala.util.control.ControlThrowable
+
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
@@ -11,8 +13,9 @@ import org.mockito.stubbing.Answer
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import scala.collection.JavaConverters._
-import scala.util.control.ControlThrowable
+
+import com.twitter.common.objectsize.ObjectSizeCalculator
+import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
 class FutureTest extends WordSpec with MockitoSugar {

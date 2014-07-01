@@ -1,7 +1,6 @@
 package com.twitter.logging
 
 import com.twitter.app.{App, Flaggable}
-import com.twitter.util.{Throw, Return}
 
 object Logging {
   implicit object LevelFlaggable extends Flaggable[Level] {

@@ -1,10 +1,13 @@
 package com.twitter.zk
 
+import java.util.concurrent.atomic.AtomicReference
+
+import scala.annotation.tailrec
+
+import org.apache.zookeeper.ZooKeeper
+
 import com.twitter.logging.Logger
 import com.twitter.util.Future
-import java.util.concurrent.atomic.AtomicReference
-import org.apache.zookeeper.ZooKeeper
-import scala.annotation.tailrec
 
 trait Connector {
 

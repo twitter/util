@@ -4,9 +4,7 @@
 
 package com.twitter.util
 
-import java.io.{
-  DataInputStream, ByteArrayInputStream,
-  DataOutputStream, ByteArrayOutputStream}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream}
 
 class RichU64Long(l64: Long) {
   import U64._

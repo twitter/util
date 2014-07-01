@@ -2,7 +2,6 @@ package com.twitter.hashing
 
 import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
-import scala.collection.mutable
 
 /** Type-class for generic hashing
  */

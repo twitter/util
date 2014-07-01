@@ -1,8 +1,7 @@
 package com.twitter.jvm
 
-import java.lang.management.{ManagementFactory, ThreadInfo}
 import java.lang.Thread.State._
-import scala.collection.mutable
+import java.lang.management.{ManagementFactory, ThreadInfo}
 
 /**
  * A thread contention summary providing a brief overview of threads

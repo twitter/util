@@ -1,9 +1,11 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise}
 import java.util.concurrent.atomic.AtomicReference
+
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
+
+import com.twitter.util.{Future, Promise}
 
 object AsyncQueue {
   private sealed trait State[+T]

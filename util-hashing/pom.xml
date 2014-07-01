@@ -15,6 +15,12 @@
     <git.dir>${project.basedir}/../../.git</git.dir>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_2.9.2</artifactId>
+      <version>1.9.1</version>
+      <scope>test</scope>
+    </dependency>
     <!-- library dependencies -->
     <dependency>
       <groupId>commons-codec</groupId>

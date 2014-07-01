@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import java.lang.ref.{ReferenceQueue, PhantomReference, Reference}
+import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
 import java.util.HashMap
 import java.util.concurrent.atomic.AtomicReference
-import java.util.logging.{Logger, Level}
+import java.util.logging.{Level, Logger}
 
 /**
  * Closable is a mixin trait to describe a closable ``resource``.

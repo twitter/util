@@ -1,14 +1,14 @@
 package com.twitter.util
 
-import com.twitter.conversions.time._
-import java.util.concurrent.{Future => JFuture}
-import java.util.concurrent._
+import java.util.concurrent.{Future => JFuture, _}
 
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.time.{Millis, Seconds, Span}
+
+import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
 class FuturePoolTest extends FunSuite with Eventually {

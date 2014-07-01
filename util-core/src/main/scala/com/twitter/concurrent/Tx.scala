@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Return}
+import com.twitter.util.{Future, Promise}
 
 /**
  * A `Tx` is used to mediate multi-party transactions with the following

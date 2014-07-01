@@ -1,8 +1,9 @@
 package com.twitter.io
 
+import java.io.InputStream
+
 import com.twitter.concurrent.AsyncMutex
 import com.twitter.util.{Closable, CloseAwaitably, Future, FuturePool, Time}
-import java.io.InputStream
 
 /**
  * Provides the Reader API for an InputStream

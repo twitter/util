@@ -1,13 +1,14 @@
 package com.twitter.jvm
 
-import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.conversions.time._
-import com.twitter.util.{Timer, Duration, Time, StorageUnit, Future, Stopwatch, NonFatal}
-import java.lang.management.ManagementFactory
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import java.util.logging.Logger
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+
+import com.twitter.concurrent.NamedPoolThreadFactory
+import com.twitter.conversions.time._
+import com.twitter.util.{Duration, Future, NonFatal, Stopwatch, StorageUnit, Time, Timer}
 
 case class Heap(
   // Estimated number of bytes allocated so far (into eden)

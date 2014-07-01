@@ -1,10 +1,11 @@
 package com.twitter.app
 
-import java.net.{URI, URLClassLoader, URISyntaxException}
-import scala.collection.mutable
+import java.io.{File, IOException}
+import java.net.{URI, URISyntaxException, URLClassLoader}
 import java.util.jar.JarFile
-import java.io.{IOException, File}
+
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 /**
  * Inspect and load the classpath. Inspired by 

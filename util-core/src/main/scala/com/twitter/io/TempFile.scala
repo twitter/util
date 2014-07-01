@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import java.io.{File, FileNotFoundException, BufferedOutputStream, FileOutputStream}
+import java.io.{BufferedOutputStream, File, FileNotFoundException, FileOutputStream}
 
 object TempFile {
   /**

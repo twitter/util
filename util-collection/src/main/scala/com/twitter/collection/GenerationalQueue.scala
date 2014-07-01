@@ -1,8 +1,8 @@
 package com.twitter.collection
 
-import collection._
+import scala.collection._
+
 import com.twitter.util.{Duration, Time}
-import com.twitter.util.TimeConversions._
 
 trait GenerationalQueue[A] {
   def touch(a: A)

@@ -1,10 +1,12 @@
 package com.twitter.zk.coordination
 
-import com.twitter.concurrent.Permit
-import com.twitter.util.{Future, Promise}
 import java.nio.charset.Charset
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
-import org.apache.zookeeper.{KeeperException, CreateMode}
+
+import org.apache.zookeeper.{CreateMode, KeeperException}
+
+import com.twitter.concurrent.Permit
+import com.twitter.util.{Future, Promise}
 import com.twitter.zk.{StateEvent, ZNode, ZkClient}
 
 /**

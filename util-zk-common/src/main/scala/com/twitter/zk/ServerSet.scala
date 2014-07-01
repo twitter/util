@@ -1,14 +1,17 @@
 package com.twitter.zk
 
-import com.google.common.collect.ImmutableSet
-import com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor
-import com.twitter.common.zookeeper.{ServerSet => CommonServerSet, ServerSetImpl, ZooKeeperClient}
-import com.twitter.concurrent.{Broker, Offer}
-import com.twitter.thrift.{Status => CommonStatus, ServiceInstance}
-import com.twitter.util.{Future, FuturePool}
 import java.net.InetSocketAddress
-import scala.collection.{Map, Set}
+
 import scala.collection.JavaConverters._
+import scala.collection.{Map, Set}
+
+import com.google.common.collect.ImmutableSet
+
+import com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor
+import com.twitter.common.zookeeper.{ServerSetImpl, ZooKeeperClient, ServerSet => CommonServerSet}
+import com.twitter.concurrent.{Broker, Offer}
+import com.twitter.thrift.{ServiceInstance, Status => CommonStatus}
+import com.twitter.util.{Future, FuturePool}
 
 /**
  * Wraps a common.zookeeper.ServerSetImpl to be asynchronous using a FuturePool.

@@ -1,9 +1,9 @@
 package com.twitter.util
 
-import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CancellationException, RejectedExecutionException, ExecutorService, Executors,
-  Future => JFuture}
+import java.util.concurrent.{CancellationException, ExecutorService, Executors, RejectedExecutionException, Future => JFuture}
+
+import com.twitter.concurrent.NamedPoolThreadFactory
 
 /**
  * A FuturePool executes tasks asynchronously, typically using a pool

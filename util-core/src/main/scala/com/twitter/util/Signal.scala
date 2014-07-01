@@ -17,8 +17,8 @@
 package com.twitter.util
 
 import java.lang.reflect.{InvocationHandler, Method, Proxy}
-import scala.collection.{Map, Set}
-import scala.collection.mutable
+
+import scala.collection.{Map, Set, mutable}
 
 object SignalHandlerFactory {
   def apply() = {

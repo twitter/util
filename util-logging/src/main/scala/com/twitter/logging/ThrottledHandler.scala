@@ -16,12 +16,14 @@
 
 package com.twitter.logging
 
-import com.twitter.conversions.time._
-import com.twitter.util.{Duration, Time}
-import java.util.{logging => javalog}
 import java.util.concurrent.atomic.AtomicReference
+import java.util.{logging => javalog}
+
 import scala.annotation.tailrec
 import scala.collection.mutable
+
+import com.twitter.conversions.time._
+import com.twitter.util.{Duration, Time}
 
 object ThrottledHandler {
   /**

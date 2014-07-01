@@ -16,15 +16,16 @@
 
 package com.twitter.logging
 
-import com.twitter.conversions.time._
-import com.twitter.util.{Duration, Time}
-import com.twitter.concurrent.NamedPoolThreadFactory
 import java.io.IOException
 import java.net._
 import java.nio.{ByteBuffer, ByteOrder}
-import java.util.{Arrays, logging => javalog}
-import java.util.concurrent.{Executors, LinkedBlockingQueue}
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.{Executors, LinkedBlockingQueue}
+import java.util.{Arrays, logging => javalog}
+
+import com.twitter.concurrent.NamedPoolThreadFactory
+import com.twitter.conversions.time._
+import com.twitter.util.{Duration, Time}
 
 private class Retry extends Exception("retry")
 

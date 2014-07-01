@@ -1,9 +1,9 @@
 package com.twitter.conversions.common
 
-import com.twitter.conversions.common.quantity.COMMON_FOREVER
-import com.twitter.zk.{CommonConnector, ZkClient}
 import com.twitter.common.zookeeper.ZooKeeperClient
-import com.twitter.util.{FuturePool, Duration}
+import com.twitter.conversions.common.quantity.COMMON_FOREVER
+import com.twitter.util.{Duration, FuturePool}
+import com.twitter.zk.{CommonConnector, ZkClient}
 
 /** Adapters for common's ZooKeeperClient (and, later, serversets, etc) */
 object zookeeper {

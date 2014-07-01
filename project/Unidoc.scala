@@ -1,8 +1,8 @@
 // From: https://github.com/akka/akka/blob/master/project/Unidoc.scala
 
-import sbt._
 import sbt.Keys._
 import sbt.Project.Initialize
+import sbt._
 
 object Unidoc {
   val unidocDirectory = SettingKey[File]("unidoc-directory")

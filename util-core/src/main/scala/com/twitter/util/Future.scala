@@ -1,13 +1,11 @@
 package com.twitter.util
 
-import com.twitter.concurrent.{Offer, Tx, Scheduler}
-import java.util.concurrent.CancellationException
-import java.util.concurrent.atomic.{
-  AtomicBoolean, AtomicInteger, AtomicReference,
-  AtomicReferenceArray}
-import java.util.concurrent.{Future => JavaFuture, TimeUnit}
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference, AtomicReferenceArray}
+import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
+
 import scala.collection.JavaConversions.{asScalaBuffer, seqAsJavaList}
-import scala.collection.mutable
+
+import com.twitter.concurrent.{Offer, Scheduler, Tx}
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.Top

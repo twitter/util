@@ -1,12 +1,11 @@
 package com.twitter.util
 
-import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.concurrent.Serialized
-import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CancellationException, ExecutorService, RejectedExecutionHandler,
-  ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
+import java.util.concurrent.{CancellationException, ExecutorService, RejectedExecutionHandler, ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
+
 import scala.collection.mutable.ArrayBuffer
+
+import com.twitter.concurrent.NamedPoolThreadFactory
 
 trait TimerTask extends Closable {
   def cancel()

@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicBoolean
-import scala.collection.mutable.ArrayBuffer
 
 /**
  * Defines a trait that makes the underlying object *cancellable*.

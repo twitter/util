@@ -1,13 +1,14 @@
 package com.twitter.jvm
 
+import java.util.concurrent.locks.ReentrantLock
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.time.{Millis, Seconds, Span}
-import com.twitter.util.{Await, Promise}
 
-import java.util.concurrent.locks.ReentrantLock
+import com.twitter.util.{Await, Promise}
 
 class Philosopher {
   val ready = new Promise[Unit]

@@ -1,8 +1,8 @@
 package com.twitter.util
 
 import java.util.concurrent.{CountDownLatch => JCountDownLatch}
+
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
 
 object Memoize {
   /**

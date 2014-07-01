@@ -1,7 +1,8 @@
 package com.twitter.io
 
+import java.io.{ByteArrayOutputStream, InputStream, OutputStream}
+
 import scala.annotation.tailrec
-import java.io.{InputStream, OutputStream, ByteArrayOutputStream}
 
 object StreamIO {
   /**

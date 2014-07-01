@@ -1,8 +1,9 @@
 package com.twitter.concurrent
 
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.ConcurrentLinkedQueue
-import com.twitter.util.{Try, Future, Promise}
+import java.util.concurrent.atomic.AtomicInteger
+
+import com.twitter.util.{Future, Promise, Try}
 
 /**
  * Efficient ordered ''serialization'' of operations.

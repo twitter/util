@@ -16,27 +16,29 @@
 
 package com.twitter.util
 
-import com.twitter.io.StreamIO
-import com.twitter.conversions.string._
 import java.io._
 import java.math.BigInteger
 import java.net.URLClassLoader
 import java.security.MessageDigest
 import java.util.Random
 import java.util.jar.JarFile
+
 import scala.collection.mutable
 import scala.io.Source
-import scala.tools.nsc.{Global, Settings}
 import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.tools.nsc.util.{BatchSourceFile, Position}
+import scala.tools.nsc.{Global, Settings}
 import scala.util.matching.Regex
+
+import com.twitter.conversions.string._
+import com.twitter.io.StreamIO
 
 /**
  * Evaluate a file or string and return the result.
  */
-@deprecated("use a throw-away instance of Eval instead")
+@deprecated("use a throw-away instance of Eval instead", "1.8.1")
 object Eval extends Eval {
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
   val classCleaner: Regex = "\\W".r
@@ -301,7 +303,7 @@ class Eval(target: Option[File]) {
   /*
    * For a given FQ classname, trick the resource finder into telling us the containing jar.
    */
-  private def classPathOfClass(className: String) = try {
+  private def classPathOfClass(className: String) = {
     val resource = className.split('.').mkString("/", "/", ".class")
     val path = getClass.getResource(resource).getPath
     if (path.indexOf("file:") >= 0) {

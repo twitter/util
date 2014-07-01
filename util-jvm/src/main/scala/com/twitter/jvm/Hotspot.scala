@@ -1,12 +1,14 @@
 package com.twitter.jvm
 
-import com.twitter.conversions.storage._
-import com.twitter.conversions.time._
-import com.twitter.util.Time
 import java.lang.management.ManagementFactory
 import javax.management.openmbean.CompositeDataSupport
 import javax.management.{ObjectName, RuntimeMBeanException}
+
 import scala.collection.JavaConverters._
+
+import com.twitter.conversions.storage._
+import com.twitter.conversions.time._
+import com.twitter.util.Time
 
 class Hotspot extends Jvm {
   private[this] val epoch = Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean().getStartTime())

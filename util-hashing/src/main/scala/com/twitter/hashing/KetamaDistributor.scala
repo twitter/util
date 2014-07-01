@@ -3,6 +3,7 @@ package com.twitter.hashing
 import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
 import java.util.TreeMap
+
 import scala.collection.JavaConversions._
 
 case class KetamaNode[A](identifier: String, weight: Int, handle: A)

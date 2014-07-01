@@ -16,11 +16,12 @@
 
 package com.twitter.logging
 
-import com.twitter.util.{HandleSignal, Return, StorageUnit, Time, Try}
-import java.io.{File, FilenameFilter, FileOutputStream, OutputStream}
+import java.io.{File, FileOutputStream, FilenameFilter, OutputStream}
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, logging => javalog}
+
+import com.twitter.util.{HandleSignal, Return, StorageUnit, Time, Try}
 
 sealed abstract class Policy
 object Policy {

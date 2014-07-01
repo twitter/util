@@ -1,7 +1,7 @@
 package com.twitter.util
 
-import java.net.{InetAddress, InetSocketAddress, Socket}
 import java.io.IOException
+import java.net.{InetSocketAddress, Socket}
 
 /**
  * A generator of random local [[java.net.InetSocketAddress]] objects with

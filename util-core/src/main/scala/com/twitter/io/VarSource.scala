@@ -1,12 +1,13 @@
 package com.twitter.io.exp
 
+import java.io.File
+import java.lang.ref.{ReferenceQueue, WeakReference}
+import java.util.HashMap
+import java.util.concurrent.atomic.AtomicBoolean
+
 import com.twitter.conversions.time._
 import com.twitter.io.{Buf, Reader}
 import com.twitter.util._
-import java.lang.ref.{ReferenceQueue, WeakReference}
-import java.io.{ByteArrayOutputStream, File, FileInputStream}
-import java.util.HashMap
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * A VarSource provides access to observerable named variables.

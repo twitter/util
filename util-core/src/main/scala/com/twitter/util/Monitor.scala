@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.logging.{Logger, Level}
+import java.util.logging.{Level, Logger}
 
 /**
  * Wraps an exception that happens when handling another exception in

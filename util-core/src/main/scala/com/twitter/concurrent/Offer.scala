@@ -1,7 +1,8 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Time, Timer, Duration, Await}
 import scala.util.Random
+
+import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
 
 /**
  * An offer to communicate with another process. The offer is

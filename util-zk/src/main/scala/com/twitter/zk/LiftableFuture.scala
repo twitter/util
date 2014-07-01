@@ -1,7 +1,8 @@
 package com.twitter.zk
 
-import com.twitter.util.{Future, Return, Throw, Try}
 import org.apache.zookeeper.KeeperException
+
+import com.twitter.util.{Future, Return, Throw}
 
 protected[zk] object LiftableFuture {
   implicit def liftableFuture[T](f: Future[T]) = new LiftableFuture(f)

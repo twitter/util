@@ -1,10 +1,12 @@
 package com.twitter.io
 
-import com.twitter.util.Await
 import java.io.ByteArrayInputStream
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.util.Await
 
 @RunWith(classOf[JUnitRunner])
 class InputStreamReaderTest extends FunSuite {

@@ -1,8 +1,9 @@
 package com.twitter.zk
 
+import scala.collection.JavaConverters._
+
 import com.twitter.common.zookeeper.ZooKeeperClient
 import com.twitter.conversions.common.quantity._
-import scala.collection.JavaConverters._
 import com.twitter.util.{Duration, FuturePool}
 
 /**

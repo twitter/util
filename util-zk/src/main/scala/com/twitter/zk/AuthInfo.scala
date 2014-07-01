@@ -1,7 +1,5 @@
 package com.twitter.zk
 
-import org.apache.zookeeper.server.auth.DigestAuthenticationProvider
-
 case class AuthInfo(mode: String, data: Array[Byte])
 
 object AuthInfo {

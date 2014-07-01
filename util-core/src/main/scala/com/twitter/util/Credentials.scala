@@ -17,10 +17,10 @@
 package com.twitter.util
 
 import java.io.{File, IOException}
+
 import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.parsing.combinator._
-import scala.util.parsing.combinator.lexical._
 
 /**
  * Simple helper to read authentication credentials from a text file.

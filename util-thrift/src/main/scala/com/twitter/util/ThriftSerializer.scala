@@ -1,11 +1,11 @@
 package com.twitter.util
 
-import java.io.{InputStream, ByteArrayInputStream, ByteArrayOutputStream}
-import org.apache.thrift.TBase
-import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory,
-  TSimpleJSONProtocol}
-import org.apache.thrift.transport.TIOStreamTransport
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
+
 import com.fasterxml.jackson.databind.MappingJsonFactory
+import org.apache.thrift.TBase
+import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory, TSimpleJSONProtocol}
+import org.apache.thrift.transport.TIOStreamTransport
 
 trait ThriftSerializer extends StringEncoder {
   def protocolFactory: TProtocolFactory

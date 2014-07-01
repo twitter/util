@@ -4,7 +4,6 @@ import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 object Duration extends TimeLikeOps[Duration] {
-  import com.twitter.conversions.time._
 
   def fromNanoseconds(nanoseconds: Long): Duration = new Duration(nanoseconds)
 

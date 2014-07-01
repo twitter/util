@@ -18,6 +18,7 @@ package com.twitter.logging
 
 import java.util.concurrent.{CountDownLatch, LinkedBlockingQueue}
 import java.util.{logging => javalog}
+
 import com.twitter.util.Time
 
 object QueueingHandler {

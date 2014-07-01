@@ -1,7 +1,6 @@
 package com.twitter.jvm
 
 import org.junit.runner.RunWith
-
 import org.scalatest.FunSpec
 import org.scalatest.junit.JUnitRunner
 

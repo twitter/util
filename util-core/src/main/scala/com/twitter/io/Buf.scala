@@ -1,7 +1,8 @@
 package com.twitter.io
 
-import java.util.Arrays
+import java.nio.ByteBuffer
 import java.nio.charset.Charset
+import java.util.Arrays
 
 /**
  * Buf represents a fixed, immutable byte buffer. Buffers may be

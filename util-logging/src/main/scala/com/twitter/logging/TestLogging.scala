@@ -17,28 +17,28 @@
 package com.twitter.logging
 
 import java.util.{logging => jlogging}
-import org.specs.Specification
+
+import org.scalatest.{BeforeAndAfter, WordSpec}
+
 
 /**
  * Specify logging during unit tests via system property, defaulting to FATAL only.
  */
-trait TestLogging { self: Specification =>
+trait TestLogging extends BeforeAndAfter { self: WordSpec =>
   val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
-  new SpecContext {
-    val logger = Logger.get("")
-    var oldLevel: jlogging.Level = _
+  private val logger = Logger.get("")
+  private var oldLevel: jlogging.Level = _
 
-    beforeSpec {
-      oldLevel = logger.getLevel()
-      logger.setLevel(logLevel)
-      logger.addHandler(new ConsoleHandler(new Formatter(), None))
-    }
+  before {
+    oldLevel = logger.getLevel()
+    logger.setLevel(logLevel)
+    logger.addHandler(new ConsoleHandler(new Formatter(), None))
+  }
 
-    afterSpec {
-      logger.clearHandlers()
-      logger.setLevel(oldLevel)
-    }
+  after {
+    logger.clearHandlers()
+    logger.setLevel(oldLevel)
   }
 
   private var traceHandler = new StringHandler(BareFormatter, None)
@@ -46,7 +46,7 @@ trait TestLogging { self: Specification =>
   /**
    * Set up logging to record messages at the given level, and not send them to the console.
    *
-   * This is meant to be used in a `doBefore` block.
+   * This is meant to be used in a `before` block.
    */
   def traceLogger(level: Level) {
     traceLogger("", level)
@@ -56,7 +56,7 @@ trait TestLogging { self: Specification =>
    * Set up logging to record messages sent to the given logger at the given level, and not send
    * them to the console.
    *
-   * This is meant to be used in a `doBefore` block.
+   * This is meant to be used in a `before` block.
    */
   def traceLogger(name: String, level: Level) {
     traceHandler.clear()
@@ -73,6 +73,6 @@ trait TestLogging { self: Specification =>
    * substring somewhere inside it.
    */
   def mustLog(substring: String) = {
-    logLines().filter { _ contains substring }.size must be_>(0)
+    assert(logLines().filter { _ contains substring }.size > 0)
   }
 }

@@ -1,9 +1,10 @@
 package com.twitter.util.reflect
 
-import java.lang.reflect.Method
 import java.io.Serializable
-import net.sf.cglib.proxy._
-import net.sf.cglib.proxy.{MethodInterceptor => CGMethodInterceptor}
+import java.lang.reflect.Method
+
+import net.sf.cglib.proxy.{MethodInterceptor => CGMethodInterceptor, _}
+
 import com.twitter.util.Future
 
 class NonexistentTargetException extends Exception("MethodCall was invoked without a valid target.")

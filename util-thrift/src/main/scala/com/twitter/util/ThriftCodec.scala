@@ -1,9 +1,7 @@
 package com.twitter.util
 
-import java.io.{InputStream, ByteArrayInputStream, ByteArrayOutputStream}
 import org.apache.thrift.TBase
-import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory }
-import org.apache.thrift.transport.TIOStreamTransport
+import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory}
 
 object ThriftCodec {
   def apply[T <: TBase[_,_]: Manifest, P <: TProtocolFactory: Manifest] = new ThriftCodec[T,P]

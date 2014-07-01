@@ -16,11 +16,11 @@
 
 package com.twitter.logging
 
-import com.twitter.app.App
-
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import com.twitter.app.App
 
 @RunWith(classOf[JUnitRunner])
 class AppTest extends FunSuite {

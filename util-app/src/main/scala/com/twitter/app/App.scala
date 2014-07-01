@@ -1,11 +1,13 @@
 package com.twitter.app
 
-import com.twitter.conversions.time._
-import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+
+import com.twitter.conversions.time._
+import com.twitter.util._
 
 /**
  * A composable application trait that includes flag parsing as well

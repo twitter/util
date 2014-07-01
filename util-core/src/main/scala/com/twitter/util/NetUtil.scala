@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.net.{UnknownHostException, InetAddress, Inet4Address}
+import java.net.{Inet4Address, InetAddress, UnknownHostException}
 
 object NetUtil {
   def isIpv4Address(ip: String): Boolean =
