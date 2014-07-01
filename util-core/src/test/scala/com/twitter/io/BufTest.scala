@@ -10,6 +10,7 @@ import org.scalatest.prop.Checkers
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
+import java.util.Arrays
 
 @RunWith(classOf[JUnitRunner])
 class BufTest extends FunSuite with MockitoSugar with Checkers {
@@ -94,6 +95,36 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
 
     Buf.Utf8.unapply(buf)
     verify(buf).write(any[Array[Byte]], any[Int])
+  }
+
+  test("Buf.ByteBuffer") {
+    val bytes = Array[Byte](111, 107, 116, 104, 101, 110)
+    val bb = java.nio.ByteBuffer.wrap(bytes)
+    val buf = Buf.ByteBuffer(bb)
+
+    assert(Buf.ByteArray(bytes) === buf)
+
+    val written = new Array[Byte](buf.length)
+    buf.write(written, 0)
+    assert(Arrays.equals(bytes, written))
+
+    val offsetWritten = new Array[Byte](buf.length + 2)
+    buf.write(offsetWritten, 2)
+    assert(Arrays.equals(Array[Byte](0, 0) ++ bytes, offsetWritten))
+
+    assert(Buf.ByteArray(bytes.drop(2).take(2)) === buf.slice(2, 4))
+    // overflow slice
+    assert(Buf.ByteArray(bytes.drop(2)) === buf.slice(2, 10))
+
+    assert(Buf.ByteBuffer(java.nio.ByteBuffer.allocate(0)) === Buf.Empty)
+    assert(Buf.ByteBuffer(java.nio.ByteBuffer.allocateDirect(0)) === Buf.Empty)
+
+    val bytes2 = Array[Byte](1,2,3,4,5,6,7,8,9,0)
+    val buf2 = Buf.ByteBuffer(java.nio.ByteBuffer.wrap(bytes2, 3, 4))
+    assert(buf2 === Buf.ByteArray(4,5,6,7))
+
+    val Buf.ByteBuffer(byteBuffer) = buf
+    assert(byteBuffer === bb)
   }
 
   test("hash code, equals") {

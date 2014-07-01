@@ -1,7 +1,6 @@
 package com.twitter.io
 
 import java.util.Arrays
-import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
 /**
@@ -161,15 +160,60 @@ object Buf {
   }
 
   /**
+   * A buffer representing the remaining bytes in the
+   * given ByteBuffer. The given buffer will not be
+   * affected.
+   *
+   * Modifications to the ByteBuffer's content will be
+   * visible to the resulting Buf. The ByteBuffer should
+   * be immutable in practice.
+   */
+  class ByteBuffer(val bb: java.nio.ByteBuffer) extends Buf {
+    val length = bb.remaining
+
+    def write(output: Array[Byte], off: Int): Unit = {
+      require(length <= output.length - off)
+      bb.duplicate.get(output, off, length)
+    }
+
+    def slice(i: Int, j: Int): Buf = {
+      require(i >=0 && j >= 0, "Index out of bounds")
+      if (j <= i || i >= length) Buf.Empty
+      else if (i == 0 && j >= length) this
+      else {
+        val dup = bb.duplicate()
+        dup.position(dup.position + i)
+        if (dup.limit > j) dup.limit(j)
+        ByteBuffer(dup)
+      }
+    }
+  }
+
+  object ByteBuffer {
+    /**
+     * Construct a buffer representing the given ByteBuffer.
+     */
+    def apply(bb: java.nio.ByteBuffer): Buf =
+      if (bb.remaining == 0) Buf.Empty else new ByteBuffer(bb.duplicate())
+
+    def unapply(buf: Buf): Option[java.nio.ByteBuffer] = buf match {
+      case byteBuf: ByteBuffer => Some(byteBuf.bb.duplicate())
+      case _ => None
+    }
+  }
+
+  /**
    * Convert the Buf to a Java NIO ByteBuffer.
    */
-  def toByteBuffer(buf: Buf): ByteBuffer = buf match {
+  def toByteBuffer(buf: Buf): java.nio.ByteBuffer = buf match {
     case ByteArray(bytes, i, j) =>
-      ByteBuffer.wrap(bytes, i, j-i)
+      java.nio.ByteBuffer.wrap(bytes, i, j-i)
+    case ByteBuffer(bb) =>
+      bb
     case buf =>
       val bytes = new Array[Byte](buf.length)
       buf.write(bytes, 0)
-      ByteBuffer.wrap(bytes)
+      java.nio.ByteBuffer.wrap(bytes)
   }
 
   /** Byte equality between two buffers. Requires copies. */
