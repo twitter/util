@@ -33,8 +33,8 @@ duration1.inMillis // => 1000L
 ```scala
 import com.twitter.conversions.storage._
 val amount = 8.megabytes
-amount.inBytes // => 8192L
-amount.inGigabytes // => 0.0078125
+amount.inBytes // => 8388608L
+amount.inKilobytes // => 8192L
 ```
 
 # Futures
