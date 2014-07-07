@@ -96,11 +96,6 @@ object Buf {
   }
 
   /**
-   * A buffer representing "end-of-file".
-   */
-  val Eof: Buf = new NoopBuf
-
-  /**
    * An empty buffer.
    */
   val Empty: Buf = new NoopBuf

@@ -16,15 +16,14 @@ class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
   /**
    * Asynchronously read at most min(`n`, `maxBufferSize`) bytes from
    * the InputStream. The returned future represents the results of
-   * the read operation.  Any failure indicates an error; a buffer
-   * value of [[com.twitter.io.Buf.Eof]] indicates that the stream has
-   * completed.
+   * the read operation.  Any failure indicates an error; an empty buffer 
+   * indicates that the stream has completed.
    */
-  def read(n: Int): Future[Buf] = {
+  def read(n: Int): Future[Option[Buf]] = {
     if (discarded)
       return Future.exception(new Reader.ReaderDiscarded())
     if (n == 0)
-      return Future.value(Buf.Empty)
+      return Future.value(Some(Buf.Empty))
 
     mutex.acquire() flatMap { permit =>
       FuturePool.interruptibleUnboundedPool {
@@ -35,9 +34,9 @@ class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
           val buffer = new Array[Byte](size)
           val c = inputStream.read(buffer, 0, size)
           if (c == -1)
-            Buf.Eof
+            None
           else
-            Buf.ByteArray(buffer, 0, c)
+            Some(Buf.ByteArray(buffer, 0, c))
         } catch { case exc: InterruptedException =>
             discarded = true
             throw exc

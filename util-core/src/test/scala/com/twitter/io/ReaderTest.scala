@@ -3,18 +3,20 @@ package com.twitter.io
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.util.Await
+import org.junit.runner.RunWith
+import com.twitter.util.{Await, Return}
 
 @RunWith(classOf[JUnitRunner])
 class ReaderTest extends FunSuite {
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int) = Buf.ByteArray(arr(i, j))
   
-  def toSeq(b: Buf) = {
-    val a = new Array[Byte](b.length)
-    b.write(a, 0)
-    a.toSeq
+  def toSeq(b: Option[Buf]) = b match {
+    case None => fail("Expected full buffer")
+    case Some(buf) =>
+      val a = new Array[Byte](buf.length)
+      buf.write(a, 0)
+      a.toSeq
   }
   
   def assertRead(r: Reader, i: Int, j: Int) {
@@ -32,8 +34,8 @@ class ReaderTest extends FunSuite {
     assert(Await.result(f) === ())
   }
   
-  def assertWriteEof(w: Writer) {
-    val f = w.write(Buf.Eof)
+  def assertWriteEmpty(w: Writer) {
+    val f = w.write(Buf.Empty)
     assert(f.isDefined)
     assert(Await.result(f) === ())
   }
@@ -55,10 +57,12 @@ class ReaderTest extends FunSuite {
     assertWrite(rw, 0, 3)
     assertWrite(rw, 3, 6)
     assert(!all.isDefined)
-    assertWriteEof(rw)
+    assertWriteEmpty(rw)
+    assert(!all.isDefined)
+    Await.result(rw.close())
     assert(all.isDefined)
     val buf = Await.result(all)
-    assert(toSeq(buf) === Seq.range(0, 6))
+    assert(toSeq(Some(buf)) === Seq.range(0, 6))
   }
   
   test("Reader.writable - write before read") {
@@ -112,5 +116,14 @@ class ReaderTest extends FunSuite {
     val rf = rw.read(10)
     assert(rf.isDefined)
     intercept[Reader.ReaderDiscarded] { Await.result(rf) }
+  }
+  
+  test("Reader.writable - close") {
+    val rw = Reader.writable()
+    val wf = rw.write(buf(0, 6)) before rw.close()
+    assert(!wf.isDefined)
+    assert(Await.result(rw.read(6)) === Some(buf(0, 6)))
+    Await.result(wf)
+    assert(Await.result(rw.read(6)) === None)
   }
 }

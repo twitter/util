@@ -730,5 +730,4 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     case Done(res) => true
     case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => false
   }
-
 }
