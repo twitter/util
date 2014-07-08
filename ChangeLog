@@ -1,3 +1,11 @@
+6.18.1  2014-07-08
+
+  * util: Update README to reflect correct storage units.
+  * util-*: Convert all tests in util to scalatest
+  * util-app: Simplifies the logic to get the appname
+  * util-io: Buf, Reader: remove Buf.Eof; end-of-stream is None
+  * util-io: Create Buf.ByteBuffer to wrap java.nio.ByteBuffer
+
 6.18.0  2014-06-23
 
   * util-app: Don't kill the JVM on flag-parsing failure
