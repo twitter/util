@@ -21,7 +21,6 @@ class TryTest extends FunSuite {
   }
 
   test("Try.rescue") {
-    val myException = new MyException
     val result1 = Return(1) rescue { case _ => Return(2) }
     val result2 = Throw(e) rescue { case _ => Return(2) }
     val result3 = Throw(e) rescue { case _ => Throw(e) }

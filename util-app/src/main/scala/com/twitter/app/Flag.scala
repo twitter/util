@@ -193,11 +193,14 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   private def default: Option[T] = defaultOrUsage.left.toOption map { d => d() }
   private def valueOrDefault: Option[T] = getValue orElse default
 
+  private[this] def flagNotFound: IllegalArgumentException =
+    new IllegalArgumentException("flag '%s' not found".format(name))
+
   /**
    * Return this flag's current value. The default value is returned
    * when the flag has not otherwise been set.
    */
-  def apply(): T = valueOrDefault getOrElse { throw new IllegalArgumentException }
+  def apply(): T = valueOrDefault getOrElse { throw flagNotFound }
 
   /** Reset this flag's value */
   def reset() { value = None }
@@ -206,7 +209,7 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   /** Get the value if it has been set */
   def get: Option[T] = getValue
   /** String representation of this flag's default value */
-  def defaultString = flaggable.show(default getOrElse { throw new IllegalArgumentException })
+  def defaultString = flaggable.show(default getOrElse { throw flagNotFound })
 
   def usageString =
     defaultOrUsage match {
@@ -298,7 +301,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
   def this(argv0: String) = this(argv0, false)
 
   private[this] val flags = new HashMap[String, Flag[_]]
-  
+
   @volatile private[this] var cmdUsage = ""
 
   // Add a help flag by default

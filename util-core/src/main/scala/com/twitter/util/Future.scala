@@ -1,11 +1,10 @@
 package com.twitter.util
 
+import com.twitter.concurrent.{Offer, Scheduler, Tx}
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference, AtomicReferenceArray}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
-
 import scala.collection.JavaConversions.{asScalaBuffer, seqAsJavaList}
-
-import com.twitter.concurrent.{Offer, Scheduler, Tx}
+import scala.collection.mutable
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.Top
@@ -333,8 +332,14 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
         f respond {
           case Return(x) =>
             results.set(i, x)
+            0.until(5)
             if (count.decrementAndGet() == 0) {
-              val resultsArray = for (j <- 0 until fsSize) yield results.get(j)
+              val resultsArray = new mutable.ArraySeq[A](fsSize)
+              var j = 0
+              while (j < fsSize) {
+                resultsArray(j) = results.get(j)
+                j += 1
+              }
               p.setValue(resultsArray)
             }
           case Throw(cause) =>
@@ -584,7 +589,7 @@ abstract class FutureTransformer[-A, +B] {
  * be delivered when the promise has not yet completed.
  */
 abstract class Future[+A] extends Awaitable[A] {
-  import Future.DEFAULT_TIMEOUT
+  import com.twitter.util.Future.DEFAULT_TIMEOUT
 
   /**
    * When the computation completes, invoke the given callback
