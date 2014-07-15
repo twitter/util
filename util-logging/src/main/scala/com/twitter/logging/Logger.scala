@@ -25,6 +25,9 @@ import scala.collection.{JavaConversions, Map, mutable}
 sealed abstract class Level(val name: String, val value: Int) extends javalog.Level(name, value) {
   Logger.levelNamesMap(name) = this
   Logger.levelsMap(value) = this
+
+  // for java compat
+  def get(): Level = this
 }
 
 object Level {

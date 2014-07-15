@@ -36,6 +36,9 @@ object NullHandler extends Handler(BareFormatter, None) {
   def publish(record: javalog.LogRecord) {}
   def close() {}
   def flush() {}
+
+  // for java compatibility
+  def get(): this.type = this
 }
 
 object StringHandler {

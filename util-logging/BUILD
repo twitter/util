@@ -8,6 +8,7 @@ jar_library(name='util-logging',
 
 jar_library(name='tests',
   dependencies=[
-    pants('util/util-logging/src/test/scala')
+    pants('util/util-logging/src/test/scala'),
+    pants('util/util-logging/src/test/java')
   ]
 )
