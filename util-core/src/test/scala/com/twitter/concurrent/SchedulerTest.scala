@@ -8,7 +8,7 @@ import org.scalatest.junit.JUnitRunner
 import com.twitter.util.Promise
 
 
-class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
+abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
   private val scheduler = new LocalScheduler(lifo)
   def submit(f: => Unit) = scheduler.submit(new Runnable {
     def run() = f

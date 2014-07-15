@@ -10,6 +10,11 @@ object Util extends Build {
     ExclusionRule("javax.jms", "jms")
   )
 
+  val scalatest = scalaVersion(sv => sv match {
+    case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2"
+    case _       => "org.scalatest" %% "scalatest" % "2.1.3"
+  })
+
   lazy val publishM2Configuration =
     TaskKey[PublishConfiguration]("publish-m2-configuration",
       "Configuration for publishing to the .m2 repository.")
