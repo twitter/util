@@ -143,6 +143,14 @@ object Monitor extends Monitor {
       if (f.isDefinedAt(exc)) f(exc)
       else false
   }
+
+  /**
+   * Checks whether or not monitoring is activated, meaning that the
+   * currently-set Monitor is non-null.
+   *
+   * @return true if currently-set Monitor is the NullMonitor. False otherwise.
+   */
+  def isActive: Boolean = get != NullMonitor
 }
 
 /**
