@@ -158,4 +158,12 @@ class FuturePoolTest extends FunSuite with Eventually {
     b.setDone()
     assert(Await.result(f) === 1)
   }
+
+  test("satisfies result promise on fatal exceptions thrown by task") {
+    val executor = Executors.newFixedThreadPool(1).asInstanceOf[ThreadPoolExecutor]
+    val pool = FuturePool(executor)
+    val rv = pool { throw new LinkageError }
+
+    intercept[ExecutionException] { Await.result(rv) }
+  }
 }

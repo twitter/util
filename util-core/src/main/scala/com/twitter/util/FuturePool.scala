@@ -1,8 +1,8 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CancellationException, ExecutorService, Executors, RejectedExecutionException, Future => JFuture}
-
+import java.util.concurrent.{
+  CancellationException, ExecutionException, ExecutorService, Executors, RejectedExecutionException}
 import com.twitter.concurrent.NamedPoolThreadFactory
 
 /**
@@ -109,8 +109,10 @@ class ExecutorServiceFuturePool protected[this](
 
         try
           p.updateIfEmpty(Try(f))
-        finally
-          Local.restore(current)
+        catch { case e: Throwable =>
+          p.updateIfEmpty(Throw(new ExecutionException(e)))
+          throw e
+        } finally Local.restore(current)
       }
     }
 
