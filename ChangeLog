@@ -1,3 +1,11 @@
+6.18.2  2014-07-23
+
+  * util-core: Fixes a broken sbt test
+  * util-core: Log exceptions caught by ChannelStatsHandler
+  * util-core: Satisfy promise on fatal exception in FuturePool task
+  * util-core: small perf improvements to Future.collect, Throw, Flag
+  * util-logging: java-friendly LoggerFactory API
+
 6.18.1  2014-07-08
 
   * util: Update README to reflect correct storage units.

@@ -4,7 +4,7 @@
   <groupId>com.twitter</groupId>
   <artifactId>util-hashing</artifactId>
   <packaging>jar</packaging>
-  <version>6.18.2-SNAPSHOT</version>
+  <version>6.18.3-SNAPSHOT</version>
   <parent>
     <groupId>com.twitter</groupId>
     <artifactId>scala-parent-292</artifactId>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core</artifactId>
-      <version>6.18.2-SNAPSHOT</version>
+      <version>6.18.3-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
