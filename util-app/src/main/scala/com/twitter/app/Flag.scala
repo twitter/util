@@ -238,6 +238,7 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
     value = flaggable.default
   }
 
+  /** Indicates whether or not the flag is valid without an argument. */
   def noArgumentOk = flaggable.default.isDefined
 }
 
@@ -367,7 +368,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
 
           // Optional argument without a value
           case Array(k) if flag(k).noArgumentOk =>
-            flags(k).parse()
+            flag(k).parse()
 
           // Mandatory argument without a value and with no more arguments.
           case Array(k) if i == args.size =>

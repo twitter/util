@@ -10,6 +10,7 @@ import com.twitter.util.RandomSocket
 
 object MyGlobalFlag extends GlobalFlag("a test flag", "a global test flag")
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
+object MyGlobalBooleanFlag extends GlobalFlag(false, "a boolean flag")
 
 @RunWith(classOf[JUnitRunner])
 class FlagTest extends FunSuite {
@@ -76,7 +77,7 @@ class FlagTest extends FunSuite {
   test("Flag: add and parse flags") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parse(Array("-foo", "973", "-bar", "hello there")).isEmpty)
+    assert(flag.parseArgs(Array("-foo", "973", "-bar", "hello there")) === Flags.Ok(Nil))
     assert(fooFlag() === 973)
     assert(barFlag() === "hello there")
   }
@@ -104,73 +105,73 @@ class FlagTest extends FunSuite {
   test("Boolean: -yes") {
     val ctx = new Bctx
     import ctx._
-    assert(flag.parse(Array("-yes")).isEmpty)
+    assert(flag.parseArgs(Array("-yes")) === Flags.Ok(Nil))
     assert(yesFlag())
   }
 
   test("Boolean: -yes=true") {
     val ctx = new Bctx
     import ctx._
-    assert(flag.parse(Array("-yes=true")).isEmpty)
+    assert(flag.parseArgs(Array("-yes=true")) === Flags.Ok(Nil))
     assert(yesFlag())
   }
 
   test("Boolean: -yes=false") {
     val ctx = new Bctx
     import ctx._
-    assert(flag.parse(Array("-yes=false")).isEmpty)
+    assert(flag.parseArgs(Array("-yes=false")) === Flags.Ok(Nil))
     assert(!yesFlag())
   }
 
   test("Boolean: -yes ARG") {
     val ctx = new Bctx
     import ctx._
-    val rem = flag.parse(Array("-yes", "ARG"))
+    val rem = flag.parseArgs(Array("-yes", "ARG"))
     assert(yesFlag())
-    assert(rem === Seq("ARG"))
+    assert(rem === Flags.Ok(Seq("ARG")))
   }
 
   test("Flag: handle remainders (sequential)") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parse(Array("-foo", "333", "arg0", "arg1")) === Seq("arg0", "arg1"))
+    assert(flag.parseArgs(Array("-foo", "333", "arg0", "arg1")) === Flags.Ok(Seq("arg0", "arg1")))
   }
 
   test("Flag: handle remainders (interpspersed)") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parse(Array("arg0", "-foo", "333", "arg1")) === Seq("arg0", "arg1"))
+    assert(flag.parseArgs(Array("arg0", "-foo", "333", "arg1")) === Flags.Ok(Seq("arg0", "arg1")))
   }
 
   test("Flag: stop parsing at '--'") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parse(Array("arg0", "--", "-foo", "333")) === Seq("arg0", "-foo", "333"))
+    assert(flag.parseArgs(Array("arg0", "--", "-foo", "333")) === Flags.Ok(Seq("arg0", "-foo", "333")))
   }
 
   test("Flag: give nice parse errors") {
     val ctx = new Ctx
     import ctx._
-    val thr = intercept[Exception] { flag.parse(Array("-foo", "blah")) }
+    assert(flag.parseArgs(Array("-foo", "blah")).isInstanceOf[Flags.Error])
   }
 
   test("Flag: handle -help") {
     val ctx = new Ctx
     import ctx._
-    intercept[FlagUsageError] { flag.parse(Array("-help")) }
+    assert(flag.parseArgs(Array("-help")).isInstanceOf[Flags.Help])
   }
 
   test("Flag: mandatory flag without argument") {
     val ctx = new Ctx
     import ctx._
-    val thr = intercept[FlagParseException] { flag.parse(Array("-foo")) }
+    assert(flag.parseArgs(Array("-foo")).isInstanceOf[Flags.Error])
   }
 
   test("Flag: undefined") {
     val ctx = new Ctx
     import ctx._
-    val thr = intercept[FlagParseException] { flag.parse(Array("-undefined")) }
-    assert(flag.parse(Array("-undefined"), true) === Seq("-undefined"))
+    assert(flag.parseArgs(Array("-undefined")).isInstanceOf[Flags.Error])
+    assert(flag.parseArgs(Array("-undefined"), true) === Flags.Ok(Seq("-undefined")))
   }
 
   class Dctx extends Ctx {
@@ -188,10 +189,18 @@ class FlagTest extends FunSuite {
       "  -com.twitter.app.MyGlobalFlagNoDefault=<Int>: a global test flag with no default")
   }
 
+  test("GlobalFlag: implicit value of true for booleans") {
+    assert(MyGlobalBooleanFlag() === false)
+    val flag = new Flags("my", includeGlobal = true)
+    flag.parseArgs(Array("-com.twitter.app.MyGlobalBooleanFlag"))
+    assert(MyGlobalBooleanFlag() === true)
+    MyGlobalBooleanFlag.reset()
+  }
+
   test("GlobalFlag") {
     assert(MyGlobalFlag() === "a test flag")
-    val flag = new Flags("my", includeGlobal=true)
-    flag.parse(Array("-com.twitter.app.MyGlobalFlag", "okay"))
+    val flag = new Flags("my", includeGlobal = true)
+    flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "okay"))
     assert(MyGlobalFlag() === "okay")
     System.setProperty("com.twitter.app.MyGlobalFlag", "not okay")
     assert(MyGlobalFlag() === "okay")
@@ -206,13 +215,13 @@ class FlagTest extends FunSuite {
     flagWithGlobal("unset.local.flag", "a flag!", "this is a local flag")
     flagWithGlobal("set.local.flag", "a flag!", "this is a local flag")
     flagWithGlobal("flag.with.single.quote", "i'm so cool", "why would you do this?")
-    flagWithGlobal.parse(Array("-set.local.flag=hi"))
+    flagWithGlobal.parseArgs(Array("-set.local.flag=hi"))
 
     val flagWithoutGlobal = new Flags("my", includeGlobal = false)
     flagWithoutGlobal("unset.local.flag", "a flag!", "this is a local flag")
     flagWithoutGlobal("set.local.flag", "a flag!", "this is a local flag")
     flagWithoutGlobal("flag.with.single.quote", "i'm so cool", "why would you do this?")
-    flagWithoutGlobal.parse(Array("-set.local.flag=hi"))
+    flagWithoutGlobal.parseArgs(Array("-set.local.flag=hi"))
 
 
     val localOnly =
