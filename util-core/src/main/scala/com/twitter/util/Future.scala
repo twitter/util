@@ -332,7 +332,6 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
         f respond {
           case Return(x) =>
             results.set(i, x)
-            0.until(5)
             if (count.decrementAndGet() == 0) {
               val resultsArray = new mutable.ArraySeq[A](fsSize)
               var j = 0
