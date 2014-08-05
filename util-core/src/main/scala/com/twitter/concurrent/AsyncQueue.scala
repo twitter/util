@@ -1,11 +1,9 @@
 package com.twitter.concurrent
 
+import com.twitter.util.{Future, Promise}
 import java.util.concurrent.atomic.AtomicReference
-
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
-
-import com.twitter.util.{Future, Promise}
 
 object AsyncQueue {
   private sealed trait State[+T]
@@ -24,7 +22,7 @@ class AsyncQueue[T] {
   import AsyncQueue._
 
   private[this] val state = new AtomicReference[State[T]](Idle)
-  
+
   def size: Int = state.get match {
     case Offering(q) => q.size
     case _ => 0
@@ -51,7 +49,7 @@ class AsyncQueue[T] {
 
     case Excepting(q, exc) if q.isEmpty =>
       Future.exception(exc)
-      
+
     case s@Excepting(q, exc) =>
       val (elem, nextq) = q.dequeue
       val nextState = Excepting(nextq, exc)
