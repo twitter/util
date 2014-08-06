@@ -1,3 +1,8 @@
+6.18.4  2014-07-31
+
+  * util-core: Remove confusing NOOP 0.until(5) in Future.collect().
+  * util-app: Fix a bug in global flag parsing
+
 6.18.2  2014-07-23
 
   * util-core: Fixes a broken sbt test
