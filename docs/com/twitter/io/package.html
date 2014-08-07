@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.io</title>
+          <title>io - com.twitter.io</title>
+          <meta name="description" content="io - com.twitter.io" />
+          <meta name="keywords" content="io com.twitter.io" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.io.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
         <h1>io</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +39,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +56,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.io.Buf" data-isabs="true">
+              <ol><li name="com.twitter.io.Buf" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BufextendsAnyRef"></a>
       <a id="Buf:Buf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,11 +67,12 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends AnyRef</span>
+        <a href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Buf represents a fixed, immutable byte buffer.</p>
-    </li><li visbl="pub" name="com.twitter.io.BufInputStream" data-isabs="false">
+    </li><li name="com.twitter.io.BufInputStream" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BufInputStreamextendsInputStream"></a>
       <a id="BufInputStream:BufInputStream"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -68,11 +80,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BufInputStream.html"><span class="name">BufInputStream</span></a><span class="result"> extends InputStream</span>
+        <a href="BufInputStream.html"><span class="name">BufInputStream</span></a><span class="result"> extends <span class="extype" name="java.io.InputStream">InputStream</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.InputStreamReader" data-isabs="false">
+    </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a>
       <a id="InputStreamReader:InputStreamReader"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -80,12 +93,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="InputStreamReader.html"><span class="name">InputStreamReader</span></a><span class="result"> extends Reader with Closable with CloseAwaitably</span>
+        <a href="InputStreamReader.html"><span class="name">InputStreamReader</span></a><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
       </span>
       </h4>
       <p class="comment cmt">Provides the Reader API for an InputStream
 </p>
-    </li><li visbl="pub" name="com.twitter.io.Reader" data-isabs="true">
+    </li><li name="com.twitter.io.Reader" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ReaderextendsAnyRef"></a>
       <a id="Reader:Reader"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -93,11 +107,12 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Reader.html"><span class="name">Reader</span></a><span class="result"> extends AnyRef</span>
+        <a href="Reader.html"><span class="name">Reader</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <p class="comment cmt">A Reader represents a stream of bytes, read in chunks.</p>
-    </li><li visbl="pub" name="com.twitter.io.Writer" data-isabs="true">
+      <p class="comment cmt">A Reader represents a stream of bytes, read in discrete chunks.</p>
+    </li><li name="com.twitter.io.Writer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="WriterextendsAnyRef"></a>
       <a id="Writer:Writer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -105,7 +120,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Writer.html"><span class="name">Writer</span></a><span class="result"> extends AnyRef</span>
+        <a href="Writer.html"><span class="name">Writer</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A Writer represents a sink for a stream of bytes, providing
@@ -115,9 +130,10 @@ a convenient interface for the producer of such streams.</p>
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.io.Buf" data-isabs="false">
+              <ol><li name="com.twitter.io.Buf" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Buf"></a>
       <a id="Buf:Buf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -125,11 +141,25 @@ a convenient interface for the producer of such streams.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$.html"><span class="name">Buf</span></a><span class="result"> extends AnyRef</span>
+        <a href="Buf$.html"><span class="name">Buf</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.Charsets" data-isabs="false">
+    </li><li name="com.twitter.io.BufReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BufReader"></a>
+      <a id="BufReader:BufReader"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BufReader$.html"><span class="name">BufReader</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.io.Charsets" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Charsets"></a>
       <a id="Charsets:Charsets"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -137,12 +167,13 @@ a convenient interface for the producer of such streams.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Charsets$.html"><span class="name">Charsets</span></a><span class="result"> extends AnyRef</span>
+        <a href="Charsets$.html"><span class="name">Charsets</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Provides a set of frequently used java.nio.charset.Charset instances and
+      <p class="comment cmt">Provides a set of frequently used <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> instances and
 the utilities related to them.</p>
-    </li><li visbl="pub" name="com.twitter.io.Files" data-isabs="false">
+    </li><li name="com.twitter.io.Files" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Files"></a>
       <a id="Files:Files"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -150,12 +181,13 @@ the utilities related to them.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Files$.html"><span class="name">Files</span></a><span class="result"> extends AnyRef</span>
+        <a href="Files$.html"><span class="name">Files</span></a>
       </span>
       </h4>
       <p class="comment cmt">Utilities for working with <code>java.io.File</code>s
 </p>
-    </li><li visbl="pub" name="com.twitter.io.InputStreamReader" data-isabs="false">
+    </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InputStreamReader"></a>
       <a id="InputStreamReader:InputStreamReader"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -163,11 +195,12 @@ the utilities related to them.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="InputStreamReader$.html"><span class="name">InputStreamReader</span></a><span class="result"> extends AnyRef</span>
+        <a href="InputStreamReader$.html"><span class="name">InputStreamReader</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.Reader" data-isabs="false">
+    </li><li name="com.twitter.io.Reader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Reader"></a>
       <a id="Reader:Reader"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -175,11 +208,12 @@ the utilities related to them.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Reader$.html"><span class="name">Reader</span></a><span class="result"> extends AnyRef</span>
+        <a href="Reader$.html"><span class="name">Reader</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.StreamIO" data-isabs="false">
+    </li><li name="com.twitter.io.StreamIO" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StreamIO"></a>
       <a id="StreamIO:StreamIO"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -187,11 +221,12 @@ the utilities related to them.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="StreamIO$.html"><span class="name">StreamIO</span></a><span class="result"> extends AnyRef</span>
+        <a href="StreamIO$.html"><span class="name">StreamIO</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.TempDirectory" data-isabs="false">
+    </li><li name="com.twitter.io.TempDirectory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TempDirectory"></a>
       <a id="TempDirectory:TempDirectory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -199,11 +234,12 @@ the utilities related to them.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="TempDirectory$.html"><span class="name">TempDirectory</span></a><span class="result"> extends AnyRef</span>
+        <a href="TempDirectory$.html"><span class="name">TempDirectory</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.TempFile" data-isabs="false">
+    </li><li name="com.twitter.io.TempFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TempFile"></a>
       <a id="TempFile:TempFile"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -211,11 +247,12 @@ the utilities related to them.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="TempFile$.html"><span class="name">TempFile</span></a><span class="result"> extends AnyRef</span>
+        <a href="TempFile$.html"><span class="name">TempFile</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.io.exp" data-isabs="false">
+    </li><li name="com.twitter.io.exp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="exp"></a>
       <a id="exp:exp"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -231,10 +268,20 @@ the utilities related to them.</p>
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -242,7 +289,6 @@ the utilities related to them.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>

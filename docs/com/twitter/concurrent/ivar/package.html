@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.concurrent.ivar</title>
+          <title>ivar - com.twitter.concurrent.ivar</title>
+          <meta name="description" content="ivar - com.twitter.concurrent.ivar" />
+          <meta name="keywords" content="ivar com.twitter.concurrent.ivar" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.twitter.concurrent.ivar.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../../package.html">com</a>.<a name="com.twitter" class="extype" href="../../package.html">twitter</a>.<a name="com.twitter.concurrent" class="extype" href="../package.html">concurrent</a></p>
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.concurrent">concurrent</a></p>
         <h1>ivar</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +39,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,53 +56,57 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.concurrent.ivar.Done" data-isabs="false">
-      <a id="Done:Done[A]"></a>
+              <ol><li name="com.twitter.concurrent.ivar.Done" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Done[A]extendsState[A]withProductwithSerializable"></a>
+      <a id="Done[A]:Done[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Done.html"><span class="name">Done</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: A</span>)</span><span class="result"> extends State[A] with Product with Serializable</span>
+        <a href="Done.html"><span class="name">Done</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="com.twitter.concurrent.ivar.Done.A">A</span></span>)</span><span class="result"> extends <a href="State.html" class="extype" name="com.twitter.concurrent.ivar.State">State</a>[<span class="extype" name="com.twitter.concurrent.ivar.Done.A">A</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.ivar.Linked" data-isabs="false">
-      <a id="Linked:Linked[A]"></a>
+    </li><li name="com.twitter.concurrent.ivar.Linked" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Linked[A]extendsState[A]withProductwithSerializable"></a>
+      <a id="Linked[A]:Linked[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Linked.html"><span class="name">Linked</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="iv">iv: IVar[A]</span>)</span><span class="result"> extends State[A] with Product with Serializable</span>
+        <a href="Linked.html"><span class="name">Linked</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="iv">iv: <a href="../IVar.html" class="extype" name="com.twitter.concurrent.IVar">IVar</a>[<span class="extype" name="com.twitter.concurrent.ivar.Linked.A">A</span>]</span>)</span><span class="result"> extends <a href="State.html" class="extype" name="com.twitter.concurrent.ivar.State">State</a>[<span class="extype" name="com.twitter.concurrent.ivar.Linked.A">A</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.ivar.State" data-isabs="true">
-      <a id="State:State[A]"></a>
+    </li><li name="com.twitter.concurrent.ivar.State" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="State[+A]extendsAnyRef"></a>
+      <a id="State[+A]:State[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">sealed </span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="State.html"><span class="name">State</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="State.html"><span class="name">State</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.ivar.Waiting" data-isabs="false">
-      <a id="Waiting:Waiting[A]"></a>
+    </li><li name="com.twitter.concurrent.ivar.Waiting" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Waiting[A]extendsState[A]withProductwithSerializable"></a>
+      <a id="Waiting[A]:Waiting[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Waiting.html"><span class="name">Waiting</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="waitq">waitq: List[(A) ⇒ Unit]</span>, <span name="chainq">chainq: List[IVar[A]]</span>)</span><span class="result"> extends State[A] with Product with Serializable</span>
+        <a href="Waiting.html"><span class="name">Waiting</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="waitq">waitq: <a href="../../../../scala/package.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[(<span class="extype" name="com.twitter.concurrent.ivar.Waiting.A">A</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span>]</span>, <span name="chainq">chainq: <a href="../../../../scala/package.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[<a href="../IVar.html" class="extype" name="com.twitter.concurrent.IVar">IVar</a>[<span class="extype" name="com.twitter.concurrent.ivar.Waiting.A">A</span>]]</span>)</span><span class="result"> extends <a href="State.html" class="extype" name="com.twitter.concurrent.ivar.State">State</a>[<span class="extype" name="com.twitter.concurrent.ivar.Waiting.A">A</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -104,10 +118,20 @@
         
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -115,7 +139,6 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
     </body>
       </html>

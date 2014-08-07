@@ -2,61 +2,81 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.app.Flags</title>
+          <title>Flags - com.twitter.app.Flags</title>
+          <meta name="description" content="Flags - com.twitter.app.Flags" />
+          <meta name="keywords" content="Flags com.twitter.app.Flags" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.app.Flags';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+        <body class="type">
       <div id="definition">
-        <a title="Go to companion" href="Flags$.html"><img src="../../../lib/class_to_object_big.png" /></a>
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a>.<a name="com.twitter.app" class="extype" href="package.html">app</a></p>
-        <h1><a title="Go to companion" href="Flags$.html">Flags</a></h1>
+        <a href="Flags$.html" title="Go to companion"><img src="../../../lib/class_to_object_big.png" /></a>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.app">app</a></p>
+        <h1><a href="Flags$.html" title="Go to companion">Flags</a></h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Flags</span><span class="result"> extends AnyRef</span>
+        <span class="name">Flags</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A simple flags implementation. We support only two formats:</p><p>   for flags with optional values (e.g. booleans):
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A simple flags implementation. We support only two formats:</p><p>   for flags with optional values (e.g. booleans):
      -flag, -flag=value
    for flags with required values:
      -flag[= ]value</p><p>That's it. These can be parsed without ambiguity.</p><p>There is no support for mandatory arguments: That is not what
 flags are for.</p><p><code>Flags.apply</code> adds a new flag to the flag set, so it is idiomatic
-to assign instances of <code>Flags</code> to a singular <code>flag</code> val:</p><pre>
-<span class="kw">val</span> flag = <span class="kw">new</span> Flags(<span class="lit">"myapp"</span>)
-<span class="kw">val</span> i = flag(<span class="lit">"i"</span>, <span class="num">123</span>, <span class="lit">"iteration count"</span>)
-</pre><p>Global flags, detached from a particular <code>Flags</code> instance but
-accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a>.
+to assign instances of <code>Flags</code> to a singular <code>flag</code> val:</p><pre><span class="kw">val</span> flag = <span class="kw">new</span> Flags(<span class="lit">"myapp"</span>)
+<span class="kw">val</span> i = flag(<span class="lit">"i"</span>, <span class="num">123</span>, <span class="lit">"iteration count"</span>)</pre><p>Global flags, detached from a particular <code>Flags</code> instance but
+accessible to all, are defined by <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">com.twitter.app.GlobalFlag</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
-    
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         <div id="order">
               <span class="filtertype">Ordering</span>
-              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
             </div>
         <div id="ancestors">
-              <span class="filtertype">Inherited</span>
-              <ol><li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show all</span></li></ol>
-              <ol id="linearization"><li name="com.twitter.app.Flags" class="in"><span>Flags</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
-            </div>
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.twitter.app.Flags"><span>Flags</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
             <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -65,32 +85,34 @@ accessible to all, are defined by <a name="com.twitter.app.GlobalFlag" class="ex
 
       <div id="template">
         <div id="allMembers">
-        <div class="members" id="constructors">
+        <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="com.twitter.app.Flags#this" data-isabs="false">
-      <a id="this:Flags"></a>
+              <ol><li name="com.twitter.app.Flags#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(argv0:String):com.twitter.app.Flags"></a>
+      <a id="&lt;init&gt;:Flags"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: String</span>)</span>
+        <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.app.Flags#this" data-isabs="false">
-      <a id="this:Flags"></a>
+    </li><li name="com.twitter.app.Flags#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(argv0:String,includeGlobal:Boolean):com.twitter.app.Flags"></a>
+      <a id="&lt;init&gt;:Flags"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: String</span>, <span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span>
+        <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="includeGlobal">includeGlobal: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">argv0</dt><dd class="cmt"><p>The name of the application that is to be configured via flags</p></dd><dt class="param">includeGlobal</dt><dd class="cmt"><p>If true, <a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a> will
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">argv0</dt><dd class="cmt"><p>The name of the application that is to be configured via flags</p></dd><dt class="param">includeGlobal</dt><dd class="cmt"><p>If true, <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlags</a> will
 be included during flag parsing. If false, only flags defined in the
 application itself will be consulted.
 </p></dd></dl></div>
@@ -101,9 +123,10 @@ application itself will be consulted.
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,11 +134,12 @@ application itself will be consulted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -123,11 +147,12 @@ application itself will be consulted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
       <a id="##():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -135,11 +160,12 @@ application itself will be consulted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -147,11 +173,12 @@ application itself will be consulted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -159,26 +186,28 @@ application itself will be consulted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#add" data-isabs="false">
-      <a id="add(com.twitter.app.Flag[_]):Unit"></a>
+    </li><li name="com.twitter.app.Flags#add" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="add(f:com.twitter.app.Flag[_]):Unit"></a>
+      <a id="add(Flag[_]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">add</span><span class="params">(<span name="f">f: com.twitter.app.Flag[_]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">add</span><span class="params">(<span name="f">f: <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[_]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Add a flag.</p><div class="fullcomment"><div class="comment cmt"><p>Add a flag. The canonical way to do so is via <code>Flags#apply</code>, but this
 method is left public for any rare edge cases where it is necessary.
 </p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>A concrete Flag to add
 </p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#apply" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply[T](name:String,help:String)(implicit_f:com.twitter.app.Flaggable[T],implicitm:Manifest[T]):com.twitter.app.Flag[T]"></a>
       <a id="apply[T](String,String)(Flaggable[T],Manifest[T]):Flag[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -186,27 +215,29 @@ method is left public for any rare edge cases where it is necessary.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: String</span>, <span name="help">help: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="_f">_f: <a name="com.twitter.app.Flaggable" class="extype" href="Flaggable.html">Flaggable</a>[T]</span>, <span name="m">m: Manifest[T]</span>)</span><span class="result">: <a name="com.twitter.app.Flag" class="extype" href="Flag.html">Flag</a>[T]</span>
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="_f">_f: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flags.apply.T">T</span>]</span>, <span name="m">m: <span class="extype" name="scala.Predef.Manifest">Manifest</span>[<span class="extype" name="com.twitter.app.Flags.apply.T">T</span>]</span>)</span><span class="result">: <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.Flags.apply.T">T</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Add a named flag with a help message.</p><div class="fullcomment"><div class="comment cmt"><p>Add a named flag with a help message.
 </p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the flag.</p></dd><dt class="param">help</dt><dd class="cmt"><p>The help string of the flag.
 </p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#apply" data-isabs="false">
-      <a id="apply[T](String,⇒ T,String)(Flaggable[T]):Flag[T]"></a>
+    </li><li name="com.twitter.app.Flags#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply[T](name:String,default:=&gt;T,help:String)(implicitevidence$9:com.twitter.app.Flaggable[T]):com.twitter.app.Flag[T]"></a>
+      <a id="apply[T](String,⇒T,String)(Flaggable[T]):Flag[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: String</span>, <span name="default">default: ⇒ T</span>, <span name="help">help: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="com.twitter.app.Flaggable" class="extype" href="Flaggable.html">Flaggable</a>[T]</span>)</span><span class="result">: <a name="com.twitter.app.Flag" class="extype" href="Flag.html">Flag</a>[T]</span>
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="default">default: ⇒ <span class="extype" name="com.twitter.app.Flags.apply.T">T</span></span>, <span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flags.apply.T">T</span>]</span>)</span><span class="result">: <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.Flags.apply.T">T</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Add a named flag with a default value and a help message.</p><div class="fullcomment"><div class="comment cmt"><p>Add a named flag with a default value and a help message.
 </p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the flag.</p></dd><dt class="param">default</dt><dd class="cmt"><p>A default value, as a thunk.</p></dd><dt class="param">help</dt><dd class="cmt"><p>The help string of the flag.
 </p></dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -214,11 +245,12 @@ method is left public for any rare edge cases where it is necessary.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -226,14 +258,18 @@ method is left public for any rare edge cases where it is necessary.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -241,11 +277,12 @@ method is left public for any rare edge cases where it is necessary.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -253,11 +290,12 @@ method is left public for any rare edge cases where it is necessary.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -265,22 +303,26 @@ method is left public for any rare edge cases where it is necessary.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#formattedFlagValues" data-isabs="false">
-      <a id="formattedFlagValues(Boolean,ClassLoader):(Iterable[String], Iterable[String])"></a>
+    </li><li name="com.twitter.app.Flags#formattedFlagValues" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formattedFlagValues(includeGlobal:Boolean,classLoader:ClassLoader):(Iterable[String],Iterable[String])"></a>
+      <a id="formattedFlagValues(Boolean,ClassLoader):(Iterable[String],Iterable[String])"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">formattedFlagValues</span><span class="params">(<span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span name="java.lang.ClassLoader" class="extype">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: (Iterable[String], Iterable[String])</span>
+        <span class="name">formattedFlagValues</span><span class="params">(<span name="includeGlobal">includeGlobal: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span class="extype" name="java.lang.ClassLoader">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: (<a href="../../../scala/package.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="../../../scala/package.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="scala.Predef.String">String</span>])</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Formats all values of all flags known to this instance into a format
@@ -288,7 +330,8 @@ suitable for logging.</p><div class="fullcomment"><div class="comment cmt"><p>Fo
 suitable for logging.
 </p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>See <code>getAll</code> above.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>See <code>getAll</code> above.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the flag values in alphabetical order, grouped into (set, unset).
 </p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#formattedFlagValuesString" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#formattedFlagValuesString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="formattedFlagValuesString(includeGlobal:Boolean,classLoader:ClassLoader):String"></a>
       <a id="formattedFlagValuesString(Boolean,ClassLoader):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -296,7 +339,7 @@ suitable for logging.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">formattedFlagValuesString</span><span class="params">(<span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span name="java.lang.ClassLoader" class="extype">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: String</span>
+        <span class="name">formattedFlagValuesString</span><span class="params">(<span name="includeGlobal">includeGlobal: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span class="extype" name="java.lang.ClassLoader">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Creates a string containing all values of all flags known to this instance
@@ -304,37 +347,40 @@ into a format suitable for logging.</p><div class="fullcomment"><div class="comm
 into a format suitable for logging.
 </p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>See <code>getAll</code> above.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>Set <code>getAll</code> above</p></dd><dt>returns</dt><dd class="cmt"><p>A string suitable for logging.
 </p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#getAll" data-isabs="false">
-      <a id="getAll(Boolean,ClassLoader):Iterable[com.twitter.app.Flag[_]]"></a>
+    </li><li name="com.twitter.app.Flags#getAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getAll(includeGlobal:Boolean,classLoader:ClassLoader):Iterable[com.twitter.app.Flag[_]]"></a>
+      <a id="getAll(Boolean,ClassLoader):Iterable[Flag[_]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getAll</span><span class="params">(<span name="includeGlobal">includeGlobal: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span name="java.lang.ClassLoader" class="extype">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: Iterable[com.twitter.app.Flag[_]]</span>
+        <span class="name">getAll</span><span class="params">(<span name="includeGlobal">includeGlobal: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">this.includeGlobal</span></span>, <span name="classLoader">classLoader: <span class="extype" name="java.lang.ClassLoader">ClassLoader</span> = <span class="symbol">this.getClass.getClassLoader</span></span>)</span><span class="result">: <a href="../../../scala/package.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[_]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get all of the flags known to this Flags instance.</p><div class="fullcomment"><div class="comment cmt"><p>Get all of the flags known to this Flags instance.
 </p></div><dl class="paramcmts block"><dt class="param">includeGlobal</dt><dd class="cmt"><p>If true, all registered
-<a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a> will be included
-in output. Defaults to the <code>includeGlobal</code> settings of this instance.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>The java.lang.ClassLoader used to fetch
-<a name="com.twitter.app.GlobalFlag" class="extype" href="GlobalFlag.html">GlobalFlag</a>, if necessary. Defaults to this
+<a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlags</a> will be included
+in output. Defaults to the <code>includeGlobal</code> settings of this instance.</p></dd><dt class="param">classLoader</dt><dd class="cmt"><p>The <span class="extype" name="java.lang.ClassLoader">java.lang.ClassLoader</span> used to fetch
+<a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlags</a>, if necessary. Defaults to this
 instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the flags known to this this Flags instance.
 </p></dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
-      <a id="getClass():java.lang.Class[_]"></a>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -342,11 +388,12 @@ instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the fl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -354,11 +401,12 @@ instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the fl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -366,11 +414,12 @@ instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the fl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -378,11 +427,12 @@ instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the fl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
       <a id="notifyAll():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -390,11 +440,12 @@ instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the fl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#parseArgs" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#parseArgs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult"></a>
       <a id="parseArgs(Array[String],Boolean):FlagParseResult"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -402,16 +453,17 @@ instance's classloader.</p></dd><dt>returns</dt><dd class="cmt"><p>All of the fl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parseArgs</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="allowUndefinedFlags">allowUndefinedFlags: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a name="com.twitter.app.Flags.FlagParseResult" class="extype" href="Flags$$FlagParseResult.html">FlagParseResult</a></span>
+        <span class="name">parseArgs</span><span class="params">(<span name="args">args: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="allowUndefinedFlags">allowUndefinedFlags: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a href="Flags$$FlagParseResult.html" class="extype" name="com.twitter.app.Flags.FlagParseResult">FlagParseResult</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Parse an array of flag strings.</p><div class="fullcomment"><div class="comment cmt"><p>Parse an array of flag strings.
 </p></div><dl class="paramcmts block"><dt class="param">args</dt><dd class="cmt"><p>The array of strings to parse.</p></dd><dt class="param">allowUndefinedFlags</dt><dd class="cmt"><p>If true, undefined flags (i.e. those that are
 not defined in the application via a <code>flag.apply</code> invocation) are allowed.
-If false, undefined flags will result in a FlagParseException being thrown.</p></dd><dt>returns</dt><dd class="cmt"><p>A <a name="com.twitter.app.Flags.FlagParseResult" class="extype" href="Flags$$FlagParseResult.html">FlagParseResult</a> representing the
+If false, undefined flags will result in a FlagParseException being thrown.</p></dd><dt>returns</dt><dd class="cmt"><p>A <a href="Flags$$FlagParseResult.html" class="extype" name="com.twitter.app.Flags.FlagParseResult">com.twitter.app.Flags.FlagParseResult</a> representing the
 result of parsing <code>args</code>.
 </p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#parseOrExit1" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#parseOrExit1" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parseOrExit1(args:Array[String],undefOk:Boolean):Seq[String]"></a>
       <a id="parseOrExit1(Array[String],Boolean):Seq[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -419,7 +471,7 @@ result of parsing <code>args</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parseOrExit1</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="undefOk">undefOk: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: Seq[String]</span>
+        <span class="name">parseOrExit1</span><span class="params">(<span name="args">args: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="undefOk">undefOk: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Parse an array of flag strings or exit the application (with exit code 1)
@@ -429,7 +481,8 @@ upon failure to do so.
 in the application via a <code>flag.apply</code> invocation) are allowed. If false,
 undefined flags will result in a FlagParseException being thrown.
 </p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#reset" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#reset" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="reset():Unit"></a>
       <a id="reset():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -437,11 +490,12 @@ undefined flags will result in a FlagParseException being thrown.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">reset</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">reset</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.app.Flags#setCmdUsage" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#setCmdUsage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="setCmdUsage(u:String):Unit"></a>
       <a id="setCmdUsage(String):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -449,24 +503,26 @@ undefined flags will result in a FlagParseException being thrown.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setCmdUsage</span><span class="params">(<span name="u">u: String</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">setCmdUsage</span><span class="params">(<span name="u">u: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Set the flags' command usage; this is a message printed
 before the flag definitions in the usage string.</p>
-    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
-      <a id="synchronized[T0](⇒ T0):T0"></a>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -474,11 +530,12 @@ before the flag definitions in the usage string.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.app.Flags#usage" data-isabs="false">
+    </li><li name="com.twitter.app.Flags#usage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="usage:String"></a>
       <a id="usage:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -486,11 +543,12 @@ before the flag definitions in the usage string.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">usage</span><span class="result">: String</span>
+        <span class="name">usage</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -498,14 +556,18 @@ before the flag definitions in the usage string.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
       <a id="wait(Long,Int):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -513,14 +575,18 @@ before the flag definitions in the usage string.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
       <a id="wait(Long):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -528,19 +594,25 @@ before the flag definitions in the usage string.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
               
         </dd></dl></div>
     </li></ol>
             </div>
 
-        <div class="values members" id="values">
+        
+
+        <div id="values" class="values members">
               <h3>Deprecated Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.app.Flags#parse" data-isabs="false">
+              <ol><li name="com.twitter.app.Flags#parse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parse(args:Array[String],undefOk:Boolean):Seq[String]"></a>
       <a id="parse(Array[String],Boolean):Seq[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -548,7 +620,7 @@ before the flag definitions in the usage string.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.17.1) Prefer result-value based Flags.parseArgs method">parse</span><span class="params">(<span name="args">args: <span name="scala.Array" class="extype">Array</span>[String]</span>, <span name="undefOk">undefOk: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: Seq[String]</span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.17.1) Prefer result-value based Flags.parseArgs method">parse</span><span class="params">(<span name="args">args: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="undefOk">undefOk: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Parse an array of flag strings.</p><div class="fullcomment"><div class="comment cmt"><p>Parse an array of flag strings.
@@ -560,7 +632,7 @@ undefined flags will result in a FlagParseException being thrown.</p></dd></dl><
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.17.1)</i> Prefer result-value based <code>Flags.parseArgs</code> method</p></dd><dt>Exceptions thrown</dt><dd><span class="cmt">FlagParseException<p>if an error occurs during flag-parsing.
 </p></span></dd><dt>Note</dt><dd><span class="cmt"><p>This method has been deprecated in favor of <code>Flags.parseArgs</code>,
 which indicates success or failure by returning
-<a name="com.twitter.app.Flags.FlagParseResult" class="extype" href="Flags$$FlagParseResult.html">FlagParseResult</a> rather than relying on thrown
+<a href="Flags$$FlagParseResult.html" class="extype" name="com.twitter.app.Flags.FlagParseResult">com.twitter.app.Flags.FlagParseResult</a> rather than relying on thrown
 exceptions.
 </p></span></dd></dl></div>
     </li></ol>
@@ -568,10 +640,18 @@ exceptions.
         </div>
 
         <div id="inheritedMembers">
-        <div name="scala.AnyRef" class="parent">
-              <h3>Inherited from AnyRef</h3>
-            </div><div name="scala.Any" class="parent">
-              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
             </div>
         </div>
 
@@ -580,7 +660,6 @@ exceptions.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>

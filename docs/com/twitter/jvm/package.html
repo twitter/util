@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.jvm</title>
+          <title>jvm - com.twitter.jvm</title>
+          <meta name="description" content="jvm - com.twitter.jvm" />
+          <meta name="keywords" content="jvm com.twitter.jvm" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.jvm.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
         <h1>jvm</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +39,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +56,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.jvm.ContentionSnapshot" data-isabs="false">
+              <ol><li name="com.twitter.jvm.ContentionSnapshot" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ContentionSnapshotextendsAnyRef"></a>
       <a id="ContentionSnapshot:ContentionSnapshot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,12 +67,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ContentionSnapshot.html"><span class="name">ContentionSnapshot</span></a><span class="result"> extends AnyRef</span>
+        <a href="ContentionSnapshot.html"><span class="name">ContentionSnapshot</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A thread contention summary providing a brief overview of threads
-that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#BLOCKED">BLOCKED</a>, <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#WAITING">WAITING</a>, or <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#TIMED_WAITING">TIMED_WAITING</a></p>
-    </li><li visbl="pub" name="com.twitter.jvm.CpuProfile" data-isabs="false">
+that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#BLOCKED" target="_blank">BLOCKED</a>, <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#WAITING" target="_blank">WAITING</a>, or <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.State.html#TIMED_WAITING" target="_blank">TIMED_WAITING</a></p>
+    </li><li name="com.twitter.jvm.CpuProfile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CpuProfileextendsProductwithSerializable"></a>
       <a id="CpuProfile:CpuProfile"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -69,23 +81,25 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="CpuProfile.html"><span class="name">CpuProfile</span></a><span class="params">(<span name="counts">counts: Map[Seq[StackTraceElement], Long]</span>, <span name="duration">duration: Duration</span>, <span name="count">count: Int</span>, <span name="missed">missed: Int</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="CpuProfile.html"><span class="name">CpuProfile</span></a><span class="params">(<span name="counts">counts: <span class="extype" name="scala.Predef.Map">Map</span>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="java.lang.StackTraceElement">StackTraceElement</span>], <span class="extype" name="scala.Long">Long</span>]</span>, <span name="duration">duration: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="count">count: <span class="extype" name="scala.Int">Int</span></span>, <span name="missed">missed: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">A CPU profile.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Estimator" data-isabs="true">
-      <a id="Estimator:Estimator[T]"></a>
+    </li><li name="com.twitter.jvm.Estimator" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Estimator[T]extendsAnyRef"></a>
+      <a id="Estimator[T]:Estimator[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Estimator.html"><span class="name">Estimator</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Estimator.html"><span class="name">Estimator</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An estimator for values of type T.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Gc" data-isabs="false">
+    </li><li name="com.twitter.jvm.Gc" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GcextendsProductwithSerializable"></a>
       <a id="Gc:Gc"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -93,11 +107,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Gc.html"><span class="name">Gc</span></a><span class="params">(<span name="count">count: Long</span>, <span name="name">name: String</span>, <span name="timestamp">timestamp: Time</span>, <span name="duration">duration: Duration</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="Gc.html"><span class="name">Gc</span></a><span class="params">(<span name="count">count: <span class="extype" name="scala.Long">Long</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="timestamp">timestamp: <a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="duration">duration: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.GcPredictor" data-isabs="false">
+    </li><li name="com.twitter.jvm.GcPredictor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GcPredictorextendsAnyRef"></a>
       <a id="GcPredictor:GcPredictor"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -105,11 +120,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="GcPredictor.html"><span class="name">GcPredictor</span></a><span class="result"> extends AnyRef</span>
+        <a href="GcPredictor.html"><span class="name">GcPredictor</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A Gc predictor.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Heap" data-isabs="false">
+    </li><li name="com.twitter.jvm.Heap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HeapextendsProductwithSerializable"></a>
       <a id="Heap:Heap"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -117,11 +133,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Heap.html"><span class="name">Heap</span></a><span class="params">(<span name="allocated">allocated: Long</span>, <span name="tenuringThreshold">tenuringThreshold: Long</span>, <span name="ageHisto">ageHisto: Seq[Long]</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="Heap.html"><span class="name">Heap</span></a><span class="params">(<span name="allocated">allocated: <span class="extype" name="scala.Long">Long</span></span>, <span name="tenuringThreshold">tenuringThreshold: <span class="extype" name="scala.Long">Long</span></span>, <span name="ageHisto">ageHisto: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Long">Long</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.Heapster" data-isabs="false">
+    </li><li name="com.twitter.jvm.Heapster" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HeapsterextendsAnyRef"></a>
       <a id="Heapster:Heapster"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -129,11 +146,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Heapster.html"><span class="name">Heapster</span></a><span class="result"> extends AnyRef</span>
+        <a href="Heapster.html"><span class="name">Heapster</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Support for heapster profiling (google perftools compatible):</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Hotspot" data-isabs="false">
+    </li><li name="com.twitter.jvm.Hotspot" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HotspotextendsJvm"></a>
       <a id="Hotspot:Hotspot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -141,11 +159,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Hotspot.html"><span class="name">Hotspot</span></a><span class="result"> extends Jvm</span>
+        <a href="Hotspot.html"><span class="name">Hotspot</span></a><span class="result"> extends <a href="Jvm.html" class="extype" name="com.twitter.jvm.Jvm">Jvm</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.Jvm" data-isabs="true">
+    </li><li name="com.twitter.jvm.Jvm" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JvmextendsAnyRef"></a>
       <a id="Jvm:Jvm"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -153,11 +172,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Jvm.html"><span class="name">Jvm</span></a><span class="result"> extends AnyRef</span>
+        <a href="Jvm.html"><span class="name">Jvm</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Access JVM internal performance counters.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Kalman" data-isabs="false">
+    </li><li name="com.twitter.jvm.Kalman" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KalmanextendsAnyRef"></a>
       <a id="Kalman:Kalman"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -165,11 +185,12 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Kalman.html"><span class="name">Kalman</span></a><span class="result"> extends AnyRef</span>
+        <a href="Kalman.html"><span class="name">Kalman</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A simple Kalman filter to estimate a scalar value.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.KalmanGaussianError" data-isabs="false">
+    </li><li name="com.twitter.jvm.KalmanGaussianError" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KalmanGaussianErrorextendsKalmanwithEstimator[Double]"></a>
       <a id="KalmanGaussianError:KalmanGaussianError"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -177,13 +198,14 @@ that are <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="KalmanGaussianError.html"><span class="name">KalmanGaussianError</span></a><span class="result"> extends Kalman with Estimator[Double]</span>
+        <a href="KalmanGaussianError.html"><span class="name">KalmanGaussianError</span></a><span class="result"> extends <a href="Kalman.html" class="extype" name="com.twitter.jvm.Kalman">Kalman</a> with <a href="Estimator.html" class="extype" name="com.twitter.jvm.Estimator">Estimator</a>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A Kalman filter in which measurement errors are normally
 distributed over the given range (as a fraction of the measured
 value).</p>
-    </li><li visbl="pub" name="com.twitter.jvm.LoadAverage" data-isabs="false">
+    </li><li name="com.twitter.jvm.LoadAverage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LoadAverageextendsEstimator[Double]"></a>
       <a id="LoadAverage:LoadAverage"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -191,13 +213,14 @@ value).</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="LoadAverage.html"><span class="name">LoadAverage</span></a><span class="result"> extends Estimator[Double]</span>
+        <a href="LoadAverage.html"><span class="name">LoadAverage</span></a><span class="result"> extends <a href="Estimator.html" class="extype" name="com.twitter.jvm.Estimator">Estimator</a>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Unix-like load average, an exponentially weighted moving average,
 smoothed to the given interval (counted in number of
 measurements).</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Pool" data-isabs="true">
+    </li><li name="com.twitter.jvm.Pool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PoolextendsAnyRef"></a>
       <a id="Pool:Pool"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -205,11 +228,12 @@ measurements).</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Pool.html"><span class="name">Pool</span></a><span class="result"> extends AnyRef</span>
+        <a href="Pool.html"><span class="name">Pool</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A handle to a garbage collected memory pool.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.PoolState" data-isabs="false">
+    </li><li name="com.twitter.jvm.PoolState" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PoolStateextendsProductwithSerializable"></a>
       <a id="PoolState:PoolState"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -217,11 +241,12 @@ measurements).</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="PoolState.html"><span class="name">PoolState</span></a><span class="params">(<span name="numCollections">numCollections: Long</span>, <span name="capacity">capacity: StorageUnit</span>, <span name="used">used: StorageUnit</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="PoolState.html"><span class="name">PoolState</span></a><span class="params">(<span name="numCollections">numCollections: <span class="extype" name="scala.Long">Long</span></span>, <span name="capacity">capacity: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>, <span name="used">used: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.Snapshot" data-isabs="false">
+    </li><li name="com.twitter.jvm.Snapshot" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SnapshotextendsProductwithSerializable"></a>
       <a id="Snapshot:Snapshot"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -229,11 +254,12 @@ measurements).</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Snapshot.html"><span class="name">Snapshot</span></a><span class="params">(<span name="timestamp">timestamp: Time</span>, <span name="heap">heap: Heap</span>, <span name="lastGcs">lastGcs: Seq[Gc]</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="Snapshot.html"><span class="name">Snapshot</span></a><span class="params">(<span name="timestamp">timestamp: <a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="heap">heap: <a href="Heap.html" class="extype" name="com.twitter.jvm.Heap">Heap</a></span>, <span name="lastGcs">lastGcs: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Gc.html" class="extype" name="com.twitter.jvm.Gc">Gc</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.WindowedMeans" data-isabs="false">
+    </li><li name="com.twitter.jvm.WindowedMeans" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WindowedMeansextendsEstimator[Double]"></a>
       <a id="WindowedMeans:WindowedMeans"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -241,7 +267,7 @@ measurements).</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="WindowedMeans.html"><span class="name">WindowedMeans</span></a><span class="result"> extends Estimator[Double]</span>
+        <a href="WindowedMeans.html"><span class="name">WindowedMeans</span></a><span class="result"> extends <a href="Estimator.html" class="extype" name="com.twitter.jvm.Estimator">Estimator</a>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">An estimator for weighted windows of means.</p>
@@ -250,9 +276,10 @@ measurements).</p>
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.jvm.CpuProfile" data-isabs="false">
+              <ol><li name="com.twitter.jvm.CpuProfile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CpuProfile"></a>
       <a id="CpuProfile:CpuProfile"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -260,11 +287,12 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="CpuProfile$.html"><span class="name">CpuProfile</span></a><span class="result"> extends Serializable</span>
+        <a href="CpuProfile$.html"><span class="name">CpuProfile</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.EstimatorTest" data-isabs="false">
+    </li><li name="com.twitter.jvm.EstimatorTest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EstimatorTest"></a>
       <a id="EstimatorTest:EstimatorTest"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -272,11 +300,12 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="EstimatorTest$.html"><span class="name">EstimatorTest</span></a><span class="result"> extends App</span>
+        <a href="EstimatorTest$.html"><span class="name">EstimatorTest</span></a><span class="result"> extends <span class="extype" name="scala.App">App</span></span>
       </span>
       </h4>
       <p class="comment cmt">Take a GC log produced by:</p>
-    </li><li visbl="pub" name="com.twitter.jvm.Heapster" data-isabs="false">
+    </li><li name="com.twitter.jvm.Heapster" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Heapster"></a>
       <a id="Heapster:Heapster"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -284,11 +313,12 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Heapster$.html"><span class="name">Heapster</span></a><span class="result"> extends AnyRef</span>
+        <a href="Heapster$.html"><span class="name">Heapster</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.Jvm" data-isabs="false">
+    </li><li name="com.twitter.jvm.Jvm" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Jvm"></a>
       <a id="Jvm:Jvm"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -296,11 +326,12 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Jvm$.html"><span class="name">Jvm</span></a><span class="result"> extends AnyRef</span>
+        <a href="Jvm$.html"><span class="name">Jvm</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.NilJvm" data-isabs="false">
+    </li><li name="com.twitter.jvm.NilJvm" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NilJvm"></a>
       <a id="NilJvm:NilJvm"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -308,11 +339,12 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NilJvm$.html"><span class="name">NilJvm</span></a><span class="result"> extends Jvm</span>
+        <a href="NilJvm$.html"><span class="name">NilJvm</span></a><span class="result"> extends <a href="Jvm.html" class="extype" name="com.twitter.jvm.Jvm">Jvm</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.jvm.Opt" data-isabs="false">
+    </li><li name="com.twitter.jvm.Opt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Opt"></a>
       <a id="Opt:Opt"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -320,11 +352,12 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Opt$.html"><span class="name">Opt</span></a><span class="result"> extends AnyRef</span>
+        <a href="Opt$.html"><span class="name">Opt</span></a>
       </span>
       </h4>
       <p class="comment cmt">Retrieve the named JVM option.</p>
-    </li><li visbl="pub" name="com.twitter.jvm.numProcs" data-isabs="false">
+    </li><li name="com.twitter.jvm.numProcs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="numProcs"></a>
       <a id="numProcs:numProcs"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -332,7 +365,7 @@ measurements).</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="numProcs$.html"><span class="name">numProcs</span></a><span class="result"> extends GlobalFlag[Double]</span>
+        <a href="numProcs$.html"><span class="name">numProcs</span></a><span class="result"> extends <a href="../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
       </h4>
       
@@ -340,10 +373,20 @@ measurements).</p>
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -351,7 +394,6 @@ measurements).</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>

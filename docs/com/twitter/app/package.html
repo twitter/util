@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.app</title>
+          <title>app - com.twitter.app</title>
+          <meta name="description" content="app - com.twitter.app" />
+          <meta name="keywords" content="app com.twitter.app" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.app.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
         <h1>app</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +39,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +56,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.app.App" data-isabs="true">
+              <ol><li name="com.twitter.app.App" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AppextendsClosablewithCloseAwaitably"></a>
       <a id="App:App"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,25 +67,27 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="App.html"><span class="name">App</span></a><span class="result"> extends Closable with CloseAwaitably</span>
+        <a href="App.html"><span class="name">App</span></a><span class="result"> extends <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
       </span>
       </h4>
       <p class="comment cmt">A composable application trait that includes flag parsing as well
 as basic application lifecycle (pre- and post- main).</p>
-    </li><li visbl="pub" name="com.twitter.app.Flag" data-isabs="false">
-      <a id="Flag:Flag[T]"></a>
+    </li><li name="com.twitter.app.Flag" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Flag[T]extendsAnyRef"></a>
+      <a id="Flag[T]:Flag[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Flag.html"><span class="name">Flag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Flag.html"><span class="name">Flag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <p class="comment cmt">A single command-line flag, instantiated by a <a name="com.twitter.app.Flags" class="extype" href="Flags.html">Flags</a>
+      <p class="comment cmt">A single command-line flag, instantiated by a <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a>
 instance.</p>
-    </li><li visbl="pub" name="com.twitter.app.FlagParseException" data-isabs="false">
+    </li><li name="com.twitter.app.FlagParseException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagParseExceptionextendsExceptionwithProductwithSerializable"></a>
       <a id="FlagParseException:FlagParseException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -82,11 +95,12 @@ instance.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FlagParseException.html"><span class="name">FlagParseException</span></a><span class="params">(<span name="message">message: String</span>, <span name="cause">cause: Throwable</span>)</span><span class="result"> extends Exception with Product with Serializable</span>
+        <a href="FlagParseException.html"><span class="name">FlagParseException</span></a><span class="params">(<span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="cause">cause: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a> = <span class="symbol">null</span></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Exception thrown upon flag-parsing failure.</p>
-    </li><li visbl="pub" name="com.twitter.app.FlagUndefinedException" data-isabs="false">
+    </li><li name="com.twitter.app.FlagUndefinedException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagUndefinedExceptionextendsException"></a>
       <a id="FlagUndefinedException:FlagUndefinedException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -94,11 +108,12 @@ instance.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FlagUndefinedException.html"><span class="name">FlagUndefinedException</span></a><span class="result"> extends Exception</span>
+        <a href="FlagUndefinedException.html"><span class="name">FlagUndefinedException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.app.FlagUsageError" data-isabs="false">
+    </li><li name="com.twitter.app.FlagUsageError" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagUsageErrorextendsExceptionwithProductwithSerializable"></a>
       <a id="FlagUsageError:FlagUsageError"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -106,11 +121,12 @@ instance.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FlagUsageError.html"><span class="name">FlagUsageError</span></a><span class="params">(<span name="usage">usage: String</span>)</span><span class="result"> extends Exception with Product with Serializable</span>
+        <a href="FlagUsageError.html"><span class="name">FlagUsageError</span></a><span class="params">(<span name="usage">usage: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.app.FlagValueRequiredException" data-isabs="false">
+    </li><li name="com.twitter.app.FlagValueRequiredException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagValueRequiredExceptionextendsException"></a>
       <a id="FlagValueRequiredException:FlagValueRequiredException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -118,23 +134,25 @@ instance.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FlagValueRequiredException.html"><span class="name">FlagValueRequiredException</span></a><span class="result"> extends Exception</span>
+        <a href="FlagValueRequiredException.html"><span class="name">FlagValueRequiredException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.app.Flaggable" data-isabs="true">
-      <a id="Flaggable:Flaggable[T]"></a>
+    </li><li name="com.twitter.app.Flaggable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Flaggable[T]extendsAnyRef"></a>
+      <a id="Flaggable[T]:Flaggable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Flaggable.html"><span class="name">Flaggable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Flaggable.html"><span class="name">Flaggable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A type class providing evidence for parsing type <code>T</code> as a flag value.</p>
-    </li><li visbl="pub" name="com.twitter.app.Flags" data-isabs="false">
+    </li><li name="com.twitter.app.Flags" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FlagsextendsAnyRef"></a>
       <a id="Flags:Flags"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -142,24 +160,26 @@ instance.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Flags.html"><span class="name">Flags</span></a><span class="result"> extends AnyRef</span>
+        <a href="Flags.html"><span class="name">Flags</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A simple flags implementation.</p>
-    </li><li visbl="pub" name="com.twitter.app.GlobalFlag" data-isabs="false">
-      <a id="GlobalFlag:GlobalFlag[T]"></a>
+    </li><li name="com.twitter.app.GlobalFlag" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GlobalFlag[T]extendsFlag[T]"></a>
+      <a id="GlobalFlag[T]:GlobalFlag[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="GlobalFlag.html"><span class="name">GlobalFlag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends Flag[T]</span>
+        <a href="GlobalFlag.html"><span class="name">GlobalFlag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.GlobalFlag.T">T</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Subclasses of GlobalFlag (that are defined in libraries) are &quot;global&quot; in the
 sense that they are accessible by any application that depends on that library.</p>
-    </li><li visbl="pub" name="com.twitter.app.GlobalFlagVisible" data-isabs="false">
+    </li><li name="com.twitter.app.GlobalFlagVisible" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GlobalFlagVisibleextendsAnnotationwithAnnotationwithClassfileAnnotation"></a>
       <a id="GlobalFlagVisible:GlobalFlagVisible"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -167,7 +187,7 @@ sense that they are accessible by any application that depends on that library.<
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="GlobalFlagVisible.html"><span class="name">GlobalFlagVisible</span></a><span class="result"> extends Annotation with Annotation with ClassfileAnnotation</span>
+        <a href="GlobalFlagVisible.html"><span class="name">GlobalFlagVisible</span></a><span class="result"> extends <span class="extype" name="scala.annotation.Annotation">Annotation</span> with <span class="extype" name="java.lang.annotation.Annotation">Annotation</span> with <span class="extype" name="scala.annotation.ClassfileAnnotation">ClassfileAnnotation</span></span>
       </span>
       </h4>
       
@@ -176,9 +196,10 @@ sense that they are accessible by any application that depends on that library.<
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.app.Flaggable" data-isabs="false">
+              <ol><li name="com.twitter.app.Flaggable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Flaggable"></a>
       <a id="Flaggable:Flaggable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -186,11 +207,12 @@ sense that they are accessible by any application that depends on that library.<
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Flaggable$.html"><span class="name">Flaggable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Flaggable$.html"><span class="name">Flaggable</span></a>
       </span>
       </h4>
       <p class="comment cmt">Default <code>Flaggable</code> implementations.</p>
-    </li><li visbl="pub" name="com.twitter.app.Flags" data-isabs="false">
+    </li><li name="com.twitter.app.Flags" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Flags"></a>
       <a id="Flags:Flags"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -198,7 +220,7 @@ sense that they are accessible by any application that depends on that library.<
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Flags$.html"><span class="name">Flags</span></a><span class="result"> extends AnyRef</span>
+        <a href="Flags$.html"><span class="name">Flags</span></a>
       </span>
       </h4>
       
@@ -206,10 +228,20 @@ sense that they are accessible by any application that depends on that library.<
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -217,7 +249,6 @@ sense that they are accessible by any application that depends on that library.<
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>

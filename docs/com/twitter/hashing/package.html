@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.hashing</title>
+          <title>hashing - com.twitter.hashing</title>
+          <meta name="description" content="hashing - com.twitter.hashing" />
+          <meta name="keywords" content="hashing com.twitter.hashing" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.hashing.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
         <h1>hashing</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +39,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,70 +56,76 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.hashing.DistributionTester" data-isabs="false">
-      <a id="DistributionTester:DistributionTester[A]"></a>
+              <ol><li name="com.twitter.hashing.DistributionTester" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DistributionTester[A]extendsAnyRef"></a>
+      <a id="DistributionTester[A]:DistributionTester[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DistributionTester.html"><span class="name">DistributionTester</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="DistributionTester.html"><span class="name">DistributionTester</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.Distributor" data-isabs="true">
-      <a id="Distributor:Distributor[A]"></a>
+    </li><li name="com.twitter.hashing.Distributor" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Distributor[A]extendsAnyRef"></a>
+      <a id="Distributor[A]:Distributor[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Distributor.html"><span class="name">Distributor</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Distributor.html"><span class="name">Distributor</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.Hashable" data-isabs="true">
-      <a id="Hashable:Hashable[T, R]"></a>
+    </li><li name="com.twitter.hashing.Hashable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Hashable[-T,+R]extendsT=&gt;R"></a>
+      <a id="Hashable[-T,+R]:Hashable[T,R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Hashable.html"><span class="name">Hashable</span></a><span class="tparams">[<span name="T">-T</span>, <span name="R">+R</span>]</span><span class="result"> extends (T) ⇒ R</span>
+        <a href="Hashable.html"><span class="name">Hashable</span></a><span class="tparams">[<span name="T">-T</span>, <span name="R">+R</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.hashing.Hashable.T">T</span>) ⇒ <span class="extype" name="com.twitter.hashing.Hashable.R">R</span></span>
       </span>
       </h4>
       <p class="comment cmt">Type-class for generic hashing
 </p>
-    </li><li visbl="pub" name="com.twitter.hashing.KetamaDistributor" data-isabs="false">
-      <a id="KetamaDistributor:KetamaDistributor[A]"></a>
+    </li><li name="com.twitter.hashing.KetamaDistributor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KetamaDistributor[A]extendsDistributor[A]"></a>
+      <a id="KetamaDistributor[A]:KetamaDistributor[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="KetamaDistributor.html"><span class="name">KetamaDistributor</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Distributor[A]</span>
+        <a href="KetamaDistributor.html"><span class="name">KetamaDistributor</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Distributor.html" class="extype" name="com.twitter.hashing.Distributor">Distributor</a>[<span class="extype" name="com.twitter.hashing.KetamaDistributor.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.KetamaNode" data-isabs="false">
-      <a id="KetamaNode:KetamaNode[A]"></a>
+    </li><li name="com.twitter.hashing.KetamaNode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KetamaNode[A]extendsProductwithSerializable"></a>
+      <a id="KetamaNode[A]:KetamaNode[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="KetamaNode.html"><span class="name">KetamaNode</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="identifier">identifier: String</span>, <span name="weight">weight: Int</span>, <span name="handle">handle: A</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="KetamaNode.html"><span class="name">KetamaNode</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="weight">weight: <span class="extype" name="scala.Int">Int</span></span>, <span name="handle">handle: <span class="extype" name="com.twitter.hashing.KetamaNode.A">A</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.LowPriorityHashable" data-isabs="true">
+    </li><li name="com.twitter.hashing.LowPriorityHashable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="LowPriorityHashableextendsAnyRef"></a>
       <a id="LowPriorityHashable:LowPriorityHashable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -117,23 +133,25 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="LowPriorityHashable.html"><span class="name">LowPriorityHashable</span></a><span class="result"> extends AnyRef</span>
+        <a href="LowPriorityHashable.html"><span class="name">LowPriorityHashable</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.SingletonDistributor" data-isabs="false">
-      <a id="SingletonDistributor:SingletonDistributor[A]"></a>
+    </li><li name="com.twitter.hashing.SingletonDistributor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SingletonDistributor[A]extendsDistributor[A]"></a>
+      <a id="SingletonDistributor[A]:SingletonDistributor[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SingletonDistributor.html"><span class="name">SingletonDistributor</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Distributor[A]</span>
+        <a href="SingletonDistributor.html"><span class="name">SingletonDistributor</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Distributor.html" class="extype" name="com.twitter.hashing.Distributor">Distributor</a>[<span class="extype" name="com.twitter.hashing.SingletonDistributor.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.KeyHasher" data-isabs="true">
+    </li><li name="com.twitter.hashing.KeyHasher" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="KeyHasherextendsAnyRef"></a>
       <a id="KeyHasher:KeyHasher"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -141,7 +159,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="KeyHasher.html"><span class="name deprecated" title="Deprecated: (Since version scala.this.deprecated.init$default$2) Prefer Hashable[Array[Byte],Long]">KeyHasher</span></a><span class="result"> extends AnyRef</span>
+        <a href="KeyHasher.html"><span class="name deprecated" title="Deprecated: (Since version 6.12.1) Prefer Hashable[Array[Byte],Long]">KeyHasher</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Hashes a key into a 32-bit or 64-bit number (depending on the algorithm).</p>
@@ -150,9 +168,10 @@
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.hashing.Hashable" data-isabs="false">
+              <ol><li name="com.twitter.hashing.Hashable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Hashable"></a>
       <a id="Hashable:Hashable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -160,11 +179,12 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Hashable$.html"><span class="name">Hashable</span></a><span class="result"> extends LowPriorityHashable</span>
+        <a href="Hashable$.html"><span class="name">Hashable</span></a><span class="result"> extends <a href="LowPriorityHashable.html" class="extype" name="com.twitter.hashing.LowPriorityHashable">LowPriorityHashable</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.hashing.KeyHasher" data-isabs="false">
+    </li><li name="com.twitter.hashing.KeyHasher" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KeyHasher"></a>
       <a id="KeyHasher:KeyHasher"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -172,7 +192,7 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="KeyHasher$.html"><span class="name">KeyHasher</span></a><span class="result"> extends AnyRef</span>
+        <a href="KeyHasher$.html"><span class="name">KeyHasher</span></a>
       </span>
       </h4>
       <p class="comment cmt">Commonly used key hashing algorithms.</p>
@@ -180,10 +200,20 @@
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -191,7 +221,6 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>

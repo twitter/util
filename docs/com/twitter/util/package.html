@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.util</title>
+          <title>util - com.twitter.util</title>
+          <meta name="description" content="util - com.twitter.util" />
+          <meta name="keywords" content="util com.twitter.util" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.util.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
         <h1>util</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,13 +39,36 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-        
-        
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.twitter.util"><span>util</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
             <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -46,34 +79,37 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Activity" data-isabs="false">
-      <a id="Activity:Activity[T]"></a>
+              <ol><li name="com.twitter.util.Activity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Activity[+T]extendsProductwithSerializable"></a>
+      <a id="Activity[+T]:Activity[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Activity.html"><span class="name">Activity</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="run">run: Var[State[T]]</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="Activity.html"><span class="name">Activity</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="run">run: <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.T">T</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">An Activity is a handle to a concurrently running process, producing
 T-typed values.</p>
-    </li><li visbl="pub" name="com.twitter.util.Awaitable" data-isabs="true">
-      <a id="Awaitable:Awaitable[T]"></a>
+    </li><li name="com.twitter.util.Awaitable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Awaitable[+T]extendsAnyRef"></a>
+      <a id="Awaitable[+T]:Awaitable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Awaitable.html"><span class="name">Awaitable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Awaitable.html"><span class="name">Awaitable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Wait for the result of some action.</p>
-    </li><li visbl="pub" name="com.twitter.util.Base64StringEncoder" data-isabs="true">
+    </li><li name="com.twitter.util.Base64StringEncoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Base64StringEncoderextendsStringEncoder"></a>
       <a id="Base64StringEncoder:Base64StringEncoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -81,23 +117,25 @@ T-typed values.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Base64StringEncoder.html"><span class="name">Base64StringEncoder</span></a><span class="result"> extends StringEncoder</span>
+        <a href="Base64StringEncoder.html"><span class="name">Base64StringEncoder</span></a><span class="result"> extends <a href="StringEncoder.html" class="extype" name="com.twitter.util.StringEncoder">StringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.BinaryThriftCodec" data-isabs="false">
-      <a id="BinaryThriftCodec:BinaryThriftCodec[T]"></a>
+    </li><li name="com.twitter.util.BinaryThriftCodec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BinaryThriftCodec[T&lt;:org.apache.thrift.TBase[_,_]]extendsThriftCodec[T,org.apache.thrift.protocol.TBinaryProtocol.Factory]"></a>
+      <a id="BinaryThriftCodec[T&lt;:TBase[_,_]]:BinaryThriftCodec[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BinaryThriftCodec.html"><span class="name">BinaryThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: org.apache.thrift.TBase[_, _]</span>]</span><span class="result"> extends ThriftCodec[T, Factory]</span>
+        <a href="BinaryThriftCodec.html"><span class="name">BinaryThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="org.apache.thrift.TBase">TBase</span>[_, _]</span>]</span><span class="result"> extends <a href="ThriftCodec.html" class="extype" name="com.twitter.util.ThriftCodec">ThriftCodec</a>[<span class="extype" name="com.twitter.util.BinaryThriftCodec.T">T</span>, <span class="extype" name="org.apache.thrift.protocol.TBinaryProtocol.Factory">Factory</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.BinaryThriftSerializer" data-isabs="false">
+    </li><li name="com.twitter.util.BinaryThriftSerializer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BinaryThriftSerializerextendsThriftSerializerwithBase64StringEncoder"></a>
       <a id="BinaryThriftSerializer:BinaryThriftSerializer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -105,23 +143,25 @@ T-typed values.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BinaryThriftSerializer.html"><span class="name">BinaryThriftSerializer</span></a><span class="result"> extends ThriftSerializer with Base64StringEncoder</span>
+        <a href="BinaryThriftSerializer.html"><span class="name">BinaryThriftSerializer</span></a><span class="result"> extends <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> with <a href="Base64StringEncoder.html" class="extype" name="com.twitter.util.Base64StringEncoder">Base64StringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.BoundedStack" data-isabs="false">
-      <a id="BoundedStack:BoundedStack[A]"></a>
+    </li><li name="com.twitter.util.BoundedStack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BoundedStack[A]extendsSeq[A]"></a>
+      <a id="BoundedStack[A]:BoundedStack[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BoundedStack.html"><span class="name">BoundedStack</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Seq[A]</span>
+        <a href="BoundedStack.html"><span class="name">BoundedStack</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.BoundedStack.A">A</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A &quot;stack&quot; with a bounded size.</p>
-    </li><li visbl="pub" name="com.twitter.util.Cancellable" data-isabs="true">
+    </li><li name="com.twitter.util.Cancellable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CancellableextendsAnyRef"></a>
       <a id="Cancellable:Cancellable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -129,11 +169,12 @@ T-typed values.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Cancellable.html"><span class="name">Cancellable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Cancellable.html"><span class="name">Cancellable</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Defines a trait that makes the underlying object *cancellable*.</p>
-    </li><li visbl="pub" name="com.twitter.util.CancellableSink" data-isabs="false">
+    </li><li name="com.twitter.util.CancellableSink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CancellableSinkextendsCancellable"></a>
       <a id="CancellableSink:CancellableSink"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -141,11 +182,12 @@ T-typed values.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="CancellableSink.html"><span class="name">CancellableSink</span></a><span class="result"> extends Cancellable</span>
+        <a href="CancellableSink.html"><span class="name">CancellableSink</span></a><span class="result"> extends <a href="Cancellable.html" class="extype" name="com.twitter.util.Cancellable">Cancellable</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Closable" data-isabs="true">
+    </li><li name="com.twitter.util.Closable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClosableextendsAnyRef"></a>
       <a id="Closable:Closable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -153,11 +195,12 @@ T-typed values.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Closable.html"><span class="name">Closable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Closable.html"><span class="name">Closable</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p>
-    </li><li visbl="pub" name="com.twitter.util.CloseAwaitably" data-isabs="true">
+    </li><li name="com.twitter.util.CloseAwaitably" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CloseAwaitablyextendsAwaitable[Unit]"></a>
       <a id="CloseAwaitably:CloseAwaitably"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -165,49 +208,53 @@ T-typed values.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="CloseAwaitably.html"><span class="name">CloseAwaitably</span></a><span class="result"> extends Awaitable[Unit]</span>
+        <a href="CloseAwaitably.html"><span class="name">CloseAwaitably</span></a><span class="result"> extends <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       </h4>
-      <p class="comment cmt">A mixin to make an <a name="com.twitter.util.Awaitable" class="extype" href="Awaitable.html">Awaitable</a> out
-of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Closable</a>.</p>
-    </li><li visbl="pub" name="com.twitter.util.Codec" data-isabs="true">
-      <a id="Codec:Codec[T, S]"></a>
+      <p class="comment cmt">A mixin to make an <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">com.twitter.util.Awaitable</a> out
+of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com.twitter.util.Closable</a>.</p>
+    </li><li name="com.twitter.util.Codec" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Codec[T,S]extendsBijection[T,S]withEncoder[T,S]withDecoder[T,S]"></a>
+      <a id="Codec[T,S]:Codec[T,S]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Codec.html"><span class="name">Codec</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends Bijection[T, S] with Encoder[T, S] with Decoder[T, S]</span>
+        <a href="Codec.html"><span class="name">Codec</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>] with <a href="Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>] with <a href="Decoder.html" class="extype" name="com.twitter.util.Decoder">Decoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A base trait for all Codecs that translate a type T into a serialized form S
 </p>
-    </li><li visbl="pub" name="com.twitter.util.Command" data-isabs="true">
-      <a id="Command:Command[T1]"></a>
+    </li><li name="com.twitter.util.Command" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Command[-T1]extendsT1=&gt;Unit"></a>
+      <a id="Command[-T1]:Command[T1]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Command.html"><span class="name">Command</span></a><span class="tparams">[<span name="T1">-T1</span>]</span><span class="result"> extends (T1) ⇒ Unit</span>
+        <a href="Command.html"><span class="name">Command</span></a><span class="tparams">[<span name="T1">-T1</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.util.Command.T1">T1</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.CompactThriftCodec" data-isabs="false">
-      <a id="CompactThriftCodec:CompactThriftCodec[T]"></a>
+    </li><li name="com.twitter.util.CompactThriftCodec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CompactThriftCodec[T&lt;:org.apache.thrift.TBase[_,_]]extendsThriftCodec[T,org.apache.thrift.protocol.TCompactProtocol.Factory]"></a>
+      <a id="CompactThriftCodec[T&lt;:TBase[_,_]]:CompactThriftCodec[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="CompactThriftCodec.html"><span class="name">CompactThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: org.apache.thrift.TBase[_, _]</span>]</span><span class="result"> extends ThriftCodec[T, Factory]</span>
+        <a href="CompactThriftCodec.html"><span class="name">CompactThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="org.apache.thrift.TBase">TBase</span>[_, _]</span>]</span><span class="result"> extends <a href="ThriftCodec.html" class="extype" name="com.twitter.util.ThriftCodec">ThriftCodec</a>[<span class="extype" name="com.twitter.util.CompactThriftCodec.T">T</span>, <span class="extype" name="org.apache.thrift.protocol.TCompactProtocol.Factory">Factory</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.CompactThriftSerializer" data-isabs="false">
+    </li><li name="com.twitter.util.CompactThriftSerializer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CompactThriftSerializerextendsThriftSerializerwithBase64StringEncoder"></a>
       <a id="CompactThriftSerializer:CompactThriftSerializer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -215,23 +262,25 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="CompactThriftSerializer.html"><span class="name">CompactThriftSerializer</span></a><span class="result"> extends ThriftSerializer with Base64StringEncoder</span>
+        <a href="CompactThriftSerializer.html"><span class="name">CompactThriftSerializer</span></a><span class="result"> extends <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> with <a href="Base64StringEncoder.html" class="extype" name="com.twitter.util.Base64StringEncoder">Base64StringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ConstFuture" data-isabs="false">
-      <a id="ConstFuture:ConstFuture[A]"></a>
+    </li><li name="com.twitter.util.ConstFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConstFuture[A]extendsFuture[A]"></a>
+      <a id="ConstFuture[A]:ConstFuture[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConstFuture.html"><span class="name">ConstFuture</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Future[A]</span>
+        <a href="ConstFuture.html"><span class="name">ConstFuture</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.ConstFuture.A">A</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A Future that is already completed.</p>
-    </li><li visbl="pub" name="com.twitter.util.CountDownLatch" data-isabs="false">
+    </li><li name="com.twitter.util.CountDownLatch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CountDownLatchextendsAnyRef"></a>
       <a id="CountDownLatch:CountDownLatch"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -239,11 +288,12 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="CountDownLatch.html"><span class="name">CountDownLatch</span></a><span class="result"> extends AnyRef</span>
+        <a href="CountDownLatch.html"><span class="name">CountDownLatch</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Credentials" data-isabs="false">
+    </li><li name="com.twitter.util.Credentials" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CredentialsextendsAnyRef"></a>
       <a id="Credentials:Credentials"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -251,24 +301,26 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Credentials.html"><span class="name">Credentials</span></a><span class="result"> extends AnyRef</span>
+        <a href="Credentials.html"><span class="name">Credentials</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Java interface to Credentials.</p>
-    </li><li visbl="pub" name="com.twitter.util.Decoder" data-isabs="true">
-      <a id="Decoder:Decoder[T, S]"></a>
+    </li><li name="com.twitter.util.Decoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Decoder[T,S]extendsAnyRef"></a>
+      <a id="Decoder[T,S]:Decoder[T,S]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Decoder.html"><span class="name">Decoder</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Decoder.html"><span class="name">Decoder</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A base trait for decoders for type T from a serialized form S
 </p>
-    </li><li visbl="pub" name="com.twitter.util.DecoderCompanion" data-isabs="true">
+    </li><li name="com.twitter.util.DecoderCompanion" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DecoderCompanionextendsAnyRef"></a>
       <a id="DecoderCompanion:DecoderCompanion"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -276,23 +328,25 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="DecoderCompanion.html"><span class="name">DecoderCompanion</span></a><span class="result"> extends AnyRef</span>
+        <a href="DecoderCompanion.html"><span class="name">DecoderCompanion</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Disposable" data-isabs="true">
-      <a id="Disposable:Disposable[T]"></a>
+    </li><li name="com.twitter.util.Disposable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Disposable[+T]extendsAnyRef"></a>
+      <a id="Disposable[+T]:Disposable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Disposable.html"><span class="name">Disposable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Disposable.html"><span class="name">Disposable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <p class="comment cmt"><a name="com.twitter.util.Disposable" class="extype" href="Disposable.html">Disposable</a> represents a live resource that must be disposed after use.</p>
-    </li><li visbl="pub" name="com.twitter.util.DoubleTrouble" data-isabs="false">
+      <p class="comment cmt"><a href="Disposable.html" class="extype" name="com.twitter.util.Disposable">com.twitter.util.Disposable</a> represents a live resource that must be disposed after use.</p>
+    </li><li name="com.twitter.util.DoubleTrouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleTroubleextendsException"></a>
       <a id="DoubleTrouble:DoubleTrouble"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -300,11 +354,12 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DoubleTrouble.html"><span class="name">DoubleTrouble</span></a><span class="result"> extends Exception</span>
+        <a href="DoubleTrouble.html"><span class="name">DoubleTrouble</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Duration" data-isabs="false">
+    </li><li name="com.twitter.util.Duration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DurationextendsTimeLike[com.twitter.util.Duration]withSerializable"></a>
       <a id="Duration:Duration"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -312,24 +367,26 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Duration.html"><span class="name">Duration</span></a><span class="result"> extends TimeLike[Duration] with Serializable</span>
+        <a href="Duration.html"><span class="name">Duration</span></a><span class="result"> extends <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>] with <span class="extype" name="java.io.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">A <code>Duration</code> represents the span between two points in time.</p>
-    </li><li visbl="pub" name="com.twitter.util.Encoder" data-isabs="true">
-      <a id="Encoder:Encoder[T, S]"></a>
+    </li><li name="com.twitter.util.Encoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Encoder[T,S]extendsT=&gt;S"></a>
+      <a id="Encoder[T,S]:Encoder[T,S]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Encoder.html"><span class="name">Encoder</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends (T) ⇒ S</span>
+        <a href="Encoder.html"><span class="name">Encoder</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.util.Encoder.T">T</span>) ⇒ <span class="extype" name="com.twitter.util.Encoder.S">S</span></span>
       </span>
       </h4>
       <p class="comment cmt">A base trait for encoders of type T into a serialized form S
 </p>
-    </li><li visbl="pub" name="com.twitter.util.EncoderCompanion" data-isabs="true">
+    </li><li name="com.twitter.util.EncoderCompanion" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="EncoderCompanionextendsAnyRef"></a>
       <a id="EncoderCompanion:EncoderCompanion"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -337,11 +394,12 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="EncoderCompanion.html"><span class="name">EncoderCompanion</span></a><span class="result"> extends AnyRef</span>
+        <a href="EncoderCompanion.html"><span class="name">EncoderCompanion</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Eval" data-isabs="false">
+    </li><li name="com.twitter.util.Eval" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EvalextendsAnyRef"></a>
       <a id="Eval:Eval"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -349,48 +407,52 @@ of a <a name="com.twitter.util.Closable" class="extype" href="Closable.html">Clo
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Eval.html"><span class="name">Eval</span></a><span class="result"> extends AnyRef</span>
+        <a href="Eval.html"><span class="name">Eval</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Evaluates files, strings, or input streams as Scala code, and returns the result.</p>
-    </li><li visbl="pub" name="com.twitter.util.Event" data-isabs="true">
-      <a id="Event:Event[T]"></a>
+    </li><li name="com.twitter.util.Event" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Event[+T]extendsAnyRef"></a>
+      <a id="Event[+T]:Event[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Event.html"><span class="name">Event</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Event.html"><span class="name">Event</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Events are instantaneous values, defined only at particular
 instants in time (cf.</p>
-    </li><li visbl="pub" name="com.twitter.util.ExceptionalFunction" data-isabs="true">
-      <a id="ExceptionalFunction:ExceptionalFunction[T1, R]"></a>
+    </li><li name="com.twitter.util.ExceptionalFunction" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ExceptionalFunction[-T1,+R]extendsFunction[T1,R]"></a>
+      <a id="ExceptionalFunction[-T1,+R]:ExceptionalFunction[T1,R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ExceptionalFunction.html"><span class="name">ExceptionalFunction</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends Function[T1, R]</span>
+        <a href="ExceptionalFunction.html"><span class="name">ExceptionalFunction</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends <a href="Function.html" class="extype" name="com.twitter.util.Function">Function</a>[<span class="extype" name="com.twitter.util.ExceptionalFunction.T1">T1</span>, <span class="extype" name="com.twitter.util.ExceptionalFunction.R">R</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ExceptionalFunction0" data-isabs="true">
-      <a id="ExceptionalFunction0:ExceptionalFunction0[R]"></a>
+    </li><li name="com.twitter.util.ExceptionalFunction0" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ExceptionalFunction0[+R]extendsFunction0[R]"></a>
+      <a id="ExceptionalFunction0[+R]:ExceptionalFunction0[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ExceptionalFunction0.html"><span class="name">ExceptionalFunction0</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends Function0[R]</span>
+        <a href="ExceptionalFunction0.html"><span class="name">ExceptionalFunction0</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends <a href="Function0.html" class="extype" name="com.twitter.util.Function0">Function0</a>[<span class="extype" name="com.twitter.util.ExceptionalFunction0.R">R</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ExecutorServiceFuturePool" data-isabs="false">
+    </li><li name="com.twitter.util.ExecutorServiceFuturePool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExecutorServiceFuturePoolextendsFuturePool"></a>
       <a id="ExecutorServiceFuturePool:ExecutorServiceFuturePool"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -398,83 +460,90 @@ instants in time (cf.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ExecutorServiceFuturePool.html"><span class="name">ExecutorServiceFuturePool</span></a><span class="result"> extends FuturePool</span>
+        <a href="ExecutorServiceFuturePool.html"><span class="name">ExecutorServiceFuturePool</span></a><span class="result"> extends <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a></span>
       </span>
       </h4>
       <p class="comment cmt">A FuturePool implementation backed by an ExecutorService.</p>
-    </li><li visbl="pub" name="com.twitter.util.Extractable" data-isabs="true">
-      <a id="Extractable:Extractable[T]"></a>
+    </li><li name="com.twitter.util.Extractable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Extractable[T]extendsAnyRef"></a>
+      <a id="Extractable[T]:Extractable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Extractable.html"><span class="name">Extractable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Extractable.html"><span class="name">Extractable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.FactoryPool" data-isabs="true">
-      <a id="FactoryPool:FactoryPool[A]"></a>
+    </li><li name="com.twitter.util.FactoryPool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FactoryPool[A]extendsPool[A]"></a>
+      <a id="FactoryPool[A]:FactoryPool[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FactoryPool.html"><span class="name">FactoryPool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Pool[A]</span>
+        <a href="FactoryPool.html"><span class="name">FactoryPool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Pool.html" class="extype" name="com.twitter.util.Pool">Pool</a>[<span class="extype" name="com.twitter.util.FactoryPool.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Function" data-isabs="true">
-      <a id="Function:Function[T1, R]"></a>
+    </li><li name="com.twitter.util.Function" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Function[-T1,+R]extendsPartialFunction[T1,R]"></a>
+      <a id="Function[-T1,+R]:Function[T1,R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Function.html"><span class="name">Function</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends PartialFunction[T1, R]</span>
+        <a href="Function.html"><span class="name">Function</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="com.twitter.util.Function.T1">T1</span>, <span class="extype" name="com.twitter.util.Function.R">R</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">This class is for Java friendliness.</p>
-    </li><li visbl="pub" name="com.twitter.util.Function0" data-isabs="true">
-      <a id="Function0:Function0[R]"></a>
+    </li><li name="com.twitter.util.Function0" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Function0[+R]extends()=&gt;R"></a>
+      <a id="Function0[+R]:Function0[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Function0.html"><span class="name">Function0</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends () ⇒ R</span>
+        <a href="Function0.html"><span class="name">Function0</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends () ⇒ <span class="extype" name="com.twitter.util.Function0.R">R</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Function2" data-isabs="true">
-      <a id="Function2:Function2[T1, T2, R]"></a>
+    </li><li name="com.twitter.util.Function2" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Function2[-T1,-T2,+R]extends(T1,T2)=&gt;R"></a>
+      <a id="Function2[-T1,-T2,+R]:Function2[T1,T2,R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Function2.html"><span class="name">Function2</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="T2">-T2</span>, <span name="R">+R</span>]</span><span class="result"> extends (T1, T2) ⇒ R</span>
+        <a href="Function2.html"><span class="name">Function2</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="T2">-T2</span>, <span name="R">+R</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.util.Function2.T1">T1</span>, <span class="extype" name="com.twitter.util.Function2.T2">T2</span>) ⇒ <span class="extype" name="com.twitter.util.Function2.R">R</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Future" data-isabs="true">
-      <a id="Future:Future[A]"></a>
+    </li><li name="com.twitter.util.Future" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Future[+A]extendsAwaitable[A]"></a>
+      <a id="Future[+A]:Future[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Future.html"><span class="name">Future</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends Awaitable[A]</span>
+        <a href="Future.html"><span class="name">Future</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A computation evaluated asynchronously.</p>
-    </li><li visbl="pub" name="com.twitter.util.FutureCancelledException" data-isabs="false">
+    </li><li name="com.twitter.util.FutureCancelledException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FutureCancelledExceptionextendsException"></a>
       <a id="FutureCancelledException:FutureCancelledException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -482,23 +551,25 @@ instants in time (cf.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FutureCancelledException.html"><span class="name">FutureCancelledException</span></a><span class="result"> extends Exception</span>
+        <a href="FutureCancelledException.html"><span class="name">FutureCancelledException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.FutureEventListener" data-isabs="true">
-      <a id="FutureEventListener:FutureEventListener[T]"></a>
+    </li><li name="com.twitter.util.FutureEventListener" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FutureEventListener[T]extendsAnyRef"></a>
+      <a id="FutureEventListener[T]:FutureEventListener[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="FutureEventListener.html"><span class="name">FutureEventListener</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="FutureEventListener.html"><span class="name">FutureEventListener</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An alternative interface for handling Future Events.</p>
-    </li><li visbl="pub" name="com.twitter.util.FuturePool" data-isabs="true">
+    </li><li name="com.twitter.util.FuturePool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FuturePoolextendsAnyRef"></a>
       <a id="FuturePool:FuturePool"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -506,37 +577,40 @@ instants in time (cf.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="FuturePool.html"><span class="name">FuturePool</span></a><span class="result"> extends AnyRef</span>
+        <a href="FuturePool.html"><span class="name">FuturePool</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A FuturePool executes tasks asynchronously, typically using a pool
 of worker threads.</p>
-    </li><li visbl="pub" name="com.twitter.util.FutureTask" data-isabs="false">
-      <a id="FutureTask:FutureTask[A]"></a>
+    </li><li name="com.twitter.util.FutureTask" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FutureTask[A]extendsPromise[A]withRunnable"></a>
+      <a id="FutureTask[A]:FutureTask[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FutureTask.html"><span class="name">FutureTask</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Promise[A] with Runnable</span>
+        <a href="FutureTask.html"><span class="name">FutureTask</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="com.twitter.util.FutureTask.A">A</span>] with <span class="extype" name="java.lang.Runnable">Runnable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.FutureTransformer" data-isabs="true">
-      <a id="FutureTransformer:FutureTransformer[A, B]"></a>
+    </li><li name="com.twitter.util.FutureTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FutureTransformer[-A,+B]extendsAnyRef"></a>
+      <a id="FutureTransformer[-A,+B]:FutureTransformer[A,B]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FutureTransformer.html"><span class="name">FutureTransformer</span></a><span class="tparams">[<span name="A">-A</span>, <span name="B">+B</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="FutureTransformer.html"><span class="name">FutureTransformer</span></a><span class="tparams">[<span name="A">-A</span>, <span name="B">+B</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An alternative interface for performing Future transformations;
 that is, converting a Future[A] to a Future[B].</p>
-    </li><li visbl="pub" name="com.twitter.util.GZIPStringEncoder" data-isabs="true">
+    </li><li name="com.twitter.util.GZIPStringEncoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="GZIPStringEncoderextendsStringEncoder"></a>
       <a id="GZIPStringEncoder:GZIPStringEncoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -544,25 +618,27 @@ that is, converting a Future[A] to a Future[B].</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="GZIPStringEncoder.html"><span class="name">GZIPStringEncoder</span></a><span class="result"> extends StringEncoder</span>
+        <a href="GZIPStringEncoder.html"><span class="name">GZIPStringEncoder</span></a><span class="result"> extends <a href="StringEncoder.html" class="extype" name="com.twitter.util.StringEncoder">StringEncoder</a></span>
       </span>
       </h4>
       <p class="comment cmt">A collection of utilities for encoding strings and byte arrays to and decoding from strings
 compressed from with gzip.</p>
-    </li><li visbl="pub" name="com.twitter.util.ImmutableLRU" data-isabs="false">
-      <a id="ImmutableLRU:ImmutableLRU[K, V]"></a>
+    </li><li name="com.twitter.util.ImmutableLRU" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ImmutableLRU[K,V]extendsAnyRef"></a>
+      <a id="ImmutableLRU[K,V]:ImmutableLRU[K,V]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ImmutableLRU.html"><span class="name">ImmutableLRU</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="ImmutableLRU.html"><span class="name">ImmutableLRU</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">&quot;map&quot; is the backing store used to hold key-&gt;(index,value)
 pairs.</p>
-    </li><li visbl="pub" name="com.twitter.util.InterruptibleExecutorServiceFuturePool" data-isabs="false">
+    </li><li name="com.twitter.util.InterruptibleExecutorServiceFuturePool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InterruptibleExecutorServiceFuturePoolextendsExecutorServiceFuturePool"></a>
       <a id="InterruptibleExecutorServiceFuturePool:InterruptibleExecutorServiceFuturePool"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -570,11 +646,38 @@ pairs.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="InterruptibleExecutorServiceFuturePool.html"><span class="name">InterruptibleExecutorServiceFuturePool</span></a><span class="result"> extends ExecutorServiceFuturePool</span>
+        <a href="InterruptibleExecutorServiceFuturePool.html"><span class="name">InterruptibleExecutorServiceFuturePool</span></a><span class="result"> extends <a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.JavaSingleton" data-isabs="true">
+    </li><li name="com.twitter.util.JMapWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JMapWrapper[A,B]extendsJMapWrapperLike[A,B,com.twitter.util.JMapWrapper[A,B]]withProductwithSerializable"></a>
+      <a id="JMapWrapper[A,B]:JMapWrapper[A,B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="JMapWrapper.html"><span class="name">JMapWrapper</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span name="underlying">underlying: <span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="com.twitter.util.JMapWrapper.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapper.B">B</span>]</span>)</span><span class="result"> extends <a href="JMapWrapperLike.html" class="extype" name="com.twitter.util.JMapWrapperLike">JMapWrapperLike</a>[<span class="extype" name="com.twitter.util.JMapWrapper.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapper.B">B</span>, <a href="JMapWrapper.html" class="extype" name="com.twitter.util.JMapWrapper">JMapWrapper</a>[<span class="extype" name="com.twitter.util.JMapWrapper.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapper.B">B</span>]] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.JMapWrapperLike" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JMapWrapperLike[A,B,+Repr&lt;:scala.collection.mutable.MapLike[A,B,Repr]withscala.collection.mutable.Map[A,B]]extendsMap[A,B]withMapLike[A,B,Repr]"></a>
+      <a id="JMapWrapperLike[A,B,+Repr&lt;:MapLike[A,B,Repr]withMap[A,B]]:JMapWrapperLike[A,B,Repr]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JMapWrapperLike.html"><span class="name">JMapWrapperLike</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="Repr">+Repr &lt;: <span class="extype" name="scala.collection.mutable.MapLike">MapLike</span>[<span class="extype" name="com.twitter.util.JMapWrapperLike.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapperLike.B">B</span>, <span class="extype" name="com.twitter.util.JMapWrapperLike.Repr">Repr</span>] with <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="com.twitter.util.JMapWrapperLike.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapperLike.B">B</span>]</span>]</span><span class="result"> extends <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="com.twitter.util.JMapWrapperLike.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapperLike.B">B</span>] with <span class="extype" name="scala.collection.mutable.MapLike">MapLike</span>[<span class="extype" name="com.twitter.util.JMapWrapperLike.A">A</span>, <span class="extype" name="com.twitter.util.JMapWrapperLike.B">B</span>, <span class="extype" name="com.twitter.util.JMapWrapperLike.Repr">Repr</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.JavaSingleton" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JavaSingletonextendsAnyRef"></a>
       <a id="JavaSingleton:JavaSingleton"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -582,11 +685,12 @@ pairs.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="JavaSingleton.html"><span class="name">JavaSingleton</span></a><span class="result"> extends AnyRef</span>
+        <a href="JavaSingleton.html"><span class="name">JavaSingleton</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A mixin to allow scala objects to be used from java.</p>
-    </li><li visbl="pub" name="com.twitter.util.JavaTimer" data-isabs="false">
+    </li><li name="com.twitter.util.JavaTimer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JavaTimerextendsTimer"></a>
       <a id="JavaTimer:JavaTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -594,11 +698,12 @@ pairs.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="JavaTimer.html"><span class="name">JavaTimer</span></a><span class="result"> extends Timer</span>
+        <a href="JavaTimer.html"><span class="name">JavaTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.JsonThriftSerializer" data-isabs="false">
+    </li><li name="com.twitter.util.JsonThriftSerializer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JsonThriftSerializerextendsThriftSerializer"></a>
       <a id="JsonThriftSerializer:JsonThriftSerializer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -606,35 +711,38 @@ pairs.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="JsonThriftSerializer.html"><span class="name">JsonThriftSerializer</span></a><span class="result"> extends ThriftSerializer</span>
+        <a href="JsonThriftSerializer.html"><span class="name">JsonThriftSerializer</span></a><span class="result"> extends <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.LastWriteWinsQueue" data-isabs="false">
-      <a id="LastWriteWinsQueue:LastWriteWinsQueue[A]"></a>
+    </li><li name="com.twitter.util.LastWriteWinsQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LastWriteWinsQueue[A]extendsQueue[A]"></a>
+      <a id="LastWriteWinsQueue[A]:LastWriteWinsQueue[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="LastWriteWinsQueue.html"><span class="name">LastWriteWinsQueue</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Queue[A]</span>
+        <a href="LastWriteWinsQueue.html"><span class="name">LastWriteWinsQueue</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="java.util.Queue">Queue</span>[<span class="extype" name="com.twitter.util.LastWriteWinsQueue.A">A</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">An implementation of java.</p>
-    </li><li visbl="pub" name="com.twitter.util.Local" data-isabs="false">
-      <a id="Local:Local[T]"></a>
+    </li><li name="com.twitter.util.Local" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Local[T]extendsAnyRef"></a>
+      <a id="Local[T]:Local[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Local.html"><span class="name">Local</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Local.html"><span class="name">Local</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A Local is a ThreadLocal whose scope is flexible.</p>
-    </li><li visbl="pub" name="com.twitter.util.LongOverflowException" data-isabs="false">
+    </li><li name="com.twitter.util.LongOverflowException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LongOverflowExceptionextendsException"></a>
       <a id="LongOverflowException:LongOverflowException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -642,47 +750,51 @@ pairs.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="LongOverflowException.html"><span class="name">LongOverflowException</span></a><span class="result"> extends Exception</span>
+        <a href="LongOverflowException.html"><span class="name">LongOverflowException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.LruMap" data-isabs="false">
-      <a id="LruMap:LruMap[K, V]"></a>
+    </li><li name="com.twitter.util.LruMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LruMap[K,V]extendsJMapWrapper[K,V]"></a>
+      <a id="LruMap[K,V]:LruMap[K,V]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="LruMap.html"><span class="name">LruMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends JMapWrapper[K, V]</span>
+        <a href="LruMap.html"><span class="name">LruMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="JMapWrapper.html" class="extype" name="com.twitter.util.JMapWrapper">JMapWrapper</a>[<span class="extype" name="com.twitter.util.LruMap.K">K</span>, <span class="extype" name="com.twitter.util.LruMap.V">V</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Managed" data-isabs="true">
-      <a id="Managed:Managed[T]"></a>
+    </li><li name="com.twitter.util.Managed" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Managed[+T]extendsAnyRef"></a>
+      <a id="Managed[+T]:Managed[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Managed.html"><span class="name">Managed</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Managed.html"><span class="name">Managed</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt"><code>Managed[T]</code> is a resource of type <code>T</code> which lifetime is explicitly managed.</p>
-    </li><li visbl="pub" name="com.twitter.util.MapToSetAdapter" data-isabs="false">
-      <a id="MapToSetAdapter:MapToSetAdapter[A]"></a>
+    </li><li name="com.twitter.util.MapToSetAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MapToSetAdapter[A]extendsSet[A]"></a>
+      <a id="MapToSetAdapter[A]:MapToSetAdapter[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="MapToSetAdapter.html"><span class="name">MapToSetAdapter</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Set[A]</span>
+        <a href="MapToSetAdapter.html"><span class="name">MapToSetAdapter</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.collection.mutable.Set">Set</span>[<span class="extype" name="com.twitter.util.MapToSetAdapter.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.MockTimer" data-isabs="false">
+    </li><li name="com.twitter.util.MockTimer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockTimerextendsTimer"></a>
       <a id="MockTimer:MockTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -690,11 +802,12 @@ pairs.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="MockTimer.html"><span class="name">MockTimer</span></a><span class="result"> extends Timer</span>
+        <a href="MockTimer.html"><span class="name">MockTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Monitor" data-isabs="true">
+    </li><li name="com.twitter.util.Monitor" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MonitorextendsAnyRef"></a>
       <a id="Monitor:Monitor"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -702,11 +815,12 @@ pairs.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Monitor.html"><span class="name">Monitor</span></a><span class="result"> extends AnyRef</span>
+        <a href="Monitor.html"><span class="name">Monitor</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A Monitor is a composable exception handler.</p>
-    </li><li visbl="pub" name="com.twitter.util.MonitorException" data-isabs="false">
+    </li><li name="com.twitter.util.MonitorException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MonitorExceptionextendsExceptionwithProductwithSerializable"></a>
       <a id="MonitorException:MonitorException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -714,12 +828,13 @@ pairs.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="MonitorException.html"><span class="name">MonitorException</span></a><span class="params">(<span name="handlingExc">handlingExc: Throwable</span>, <span name="monitorExc">monitorExc: Throwable</span>)</span><span class="result"> extends Exception with Product with Serializable</span>
+        <a href="MonitorException.html"><span class="name">MonitorException</span></a><span class="params">(<span name="handlingExc">handlingExc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>, <span name="monitorExc">monitorExc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Wraps an exception that happens when handling another exception in
 a monitor.</p>
-    </li><li visbl="pub" name="com.twitter.util.NoFuture" data-isabs="false">
+    </li><li name="com.twitter.util.NoFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NoFutureextendsFuture[Nothing]"></a>
       <a id="NoFuture:NoFuture"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -727,11 +842,12 @@ a monitor.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="NoFuture.html"><span class="name">NoFuture</span></a><span class="result"> extends Future[Nothing]</span>
+        <a href="NoFuture.html"><span class="name">NoFuture</span></a><span class="result"> extends <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A future with no future (never completes).</p>
-    </li><li visbl="pub" name="com.twitter.util.NoStacktrace" data-isabs="true">
+    </li><li name="com.twitter.util.NoStacktrace" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="NoStacktraceextendsException"></a>
       <a id="NoStacktrace:NoStacktrace"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -739,11 +855,12 @@ a monitor.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="NoStacktrace.html"><span class="name">NoStacktrace</span></a><span class="result"> extends Exception</span>
+        <a href="NoStacktrace.html"><span class="name">NoStacktrace</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.NullTimer" data-isabs="false">
+    </li><li name="com.twitter.util.NullTimer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NullTimerextendsTimer"></a>
       <a id="NullTimer:NullTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -751,36 +868,39 @@ a monitor.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="NullTimer.html"><span class="name">NullTimer</span></a><span class="result"> extends Timer</span>
+        <a href="NullTimer.html"><span class="name">NullTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       </h4>
       <p class="comment cmt">A NullTimer is not a timer at all: it invokes all tasks immediately
 and inline.</p>
-    </li><li visbl="pub" name="com.twitter.util.Pool" data-isabs="true">
-      <a id="Pool:Pool[A]"></a>
+    </li><li name="com.twitter.util.Pool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Pool[A]extendsAnyRef"></a>
+      <a id="Pool[A]:Pool[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Pool.html"><span class="name">Pool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Pool.html"><span class="name">Pool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Promise" data-isabs="false">
-      <a id="Promise:Promise[A]"></a>
+    </li><li name="com.twitter.util.Promise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Promise[A]extendsFuture[A]withPromise.Responder[A]"></a>
+      <a id="Promise[A]:Promise[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Promise.html"><span class="name">Promise</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Future[A] with Responder[A]</span>
+        <a href="Promise.html"><span class="name">Promise</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Promise.A">A</span>] with <a href="Promise$$Responder.html" class="extype" name="com.twitter.util.Promise.Responder">Responder</a>[<span class="extype" name="com.twitter.util.Promise.A">A</span>]</span>
       </span>
       </h4>
-      <p class="comment cmt">A writeable <a name="com.twitter.util.Future" class="extype" href="Future.html">Future</a> that supports merging.</p>
-    </li><li visbl="pub" name="com.twitter.util.ReferenceCountedTimer" data-isabs="true">
+      <p class="comment cmt">A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.</p>
+    </li><li name="com.twitter.util.ReferenceCountedTimer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ReferenceCountedTimerextendsTimer"></a>
       <a id="ReferenceCountedTimer:ReferenceCountedTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -788,11 +908,12 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ReferenceCountedTimer.html"><span class="name">ReferenceCountedTimer</span></a><span class="result"> extends Timer</span>
+        <a href="ReferenceCountedTimer.html"><span class="name">ReferenceCountedTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ReferenceCountingTimer" data-isabs="false">
+    </li><li name="com.twitter.util.ReferenceCountingTimer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReferenceCountingTimerextendsReferenceCountedTimer"></a>
       <a id="ReferenceCountingTimer:ReferenceCountingTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -800,23 +921,25 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ReferenceCountingTimer.html"><span class="name">ReferenceCountingTimer</span></a><span class="result"> extends ReferenceCountedTimer</span>
+        <a href="ReferenceCountingTimer.html"><span class="name">ReferenceCountingTimer</span></a><span class="result"> extends <a href="ReferenceCountedTimer.html" class="extype" name="com.twitter.util.ReferenceCountedTimer">ReferenceCountedTimer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Return" data-isabs="false">
-      <a id="Return:Return[R]"></a>
+    </li><li name="com.twitter.util.Return" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Return[+R]extendsTry[R]withProductwithSerializable"></a>
+      <a id="Return[+R]:Return[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Return.html"><span class="name">Return</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="r">r: R</span>)</span><span class="result"> extends Try[R] with Product with Serializable</span>
+        <a href="Return.html"><span class="name">Return</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="r">r: <span class="extype" name="com.twitter.util.Return.R">R</span></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.RichU64ByteArray" data-isabs="false">
+    </li><li name="com.twitter.util.RichU64ByteArray" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichU64ByteArrayextendsAnyRef"></a>
       <a id="RichU64ByteArray:RichU64ByteArray"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -824,11 +947,12 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RichU64ByteArray.html"><span class="name">RichU64ByteArray</span></a><span class="result"> extends AnyRef</span>
+        <a href="RichU64ByteArray.html"><span class="name">RichU64ByteArray</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.RichU64Long" data-isabs="false">
+    </li><li name="com.twitter.util.RichU64Long" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichU64LongextendsAnyRef"></a>
       <a id="RichU64Long:RichU64Long"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -836,11 +960,12 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RichU64Long.html"><span class="name">RichU64Long</span></a><span class="result"> extends AnyRef</span>
+        <a href="RichU64Long.html"><span class="name">RichU64Long</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.RichU64String" data-isabs="false">
+    </li><li name="com.twitter.util.RichU64String" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichU64StringextendsAnyRef"></a>
       <a id="RichU64String:RichU64String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -848,23 +973,25 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RichU64String.html"><span class="name">RichU64String</span></a><span class="result"> extends AnyRef</span>
+        <a href="RichU64String.html"><span class="name">RichU64String</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.RingBuffer" data-isabs="false">
-      <a id="RingBuffer:RingBuffer[A]"></a>
+    </li><li name="com.twitter.util.RingBuffer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RingBuffer[A]extendsSeq[A]"></a>
+      <a id="RingBuffer[A]:RingBuffer[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RingBuffer.html"><span class="name">RingBuffer</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Seq[A]</span>
+        <a href="RingBuffer.html"><span class="name">RingBuffer</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.RingBuffer.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ScheduledThreadPoolTimer" data-isabs="false">
+    </li><li name="com.twitter.util.ScheduledThreadPoolTimer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScheduledThreadPoolTimerextendsTimer"></a>
       <a id="ScheduledThreadPoolTimer:ScheduledThreadPoolTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -872,11 +999,12 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ScheduledThreadPoolTimer.html"><span class="name">ScheduledThreadPoolTimer</span></a><span class="result"> extends Timer</span>
+        <a href="ScheduledThreadPoolTimer.html"><span class="name">ScheduledThreadPoolTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SignalHandler" data-isabs="true">
+    </li><li name="com.twitter.util.SignalHandler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SignalHandlerextendsAnyRef"></a>
       <a id="SignalHandler:SignalHandler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -884,23 +1012,25 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="SignalHandler.html"><span class="name">SignalHandler</span></a><span class="result"> extends AnyRef</span>
+        <a href="SignalHandler.html"><span class="name">SignalHandler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SimplePool" data-isabs="false">
-      <a id="SimplePool:SimplePool[A]"></a>
+    </li><li name="com.twitter.util.SimplePool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SimplePool[A]extendsPool[A]"></a>
+      <a id="SimplePool[A]:SimplePool[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SimplePool.html"><span class="name">SimplePool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends Pool[A]</span>
+        <a href="SimplePool.html"><span class="name">SimplePool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Pool.html" class="extype" name="com.twitter.util.Pool">Pool</a>[<span class="extype" name="com.twitter.util.SimplePool.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.StateMachine" data-isabs="true">
+    </li><li name="com.twitter.util.StateMachine" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="StateMachineextendsAnyRef"></a>
       <a id="StateMachine:StateMachine"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -908,11 +1038,12 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="StateMachine.html"><span class="name">StateMachine</span></a><span class="result"> extends AnyRef</span>
+        <a href="StateMachine.html"><span class="name">StateMachine</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Stopwatch" data-isabs="true">
+    </li><li name="com.twitter.util.Stopwatch" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="StopwatchextendsAnyRef"></a>
       <a id="Stopwatch:Stopwatch"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -920,11 +1051,12 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Stopwatch.html"><span class="name">Stopwatch</span></a><span class="result"> extends AnyRef</span>
+        <a href="Stopwatch.html"><span class="name">Stopwatch</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A stopwatch may be used to measure elapsed time.</p>
-    </li><li visbl="pub" name="com.twitter.util.StorageUnit" data-isabs="false">
+    </li><li name="com.twitter.util.StorageUnit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StorageUnitextendsOrdered[com.twitter.util.StorageUnit]"></a>
       <a id="StorageUnit:StorageUnit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -932,11 +1064,12 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="StorageUnit.html"><span class="name">StorageUnit</span></a><span class="result"> extends Ordered[StorageUnit]</span>
+        <a href="StorageUnit.html"><span class="name">StorageUnit</span></a><span class="result"> extends <a href="../../../scala/package.html#Ordered[T]=scala.math.Ordered[T]" class="extmbr" name="scala.Ordered">Ordered</a>[<a href="StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a>]</span>
       </span>
       </h4>
       <p class="comment cmt">Representation of storage units.</p>
-    </li><li visbl="pub" name="com.twitter.util.StringEncoder" data-isabs="true">
+    </li><li name="com.twitter.util.StringEncoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="StringEncoderextendsAnyRef"></a>
       <a id="StringEncoder:StringEncoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -944,11 +1077,12 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="StringEncoder.html"><span class="name">StringEncoder</span></a><span class="result"> extends AnyRef</span>
+        <a href="StringEncoder.html"><span class="name">StringEncoder</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SunSignalHandler" data-isabs="false">
+    </li><li name="com.twitter.util.SunSignalHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SunSignalHandlerextendsSignalHandler"></a>
       <a id="SunSignalHandler:SunSignalHandler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -956,23 +1090,25 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SunSignalHandler.html"><span class="name">SunSignalHandler</span></a><span class="result"> extends SignalHandler</span>
+        <a href="SunSignalHandler.html"><span class="name">SunSignalHandler</span></a><span class="result"> extends <a href="SignalHandler.html" class="extype" name="com.twitter.util.SignalHandler">SignalHandler</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SynchronizedLruMap" data-isabs="false">
-      <a id="SynchronizedLruMap:SynchronizedLruMap[K, V]"></a>
+    </li><li name="com.twitter.util.SynchronizedLruMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SynchronizedLruMap[K,V]extendsLruMap[K,V]withSynchronizedMap[K,V]"></a>
+      <a id="SynchronizedLruMap[K,V]:SynchronizedLruMap[K,V]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SynchronizedLruMap.html"><span class="name">SynchronizedLruMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends LruMap[K, V] with SynchronizedMap[K, V]</span>
+        <a href="SynchronizedLruMap.html"><span class="name">SynchronizedLruMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="LruMap.html" class="extype" name="com.twitter.util.LruMap">LruMap</a>[<span class="extype" name="com.twitter.util.SynchronizedLruMap.K">K</span>, <span class="extype" name="com.twitter.util.SynchronizedLruMap.V">V</span>] with <span class="extype" name="scala.collection.mutable.SynchronizedMap">SynchronizedMap</span>[<span class="extype" name="com.twitter.util.SynchronizedLruMap.K">K</span>, <span class="extype" name="com.twitter.util.SynchronizedLruMap.V">V</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.TempFolder" data-isabs="true">
+    </li><li name="com.twitter.util.TempFolder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TempFolderextendsAnyRef"></a>
       <a id="TempFolder:TempFolder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -980,11 +1116,12 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="TempFolder.html"><span class="name">TempFolder</span></a><span class="result"> extends AnyRef</span>
+        <a href="TempFolder.html"><span class="name">TempFolder</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Test mixin that creates a new folder for a block of code to execute in.</p>
-    </li><li visbl="pub" name="com.twitter.util.ThreadStoppingTimer" data-isabs="false">
+    </li><li name="com.twitter.util.ThreadStoppingTimer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ThreadStoppingTimerextendsTimer"></a>
       <a id="ThreadStoppingTimer:ThreadStoppingTimer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -992,23 +1129,25 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ThreadStoppingTimer.html"><span class="name">ThreadStoppingTimer</span></a><span class="result"> extends Timer</span>
+        <a href="ThreadStoppingTimer.html"><span class="name">ThreadStoppingTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ThriftCodec" data-isabs="false">
-      <a id="ThriftCodec:ThriftCodec[T, P]"></a>
+    </li><li name="com.twitter.util.ThriftCodec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ThriftCodec[T&lt;:org.apache.thrift.TBase[_,_],P&lt;:org.apache.thrift.protocol.TProtocolFactory]extendsCodec[T,Array[Byte]]withThriftSerializer"></a>
+      <a id="ThriftCodec[T&lt;:TBase[_,_],P&lt;:TProtocolFactory]:ThriftCodec[T,P]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ThriftCodec.html"><span class="name">ThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: org.apache.thrift.TBase[_, _]</span>, <span name="P">P &lt;: TProtocolFactory</span>]</span><span class="result"> extends Codec[T, Array[Byte]] with ThriftSerializer</span>
+        <a href="ThriftCodec.html"><span class="name">ThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="org.apache.thrift.TBase">TBase</span>[_, _]</span>, <span name="P">P &lt;: <span class="extype" name="org.apache.thrift.protocol.TProtocolFactory">TProtocolFactory</span></span>]</span><span class="result"> extends <a href="Codec.html" class="extype" name="com.twitter.util.Codec">Codec</a>[<span class="extype" name="com.twitter.util.ThriftCodec.T">T</span>, <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]] with <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ThriftSerializer" data-isabs="true">
+    </li><li name="com.twitter.util.ThriftSerializer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ThriftSerializerextendsStringEncoder"></a>
       <a id="ThriftSerializer:ThriftSerializer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1016,23 +1155,25 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ThriftSerializer.html"><span class="name">ThriftSerializer</span></a><span class="result"> extends StringEncoder</span>
+        <a href="ThriftSerializer.html"><span class="name">ThriftSerializer</span></a><span class="result"> extends <a href="StringEncoder.html" class="extype" name="com.twitter.util.StringEncoder">StringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Throw" data-isabs="false">
-      <a id="Throw:Throw[R]"></a>
+    </li><li name="com.twitter.util.Throw" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Throw[+R]extendsTry[R]withProductwithSerializable"></a>
+      <a id="Throw[+R]:Throw[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Throw.html"><span class="name">Throw</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="e">e: Throwable</span>)</span><span class="result"> extends Try[R] with Product with Serializable</span>
+        <a href="Throw.html"><span class="name">Throw</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Time" data-isabs="false">
+    </li><li name="com.twitter.util.Time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TimeextendsTimeLike[com.twitter.util.Time]withSerializable"></a>
       <a id="Time:Time"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1040,12 +1181,13 @@ and inline.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Time.html"><span class="name">Time</span></a><span class="result"> extends TimeLike[Time] with Serializable</span>
+        <a href="Time.html"><span class="name">Time</span></a><span class="result"> extends <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>] with <span class="extype" name="java.io.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">An absolute point in time, represented as the number of
 nanoseconds since the Unix epoch.</p>
-    </li><li visbl="pub" name="com.twitter.util.TimeControl" data-isabs="true">
+    </li><li name="com.twitter.util.TimeControl" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TimeControlextendsAnyRef"></a>
       <a id="TimeControl:TimeControl"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1053,11 +1195,12 @@ nanoseconds since the Unix epoch.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="TimeControl.html"><span class="name">TimeControl</span></a><span class="result"> extends AnyRef</span>
+        <a href="TimeControl.html"><span class="name">TimeControl</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.TimeFormat" data-isabs="false">
+    </li><li name="com.twitter.util.TimeFormat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TimeFormatextendsAnyRef"></a>
       <a id="TimeFormat:TimeFormat"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1065,35 +1208,38 @@ nanoseconds since the Unix epoch.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="TimeFormat.html"><span class="name">TimeFormat</span></a><span class="result"> extends AnyRef</span>
+        <a href="TimeFormat.html"><span class="name">TimeFormat</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A thread-safe wrapper around a SimpleDateFormat object.</p>
-    </li><li visbl="pub" name="com.twitter.util.TimeLike" data-isabs="true">
-      <a id="TimeLike:TimeLike[This]"></a>
+    </li><li name="com.twitter.util.TimeLike" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TimeLike[This&lt;:com.twitter.util.TimeLike[This]]extendsOrdered[This]"></a>
+      <a id="TimeLike[This&lt;:TimeLike[This]]:TimeLike[This]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="TimeLike.html"><span class="name">TimeLike</span></a><span class="tparams">[<span name="This">This &lt;: TimeLike[This]</span>]</span><span class="result"> extends Ordered[This]</span>
+        <a href="TimeLike.html"><span class="name">TimeLike</span></a><span class="tparams">[<span name="This">This &lt;: <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a>[<span class="extype" name="com.twitter.util.TimeLike.This">This</span>]</span>]</span><span class="result"> extends <a href="../../../scala/package.html#Ordered[T]=scala.math.Ordered[T]" class="extmbr" name="scala.Ordered">Ordered</a>[<span class="extype" name="com.twitter.util.TimeLike.This">This</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">A common trait for time-like values.</p>
-    </li><li visbl="pub" name="com.twitter.util.TimeLikeOps" data-isabs="true">
-      <a id="TimeLikeOps:TimeLikeOps[This]"></a>
+    </li><li name="com.twitter.util.TimeLikeOps" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TimeLikeOps[This&lt;:com.twitter.util.TimeLike[This]]extendsAnyRef"></a>
+      <a id="TimeLikeOps[This&lt;:TimeLike[This]]:TimeLikeOps[This]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="TimeLikeOps.html"><span class="name">TimeLikeOps</span></a><span class="tparams">[<span name="This">This &lt;: TimeLike[This]</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="TimeLikeOps.html"><span class="name">TimeLikeOps</span></a><span class="tparams">[<span name="This">This &lt;: <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a>[<span class="extype" name="com.twitter.util.TimeLikeOps.This">This</span>]</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.TimeoutException" data-isabs="false">
+    </li><li name="com.twitter.util.TimeoutException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TimeoutExceptionextendsTimeoutException"></a>
       <a id="TimeoutException:TimeoutException"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1101,11 +1247,12 @@ nanoseconds since the Unix epoch.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="TimeoutException.html"><span class="name">TimeoutException</span></a><span class="result"> extends TimeoutException</span>
+        <a href="TimeoutException.html"><span class="name">TimeoutException</span></a><span class="result"> extends <span class="extype" name="java.util.concurrent.TimeoutException">java.util.concurrent.TimeoutException</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Timer" data-isabs="true">
+    </li><li name="com.twitter.util.Timer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TimerextendsAnyRef"></a>
       <a id="Timer:Timer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1113,11 +1260,12 @@ nanoseconds since the Unix epoch.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Timer.html"><span class="name">Timer</span></a><span class="result"> extends AnyRef</span>
+        <a href="Timer.html"><span class="name">Timer</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.TimerTask" data-isabs="true">
+    </li><li name="com.twitter.util.TimerTask" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TimerTaskextendsClosable"></a>
       <a id="TimerTask:TimerTask"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1125,82 +1273,88 @@ nanoseconds since the Unix epoch.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="TimerTask.html"><span class="name">TimerTask</span></a><span class="result"> extends Closable</span>
+        <a href="TimerTask.html"><span class="name">TimerTask</span></a><span class="result"> extends <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Try" data-isabs="true">
-      <a id="Try:Try[R]"></a>
+    </li><li name="com.twitter.util.Try" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Try[+R]extendsAnyRef"></a>
+      <a id="Try[+R]:Try[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">sealed abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Try.html"><span class="name">Try</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Try.html"><span class="name">Try</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">This class represents a computation that can succeed or fail.</p>
-    </li><li visbl="pub" name="com.twitter.util.Updatable" data-isabs="true">
-      <a id="Updatable:Updatable[T]"></a>
+    </li><li name="com.twitter.util.Updatable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Updatable[T]extendsAnyRef"></a>
+      <a id="Updatable[T]:Updatable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Updatable.html"><span class="name">Updatable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Updatable.html"><span class="name">Updatable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Denotes an updatable container.</p>
-    </li><li visbl="pub" name="com.twitter.util.Var" data-isabs="true">
-      <a id="Var:Var[T]"></a>
+    </li><li name="com.twitter.util.Var" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Var[+T]extendsAnyRef"></a>
+      <a id="Var[+T]:Var[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Var.html"><span class="name">Var</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Var.html"><span class="name">Var</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Trait Var represents a variable.</p>
-    </li><li visbl="pub" name="com.twitter.util.Witness" data-isabs="true">
-      <a id="Witness:Witness[N]"></a>
+    </li><li name="com.twitter.util.Witness" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Witness[-N]extendsAnyRef"></a>
+      <a id="Witness[-N]:Witness[N]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Witness.html"><span class="name">Witness</span></a><span class="tparams">[<span name="N">-N</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Witness.html"><span class="name">Witness</span></a><span class="tparams">[<span name="N">-N</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <p class="comment cmt">A witness is the recipient of <a name="com.twitter.util.Event" class="extype" href="Event.html">Event</a>.</p>
-    </li><li visbl="pub" name="com.twitter.util.Bijection" data-isabs="true">
-      <a id="Bijection:Bijection[A, B]"></a>
+      <p class="comment cmt">A witness is the recipient of <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>.</p>
+    </li><li name="com.twitter.util.Bijection" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Bijection[A,B]extendsA=&gt;B"></a>
+      <a id="Bijection[A,B]:Bijection[A,B]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Bijection.html"><span class="name deprecated" title="Deprecated: (Since version 2014-06-05) Prefer using com.twitter.bijection.Bijection">Bijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends (A) ⇒ B</span>
+        <a href="Bijection.html"><span class="name deprecated" title="Deprecated: (Since version 2014-06-05) Prefer using com.twitter.bijection.Bijection">Bijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.util.Bijection.A">A</span>) ⇒ <span class="extype" name="com.twitter.util.Bijection.B">B</span></span>
       </span>
       </h4>
       <p class="comment cmt">A bijection is a function for which every value in its codomain
 (set of all possible results) is equivalent to application of the
 function on a unique value in its domain (all possible
 inputs).</p>
-    </li><li visbl="pub" name="com.twitter.util.Config" data-isabs="true">
-      <a id="Config:Config[T]"></a>
+    </li><li name="com.twitter.util.Config" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Config[T]extends()=&gt;T"></a>
+      <a id="Config[T]:Config[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Config.html"><span class="name deprecated" title="Deprecated: (Since version ) use a Plain Old Scala Object">Config</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends () ⇒ T</span>
+        <a href="Config.html"><span class="name deprecated" title="Deprecated: (Since version ) use a Plain Old Scala Object">Config</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends () ⇒ <span class="extype" name="com.twitter.util.Config.T">T</span></span>
       </span>
       </h4>
       <p class="comment cmt">A config object contains vars for configuring an object of type T, and an apply() method
@@ -1210,9 +1364,10 @@ which turns this config into an object of type T.</p>
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Activity" data-isabs="false">
+              <ol><li name="com.twitter.util.Activity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Activity"></a>
       <a id="Activity:Activity"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1220,11 +1375,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Activity$.html"><span class="name">Activity</span></a><span class="result"> extends Serializable</span>
+        <a href="Activity$.html"><span class="name">Activity</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Await" data-isabs="false">
+    </li><li name="com.twitter.util.Await" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Await"></a>
       <a id="Await:Await"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1232,11 +1388,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Await$.html"><span class="name">Await</span></a><span class="result"> extends AnyRef</span>
+        <a href="Await$.html"><span class="name">Await</span></a>
       </span>
       </h4>
       <p class="comment cmt">Await the result of some action.</p>
-    </li><li visbl="pub" name="com.twitter.util.Awaitable" data-isabs="false">
+    </li><li name="com.twitter.util.Awaitable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Awaitable"></a>
       <a id="Awaitable:Awaitable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1244,11 +1401,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Awaitable$.html"><span class="name">Awaitable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Awaitable$.html"><span class="name">Awaitable</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Base64Long" data-isabs="false">
+    </li><li name="com.twitter.util.Base64Long" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Base64Long"></a>
       <a id="Base64Long:Base64Long"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1256,11 +1414,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Base64Long$.html"><span class="name">Base64Long</span></a><span class="result"> extends AnyRef</span>
+        <a href="Base64Long$.html"><span class="name">Base64Long</span></a>
       </span>
       </h4>
       <p class="comment cmt">Efficient conversion of Longs to base 64 encoded strings.</p>
-    </li><li visbl="pub" name="com.twitter.util.Base64StringEncoder" data-isabs="false">
+    </li><li name="com.twitter.util.Base64StringEncoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Base64StringEncoder"></a>
       <a id="Base64StringEncoder:Base64StringEncoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1268,11 +1427,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Base64StringEncoder$.html"><span class="name">Base64StringEncoder</span></a><span class="result"> extends Base64StringEncoder</span>
+        <a href="Base64StringEncoder$.html"><span class="name">Base64StringEncoder</span></a><span class="result"> extends <a href="Base64StringEncoder.html" class="extype" name="com.twitter.util.Base64StringEncoder">Base64StringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.BinaryCodec" data-isabs="false">
+    </li><li name="com.twitter.util.BinaryCodec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BinaryCodec"></a>
       <a id="BinaryCodec:BinaryCodec"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1280,11 +1440,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="BinaryCodec$.html"><span class="name">BinaryCodec</span></a><span class="result"> extends AnyRef</span>
+        <a href="BinaryCodec$.html"><span class="name">BinaryCodec</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Cancellable" data-isabs="false">
+    </li><li name="com.twitter.util.Cancellable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Cancellable"></a>
       <a id="Cancellable:Cancellable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1292,11 +1453,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Cancellable$.html"><span class="name">Cancellable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Cancellable$.html"><span class="name">Cancellable</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Closable" data-isabs="false">
+    </li><li name="com.twitter.util.Closable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Closable"></a>
       <a id="Closable:Closable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1304,11 +1466,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Closable$.html"><span class="name">Closable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Closable$.html"><span class="name">Closable</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Codec" data-isabs="false">
+    </li><li name="com.twitter.util.Codec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Codec"></a>
       <a id="Codec:Codec"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1316,11 +1479,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Codec$.html"><span class="name">Codec</span></a><span class="result"> extends EncoderCompanion with DecoderCompanion</span>
+        <a href="Codec$.html"><span class="name">Codec</span></a><span class="result"> extends <a href="EncoderCompanion.html" class="extype" name="com.twitter.util.EncoderCompanion">EncoderCompanion</a> with <a href="DecoderCompanion.html" class="extype" name="com.twitter.util.DecoderCompanion">DecoderCompanion</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Credentials" data-isabs="false">
+    </li><li name="com.twitter.util.Credentials" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Credentials"></a>
       <a id="Credentials:Credentials"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1328,11 +1492,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Credentials$.html"><span class="name">Credentials</span></a><span class="result"> extends AnyRef</span>
+        <a href="Credentials$.html"><span class="name">Credentials</span></a>
       </span>
       </h4>
       <p class="comment cmt">Simple helper to read authentication credentials from a text file.</p>
-    </li><li visbl="pub" name="com.twitter.util.Decoder" data-isabs="false">
+    </li><li name="com.twitter.util.Decoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Decoder"></a>
       <a id="Decoder:Decoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1340,11 +1505,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Decoder$.html"><span class="name">Decoder</span></a><span class="result"> extends DecoderCompanion</span>
+        <a href="Decoder$.html"><span class="name">Decoder</span></a><span class="result"> extends <a href="DecoderCompanion.html" class="extype" name="com.twitter.util.DecoderCompanion">DecoderCompanion</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Disposable" data-isabs="false">
+    </li><li name="com.twitter.util.Disposable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Disposable"></a>
       <a id="Disposable:Disposable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1352,11 +1518,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Disposable$.html"><span class="name">Disposable</span></a><span class="result"> extends AnyRef</span>
+        <a href="Disposable$.html"><span class="name">Disposable</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Duration" data-isabs="false">
+    </li><li name="com.twitter.util.Duration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Duration"></a>
       <a id="Duration:Duration"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1364,11 +1531,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Duration$.html"><span class="name">Duration</span></a><span class="result"> extends TimeLikeOps[Duration] with Serializable</span>
+        <a href="Duration$.html"><span class="name">Duration</span></a><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>] with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Encoder" data-isabs="false">
+    </li><li name="com.twitter.util.Encoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Encoder"></a>
       <a id="Encoder:Encoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1376,11 +1544,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Encoder$.html"><span class="name">Encoder</span></a><span class="result"> extends EncoderCompanion</span>
+        <a href="Encoder$.html"><span class="name">Encoder</span></a><span class="result"> extends <a href="EncoderCompanion.html" class="extype" name="com.twitter.util.EncoderCompanion">EncoderCompanion</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Event" data-isabs="false">
+    </li><li name="com.twitter.util.Event" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Event"></a>
       <a id="Event:Event"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1388,11 +1557,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Event$.html"><span class="name">Event</span></a><span class="result"> extends AnyRef</span>
+        <a href="Event$.html"><span class="name">Event</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Function" data-isabs="false">
+    </li><li name="com.twitter.util.Function" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Function"></a>
       <a id="Function:Function"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1400,11 +1570,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Function$.html"><span class="name">Function</span></a><span class="result"> extends AnyRef</span>
+        <a href="Function$.html"><span class="name">Function</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Future" data-isabs="false">
+    </li><li name="com.twitter.util.Future" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Future"></a>
       <a id="Future:Future"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1412,11 +1583,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Future$.html"><span class="name">Future</span></a><span class="result"> extends AnyRef</span>
+        <a href="Future$.html"><span class="name">Future</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.FuturePool" data-isabs="false">
+    </li><li name="com.twitter.util.FuturePool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FuturePool"></a>
       <a id="FuturePool:FuturePool"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1424,11 +1596,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="FuturePool$.html"><span class="name">FuturePool</span></a><span class="result"> extends AnyRef</span>
+        <a href="FuturePool$.html"><span class="name">FuturePool</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.FutureTask" data-isabs="false">
+    </li><li name="com.twitter.util.FutureTask" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FutureTask"></a>
       <a id="FutureTask:FutureTask"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1436,11 +1609,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="FutureTask$.html"><span class="name">FutureTask</span></a><span class="result"> extends AnyRef</span>
+        <a href="FutureTask$.html"><span class="name">FutureTask</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.GZIPStringEncoder" data-isabs="false">
+    </li><li name="com.twitter.util.GZIPStringEncoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GZIPStringEncoder"></a>
       <a id="GZIPStringEncoder:GZIPStringEncoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1448,11 +1622,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="GZIPStringEncoder$.html"><span class="name">GZIPStringEncoder</span></a><span class="result"> extends GZIPStringEncoder</span>
+        <a href="GZIPStringEncoder$.html"><span class="name">GZIPStringEncoder</span></a><span class="result"> extends <a href="GZIPStringEncoder.html" class="extype" name="com.twitter.util.GZIPStringEncoder">GZIPStringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.HandleSignal" data-isabs="false">
+    </li><li name="com.twitter.util.HandleSignal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HandleSignal"></a>
       <a id="HandleSignal:HandleSignal"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1460,11 +1635,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="HandleSignal$.html"><span class="name">HandleSignal</span></a><span class="result"> extends AnyRef</span>
+        <a href="HandleSignal$.html"><span class="name">HandleSignal</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ImmutableLRU" data-isabs="false">
+    </li><li name="com.twitter.util.ImmutableLRU" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ImmutableLRU"></a>
       <a id="ImmutableLRU:ImmutableLRU"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1472,11 +1648,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="ImmutableLRU$.html"><span class="name">ImmutableLRU</span></a><span class="result"> extends AnyRef</span>
+        <a href="ImmutableLRU$.html"><span class="name">ImmutableLRU</span></a>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="com.twitter.util.Local" data-isabs="false">
+    </li><li name="com.twitter.util.Local" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Local"></a>
       <a id="Local:Local"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1484,11 +1661,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Local$.html"><span class="name">Local</span></a><span class="result"> extends AnyRef</span>
+        <a href="Local$.html"><span class="name">Local</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.LongOverflowArith" data-isabs="false">
+    </li><li name="com.twitter.util.LongOverflowArith" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LongOverflowArith"></a>
       <a id="LongOverflowArith:LongOverflowArith"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1496,11 +1674,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="LongOverflowArith$.html"><span class="name">LongOverflowArith</span></a><span class="result"> extends AnyRef</span>
+        <a href="LongOverflowArith$.html"><span class="name">LongOverflowArith</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.LruMap" data-isabs="false">
+    </li><li name="com.twitter.util.LruMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LruMap"></a>
       <a id="LruMap:LruMap"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1508,11 +1687,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="LruMap$.html"><span class="name">LruMap</span></a><span class="result"> extends Serializable</span>
+        <a href="LruMap$.html"><span class="name">LruMap</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Managed" data-isabs="false">
+    </li><li name="com.twitter.util.Managed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Managed"></a>
       <a id="Managed:Managed"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1520,11 +1700,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Managed$.html"><span class="name">Managed</span></a><span class="result"> extends AnyRef</span>
+        <a href="Managed$.html"><span class="name">Managed</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Memoize" data-isabs="false">
+    </li><li name="com.twitter.util.Memoize" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Memoize"></a>
       <a id="Memoize:Memoize"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1532,11 +1713,12 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Memoize$.html"><span class="name">Memoize</span></a><span class="result"> extends AnyRef</span>
+        <a href="Memoize$.html"><span class="name">Memoize</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Monitor" data-isabs="false">
+    </li><li name="com.twitter.util.Monitor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Monitor"></a>
       <a id="Monitor:Monitor"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1544,12 +1726,13 @@ which turns this config into an object of type T.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Monitor$.html"><span class="name">Monitor</span></a><span class="result"> extends Monitor</span>
+        <a href="Monitor$.html"><span class="name">Monitor</span></a><span class="result"> extends <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
       <p class="comment cmt">Defines the (Future)-{{Local}} monitor as well as some monitor
 utilities.</p>
-    </li><li visbl="pub" name="com.twitter.util.NetUtil" data-isabs="false">
+    </li><li name="com.twitter.util.NetUtil" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NetUtil"></a>
       <a id="NetUtil:NetUtil"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1557,11 +1740,12 @@ utilities.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NetUtil$.html"><span class="name">NetUtil</span></a><span class="result"> extends AnyRef</span>
+        <a href="NetUtil$.html"><span class="name">NetUtil</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.NilStopwatch" data-isabs="false">
+    </li><li name="com.twitter.util.NilStopwatch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NilStopwatch"></a>
       <a id="NilStopwatch:NilStopwatch"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1569,12 +1753,13 @@ utilities.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NilStopwatch$.html"><span class="name">NilStopwatch</span></a><span class="result"> extends Stopwatch</span>
+        <a href="NilStopwatch$.html"><span class="name">NilStopwatch</span></a><span class="result"> extends <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a></span>
       </span>
       </h4>
-      <p class="comment cmt">A trivial implementation of <a name="com.twitter.util.Stopwatch" class="extype" href="Stopwatch.html">Stopwatch</a> for use as a null
+      <p class="comment cmt">A trivial implementation of <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">com.twitter.util.Stopwatch</a> for use as a null
 object.</p>
-    </li><li visbl="pub" name="com.twitter.util.NoStacktrace" data-isabs="false">
+    </li><li name="com.twitter.util.NoStacktrace" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NoStacktrace"></a>
       <a id="NoStacktrace:NoStacktrace"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1582,11 +1767,12 @@ object.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NoStacktrace$.html"><span class="name">NoStacktrace</span></a><span class="result"> extends Serializable</span>
+        <a href="NoStacktrace$.html"><span class="name">NoStacktrace</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.NonFatal" data-isabs="false">
+    </li><li name="com.twitter.util.NonFatal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NonFatal"></a>
       <a id="NonFatal:NonFatal"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1594,12 +1780,13 @@ object.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NonFatal$.html"><span class="name">NonFatal</span></a><span class="result"> extends AnyRef</span>
+        <a href="NonFatal$.html"><span class="name">NonFatal</span></a>
       </span>
       </h4>
       <p class="comment cmt">A classifier of fatal exceptions
 </p>
-    </li><li visbl="pub" name="com.twitter.util.NullMonitor" data-isabs="false">
+    </li><li name="com.twitter.util.NullMonitor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NullMonitor"></a>
       <a id="NullMonitor:NullMonitor"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1607,11 +1794,12 @@ object.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NullMonitor$.html"><span class="name">NullMonitor</span></a><span class="result"> extends Monitor</span>
+        <a href="NullMonitor$.html"><span class="name">NullMonitor</span></a><span class="result"> extends <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
       <p class="comment cmt">A monitor that always fails to handle an exception.</p>
-    </li><li visbl="pub" name="com.twitter.util.NullTimerTask" data-isabs="false">
+    </li><li name="com.twitter.util.NullTimerTask" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NullTimerTask"></a>
       <a id="NullTimerTask:NullTimerTask"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1619,11 +1807,12 @@ object.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NullTimerTask$.html"><span class="name">NullTimerTask</span></a><span class="result"> extends TimerTask</span>
+        <a href="NullTimerTask$.html"><span class="name">NullTimerTask</span></a><span class="result"> extends <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Promise" data-isabs="false">
+    </li><li name="com.twitter.util.Promise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Promise"></a>
       <a id="Promise:Promise"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1631,11 +1820,12 @@ object.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Promise$.html"><span class="name">Promise</span></a><span class="result"> extends AnyRef</span>
+        <a href="Promise$.html"><span class="name">Promise</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.RandomSocket" data-isabs="false">
+    </li><li name="com.twitter.util.RandomSocket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RandomSocket"></a>
       <a id="RandomSocket:RandomSocket"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1643,12 +1833,13 @@ object.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="RandomSocket$.html"><span class="name">RandomSocket</span></a><span class="result"> extends AnyRef</span>
+        <a href="RandomSocket$.html"><span class="name">RandomSocket</span></a>
       </span>
       </h4>
-      <p class="comment cmt">A generator of random local java.net.InetSocketAddress objects with
+      <p class="comment cmt">A generator of random local <span class="extype" name="java.net.InetSocketAddress">java.net.InetSocketAddress</span> objects with
 ephemeral ports.</p>
-    </li><li visbl="pub" name="com.twitter.util.Return" data-isabs="false">
+    </li><li name="com.twitter.util.Return" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Return"></a>
       <a id="Return:Return"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1656,11 +1847,12 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Return$.html"><span class="name">Return</span></a><span class="result"> extends Serializable</span>
+        <a href="Return$.html"><span class="name">Return</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.RootMonitor" data-isabs="false">
+    </li><li name="com.twitter.util.RootMonitor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RootMonitor"></a>
       <a id="RootMonitor:RootMonitor"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1668,11 +1860,12 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="RootMonitor$.html"><span class="name">RootMonitor</span></a><span class="result"> extends Monitor</span>
+        <a href="RootMonitor$.html"><span class="name">RootMonitor</span></a><span class="result"> extends <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SetMaker" data-isabs="false">
+    </li><li name="com.twitter.util.SetMaker" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SetMaker"></a>
       <a id="SetMaker:SetMaker"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1680,11 +1873,12 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SetMaker$.html"><span class="name">SetMaker</span></a><span class="result"> extends AnyRef</span>
+        <a href="SetMaker$.html"><span class="name">SetMaker</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SignalHandlerFactory" data-isabs="false">
+    </li><li name="com.twitter.util.SignalHandlerFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SignalHandlerFactory"></a>
       <a id="SignalHandlerFactory:SignalHandlerFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1692,11 +1886,12 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SignalHandlerFactory$.html"><span class="name">SignalHandlerFactory</span></a><span class="result"> extends AnyRef</span>
+        <a href="SignalHandlerFactory$.html"><span class="name">SignalHandlerFactory</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.StateMachine" data-isabs="false">
+    </li><li name="com.twitter.util.StateMachine" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StateMachine"></a>
       <a id="StateMachine:StateMachine"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1704,11 +1899,12 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="StateMachine$.html"><span class="name">StateMachine</span></a><span class="result"> extends AnyRef</span>
+        <a href="StateMachine$.html"><span class="name">StateMachine</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Stopwatch" data-isabs="false">
+    </li><li name="com.twitter.util.Stopwatch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Stopwatch"></a>
       <a id="Stopwatch:Stopwatch"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1716,12 +1912,13 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Stopwatch$.html"><span class="name">Stopwatch</span></a><span class="result"> extends Stopwatch</span>
+        <a href="Stopwatch$.html"><span class="name">Stopwatch</span></a><span class="result"> extends <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a></span>
       </span>
       </h4>
-      <p class="comment cmt">The system <a name="com.twitter.util.Stopwatch" class="extype" href="Stopwatch.html">Stopwatch</a> measures elapsed time
-using System.nanoTime.</p>
-    </li><li visbl="pub" name="com.twitter.util.StorageUnit" data-isabs="false">
+      <p class="comment cmt">The system <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">com.twitter.util.Stopwatch</a> measures elapsed time
+using <span class="extype" name="System.nanoTime">System.nanoTime</span>.</p>
+    </li><li name="com.twitter.util.StorageUnit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StorageUnit"></a>
       <a id="StorageUnit:StorageUnit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1729,23 +1926,25 @@ using System.nanoTime.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="StorageUnit$.html"><span class="name">StorageUnit</span></a><span class="result"> extends AnyRef</span>
+        <a href="StorageUnit$.html"><span class="name">StorageUnit</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.package#StorageUnitConversions" data-isabs="false">
+    </li><li name="com.twitter.util.package#StorageUnitConversions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StorageUnitConversions:com.twitter.conversions.storage.type"></a>
+      <a id="StorageUnitConversions:storage.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">StorageUnitConversions</span><span class="result">: com.twitter.conversions.storage.type</span>
+        <span class="name">StorageUnitConversions</span><span class="result">: <a href="../conversions/storage$.html" class="extype" name="com.twitter.conversions.storage">storage</a>.type</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.package" class="extype" href="package$.html">package</a></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.util.StringEncoder" data-isabs="false">
+      
+    </li><li name="com.twitter.util.StringEncoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StringEncoder"></a>
       <a id="StringEncoder:StringEncoder"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1753,11 +1952,12 @@ using System.nanoTime.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="StringEncoder$.html"><span class="name">StringEncoder</span></a><span class="result"> extends StringEncoder</span>
+        <a href="StringEncoder$.html"><span class="name">StringEncoder</span></a><span class="result"> extends <a href="StringEncoder.html" class="extype" name="com.twitter.util.StringEncoder">StringEncoder</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.SunSignalHandler" data-isabs="false">
+    </li><li name="com.twitter.util.SunSignalHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SunSignalHandler"></a>
       <a id="SunSignalHandler:SunSignalHandler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1765,11 +1965,12 @@ using System.nanoTime.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SunSignalHandler$.html"><span class="name">SunSignalHandler</span></a><span class="result"> extends AnyRef</span>
+        <a href="SunSignalHandler$.html"><span class="name">SunSignalHandler</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.ThriftCodec" data-isabs="false">
+    </li><li name="com.twitter.util.ThriftCodec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ThriftCodec"></a>
       <a id="ThriftCodec:ThriftCodec"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1777,11 +1978,12 @@ using System.nanoTime.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="ThriftCodec$.html"><span class="name">ThriftCodec</span></a><span class="result"> extends AnyRef</span>
+        <a href="ThriftCodec$.html"><span class="name">ThriftCodec</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Time" data-isabs="false">
+    </li><li name="com.twitter.util.Time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Time"></a>
       <a id="Time:Time"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1789,26 +1991,28 @@ using System.nanoTime.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Time$.html"><span class="name">Time</span></a><span class="result"> extends TimeLikeOps[Time] with Serializable</span>
+        <a href="Time$.html"><span class="name">Time</span></a><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>] with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Use <code>Time.now</code> in your program instead of
 <code>System.currentTimeMillis</code>, and unit tests will be able to adjust
 the current time to verify timeouts and other time-dependent
 behavior, without calling <code>sleep</code>.</p>
-    </li><li visbl="pub" name="com.twitter.util.package#TimeConversions" data-isabs="false">
+    </li><li name="com.twitter.util.package#TimeConversions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="TimeConversions:com.twitter.conversions.time.type"></a>
+      <a id="TimeConversions:time.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">TimeConversions</span><span class="result">: com.twitter.conversions.time.type</span>
+        <span class="name">TimeConversions</span><span class="result">: <a href="../conversions/time$.html" class="extype" name="com.twitter.conversions.time">time</a>.type</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.twitter.util.package" class="extype" href="package$.html">package</a></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.util.Timer" data-isabs="false">
+      
+    </li><li name="com.twitter.util.Timer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Timer"></a>
       <a id="Timer:Timer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1816,11 +2020,12 @@ behavior, without calling <code>sleep</code>.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Timer$.html"><span class="name">Timer</span></a><span class="result"> extends AnyRef</span>
+        <a href="Timer$.html"><span class="name">Timer</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Try" data-isabs="false">
+    </li><li name="com.twitter.util.Try" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Try"></a>
       <a id="Try:Try"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1828,12 +2033,13 @@ behavior, without calling <code>sleep</code>.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Try$.html"><span class="name">Try</span></a><span class="result"> extends AnyRef</span>
+        <a href="Try$.html"><span class="name">Try</span></a>
       </span>
       </h4>
       <p class="comment cmt">The Try type represents a computation that may either result in an exception
 or return a success value.</p>
-    </li><li visbl="pub" name="com.twitter.util.U64" data-isabs="false">
+    </li><li name="com.twitter.util.U64" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="U64"></a>
       <a id="U64:U64"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1841,11 +2047,12 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="U64$.html"><span class="name">U64</span></a><span class="result"> extends AnyRef</span>
+        <a href="U64$.html"><span class="name">U64</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Unsafe" data-isabs="false">
+    </li><li name="com.twitter.util.Unsafe" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Unsafe"></a>
       <a id="Unsafe:Unsafe"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1853,11 +2060,12 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Unsafe$.html"><span class="name">Unsafe</span></a><span class="result"> extends AnyRef</span>
+        <a href="Unsafe$.html"><span class="name">Unsafe</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Var" data-isabs="false">
+    </li><li name="com.twitter.util.Var" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Var"></a>
       <a id="Var:Var"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1865,11 +2073,12 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Var$.html"><span class="name">Var</span></a><span class="result"> extends AnyRef</span>
+        <a href="Var$.html"><span class="name">Var</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.Witness" data-isabs="false">
+    </li><li name="com.twitter.util.Witness" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Witness"></a>
       <a id="Witness:Witness"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1877,11 +2086,12 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Witness$.html"><span class="name">Witness</span></a><span class="result"> extends AnyRef</span>
+        <a href="Witness$.html"><span class="name">Witness</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.benchmark" data-isabs="false">
+    </li><li name="com.twitter.util.benchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="benchmark"></a>
       <a id="benchmark:benchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1893,7 +2103,8 @@ or return a success value.</p>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.reflect" data-isabs="false">
+    </li><li name="com.twitter.util.reflect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="reflect"></a>
       <a id="reflect:reflect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1905,7 +2116,8 @@ or return a success value.</p>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.util.repository" data-isabs="false">
+    </li><li name="com.twitter.util.repository" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="repository"></a>
       <a id="repository:repository"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1920,9 +2132,12 @@ or return a success value.</p>
     </li></ol>
             </div>
 
-        <div class="values members" id="values">
+        
+
+        <div id="values" class="values members">
               <h3>Deprecated Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.util.Bijection" data-isabs="false">
+              <ol><li name="com.twitter.util.Bijection" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Bijection"></a>
       <a id="Bijection:Bijection"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1930,14 +2145,15 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Bijection$.html"><span class="name deprecated" title="Deprecated: (Since version 6.17.1) Prefer using com.twitter.bijection.Bijection">Bijection</span></a><span class="result"> extends AnyRef</span>
+        <a href="Bijection$.html"><span class="name deprecated" title="Deprecated: (Since version 6.17.1) Prefer using com.twitter.bijection.Bijection">Bijection</span></a>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.17.1)</i> Prefer using com.twitter.bijection.Bijection</p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.util.Config" data-isabs="false">
+    </li><li name="com.twitter.util.Config" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Config"></a>
       <a id="Config:Config"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1945,11 +2161,12 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Config$.html"><span class="name deprecated" title="Deprecated: (Since version ) use a Plain Old Scala Object">Config</span></a><span class="result"> extends AnyRef</span>
+        <a href="Config$.html"><span class="name deprecated" title="Deprecated: (Since version ) use a Plain Old Scala Object">Config</span></a>
       </span>
       </h4>
       <p class="comment cmt">You can import Config.</p>
-    </li><li visbl="pub" name="com.twitter.util.Eval" data-isabs="false">
+    </li><li name="com.twitter.util.Eval" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Eval"></a>
       <a id="Eval:Eval"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1957,7 +2174,7 @@ or return a success value.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Eval$.html"><span class="name deprecated" title="Deprecated: (Since version scala.this.deprecated.init$default$2) use a throw-away instance of Eval instead">Eval</span></a><span class="result"> extends Eval</span>
+        <a href="Eval$.html"><span class="name deprecated" title="Deprecated: (Since version 1.8.1) use a throw-away instance of Eval instead">Eval</span></a><span class="result"> extends <a href="Eval.html" class="extype" name="com.twitter.util.Eval">Eval</a></span>
       </span>
       </h4>
       <p class="comment cmt">Evaluate a file or string and return the result.</p>
@@ -1966,7 +2183,19 @@ or return a success value.</p>
         </div>
 
         <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
         
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -1974,7 +2203,6 @@ or return a success value.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>

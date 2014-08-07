@@ -2,24 +2,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.twitter.concurrent</title>
+          <title>concurrent - com.twitter.concurrent</title>
+          <meta name="description" content="concurrent - com.twitter.concurrent" />
+          <meta name="keywords" content="concurrent com.twitter.concurrent" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.twitter.concurrent.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.twitter" class="extype" href="../package.html">twitter</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
         <h1>concurrent</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +39,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +56,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.twitter.concurrent.AsyncMutex" data-isabs="false">
+              <ol><li name="com.twitter.concurrent.AsyncMutex" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncMutexextendsAsyncSemaphore"></a>
       <a id="AsyncMutex:AsyncMutex"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,23 +67,25 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="AsyncMutex.html"><span class="name">AsyncMutex</span></a><span class="result"> extends AsyncSemaphore</span>
+        <a href="AsyncMutex.html"><span class="name">AsyncMutex</span></a><span class="result"> extends <a href="AsyncSemaphore.html" class="extype" name="com.twitter.concurrent.AsyncSemaphore">AsyncSemaphore</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.AsyncQueue" data-isabs="false">
-      <a id="AsyncQueue:AsyncQueue[T]"></a>
+    </li><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncQueue[T]extendsAnyRef"></a>
+      <a id="AsyncQueue[T]:AsyncQueue[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An asynchronous FIFO queue.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.AsyncSemaphore" data-isabs="false">
+    </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncSemaphoreextendsAnyRef"></a>
       <a id="AsyncSemaphore:AsyncSemaphore"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -80,12 +93,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends AnyRef</span>
+        <a href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An AsyncSemaphore is a traditional semaphore but with asynchronous
 execution.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.BridgedThreadPoolScheduler" data-isabs="false">
+    </li><li name="com.twitter.concurrent.BridgedThreadPoolScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BridgedThreadPoolSchedulerextendsSchedulerwithExecutorScheduler"></a>
       <a id="BridgedThreadPoolScheduler:BridgedThreadPoolScheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -93,36 +107,39 @@ execution.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BridgedThreadPoolScheduler.html"><span class="name">BridgedThreadPoolScheduler</span></a><span class="result"> extends Scheduler with ExecutorScheduler</span>
+        <a href="BridgedThreadPoolScheduler.html"><span class="name">BridgedThreadPoolScheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a> with <a href="ExecutorScheduler.html" class="extype" name="com.twitter.concurrent.ExecutorScheduler">ExecutorScheduler</a></span>
       </span>
       </h4>
       <p class="comment cmt">A scheduler that bridges tasks submitted by external threads into local
 executor threads.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.Broker" data-isabs="false">
-      <a id="Broker:Broker[T]"></a>
+    </li><li name="com.twitter.concurrent.Broker" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Broker[T]extendsAnyRef"></a>
+      <a id="Broker[T]:Broker[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An unbuffered FIFO queue, brokered by <code>Offer</code>s.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.ConcurrentBijection" data-isabs="false">
-      <a id="ConcurrentBijection:ConcurrentBijection[A, B]"></a>
+    </li><li name="com.twitter.concurrent.ConcurrentBijection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConcurrentBijection[A,B]extendsMap[A,B]"></a>
+      <a id="ConcurrentBijection[A,B]:ConcurrentBijection[A,B]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends Map[A, B]</span>
+        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="com.twitter.concurrent.ConcurrentBijection.A">A</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentBijection.B">B</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.ExecutorScheduler" data-isabs="true">
+    </li><li name="com.twitter.concurrent.ExecutorScheduler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ExecutorSchedulerextendsAnyRef"></a>
       <a id="ExecutorScheduler:ExecutorScheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -130,37 +147,40 @@ executor threads.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends AnyRef</span>
+        <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A named Scheduler mix-in that causes submitted tasks to be dispatched according to
-an java.util.concurrent.ExecutorService created by an abstract factory
+an <span class="extype" name="java.util.concurrent.ExecutorService">java.util.concurrent.ExecutorService</span> created by an abstract factory
 function.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.IVar" data-isabs="false">
-      <a id="IVar:IVar[A]"></a>
+    </li><li name="com.twitter.concurrent.IVar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IVar[A]extendsIVarField[A]"></a>
+      <a id="IVar[A]:IVar[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="IVar.html"><span class="name">IVar</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends IVarField[A]</span>
+        <a href="IVar.html"><span class="name">IVar</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="IVarField.html" class="extype" name="com.twitter.concurrent.IVarField">IVarField</a>[<span class="extype" name="com.twitter.concurrent.IVar.A">A</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.IVarField" data-isabs="false">
-      <a id="IVarField:IVarField[A]"></a>
+    </li><li name="com.twitter.concurrent.IVarField" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IVarField[A]extendsObject"></a>
+      <a id="IVarField[A]:IVarField[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="IVarField.html"><span class="name">IVarField</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="IVarField.html"><span class="name">IVarField</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.LocalScheduler" data-isabs="false">
+    </li><li name="com.twitter.concurrent.LocalScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LocalSchedulerextendsScheduler"></a>
       <a id="LocalScheduler:LocalScheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -168,11 +188,12 @@ function.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="LocalScheduler.html"><span class="name">LocalScheduler</span></a><span class="result"> extends Scheduler</span>
+        <a href="LocalScheduler.html"><span class="name">LocalScheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a></span>
       </span>
       </h4>
       <p class="comment cmt">An efficient thread-local, direct-dispatch scheduler.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.NamedPoolThreadFactory" data-isabs="false">
+    </li><li name="com.twitter.concurrent.NamedPoolThreadFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NamedPoolThreadFactoryextendsThreadFactory"></a>
       <a id="NamedPoolThreadFactory:NamedPoolThreadFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -180,24 +201,26 @@ function.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="NamedPoolThreadFactory.html"><span class="name">NamedPoolThreadFactory</span></a><span class="result"> extends ThreadFactory</span>
+        <a href="NamedPoolThreadFactory.html"><span class="name">NamedPoolThreadFactory</span></a><span class="result"> extends <span class="extype" name="java.util.concurrent.ThreadFactory">ThreadFactory</span></span>
       </span>
       </h4>
-      <p class="comment cmt">A java.util.concurrent.ThreadFactory which creates threads with a name
+      <p class="comment cmt">A <span class="extype" name="java.util.concurrent.ThreadFactory">java.util.concurrent.ThreadFactory</span> which creates threads with a name
 indicating the pool from which they originated.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.Offer" data-isabs="true">
-      <a id="Offer:Offer[T]"></a>
+    </li><li name="com.twitter.concurrent.Offer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Offer[+T]extendsAnyRef"></a>
+      <a id="Offer[+T]:Offer[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An offer to communicate with another process.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.OfferBenchmark" data-isabs="false">
+    </li><li name="com.twitter.concurrent.OfferBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OfferBenchmarkextendsSimpleBenchmark"></a>
       <a id="OfferBenchmark:OfferBenchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -205,11 +228,12 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="OfferBenchmark.html"><span class="name">OfferBenchmark</span></a><span class="result"> extends SimpleBenchmark</span>
+        <a href="OfferBenchmark.html"><span class="name">OfferBenchmark</span></a><span class="result"> extends <span class="extype" name="com.google.caliper.SimpleBenchmark">SimpleBenchmark</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.Permit" data-isabs="true">
+    </li><li name="com.twitter.concurrent.Permit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PermitextendsAnyRef"></a>
       <a id="Permit:Permit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -217,11 +241,12 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends AnyRef</span>
+        <a href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.Scheduler" data-isabs="true">
+    </li><li name="com.twitter.concurrent.Scheduler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SchedulerextendsAnyRef"></a>
       <a id="Scheduler:Scheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -229,11 +254,12 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends AnyRef</span>
+        <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <p class="comment cmt">An interface for scheduling java.lang.Runnable tasks.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.SchedulerBenchmark" data-isabs="false">
+      <p class="comment cmt">An interface for scheduling <span class="extype" name="java.lang.Runnable">java.lang.Runnable</span> tasks.</p>
+    </li><li name="com.twitter.concurrent.SchedulerBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SchedulerBenchmarkextendsSimpleBenchmark"></a>
       <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -241,11 +267,12 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SchedulerBenchmark.html"><span class="name">SchedulerBenchmark</span></a><span class="result"> extends SimpleBenchmark</span>
+        <a href="SchedulerBenchmark.html"><span class="name">SchedulerBenchmark</span></a><span class="result"> extends <span class="extype" name="com.google.caliper.SimpleBenchmark">SimpleBenchmark</span></span>
       </span>
       </h4>
       <p class="comment cmt">Measure Scheduler.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.Serialized" data-isabs="true">
+    </li><li name="com.twitter.concurrent.Serialized" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SerializedextendsAnyRef"></a>
       <a id="Serialized:Serialized"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -253,35 +280,38 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends AnyRef</span>
+        <a href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Efficient ordered <i>serialization</i> of operations.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.Spool" data-isabs="true">
-      <a id="Spool:Spool[A]"></a>
+    </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Spool[+A]extendsAnyRef"></a>
+      <a id="Spool[+A]:Spool[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">sealed </span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A spool is an asynchronous stream.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource" data-isabs="false">
-      <a id="SpoolSource:SpoolSource[A]"></a>
+    </li><li name="com.twitter.concurrent.SpoolSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SpoolSource[A]extendsAnyRef"></a>
+      <a id="SpoolSource[A]:SpoolSource[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.ThreadPoolScheduler" data-isabs="false">
+    </li><li name="com.twitter.concurrent.ThreadPoolScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ThreadPoolSchedulerextendsSchedulerwithExecutorScheduler"></a>
       <a id="ThreadPoolScheduler:ThreadPoolScheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -289,48 +319,51 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ThreadPoolScheduler.html"><span class="name">ThreadPoolScheduler</span></a><span class="result"> extends Scheduler with ExecutorScheduler</span>
+        <a href="ThreadPoolScheduler.html"><span class="name">ThreadPoolScheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a> with <a href="ExecutorScheduler.html" class="extype" name="com.twitter.concurrent.ExecutorScheduler">ExecutorScheduler</a></span>
       </span>
       </h4>
       <p class="comment cmt">A scheduler that dispatches directly to an underlying Java
 cached threadpool executor.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.Tx" data-isabs="true">
-      <a id="Tx:Tx[T]"></a>
+    </li><li name="com.twitter.concurrent.Tx" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Tx[+T]extendsAnyRef"></a>
+      <a id="Tx[+T]:Tx[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
 protocol:</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.ConcurrentMultiMap" data-isabs="false">
-      <a id="ConcurrentMultiMap:ConcurrentMultiMap[K, V]"></a>
+    </li><li name="com.twitter.concurrent.ConcurrentMultiMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ConcurrentMultiMap[K,V]extendsAnyRef"></a>
+      <a id="ConcurrentMultiMap[K,V]:ConcurrentMultiMap[K,V]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentMultiMap.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="ConcurrentMultiMap.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> use guava's Multimaps.synchronizedMultimap</p></dd></dl></div>
-    </li><li visbl="pub" name="com.twitter.concurrent.ConcurrentPool" data-isabs="false">
-      <a id="ConcurrentPool:ConcurrentPool[K, V]"></a>
+    </li><li name="com.twitter.concurrent.ConcurrentPool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConcurrentPool[K,V]extendsAnyRef"></a>
+      <a id="ConcurrentPool[K,V]:ConcurrentPool[K,V]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentPool.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use finagle's BufferingPool">ConcurrentPool</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="ConcurrentPool.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use finagle's BufferingPool">ConcurrentPool</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">The ConcurrentPool provides a concurrent object pool on top of the
@@ -340,9 +373,10 @@ java.</p>
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="com.twitter.concurrent.AsyncQueue" data-isabs="false">
+              <ol><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncQueue"></a>
       <a id="AsyncQueue:AsyncQueue"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -350,11 +384,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="AsyncQueue$.html"><span class="name">AsyncQueue</span></a><span class="result"> extends AnyRef</span>
+        <a href="AsyncQueue$.html"><span class="name">AsyncQueue</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.AsyncSemaphore" data-isabs="false">
+    </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncSemaphore"></a>
       <a id="AsyncSemaphore:AsyncSemaphore"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -362,11 +397,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="AsyncSemaphore$.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends AnyRef</span>
+        <a href="AsyncSemaphore$.html"><span class="name">AsyncSemaphore</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.IVar" data-isabs="false">
+    </li><li name="com.twitter.concurrent.IVar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IVar"></a>
       <a id="IVar:IVar"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -374,11 +410,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="IVar$.html"><span class="name">IVar</span></a><span class="result"> extends AnyRef</span>
+        <a href="IVar$.html"><span class="name">IVar</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.Offer" data-isabs="false">
+    </li><li name="com.twitter.concurrent.Offer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Offer"></a>
       <a id="Offer:Offer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -386,11 +423,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Offer$.html"><span class="name">Offer</span></a><span class="result"> extends AnyRef</span>
+        <a href="Offer$.html"><span class="name">Offer</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.Scheduler" data-isabs="false">
+    </li><li name="com.twitter.concurrent.Scheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Scheduler"></a>
       <a id="Scheduler:Scheduler"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -398,11 +436,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Scheduler$.html"><span class="name">Scheduler</span></a><span class="result"> extends Scheduler</span>
+        <a href="Scheduler$.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a></span>
       </span>
       </h4>
       <p class="comment cmt">A global scheduler.</p>
-    </li><li visbl="pub" name="com.twitter.concurrent.Spool" data-isabs="false">
+    </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Spool"></a>
       <a id="Spool:Spool"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -410,11 +449,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Spool$.html"><span class="name">Spool</span></a><span class="result"> extends AnyRef</span>
+        <a href="Spool$.html"><span class="name">Spool</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.SpoolSource" data-isabs="false">
+    </li><li name="com.twitter.concurrent.SpoolSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SpoolSource"></a>
       <a id="SpoolSource:SpoolSource"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -422,11 +462,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SpoolSource$.html"><span class="name">SpoolSource</span></a><span class="result"> extends AnyRef</span>
+        <a href="SpoolSource$.html"><span class="name">SpoolSource</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.Tx" data-isabs="false">
+    </li><li name="com.twitter.concurrent.Tx" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Tx"></a>
       <a id="Tx:Tx"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -434,11 +475,12 @@ java.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Tx$.html"><span class="name">Tx</span></a><span class="result"> extends AnyRef</span>
+        <a href="Tx$.html"><span class="name">Tx</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.twitter.concurrent.ivar" data-isabs="false">
+    </li><li name="com.twitter.concurrent.ivar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ivar"></a>
       <a id="ivar:ivar"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -454,10 +496,20 @@ java.</p>
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
@@ -465,7 +517,6 @@ java.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
     </body>
       </html>
