@@ -233,7 +233,7 @@ object Hashable extends LowPriorityHashable {
   */
   val JENKINS = new Hashable[Array[Byte],Long] {
     override def apply(key: Array[Byte]): Long = {
-      var a, b, c = 0xdeadbeef + key.size
+      var a, b, c = 0xdeadbeef + key.length
 
       def rot(x: Int, k: Int) = (((x) << (k)) | ((x) >> (32 - (k))))
 
@@ -254,7 +254,7 @@ object Hashable extends LowPriorityHashable {
       }
 
       var block = 0
-      val numBlocks = (key.size - 1) / 12
+      val numBlocks = (key.length - 1) / 12
       while (block < numBlocks) {
         val offset = block * 12
         a += key(offset)
@@ -276,7 +276,7 @@ object Hashable extends LowPriorityHashable {
         block += 1
       }
 
-      val remaining = key.size - (numBlocks * 12)
+      val remaining = key.length - (numBlocks * 12)
       val offset = numBlocks * 12
 
       if (remaining > 0) a += key(offset)

@@ -33,7 +33,7 @@ class LastWriteWinsQueue[A] extends java.util.Queue[A] {
 
   def toArray[T](array: Array[T with java.lang.Object]): Array[T with java.lang.Object] = {
     val contained = item.get
-    if (contained.isDefined && array.size > 0) {
+    if (contained.isDefined && array.length > 0) {
       array(0) = contained.get.asInstanceOf[T with java.lang.Object]
       array
     } else if (contained.isDefined) {

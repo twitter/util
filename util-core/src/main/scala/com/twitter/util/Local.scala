@@ -29,7 +29,7 @@ final object Local {
     else {
       val oldCtx = ctx
       ctx = new Array[Option[_]](size)
-      System.arraycopy(oldCtx, 0, ctx, 0, oldCtx.size)
+      System.arraycopy(oldCtx, 0, ctx, 0, oldCtx.length)
     }
 
     ctx(i) = v
@@ -38,7 +38,7 @@ final object Local {
 
   private def get(i: Int): Option[_] = {
     val ctx = localCtx.get
-    if (ctx == null || ctx.size <= i)
+    if (ctx == null || ctx.length <= i)
       return None
 
     val v = ctx(i)

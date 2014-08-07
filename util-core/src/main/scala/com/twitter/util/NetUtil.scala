@@ -108,7 +108,7 @@ object NetUtil {
   def ipToIpBlock(ip: String, prefixLen: Option[Int]): (Int, Int) = {
     val arr = ip.split('.')
     val pLen = prefixLen match {
-      case None if (arr.size != 4) => arr.size * 8
+      case None if arr.length != 4 => arr.length * 8
       case t => t.getOrElse(32)
     }
 

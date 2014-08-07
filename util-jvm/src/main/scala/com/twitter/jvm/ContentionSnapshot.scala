@@ -35,7 +35,7 @@ class ContentionSnapshot {
                       .collect { case Blocked(info) => info }
 
     val ownerIds = blocked map(_.getLockOwnerId) filter(_ != -1)
-    val owners = if (ownerIds.size == 0) Seq[String]() else
+    val owners = if (ownerIds.length == 0) Seq[String]() else
       bean.getThreadInfo(ownerIds.toArray, true, true).map(_.toString).toSeq
 
     val deadlockThreadIds = bean.findDeadlockedThreads()

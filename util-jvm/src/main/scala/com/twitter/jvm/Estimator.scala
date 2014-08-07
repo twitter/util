@@ -24,7 +24,7 @@ class Kalman(N: Int) {
   private[this] var weight: Double = 0.9
 
   /**
-   * Update the filter with measurement `m` 
+   * Update the filter with measurement `m`
    * and measurement error `e`.
    */
   def measure(m: Double, e: Double) {
@@ -58,16 +58,16 @@ class Kalman(N: Int) {
   def estimate = est
 
   private[this] def variance(samples: Array[Double]): Double = {
-    if (samples.size == 1)
+    if (samples.length == 1)
       return 0D
 
     val sum = samples.sum
-    val mean = sum / samples.size
+    val mean = sum / samples.length
     val diff = (samples map { x => (x-mean)*(x-mean) }).sum
-    diff/(samples.size-1)
+    diff/(samples.length-1)
   }
 
-  override def toString = 
+  override def toString =
     "Kalman<estimate=%f, weight=%f, mvar=%f, evar=%f>".format(estimate, weight, mvar, evar)
 }
 
@@ -106,7 +106,7 @@ class WindowedMeans(N: Int, windows: Seq[(Int, Int)]) extends Estimator[Double] 
       else x
     }
     val j = (from%N).toInt
-    val sum = 
+    val sum =
       if (i == j) buf.sum
       else if (i < j) buf.slice(i, j).sum
       else buf.slice(i, N).sum + buf.slice(0, j).sum
@@ -140,7 +140,7 @@ class LoadAverage(interval: Double) extends Estimator[Double] {
   private[this] var first = true
 
   def measure(m: Double) {
-    load = 
+    load =
       if (load.isNaN) m
       else load*a + m*(1-a)
   }
@@ -161,13 +161,13 @@ class LoadAverage(interval: Double) extends Estimator[Double] {
  */
 object EstimatorTest extends App {
   import com.twitter.conversions.storage._
-  
+
   val estimator = args match {
     case Array("kalman", n, error) =>
       new KalmanGaussianError(n.toInt, error.toDouble)
     case Array("windowed", n, windows) =>
-      new WindowedMeans(n.toInt, 
-        windows.split(",") map { w => 
+      new WindowedMeans(n.toInt,
+        windows.split(",") map { w =>
           w.split(":") match {
             case Array(w, i) => (w.toInt, i.toInt)
             case _ => throw new IllegalArgumentException("bad weight, count pair "+w)
@@ -179,7 +179,7 @@ object EstimatorTest extends App {
     case _ => throw new IllegalArgumentException("bad args ")
   }
 
-  val lines = scala.io.Source.stdin.getLines().drop(1) 
+  val lines = scala.io.Source.stdin.getLines().drop(1)
   val states = lines.toArray map(_.split(" ") filter(_ != "") map(_.toDouble)) collect {
     case Array(s0c, s1c, s0u, s1u, ec, eu, oc, ou, pc, pu, ygc, ygct, fgc, fgct, gct) =>
       PoolState(ygc.toLong, ec.toLong.bytes, eu.toLong.bytes)
@@ -202,7 +202,7 @@ object EstimatorTest extends App {
 
 /*
 
-The following script is useful for plotting 
+The following script is useful for plotting
 results from EstimatorTest:
 
 	% scala ... com.twitter.jvm.EstimatorTest [ARGS] > /tmp/out

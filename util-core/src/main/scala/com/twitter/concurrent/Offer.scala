@@ -204,7 +204,7 @@ object Offer {
         }
         i = 0
         var foundPos = -1
-        while (foundPos < 0 && i < prepd.size) {
+        while (foundPos < 0 && i < prepd.length) {
           val winner = prepd(i)
           if (winner.isDefined) foundPos = i
           i += 1
@@ -213,7 +213,7 @@ object Offer {
         def updateLosers(winPos: Int, prepd: Array[Future[Tx[T]]]): Future[Tx[T]] = {
           val winner = prepd(winPos)
           var j = 0
-          while (j < prepd.size) {
+          while (j < prepd.length) {
             val loser = prepd(j)
             if (loser ne winner) {
               loser onSuccess { tx => tx.nack() }

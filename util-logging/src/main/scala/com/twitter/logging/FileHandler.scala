@@ -249,7 +249,7 @@ class FileHandler(
           }
         ).sortBy(_.getName)
 
-      val toDeleteCount = math.max(0, rotatedFiles.size - rotateCount)
+      val toDeleteCount = math.max(0, rotatedFiles.length - rotateCount)
       rotatedFiles.take(toDeleteCount).foreach(_.delete())
     }
   }
