@@ -1,3 +1,8 @@
+6.19.0  2014-08-05
+
+  * util: smattering of minor cleanups in util and finagle
+  * util-core: Reader and getContent symmetry
+
 6.18.4  2014-07-31
 
   * util-core: Remove confusing NOOP 0.until(5) in Future.collect().
