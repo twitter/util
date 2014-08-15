@@ -50,14 +50,37 @@ class RichU64ByteArray(bytes: Array[Byte]) {
   def toU64Long = new DataInputStream(new ByteArrayInputStream(bytes)).readLong
 }
 
+/**
+ * RichU64String parses string as a 64-bit unsigned hexadecimal long,
+ * outputting a signed Long or a byte array. Valid input is 1-16 hexadecimal
+ * digits (0-9, a-z, A-Z).
+ *
+ * @throws NumberFormatException if string is not a non-negative hexadecimal
+ * string
+ */
 class RichU64String(string: String) {
+  private[this] def validateHexDigit(c: Char) {
+    if (!(('0' <= c && c <= '9') ||
+      ('a' <= c && c <= 'f') ||
+      ('A' <= c && c <= 'F'))) {
+      throw new NumberFormatException("For input string: \"" + string + "\"")
+    }
+  }
+
   if (string.length > 16) {
     throw new NumberFormatException("Number longer than 16 hex characters")
+  } else if (string.isEmpty) {
+    throw new NumberFormatException("Empty string")
   }
+  string.foreach(validateHexDigit)
 
   def toU64ByteArray = {
     val padded = "0" * (16-string.length()) + string
-    (0 until 16 by 2).map(i => Integer.parseInt(padded.slice(i, i + 2), 16).toByte).toArray
+    (0 until 16 by 2).map(i => {
+      val parsed = Integer.parseInt(padded.slice(i, i + 2), 16)
+      assert (parsed >= 0)
+      parsed.toByte
+    }).toArray
   }
 
   def toU64Long = (new RichU64ByteArray(toU64ByteArray)).toU64Long
