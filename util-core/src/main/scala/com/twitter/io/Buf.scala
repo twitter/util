@@ -1,6 +1,5 @@
 package com.twitter.io
 
-import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.util.Arrays
 
@@ -52,11 +51,19 @@ trait Buf { outer =>
 private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
   override def concat(right: Buf): Buf = right match {
     case buf if buf.isEmpty => this
-    case ConcatBuf(rigthChain) => ConcatBuf(chain ++ rigthChain)
+    case ConcatBuf(rightChain) => ConcatBuf(chain ++ rightChain)
     case buf => ConcatBuf(chain :+ right)
   }
 
-  def length: Int = chain.map(_.length).sum
+  def length: Int = {
+    var i = 0
+    var sum = 0
+    while (i < chain.length) {
+      sum += chain(i).length
+      i += 1
+    }
+    sum
+  }
 
   def write(output: Array[Byte], off: Int) = {
     require(length <= output.length - off)
@@ -73,7 +80,7 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
     var end = j
     var res = Buf.Empty
     chain foreach { buf =>
-      val buf1 = buf.slice(begin max 0, end max 0)
+      val buf1 = buf.slice(math.max(0, begin), math.max(0, end))
       if (!buf1.isEmpty)
         res = res concat buf1
       begin -= buf.length
@@ -113,19 +120,35 @@ object Buf {
 
       if (j <= i || i >= length) Buf.Empty
       else if (i == 0 && j >= length) this
-      else ByteArray(bytes, begin+i, (begin+j) min end)
+      else ByteArray(bytes, begin+i, math.min(begin+j, end))
     }
 
-    val length = end-begin
+    def length = end-begin
 
     override def toString = "ByteArray("+length+")"
 
-    override def equals(other: Any): Boolean = other match {
-      case other: ByteArray
-          if other.begin == 0 && other.end == other.bytes.length &&
-          begin == 0 && end == bytes.length =>
-        Arrays.equals(bytes, other.bytes)
-      case other => super.equals(other)
+    override def equals(other: Any): Boolean = {
+      def bytesEq(b1: Array[Byte], off1: Int, b2: Array[Byte], off2: Int, len: Int): Boolean = {
+        var i = 0
+        while (i < len) {
+          if (b1(off1 + i) != b2(off2 + i))
+            return false
+          i += 1
+        }
+        true
+      }
+
+      val len = length
+      other match {
+        case buf: ByteArray if buf.length == len =>
+          bytesEq(bytes, begin, buf.bytes, buf.begin, len)
+        case buf: Buf if buf.length == len =>
+          val bs = new Array[Byte](len)
+          buf.write(bs, 0)
+          bytesEq(bytes, begin, bs, 0, len)
+        case _ =>
+          false
+      }
     }
   }
 
