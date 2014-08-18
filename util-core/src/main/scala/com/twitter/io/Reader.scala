@@ -1,7 +1,8 @@
 package com.twitter.io
 
 import com.twitter.util.{Future, Promise, Closable, Time}
-import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
+import java.io.{
+  File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
 
 /**
  * A Reader represents a stream of bytes, read in discrete chunks.
@@ -159,6 +160,33 @@ object Reader {
    * Wrap InputStream s in with a Reader
    */
   def fromStream(s: InputStream): Reader = InputStreamReader(s)
+
+  /**
+   * Copy the bytes from a Reader to a Writer in chunks of the given buffer size
+   * (default = 4KB). The Writer is unmanaged, the caller is responsible for
+   * finalization and error handling, e.g.:
+   *
+   *     Reader.copy(r, w) ensure w.close()
+   *
+   * @param n The number of bytes to read on each refill of the Writer.
+   */
+  def copy(r: Reader, w: Writer, n: Int): Future[Unit] = {
+    def loop(): Future[Unit] =
+      r.read(n) flatMap {
+        case None => Future.Done
+        case Some(buf) => w.write(buf) before loop()
+      }
+    loop()
+  }
+
+  /**
+   * Copy the bytes from a Reader to a Writer in chunks of the given buffer size
+   * (default = 4KB). The Writer is unmanaged, the caller is responsible for
+   * finalization and error handling, e.g.:
+   *
+   *     Reader.copy(r, w) ensure w.close()
+   */
+  def copy(r: Reader, w: Writer): Future[Unit] = copy(r, w, Writer.BufferSize)
 }
 
 /**
@@ -180,4 +208,30 @@ trait Writer {
    * failed. No further writes are allowed.
    */
   def fail(cause: Throwable)
+}
+
+object Writer {
+  val BufferSize = 4096
+
+  /**
+   * Construct a Writer from a given OutputStream.
+   *
+   * This Writer is not thread safe. If multiple threads attempt to `write`, the
+   * behavior is identical to multiple threads calling `write` on the underlying
+   * OutputStream.
+   *
+   * @param bufsize Size of the copy buffer between Writer and OutputStream.
+   */
+  def fromOutputStream(out: OutputStream, bufsize: Int): Writer with Closable =
+    new OutputStreamWriter(out, bufsize)
+
+  /**
+   * Construct a Writer from a given OutputStream.
+   *
+   * This Writer is not thread safe. If multiple threads attempt to `write`, the
+   * behavior is identical to multiple threads calling `write` on the underlying
+   * OutputStream.
+   */
+  def fromOutputStream(out: OutputStream): Writer with Closable =
+    fromOutputStream(out, BufferSize)
 }

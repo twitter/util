@@ -4,10 +4,13 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
-import com.twitter.util.{Await, Return}
+import org.scalacheck.Prop.forAll
+import org.scalatest.prop.Checkers
+import com.twitter.util.{Await, Future, Promise, Return}
+import java.io.{ByteArrayOutputStream, OutputStream}
 
 @RunWith(classOf[JUnitRunner])
-class ReaderTest extends FunSuite {
+class ReaderTest extends FunSuite with Checkers {
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int) = Buf.ByteArray(arr(i, j))
   
@@ -38,6 +41,68 @@ class ReaderTest extends FunSuite {
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
     assert(Await.result(f) === ())
+  }
+
+  test("Reader.connect") {
+    check(forAll { (p: Array[Byte], q: Array[Byte], r: Array[Byte]) =>
+      val rw = Reader.writable()
+      val bos = new ByteArrayOutputStream
+
+      val w = Writer.fromOutputStream(bos)
+      val f = Reader.copy(rw, w) ensure w.close()
+      val g =
+        rw.write(Buf.ByteArray(p)) before
+          rw.write(Buf.ByteArray(q)) before
+            rw.write(Buf.ByteArray(r)) before rw.close()
+
+      Await.ready(Future.join(f, g))
+
+      val b = new ByteArrayOutputStream
+      b.write(p)
+      b.write(q)
+      b.write(r)
+
+      java.util.Arrays.equals(bos.toByteArray, b.toByteArray)
+    })
+  }
+
+  test("Writer.fromOutputStream - close") {
+    val w = Writer.fromOutputStream(new ByteArrayOutputStream)
+    w.close()
+    intercept[IllegalStateException] { Await.result(w.write(Buf.Empty)) }
+  }
+
+  test("Writer.fromOutputStream - fail") {
+    val w = Writer.fromOutputStream(new ByteArrayOutputStream)
+    w.fail(new Exception)
+    intercept[Exception] { Await.result(w.write(Buf.Empty)) }
+  }
+
+  test("Writer.fromOutputStream - error") {
+    val os = new OutputStream {
+      def write(b: Int) { }
+      override def write(b: Array[Byte], n: Int, m: Int) { throw new Exception }
+    }
+    val f = Writer.fromOutputStream(os).write(Buf.Utf8("."))
+    intercept[Exception] { Await.result(f) }
+  }
+
+  test("Writer.fromOutputStream") {
+    val closep = new Promise[Unit]
+    val writep = new Promise[Array[Byte]]
+    val os = new OutputStream {
+      def write(b: Int) { }
+      override def write(b: Array[Byte], n: Int, m: Int) { writep.setValue(b) }
+      override def close() { closep.setDone() }
+    }
+    val w = Writer.fromOutputStream(os)
+    assert(!writep.isDefined)
+    assert(!closep.isDefined)
+    Await.ready(w.write(Buf.Utf8(".")))
+    assert(writep.isDefined)
+    assert(!closep.isDefined)
+    Await.ready(w.close())
+    assert(closep.isDefined)
   }
 
   test("Reader.writable") {
