@@ -3,6 +3,7 @@ package com.twitter.util
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import scala.collection.JavaConverters._
+import scala.runtime.NonLocalReturnControl
 import scala.util.control.ControlThrowable
 
 import org.junit.runner.RunWith
@@ -861,6 +862,33 @@ class FutureTest extends WordSpec with MockitoSugar {
             case Return(v) => const.value(throw e)
             case Throw(t) => const.value(0)
           } mustProduce(Throw(e))
+        }
+
+        "non local returns executed during transformation" in {
+          def ret(): String = {
+            val f = const.value(1).transform {
+              case Return(v) =>
+                val fn = { () =>
+                  return "OK"
+                }
+                fn()
+                Future.value(ret())
+              case Throw(t) => const.value(0)
+            }
+            assert(f.poll.isDefined)
+            val e = intercept[FutureNonLocalReturnControl] {
+              f.poll.get.get
+            }
+
+            val g = e.getCause match {
+              case t: NonLocalReturnControl[_] => t
+              case _ =>
+                fail()
+            }
+            assert(g.value === "OK")
+            "bleh"
+          }
+          ret()
         }
 
         "fatal exceptions thrown during transformation" in {

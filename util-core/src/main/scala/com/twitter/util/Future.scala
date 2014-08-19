@@ -5,6 +5,11 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReferenc
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import scala.collection.JavaConversions.{asScalaBuffer, seqAsJavaList}
 import scala.collection.mutable
+import scala.runtime.NonLocalReturnControl
+
+class FutureNonLocalReturnControl(cause: NonLocalReturnControl[_]) extends Exception(cause) {
+  override def getMessage: String = "Invalid use of `return` in closure passed to a Future"
+}
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.Top
@@ -1076,7 +1081,10 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
     respond({ r =>
-      val result = try f(r) catch { case NonFatal(e) => Future.exception(e) }
+      val result = try f(r) catch {
+        case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
+        case NonFatal(e) => Future.exception(e)
+      }
       p.become(result)
     })
     p

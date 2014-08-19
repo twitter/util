@@ -1,11 +1,12 @@
 package com.twitter.util
 
+import com.twitter.concurrent.Scheduler
+
 import java.util.concurrent.atomic.AtomicBoolean
 
 import scala.annotation.tailrec
 import scala.collection.mutable
-
-import com.twitter.concurrent.Scheduler
+import scala.runtime.NonLocalReturnControl
 
 object Promise {
   /**
@@ -93,6 +94,7 @@ object Promise {
     private[this] def k(r: Try[A]) = {
       promise.become(
         try f(r) catch {
+          case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
           case NonFatal(e) => Future.exception(e)
         }
       )
