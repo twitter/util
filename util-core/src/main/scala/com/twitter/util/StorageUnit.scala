@@ -87,6 +87,9 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def min(other: StorageUnit): StorageUnit =
     if (this < other) this else other
 
+  def max(other: StorageUnit): StorageUnit =
+    if (this > other) this else other
+
   override def toString() = inBytes + ".bytes"
 
   def toHuman(): String = {
