@@ -182,13 +182,16 @@ class FlagUndefinedException extends Exception(Flags.FlagUndefinedMessage)
  * @see [[com.twitter.app.Flags]]
  */
 class Flag[T: Flaggable] private[app](val name: String, val help: String, defaultOrUsage: Either[() => T, String]) {
-
   private[app] def this(name: String, help: String, default: => T) = this(name, help, Left(() => default))
   private[app] def this(name: String, help: String, usage: String) = this(name, help, Right(usage))
 
   protected val flaggable = implicitly[Flaggable[T]]
+
   @volatile private[this] var value: Option[T] = None
   protected def getValue: Option[T] = value
+
+  @volatile private[this] var _parsingDone = false
+  protected[this] def parsingDone = _parsingDone
 
   private def default: Option[T] = defaultOrUsage.left.toOption map { d => d() }
   private def valueOrDefault: Option[T] = getValue orElse default
@@ -200,10 +203,17 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
    * Return this flag's current value. The default value is returned
    * when the flag has not otherwise been set.
    */
-  def apply(): T = valueOrDefault getOrElse { throw flagNotFound }
+  def apply(): T = {
+    if (!parsingDone)
+      java.util.logging.Logger.getLogger("").severe("Flag %s read before parse.".format(name))
+    valueOrDefault getOrElse { throw flagNotFound }
+  }
 
   /** Reset this flag's value */
-  def reset() { value = None }
+  def reset() {
+    value = None
+    _parsingDone = false
+  }
   /** True if the flag has been set */
   def isDefined = getValue.isDefined
   /** Get the value if it has been set */
@@ -231,11 +241,17 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   /** Parse value `raw` into this flag. */
   def parse(raw: String) {
     value = Some(flaggable.parse(raw))
+    _parsingDone = true
   }
 
   /** Parse this flag with no argument. */
   def parse() {
     value = flaggable.default
+    _parsingDone = true
+  }
+
+  private[app] def finishParsing() {
+    _parsingDone = true
   }
 
   /** Indicates whether or not the flag is valid without an argument. */
@@ -311,6 +327,10 @@ class Flags(argv0: String, includeGlobal: Boolean) {
 
   def reset() = synchronized {
     flags foreach { case (_, f) => f.reset() }
+  }
+
+  private[app] def finishParsing(): Unit = {
+    flags.values.foreach { _.finishParsing() }
   }
 
   private[this] def resolveGlobalFlag(f: String) =
@@ -397,6 +417,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
         remaining += a
       }
     }
+    finishParsing()
 
     if (helpFlag())
       Help(usage)
@@ -614,6 +635,8 @@ class GlobalFlag[T] private[app](
   defaultOrUsage: Either[() => T, String],
   help: String
 )(implicit _f: Flaggable[T]) extends Flag[T](null, help, defaultOrUsage) {
+
+  override protected[this] def parsingDone: Boolean = true
 
   def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
   def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)

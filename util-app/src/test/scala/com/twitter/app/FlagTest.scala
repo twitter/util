@@ -70,6 +70,8 @@ class FlagTest extends FunSuite {
   test("Flag: defaults") {
     val ctx = new Ctx
     import ctx._
+
+    flag.finishParsing()
     assert(fooFlag() === 123)
     assert(barFlag() === "okay")
   }
@@ -78,6 +80,7 @@ class FlagTest extends FunSuite {
     val ctx = new Ctx
     import ctx._
     assert(flag.parseArgs(Array("-foo", "973", "-bar", "hello there")) === Flags.Ok(Nil))
+    flag.finishParsing()
     assert(fooFlag() === 973)
     assert(barFlag() === "hello there")
   }
@@ -88,6 +91,7 @@ class FlagTest extends FunSuite {
     val flag2 = flag("foo", 2, "")
     val allFlags = flag.getAll().toSet
 
+    flag.finishParsing()
     assert(!allFlags.exists(_() == 1), "original flag was not overridden")
     assert(allFlags.exists(_() == 2), "overriding flag was not present in flags set")
   }
@@ -99,6 +103,8 @@ class FlagTest extends FunSuite {
   test("Boolean: default") {
     val ctx = new Bctx
     import ctx._
+
+    flag.finishParsing()
     assert(!yesFlag())
   }
 
@@ -262,4 +268,64 @@ class FlagTest extends FunSuite {
     assert(matchesGlobal(flagWithGlobal.formattedFlagValuesString()))
     assert(flagWithoutGlobal.formattedFlagValuesString() === localOnly)
   }
+
+  // TODO: uncomment after we add script parsing mode
+  /*
+  test("Flag that needs parsing will complain without parsing") {
+    val flag = new Flag[Int]("foo", "bar", Left(() => 3))
+    intercept[IllegalStateException] {
+      flag()
+    }
+    flag.finishParsing()
+    assert(flag() === 3)
+  }
+
+  test("Flag that needs parsing ok after parsing") {
+    val flag = new Flag[Int]("foo", "bar", Left(() => 3))
+    intercept[IllegalStateException] {
+      flag()
+    }
+    flag.parse("4")
+    assert(flag() === 4)
+  }
+
+  test("Flag that needs parsing ok resets properly") {
+    val flag = new Flag[Int]("foo", "bar", Left(() => 3))
+    flag.parse("4")
+    assert(flag() === 4)
+
+    flag.reset()
+    intercept[IllegalStateException] {
+      flag()
+    }
+    flag.parse("4")
+    assert(flag() === 4)
+  }
+
+  test("Flags fail before parsing, OK after") {
+    val ctx = new Ctx()
+    import ctx._
+
+    intercept[IllegalStateException] {
+      fooFlag()
+    }
+    assert(flag.parseArgs(Array()) === Flags.Ok(Nil))
+    assert(fooFlag() === 123)
+  }
+
+  test("Flags reset properly with respect to failure") {
+    val ctx = new Ctx()
+    import ctx._
+
+    assert(flag.parseArgs(Array()) === Flags.Ok(Nil))
+    assert(fooFlag() === 123)
+
+    flag.reset()
+    intercept[IllegalStateException] {
+      fooFlag()
+    }
+    assert(flag.parseArgs(Array()) === Flags.Ok(Nil))
+    assert(fooFlag() === 123)
+  }
+   */
 }

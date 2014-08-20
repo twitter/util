@@ -17,6 +17,9 @@ import com.twitter.util._
  * with modularity in mind, and common functionality should be
  * extracted into mixins.
  *
+ * Flags should only be constructed in the constructor, and should only be read
+ * in the premain or later, after they have been parsed.
+ *
  * {{{
  * object MyApp extends App {
  *   val n = flag("n", 100, "Number of items to process")
