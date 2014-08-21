@@ -35,6 +35,34 @@ import scala.util.matching.Regex
 import com.twitter.conversions.string._
 import com.twitter.io.StreamIO
 
+trait ClassPathFinder extends (Eval=>List[List[String]])
+
+object ClassPathFinder {
+  val UsingThisClassLoader = new ClassPathFinder {
+    def getClassPath(cl: ClassLoader, acc: List[List[String]] = List.empty): List[List[String]] = {
+      val cp = cl match {
+        case urlClassLoader: URLClassLoader => urlClassLoader.getURLs.filter(_.getProtocol == "file").
+          map(u => new File(u.toURI).getPath).toList
+        case _ => Nil
+      }
+      cl.getParent match {
+        case null => (cp :: acc).reverse
+        case parent => getClassPath(parent, cp :: acc)
+      }
+    }
+
+    def apply(eval:Eval) = getClassPath(eval.getClass.getClassLoader)
+  }
+
+  val UsingSysProperty = new ClassPathFinder {
+    def apply(eval:Eval) = {
+      val prop = System.getProperty("java.class.path")
+      val list = prop.split(":").toList
+      List(list)
+    }
+  }
+}
+
 /**
  * Evaluate a file or string and return the result.
  */
@@ -62,12 +90,13 @@ object Eval extends Eval {
  * - contruct an instance of that class
  * - return the result of `apply()`
  */
-class Eval(target: Option[File]) {
+class Eval(target: Option[File], classPathFinder:ClassPathFinder) {
+
   /**
    * empty constructor for backwards compatibility
    */
   def this() {
-    this(None)
+    this(None, ClassPathFinder.UsingThisClassLoader)
   }
 
   import Eval.jvmId
@@ -321,19 +350,8 @@ class Eval(target: Option[File]) {
    * This is probably fragile.
    */
   lazy val impliedClassPath: List[String] = {
-    def getClassPath(cl: ClassLoader, acc: List[List[String]] = List.empty): List[List[String]] = {
-      val cp = cl match {
-        case urlClassLoader: URLClassLoader => urlClassLoader.getURLs.filter(_.getProtocol == "file").
-          map(u => new File(u.toURI).getPath).toList
-        case _ => Nil
-      }
-      cl.getParent match {
-        case null => (cp :: acc).reverse
-        case parent => getClassPath(parent, cp :: acc)
-      }
-    }
+    val classPath = classPathFinder(this)
 
-    val classPath = getClassPath(this.getClass.getClassLoader)
     val currentClassPath = classPath.head
 
     // if there's just one thing in the classpath, and it's a jar, assume an executable jar.
@@ -577,3 +595,4 @@ class Eval(target: Option[File]) {
   class CompilerException(val messages: List[List[String]]) extends Exception(
     "Compiler exception " + messages.map(_.mkString("\n")).mkString("\n"))
 }
+
