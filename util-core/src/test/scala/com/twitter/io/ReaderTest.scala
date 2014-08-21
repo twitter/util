@@ -5,12 +5,13 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalacheck.Prop.forAll
-import org.scalatest.prop.Checkers
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatest.matchers.ShouldMatchers
 import com.twitter.util.{Await, Future, Promise, Return}
 import java.io.{ByteArrayOutputStream, OutputStream}
 
 @RunWith(classOf[JUnitRunner])
-class ReaderTest extends FunSuite with Checkers {
+class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with ShouldMatchers {
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int) = Buf.ByteArray(arr(i, j))
   
@@ -43,8 +44,8 @@ class ReaderTest extends FunSuite with Checkers {
     assert(Await.result(f) === ())
   }
 
-  test("Reader.connect") {
-    check(forAll { (p: Array[Byte], q: Array[Byte], r: Array[Byte]) =>
+  test("Reader.copy - source and destination equality") {
+    forAll { (p: Array[Byte], q: Array[Byte], r: Array[Byte]) =>
       val rw = Reader.writable()
       val bos = new ByteArrayOutputStream
 
@@ -62,8 +63,11 @@ class ReaderTest extends FunSuite with Checkers {
       b.write(q)
       b.write(r)
 
-      java.util.Arrays.equals(bos.toByteArray, b.toByteArray)
-    })
+      bos.flush()
+      b.flush()
+
+      bos.toByteArray should equal(b.toByteArray)
+    }
   }
 
   test("Writer.fromOutputStream - close") {
