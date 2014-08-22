@@ -41,7 +41,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -94,7 +94,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -133,7 +133,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -198,7 +198,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">Nil</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Nothing">Nothing</span>]]</span>
+        <span class="name">Nil</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Nothing">Nothing</span>]]</span>
       </span>
       </h4>
       
@@ -293,7 +293,7 @@ values are wrapped in the Return[_] type.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">batched</span><span class="tparams">[<span name="In">In</span>, <span name="Out">Out</span>]</span><span class="params">(<span name="sizeThreshold">sizeThreshold: <span class="extype" name="scala.Int">Int</span></span>, <span name="timeThreshold">timeThreshold: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a> = <span class="symbol"><span class="name"><a href="Duration$.html">Duration.Top</a></span></span></span>, <span name="sizePercentile">sizePercentile: ⇒ <span class="extype" name="scala.Float">Float</span> = <span class="symbol">1.0f</span></span>)</span><span class="params">(<span name="f">f: (<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.Future.batched.In">In</span>]) ⇒ <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.Future.batched.Out">Out</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: (<span class="extype" name="com.twitter.util.Future.batched.In">In</span>) ⇒ <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.batched.Out">Out</span>]</span>
+        <span class="name">batched</span><span class="tparams">[<span name="In">In</span>, <span name="Out">Out</span>]</span><span class="params">(<span name="sizeThreshold">sizeThreshold: <span class="extype" name="scala.Int">Int</span></span>, <span name="timeThreshold">timeThreshold: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a> = <span class="symbol"><span class="name"><a href="Duration$.html">Duration.Top</a></span></span></span>, <span name="sizePercentile">sizePercentile: ⇒ <span class="extype" name="scala.Float">Float</span> = <span class="symbol">1.0f</span></span>)</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.Future.batched.In">In</span>]) ⇒ <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.Future.batched.Out">Out</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: (<span class="extype" name="com.twitter.util.Future.batched.In">In</span>) ⇒ <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.batched.Out">Out</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Creates a &quot;batched&quot; Future that, given a function
@@ -324,7 +324,7 @@ used for the next batch to be collected.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -361,7 +361,7 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">collect</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collect.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.Future.collect.A">A</span>]]</span>
+        <span class="name">collect</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collect.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.Future.collect.A">A</span>]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of
@@ -395,7 +395,7 @@ Future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">collectToTry</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]]</span>
+        <span class="name">collectToTry</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]]
@@ -424,7 +424,7 @@ Future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -450,7 +450,7 @@ Future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.exception.A">A</span>]</span>
+        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.exception.A">A</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Make a Future with an error.</p><div class="fullcomment"><div class="comment cmt"><p>Make a Future with an error. E.g., Future.exception(new
@@ -891,7 +891,7 @@ do.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">join</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.join.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.join.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Take a sequence of Futures, wait till they all complete
@@ -932,7 +932,7 @@ onSuccess g; f0 }</code> will cancel f0 so that f0 never hangs.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -984,7 +984,7 @@ onSuccess g; f0 }</code> will cancel f0 so that f0 never hangs.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parallel</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.parallel.A">A</span>]</span>)</span><span class="result">: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.parallel.A">A</span>]]</span>
+        <span class="name">parallel</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.parallel.A">A</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.parallel.A">A</span>]]</span>
       </span>
       </h4>
       
@@ -997,7 +997,7 @@ onSuccess g; f0 }</code> will cancel f0 so that f0 never hangs.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">rawException</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rawException.A">A</span>]</span>
+        <span class="name">rawException</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rawException.A">A</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Make a Future with an error.</p><div class="fullcomment"><div class="comment cmt"><p>Make a Future with an error. E.g., Future.exception(new
@@ -1029,7 +1029,7 @@ to be satisfied and the rest of the futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">select</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.select.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.select.A">A</span>], <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.select.A">A</span>]])]</span>
+        <span class="name">select</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.select.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.select.A">A</span>], <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.select.A">A</span>]])]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">&quot;Select&quot; off the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>&quot;Select&quot; off the first future to be satisfied.  Return this as a
@@ -1045,7 +1045,7 @@ result, with the remainder of the Futures as a sequence.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">selectIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <a href="../../../scala/package.html#IndexedSeq[+A]=IndexedSeq[A]" class="extmbr" name="scala.IndexedSeq">IndexedSeq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.selectIndex.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Int">Int</span>]</span>
+        <span class="name">selectIndex</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.selectIndex.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Int">Int</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Select the index into <code>fs</code> of the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Select the index into <code>fs</code> of the first future to be satisfied.
@@ -1245,7 +1245,7 @@ after each computation completes.</p>
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
