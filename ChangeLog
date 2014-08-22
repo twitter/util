@@ -1,3 +1,14 @@
+6.20.0  2014-08-22
+
+  * util: Enables cross-publishing for 2.11
+  * util-app: Log severely if a flag is read at the wrong time
+  * util-core: Changes transform to fail Futures if you return inside the passed closure
+  * util-core: Copy bytes from Reader to Writer and OutputStream
+  * util-core: Fix RichU64String to throw for negative input Problem
+  * util-core: Optimizations in Buf
+  * util-core: Remove some unnecessary implicit conversions
+  * util-doc: Fix updatedocs.bash to update new util docs
+
 6.19.0  2014-08-05
 
   * util: smattering of minor cleanups in util and finagle
