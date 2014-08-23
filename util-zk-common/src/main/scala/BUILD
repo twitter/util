@@ -1,4 +1,9 @@
 scala_library(name='scala',
+  provides = artifact(
+    org = 'com.twitter',
+    name = 'util-zk-common',
+    repo = pants('pants-support/ivy:internal'),
+  ),
   dependencies=[
     pants('3rdparty:guava'),
     pants('3rdparty:zookeeper'),
@@ -13,7 +18,4 @@ scala_library(name='scala',
     pants('util/util-zk/src/main/scala'),
   ],
   sources=rglobs('*.scala'),
-  provides=artifact(org='com.twitter',
-                    name='util-zk-common',
-                    repo='pants-support/ivy:internal',),
 )

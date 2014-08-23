@@ -1,4 +1,9 @@
 scala_library(name='scala',
+  provides = artifact(
+    org = 'com.twitter',
+    name = 'util-thrift',
+    repo = pants('pants-support/ivy:internal'),
+  ),
   dependencies=[
     pants('3rdparty:jackson-databind'),
     pants('3rdparty:libthrift-0.5.0'),
@@ -6,7 +11,4 @@ scala_library(name='scala',
     pants('util/util-codec')
   ],
   sources=rglobs('*.scala'),
-  provides=artifact(org='com.twitter',
-                    name='util-thrift',
-                    repo='pants-support/ivy:internal',),
 )

@@ -1,4 +1,9 @@
 scala_library(name='scala',
+  provides = artifact(
+    org = 'com.twitter',
+    name = 'util-logging',
+    repo = pants('pants-support/ivy:internal'),
+  ),
   dependencies=[
     # TODO(John Sirois): This is a bogus dependency for nearly all use cases - isolate
     # com.twitter.logging.TestLogging to its own scala_library target and move users over.
@@ -7,7 +12,4 @@ scala_library(name='scala',
     pants('util/util-core/src/main/scala'),
   ],
   sources=rglobs('*.scala'),
-  provides=artifact(org='com.twitter',
-                    name='util-logging',
-                    repo='pants-support/ivy:internal',),
 )
