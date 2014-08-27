@@ -14,6 +14,15 @@ import org.scalatest.prop.Checkers
 
 @RunWith(classOf[JUnitRunner])
 class BufTest extends FunSuite with MockitoSugar with Checkers {
+  val AllCharsets = Seq(
+    Charsets.Iso8859_1,
+    Charsets.UsAscii,
+    Charsets.Utf8,
+    Charsets.Utf16,
+    Charsets.Utf16BE,
+    Charsets.Utf16LE
+  )
+
   test("Buf.ByteArray.slice") {
     val arr = Array.range(0, 16).map(_.toByte)
     val buf = Buf.ByteArray(arr)
@@ -81,7 +90,8 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
   test("Buf.Utf8.unapply with a Buf.ByteArray") {
     val str = "Hello, world!"
     val buf = Buf.Utf8(str)
-    assert(Buf.Utf8.unapply(buf) === Some(str))
+    val Buf.Utf8(out) = buf
+    assert(out === str)
   }
 
   test("Buf.Utf8.unapply with a non-Buf.ByteArray") {
@@ -93,8 +103,30 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
       }
     )
 
-    Buf.Utf8.unapply(buf)
+    val Buf.Utf8(_) = buf
     verify(buf).write(any[Array[Byte]], any[Int])
+  }
+
+  AllCharsets foreach { charset =>
+    test("Buf.StringCoder: decoding to %s does not modify underlying byte buffer".format(charset.name)) {
+      val coder = new Buf.StringCoder(charset) {}
+      val hw = "Hello, world!"
+      val bb = charset.encode(hw)
+      val wrappedBuf = new Buf.ByteBuffer(bb)
+      val coder(_) = wrappedBuf
+      assert(wrappedBuf.bb === bb)
+      assert(wrappedBuf.bb.position() === bb.position())
+    }
+  }
+
+  AllCharsets foreach { charset =>
+    test("Buf.StringCoder: %s charset can encode and decode an English phrase".format(charset.name)) {
+      val coder = new Buf.StringCoder(charset) {}
+      val phrase = "Hello, world!"
+      val encoded = coder(phrase)
+      val coder(out) = encoded
+      assert(out === phrase)
+    }
   }
 
   test("Buf.ByteBuffer") {

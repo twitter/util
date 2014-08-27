@@ -32,12 +32,12 @@ object Charsets {
   val Utf8: Charset = Charset.forName("UTF-8")
 
   /**
-   * ISO Latin Alphabet No. 1, as known as `ISO-LATIN-1`
+   * ISO Latin Alphabet No. 1, also known as `ISO-LATIN-1`
    */
   val Iso8859_1: Charset = Charset.forName("ISO-8859-1")
 
   /**
-   * 7-bit ASCII, as known as ISO646-US or the Basic Latin block of the
+   * 7-bit ASCII, also known as ISO646-US or the Basic Latin block of the
    * Unicode character set
    */
   val UsAscii: Charset = Charset.forName("US-ASCII")
@@ -53,6 +53,8 @@ object Charsets {
   /**
    * Returns a cached thread-local [[java.nio.charset.CharsetEncoder]] for
    * the specified `charset`.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
   def encoder(charset: Charset): CharsetEncoder = {
     val e = encoders.get.getOrElseUpdate(charset, charset.newEncoder());
@@ -64,6 +66,8 @@ object Charsets {
   /**
    * Returns a cached thread-local [[java.nio.charset.CharsetDecoder]] for
    * the specified `charset`.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
   def decoder(charset: Charset): CharsetDecoder = {
     val d = decoders.get.getOrElseUpdate(charset, charset.newDecoder())

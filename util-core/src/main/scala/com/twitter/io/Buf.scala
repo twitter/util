@@ -1,5 +1,6 @@
 package com.twitter.io
 
+import java.nio.CharBuffer
 import java.nio.charset.Charset
 import java.util.Arrays
 
@@ -279,20 +280,80 @@ object Buf {
 
   /**
    * Create and deconstruct Utf-8 encoded buffers.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object Utf8 {
-    private val utf8 = Charset.forName("UTF-8")
+  object Utf8 extends StringCoder(Charsets.Utf8)
 
-    def apply(s: String): Buf = ByteArray(s.getBytes(utf8))
+  /**
+   * Create and deconstruct 16-bit UTF buffers.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   */
+  object Utf16 extends StringCoder(Charsets.Utf16)
 
-    def unapply(buf: Buf): Option[String] = buf match {
-      case ba: ByteArray =>
-        val s = new String(ba.bytes, ba.begin, ba.end-ba.begin, utf8)
-        Some(s)
-      case buf =>
-        val bytes = new Array[Byte](buf.length)
-        buf.write(bytes, 0)
-        Some(new String(bytes, utf8))
+  /**
+   * Create and deconstruct buffers encoded by the 16-bit UTF charset
+   * with big-endian byte order.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   */
+  object Utf16BE extends StringCoder(Charsets.Utf16BE)
+
+  /**
+   * Create and deconstruct buffers encoded by the 16-bit UTF charset
+   * with little-endian byte order.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   */
+  object Utf16LE extends StringCoder(Charsets.Utf16LE)
+
+  /**
+   * Create and deconstruct buffers encoded by the
+   * ISO Latin Alphabet No. 1 charset.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   */
+  object Iso8859_1 extends StringCoder(Charsets.Iso8859_1)
+
+  /**
+   * Create and deconstruct buffers encoded by the 7-bit ASCII,
+   * also known as ISO646-US or the Basic Latin block of the
+   * Unicode character set.
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   */
+  object UsAscii extends StringCoder(Charsets.UsAscii)
+
+  /**
+   * a StringCoder for a given [[java.nio.charset.Charset]] provides an
+   * encoder: String -> Buf and an extractor: Buf -> Option[String].
+   *
+   * @note Malformed and unmappable input is silently replaced
+   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   */
+  private[io] abstract class StringCoder(charset: Charset) {
+    /**
+     * Encode the String to its Buf representation per the charset
+     */
+    def apply(s: String): Buf =  {
+      val enc = Charsets.encoder(charset)
+      val cb = CharBuffer.wrap(s.toCharArray)
+      ByteBuffer(enc.encode(cb))
+    }
+
+    /**
+     * @return Some(String representation of the Buf)
+     * @note This extractor does *not* return None to indicate a failed
+     *       or impossible decoding. Malformed or unmappable bytes will
+     *       instead be silently replaced by the replacement character
+     *       ("\uFFFD") in the returned String. This behavior may change
+     *       in the future.
+     */
+    def unapply(buf: Buf): Option[String] = {
+      val dec = Charsets.decoder(charset)
+      val bb = Buf.toByteBuffer(buf)
+      Some(dec.decode(bb).toString)
     }
   }
 
