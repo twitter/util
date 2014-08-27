@@ -7,6 +7,11 @@ import scala.collection.mutable
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import org.junit.runner.RunWith
+import scala.collection.mutable
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
+import scala.collection.immutable.VectorBuilder
 
 @RunWith(classOf[JUnitRunner])
 class EventTest extends FunSuite {
@@ -21,12 +26,12 @@ class EventTest extends FunSuite {
     assert(ref.get === Seq(1))
     e.notify(2)
     assert(ref.get === Seq(1, 2))
-    
+
     Await.ready(sub.close())
     e.notify(3)
     assert(ref.get === Seq(1, 2))
   }
-  
+
   test("Event.collect") {
     val e = Event[Int]()
     val events = e collect { case i if i%2==0 => i*2 }
@@ -40,7 +45,7 @@ class EventTest extends FunSuite {
     e.notify(3); e.notify(4)
     assert(ref.get === Seq(4,8))
   }
-  
+
   test("Event.foldLeft") {
     val e = Event[Int]()
     val sum = e.foldLeft(0) (_+_)
@@ -53,7 +58,7 @@ class EventTest extends FunSuite {
     e.notify(12)
     assert(ref.get === 13)
   }
-  
+
   test("Event.sliding") {
     val e = Event[Int]()
     val w = e.sliding(3)
@@ -73,7 +78,7 @@ class EventTest extends FunSuite {
   test("Event.mergeMap") {
     val e = Event[Int]()
     val inners = new mutable.ArrayBuffer[Witness[String]]
-    val e2 = e mergeMap { i => 
+    val e2 = e mergeMap { i =>
       val e = Event[String]()
       inners += e
       e
@@ -96,7 +101,7 @@ class EventTest extends FunSuite {
     inners(1).notify("yay")
     assert(ref.get === "yay")
   }
-  
+
   test("Event.mergeMap closes constituent witnesses") {
     @volatile var n = 0
 
@@ -107,7 +112,7 @@ class EventTest extends FunSuite {
         Closable.make { _ => n -= 1; Future.Done }
       }
     }
-    
+
     val e12 = e1 mergeMap { _ => e2 }
 
     val ref = new AtomicReference(Seq.empty[Int])
@@ -125,38 +130,38 @@ class EventTest extends FunSuite {
     val ref = new AtomicReference[Seq[Either[Int, String]]](Seq.empty)
     e.build.register(Witness(ref))
     assert(ref.get.isEmpty)
-    
+
     e1.notify(1)
     e1.notify(2)
     e2.notify("1")
     e1.notify(3)
     e2.notify("2")
-    
+
     assert(ref.get === Seq(Left(1), Left(2), Right("1"), Left(3), Right("2")))
   }
-  
+
   test("Event.zip") {
     val e1 = Event[Int]()
     val e2 = Event[String]()
     val e = e1 zip e2
     val ref = new AtomicReference[Seq[(Int, String)]](Seq.empty)
     e.build.register(Witness(ref))
-    
+
     for (i <- 0 until 50) e1.notify(i)
     for (i <- 0 until 50) e2.notify(i.toString)
     for (i <- 50 until 100) e2.notify(i.toString)
     for (i <- 50 until 100) e1.notify(i)
-    
+
     assert(ref.get === ((0 until 100) zip ((0 until 100) map(_.toString))))
   }
-  
+
   test("Event.joinLast") {
     val e1 = Event[Int]()
     val e2 = Event[String]()
     val e = e1 joinLast e2
     val ref = new AtomicReference[(Int, String)]((0, ""))
     e.register(Witness(ref))
-    
+
     assert(ref.get === (0, ""))
     e1.notify(1)
     assert(ref.get === (0, ""))
@@ -167,13 +172,13 @@ class EventTest extends FunSuite {
     e1.notify(2)
     assert(ref.get === (2, "ok1"))
   }
-  
+
   test("Event.take") {
     val e = Event[Int]()
     val e1 = e.take(5)
     val ref = new AtomicReference[Seq[Int]](Seq.empty)
     e1.build.register(Witness(ref))
-    
+
     e.notify(1)
     e.notify(2)
     assert(ref.get === Seq(1, 2))
@@ -185,7 +190,7 @@ class EventTest extends FunSuite {
     e.notify(7)
     assert(ref.get === Seq(1, 2, 3, 4, 5))
   }
-  
+
   test("Event.merge") {
     val e1, e2 = Event[Int]()
     val e = e1 merge e2
@@ -198,10 +203,10 @@ class EventTest extends FunSuite {
       if (i%2 == 0) e1.notify(i)
       else e2.notify(i)
     }
-    
+
     assert(ref.get === Seq.range(0, 300))
   }
-  
+
   test("Event.toVar") {
     val e = Event[Int]()
     val v = Var(0, e)
@@ -212,11 +217,11 @@ class EventTest extends FunSuite {
     for (i <- 1 until 100) e.notify(i)
     assert(ref.get === Seq.range(0, 100))
   }
-  
+
   test("Event.toFuture") {
     val e = Event[Int]()
     val f = e.toFuture()
-    
+
     assert(!f.isDefined)
     e.notify(123)
     assert(f.isDefined)
@@ -234,7 +239,7 @@ class EventTest extends FunSuite {
     val caught = intercept[Exception] { Await.result(f) }
     assert(caught === exc)
   }
-  
+
   test("Jake's composition test") {
     def sum(v: Var[Int]): Var[Int] = {
       val e = v.changes.foldLeft(0) (_+_)
@@ -249,10 +254,10 @@ class EventTest extends FunSuite {
     val y = Var(9)
 
     val z = ite(b, sum(x), sum(y))
-    
+
     val ref = new AtomicReference[Int]
     z.changes.register(Witness(ref))
-    
+
     assert(ref.get === 7)
     x() = 10
     assert(ref.get === 17)
@@ -264,5 +269,27 @@ class EventTest extends FunSuite {
     assert(ref.get === 17)
     x() = 3
     assert(ref.get === 20)
+  }
+
+  test("Event.register: no races between registered witnesses") {
+    val e = Event[Unit]()
+    val counter = new AtomicInteger
+    val n = 1000
+
+    val nThreads = 8
+    val latch = new CountDownLatch(n)
+    val ex = Executors.newFixedThreadPool(nThreads)
+    val addTask = new Runnable {
+      def run() = {
+        e.respond(_ => counter.incrementAndGet())
+        latch.countDown()
+      }
+    }
+    for (_ <- 1 to n) ex.execute(addTask)
+    latch.await()
+    ex.shutdown()
+
+    e.notify(())
+    assert(counter.get === n)
   }
 }

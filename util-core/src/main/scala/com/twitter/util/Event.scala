@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
-
+import scala.annotation.tailrec
 import scala.collection.generic.CanBuild
 import scala.collection.immutable.Queue
 
@@ -24,7 +24,7 @@ trait Event[+T] { self =>
   def register(s: Witness[T]): Closable
 
   /**
-   * Observe this event with function `f`. Equivalent to 
+   * Observe this event with function `f`. Equivalent to
    * `register(Witness(f))`.
    */
   final def respond(s: T => Unit): Closable = register(Witness(s))
@@ -35,7 +35,7 @@ trait Event[+T] { self =>
    * not apply are dropped; other values are transformed by `f`.
    */
   def collect[U](f: PartialFunction[T, U]): Event[U] = new Event[U] {
-    def register(s: Witness[U]) = 
+    def register(s: Witness[U]) =
       self respond { t =>
         if (f.isDefinedAt(t))
           s.notify(f(t))
@@ -282,18 +282,43 @@ object Event {
    * A new Event of type T which is also a Witness.
    */
   def apply[T](): Event[T] with Witness[T] = new Event[T] with Witness[T] {
-    @volatile var registerrs: List[Witness[T]] = Nil
+    private[this] val witnesses = new AtomicReference(Set.empty[Witness[T]])
 
-    def register(s: Witness[T]) = {
-      registerrs ::= s
+    def register(w: Witness[T]) = {
+      casAdd(w)
       Closable.make { _ =>
-        registerrs = registerrs filter (_ ne s)
+        casRemove(w)
         Future.Done
       }
     }
 
+    /**
+     * Notifies registered witnesses
+     *
+     * @note This method in synchronized to ensure that all witnesses
+     * recieve notifications in the same order. Consequently it will block
+     * until the witnesses are notified.
+     */
     def notify(t: T) = synchronized {
-      for (s <- registerrs) s.notify(t)
+      val current = witnesses.get
+      for (w <- current)
+        w.notify(t)
+    }
+
+    @tailrec
+    private def casAdd(w: Witness[T]): Unit = {
+      val current = witnesses.get
+      if (!witnesses.compareAndSet(current, current + w)) {
+        casAdd(w)
+      }
+    }
+
+    @tailrec
+    private def casRemove(w: Witness[T]): Unit = {
+      val current = witnesses.get
+      if (!witnesses.compareAndSet(current, current - w)) {
+        casRemove(w)
+      }
     }
   }
 }
