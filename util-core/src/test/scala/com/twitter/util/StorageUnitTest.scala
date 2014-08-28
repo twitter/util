@@ -24,6 +24,10 @@ class StorageUnitTest extends FunSuite {
     assert(Long.MaxValue.bytes.toHuman === "8.0 EiB")
   }
 
+  test("StorageUnit: should handle Long value") {
+    assert(StorageUnit.parse("3589654126.bytes") === 3589654126L.bytes)
+  }
+
   test("StorageUnit: should accept humanity") {
     assert(StorageUnit.parse("142.bytes") === 142.bytes)
     assert(StorageUnit.parse("78.kilobytes") === 78.kilobytes)

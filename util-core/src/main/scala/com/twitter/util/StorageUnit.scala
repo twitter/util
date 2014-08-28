@@ -40,7 +40,7 @@ object StorageUnit {
 
   def parse(s: String): StorageUnit = s.split("\\.") match {
     case Array(v, u) =>
-      val vv = v.toInt
+      val vv = v.toLong
       val uu = factor(u)
       new StorageUnit(vv*uu)
 
