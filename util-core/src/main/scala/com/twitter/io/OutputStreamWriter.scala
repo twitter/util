@@ -42,10 +42,15 @@ class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Writer with Cl
   def write(buf: Buf): Future[Unit] =
     if (done.isDefined) done else (
       done or writeOp.getAndSet(_ => Future.exception(WriteExc))(buf)
-    ) respond {
-      case Return(_) => writeOp.set(doWrite)
-      case Throw(cause) if cause != WriteExc => close()
-      case Throw(_) =>
+    ) transform {
+      case Return(_) =>
+        writeOp.set(doWrite)
+        Future.Done
+
+      case Throw(cause) =>
+        // We don't need to wait for the close, we care only that it is called.
+        if (cause != WriteExc) close()
+        Future.exception(cause)
     }
 
   def fail(cause: Throwable): Unit =

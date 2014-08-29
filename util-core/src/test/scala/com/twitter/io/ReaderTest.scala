@@ -49,21 +49,19 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
       val rw = Reader.writable()
       val bos = new ByteArrayOutputStream
 
-      val w = Writer.fromOutputStream(bos)
+      val w = Writer.fromOutputStream(bos, 31)
       val f = Reader.copy(rw, w) ensure w.close()
       val g =
         rw.write(Buf.ByteArray(p)) before
           rw.write(Buf.ByteArray(q)) before
             rw.write(Buf.ByteArray(r)) before rw.close()
 
-      Await.ready(Future.join(f, g))
+      Await.result(Future.join(f, g))
 
       val b = new ByteArrayOutputStream
       b.write(p)
       b.write(q)
       b.write(r)
-
-      bos.flush()
       b.flush()
 
       bos.toByteArray should equal(b.toByteArray)

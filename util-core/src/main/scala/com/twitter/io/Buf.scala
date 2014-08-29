@@ -121,7 +121,10 @@ object Buf {
 
       if (j <= i || i >= length) Buf.Empty
       else if (i == 0 && j >= length) this
-      else ByteArray(bytes, begin+i, math.min(begin+j, end))
+      else {
+        val cap = math.min(j, length)
+        ByteArray(bytes, begin+i, math.min(begin+cap, end))
+      }
     }
 
     def length = end-begin
