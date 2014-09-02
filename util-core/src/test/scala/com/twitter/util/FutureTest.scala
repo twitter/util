@@ -1495,6 +1495,23 @@ class FutureTest extends WordSpec with MockitoSugar {
   test("ConstFuture", new MkConst { def apply[A](r: Try[A]) = Future.const(r) })
   test("Promise", new MkConst { def apply[A](r: Try[A]) = new Promise(r) })
 
+  "Future.apply" should {
+    "fail on NLRC" in {
+      def ok(): String = {
+        val f = Future(return "OK")
+        val t = intercept[FutureNonLocalReturnControl] {
+          f.poll.get.get
+        }
+        val nlrc = intercept[NonLocalReturnControl[String]] {
+          throw t.getCause
+        }
+        assert(nlrc.value === "OK")
+        "NOK"
+      }
+      assert(ok() === "NOK")
+    }
+  }
+
   "Future.None" should {
     "always be defined" in {
       assert(Future.None.isDefined === true)

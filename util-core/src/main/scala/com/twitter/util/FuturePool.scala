@@ -1,9 +1,10 @@
 package com.twitter.util
 
+import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{
   CancellationException, ExecutionException, ExecutorService, Executors, RejectedExecutionException}
-import com.twitter.concurrent.NamedPoolThreadFactory
+import scala.runtime.NonLocalReturnControl
 
 /**
  * A FuturePool executes tasks asynchronously, typically using a pool
@@ -109,9 +110,14 @@ class ExecutorServiceFuturePool protected[this](
 
         try
           p.updateIfEmpty(Try(f))
-        catch { case e: Throwable =>
-          p.updateIfEmpty(Throw(new ExecutionException(e)))
-          throw e
+        catch {
+          case nlrc: NonLocalReturnControl[_] =>
+            val fnlrc = new FutureNonLocalReturnControl(nlrc)
+            p.updateIfEmpty(Throw(fnlrc))
+            throw fnlrc
+          case e: Throwable =>
+            p.updateIfEmpty(Throw(new ExecutionException(e)))
+            throw e
         } finally Local.restore(current)
       }
     }

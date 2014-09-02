@@ -81,7 +81,11 @@ object Future {
    * exceptions and wrap them in the Throw[_] type. Non-exceptional
    * values are wrapped in the Return[_] type.
    */
-  def apply[A](a: => A): Future[A] = const(Try(a))
+  def apply[A](a: => A): Future[A] = try {
+    const(Try(a))
+  } catch {
+    case nlrc: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(nlrc))
+  }
 
   def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 

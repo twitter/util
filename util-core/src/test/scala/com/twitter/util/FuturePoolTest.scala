@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import com.twitter.conversions.time._
+
 import java.util.concurrent.{Future => JFuture, _}
 
 import org.junit.runner.RunWith
@@ -8,7 +10,7 @@ import org.scalatest.concurrent.Eventually
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.time.{Millis, Seconds, Span}
 
-import com.twitter.conversions.time._
+import scala.runtime.NonLocalReturnControl
 
 @RunWith(classOf[JUnitRunner])
 class FuturePoolTest extends FunSuite with Eventually {
@@ -165,5 +167,30 @@ class FuturePoolTest extends FunSuite with Eventually {
     val rv = pool { throw new LinkageError }
 
     intercept[ExecutionException] { Await.result(rv) }
+  }
+
+  class PoolCtx {
+    val executor = Executors.newFixedThreadPool(1).asInstanceOf[ThreadPoolExecutor]
+    val pool = FuturePool(executor)
+
+    val pools = Seq(FuturePool.immediatePool, pool)
+  }
+
+  test("handles NonLocalReturnControl properly") {
+    val ctx = new PoolCtx
+    import ctx._
+
+    def fake(): String = {
+      pools foreach { pool =>
+        val rv = pool { return "OK" }
+
+        val e = intercept[FutureNonLocalReturnControl] { Await.result(rv) }
+        val f = intercept[NonLocalReturnControl[String]] { throw e.getCause }
+        assert(f.value === "OK")
+      }
+      "FINISHED"
+    }
+
+    assert(fake() === "FINISHED")
   }
 }
