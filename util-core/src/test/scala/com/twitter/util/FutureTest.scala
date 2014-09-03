@@ -308,6 +308,18 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           }
         }
 
+        "execute when flushBatch is called" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(4)(f)
+
+          when(f.apply(Seq(1,2,3))) thenReturn(Future.value(result))
+          batcher(1)
+          batcher(2)
+          batcher(3)
+          batcher.flushBatch
+          verify(f).apply(Seq(1,2,3))
+        }
+
         "propagates results" in {
           val f = mock[Seq[Int] => Future[Seq[Int]]]
           val batcher = Future.batched(3)(f)
