@@ -19,6 +19,7 @@
   </distributionManagement>
   <modules>
     <module>util-app</module>
+    <module>util-cache</module>
     <module>util-class-preloader</module>
     <module>util-codec</module>
     <module>util-collection</module>

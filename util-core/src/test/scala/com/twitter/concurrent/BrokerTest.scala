@@ -4,13 +4,12 @@ package com.twitter.concurrent
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
 
 import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.util.{Await, Return}
 
 @RunWith(classOf[JUnitRunner])
-class BrokerTest extends WordSpec with MockitoSugar {
+class BrokerTest extends WordSpec {
   "Broker" should {
     "send data (send, recv)" in {
       val br = new Broker[Int]

@@ -349,6 +349,34 @@ class FutureTest extends WordSpec with MockitoSugar {
         }
       }
 
+      "interruptible" should {
+        "properly ignore the underlying future on interruption" in {
+          val p = Promise[Unit]
+          val i = p.interruptible()
+          val e = new Exception
+          i.raise(e)
+          p.setDone()
+          assert(p.poll === Some(Return(())))
+          assert(i.poll === Some(Throw(e)))
+        }
+
+        "respect the underlying future" in {
+          val p = Promise[Unit]
+          val i = p.interruptible()
+          p.setDone()
+          assert(p.poll === Some(Return(())))
+          assert(i.poll === Some(Return(())))
+        }
+
+        "do nothing for const" in {
+          val f = const.value(())
+          val i = f.interruptible()
+          i.raise(new Exception())
+          assert(f.poll === Some(Return(())))
+          assert(i.poll === Some(Return(())))
+        }
+      }
+
       "collect" should {
         trait CollectHelper {
           val p0, p1 = new HandledPromise[Int]
@@ -1580,6 +1608,8 @@ class FutureTest extends WordSpec with MockitoSugar {
       assert(task.isCancelled)
     }
   }
+
+
 
   // TODO(John Sirois):  Kill this mvn test hack when pants takes over.
   "Java" should {

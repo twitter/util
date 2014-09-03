@@ -1062,6 +1062,30 @@ abstract class Future[+A] extends Awaitable[A] {
    * Returns the result of the computation as a Future[Try[A]].
    */
   def liftToTry: Future[Try[A]] = transform(Future.value)
+
+  /**
+   * Makes a derivative Future which will be satisfied with the result
+   * of the parent.  However, if it's interrupted, it will detach from
+   * the parent Future, satisfy itself with the exception raised to
+   * it, and won't propagate the interruption back to the parent
+   * Future.
+   *
+   * This is useful for when a Future is shared between many contexts,
+   * where it may not be useful to discard the underlying computation
+   * if just one context is no longer interested in the result.  In
+   * particular, this is different from Future#masked in that it will
+   * prevent memory leaks if the parent Future will never be
+   * satisfied, because closures that are attached to this derivative
+   * Future will not be held onto by the killer Future.
+   */
+  def interruptible(): Future[A] = {
+    val p = Promise.attached(this)
+    p setInterruptHandler { case t: Throwable =>
+      if (p.detach())
+        p.setException(t)
+    }
+    p
+  }
 }
 
 /**

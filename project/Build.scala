@@ -9,6 +9,10 @@ object Util extends Build {
     ExclusionRule("com.sun.jmx", "jmxri"),
     ExclusionRule("javax.jms", "jms")
   )
+  val scalatest = scalaVersion(sv => sv match {
+    case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2"
+    case _       => "org.scalatest" %% "scalatest" % "2.1.3"
+  })
 
   val scalatestTest = scalaVersion(sv => sv match {
     case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2" % "test"
@@ -113,7 +117,7 @@ object Util extends Build {
       sharedSettings ++
       Unidoc.settings
   ) aggregate(
-    utilCore, utilCodec, utilCollection, utilReflect,
+    utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilClassPreloader, utilBenchmark, utilApp
   )
@@ -177,6 +181,20 @@ object Util extends Build {
       "javax.inject"             % "javax.inject"        % "1",
       "com.google.guava"         % "guava"               % "16.0.1",
       "commons-collections"      % "commons-collections" % "3.2.1"
+    )
+  ).dependsOn(utilCore % "compile->compile;test->test")
+
+  lazy val utilCache = Project(
+    id = "util-cache",
+    base = file("util-cache"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-cache",
+    libraryDependencies ++= Seq(
+      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
+      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
+      "com.google.guava"         % "guava"               % "16.0.1"
     )
   ).dependsOn(utilCore)
 
