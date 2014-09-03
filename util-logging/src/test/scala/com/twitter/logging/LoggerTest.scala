@@ -63,6 +63,37 @@ class LoggerTest extends WordSpec with TempFolder with TestLogging {
       log.addHandler(myHandler)
     }
 
+    "not execute string creation and concatenation" in {
+      val logger = Logger.get("lazyTest1")
+      var executed = false
+      def function() = {
+        executed = true
+        "asdf"+executed+" hi there"
+      }
+
+      logger.debugLazy(function)
+      assert(!executed)
+    }
+
+    "execute string creation and concatenation is FAILING" in {
+      val logger = Logger.get("lazyTest2")
+      logger.setLevel(Level.DEBUG)
+      var executed = false
+      def function() = {
+        executed = true
+        "asdf"+executed+" hi there"
+      }
+      logger.debugLazy(function)
+      assert(executed)
+    }
+
+    "make sure compiles with normal string case" in {
+      //in some cases, if debugLazy definition was changed, the below would no longer compile
+      val logger = Logger.get("lazyTest3")
+      val executed = true
+      logger.debugLazy("hi there"+executed+"cool")
+    }
+
     "provide level name and value maps" in {
       assert(Logger.levels === Map(
         Level.ALL.value -> Level.ALL,

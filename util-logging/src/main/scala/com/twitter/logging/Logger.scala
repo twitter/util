@@ -132,6 +132,9 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   def trace(msg: String, items: Any*) = log(Level.TRACE, msg, items: _*)
   def trace(thrown: Throwable, msg: String, items: Any*) = log(Level.TRACE, thrown, msg, items: _*)
 
+  def debugLazy(msg: => AnyRef): Unit = logLazy(Level.DEBUG, null, msg)
+  def traceLazy(msg: => AnyRef): Unit = logLazy(Level.TRACE, null, msg)
+
   /**
    * Log a message, with lazy (call-by-name) computation of the message,
    * at the desired level.
