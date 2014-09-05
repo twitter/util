@@ -122,12 +122,12 @@ class Formatter(
   /**
    * Return the string representation of a given log level's name
    */
-  def formatLevelName(level: javalog.Level) = {
+  def formatLevelName(level: javalog.Level): String = {
     level match {
       case x: Level =>
         x.name
       case x: javalog.Level =>
-        Logger.levelsMap.get(x.intValue) match {
+        Logger.levels.get(x.intValue) match {
           case None => "%03d".format(x.intValue)
           case Some(level) => level.name
         }

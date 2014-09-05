@@ -18,14 +18,11 @@ package com.twitter.logging
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.{logging => javalog}
-
-import scala.collection.{JavaConversions, Map, mutable}
+import scala.collection.JavaConverters._
+import scala.collection.Map
 
 // replace java's ridiculous log levels with the standard ones.
 sealed abstract class Level(val name: String, val value: Int) extends javalog.Level(name, value) {
-  Logger.levelNamesMap(name) = this
-  Logger.levelsMap(value) = this
-
   // for java compat
   def get(): Level = this
 }
@@ -41,24 +38,8 @@ object Level {
   case object TRACE extends Level("TRACE", 400)
   case object ALL extends Level("ALL", Int.MinValue)
 
-  // to force them to get loaded from class files:
-  {
-    val root = Logger.root
-    val originalLevel = root.getLevel()
-    root.setLevel(OFF)
-    root.setLevel(FATAL)
-    root.setLevel(CRITICAL)
-    root.setLevel(ERROR)
-    root.setLevel(WARNING)
-    root.setLevel(INFO)
-    root.setLevel(DEBUG)
-    root.setLevel(TRACE)
-    root.setLevel(ALL)
-    root.setLevel(originalLevel)
-  }
-
-  // All we need is for the object to be initialized.
-  private[logging] def init() {}
+  private[logging] val AllLevels: Seq[Level] =
+    Seq(OFF, FATAL, CRITICAL, ERROR, WARNING, INFO, DEBUG, TRACE, ALL)
 }
 
 class LoggingException(reason: String) extends Exception(reason)
@@ -200,8 +181,16 @@ object NullLogger extends Logger(
 )
 
 object Logger extends Iterable[Logger] {
-  private[logging] val levelNamesMap = new mutable.HashMap[String, Level]
-  private[logging] val levelsMap = new mutable.HashMap[Int, Level]
+
+  private[this] val levelNamesMap: Map[String, Level] =
+    Level.AllLevels.map { level =>
+      level.name -> level
+    }.toMap
+
+  private[this] val levelsMap: Map[Int, Level] =
+    Level.AllLevels.map { level =>
+      level.value -> level
+    }.toMap
 
   // A cache of scala Logger objects by name.
   // Using a low concurrencyLevel (2), with the assumption that we aren't ever creating too
@@ -247,10 +236,6 @@ object Logger extends Iterable[Logger] {
 
   /** ALL is used to log everything. */
   def ALL = Level.ALL
-
-  // We need to make sure levels are initialized here, in case
-  // Logger is referred to before Level (eg. Logger.levelsMap).
-  Level.init()
 
   /**
    * Return a map of log level values to the corresponding Level objects.
@@ -354,7 +339,7 @@ object Logger extends Iterable[Logger] {
   /**
    * Iterate the Logger objects that have been created.
    */
-  def iterator: Iterator[Logger] = JavaConversions.asScalaIterator(loggersCache.values.iterator)
+  def iterator: Iterator[Logger] = loggersCache.values.iterator.asScala
 
   def configure(loggerFactories: List[() => Logger]) {
     loggerFactoryCache = loggerFactories
