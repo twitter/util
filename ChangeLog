@@ -1,3 +1,7 @@
+6.21.1  2014-09-05
+
+  * util-logging: make Logger immutable & break cyclic dependency on Level
+
 6.20.0  2014-08-22
 
   * util: Enables cross-publishing for 2.11
