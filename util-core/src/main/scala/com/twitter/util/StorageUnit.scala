@@ -38,14 +38,18 @@ object StorageUnit {
     }
   }
 
+  /**
+   * Note, this can cause overflows of the Long used to represent the
+   * number of bytes.
+   */
   def parse(s: String): StorageUnit = s.split("\\.") match {
     case Array(v, u) =>
       val vv = v.toLong
       val uu = factor(u)
-      new StorageUnit(vv*uu)
+      new StorageUnit(vv * uu)
 
     case _ =>
-      throw new NumberFormatException("invalid storage unit string")
+      throw new NumberFormatException("invalid storage unit string: %s".format(s))
   }
 }
 
@@ -54,6 +58,9 @@ object StorageUnit {
  *
  * If you import the [[com.twitter.conversions.storage]] implicits you can
  * write human-readable values such as `1.gigabyte` or `50.megabytes`.
+ *
+ * Note: operations can cause overflows of the Long used to represent the
+ * number of bytes.
  */
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def inBytes     = bytes
