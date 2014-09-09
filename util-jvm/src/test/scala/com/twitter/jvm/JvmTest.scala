@@ -35,7 +35,7 @@ class JvmTest extends WordSpec with TestLogging {
           val gcs = snap.lastGcs filter(_.name != gc.name)
           setSnap(snap.copy(lastGcs=gc +: gcs))
         }
-      
+
         def forceGc() = ()
         def edenPool = NilJvm.edenPool
       }
@@ -80,7 +80,7 @@ class JvmTest extends WordSpec with TestLogging {
         val h = new JvmHelper
         import h._
 
-        traceLogger(Level.WARNING)
+        traceLogger(Level.DEBUG)
 
         jvm foreachGc { _ => /*ignore*/}
         assert(jvm.executor.schedules.size === 1)

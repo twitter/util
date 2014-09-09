@@ -1,14 +1,11 @@
 package com.twitter.jvm
 
-import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
-import java.util.logging.Logger
-
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
 import com.twitter.util.{Duration, Future, NonFatal, Stopwatch, StorageUnit, Time, Timer}
+import java.util.concurrent.{ConcurrentHashMap, Executors, ScheduledExecutorService, TimeUnit}
+import java.util.logging.{Level, Logger}
+import scala.collection.JavaConverters._
 
 case class Heap(
   // Estimated number of bytes allocated so far (into eden)
@@ -81,6 +78,8 @@ case class Snapshot(
  * interface so that we are decoupled from the actual underlying JVM.
  */
 trait Jvm {
+  import Jvm.log
+
   trait Opts {
     def compileThresh: Option[Int]
   }
@@ -115,30 +114,31 @@ trait Jvm {
   def foreachGc(f: Gc => Unit) {
     val Period = 1.second
     val LogPeriod = 30.minutes
-    val log = Logger.getLogger(getClass.getName)
     @volatile var missedCollections = 0L
     @volatile var lastLog = Time.epoch
 
-    val lastByName = mutable.HashMap[String, Long]()
+    val lastByName = new ConcurrentHashMap[String, java.lang.Long](16, 0.75f, 1)
     def sample() {
-      val Snapshot(timestamp, _, gcs) = snap
+      val Snapshot(_, _, gcs) = snap
 
       for (gc@Gc(count, name, _, _) <- gcs) {
-        lastByName.get(name) match {
-          case Some(`count`) => // old
-          case Some(lastCount) =>
-            missedCollections += count - 1 - lastCount
-            if (missedCollections > 0 && Time.now - lastLog > LogPeriod) {
-              log.warning("Missed %d collections for %s due to sampling".format(missedCollections, name))
-              lastLog = Time.now
-              missedCollections = 0
+        val lastCount = lastByName.get(name)
+        if (lastCount == null) {
+          f(gc)
+        } else if (lastCount != count) {
+          missedCollections += count - 1 - lastCount
+          if (missedCollections > 0 && Time.now - lastLog > LogPeriod) {
+            if (log.isLoggable(Level.FINE)) {
+              log.fine("Missed %d collections for %s due to sampling"
+                .format(missedCollections, name))
             }
-            f(gc)
-          case None =>
-            f(gc)
+            lastLog = Time.now
+            missedCollections = 0
+          }
+          f(gc)
         }
 
-        lastByName(name) = count
+        lastByName.put(name, count)
       }
     }
 
@@ -195,6 +195,8 @@ object Jvm {
     try new Hotspot catch {
       case NonFatal(_) => NilJvm
     }
+
+  private val log = Logger.getLogger(getClass.getName)
 
   def apply(): Jvm = _jvm
 }
