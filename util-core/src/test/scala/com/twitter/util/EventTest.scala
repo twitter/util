@@ -1,17 +1,11 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicReference
-
-import scala.collection.mutable
-
-import org.junit.runner.RunWith
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
+import java.util.concurrent.Executors
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import scala.collection.mutable
-import java.util.concurrent.Executors
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
-import scala.collection.immutable.VectorBuilder
 
 @RunWith(classOf[JUnitRunner])
 class EventTest extends FunSuite {
@@ -30,6 +24,41 @@ class EventTest extends FunSuite {
     Await.ready(sub.close())
     e.notify(3)
     assert(ref.get === Seq(1, 2))
+  }
+
+  test("Event.filter") {
+    val calls = new AtomicInteger()
+    val e = Event[Int]()
+    val evens = e.filter { p =>
+      calls.incrementAndGet()
+      p % 2 == 0
+    }
+    val ref = new AtomicReference[Seq[Int]](Seq.empty)
+    evens.build.register(Witness(ref))
+
+    e.notify(1)
+    assert(ref.get === Seq.empty)
+    assert(1 === calls.get())
+
+    e.notify(2)
+    assert(ref.get === Seq(2))
+    assert(2 === calls.get())
+  }
+
+  test("Event.map") {
+    val calls = new AtomicInteger()
+    val e = Event[Int]()
+    val mapped = e.map { p =>
+      calls.incrementAndGet()
+      p * 2
+    }
+
+    val ref = new AtomicReference[Seq[Int]](Seq.empty)
+    mapped.build.register(Witness(ref))
+
+    e.notify(1)
+    assert(ref.get === Seq(2))
+    assert(1 === calls.get())
   }
 
   test("Event.collect") {

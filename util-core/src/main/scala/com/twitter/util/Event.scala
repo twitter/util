@@ -12,8 +12,8 @@ import scala.collection.immutable.Queue
  * discrete counterpart to [[com.twitter.util.Var Var]]'s continuous
  * nature.
  *
- * Events are observed by registering [[com.twitter.util.Witness
- * Witnesss]] to which the Event's values are notified.
+ * Events are observed by registering [[com.twitter.util.Witness Witnesses]]
+ * to which the Event's values are notified.
  */
 trait Event[+T] { self =>
   /**
@@ -37,8 +37,7 @@ trait Event[+T] { self =>
   def collect[U](f: PartialFunction[T, U]): Event[U] = new Event[U] {
     def register(s: Witness[U]) =
       self respond { t =>
-        if (f.isDefinedAt(t))
-          s.notify(f(t))
+        f.runWith(s.notify)(t)
       }
   }
 
