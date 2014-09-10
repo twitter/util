@@ -1,13 +1,13 @@
 junit_tests(name='scala',
   dependencies=[
-    pants('3rdparty:cglib'),
-    pants('3rdparty:jmock'),
-    pants('3rdparty:junit'),
-    pants('3rdparty:mockito-all'),
-    pants('3rdparty:scalatest'),
-    pants('3rdparty:zookeeper'),
-    pants('util/util-core/src/main/scala'),
-    pants('util/util-zk/src/main/scala'),
+    '3rdparty:cglib',
+    '3rdparty:jmock',
+    '3rdparty:junit',
+    '3rdparty:mockito-all',
+    '3rdparty:scalatest',
+    '3rdparty:zookeeper',
+    'util/util-core/src/main/scala',
+    'util/util-zk/src/main/scala',
   ],
   sources=rglobs('*.scala')
 )

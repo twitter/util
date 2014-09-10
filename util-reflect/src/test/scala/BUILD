@@ -1,9 +1,9 @@
 junit_tests(name='scala',
   dependencies=[
-    pants('3rdparty:junit'),
-    pants('3rdparty:scalatest'),
-    pants('util/util-core/src/main/scala'),
-    pants('util/util-reflect/src/main/scala')
+    '3rdparty:junit',
+    '3rdparty:scalatest',
+    'util/util-core/src/main/scala',
+    'util/util-reflect/src/main/scala'
   ],
   sources=rglobs('*.scala')
 )

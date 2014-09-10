@@ -3,6 +3,6 @@
 java_library(name='java',
   sources=rglobs('*.java'),
   dependencies=[
-    pants('util/util-core/src/main/scala')
+    'util/util-core/src/main/scala'
   ]
 )

@@ -2,11 +2,11 @@ scala_library(name='scala',
   provides = scala_artifact(
     org = 'com.twitter',
     name = 'util-codec',
-    repo = pants('pants-support/ivy:internal'),
+    repo = 'pants-support/ivy:internal',
   ),
   dependencies=[
-    pants('3rdparty:commons-codec'),
-    pants('util/util-core/src/main/scala')
+    '3rdparty:commons-codec',
+    'util/util-core/src/main/scala'
   ],
   sources=rglobs('*.scala'),
 )

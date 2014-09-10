@@ -1,10 +1,10 @@
 jar_library(name='base',
   dependencies=[
-    pants('3rdparty:junit'),
-    pants('3rdparty:mockito-all'),
-    pants('3rdparty:scalacheck'),
-    pants('3rdparty:scalatest'),
-    pants('3rdparty/jvm/com/twitter/common:objectsize'),
-    pants('util/util-core/src/main/scala'),
+    '3rdparty:junit',
+    '3rdparty:mockito-all',
+    '3rdparty:scalacheck',
+    '3rdparty:scalatest',
+    '3rdparty/jvm/com/twitter/common:objectsize',
+    'util/util-core/src/main/scala',
   ],
 )
