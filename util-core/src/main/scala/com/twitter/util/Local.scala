@@ -48,6 +48,23 @@ final object Local {
   private def clear(i: Int) {
     set(i, None)
   }
+  
+  /**
+   * Clear all locals in the current context.
+   */
+  def clear() {
+    localCtx.set(null)
+  }
+
+  /**
+   * Execute a block with all Locals clear, restoring
+   * current values upon completion.
+   */
+  def letClear[U](f: => U): U = {
+    val saved = save()
+    clear()
+    try f finally restore(saved)
+  }
 }
 
 /**
