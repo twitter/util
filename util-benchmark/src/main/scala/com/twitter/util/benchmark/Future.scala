@@ -62,13 +62,15 @@ class FutureBenchmark extends SimpleBenchmark {
     }
   }
 
+  /* 
+  note(dschobel): timeSelect and timeSelectIndex fail 
+  by exceeding their heap limits. see go/jira/CSL-1104
+
   def timeSelect(reps: Int) {
     val numToSelect = 5
-    val done = new Promise[Unit]
-    done.setDone()
-
+    val p = new Promise[Unit]
     val fs: Seq[Future[Unit]] =
-      Seq.fill(numToSelect - 1) { new Promise[Unit] } :+ done
+      Seq.fill(numToSelect - 1) { p } :+ Future.Done
 
     var i = 0
     while (i < reps) {
@@ -79,10 +81,9 @@ class FutureBenchmark extends SimpleBenchmark {
 
   def timeSelectIndex(reps: Int) {
     val numToSelect = 5
-    val done = new Promise[Unit]
-    done.setDone()
+    val p = new Promise[Unit]
     val fs: IndexedSeq[Future[Unit]] =
-      IndexedSeq.fill(numToSelect - 1) { new Promise[Unit] } :+ done
+      IndexedSeq.fill(numToSelect - 1) { p } :+ Future.Done
 
     var i = 0
     while (i < reps) {
@@ -90,4 +91,5 @@ class FutureBenchmark extends SimpleBenchmark {
       i += 1
     }
   }
+  */
 }
