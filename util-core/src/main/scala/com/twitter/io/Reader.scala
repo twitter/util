@@ -1,6 +1,8 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, Promise, Closable, Time}
+import com.twitter.concurrent.Spool
+import com.twitter.concurrent.Spool.{Empty, *::}
+import com.twitter.util.{Future, Promise, Closable, Time, Throw}
 import java.io.{
   File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
 
@@ -62,7 +64,7 @@ object Reader {
    */
   def writable(): Reader with Writer with Closable = new Reader with Writer with Closable {
     private[this] var state: State = Idle
-    
+
     def close(deadline: Time): Future[Unit] = synchronized {
       state match {
         case Failing(_) | Eof =>
@@ -162,11 +164,65 @@ object Reader {
   def fromStream(s: InputStream): Reader = InputStreamReader(s)
 
   /**
-   * Copy the bytes from a Reader to a Writer in chunks of the given buffer size
-   * (default = 4KB). The Writer is unmanaged, the caller is responsible for
-   * finalization and error handling, e.g.:
+   * Convenient abstraction to read from a spool of Readers as if it were a
+   * single Reader.
+   */
+  def concat(readers: Spool[Reader]): Reader = {
+    val target = Reader.writable()
+    val f = copyMany(readers, target) respond {
+      case Throw(exc) => target.fail(exc)
+      case _ => target.close()
+    }
+    new Reader {
+      def read(n: Int) = target.read(n)
+      def discard() {
+        // We have to do this so that when the the target is discarded we can
+        // interrupt the read operation. Consider the following:
+        //
+        //     r.read(..) { case Some(b) => target.write(b) }
+        //
+        // The computation r.read(..) will be interupted because we set an
+        // interrupt handler in Reader.copy to discard `r`.
+        f.raise(new Reader.ReaderDiscarded())
+        target.discard()
+      }
+    }
+  }
+
+  /**
+   * Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
+   * caller is responsible for finalization and error handling, e.g.:
    *
-   *     Reader.copy(r, w) ensure w.close()
+   * {{{
+   * Reader.copyMany(readers, writer) ensure writer.close()
+   * }}}
+   *
+   * @param bufsize The number of bytes to read each time.
+   */
+  def copyMany(readers: Spool[Reader], target: Writer, bufsize: Int): Future[Unit] =
+    if (readers.isEmpty) Future.Done else
+      Reader.copy(readers.head, target, bufsize) before
+        readers.tail flatMap { tail => copyMany(tail, target, bufsize) }
+
+  /**
+   * Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
+   * caller is responsible for finalization and error handling, e.g.:
+   *
+   * {{{
+   * Reader.copyMany(readers, writer) ensure writer.close()
+   * }}}
+   */
+  def copyMany(readers: Spool[Reader], target: Writer): Future[Unit] =
+    copyMany(readers, target, Writer.BufferSize)
+
+  /**
+   * Copy the bytes from a Reader to a Writer in chunks of size `n`. The Writer
+   * is unmanaged, the caller is responsible for finalization and error
+   * handling, e.g.:
+   *
+   * {{{
+   * Reader.copy(r, w, n) ensure w.close()
+   * }}}
    *
    * @param n The number of bytes to read on each refill of the Writer.
    */
@@ -176,15 +232,22 @@ object Reader {
         case None => Future.Done
         case Some(buf) => w.write(buf) before loop()
       }
-    loop()
+    val p = new Promise[Unit]
+    // We have to do this because discarding the writer doesn't interrupt read
+    // operations, it only fails the next write operation.
+    loop() proxyTo p
+    p setInterruptHandler { case exc => r.discard() }
+    p
   }
 
   /**
-   * Copy the bytes from a Reader to a Writer in chunks of the given buffer size
-   * (default = 4KB). The Writer is unmanaged, the caller is responsible for
-   * finalization and error handling, e.g.:
+   * Copy the bytes from a Reader to a Writer in chunks of size
+   * `Writer.BufferSize`. The Writer is unmanaged, the caller is responsible
+   * for finalization and error handling, e.g.:
    *
-   *     Reader.copy(r, w) ensure w.close()
+   * {{{
+   * Reader.copy(r, w) ensure w.close()
+   * }}}
    */
   def copy(r: Reader, w: Writer): Future[Unit] = copy(r, w, Writer.BufferSize)
 }

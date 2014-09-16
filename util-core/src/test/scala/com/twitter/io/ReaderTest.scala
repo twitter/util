@@ -1,17 +1,21 @@
 package com.twitter.io
 
-import org.junit.runner.RunWith
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
+import java.io.{ByteArrayOutputStream, OutputStream}
+
+import com.twitter.concurrent.Spool
+import com.twitter.util.{Await, Future, Promise, Return}
 import org.junit.runner.RunWith
 import org.scalacheck.Prop.forAll
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalacheck.{Arbitrary, Prop}
+import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
-import com.twitter.util.{Await, Future, Promise, Return}
-import java.io.{ByteArrayOutputStream, OutputStream}
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 @RunWith(classOf[JUnitRunner])
 class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with ShouldMatchers {
+  import Spool.*::
+
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int) = Buf.ByteArray(arr(i, j))
   
@@ -42,6 +46,28 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
     assert(Await.result(f) === ())
+  }
+
+  def assertDiscard(r: Reader) {
+    val f = r.read(1)
+    assert(!f.isDefined)
+    r.discard()
+    intercept[Reader.ReaderDiscarded] { Await.result(f) }
+  }
+
+  def assertReadWhileReading(r: Reader) {
+    val f = r.read(1)
+    intercept[IllegalStateException] { Await.result(r.read(1)) }
+    assert(!f.isDefined)
+  }
+
+  def assertFailed(r: Reader, p: Promise[Option[Buf]]) {
+    val f = r.read(1)
+    assert(!f.isDefined)
+    p.setException(new Exception)
+    intercept[Exception] { Await.result(f) }
+    intercept[Exception] { Await.result(r.read(0)) }
+    intercept[Exception] { Await.result(r.read(1)) }
   }
 
   test("Reader.copy - source and destination equality") {
@@ -192,5 +218,65 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
     assert(Await.result(rw.read(6)) === Some(buf(0, 6)))
     Await.result(wf)
     assert(Await.result(rw.read(6)) === None)
+  }
+
+  test("Reader.concat") {
+    import Spool.seqToSpool
+
+    forAll { (ss: List[String]) =>
+      val readers = ss map { s => BufReader(Buf.Utf8(s)) }
+      val buf = Reader.readAll(Reader.concat(readers.toSpool))
+      Await.result(buf) should equal(Buf.Utf8(ss.mkString))
+    }
+  }
+
+  test("Reader.concat - discard") {
+    val p = new Promise[Option[Buf]]
+    val head = new Reader {
+      def read(n: Int) = p
+      def discard() = p.setException(new Reader.ReaderDiscarded)
+    }
+    val tail = new Promise[Spool[Reader]]
+    val reader = Reader.concat(head *:: tail)
+    reader.discard()
+    assert(p.isDefined === true)
+  }
+
+  test("Reader.concat - read while reading") {
+    val p = new Promise[Option[Buf]]
+    val head = new Reader {
+      def read(n: Int) = p
+      def discard() = p.setException(new Reader.ReaderDiscarded)
+    }
+    val tail = new Promise[Spool[Reader]]
+    val reader = Reader.concat(head *:: tail)
+    assertReadWhileReading(reader)
+  }
+
+  test("Reader.concat - failed") {
+    val p = new Promise[Option[Buf]]
+    val head = new Reader {
+      def read(n: Int) = p
+      def discard() = p.setException(new Reader.ReaderDiscarded)
+    }
+    val tail = new Promise[Spool[Reader]]
+    val reader = Reader.concat(head *:: tail)
+    assertFailed(reader, p)
+  }
+
+  test("Reader.concat - lazy tail") {
+    val head = new Reader {
+      def read(n: Int) = Future.exception(new Exception)
+      def discard() { }
+    }
+    val p = new Promise[Spool[Reader]]
+    def tail: Future[Spool[Reader]] = {
+      p.setException(new Exception)
+      p
+    }
+    val combined = Reader.concat(head *:: tail)
+    val buf = Reader.readAll(combined)
+    intercept[Exception] { Await.result(buf) }
+    assert(p.isDefined === false)
   }
 }
