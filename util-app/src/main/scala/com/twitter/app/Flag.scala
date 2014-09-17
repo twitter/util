@@ -1,10 +1,8 @@
 package com.twitter.app
 
 import java.net.InetSocketAddress
-
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable.{ArrayBuffer, HashMap}
-
 import com.twitter.util._
 
 /**
@@ -147,12 +145,12 @@ object Flaggable {
         case (acc, s) => acc :+ s
       }
 
-      tuples map { tup =>
+      tuples.map { tup =>
         tup.split("=") match {
           case Array(k, v) => (kflag.parse(k), vflag.parse(v))
           case _ => throw new IllegalArgumentException("not a 'k=v'")
         }
-      } toMap
+      }.toMap
     }
 
     override def show(out: Map[K, V]) = {
@@ -175,29 +173,90 @@ case class FlagUsageError(usage: String) extends Exception
 class FlagValueRequiredException extends Exception(Flags.FlagValueRequiredMessage)
 class FlagUndefinedException extends Exception(Flags.FlagUndefinedMessage)
 
+object Flag {
+
+  // stores Local overrides for a Flag's value
+  private val localFlagValues = new Local[Map[Flag[_], Any]]
+
+}
+
 /**
  * A single command-line flag, instantiated by a [[com.twitter.app.Flags]]
  * instance. Its current value can be extracted via `apply()`.
  *
  * @see [[com.twitter.app.Flags]]
  */
-class Flag[T: Flaggable] private[app](val name: String, val help: String, defaultOrUsage: Either[() => T, String]) {
-  private[app] def this(name: String, help: String, default: => T) = this(name, help, Left(() => default))
-  private[app] def this(name: String, help: String, usage: String) = this(name, help, Right(usage))
+class Flag[T: Flaggable] private[app](
+    val name: String,
+    val help: String,
+    defaultOrUsage: Either[() => T, String])
+{
+  import Flag._
+
+  private[app] def this(name: String, help: String, default: => T) =
+    this(name, help, Left(() => default))
+
+  private[app] def this(name: String, help: String, usage: String) =
+    this(name, help, Right(usage))
 
   protected val flaggable = implicitly[Flaggable[T]]
 
+  private[this] def localValue: Option[T] = localFlagValues() match {
+    case None => None
+    case Some(flagValues) =>
+      flagValues.get(this) match {
+        case None => None
+        case Some(flagValue) => Some(flagValue.asInstanceOf[T])
+      }
+  }
+
+  private[this] def setLocalValue(value: Option[T]): Unit = {
+    val updatedMap: Map[Flag[_], Any] = (localFlagValues(), value) match {
+      case (Some(map), Some(v)) => map + (this -> v)
+      case (Some(map), None)    => map - this
+      case (None, Some(v))      => Map(this -> v)
+      case (None, None)         => Map.empty[Flag[_], Any]
+    }
+    if (updatedMap.isEmpty)
+      localFlagValues.clear()
+    else
+      localFlagValues.set(Some(updatedMap))
+  }
+
   @volatile private[this] var value: Option[T] = None
-  protected def getValue: Option[T] = value
+
+  protected def getValue: Option[T] = localValue match {
+    case lv@Some(_) => lv
+    case None => value
+  }
 
   @volatile private[this] var _parsingDone = false
   protected[this] def parsingDone = _parsingDone
 
-  private def default: Option[T] = defaultOrUsage.left.toOption map { d => d() }
-  private def valueOrDefault: Option[T] = getValue orElse default
+  private def default: Option[T] = defaultOrUsage match {
+    case Right(_) => None
+    case Left(d) => Some(d())
+  }
+
+  private def valueOrDefault: Option[T] = getValue match {
+    case v@Some(_) => v
+    case None => default
+  }
 
   private[this] def flagNotFound: IllegalArgumentException =
     new IllegalArgumentException("flag '%s' not found".format(name))
+
+  /**
+   * Override the value of this flag with `t`, only for the scope of the current
+   * [[com.twitter.util.Local]] for the given function `f`.
+   */
+  def let(t: T)(f: => Unit): Unit = {
+    val prev = localValue
+    setLocalValue(Some(t))
+    try f finally {
+      setLocalValue(prev)
+    }
+  }
 
   /**
    * Return this flag's current value. The default value is returned
@@ -206,7 +265,10 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   def apply(): T = {
     if (!parsingDone)
       java.util.logging.Logger.getLogger("").severe("Flag %s read before parse.".format(name))
-    valueOrDefault getOrElse { throw flagNotFound }
+    valueOrDefault match {
+      case Some(v) => v
+      case None => throw flagNotFound
+    }
   }
 
   /** Reset this flag's value */
@@ -214,14 +276,17 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
     value = None
     _parsingDone = false
   }
+
   /** True if the flag has been set */
-  def isDefined = getValue.isDefined
+  def isDefined: Boolean = getValue.isDefined
+
   /** Get the value if it has been set */
   def get: Option[T] = getValue
-  /** String representation of this flag's default value */
-  def defaultString = flaggable.show(default getOrElse { throw flagNotFound })
 
-  def usageString =
+  /** String representation of this flag's default value */
+  def defaultString: String = flaggable.show(default getOrElse { throw flagNotFound })
+
+  def usageString: String =
     defaultOrUsage match {
       case Left(_) => "  -%s='%s': %s".format(name, defaultString, help)
       case Right(usage) => "  -%s=<%s>: %s".format(name, usage, help)
@@ -255,7 +320,7 @@ class Flag[T: Flaggable] private[app](val name: String, val help: String, defaul
   }
 
   /** Indicates whether or not the flag is valid without an argument. */
-  def noArgumentOk = flaggable.default.isDefined
+  def noArgumentOk: Boolean = flaggable.default.isDefined
 }
 
 object Flags {

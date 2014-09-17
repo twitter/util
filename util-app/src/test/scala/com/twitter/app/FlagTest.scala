@@ -1,16 +1,14 @@
 package com.twitter.app
 
-import java.net.InetSocketAddress
-
+import com.twitter.util.RandomSocket
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import scala.collection.mutable.Buffer
 
-import com.twitter.util.RandomSocket
-
-object MyGlobalFlag extends GlobalFlag("a test flag", "a global test flag")
+object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
-object MyGlobalBooleanFlag extends GlobalFlag(false, "a boolean flag")
+object MyGlobalBooleanFlag extends GlobalFlag[Boolean](false, "a boolean flag")
 
 @RunWith(classOf[JUnitRunner])
 class FlagTest extends FunSuite {
@@ -33,7 +31,6 @@ class FlagTest extends FunSuite {
     assert(local.getPort === port)
 
     val ip = "141.211.133.111"
-    val expectedRemote = new InetSocketAddress(ip, port)
     val remote = Flaggable.ofInetSocketAddress.parse(ip + ":" + port)
 
     assert(remote.getHostName === remote.getHostName)
@@ -87,13 +84,36 @@ class FlagTest extends FunSuite {
 
   test("Flag: override a flag") {
     val flag = new Flags("test")
-    val flag1 = flag("foo", 1, "")
-    val flag2 = flag("foo", 2, "")
+    flag("foo", 1, "")
+    flag("foo", 2, "")
     val allFlags = flag.getAll().toSet
 
     flag.finishParsing()
     assert(!allFlags.exists(_() == 1), "original flag was not overridden")
     assert(allFlags.exists(_() == 2), "overriding flag was not present in flags set")
+  }
+
+  test("Flag: let") {
+    def current: Boolean = MyGlobalBooleanFlag()
+
+    // track the order the blocks execute and that they only execute once
+    var buf = Buffer[Int]()
+
+    // make sure they stack properly
+    assert(current === false)
+    MyGlobalBooleanFlag.let(true) {
+      buf += 1
+      assert(current === true)
+      MyGlobalBooleanFlag.let(false) {
+        buf += 2
+        assert(current === false)
+      }
+      buf += 3
+      assert(current === true)
+    }
+    assert(current === false)
+
+    assert(buf === Seq(1, 2, 3))
   }
 
   class Bctx extends Ctx {
