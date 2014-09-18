@@ -1,6 +1,12 @@
-6.21.1  2014-09-05
-
+6.21.2  2014-09-08
+  * util-cache: Adds a Guava-backed asynchronous cache
+  * util-core: Fixed FuturePool for NLRC
+  * util-core: Improve java friendliness of futures
+  * util-core: Make register/close on Event() work atomically
+  * util-core: Reimplement Buf.Utf8 encoder/extractor using io.Charsets
+  * util-core: storage parse() should be able to handle Long
   * util-logging: make Logger immutable & break cyclic dependency on Level
+  * util: Upgrade to scala_2.10
 
 6.20.0  2014-08-22
 
