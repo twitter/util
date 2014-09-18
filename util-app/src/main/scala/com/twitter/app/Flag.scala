@@ -122,6 +122,13 @@ object Flaggable {
     }
   }
 
+  implicit def ofSet[T: Flaggable] = new Flaggable[Set[T]] {
+    private val flag = implicitly[Flaggable[T]]
+    assert(!flag.default.isDefined)
+    override def parse(v: String): Set[T] = v.split(",").map(flag.parse(_)).toSet
+    override def show(set: Set[T]) = set map flag.show mkString ","
+  }
+
   implicit def ofSeq[T: Flaggable] = new Flaggable[Seq[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(!flag.default.isDefined)
