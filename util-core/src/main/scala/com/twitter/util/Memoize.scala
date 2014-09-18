@@ -6,6 +6,19 @@ import scala.annotation.tailrec
 
 object Memoize {
   /**
+   * A Snappable is a memoized function for which a
+   * [[scala.collection.immutable.Map]] of the currently memoized computations
+   * can be obtained.
+   */
+  trait Snappable[A, B] extends (A => B) {
+    /**
+     * Produces a snapshot of the currently memoized computations, as a
+     * [[scala.collection.immutable.Map]]
+     */
+    def snap: Map[A, B]
+  }
+
+  /**
    * Thread-safe memoization for a function.
    *
    * This works like a lazy val indexed by the input value. The memo
@@ -31,9 +44,20 @@ object Memoize {
    * inputs, are expensive compared to a hash lookup and the memory
    * overhead, and will be called repeatedly.
    */
-  def apply[A, B](f: A => B): A => B =
-    new Function1[A, B] {
+  def apply[A, B](f: A => B): A => B = snappable[A, B](f)
+
+  /**
+   * Produces [[com.twitter.util.Memoize.Snappable]], thread-safe
+   * memoization for a function.
+   */
+  def snappable[A, B](f: A => B): Snappable[A, B] =
+    new Snappable[A, B] {
       private[this] var memo = Map.empty[A, Either[JCountDownLatch, B]]
+
+      def snap: Map[A, B] =
+        synchronized(memo) collect {
+          case (a, Right(b)) => (a, b)
+        }
 
       /**
        * What to do if we do not find the value already in the memo
