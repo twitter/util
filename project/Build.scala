@@ -14,21 +14,6 @@ object Util extends Build {
     case _       => "org.scalatest" %% "scalatest" % "2.1.3"
   })
 
-  val scalatestTest = scalaVersion(sv => sv match {
-    case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2" % "test"
-    case _       => "org.scalatest" %% "scalatest" % "2.1.3" % "test"
-  })
-
-  val scalatest = scalaVersion(sv => sv match {
-    case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2"
-    case _       => "org.scalatest" %% "scalatest" % "2.1.3"
-  })
-
-  val scalacheck = scalaVersion(sv => sv match {
-    case "2.9.2" => "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
-    case _       => "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
-  })
-
   val parserCombinators = scalaVersion(sv => sv match {
     case v: String if v startsWith "2.11" =>
       Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2")
@@ -51,14 +36,14 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    crossScalaVersions := Seq("2.9.2", "2.10.4", "2.11.2"),
+    crossScalaVersions := Seq("2.10.4", "2.11.2"),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
-    libraryDependencies <+= scalatestTest,
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
-      "org.mockito" % "mockito-all" % "1.8.5" % "test"
+      "org.mockito" % "mockito-all" % "1.8.5" % "test",
+      "org.scalatest" %% "scalatest" % "2.1.3" % "test"
     ),
 
     resolvers += "twitter repo" at "http://maven.twttr.com",
@@ -129,8 +114,10 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-core",
-    libraryDependencies += "com.twitter.common" % "objectsize" % "0.0.10" % "test",
-    libraryDependencies <+= scalacheck,
+    libraryDependencies ++= Seq(
+      "com.twitter.common" % "objectsize" % "0.0.10" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
+    ),
     libraryDependencies <++= parserCombinators,
     resourceGenerators in Compile <+=
       (resourceManaged in Compile, name, version) map { (dir, name, ver) =>
@@ -220,7 +207,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-logging",
-    libraryDependencies <+= scalatest
+    libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3"
   ).dependsOn(utilCore, utilApp)
 
   lazy val utilThrift = Project(

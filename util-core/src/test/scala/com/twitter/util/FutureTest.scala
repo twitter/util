@@ -909,7 +909,7 @@ class FutureTest extends WordSpec with MockitoSugar {
             }
 
             val g = e.getCause match {
-              case t: NonLocalReturnControl[_] => t
+              case t: NonLocalReturnControl[_] => t.asInstanceOf[NonLocalReturnControl[String]]
               case _ =>
                 fail()
             }
