@@ -9,10 +9,6 @@ object Util extends Build {
     ExclusionRule("com.sun.jmx", "jmxri"),
     ExclusionRule("javax.jms", "jms")
   )
-  val scalatest = scalaVersion(sv => sv match {
-    case "2.9.2" => "org.scalatest" %% "scalatest" % "1.9.2"
-    case _       => "org.scalatest" %% "scalatest" % "2.1.3"
-  })
 
   val parserCombinators = scalaVersion(sv => sv match {
     case v: String if v startsWith "2.11" =>
@@ -43,7 +39,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
       "org.mockito" % "mockito-all" % "1.8.5" % "test",
-      "org.scalatest" %% "scalatest" % "2.1.3" % "test"
+      "org.scalatest" %% "scalatest" % "2.2.2" % "test"
     ),
 
     resolvers += "twitter repo" at "http://maven.twttr.com",
@@ -207,7 +203,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-logging",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3"
+    libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2"
   ).dependsOn(utilCore, utilApp)
 
   lazy val utilThrift = Project(
