@@ -347,27 +347,26 @@ object Time extends TimeLikeOps[Time] {
   def withTimeFunction[A](timeFunction: => Time)(body: TimeControl => A): A = {
     @volatile var tf = () => timeFunction
     val tmr = new MockTimer
-    val save = Local.save()
-    try {
-      val timeControl = new TimeControl {
-        def set(time: Time) {
-          tf = () => time
-          tmr.tick()
+
+    Time.localGetTime.let(() => tf()) {
+      Time.localGetTimer.let(tmr) {
+        val timeControl = new TimeControl {
+          def set(time: Time): Unit = {
+            tf = () => time
+            tmr.tick()
+          }
+          def advance(delta: Duration): Unit = {
+            val newTime = tf() + delta
+            /* Modifying the var here instead of resetting the local allows this method
+             to work inside filters or between the creation and fulfillment of Promises.
+             See BackupRequestFilterTest in Finagle as an example. */
+            tf = () => newTime
+            tmr.tick()
+          }
         }
-        def advance(delta: Duration) {
-          val newTime = tf() + delta
-          /* Modifying the var here instead of resetting the local allows this method
-            to work inside filters or between the creation and fulfillment of Promises.
-            See BackupRequestFilterTest in Finagle for an example. */
-          tf = () => newTime
-          tmr.tick()
-        }
+
+        body(timeControl)
       }
-      Time.localGetTime() = () => tf()
-      Time.localGetTimer() = tmr
-      body(timeControl)
-    } finally {
-      Local.restore(save)
     }
   }
 
