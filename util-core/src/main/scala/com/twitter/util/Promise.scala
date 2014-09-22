@@ -184,7 +184,7 @@ object Promise {
     @throws(classOf[Exception])
     def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A =
       parent.result(timeout)
-      
+
     def isReady(implicit permit: Awaitable.CanAwait): Boolean =
       parent.isReady
 
@@ -241,8 +241,8 @@ object Promise {
    */
   def attached[A](parent: Future[A]): Promise[A] with Detachable = parent match {
     case p: Promise[_] =>
-      new DetachablePromise[A](p)
-    case _ => {
+      new DetachablePromise[A](p.asInstanceOf[Promise[A]])
+    case _ =>
       val p = new Promise[A] with Detachable {
         private[this] val detached = new AtomicBoolean(false)
 
@@ -252,7 +252,6 @@ object Promise {
         if (p.detach()) p.update(t)
       }
       p
-    }
   }
 }
 
@@ -507,7 +506,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
 
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = {
-    val Done(theTry) = ready(timeout).compress().theState
+    val Done(theTry) = ready(timeout).compress().theState()
     theTry()
   }
 
@@ -546,6 +545,10 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    * (where `a` and `b` may resolve as such transitively).
    */
   def become(other: Future[A]) {
+    if (isDefined) {
+      val current = get(Duration.Zero)
+      throw new IllegalStateException(s"cannot become() on an already satisfied promise: $current")
+    }
     if (other.isInstanceOf[Promise[_]]) {
       val that = other.asInstanceOf[Promise[A]]
       that.link(compress())
@@ -585,7 +588,8 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    */
   def update(result: Try[A]) {
     updateIfEmpty(result) || {
-      throw new ImmutableResult("Result set multiple times: " + result)
+      val current = get(Duration.Zero)
+      throw new ImmutableResult(s"Result set multiple times. Value='$current', New='$result'")
     }
   }
 
@@ -651,12 +655,19 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     }
   }
 
+  /**
+   * Should only be called when this Promise has already been fulfilled
+   * or it is becoming another Future via `become`.
+   */
   protected final def compress(): Promise[A] = state match {
     case s@Linked(p) =>
       val target = p.compress()
+      // due to the assumptions stated above regarding when this can be called,
+      // there should never be a `cas` fail.
       cas(s, Linked(target))
       target
-    case _ => this
+    case _ =>
+      this
   }
 
   @tailrec

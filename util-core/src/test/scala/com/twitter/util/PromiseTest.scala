@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import java.lang.ref.WeakReference
-
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually
@@ -73,6 +72,30 @@ class PromiseTest extends FunSuite with Eventually {
     assert(p.poll === Some(Return(())))
   }
 
+  test("become not allowed when already satisfied") {
+    val value = "hellohello"
+    val p = new Promise[String]()
+    p.setValue(value)
+
+    val ex = intercept[IllegalStateException] {
+      p.become(new Promise[String]())
+    }
+    assert(ex.getMessage.contains(value))
+  }
+
+  test("Updating a Promise more than once should fail") {
+    val p = new Promise[Int]()
+    val first = Return(1)
+    val second = Return(2)
+
+    p.update(first)
+    val ex = intercept[Promise.ImmutableResult] {
+      p.update(second)
+    }
+    assert(ex.message.contains(first.toString))
+    assert(ex.message.contains(second.toString))
+  }
+
   // this won't work inline, because we still hold a reference to d
   def detach(d: Promise.Detachable) {
     assert(d != null)
@@ -81,7 +104,7 @@ class PromiseTest extends FunSuite with Eventually {
 
   // System.gc is advisory, and isn't guaranteed to run
   if (!Option(System.getProperty("SKIP_FLAKY")).isDefined) test("Promise.attached should properly detach on gc") {
-    val p = Promise[Unit]
+    val p = Promise[Unit]()
     val attachedRef: WeakReference[Promise[Unit] with Promise.Detachable] =
       new WeakReference(Promise.attached(p))
 
