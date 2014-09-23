@@ -240,7 +240,7 @@ class Flag[T: Flaggable] private[app](
   @volatile private[this] var _parsingDone = false
   protected[this] def parsingDone = _parsingDone
 
-  private def default: Option[T] = defaultOrUsage match {
+  private lazy val default: Option[T] = defaultOrUsage match {
     case Right(_) => None
     case Left(d) => Some(d())
   }
@@ -709,15 +709,7 @@ class GlobalFlag[T] private[app](
 )(implicit _f: Flaggable[T]) extends Flag[T](null, help, defaultOrUsage) {
 
   override protected[this] def parsingDone: Boolean = true
-
-  def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
-  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
-
-  // Unfortunately, `getClass` in the the extends... above
-  // doesn't give the right answer.
-  override val name = getClass.getName.stripSuffix("$")
-
-  protected override def getValue = super.getValue orElse {
+  private[this] lazy val propertyValue =
     Option(System.getProperty(name)) flatMap { p =>
       try Some(flaggable.parse(p)) catch {
         case NonFatal(exc) =>
@@ -727,6 +719,17 @@ class GlobalFlag[T] private[app](
           None
       }
     }
+
+  def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
+  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
+
+  // Unfortunately, `getClass` in the the extends... above
+  // doesn't give the right answer.
+  override val name = getClass.getName.stripSuffix("$")
+
+  protected override def getValue = super.getValue match {
+    case v@Some(_) => v
+    case _ => propertyValue
   }
 
   def getGlobalFlag: Flag[_] = this

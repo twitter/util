@@ -228,11 +228,11 @@ class FlagTest extends FunSuite {
     val flag = new Flags("my", includeGlobal = true)
     flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "okay"))
     assert(MyGlobalFlag() === "okay")
-    System.setProperty("com.twitter.app.MyGlobalFlag", "not okay")
-    assert(MyGlobalFlag() === "okay")
     MyGlobalFlag.reset()
-    assert(MyGlobalFlag() === "not okay")
-    System.clearProperty("com.twitter.app.MyGlobalFlag")
+    assert(MyGlobalFlag() === "a test flag")
+    MyGlobalFlag.let("not okay") {
+      assert(MyGlobalFlag() === "not okay")
+    }
   }
 
   test("formatFlagValues") {
