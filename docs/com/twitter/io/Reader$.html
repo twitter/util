@@ -211,6 +211,20 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Reader#concat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="concat(readers:com.twitter.concurrent.Spool[com.twitter.io.Reader]):com.twitter.io.Reader"></a>
+      <a id="concat(Spool[Reader]):Reader"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">concat</span><span class="params">(<span name="readers">readers: <a href="../concurrent/Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convenient abstraction to read from a spool of Readers as if it were a
+single Reader.</p>
     </li><li name="com.twitter.io.Reader#copy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="copy(r:com.twitter.io.Reader,w:com.twitter.io.Writer):com.twitter.util.Future[Unit]"></a>
       <a id="copy(Reader,Writer):Future[Unit]"></a>
@@ -223,11 +237,10 @@
         <span class="name">copy</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of the given buffer size
-(default = 4KB).</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of the given buffer size
-(default = 4KB). The Writer is unmanaged, the caller is responsible for
-finalization and error handling, e.g.:</p><p>    Reader.copy(r, w) ensure w.close()
-</p></div></div>
+      <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of size
+<code>Writer.BufferSize</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of size
+<code>Writer.BufferSize</code>. The Writer is unmanaged, the caller is responsible
+for finalization and error handling, e.g.:</p><pre>Reader.copy(r, w) ensure w.close()</pre></div></div>
     </li><li name="com.twitter.io.Reader#copy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="copy(r:com.twitter.io.Reader,w:com.twitter.io.Writer,n:Int):com.twitter.util.Future[Unit]"></a>
       <a id="copy(Reader,Writer,Int):Future[Unit]"></a>
@@ -240,11 +253,38 @@ finalization and error handling, e.g.:</p><p>    Reader.copy(r, w) ensure w.clos
         <span class="name">copy</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of the given buffer size
-(default = 4KB).</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of the given buffer size
-(default = 4KB). The Writer is unmanaged, the caller is responsible for
-finalization and error handling, e.g.:</p><p>    Reader.copy(r, w) ensure w.close()
-</p></div><dl class="paramcmts block"><dt class="param">n</dt><dd class="cmt"><p>The number of bytes to read on each refill of the Writer.
+      <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of size <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of size <code>n</code>. The Writer
+is unmanaged, the caller is responsible for finalization and error
+handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div><dl class="paramcmts block"><dt class="param">n</dt><dd class="cmt"><p>The number of bytes to read on each refill of the Writer.
+</p></dd></dl></div>
+    </li><li name="com.twitter.io.Reader#copyMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copyMany(readers:com.twitter.concurrent.Spool[com.twitter.io.Reader],target:com.twitter.io.Writer):com.twitter.util.Future[Unit]"></a>
+      <a id="copyMany(Spool[Reader],Writer):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copyMany</span><span class="params">(<span name="readers">readers: <a href="../concurrent/Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Copy bytes from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
+caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div></div>
+    </li><li name="com.twitter.io.Reader#copyMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copyMany(readers:com.twitter.concurrent.Spool[com.twitter.io.Reader],target:com.twitter.io.Writer,bufsize:Int):com.twitter.util.Future[Unit]"></a>
+      <a id="copyMany(Spool[Reader],Writer,Int):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copyMany</span><span class="params">(<span name="readers">readers: <a href="../concurrent/Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="bufsize">bufsize: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Copy bytes from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
+caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div><dl class="paramcmts block"><dt class="param">bufsize</dt><dd class="cmt"><p>The number of bytes to read each time.
 </p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>

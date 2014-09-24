@@ -417,6 +417,31 @@ comprehensions. Use <code>onSuccess</code> instead of this method for more reada
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Future#interruptible" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="interruptible():com.twitter.util.Future[A]"></a>
+      <a id="interruptible():Future[Nothing]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">interruptible</span><span class="params">()</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Makes a derivative Future which will be satisfied with the result
+of the parent.</p><div class="fullcomment"><div class="comment cmt"><p>Makes a derivative Future which will be satisfied with the result
+of the parent.  However, if it's interrupted, it will detach from
+the parent Future, satisfy itself with the exception raised to
+it, and won't propagate the interruption back to the parent
+Future.</p><p>This is useful for when a Future is shared between many contexts,
+where it may not be useful to discard the underlying computation
+if just one context is no longer interested in the result.  In
+particular, this is different from Future#masked in that it will
+prevent memory leaks if the parent Future will never be
+satisfied, because closures that are attached to this derivative
+Future will not be held onto by the killer Future.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
     </li><li name="com.twitter.util.Future#isDefined" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isDefined:Boolean"></a>
       <a id="isDefined:Boolean"></a>
@@ -668,8 +693,9 @@ satisfied, returns Some(result), otherwise None.
       </span>
       </h4>
       <p class="shortcomment cmt">Send updates from this Future to the other.</p><div class="fullcomment"><div class="comment cmt"><p>Send updates from this Future to the other.
-<code><code>other<i> must not yet be satisfied.
-</i></code></code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
+<code>other</code> must not yet be satisfied at the time of the call.
+After this call, nobody else should satisfy <code>other</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
     </li><li name="com.twitter.util.NoFuture#raise" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="raise(interrupt:Throwable):Unit"></a>
       <a id="raise(Throwable):Unit"></a>

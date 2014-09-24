@@ -219,6 +219,20 @@ given ByteBuffer.</p>
       </span>
       </h4>
       <p class="shortcomment cmt">An empty buffer.</p>
+    </li><li name="com.twitter.io.Buf.Iso8859_1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Iso8859_1"></a>
+      <a id="Iso8859_1:Iso8859_1"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$Iso8859_1$.html"><span class="name">Iso8859_1</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Create and deconstruct buffers encoded by the
+ISO Latin Alphabet No.</p>
     </li><li name="com.twitter.io.Buf.U32BE" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="U32BE"></a>
       <a id="U32BE:U32BE"></a>
@@ -275,6 +289,62 @@ big endian encoded buffers.</p>
       </h4>
       <p class="comment cmt">Create and deconstruct unsigned 64-bit
 little endian encoded buffers.</p>
+    </li><li name="com.twitter.io.Buf.UsAscii" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UsAscii"></a>
+      <a id="UsAscii:UsAscii"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$UsAscii$.html"><span class="name">UsAscii</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Create and deconstruct buffers encoded by the 7-bit ASCII,
+also known as ISO646-US or the Basic Latin block of the
+Unicode character set.</p>
+    </li><li name="com.twitter.io.Buf.Utf16" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Utf16"></a>
+      <a id="Utf16:Utf16"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$Utf16$.html"><span class="name">Utf16</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Create and deconstruct 16-bit UTF buffers.</p>
+    </li><li name="com.twitter.io.Buf.Utf16BE" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Utf16BE"></a>
+      <a id="Utf16BE:Utf16BE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$Utf16BE$.html"><span class="name">Utf16BE</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Create and deconstruct buffers encoded by the 16-bit UTF charset
+with big-endian byte order.</p>
+    </li><li name="com.twitter.io.Buf.Utf16LE" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Utf16LE"></a>
+      <a id="Utf16LE:Utf16LE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$Utf16LE$.html"><span class="name">Utf16LE</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Create and deconstruct buffers encoded by the 16-bit UTF charset
+with little-endian byte order.</p>
     </li><li name="com.twitter.io.Buf.Utf8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Utf8"></a>
       <a id="Utf8:Utf8"></a>
@@ -284,7 +354,7 @@ little endian encoded buffers.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$Utf8$.html"><span class="name">Utf8</span></a>
+        <a href="Buf$$Utf8$.html"><span class="name">Utf8</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
       </span>
       </h4>
       <p class="comment cmt">Create and deconstruct Utf-8 encoded buffers.</p>

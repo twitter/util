@@ -164,7 +164,7 @@ the utilities related to them.
         <span class="name">Iso8859_1</span><span class="result">: <span class="extype" name="java.nio.charset.Charset">Charset</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">ISO Latin Alphabet No.</p><div class="fullcomment"><div class="comment cmt"><p>ISO Latin Alphabet No. 1, as known as <code>ISO-LATIN-1</code>
+      <p class="shortcomment cmt">ISO Latin Alphabet No.</p><div class="fullcomment"><div class="comment cmt"><p>ISO Latin Alphabet No. 1, also known as <code>ISO-LATIN-1</code>
 </p></div></div>
     </li><li name="com.twitter.io.Charsets#UsAscii" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="UsAscii:java.nio.charset.Charset"></a>
@@ -178,7 +178,7 @@ the utilities related to them.
         <span class="name">UsAscii</span><span class="result">: <span class="extype" name="java.nio.charset.Charset">Charset</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">7-bit ASCII, as known as ISO646-US or the Basic Latin block of the
+      <p class="shortcomment cmt">7-bit ASCII, also known as ISO646-US or the Basic Latin block of the
 Unicode character set
 </p>
     </li><li name="com.twitter.io.Charsets#Utf16" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -270,7 +270,7 @@ an optional byte-order mark
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.io.Charsets#decoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Charsets#decoder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="decoder(charset:java.nio.charset.Charset):java.nio.charset.CharsetDecoder"></a>
       <a id="decoder(Charset):CharsetDecoder"></a>
       <h4 class="signature">
@@ -283,8 +283,11 @@ an optional byte-order mark
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a cached thread-local <span class="extype" name="java.nio.charset.CharsetDecoder">java.nio.charset.CharsetDecoder</span> for
-the specified <code>charset</code>.</p>
-    </li><li name="com.twitter.io.Charsets#encoder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+the specified <code>charset</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a cached thread-local <span class="extype" name="java.nio.charset.CharsetDecoder">java.nio.charset.CharsetDecoder</span> for
+the specified <code>charset</code>.</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
+      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span>
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Charsets#encoder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="encoder(charset:java.nio.charset.Charset):java.nio.charset.CharsetEncoder"></a>
       <a id="encoder(Charset):CharsetEncoder"></a>
       <h4 class="signature">
@@ -297,7 +300,10 @@ the specified <code>charset</code>.</p>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a cached thread-local <span class="extype" name="java.nio.charset.CharsetEncoder">java.nio.charset.CharsetEncoder</span> for
-the specified <code>charset</code>.</p>
+the specified <code>charset</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a cached thread-local <span class="extype" name="java.nio.charset.CharsetEncoder">java.nio.charset.CharsetEncoder</span> for
+the specified <code>charset</code>.</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
+      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span>
+</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

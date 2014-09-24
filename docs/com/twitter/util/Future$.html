@@ -475,20 +475,6 @@ Exception(&quot;boo&quot;)).
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Future#flatten" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="flatten[A](ffa:com.twitter.util.Future[com.twitter.util.Future[A]]):com.twitter.util.Future[A]"></a>
-      <a id="flatten[A](Future[Future[A]]):Future[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="ffa">ffa: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatten.A">A</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Flattens a nested future.</p><div class="fullcomment"><div class="comment cmt"><p>Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
-</p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -1223,7 +1209,24 @@ after each computation completes.</p>
 
         <div id="values" class="values members">
               <h3>Deprecated Value Members</h3>
-              <ol><li name="com.twitter.util.Future#void" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="com.twitter.util.Future#flatten" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatten[A](ffa:com.twitter.util.Future[com.twitter.util.Future[A]]):com.twitter.util.Future[A]"></a>
+      <a id="flatten[A](Future[Future[A]]):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.20.1) Use Futures.flatten instead">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="ffa">ffa: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatten.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Flattens a nested future.</p><div class="fullcomment"><div class="comment cmt"><p>Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.20.1)</i> Use Futures.flatten instead</p></dd></dl></div>
+    </li><li name="com.twitter.util.Future#void" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="void():com.twitter.util.Future[Void]"></a>
       <a id="void():Future[Void]"></a>
       <h4 class="signature">
