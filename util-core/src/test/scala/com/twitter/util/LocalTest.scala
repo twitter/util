@@ -66,12 +66,12 @@ class LocalTest extends FunSuite {
     Local.restore(saved)
     assert(local() === Some(123))
   }
-  
+
   test("Local.letClear: should clear all locals and restore previous value") {
     val l1, l2 = new Local[Int]
     l1() = 1
     l2() = 2
-    
+
     Local.letClear {
       assert(!l1().isDefined)
       assert(!l2().isDefined)

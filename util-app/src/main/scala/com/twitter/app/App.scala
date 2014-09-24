@@ -79,7 +79,7 @@ trait App extends Closable with CloseAwaitably {
    * provides a default value to be passed as `close(grace)`.
    */
   def defaultCloseGracePeriod: Duration = Duration.Zero
-  
+
   /**
    * The actual close grace period.
    */

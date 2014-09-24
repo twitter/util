@@ -40,7 +40,7 @@ trait Scheduler {
    * The amount of CPU time that's been scheduled as per ThreadMXBean.
    */
   def cpuTime: Long
-  
+
   /**
    * Total walltime spent in the scheduler.
    */
@@ -50,7 +50,7 @@ trait Scheduler {
    * The number of dispatches performed by this scheduler.
    */
   def numDispatches: Long
-  
+
   /**
    * Executes a function `f` in a blocking fashion.
    *
@@ -89,7 +89,7 @@ object Scheduler extends Scheduler {
   def cpuTime = self.cpuTime
   def wallTime = self.wallTime
   def numDispatches = self.numDispatches
-  
+
   def blocking[T](f: => T)(implicit perm: CanAwait) = self.blocking(f)
 }
 
@@ -128,7 +128,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
 
       if (lifo) {
         if (r2 != null) {
-          rs.addFirst(r2) 
+          rs.addFirst(r2)
           r2 = r1
           r1 = r0
         } else if (r1 != null) {
@@ -216,7 +216,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
   def cpuTime = (activations.iterator map (_.cpuTime)).sum
   def wallTime = (activations.iterator map (_.wallTime)).sum
   def numDispatches = (activations.iterator map (_.numDispatches)).sum
-  
+
   def blocking[T](f: => T)(implicit perm: CanAwait) = f
 }
 
@@ -280,7 +280,7 @@ trait ExecutorScheduler { self: Scheduler =>
   def numDispatches = -1L  // Unsupported
 
   def getExecutor = executor
-  
+
   def blocking[T](f: => T)(implicit perm: CanAwait) = f
 }
 

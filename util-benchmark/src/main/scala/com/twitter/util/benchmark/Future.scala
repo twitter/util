@@ -62,8 +62,8 @@ class FutureBenchmark extends SimpleBenchmark {
     }
   }
 
-  /* 
-  note(dschobel): timeSelect and timeSelectIndex fail 
+  /*
+  note(dschobel): timeSelect and timeSelectIndex fail
   by exceeding their heap limits. see go/jira/CSL-1104
 
   def timeSelect(reps: Int) {

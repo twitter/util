@@ -16,7 +16,7 @@ class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
   /**
    * Asynchronously read at most min(`n`, `maxBufferSize`) bytes from
    * the InputStream. The returned future represents the results of
-   * the read operation.  Any failure indicates an error; an empty buffer 
+   * the read operation.  Any failure indicates an error; an empty buffer
    * indicates that the stream has completed.
    */
   def read(n: Int): Future[Option[Buf]] = {

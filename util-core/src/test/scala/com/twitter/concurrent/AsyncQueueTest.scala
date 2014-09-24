@@ -11,7 +11,7 @@ class AsyncQueueTest extends FunSuite {
     val p0 = q.poll()
     val p1 = q.poll()
     val p2 = q.poll()
-    
+
     assert(!p0.isDefined)
     assert(!p1.isDefined)
     assert(!p2.isDefined)
@@ -31,7 +31,7 @@ class AsyncQueueTest extends FunSuite {
 
   test("queue offers") {
     val q = new AsyncQueue[Int]
-    
+
     q.offer(1)
     q.offer(2)
     q.offer(3)
@@ -62,14 +62,14 @@ class AsyncQueueTest extends FunSuite {
     val exc = new Exception("sad panda")
     val p0 = q.poll()
     val p1 = q.poll()
-    
+
     assert(!p0.isDefined)
     assert(!p1.isDefined)
 
     q.fail(exc)
     assert(p0.poll === Some(Throw(exc)))
     assert(p1.poll === Some(Throw(exc)))
-    
+
     assert(q.poll().poll === Some(Throw(exc)))
   }
 
@@ -78,9 +78,9 @@ class AsyncQueueTest extends FunSuite {
 
     val exc = new Exception("sad panda")
     val p0 = q.poll()
-    
+
     assert(!p0.isDefined)
-    
+
     q.offer(1)
     q.offer(2)
     q.fail(exc, false)
@@ -97,7 +97,7 @@ class AsyncQueueTest extends FunSuite {
 
     val exc = new Exception
     q.fail(exc)
-    
+
     q.offer(1)
     assert(q.poll().poll === Some(Throw(exc)))
   }

@@ -30,7 +30,7 @@ abstract class Function[-T1, +R] extends PartialFunction[T1, R] {
 
 object Function {
   /**
-   * Compose a function with a monitor; all invocations of the 
+   * Compose a function with a monitor; all invocations of the
    * returned function are synchronized with the given monitor `m`.
    */
   def synchronizeWith[T, R](m: Object)(f: T => R): T => R =

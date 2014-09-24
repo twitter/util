@@ -102,9 +102,9 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
   public static final Map<_Fields, FieldMetaData> metaDataMap;
   static {
     Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.A_STRING, new FieldMetaData("aString", TFieldRequirementType.DEFAULT, 
+    tmpMap.put(_Fields.A_STRING, new FieldMetaData("aString", TFieldRequirementType.DEFAULT,
         new FieldValueMetaData(TType.STRING)));
-    tmpMap.put(_Fields.A_NUMBER, new FieldMetaData("aNumber", TFieldRequirementType.DEFAULT, 
+    tmpMap.put(_Fields.A_NUMBER, new FieldMetaData("aNumber", TFieldRequirementType.DEFAULT,
         new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
     FieldMetaData.addStructMetaDataMap(TestThriftStructure.class, metaDataMap);
@@ -321,14 +321,14 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
     while (true)
     {
       field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      if (field.type == TType.STOP) {
         break;
       }
       switch (field.id) {
         case 1: // A_STRING
           if (field.type == TType.STRING) {
             this.aString = iprot.readString();
-          } else { 
+          } else {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
@@ -336,7 +336,7 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
           if (field.type == TType.I32) {
             this.aNumber = iprot.readI32();
             setANumberIsSet(true);
-          } else { 
+          } else {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;

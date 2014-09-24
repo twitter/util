@@ -52,7 +52,7 @@ class BoundedStackTest extends WordSpec {
       assert(buf(0) === "f")
       assert(buf.toList === List("f", "e", "d", "c"))
     }
-    
+
     "handle update" in {
       val buf = new BoundedStack[String](4)
       buf ++= List("a", "b", "c", "d", "e", "f")
@@ -64,7 +64,7 @@ class BoundedStackTest extends WordSpec {
       }
       assert(buf.toList === List("f2", "e2", "d2", "c2"))
     }
-    
+
     "insert at 0 is same as +=" in {
       val buf = new BoundedStack[String](3)
       buf.insert(0, "a")
@@ -80,7 +80,7 @@ class BoundedStackTest extends WordSpec {
       assert(buf(2) === "a")
       buf.insert(0, "d")
     }
-    
+
     "insert at count pushes to bottom" in {
       val buf = new BoundedStack[String](3)
       buf.insert(0, "a")
@@ -90,7 +90,7 @@ class BoundedStackTest extends WordSpec {
       assert(buf(1) === "b")
       assert(buf(2) === "c")
     }
-    
+
     "insert > count throws exception" in {
       val buf = new BoundedStack[String](3)
       intercept[IndexOutOfBoundsException] {

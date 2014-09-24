@@ -24,9 +24,9 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
    * Map a T-typed activity to a U-typed one.
    */
   def map[U](f: T => U): Activity[U] = collect { case x => f(x) }
-  
+
   /**
-   * Build a new activity by applying `f` to each value. When 
+   * Build a new activity by applying `f` to each value. When
    * `f` is not defined for this activity's current value, the derived
    * activity becomes pending.
    */
@@ -37,7 +37,7 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
       }
     case _ => Activity.pending
   }
-  
+
   /**
    * Join two activities.
    */
@@ -49,7 +49,7 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
    */
   def flatMap[U](f: T => Activity[U]): Activity[U] =
     Activity(run flatMap {
-      case Ok(v) => 
+      case Ok(v) =>
         val a = try f(v) catch {
           case NonFatal(exc) => Activity.exception(exc)
         }
@@ -112,7 +112,7 @@ object Activity {
    * of values.
    *
    * @usecase def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
-   * 
+   *
    *   @inheritdoc
    */
   def collect[T, CC[X] <: Traversable[X]](acts: CC[Activity[T]])
@@ -129,7 +129,7 @@ object Activity {
         case Pending | Failed(_) => true
         case Ok(_) => false
       }
-      
+
       notOk match {
         case None =>
         case Some(Pending) => return Pending
@@ -180,12 +180,12 @@ object Activity {
    * The activity is running with a current value of `t`.
    */
   case class Ok[T](t: T) extends State[T]
-  
+
   /**
    * The activity is pending output.
    */
   object Pending extends State[Nothing]
-  
+
   /**
    * The activity has failed, with exception `exc`.
    */

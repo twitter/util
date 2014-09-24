@@ -102,7 +102,7 @@ class Hotspot extends Jvm {
         i <- 1L to thresh
         bucket <- cs.get("sun.gc.generation.0.agetable.bytes.%02d".format(i))
       } yield long(bucket)
-      
+
       Heap(allocated, tenuringThreshold getOrElse -1, ageHisto)
     }
 
@@ -126,7 +126,7 @@ class Hotspot extends Jvm {
         capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
         used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
       } yield PoolState(invocations, capacity.bytes, used.bytes)
-  
+
       state getOrElse NilJvm.edenPool.state()
     }
   }

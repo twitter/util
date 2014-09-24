@@ -65,7 +65,7 @@ trait TestLogging extends BeforeAndAfter { self: WordSpec =>
     logger.clearHandlers()
     logger.addHandler(traceHandler)
   }
-  
+
   def logLines(): Seq[String] = traceHandler.get.split("\n")
 
   /**

@@ -47,7 +47,7 @@ object Reader {
     loop(Buf.Empty)
   }
 
-  class ReaderDiscarded 
+  class ReaderDiscarded
     extends Exception("This writer's reader has been discarded")
 
   private sealed trait State
@@ -85,7 +85,7 @@ object Reader {
       state match {
         case Failing(exc) =>
           Future.exception(exc)
-          
+
         case Eof =>
           Future.exception(new IllegalStateException("write after close"))
 
@@ -265,7 +265,7 @@ trait Writer {
     * backpressure is asserted.
     */
   def write(buf: Buf): Future[Unit]
-  
+
   /**
    * Indicate that the producer of the bytestream has
    * failed. No further writes are allowed.

@@ -34,7 +34,7 @@ class VarTest extends FunSuite {
     assert(Var.sample(s) === "123")
     v() = 8923
     assert(Var.sample(s) === "8923")
-    
+
     var buf = mutable.Buffer[String]()
     s observe { v => buf += v }
     assert(buf.toSeq === Seq("8923"))
@@ -110,24 +110,24 @@ class VarTest extends FunSuite {
     assert(cur === 123)
     assert(us(0).observerCount === 1)
     assert(us drop 1 forall (_.observerCount == 0))
-    
+
     us(1).update(333)
     assert(cur === 123)
     assert(us(0).observerCount === 1)
     assert(us drop 1 forall (_.observerCount == 0))
-    
+
     us(0).update(0)
     assert(cur === 333)
     assert(us(0).observerCount === 1)
     assert(us(1).observerCount === 1)
     assert(us drop 2 forall (_.observerCount == 0))
-    
+
     val f = sub.close()
     assert(f.isDefined)
     Await.result(f)
     assert(us forall (_.observerCount == 0))
   }
-  
+
   test("Var(init)") {
     val v = Var(123)
     var cur = Var.sample(v)
@@ -142,19 +142,19 @@ class VarTest extends FunSuite {
     v() = 100
     assert(cur === 111)
   }
-  
+
   test("multiple observers at the same level") {
     val v = Var(2)
     val a = v map(_*2)
     val b = v map(_*3)
-    
+
     var x, y = 0
     a observe { x = _ }
     b observe { y = _ }
 
     assert(x === 4)
     assert(y === 6)
-    
+
     v() = 1
     assert(x === 2)
     assert(y === 3)
@@ -174,18 +174,18 @@ class VarTest extends FunSuite {
       x observe { v() = _ }
       c
     }
-    
+
     assert(called === 0)
     var vv: Int = 0
     val o = v observe { vv = _ }
     assert(called === 1)
     assert(vv === 333)
     assert(closed === Time.Zero)
-    
+
     x() = 111
     assert(vv === 111)
     assert(closed === Time.Zero)
-    
+
     val o1 = v observe { v => () }
 
     val t = Time.now
@@ -193,30 +193,30 @@ class VarTest extends FunSuite {
     assert(called === 1)
     assert(closed === Time.Zero)
     assert(f.isDone)
-    
+
     // Closing the Var.async process is asynchronous with closing
     // the Var itself.
     val f1 = o1.close(t)
     assert(closed === t)
     assert(f1.isDone)
   }
-  
+
   test("Var.collect[Seq]") {
     val vars = Seq(
       Var(1),
       Var(2),
       Var(3))
-    
+
     val coll = Var.collect(vars: Seq[Var[Int]])
     val ref = new AtomicReference[Seq[Int]]
     coll.observeTo(ref)
     assert(ref.get === Seq(1,2,3))
-    
+
     vars(1).update(999)
     assert(ref.get === Seq(1,999,3))
   }
-  
-  // This is either very neat or very horrendous, 
+
+  // This is either very neat or very horrendous,
   // depending on your point of view.
   test("Var.collect[Set]") {
     val vars = Seq(
@@ -228,10 +228,10 @@ class VarTest extends FunSuite {
     val ref = new AtomicReference[Set[Int]]
     coll.observeTo(ref)
     assert(ref.get === Set(1,2,3))
-    
+
     vars(1).update(1)
     assert(ref.get === Set(1,3))
-    
+
     vars(1).update(999)
     assert(ref.get === Set(1,999,3))
   }
@@ -319,14 +319,14 @@ class VarTest extends FunSuite {
       case Var.Sampled(123) =>
       case _ => fail()
     }
-    
+
     v() = 333
     v match {
       case Var.Sampled(333) =>
       case _ => fail
     }
   }
-  
+
   def testPropagation(typ: String, newVar: Int => Var[Int]) {
     test("Don't propagate up-to-date "+typ+"-valued Var observations") {
       val v = Var(123)
@@ -334,7 +334,7 @@ class VarTest extends FunSuite {
       val x = v flatMap { _ => w }
       var buf = mutable.Buffer[Int]()
       x observe { v => buf += v }
-      
+
       assert(buf === Seq(333))
       v() = 333
       assert(buf === Seq(333))
@@ -348,10 +348,10 @@ class VarTest extends FunSuite {
         case 123 => w1
         case _ => w2
       }
-  
+
       var buf = mutable.Buffer[Int]()
       x observe { v => buf += v }
-  
+
       assert(buf === Seq(333))
       v() = 333
       assert(buf === Seq(333, 444))
@@ -396,7 +396,7 @@ class VarTest extends FunSuite {
     bc.start()
     ac.join()
     bc.join()
-    
+
     assert(j === N-1)
   }
 

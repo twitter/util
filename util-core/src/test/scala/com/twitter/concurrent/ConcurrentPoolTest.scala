@@ -20,7 +20,7 @@ class ConcurrentPoolTest extends WordSpec {
     for (i <- 0 until 10)
       pool.put(1, i)
 
-    for (i <- 0 until 10)    
+    for (i <- 0 until 10)
       assert(pool.get(1) === Some(i))
 
     assert(pool.get(1) === None)

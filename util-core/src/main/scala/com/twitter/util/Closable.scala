@@ -48,7 +48,7 @@ object Closable {
    * resource ''n+1'' is not closed until resource ''n'' is.
    */
   def sequence(closables: Closable*): Closable = new Closable {
-    private final def closeSeq(deadline: Time, closables: Seq[Closable]): Future[Unit] = 
+    private final def closeSeq(deadline: Time, closables: Seq[Closable]): Future[Unit] =
       closables match {
         case Seq() => Future.Done
         case Seq(hd, tl@_*) => hd.close(deadline) flatMap { _ => closeSeq(deadline, tl) }
@@ -61,16 +61,16 @@ object Closable {
   val nop: Closable = new Closable {
     def close(deadline: Time) = Future.Done
   }
-  
+
   /** Make a new Closable whose close method invokes f. */
   def make(f: Time => Future[Unit]): Closable = new Closable {
     def close(deadline: Time) = f(deadline)
   }
-  
+
   def ref(r: AtomicReference[Closable]): Closable = new Closable {
     def close(deadline: Time) = r.getAndSet(nop).close(deadline)
   }
-  
+
   private val refs = new HashMap[Reference[Object], Closable]
   private val refq = new ReferenceQueue[Object]
 

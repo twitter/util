@@ -415,7 +415,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       val path = "/path"
       "ok" in {
         delete(path, version)(Future.Done)
-        assert(Await.result(zkClient(path).delete(version)) match { 
+        assert(Await.result(zkClient(path).delete(version)) match {
           case ZNode(p) => p == path
         })
       }

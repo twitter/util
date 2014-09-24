@@ -71,7 +71,7 @@ object Duration extends TimeLikeOps[Duration] {
     }
     override def unary_- = Bottom
     override def toString = "Duration.Top"
-    
+
     private def writeReplace(): Object = DurationBox.Top()
   }
 
@@ -112,7 +112,7 @@ object Duration extends TimeLikeOps[Duration] {
 
     override def unary_- = Top
     override def toString = "Duration.Bottom"
-    
+
     private def writeReplace(): Object = DurationBox.Bottom()
   }
 

@@ -84,7 +84,7 @@ class InterruptibleExecutorServiceFuturePool(
  * If a piece of work has started, it cannot be cancelled and will not propagate
  * cancellation unless interruptible is true.
  *
- * If you want to propagate cancellation, use 
+ * If you want to propagate cancellation, use
  */
 class ExecutorServiceFuturePool protected[this](
   val executor: ExecutorService,

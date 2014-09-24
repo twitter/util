@@ -38,7 +38,7 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
       }
       n += 1
     }
-    
+
     assert(n === 3)
   }
 
@@ -71,9 +71,9 @@ class ThreadPoolSchedulerTest extends FunSuite with Eventually {
     scheduler.submit(new Runnable {
       def run() { p.setDone() }
     })
-    
+
     eventually { p.isDone }
-    
+
     scheduler.shutdown()
   }
 }

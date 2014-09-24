@@ -149,7 +149,7 @@ class ProxyTest extends WordSpec {
 
       assert(targetless.bar(2) === Some(30L))
     }
-    
+
     // Sigh. Benchmarking has no place in unit tests.
 
     def time(f: => Unit) = { val elapsed = Stopwatch.start(); f; elapsed().inMilliseconds }

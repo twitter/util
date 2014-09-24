@@ -11,7 +11,7 @@ import com.google.caliper.SimpleBenchmark
  */
 class SchedulerBenchmark extends SimpleBenchmark {
   val NumThreads = 48
- 
+
   private def go(scheduler: Scheduler, n: Int, m: Int) {
     val nop = new Runnable { def run() {} }
     var i = 0
@@ -30,7 +30,7 @@ class SchedulerBenchmark extends SimpleBenchmark {
 
     scheduler.flush()
   }
-  
+
   def timeLocalFifo1(nreps: Int) {
     go(new LocalScheduler, nreps, 1)
   }
@@ -42,7 +42,7 @@ class SchedulerBenchmark extends SimpleBenchmark {
   def timeLocalFifo3(nreps: Int) {
     go(new LocalScheduler, nreps, 1)
   }
-  
+
   def timeLocalFifo4(nreps: Int) {
     go(new LocalScheduler, nreps, 1)
   }
@@ -50,7 +50,7 @@ class SchedulerBenchmark extends SimpleBenchmark {
   def timeLocalFifo8(nreps: Int) {
     go(new LocalScheduler, nreps, 1)
   }
-  
+
   def timeLocalFifo16(nreps: Int) {
     go(new LocalScheduler, nreps, 1)
   }
@@ -70,7 +70,7 @@ class SchedulerBenchmark extends SimpleBenchmark {
   def timeLocalLifo3(nreps: Int) {
     go(new LocalScheduler(true), nreps, 1)
   }
-  
+
   def timeLocalLifo4(nreps: Int) {
     go(new LocalScheduler(true), nreps, 1)
   }
@@ -78,7 +78,7 @@ class SchedulerBenchmark extends SimpleBenchmark {
   def timeLocalLifo8(nreps: Int) {
     go(new LocalScheduler(true), nreps, 1)
   }
-  
+
   def timeLocalLifo16(nreps: Int) {
     go(new LocalScheduler(true), nreps, 1)
   }

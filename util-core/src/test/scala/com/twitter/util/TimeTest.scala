@@ -98,7 +98,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec {
           case _           => false
         })
     }
-    
+
     "roundtrip through serialization" in {
       for (v <- vs) {
         val bytes = new ByteArrayOutputStream

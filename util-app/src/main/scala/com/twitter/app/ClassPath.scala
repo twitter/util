@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 /**
- * Inspect and load the classpath. Inspired by 
+ * Inspect and load the classpath. Inspired by
  * Guava's ClassPath utility.
  *
  * @note This is not a generic facility -- it supports
@@ -17,7 +17,7 @@ import scala.collection.mutable
 private object ClassPath {
 
   private val ignoredPackages = Seq(
-    "apple/", "ch/epfl/", "com/apple/", "com/oracle/", 
+    "apple/", "ch/epfl/", "com/apple/", "com/oracle/",
     "com/sun/", "java/", "javax/", "scala/", "sun/", "sunw/")
 
   // TODO: we can inspect the constant pool for "Premain"
@@ -69,7 +69,7 @@ private object ClassPath {
         }
       case _ =>
     }
-    
+
     ents
   }
 
@@ -103,7 +103,7 @@ private object ClassPath {
     val jarFile = try new JarFile(file) catch {
       case _: IOException => return  // not a Jar file
     }
-    
+
     try {
       for (uri <- jarClasspath(file, jarFile.getManifest))
         browseUri(uri, loader, buf)

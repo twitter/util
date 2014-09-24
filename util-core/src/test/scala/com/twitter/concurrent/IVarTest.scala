@@ -87,7 +87,7 @@ class IVarTest extends WordSpec {
       iv.set(1)
       assert(didrun === false)
     }
-    
+
     "not remove another waiter on unget" in {
       val h = new IVarHelper
       import h._

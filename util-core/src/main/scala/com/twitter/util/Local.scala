@@ -48,7 +48,7 @@ final object Local {
   private def clear(i: Int) {
     set(i, None)
   }
-  
+
   /**
    * Clear all locals in the current context.
    */

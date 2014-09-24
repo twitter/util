@@ -100,14 +100,14 @@ trait Var[+T] { self =>
    * Event.
    */
   lazy val changes: Event[T] = new Event[T] {
-    def register(s: Witness[T]) = 
+    def register(s: Witness[T]) =
       self observe { newv => s.notify(newv) }
   }
 
   /**
    * A one-shot predicate observation. The returned future
    * is satisfied with the first observed value of Var that obtains
-   * the predicate `pred`. Observation stops when the future is 
+   * the predicate `pred`. Observation stops when the future is
    * satisfied.
    *
    * Interrupting the future will also satisfy the future (with the

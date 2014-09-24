@@ -36,7 +36,7 @@ class ConcurrentBijectionTest extends WordSpec {
     assert(b.getReverse(2) === None)
     assert(b.get(1)        === Some(3))
     assert(b.getReverse(3) === Some(1))
-    
+
     // Now, introduce a new reverse mapping for 3, which should kill
     // the existing 1 -> 3 mapping.
     b += (100 -> 3)
