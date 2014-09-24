@@ -328,7 +328,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * Future result will be the first exception encountered.
    *
    * @param fs a sequence of Futures
-   * @return a Future[Seq[A]] containing the collected values from fs.
+   * @return a `Future[Seq[A]]` containing the collected values from fs.
    */
   def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
     if (fs.isEmpty) {
@@ -365,7 +365,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * future result will be the first exception encountered.
    *
    * @param fs a java.util.List of Futures
-   * @return a Future[java.util.List[A]] containing the collected values from fs.
+   * @return a `Future[java.util.List[A]]` containing the collected values from fs.
    */
   def collect[A](fs: java.util.List[Future[A]]): Future[java.util.List[A]] =
     collect(asScalaBuffer(fs)) map(seqAsJavaList(_))
@@ -374,7 +374,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * Collect the results from the given futures into a new future of Seq[Try[A]]
    *
    * @param fs a sequence of Futures
-   * @return a Future[Seq[Try[A]]] containing the collected values from fs.
+   * @return a `Future[Seq[Try[A]]]` containing the collected values from fs.
    */
   def collectToTry[A](fs: Seq[Future[A]]): Future[Seq[Try[A]]] =
     Future.collect(fs map(_.liftToTry))
@@ -383,7 +383,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * Collect the results from the given futures into a new future of Seq[Try[A]]
    *
    * @param fs a java.util.List of Futures
-   * @return a Future[java.util.List[Try[A]]] containing the collected values from fs.
+   * @return a `Future[java.util.List[Try[A]]]` containing the collected values from fs.
    */
   def collectToTry[A](fs: java.util.List[Future[A]]): Future[java.util.List[Try[A]]] =
     collectToTry(asScalaBuffer(fs)) map(seqAsJavaList(_))
@@ -439,7 +439,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * result, with the remainder of the Futures as a sequence.
    *
    * @param fs a java.util.List
-   * @return a Future[Tuple2[Try[A], java.util.List[Future[A]]]] representing the first future
+   * @return a `Future[Tuple2[Try[A], java.util.List[Future[A]]]]` representing the first future
    * to be satisfied and the rest of the futures.
    */
   def select[A](fs: java.util.List[Future[A]]): Future[(Try[A], java.util.List[Future[A]])] = {
@@ -625,7 +625,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * Block indefinitely, wait for the result of the Future to be available.
    */
   @deprecated("Use Await.result", "6.2.x")
-  def apply(): A = apply(DEFAULT_TIMEOUT)
+  def apply(): A = Await.result(this, DEFAULT_TIMEOUT)
 
   /**
    * Block, but only as long as the given Timeout.
@@ -637,12 +637,13 @@ abstract class Future[+A] extends Awaitable[A] {
    * Alias for apply().
    */
   @deprecated("Use Await.result", "6.2.x")
-  def get() = apply()
+  def get(): A = Await.result(this, DEFAULT_TIMEOUT)
 
-  @deprecated("Use Await.result", "6.2.x")
-  def isReturn = get(DEFAULT_TIMEOUT) isReturn
-  @deprecated("Use Await.result", "6.2.x")
-  def isThrow  = get(DEFAULT_TIMEOUT) isThrow
+  @deprecated("Use Await.result(future.liftToTry).isReturn", "6.2.x")
+  def isReturn: Boolean =  Await.result(liftToTry, DEFAULT_TIMEOUT).isReturn
+
+  @deprecated("Use Await.result(future.liftToTry).isThrow", "6.2.x")
+  def isThrow: Boolean = Await.result(liftToTry, DEFAULT_TIMEOUT).isThrow
 
   /**
    * Is the result of the Future available yet?
@@ -662,7 +663,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * `timeout`. The result is a Return[_] or Throw[_] depending upon
    * whether the computation finished in time.
    */
-  @deprecated("Use Await.result", "6.2.x")
+  @deprecated("Use Await.result(future.liftToTry)", "6.2.x")
   final def get(timeout: Duration): Try[A] =
     try {
       Return(Await.result(this, timeout))
@@ -968,9 +969,8 @@ abstract class Future[+A] extends Awaitable[A] {
    */
   def proxyTo[B >: A](other: Promise[B]) {
     if (other.isDefined) {
-      val value = other.get(Duration.Zero)
       throw new IllegalStateException(
-        s"Cannot call proxyTo on an already satisfied Promise: $value")
+        s"Cannot call proxyTo on an already satisfied Promise: ${Await.result(other.liftToTry)}")
     }
     respond { other() = _ }
   }
@@ -1327,17 +1327,20 @@ class NoFuture extends Future[Nothing] {
   def raise(interrupt: Throwable) {}
 
   // Awaitable
+  private[this] def sleepThenTimeout(timeout: Duration): TimeoutException = {
+    Thread.sleep(timeout.inMilliseconds)
+    new TimeoutException(timeout.toString)
+  }
+
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
-    Thread.sleep(timeout.inMilliseconds)
-    throw new TimeoutException(timeout.toString)
+    throw sleepThenTimeout(timeout)
   }
 
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): Nothing = {
-    Thread.sleep(timeout.inMilliseconds)
-    throw new TimeoutException(timeout.toString)
+    throw sleepThenTimeout(timeout)
   }
 
   def poll: Option[Try[Nothing]] = None

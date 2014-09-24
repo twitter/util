@@ -1,9 +1,8 @@
 package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
-
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
-
 import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.runtime.NonLocalReturnControl
@@ -498,9 +497,8 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
       case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
         val condition = new java.util.concurrent.CountDownLatch(1)
         respond { _ => condition.countDown() }
-        val (v, u) = timeout.inTimeUnit
         Scheduler.flush()
-        if (condition.await(v, u)) this
+        if (condition.await(timeout.inNanoseconds, TimeUnit.NANOSECONDS)) this
         else throw new TimeoutException(timeout.toString)
     }
 
@@ -546,7 +544,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    */
   def become(other: Future[A]) {
     if (isDefined) {
-      val current = get(Duration.Zero)
+      val current = Await.result(liftToTry)
       throw new IllegalStateException(s"cannot become() on an already satisfied promise: $current")
     }
     if (other.isInstanceOf[Promise[_]]) {
@@ -588,7 +586,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
    */
   def update(result: Try[A]) {
     updateIfEmpty(result) || {
-      val current = get(Duration.Zero)
+      val current = Await.result(liftToTry)
       throw new ImmutableResult(s"Result set multiple times. Value='$current', New='$result'")
     }
   }

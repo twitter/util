@@ -1,8 +1,7 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicBoolean
-
 import com.twitter.concurrent.Scheduler
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Wait for the result of some action. Awaitable is not used
@@ -50,10 +49,13 @@ object Awaitable {
  *
  * Returns the result of the action when it has completed.
  *
+ * If you want the results as a [[com.twitter.util.Try]],
+ * use `Await.result(future.liftToTry)`.
+ *
  * @define all
  *
  * Returns after all actions have completed. The timeout given is
- * passed to each awaitable in turn, meaning await time will be
+ * passed to each awaitable in turn, meaning max await time will be
  * awaitables.size * timeout.
  */
 object Await {
@@ -66,7 +68,12 @@ object Await {
   def ready[T <: Awaitable[_]](awaitable: T): T =
     ready(awaitable, Duration.Top)
 
-  /** $ready */
+  /**
+   * $ready
+   *
+   * If the `Awaitable` is not ready within `timeout`, a
+   * [[com.twitter.util.TimeoutException]] will be thrown.
+   */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   def ready[T <: Awaitable[_]](awaitable: T, timeout: Duration): T = {
@@ -79,7 +86,12 @@ object Await {
   def result[T](awaitable: Awaitable[T]): T =
     result(awaitable, Duration.Top)
 
-  /** $result */
+  /**
+   * $result
+   *
+   * If the `Awaitable` is not ready within `timeout`, a
+   * [[com.twitter.util.TimeoutException]] will be thrown.
+   */
   @throws(classOf[Exception])
   def result[T](awaitable: Awaitable[T], timeout: Duration): T =
     if (awaitable.isReady) awaitable.result(timeout)
@@ -91,7 +103,12 @@ object Await {
   def all(awaitables: Awaitable[_]*): Unit =
     all(awaitables, Duration.Top)
 
-  /** $all */
+  /**
+   * $all
+   *
+   * If any of the `Awaitable`s are not ready within `timeout`, a
+   * [[com.twitter.util.TimeoutException]] will be thrown.
+   */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   def all(awaitables: Seq[Awaitable[_]], timeout: Duration): Unit =
@@ -133,7 +150,7 @@ trait CloseAwaitably extends Awaitable[Unit] {
 
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): Unit =
     onClose.result(timeout)
-  
+
   def isReady(implicit permit: Awaitable.CanAwait): Boolean =
     onClose.isReady
 }
