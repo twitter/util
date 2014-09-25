@@ -163,8 +163,10 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Returns after all actions have completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns after all actions have completed. The timeout given is
-passed to each awaitable in turn, meaning await time will be
-awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+passed to each awaitable in turn, meaning max await time will be
+awaitables.size * timeout.</p><p>If any of the <code>Awaitable</code>s are not ready within <code>timeout</code>, a
+<a href="TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">com.twitter.util.TimeoutException</a> will be thrown.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="symbol">classOf[TimeoutException]</span>
@@ -189,7 +191,7 @@ awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotation
       </span>
       </h4>
       <p class="shortcomment cmt">Returns after all actions have completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns after all actions have completed. The timeout given is
-passed to each awaitable in turn, meaning await time will be
+passed to each awaitable in turn, meaning max await time will be
 awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -369,7 +371,8 @@ awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotation
         <span class="name">ready</span><span class="tparams">[<span name="T">T &lt;: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]</span>]</span><span class="params">(<span name="awaitable">awaitable: <span class="extype" name="com.twitter.util.Await.ready.T">T</span></span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.ready.T">T</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns the object when the action has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the object when the action has completed.
+      <p class="shortcomment cmt">Returns the object when the action has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the object when the action has completed.</p><p>If the <code>Awaitable</code> is not ready within <code>timeout</code>, a
+<a href="TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">com.twitter.util.TimeoutException</a> will be thrown.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -419,7 +422,9 @@ awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotation
         <span class="name">result</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="awaitable">awaitable: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Await.result.T">T</span>]</span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.result.T">T</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns the result of the action when it has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the result of the action when it has completed.
+      <p class="shortcomment cmt">Returns the result of the action when it has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the result of the action when it has completed.</p><p>If you want the results as a <a href="Try.html" class="extype" name="com.twitter.util.Try">com.twitter.util.Try</a>,
+use <code>Await.result(future.liftToTry)</code>.</p><p>If the <code>Awaitable</code> is not ready within <code>timeout</code>, a
+<a href="TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">com.twitter.util.TimeoutException</a> will be thrown.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -439,7 +444,8 @@ awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotation
         <span class="name">result</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="awaitable">awaitable: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Await.result.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.result.T">T</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns the result of the action when it has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the result of the action when it has completed.
+      <p class="shortcomment cmt">Returns the result of the action when it has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the result of the action when it has completed.</p><p>If you want the results as a <a href="Try.html" class="extype" name="com.twitter.util.Try">com.twitter.util.Try</a>,
+use <code>Await.result(future.liftToTry)</code>.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       

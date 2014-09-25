@@ -350,7 +350,7 @@ used for the next batch to be collected.
 Seq[A].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
 Seq[A]. If one or of the given futures is exceptional, the resulting
 future result will be the first exception encountered.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[java.util.List[A]] containing the collected values from fs.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[A]]</code> containing the collected values from fs.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collect[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[A]]"></a>
@@ -368,7 +368,7 @@ future result will be the first exception encountered.
 Seq[A].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
 Seq[A]. If one or of the given Futures is exceptional, the resulting
 Future result will be the first exception encountered.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Seq[A]] containing the collected values from fs.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[A]]</code> containing the collected values from fs.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#collectToTry" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]"></a>
@@ -384,7 +384,7 @@ Future result will be the first exception encountered.
       </h4>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]]
 </p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of Seq[Try[A]]
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[java.util.List[Try[A]]] containing the collected values from fs.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[Try[A]]]</code> containing the collected values from fs.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#collectToTry" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collectToTry[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[com.twitter.util.Try[A]]]"></a>
@@ -400,7 +400,7 @@ Future result will be the first exception encountered.
       </h4>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]]
 </p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of Seq[Try[A]]
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Seq[Try[A]]] containing the collected values from fs.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[Try[A]]]</code> containing the collected values from fs.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#const" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="const[A](result:com.twitter.util.Try[A]):com.twitter.util.Future[A]"></a>
@@ -1003,7 +1003,7 @@ Exception(&quot;boo&quot;)). The exception is not wrapped in any way.
       </h4>
       <p class="shortcomment cmt">&quot;Select&quot; off the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>&quot;Select&quot; off the first future to be satisfied.  Return this as a
 result, with the remainder of the Futures as a sequence.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Tuple2[Try[A], java.util.List[Future[A]]]] representing the first future
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Tuple2[Try[A], java.util.List[Future[A]]]]</code> representing the first future
 to be satisfied and the rest of the futures.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#select" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">

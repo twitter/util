@@ -1440,7 +1440,7 @@ Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result">get</span><span class="params">(<span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="../util/Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="org.apache.zookeeper.WatchedEvent">WatchedEvent</span>]</span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry)">get</span><span class="params">(<span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="../util/Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="org.apache.zookeeper.WatchedEvent">WatchedEvent</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Demands that the result of the future be available within
@@ -1450,7 +1450,7 @@ whether the computation finished in time.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result</p></dd></dl></div>
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result(future.liftToTry)</p></dd></dl></div>
     </li><li name="com.twitter.util.Future#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get():A"></a>
       <a id="get():WatchedEvent"></a>
@@ -1477,13 +1477,13 @@ whether the computation finished in time.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result">isReturn</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry).isReturn">isReturn</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result</p></dd></dl></div>
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result(future.liftToTry).isReturn</p></dd></dl></div>
     </li><li name="com.twitter.util.Future#isThrow" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isThrow:Boolean"></a>
       <a id="isThrow:Boolean"></a>
@@ -1493,13 +1493,13 @@ whether the computation finished in time.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result">isThrow</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry).isThrow">isThrow</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result</p></dd></dl></div>
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result(future.liftToTry).isThrow</p></dd></dl></div>
     </li><li name="com.twitter.util.Future#void" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="void:com.twitter.util.Future[Void]"></a>
       <a id="void:Future[Void]"></a>
