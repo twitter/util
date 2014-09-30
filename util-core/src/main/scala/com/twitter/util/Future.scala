@@ -394,45 +394,48 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    *
    * @param fs a scala.collection.Seq
    */
-  def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] = {
+  def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] =
     if (fs.isEmpty) {
-      Future.exception(new IllegalArgumentException("empty future list!"))
+      Future.exception(new IllegalArgumentException("empty future list"))
     } else {
       val p = Promise.interrupts[(Try[A], Seq[Future[A]])](fs:_*)
-      fs foreach { f =>
-        f respond { res =>
-          if (!p.isDefined) {
-            val others = fs filterNot { _ eq f }
-            p.updateIfEmpty(Return((res, others)))
-          }
+      val as = fs.map(f => (Promise.attached(f), f))
+      for ((a, f) <- as) a respond { t =>
+        if (!p.isDefined) {
+          p.updateIfEmpty(Return(t -> fs.filterNot(_ eq f)))
+          for (z <- as) z._1.detach()
         }
       }
       p
     }
-  }
 
   /**
    * Select the index into `fs` of the first future to be satisfied.
    *
    * @param fs cannot be empty
    */
-  def selectIndex[A](fs: IndexedSeq[Future[A]]): Future[Int] = {
+  def selectIndex[A](fs: IndexedSeq[Future[A]]): Future[Int] =
     if (fs.isEmpty) {
       Future.exception(new IllegalArgumentException("empty future list"))
     } else {
       val p = Promise.interrupts[Int](fs:_*)
+      val as = fs.map(Promise.attached)
       var i = 0
-      while (i < fs.size) {
+      while (i < as.size) {
         val ii = i
-        fs(i) respond { res =>
-          if (!p.isDefined)
-            p.updateIfEmpty(Return(ii))
+        as(ii) ensure {
+          if (!p.isDefined && p.updateIfEmpty(Return(ii))) {
+            var j = 0
+            while (j < as.size) {
+              as(j).detach()
+              j += 1
+            }
+          }
         }
         i += 1
       }
       p
     }
-  }
 
   /**
    * "Select" off the first future to be satisfied.  Return this as a
@@ -924,8 +927,10 @@ abstract class Future[+A] extends Awaitable[A] {
    */
   def select[U >: A](other: Future[U]): Future[U] = {
     val p = Promise.interrupts[U](other, this)
-    other respond { p.updateIfEmpty(_) }
-    this  respond { p.updateIfEmpty(_) }
+    val a = Promise.attached(other)
+    val b = Promise.attached(this)
+    a respond { t => if (p.updateIfEmpty(t)) b.detach() }
+    b respond { t => if (p.updateIfEmpty(t)) a.detach() }
     p
   }
 

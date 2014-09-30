@@ -392,6 +392,16 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     }
   }
 
+  // Useful for debugging waitq.
+  private[util] def waitqLength: Int = state match {
+    case Waiting(first, rest) if first == null => rest.length
+    case Waiting(first, rest) => rest.length + 1
+    case Interruptible(waitq, _) => waitq.length
+    case Transforming(waitq, _) => waitq.length
+    case Interrupted(waitq, _) => waitq.length
+    case Done(_) | Linked(_) => 0
+  }
+
   /**
    * Forward interrupts to another future.
    *

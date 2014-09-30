@@ -1,13 +1,11 @@
 package com.twitter.util
 
-import java.lang.ref.WeakReference
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.concurrent.Eventually
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class PromiseTest extends FunSuite with Eventually {
+class PromiseTest extends FunSuite {
   test("Promise.attached should detach via interruption") {
     val p = new HandledPromise[Unit]()
     val f = Promise.attached(p)
@@ -102,15 +100,14 @@ class PromiseTest extends FunSuite with Eventually {
     assert(d.detach())
   }
 
-  // System.gc is advisory, and isn't guaranteed to run
-  if (!Option(System.getProperty("SKIP_FLAKY")).isDefined) test("Promise.attached should properly detach on gc") {
-    val p = Promise[Unit]()
-    val attachedRef: WeakReference[Promise[Unit] with Promise.Detachable] =
-      new WeakReference(Promise.attached(p))
-
-    detach(attachedRef.get())
-
-    System.gc()
-    eventually(assert(attachedRef.get() === null))
+  test("Promise.attached undone by detach") {
+    val p = new Promise[Unit]
+    assert(p.waitqLength === 0)
+    val q = Promise.attached(p)
+    assert(p.waitqLength === 1)
+    q.respond(_ => ())
+    assert(p.waitqLength === 1)
+    q.detach()
+    assert(p.waitqLength === 0)
   }
 }

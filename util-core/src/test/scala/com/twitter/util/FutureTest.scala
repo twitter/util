@@ -8,15 +8,18 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
+import org.scalacheck.{Gen, Arbitrary}
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.ControlThrowable
+import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
-class FutureTest extends WordSpec with MockitoSugar {
+class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       expected match {
@@ -493,106 +496,6 @@ class FutureTest extends WordSpec with MockitoSugar {
             f.raise(new Exception)
             assert(ps.count(_.handled.isDefined) === 2)
           }
-        }
-      }
-
-      "select" should {
-        "return the first result" which {
-          def tryBothForIndex(i: Int) = {
-            "success (%d)".format(i) in {
-              val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
-              val f = Future.select(fs)
-              assert(f.isDefined === false)
-              fs(i)() = Return(1)
-              assert(f.isDefined === true)
-              assert(Await.result(f) match {
-                case (Return(1), rest) =>
-                  assert(rest.size === 9)
-                  val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
-                  assert(rest.size === elems.size)
-                  assert(rest.diff(elems).isEmpty)
-                  true
-              })
-            }
-
-            "failure (%d)".format(i) in {
-              val fs = (0 until 10 map { _ => new Promise[Int] }) toArray
-              val f = Future.select(fs)
-              assert(f.isDefined === false)
-              val e = new Exception("sad panda")
-              fs(i)() = Throw(e)
-              assert(f.isDefined === true)
-              assert(Await.result(f) match {
-                case (Throw(e), rest) =>
-                  assert(rest.size === 9)
-                  val elems = fs.slice(0, i) ++ fs.slice(i + 1, 10)
-                  assert(rest.size === elems.size)
-                  assert(elems.diff(rest).isEmpty)
-                  true
-              })
-            }
-          }
-
-          // Ensure this works for all indices:
-          0 until 10 foreach { tryBothForIndex(_) }
-        }
-
-        "fail if we attempt to select an empty future sequence" in {
-          val f = Future.select(Seq())
-          assert(f.isDefined === true)
-          val e = new IllegalArgumentException("empty future list!")
-          val actual = intercept[IllegalArgumentException] { Await.result(f) }
-          assert(actual.getMessage === e.getMessage)
-        }
-
-        "propagate interrupts" in {
-          val fs = for (_ <- 0 until 10 toArray) yield new HandledPromise[Int]
-          Future.select(fs).raise(new Exception)
-          assert((fs forall (_.handled.isDefined)) === true)
-        }
-      }
-
-      "selectIndex" should {
-        "return the first result" when {
-          def tryBothForIndex(i: Int) = {
-            "success (%d)".format(i) in {
-              val fs = Seq.fill(10) { new Promise[Int] } toArray
-              val fPos = Future.selectIndex(fs)
-              assert(!fPos.isDefined)
-              fs(i).setValue(1)
-              assert(fPos.isDefined)
-              assert(Await.result(fPos) === i)
-            }
-
-            "failure (%d)".format(i) in {
-              val fs = Seq.fill(10) { new Promise[Int] } toArray
-              val fPos = Future.selectIndex(fs)
-              assert(!fPos.isDefined)
-              val e = new Exception("sad panda")
-              fs(i).setException(e)
-              assert(fPos.isDefined)
-              assert(Await.result(fPos) === i)
-            }
-          }
-
-          // Ensure this works for all indices:
-          0 until 10 foreach { tryBothForIndex(_) }
-        }
-
-        "fail if we attempt to select an empty future sequence" in {
-          val f = Future.selectIndex(IndexedSeq())
-          assert(f.isDefined)
-          val e = intercept[IllegalArgumentException] {
-            Await.result(f)
-          }
-          val expected = "empty future list"
-          assert(e.getMessage === expected)
-        }
-
-        "propagate interrupts" in {
-          val fs = Array.fill(10) { new HandledPromise[Int] }
-          Future.selectIndex(fs).raise(new Exception)
-          assert(fs forall (_.handled.isDefined))
         }
       }
 
@@ -1647,7 +1550,134 @@ class FutureTest extends WordSpec with MockitoSugar {
     }
   }
 
+  "Future.select" should {
+    import Arbitrary.arbitrary
+    val genLen = Gen.choose(1, 10)
 
+    "return the first result" which {
+      forAll(genLen, arbitrary[Boolean]) { (n, fail) =>
+        val ps = ((0 until n) map(_ => new Promise[Int])).toList
+        assert(ps.map(_.waitqLength).sum === 0)
+        val f = Future.select(ps)
+        val i = Random.nextInt(ps.length)
+        val e = new Exception("sad panda")
+        val t = if (fail) Throw(e) else Return(i)
+        ps(i).update(t)
+        assert(f.isDefined)
+        val (ft, fps) = Await.result(f)
+        assert(ft === t)
+        assert(fps.toSet === (ps.toSet - ps(i)))
+      }
+    }
+
+    "not accumulate listeners when losing or" in {
+      val p = new Promise[Unit]
+      val q = new Promise[Unit]
+      (p or q)
+      assert(p.waitqLength === 1)
+      q.setDone()
+      assert(p.waitqLength === 0)
+    }
+
+    "not accumulate listeners when losing select" in {
+      val p = new Promise[Unit]
+      val q = new Promise[Unit]
+      val f = Future.select(Seq(p, q))
+      assert(p.waitqLength === 1)
+      q.setDone()
+      assert(p.waitqLength === 0)
+    }
+
+    "not accumulate listeners if not selected" in {
+      forAll(genLen, arbitrary[Boolean]) { (n, fail) =>
+        val ps = ((0 until n) map(_ => new Promise[Int])).toList
+        assert(ps.map(_.waitqLength).sum === 0)
+        val f = Future.select(ps)
+        assert(ps.map(_.waitqLength).sum === n)
+        val i = Random.nextInt(ps.length)
+        val e = new Exception("sad panda")
+        val t = if (fail) Throw(e) else Return(i)
+        f respond { _ => () }
+        assert(ps.map(_.waitqLength).sum === n)
+        ps(i).update(t)
+        assert(ps.map(_.waitqLength).sum === 0)
+      }
+    }
+
+    "fail if we attempt to select an empty future sequence" in {
+      val f = Future.select(Nil)
+      assert(f.isDefined)
+      val e = new IllegalArgumentException("empty future list")
+      val actual = intercept[IllegalArgumentException] { Await.result(f) }
+      assert(actual.getMessage === e.getMessage)
+    }
+
+    "propagate interrupts" in {
+      val fs = (0 until 10).map(_ => new HandledPromise[Int])
+      Future.select(fs).raise(new Exception)
+      assert(fs.forall(_.handled.isDefined))
+    }
+  }
+
+  // These tests are almost a carbon copy of the "Future.select" tests, they
+  // should evolve in-sync.
+  "Future.selectIndex" should {
+    import Arbitrary.arbitrary
+    val genLen = Gen.choose(1, 10)
+
+    "return the first result" which {
+      forAll(genLen, arbitrary[Boolean]) { (n, fail) =>
+        val ps = ((0 until n) map(_ => new Promise[Int])).toIndexedSeq
+        assert(ps.map(_.waitqLength).sum === 0)
+        val f = Future.selectIndex(ps)
+        val i = Random.nextInt(ps.length)
+        val e = new Exception("sad panda")
+        val t = if (fail) Throw(e) else Return(i)
+        ps(i).update(t)
+        assert(f.isDefined)
+        assert(Await.result(f) === i)
+      }
+    }
+
+    "not accumulate listeners when losing select" in {
+      val p = new Promise[Unit]
+      val q = new Promise[Unit]
+      val f = Future.selectIndex(IndexedSeq(p, q))
+      assert(p.waitqLength === 1)
+      q.setDone()
+      assert(p.waitqLength === 0)
+    }
+
+    "not accumulate listeners if not selected" in {
+      forAll(genLen, arbitrary[Boolean]) { (n, fail) =>
+        val ps = ((0 until n) map(_ => new Promise[Int])).toIndexedSeq
+        assert(ps.map(_.waitqLength).sum === 0)
+        val f = Future.selectIndex(ps)
+        assert(ps.map(_.waitqLength).sum === n)
+        val i = Random.nextInt(ps.length)
+        val e = new Exception("sad panda")
+        val t = if (fail) Throw(e) else Return(i)
+        f respond { _ => () }
+        assert(ps.map(_.waitqLength).sum === n)
+        ps(i).update(t)
+        assert(ps.map(_.waitqLength).sum === 0)
+      }
+    }
+
+    "fail if we attempt to select an empty future sequence" in {
+      val f = Future.selectIndex(IndexedSeq.empty)
+      assert(f.isDefined)
+      val e = new IllegalArgumentException("empty future list")
+      val actual = intercept[IllegalArgumentException] { Await.result(f) }
+      assert(actual.getMessage === e.getMessage)
+    }
+
+    "propagate interrupts" in {
+      val fs = (0 until 10).map(_ => new HandledPromise[Int])
+      Future.selectIndex(fs).raise(new Exception)
+      assert(fs.forall(_.handled.isDefined))
+    }
+  }
 
   // TODO(John Sirois):  Kill this mvn test hack when pants takes over.
   "Java" should {

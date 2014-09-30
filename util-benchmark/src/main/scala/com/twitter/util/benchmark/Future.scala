@@ -16,7 +16,7 @@ class FutureBenchmark extends SimpleBenchmark {
     var j = 0
     while (i < nreps) {
       j = 0
-      while (j<N) {
+      while (j < N) {
         val p = new Promise[Unit]
         if (n > 0) p.respond(f)
         if (n > 1) p.respond(f)
@@ -62,10 +62,6 @@ class FutureBenchmark extends SimpleBenchmark {
     }
   }
 
-  /*
-  note(dschobel): timeSelect and timeSelectIndex fail
-  by exceeding their heap limits. see go/jira/CSL-1104
-
   def timeSelect(reps: Int) {
     val numToSelect = 5
     val p = new Promise[Unit]
@@ -91,5 +87,4 @@ class FutureBenchmark extends SimpleBenchmark {
       i += 1
     }
   }
-  */
 }
