@@ -1638,6 +1638,13 @@ class FutureTest extends WordSpec with MockitoSugar {
       f mustProduce Throw(e)
       assert(task.isCancelled)
     }
+    
+    "Return Future.Done for durations <= 0" in {
+      implicit val timer = new MockTimer
+      assert(Future.sleep(Duration.Zero) eq Future.Done)
+      assert(Future.sleep((-10).seconds) eq Future.Done)
+      assert(timer.tasks.isEmpty)
+    }
   }
 
 

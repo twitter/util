@@ -59,7 +59,7 @@ object Future {
    * A unit future that completes after `howlong`.
    */
   def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] = {
-    if (howlong == Duration.Zero)
+    if (howlong <= Duration.Zero)
       return Future.Done
 
     val p = new Promise[Unit]
