@@ -33,6 +33,11 @@ trait Logging { self: App =>
   protected[this] val outputFlag = flag("log.output", defaultOutput, "Output file")
   protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
 
+  private[this] val asyncFlag = flag("log.async", true, "Log asynchronously")
+
+  private[this] val asyncMaxSizeFlag =
+    flag("log.async.maxsize", 4096, "Max queue size for async logging")
+
   // FileHandler-related flags are ignored if outputFlag is not overridden.
   protected[this] val rollPolicyFlag = flag("log.rollPolicy", defaultRollPolicy,
     "When or how frequently to roll the logfile. " +
@@ -51,7 +56,7 @@ trait Logging { self: App =>
   def handlers: List[() => Handler] = {
     val output = outputFlag()
     val level = Some(levelFlag())
-    val handler =
+    var handler =
       if (output == "/dev/stderr")
         ConsoleHandler(level = level)
       else
@@ -62,6 +67,9 @@ trait Logging { self: App =>
           rotateCountFlag(),
           level = level
         )
+    if (asyncFlag())
+      handler = QueueingHandler(handler, asyncMaxSizeFlag())
+
     handler :: Nil
   }
 
