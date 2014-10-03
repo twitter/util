@@ -59,6 +59,43 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
     }
   }
 
+  test("Buf.concat.slice empty") {
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val arr = a1 ++ a2 ++ a3
+    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+
+    assert(buf.slice(25, 30) === Buf.Empty)
+  }
+
+  test("Buf.concat.slice truncated") {
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val arr = a1 ++ a2 ++ a3
+    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+
+    assert(buf.slice(20, 30) === buf.slice(20, 24)) // just last
+    assert(buf.slice(12, 30) === buf.slice(12, 24)) // two bufs
+    assert(buf.slice(8, 30) === buf.slice(8, 24)) // two bufs
+  }
+
+  test("Buf.concat.slice invalid args throws") {
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val arr = a1 ++ a2 ++ a3
+    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+
+    intercept[IllegalArgumentException] {
+      buf.slice(-1, 0)
+    }
+    intercept[IllegalArgumentException] {
+      buf.slice(1, 0)
+    }
+  }
+
   test("Buf.Utf8: English") {
     val buf = Buf.Utf8("Hello, world!")
     assert(buf.length === 13)

@@ -50,6 +50,8 @@ trait Buf { outer =>
 }
 
 private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
+  require(chain.length > 0)
+
   override def concat(right: Buf): Buf = right match {
     case buf if buf.isEmpty => this
     case ConcatBuf(rightChain) => ConcatBuf(chain ++ rightChain)
@@ -75,19 +77,59 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
     }
   }
 
+  /**
+   * @note we are foregoing clarity for performance
+   *       slice only entails 3 necessary allocations
+   */
   def slice(i: Int, j: Int): Buf = {
-    require(0 <= i && i <= j)
+    if (i == j) return Buf.Empty
+    require(0 <= i && i < j)
+    val first = chain.head
+
     var begin = i
     var end = j
-    var res = Buf.Empty
-    chain foreach { buf =>
-      val buf1 = buf.slice(math.max(0, begin), math.max(0, end))
-      if (!buf1.isEmpty)
-        res = res concat buf1
-      begin -= buf.length
-      end -= buf.length
+    var start, startBegin, startEnd, finish, finishBegin, finishEnd = -1
+    var cur = 0
+    while (cur < chain.length && finish == -1) {
+      val buf = chain(cur)
+      val len = buf.length
+      if (begin >= 0 && begin < len) {
+        start = cur
+        startBegin = begin
+        startEnd = end
+      }
+      if (end <= len) {
+        finish = cur
+        finishBegin = math.max(0, begin)
+        finishEnd = end
+      }
+      begin -= len
+      end -= len
+      cur += 1
     }
-    res
+    if (start == -1) Buf.Empty
+    else if (start == finish || (start == (cur - 1) && finish == -1)) {
+      chain(start).slice(startBegin, startEnd)
+    } else if (finish == -1) {
+      val untrimmedFirst = chain(start)
+      val first: Buf = if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
+      else untrimmedFirst.slice(startBegin, startEnd)
+      ConcatBuf(if (first == null) chain.slice(start, length)
+      else first +: chain.slice(start + 1, length))
+    } else {
+      val untrimmedFirst = chain(start)
+      val first: Buf = if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
+      else untrimmedFirst.slice(startBegin, startEnd)
+
+      val untrimmedLast = chain(finish)
+      val last: Buf = if (finishBegin == 0 && finishEnd >= untrimmedLast.length) null
+      else untrimmedLast.slice(finishBegin, finishEnd)
+
+      ConcatBuf(if (first == null && last == null) chain.slice(start, finish + 1)
+      else if (first == null) chain.slice(start, finish) :+ last
+      else if (last == null) first +: chain.slice(start + 1, finish + 1)
+      else first +: chain.slice(start + 1, finish) :+ last)
+    }
   }
 }
 
