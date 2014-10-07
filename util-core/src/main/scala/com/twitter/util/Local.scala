@@ -65,6 +65,21 @@ final object Local {
     clear()
     try f finally restore(saved)
   }
+  
+  /**
+   * Convert a closure `() => R` into another closure of the same
+   * type whose Local context is saved when calling `closed`
+   * and restored upon invocation.
+   */
+  def closed[R](fn: () => R): () => R = {
+    val closure = Local.save()
+    () => {
+      val save = Local.save()
+      Local.restore(closure)
+      try fn()
+      finally Local.restore(save)
+    }
+  }
 }
 
 /**

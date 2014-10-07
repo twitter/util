@@ -127,4 +127,19 @@ class LocalTest extends FunSuite {
     Local.restore(save0)
     assert(l() === Some(1))
   }
+  
+  test("Local.closed") {
+    val l = new Local[Int]
+    l() = 1
+    val adder: () => Int = { () =>
+      val rv = 100+l().get
+      l() = 10000
+      rv
+    }
+    val fn = Local.closed(adder)
+    l() = 100
+    assert(fn() === 101)
+    assert(l() === Some(100))
+    assert(fn() === 101)
+  }
 }
