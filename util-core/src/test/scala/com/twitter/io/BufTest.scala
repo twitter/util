@@ -1,19 +1,20 @@
 package com.twitter.io
 
+import java.nio.CharBuffer
 import java.util.Arrays
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.scalacheck.Prop._
+import org.scalacheck.{Arbitrary, Gen, Prop}
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.prop.Checkers
+import org.scalatest.prop.{GeneratorDrivenPropertyChecks, Checkers}
 
 @RunWith(classOf[JUnitRunner])
-class BufTest extends FunSuite with MockitoSugar with Checkers {
+class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChecks with Checkers {
   val AllCharsets = Seq(
     Charsets.Iso8859_1,
     Charsets.UsAscii,
@@ -212,7 +213,7 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
     ae(Buf.Utf8(string), Buf.ByteArray(shifted, 3, 3+bytes.length))
   }
 
-  check(forAll { (in: Int) =>
+  check(Prop.forAll { (in: Int) =>
     val buf = Buf.U32BE(in)
     val Buf.U32BE(out, _) = buf
 
@@ -224,7 +225,7 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
     out == in && outByteBuf.getInt == in
   })
 
-  check(forAll { (in: Int) =>
+  check(Prop.forAll { (in: Int) =>
     val buf = Buf.U32LE(in)
     val Buf.U32LE(out, _) = buf
 
@@ -236,7 +237,7 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
     out == in && outByteBuf.getInt == in
   })
 
-  check(forAll { (in: Long) =>
+  check(Prop.forAll { (in: Long) =>
     val buf = Buf.U64BE(in)
     val Buf.U64BE(out, _) = buf
 
@@ -248,7 +249,7 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
     out == in && outByteBuf.getLong == in
   })
 
-  check(forAll { (in: Long) =>
+  check(Prop.forAll { (in: Long) =>
     val buf = Buf.U64LE(in)
     val Buf.U64LE(out, _) = buf
 
@@ -330,5 +331,44 @@ class BufTest extends FunSuite with MockitoSugar with Checkers {
     sliced.write(output2, 0)
     assert(sliced.length === size2)
     assert(expected2.toSeq === output2.toSeq)
+  }
+
+  implicit lazy val arbBuf: Arbitrary[Buf] = {
+    import java.nio.charset.StandardCharsets.UTF_8
+    val ctors: Seq[String => Buf] = Seq(
+      Buf.Iso8859_1.apply,
+      Buf.UsAscii.apply,
+      Buf.Utf8.apply,
+      Buf.Utf16.apply,
+      Buf.Utf16BE.apply,
+      Buf.Utf16LE.apply,
+      s => Buf.ByteArray(s.getBytes("UTF-8")),
+      s => Buf.ByteBuffer(UTF_8.encode(CharBuffer.wrap(s))))
+
+    Arbitrary(for {
+      s <- Arbitrary.arbitrary[String]
+      c <- Gen.oneOf(ctors)
+    } yield c.apply(s))
+  }
+
+  test("Buf.slice") {
+    val bufSplits = for {
+      b <- Arbitrary.arbitrary[Buf]
+      i <- Gen.choose(0, b.length)
+      j <- Gen.choose(i, b.length)
+      k <- Gen.choose(j, b.length)
+    } yield (b, i, j, k)
+
+    forAll(bufSplits) { case (buf, i, j, k) =>
+      // This `whenever` would be unnecessary if not for Shrinking, see:
+      // https://github.com/rickynils/scalacheck/issues/18.
+      whenever (i <= j && j <= k) {
+        val b1 = buf.slice(i, k)
+        val b2 = b1.slice(0, j - i)
+
+        assert(b1.length === k - i)
+        assert(b2.length === j - i)
+      }
+    }
   }
 }

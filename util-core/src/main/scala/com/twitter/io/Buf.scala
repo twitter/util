@@ -247,8 +247,9 @@ object Buf {
       else if (i == 0 && j >= length) this
       else {
         val dup = bb.duplicate()
+        val limit = dup.position + math.min(j, length)
+        if (dup.limit > limit) dup.limit(limit)
         dup.position(dup.position + i)
-        if (dup.limit > j) dup.limit(j)
         ByteBuffer(dup)
       }
     }
