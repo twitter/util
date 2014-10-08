@@ -5,6 +5,7 @@ scala_library(name='scala',
     repo = 'pants-support/ivy:internal',
   ),
   dependencies=[
+    'util/util-app/src/main/java',
     'util/util-core/src/main/scala',
   ],
   sources=rglobs('*.scala'),
