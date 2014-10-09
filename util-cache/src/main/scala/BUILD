@@ -6,5 +6,5 @@ scala_library(name='scala',
   ],
   provides=artifact(org='com.twitter',
                     name='util-cache',
-                    repo='pants-support/ivy:internal',),
+                    repo = artifactory,),
 )

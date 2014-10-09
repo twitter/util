@@ -2,7 +2,7 @@ scala_library(name='scala',
   provides = scala_artifact(
     org = 'com.twitter',
     name = 'util-logging',
-    repo = 'pants-support/ivy:internal',
+    repo = artifactory,
   ),
   dependencies=[
     # TODO(John Sirois): This is a bogus dependency for nearly all use cases - isolate
