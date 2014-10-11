@@ -53,6 +53,19 @@ class RingBufferTest extends WordSpec {
       assert(buf.toList === List("c", "d", "e", "f"))
     }
 
+    "drop and decrease size" in {
+      val buf = new RingBuffer[String](6)
+      buf ++= List("a", "b", "c", "d", "e", "f")
+      assert(buf.size === 6)
+      buf.drop(3)
+      assert(buf.size === 3)
+      assert(buf.next === "d")
+      assert(buf.next === "e")
+      assert(buf.next === "f")
+      buf.drop(3)
+      assert(buf.size === 0)
+    }
+
     "removeWhere" in {
       val buf = new RingBuffer[Int](6)
       buf ++= (0 until 10)

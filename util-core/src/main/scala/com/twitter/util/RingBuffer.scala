@@ -1,5 +1,6 @@
 package com.twitter.util
 
+@deprecated("Use com.google.common.collect.EvictingQueue instead")
 class RingBuffer[A: ClassManifest](val maxSize: Int) extends Seq[A] {
   private val array = new Array[A](maxSize)
   private var read = 0
@@ -77,7 +78,10 @@ class RingBuffer[A: ClassManifest](val maxSize: Int) extends Seq[A] {
 
   override def drop(n: Int): RingBuffer[A] = {
     if (n >= maxSize) clear()
-    else read = (read + n) % maxSize
+    else {
+      read = (read + n) % maxSize
+      count_ = math.max(0, count_ - n)
+    }
     this
   }
 
