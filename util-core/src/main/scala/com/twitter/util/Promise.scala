@@ -21,9 +21,10 @@ object Promise {
   }
 
   /**
-   * Detach an object from another.
+   * A template trait for [[com.twitter.util.Promise Promises]] that are derived
+   * and capable of being detached from other Promises.
    */
-  trait Detachable {
+  trait Detachable { _: Promise[_] =>
     /**
      * Returns true if successfully detached, will return true at most once.
      *
@@ -33,8 +34,12 @@ object Promise {
     def detach(): Boolean
   }
 
+  /**
+   * A detachable [[com.twitter.util.Promise]].
+   */
   private class DetachablePromise[A](underlying: Promise[_ <: A])
-      extends Promise[A] with Promise.K[A] with Detachable {
+    extends Promise[A] with Promise.K[A] with Detachable
+  {
     underlying.continue(this)
 
     def detach(): Boolean = underlying.detach(this)
@@ -200,6 +205,10 @@ object Promise {
 
   // PUBLIC API
 
+  /**
+   * Indicates that an attempt to satisfy a [[com.twitter.util.Promise]] was made
+   * after that promise had already been satisfied.
+   */
   case class ImmutableResult(message: String) extends Exception(message)
 
   /** Create a new, empty, promise of type {{A}}. */
@@ -231,12 +240,14 @@ object Promise {
    * it can just be used as a normal Promise.
    *
    * The contract for Detachable is to only do non-idempotent side-effects after
-   * detaching.  Here, the pertinent side-effect is satisfying the Promise.
+   * detaching.  Here, the pertinent side-effect is the satisfaction of the Promise.
    *
+   * {{{
    * val f: Future[Unit]
    * val p: Promise[Unit] with Detachable = Promise.attached(f)
    * ...
    * if (p.detach()) p.setValue(())
+   * }}}
    */
   def attached[A](parent: Future[A]): Promise[A] with Detachable = parent match {
     case p: Promise[_] =>
@@ -602,9 +613,13 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
   }
 
   /**
-   * Populate the Promise with the given Try. The try can either be a
-   * value or an exception. setValue and setException are generally
+   * Populate the Promise with the given Try. The Try can either be a
+   * value or an exception. `setValue` and `setException` are generally
    * more readable methods to use.
+   *
+   * @note Invoking `updateIfEmpty` without checking the boolean result is almost
+   * never the right approach. Doing so is generally unsafe unless race
+   * conditions are acceptable.
    *
    * @return true only if the result is updated, false if it was already set.
    */
