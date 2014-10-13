@@ -1,11 +1,43 @@
-6.22.0
+.. Author notes: this file is formatted with restructured text
+   (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
+   The changelog style is adapted from Apache Lucene.
 
-  Changes in Runtime Behavior:
+6.22.0  2014-10-13
+
+System Requirements:
+  * util-core: prefer Await.result(future.liftToTry) to deprecated methods
+  * c.t.util.Time: Scope Locals with `Local.let` instead of `save`+`restore`
+
+Changes in Runtime Behavior:
   * util-logging:
-      Logging's default handler is now async by default via `com.twitter.logging.QueueingHandler`.
-      Two Flags allowing for customization:
-        `com.twitter.logging.log.async`: Default true, turns this functionality on/off.
-        `com.twitter.logging.log.async.maxsize`: Default 4096, max size of the async buffer.
+    - Logging's default handler is now async by default via `com.twitter.logging.QueueingHandler`.
+    - Two Flags allowing for customization:
+      + `com.twitter.logging.log.async`: Default true, turns this functionality on/off.
+      + `com.twitter.logging.log.async.maxsize`: Default 4096, max size of the async buffer.
+  * util.RingBuffer: fix buffer size on drops
+  * util-io: Fix Buf.ByteBuffer.slice
+  * util-core: Future.sleep: short-circuit when duration <= 0
+
+New Features:
+  * util-core: introduce Memoize.snappable
+  * util-app: add Flaggable.ofSet
+  * util-app: introduce Flag.let
+
+Optimizations:
+  * util-core: Perf improvement to ConcatBuf#slice
+  * util-core: Avoid accumulation of listeners in Future.select
+  * util-core: Event.filter only 1 call to filter predicate
+
+Bug Fixes:
+  * util-jvm: Fix logging in Jvm.foreachGc
+  * util-core: document StorageUnit can overflow
+  * util-core: check Future.proxyTo and Promise.become preconditions
+
+API Changes:
+  * util-core: remove Leaky and FutureBenchmark
+
+Documentation:
+  * util, ostrich, finagle, twitter-server: Remove all trailing spaces
 
 6.21.2  2014-09-08
   * util-cache: Adds a Guava-backed asynchronous cache
