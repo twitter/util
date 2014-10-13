@@ -39,6 +39,9 @@ API Changes:
 Documentation:
   * util, ostrich, finagle, twitter-server: Remove all trailing spaces
 
+  API Changes:
+  * util-core: Deprecate `RingBuffer` in favor of Guava's `com.google.common.collect.EvictingQueue`.
+
 6.21.2  2014-09-08
   * util-cache: Adds a Guava-backed asynchronous cache
   * util-core: Fixed FuturePool for NLRC
