@@ -58,7 +58,7 @@ trait Monitor { self =>
   def andThen(next: Monitor) = new Monitor {
     def handle(exc: Throwable) =
       self.tryHandle(exc) match {
-        case Return.Unit =>
+        case Return(_) =>
           next.tryHandle(exc)
           true
         case Throw(exc1) =>

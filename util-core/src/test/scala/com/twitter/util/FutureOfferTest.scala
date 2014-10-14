@@ -20,7 +20,9 @@ class FutureOfferTest extends WordSpec with MockitoSugar {
          case Some(Return(tx)) =>
            tx.ack().poll match {
              case Some(Return(Tx.Commit(Return(123)))) => true
+             case _ => false
            }
+         case _ => false
       })
     }
   }

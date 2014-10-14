@@ -51,6 +51,7 @@ object StateEvent {
       case KeeperState.SyncConnected => Connected
       case KeeperState.Disconnected => Disconnected
       case KeeperState.Expired => Expired
+      case KeeperState.NoSyncConnected => throw new IllegalArgumentException("Can't convert deprecated state to StateEvent")
     }
   }
 }
