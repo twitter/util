@@ -17,6 +17,7 @@ Changes in Runtime Behavior:
   * util.RingBuffer: fix buffer size on drops
   * util-io: Fix Buf.ByteBuffer.slice
   * util-core: Future.sleep: short-circuit when duration <= 0
+  * util-core: IVar and IVarField were removed. Use com.twitter.util.Promise instead because it provides a superset of IVar behavior.
 
 New Features:
   * util-core: introduce Memoize.snappable
