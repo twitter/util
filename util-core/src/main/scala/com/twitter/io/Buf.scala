@@ -28,10 +28,10 @@ trait Buf { outer =>
 
   /**
    * Returns a new buffer representing a slice of this buffer, delimited
-   * by the indices `i` inclusive and `j` exclusive: `[i, j)`. Out of bounds
-   * indices are truncated. Negative indices are not accepted.
+   * by the indices `from` inclusive and `until` exclusive: `[from, until)`.
+   * Out of bounds indices are truncated. Negative indices are not accepted.
    */
-  def slice(i: Int, j: Int): Buf
+  def slice(from: Int, until: Int): Buf
 
   /**
    * Concatenate this buffer with the given buffer.
@@ -81,13 +81,12 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
    * @note we are foregoing clarity for performance
    *       slice only entails 3 necessary allocations
    */
-  def slice(i: Int, j: Int): Buf = {
-    if (i == j) return Buf.Empty
-    require(0 <= i && i < j)
-    val first = chain.head
+  def slice(from: Int, until: Int): Buf = {
+    if (from == until) return Buf.Empty
+    require(0 <= from && from < until)
 
-    var begin = i
-    var end = j
+    var begin = from
+    var end = until
     var start, startBegin, startEnd, finish, finishBegin, finishEnd = -1
     var cur = 0
     while (cur < chain.length && finish == -1) {
@@ -138,8 +137,8 @@ object Buf {
     def write(buf: Array[Byte], off: Int) = ()
     override val isEmpty = true
     def length = 0
-    def slice(i: Int, j: Int): Buf = {
-      require(i >=0 && j >= 0, "Index out of bounds")
+    def slice(from: Int, until: Int): Buf = {
+      require(from >= 0 && until >= 0, "Index out of bounds")
       this
     }
     override def concat(right: Buf) = right
@@ -158,14 +157,14 @@ object Buf {
     def write(buf: Array[Byte], off: Int): Unit =
       System.arraycopy(bytes, begin, buf, off, length)
 
-    def slice(i: Int, j: Int): Buf = {
-      require(i >=0 && j >= 0, "Index out of bounds")
+    def slice(from: Int, until: Int): Buf = {
+      require(from >=0 && until >= 0, "Index out of bounds")
 
-      if (j <= i || i >= length) Buf.Empty
-      else if (i == 0 && j >= length) this
+      if (until <= from || from >= length) Buf.Empty
+      else if (from == 0 && until >= length) this
       else {
-        val cap = math.min(j, length)
-        ByteArray(bytes, begin+i, math.min(begin+cap, end))
+        val cap = math.min(until, length)
+        ByteArray(bytes, begin+from, math.min(begin+cap, end))
       }
     }
 
@@ -241,15 +240,15 @@ object Buf {
       bb.duplicate.get(output, off, length)
     }
 
-    def slice(i: Int, j: Int): Buf = {
-      require(i >=0 && j >= 0, "Index out of bounds")
-      if (j <= i || i >= length) Buf.Empty
-      else if (i == 0 && j >= length) this
+    def slice(from: Int, until: Int): Buf = {
+      require(from >=0 && until >= 0, "Index out of bounds")
+      if (until <= from || from >= length) Buf.Empty
+      else if (from == 0 && until >= length) this
       else {
         val dup = bb.duplicate()
-        val limit = dup.position + math.min(j, length)
+        val limit = dup.position + math.min(until, length)
         if (dup.limit > limit) dup.limit(limit)
-        dup.position(dup.position + i)
+        dup.position(dup.position + from)
         ByteBuffer(dup)
       }
     }
