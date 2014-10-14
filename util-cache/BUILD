@@ -8,6 +8,7 @@ jar_library(name='util-cache',
 
 jar_library(name='tests',
   dependencies=[
+    'util/util-cache/src/test/java',
     'util/util-cache/src/test/scala'
   ]
 )

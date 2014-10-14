@@ -1,0 +1,9 @@
+junit_tests(name='java',
+  dependencies=[
+    '3rdparty:junit',
+    '3rdparty:mockito-all',
+    '3rdparty:scala-library',
+    'util/util-cache',
+  ],
+  sources=rglobs('*.java')
+)
