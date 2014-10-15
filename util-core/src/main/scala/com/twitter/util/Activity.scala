@@ -162,6 +162,27 @@ object Activity {
   def value[T](v: T): Activity[T] = Activity(Var.value(Ok(v)))
 
   /**
+   * Create an activity backed by a [[com.twitter.util.Future]].
+   *
+   * The resultant `Activity` is pending until the original `Future` is
+   * satisfied. `Future` success or failure corresponds to the expected
+   * `Activity.Ok` or `Activity.Failed` result.
+   *
+   * Closure of observations of the `run` `Var` of the resultant `Activity` is
+   * ''not'' propagated to the original `Future`. That is to say, invoking
+   * `close()` on observations of `Activity.run` will not result in the
+   * cancellation of the original `Future`.
+   */
+  def future[T](f: Future[T]): Activity[T] = {
+    val run = Var(Pending: State[T])
+    f respond {
+      case Return(v) => run() = Ok(v)
+      case Throw(e) => run() = Failed(e)
+    }
+    Activity(run)
+  }
+
+  /**
    * Create a new static activity with exception `exc`.
    */
   def exception(exc: Throwable): Activity[Nothing] = Activity(Var.value(Failed(exc)))

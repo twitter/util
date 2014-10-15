@@ -282,7 +282,7 @@ object Var {
    * Create a new Var whose values are provided asynchronously by
    * `update`. The returned Var is dormant until it is observed:
    * `update` is called by-need. Such observations are also reference
-   * counted so that simultaneous observervations do not result in
+   * counted so that simultaneous observations do not result in
    * multiple invocations of `update`. When the last observer stops
    * observing, the [[com.twitter.util.Closable]] returned
    * from `update` is closed. Subsequent observations result in a new

@@ -26,7 +26,6 @@ class ActivityTest extends FunSuite {
     assert(ref.get === Seq(Activity.Pending, Activity.Ok(1), Activity.Ok(-2)))
   }
 
-
   test("Activity#collect") {
     val v = Var(Activity.Pending: Activity.State[Int])
     val ref = new AtomicReference(Seq.empty: Seq[Try[String]])
@@ -69,6 +68,36 @@ class ActivityTest extends FunSuite {
     wits(0).notify(Return(100))
     assert(ref.get === Seq(
       Return(Seq.range(0, 10)), Throw(exc), Return(100 +: Seq.range(1, 10))))
+  }
+
+  test("Activity.future: produce an initially-pending Activity") {
+    assert(Activity.future(Future.never).run.sample === Activity.Pending)
+  }
+
+  test("Activity.future: produce an Activity that completes on success of the original Future") {
+    val p = new Promise[Int]
+    val act = Activity.future(p)
+    assert(act.run.sample === Activity.Pending)
+    p.setValue(4)
+    assert(act.run.sample === Activity.Ok(4))
+  }
+
+  test("Activity.future: produce an Activity that fails on failure of the original Future") {
+    val p = new Promise[Unit]
+    val e = new Exception("gooby pls")
+    val act = Activity.future(p)
+    assert(act.run.sample === Activity.Pending)
+    p.setException(e)
+    assert(act.run.sample === Activity.Failed(e))
+  }
+
+  test("Activity.future: produce an Activity that doesn't propagate " +
+    "cancellation back to the parent future")
+  {
+    val p = new Promise[Unit]
+    val obs = Activity.future(p).run.changes.register(Witness(_ => ()))
+    Await.ready(obs.close())
+    assert(!p.isDefined)
   }
 
   test("Exceptions are encoded") {
