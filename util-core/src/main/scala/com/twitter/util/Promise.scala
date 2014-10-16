@@ -235,12 +235,19 @@ object Promise {
   }
 
   /**
-   * Create a derivative promise that will be satisfied with the result of the parent.
-   * However, if the derivative promise is detached before the parent is satisfied,
-   * it can just be used as a normal Promise.
+   * Create a derivative promise that will be satisfied with the result of the
+   * parent.
    *
-   * The contract for Detachable is to only do non-idempotent side-effects after
-   * detaching.  Here, the pertinent side-effect is the satisfaction of the Promise.
+   * If the derivative promise is detached before the parent is satisfied, then
+   * it becomes disconnected from the parent and can be used as a normal,
+   * unlinked Promise.
+   *
+   * By the contract of `Detachable`, satisfaction of the Promise must occur
+   * ''after'' detachment. Promises should only ever be satisfied after they are
+   * successfully detached (thus satisfaction is the responsibility of the
+   * detacher).
+   *
+   * Ex:
    *
    * {{{
    * val f: Future[Unit]
