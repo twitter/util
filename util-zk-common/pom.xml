@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.twitter.common.zookeeper</groupId>
       <artifactId>client</artifactId>
-      <version>0.0.69</version>
+      <version>0.0.70</version>
       <!-- excluded to prevent conflicts with caged finagle/util -->
       <exclusions>
         <exclusion>
