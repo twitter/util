@@ -2,6 +2,8 @@ package com.twitter.app
 
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicReference
+import java.util.logging.Logger
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -121,6 +123,8 @@ trait App extends Closable with CloseAwaitably {
   }
 
   final def main(args: Array[String]) {
+    App.register(this)
+
     for (f <- inits) f()
 
     flag.parseArgs(args, allowUndefinedFlags) match {
@@ -156,4 +160,22 @@ trait App extends Closable with CloseAwaitably {
     // The deadline to 'close' is advisory; we enforce it here.
     Await.result(this, closeDeadline - Time.now)
   }
+}
+
+object App {
+  private[this] val log = Logger.getLogger(getClass.getName)
+  private[this] val ref = new AtomicReference[Option[App]](None)
+
+  /**
+   * The currently registered App, if any. While the expectation is that there
+   * will be a single running App per process, the most-recently registered
+   * App will be returned in the event that more than one exists.
+   */
+  def registered: Option[App] = ref.get
+
+  private[App] def register(app: App): Unit =
+    ref.getAndSet(Some(app)).foreach { existing =>
+      log.warning(
+        s"Multiple com.twitter.app.App main methods called. ${existing.name}, then ${app.name}")
+    }
 }

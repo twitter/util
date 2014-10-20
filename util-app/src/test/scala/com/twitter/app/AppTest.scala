@@ -14,7 +14,21 @@ class AppTest extends FunSuite {
     val throwApp = new TestApp(() => throw new RuntimeException)
 
     intercept[RuntimeException] {
-      throwApp.main(Array.empty[String])
+      throwApp.main(Array.empty)
     }
+  }
+
+  test("App: register on main call, last App wins") {
+    val test1 = new TestApp(() => ())
+    val test2 = new TestApp(() => ())
+
+    assert(App.registered != Some(test1))
+    assert(App.registered != Some(test2))
+
+    test1.main(Array.empty)
+    assert(App.registered === Some(test1))
+
+    test2.main(Array.empty)
+    assert(App.registered === Some(test2))
   }
 }
