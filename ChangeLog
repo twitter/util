@@ -40,6 +40,9 @@ API Changes:
 Documentation:
   * util, ostrich, finagle, twitter-server: Remove all trailing spaces
 
+  Package factoring:
+  * Test classes from util-logging were factored into its own package, util-test.
+
   API Changes:
   * util-core: Deprecate `RingBuffer` in favor of Guava's `com.google.common.collect.EvictingQueue`.
 

@@ -29,6 +29,7 @@
     <module>util-jvm</module>
     <module>util-logging</module>
     <module>util-reflect</module>
+    <module>util-test</module>
     <module>util-thrift</module>
     <module>util-zk</module>
     <module>util-zk-common</module>

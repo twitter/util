@@ -99,7 +99,7 @@ object Util extends Build {
       Unidoc.settings
   ) aggregate(
     utilCore, utilCodec, utilCollection, utilCache, utilReflect,
-    utilLogging, utilThrift, utilHashing, utilJvm, utilZk,
+    utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilClassPreloader, utilBenchmark, utilApp
   )
 
@@ -202,9 +202,19 @@ object Util extends Build {
     settings = Project.defaultSettings ++
       sharedSettings
   ).settings(
-    name := "util-logging",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2"
+    name := "util-logging"
   ).dependsOn(utilCore, utilApp)
+
+  lazy val utilTest = Project(
+    id = "util-test",
+    base = file("util-test"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-test",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2"
+  ).dependsOn(utilCore, utilLogging)
+
 
   lazy val utilThrift = Project(
     id = "util-thrift",
@@ -240,7 +250,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-jvm"
-  ).dependsOn(utilApp, utilCore, utilLogging % "test")
+  ).dependsOn(utilApp, utilCore, utilTest % "test")
 
   lazy val utilZk = Project(
     id = "util-zk",

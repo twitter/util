@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.twitter</groupId>
-  <artifactId>util-jvm_2.10</artifactId>
+  <artifactId>util-test_2.10</artifactId>
   <packaging>jar</packaging>
   <version>6.22.1-SNAPSHOT</version>
   <parent>
@@ -20,30 +20,12 @@
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_2.10</artifactId>
       <version>2.2.2</version>
-      <scope>test</scope>
     </dependency>
     <!-- project dependencies -->
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-app_2.10</artifactId>
-      <version>6.22.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>util-core_2.10</artifactId>
-      <version>6.22.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
       <artifactId>util-logging_2.10</artifactId>
-      <scope>test</scope>
       <version>6.22.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>util-test_2.10</artifactId>
-      <version>6.22.1-SNAPSHOT</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

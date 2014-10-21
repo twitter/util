@@ -6,6 +6,7 @@ junit_tests(name='scala',
     'util/util-core/src/main/scala',
     'util/util-jvm/src/main/scala',
     'util/util-logging/src/main/scala',
+    'util/util-test/src/main/scala',
   ],
   sources=rglobs('*.scala')
 )

@@ -20,6 +20,7 @@
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_2.10</artifactId>
       <version>2.2.2</version>
+      <scope>test</scope>
     </dependency>
     <!-- project dependencies -->
     <dependency>

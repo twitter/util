@@ -16,21 +16,71 @@
 
 package com.twitter.logging
 
+import com.twitter.conversions.time._
+import com.twitter.util.TempFolder
 import java.net.InetSocketAddress
 import java.util.concurrent.{Callable, CountDownLatch, Executors, Future, TimeUnit}
 import java.util.{logging => javalog}
-
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.{BeforeAndAfter, WordSpec}
 import scala.collection.mutable
 
-import org.junit.runner.RunWith
-import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
-
-import com.twitter.conversions.time._
-import com.twitter.util.TempFolder
-
 @RunWith(classOf[JUnitRunner])
-class LoggerTest extends WordSpec with TempFolder with TestLogging {
+class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
+  val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
+
+  private val logger = Logger.get("")
+  private var oldLevel: javalog.Level = _
+
+  before {
+    oldLevel = logger.getLevel()
+    logger.setLevel(logLevel)
+    logger.addHandler(new ConsoleHandler(new Formatter(), None))
+  }
+
+  after {
+    logger.clearHandlers()
+    logger.setLevel(oldLevel)
+  }
+  
+
+  private var traceHandler = new StringHandler(BareFormatter, None)
+
+  /**
+   * Set up logging to record messages at the given level, and not send them to the console.
+   *
+   * This is meant to be used in a `before` block.
+   */
+  def traceLogger(level: Level) {
+    traceLogger("", level)
+  }
+
+  /**
+   * Set up logging to record messages sent to the given logger at the given level, and not send
+   * them to the console.
+   *
+   * This is meant to be used in a `before` block.
+   */
+  def traceLogger(name: String, level: Level) {
+    traceHandler.clear()
+    val logger = Logger.get(name)
+    logger.setLevel(level)
+    logger.clearHandlers()
+    logger.addHandler(traceHandler)
+  }
+
+  def logLines(): Seq[String] = traceHandler.get.split("\n")
+
+  /**
+   * Verify that the logger set up with `traceLogger` has received a log line with the given
+   * substring somewhere inside it.
+   */
+  def mustLog(substring: String) = {
+    assert(logLines().filter { _ contains substring }.size > 0)
+  }
+
+
   class LoggerSpecHelper {
     var myHandler: Handler = null
     var log: Logger = null
