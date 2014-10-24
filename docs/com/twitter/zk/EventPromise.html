@@ -1224,14 +1224,17 @@ more readable methods to use.
         <span class="name">updateIfEmpty</span><span class="params">(<span name="result">result: <a href="../util/Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="org.apache.zookeeper.WatchedEvent">WatchedEvent</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Populate the Promise with the given Try.</p><div class="fullcomment"><div class="comment cmt"><p>Populate the Promise with the given Try. The try can either be a
-value or an exception. setValue and setException are generally
+      <p class="shortcomment cmt">Populate the Promise with the given Try.</p><div class="fullcomment"><div class="comment cmt"><p>Populate the Promise with the given Try. The Try can either be a
+value or an exception. <code>setValue</code> and <code>setException</code> are generally
 more readable methods to use.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>true only if the result is updated, false if it was already set.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@tailrec</span><span class="args">()</span>
               
-        </dd></dl></div>
+        </dd><dt>Note</dt><dd><span class="cmt"><p>Invoking <code>updateIfEmpty</code> without checking the boolean result is almost
+never the right approach. Doing so is generally unsafe unless race
+conditions are acceptable.
+</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#voided" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="voided:com.twitter.util.Future[Void]"></a>
       <a id="voided:Future[Void]"></a>

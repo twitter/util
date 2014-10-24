@@ -93,7 +93,8 @@
         <a href="Promise$$Detachable.html"><span class="name">Detachable</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Detach an object from another.</p>
+      <p class="comment cmt">A template trait for <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promises</a> that are derived
+and capable of being detached from other Promises.</p>
     </li><li name="com.twitter.util.Promise.ImmutableResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ImmutableResultextendsExceptionwithProductwithSerializable"></a>
       <a id="ImmutableResult:ImmutableResult"></a>
@@ -106,7 +107,8 @@
         <a href="Promise$$ImmutableResult.html"><span class="name">ImmutableResult</span></a><span class="params">(<span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Exception">Exception</span> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Indicates that an attempt to satisfy a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">com.twitter.util.Promise</a> was made
+after that promise had already been satisfied.</p>
     </li><li name="com.twitter.util.Promise.Responder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Responder[A]extendsFuture[A]"></a>
       <a id="Responder[A]:Responder[A]"></a>
@@ -230,14 +232,17 @@
         <span class="name">attached</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="parent">parent: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Promise.attached.A">A</span>]</span>)</span><span class="result">: <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="com.twitter.util.Promise.attached.A">A</span>] with <a href="Promise$$Detachable.html" class="extype" name="com.twitter.util.Promise.Detachable">Detachable</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Create a derivative promise that will be satisfied with the result of the parent.</p><div class="fullcomment"><div class="comment cmt"><p>Create a derivative promise that will be satisfied with the result of the parent.
-However, if the derivative promise is detached before the parent is satisfied,
-it can just be used as a normal Promise.</p><p>The contract for Detachable is to only do non-idempotent side-effects after
-detaching.  Here, the pertinent side-effect is satisfying the Promise.</p><p>val f: Future[Unit]
-val p: Promise[Unit] with Detachable = Promise.attached(f)
+      <p class="shortcomment cmt">Create a derivative promise that will be satisfied with the result of the
+parent.</p><div class="fullcomment"><div class="comment cmt"><p>Create a derivative promise that will be satisfied with the result of the
+parent.</p><p>If the derivative promise is detached before the parent is satisfied, then
+it becomes disconnected from the parent and can be used as a normal,
+unlinked Promise.</p><p>By the contract of <code>Detachable</code>, satisfaction of the Promise must occur
+<i>after</i> detachment. Promises should only ever be satisfied after they are
+successfully detached (thus satisfaction is the responsibility of the
+detacher).</p><p>Ex:</p><pre><span class="kw">val</span> f: Future[<span class="std">Unit</span>]
+<span class="kw">val</span> p: Promise[<span class="std">Unit</span>] <span class="kw">with</span> Detachable = Promise.attached(f)
 ...
-if (p.detach()) p.setValue(())
-</p></div></div>
+<span class="kw">if</span> (p.detach()) p.setValue(())</pre></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>

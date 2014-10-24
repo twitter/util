@@ -336,6 +336,25 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Activity#future" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="future[T](f:com.twitter.util.Future[T]):com.twitter.util.Activity[T]"></a>
+      <a id="future[T](Future[T]):Activity[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">future</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Activity.future.T">T</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.future.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create an activity backed by a <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Create an activity backed by a <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>.</p><p>The resultant <code>Activity</code> is pending until the original <code>Future</code> is
+satisfied. <code>Future</code> success or failure corresponds to the expected
+<code>Activity.Ok</code> or <code>Activity.Failed</code> result.</p><p>Closure of observations of the <code>run</code> <code>Var</code> of the resultant <code>Activity</code> is
+<i>not</i> propagated to the original <code>Future</code>. That is to say, invoking
+<code>close()</code> on observations of <code>Activity.run</code> will not result in the
+cancellation of the original <code>Future</code>.
+</p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

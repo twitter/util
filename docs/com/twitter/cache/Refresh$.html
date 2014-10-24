@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>IVarField - com.twitter.concurrent.IVarField</title>
-          <meta name="description" content="IVarField - com.twitter.concurrent.IVarField" />
-          <meta name="keywords" content="IVarField com.twitter.concurrent.IVarField" />
+          <title>Refresh - com.twitter.cache.Refresh</title>
+          <meta name="description" content="Refresh - com.twitter.cache.Refresh" />
+          <meta name="keywords" content="Refresh com.twitter.cache.Refresh" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.concurrent.IVarField';
+            var hash = 'com.twitter.cache.Refresh$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,29 +22,36 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../../../lib/class_big.png" />
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.concurrent">concurrent</a></p>
-        <h1>IVarField</h1>
+        <img src="../../../lib/object_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.cache">cache</a></p>
+        <h1>Refresh</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">IVarField</span><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">Refresh</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A single-value asynchronous cache with TTL.  The provider supplies the future value when invoked
+and this class ensures that the provider is not invoked more frequently than the TTL.  If the
+future fails, that failure is not cached. If more than one value is required, a FutureCache
+backed by a guava cache with TTL may be more appropriate.</p><p>This is useful in situations where a call to an external service returns a value that changes
+infrequently and we need to access that value often, for example asking a service for a list of
+features that it supports.</p><p>A non-memoized function like this:
+  def getData(): Future[T] = { ... }</p><p>can be memoized with a TTL of 1 hour as follows:
+  import com.twitter.util.TimeConversions._
+  import com.twitter.cache.Refresh
+  val getData: () =&gt; Future[T] = Refresh.every(1.hour) { ... }
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
-        </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="IVar.html" class="extype" name="com.twitter.concurrent.IVar">IVar</a></div>
         </div></div>
         
 
@@ -62,7 +69,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.concurrent.IVarField"><span>IVarField</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.cache.Refresh"><span>Refresh</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -80,23 +87,7 @@
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.concurrent.IVarField#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():com.twitter.concurrent.IVarField[A]"></a>
-      <a id="&lt;init&gt;:IVarField[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">IVarField</span><span class="params">()</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
+        
 
         
 
@@ -227,6 +218,23 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.cache.Refresh#every" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="every[T](ttl:com.twitter.util.Duration)(provider:=&gt;com.twitter.util.Future[T]):()=&gt;com.twitter.util.Future[T]"></a>
+      <a id="every[T](Duration)(⇒Future[T]):()⇒Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">every</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="ttl">ttl: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="provider">provider: ⇒ <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.cache.Refresh.every.T">T</span>]</span>)</span><span class="result">: () ⇒ <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.cache.Refresh.every.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create a memoized future with TTL.</p><div class="fullcomment"><div class="comment cmt"><p>Create a memoized future with TTL.</p><p>From Scala:
+  Refresh.every(1.hour) { ... }</p><p>From Java:
+  Refresh.every(Duration.fromSeconds(3600), new Function0&lt;Future&lt;T&gt;&gt;() {</p></div><dl class="paramcmts block"><dt class="param">ttl</dt><dd class="cmt"><p>The amount of time between refreshes</p></dd><dt class="param">provider</dt><dd class="cmt"><p>A provider function that returns a future to refresh</p></dd><dt>returns</dt><dd class="cmt"><p>A memoized version of <code>operation</code> that will refresh on invocation
+        if more than <code>ttl</code> time has passed since <code>operation</code> was last called.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>

@@ -103,7 +103,7 @@ bytestreams.</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a hre
       <p class="shortcomment cmt">The number of bytes in the buffer
 </p>
     </li><li name="com.twitter.io.Buf#slice" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="slice(i:Int,j:Int):com.twitter.io.Buf"></a>
+      <a id="slice(from:Int,until:Int):com.twitter.io.Buf"></a>
       <a id="slice(Int,Int):Buf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,13 +111,13 @@ bytestreams.</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a hre
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">slice</span><span class="params">(<span name="i">i: <span class="extype" name="scala.Int">Int</span></span>, <span name="j">j: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+        <span class="name">slice</span><span class="params">(<span name="from">from: <span class="extype" name="scala.Int">Int</span></span>, <span name="until">until: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a new buffer representing a slice of this buffer, delimited
-by the indices <code>i</code> inclusive and <code>j</code> exclusive: <code>[i, j)</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new buffer representing a slice of this buffer, delimited
-by the indices <code>i</code> inclusive and <code>j</code> exclusive: <code>[i, j)</code>. Out of bounds
-indices are truncated. Negative indices are not accepted.
+by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[from, until)</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new buffer representing a slice of this buffer, delimited
+by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[from, until)</code>.
+Out of bounds indices are truncated. Negative indices are not accepted.
 </p></div></div>
     </li><li name="com.twitter.io.Buf#write" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="write(output:Array[Byte],off:Int):Unit"></a>

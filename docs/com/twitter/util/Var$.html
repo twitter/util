@@ -225,7 +225,7 @@ on these.
 <code>update</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new Var whose values are provided asynchronously by
 <code>update</code>. The returned Var is dormant until it is observed:
 <code>update</code> is called by-need. Such observations are also reference
-counted so that simultaneous observervations do not result in
+counted so that simultaneous observations do not result in
 multiple invocations of <code>update</code>. When the last observer stops
 observing, the <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com.twitter.util.Closable</a> returned
 from <code>update</code> is closed. Subsequent observations result in a new
