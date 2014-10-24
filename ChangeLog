@@ -2,6 +2,28 @@
    (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
    The changelog style is adapted from Apache Lucene.
 
+6.22.1  2014-10-23
+
+Bug Fixes:
+  * util and finagle: fix compiler warnings
+
+Deprecation:
+  * util-core: Add deprecation of RingBuffer to changelog
+  * util-core: Removed IVar and IVarField 
+
+Documentation:
+  * util-core: Clarify Scaladoc of `Promise.attached`
+  * util-core: Add self-type to `Promise.Detachable` and augment Promise Scaladocs
+  * util-io: Better names for Buf.slice() paramters.
+
+New Features:
+  * util-app: Add App registration
+  * util-cache Add asynchronous cache with TTL 
+  * util-core: Add `Activity.future`
+
+Package factoring:
+  * util-logging: factor out testing code into new package util-test
+
 6.22.0  2014-10-13
 
 System Requirements:
