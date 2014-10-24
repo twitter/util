@@ -4,7 +4,7 @@ scala_library(name='scala',
     '3rdparty:guava',
     'util/util-core'
   ],
-  provides=artifact(org='com.twitter',
-                    name='util-cache',
-                    repo = artifactory,),
+  provides=scala_artifact(org='com.twitter',
+                          name='util-cache',
+                          repo = artifactory,),
 )
