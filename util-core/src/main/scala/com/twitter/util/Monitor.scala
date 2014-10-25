@@ -43,7 +43,7 @@ trait Monitor { self =>
    * attempts to let {{next}} handle it.
    */
   def orElse(next: Monitor) = new Monitor {
-    def handle(exc: Throwable) = {
+    def handle(exc: Throwable): Boolean = {
       self.tryHandle(exc) rescue { case exc1 =>
         next.tryHandle(exc1)
       } isReturn
@@ -56,7 +56,7 @@ trait Monitor { self =>
    * handles the exception if either {{this}} or {{next}} does.
    */
   def andThen(next: Monitor) = new Monitor {
-    def handle(exc: Throwable) =
+    def handle(exc: Throwable): Boolean =
       self.tryHandle(exc) match {
         case Return(_) =>
           next.tryHandle(exc)
@@ -135,13 +135,12 @@ object Monitor extends Monitor {
   def handle(exc: Throwable): Boolean =
     (get orElse RootMonitor).handle(exc)
 
+  private[this] val AlwaysFalse = scala.Function.const(false) _
   /**
    * Create a new monitor from a partial function.
    */
   def mk(f: PartialFunction[Throwable, Boolean]) = new Monitor {
-    def handle(exc: Throwable) =
-      if (f.isDefinedAt(exc)) f(exc)
-      else false
+    def handle(exc: Throwable): Boolean = f.applyOrElse(exc, AlwaysFalse)
   }
 
   /**

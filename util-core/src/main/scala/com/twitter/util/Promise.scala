@@ -147,6 +147,7 @@ object Promise {
   private val emptyState: State[Nothing] = Waiting(null, Nil)
   private val unsafe = Unsafe()
   private val stateOff = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
+  private val AlwaysUnit: Any => Unit = scala.Function.const(()) _
 
   sealed trait Responder[A] extends Future[A] {
     protected[util] def depth: Short
@@ -403,8 +404,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
           setInterruptHandler(f)
 
       case Interrupted(_, signal) =>
-        if (f.isDefinedAt(signal))
-          f(signal)
+        f.applyOrElse(signal, Promise.AlwaysUnit)
 
       case Done(_) => // ignore
     }
@@ -455,8 +455,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] {
     case Linked(p) => p.raise(intr)
     case s@Interruptible(waitq, handler) =>
       if (!cas(s, Interrupted(waitq, intr))) raise(intr) else {
-        if (handler.isDefinedAt(intr))
-          handler(intr)
+        handler.applyOrElse(intr, Promise.AlwaysUnit)
       }
 
     case s@Transforming(waitq, other) =>
