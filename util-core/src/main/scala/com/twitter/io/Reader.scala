@@ -140,14 +140,17 @@ object Reader {
     def discard() = fail(new ReaderDiscarded)
 
     def fail(cause: Throwable): Unit = synchronized {
-      state match {
+      // We fix the state before inspecting it so we enter in a
+      // good state if setting promises recurses.
+      val oldState = state
+      state = Failing(cause)
+      oldState match {
         case Idle | Eof | Failing(_) =>
         case Reading(_, p) =>
           p.setException(cause)
         case Writing(_, p) =>
           p.setException(cause)
       }
-      state = Failing(cause)
     }
   }
 
