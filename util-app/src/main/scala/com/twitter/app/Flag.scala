@@ -196,15 +196,22 @@ object Flag {
 class Flag[T: Flaggable] private[app](
     val name: String,
     val help: String,
-    defaultOrUsage: Either[() => T, String])
+    defaultOrUsage: Either[() => T, String],
+    failFastUntilParsed: Boolean)
 {
   import Flag._
 
+  private[app] def this(name: String, help: String, default: => T, failFastUntilParsed: Boolean) =
+    this(name, help, Left(() => default), failFastUntilParsed)
+
+  private[app] def this(name: String, help: String, usage: String, failFastUntilParsed: Boolean) =
+    this(name, help, Right(usage), failFastUntilParsed)
+
   private[app] def this(name: String, help: String, default: => T) =
-    this(name, help, Left(() => default))
+    this(name, help, default, false)
 
   private[app] def this(name: String, help: String, usage: String) =
-    this(name, help, Right(usage))
+    this(name, help, usage, false)
 
   protected val flaggable = implicitly[Flaggable[T]]
 
@@ -270,8 +277,12 @@ class Flag[T: Flaggable] private[app](
    * when the flag has not otherwise been set.
    */
   def apply(): T = {
-    if (!parsingDone)
-      java.util.logging.Logger.getLogger("").severe("Flag %s read before parse.".format(name))
+    if (!parsingDone) {
+      if (failFastUntilParsed)
+        throw new IllegalStateException(s"Flag $name read before parse.")
+      else
+        java.util.logging.Logger.getLogger("").severe(s"Flag $name read before parse.")
+    }
     valueOrDefault match {
       case Some(v) => v
       case None => throw flagNotFound
@@ -384,9 +395,10 @@ object Flags {
  * be included during flag parsing. If false, only flags defined in the
  * application itself will be consulted.
  */
-class Flags(argv0: String, includeGlobal: Boolean) {
+class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean) {
   import Flags._
 
+  def this(argv0: String, includeGlobal: Boolean) = this(argv0, includeGlobal, false)
   def this(argv0: String) = this(argv0, false)
 
   private[this] val flags = new HashMap[String, Flag[_]]
@@ -564,7 +576,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
    * @param help The help string of the flag.
    */
   def apply[T: Flaggable](name: String, default: => T, help: String) = {
-    val f = new Flag[T](name, help, default)
+    val f = new Flag[T](name, help, default, failFastUntilParsed)
     add(f)
     f
   }
@@ -576,7 +588,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
    * @param help The help string of the flag.
    */
   def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = {
-    val f = new Flag[T](name, help, m.toString)
+    val f = new Flag[T](name, help, m.toString, failFastUntilParsed)
     add(f)
     f
   }
@@ -706,7 +718,7 @@ class Flags(argv0: String, includeGlobal: Boolean) {
 class GlobalFlag[T] private[app](
   defaultOrUsage: Either[() => T, String],
   help: String
-)(implicit _f: Flaggable[T]) extends Flag[T](null, help, defaultOrUsage) {
+)(implicit _f: Flaggable[T]) extends Flag[T](null, help, defaultOrUsage, false) {
 
   override protected[this] def parsingDone: Boolean = true
   private[this] lazy val propertyValue =

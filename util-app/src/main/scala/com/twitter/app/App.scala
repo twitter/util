@@ -39,13 +39,17 @@ trait App extends Closable with CloseAwaitably {
   /** The name of the application, based on the classname */
   val name = getClass.getName stripSuffix "$"
   /** The [[com.twitter.app.Flags]] instance associated with this application */
-  val flag = new Flags(name, includeGlobal = true)
+  //failfastOnFlagsNotParsed is called in the ctor of App.scala here which is a bad idea
+  //as things like this can happen http://stackoverflow.com/questions/18138397/calling-method-from-constructor
+  val flag = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
   private var _args = Array[String]()
   /** The remaining, unparsed arguments */
   def args = _args
 
   /** Whether or not to accept undefined flags */
   protected def allowUndefinedFlags = false
+
+  protected def failfastOnFlagsNotParsed = false
 
   private val inits     = mutable.Buffer[() => Unit]()
   private val premains  = mutable.Buffer[() => Unit]()
