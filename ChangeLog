@@ -2,6 +2,11 @@
    (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
    The changelog style is adapted from Apache Lucene.
 
+6.x
+
+API Changes:
+  * util-core: Removed `Sieve` example.
+
 6.22.1  2014-10-23
 
 Bug Fixes:
