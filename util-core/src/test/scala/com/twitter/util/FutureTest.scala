@@ -1678,15 +1678,4 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       assert(fs.forall(_.handled.isDefined))
     }
   }
-
-  // TODO(John Sirois):  Kill this mvn test hack when pants takes over.
-  "Java" should {
-    "work" in {
-      val test = new FutureCompilationTest()
-      test.testFutureCastMap()
-      test.testFutureCastFlatMap()
-      test.testTransformedBy()
-      assert(true === true)
-    }
-  }
 }

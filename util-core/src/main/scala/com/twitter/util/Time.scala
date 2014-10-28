@@ -114,7 +114,7 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def inMinutes: Int       = (inNanoseconds / Duration.NanosPerMinute) toInt
   def inHours: Int         = (inNanoseconds / Duration.NanosPerHour) toInt
   def inDays: Int          = (inNanoseconds / Duration.NanosPerDay) toInt
-  def inMillis: Long       = inMilliseconds // (Backwards compat)
+  def inMillis: Long       = inMilliseconds // (Backwards compatibility)
 
   /**
    * Returns a value/`TimeUnit` pair; attempting to return coarser
@@ -229,6 +229,7 @@ object Time extends TimeLikeOps[Time] {
   // This is needed for Java compatibility.
   override def fromSeconds(seconds: Int): Time = super.fromSeconds(seconds)
   override def fromMilliseconds(millis: Long): Time = super.fromMilliseconds(millis)
+  override def fromMicroseconds(micros: Long): Time = super.fromMicroseconds(micros)
 
   /**
    * Time `Top` is greater than any other definable time, and is
@@ -566,4 +567,16 @@ sealed class Time private[util] (protected val nanos: Long) extends {
   def toDate = new Date(inMillis)
 
   private def writeReplace(): Object = TimeBox.Finite(inNanoseconds)
+
+  /**
+   * Adds `delta` to this `Time`.
+   */
+  def plus(delta: Duration): Time = this + delta
+
+  /**
+   * Subtracts `delta` from this `Time`.
+   */
+  def minus(delta: Duration): Time = this - delta
+
+  override def floor(x: Duration): Time = super.floor(x) // for Java-compatibility
 }

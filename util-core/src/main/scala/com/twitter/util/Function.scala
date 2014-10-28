@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import java.util.concurrent.Callable
+
 abstract class Function0[+R] extends (() => R)
 
 abstract class ExceptionalFunction0[+R] extends Function0[R] {
@@ -35,6 +37,16 @@ object Function {
    */
   def synchronizeWith[T, R](m: Object)(f: T => R): T => R =
     t => m.synchronized { f(t) }
+
+  /**
+   * Creates `() => Unit` function from given `Runnable`.
+   */
+  def ofRunnable(r: Runnable): () => Unit = () => r.run()
+
+  /**
+   * Creates `() => A` function from given `Callable`.
+   */
+  def ofCallable[A](c: Callable[A]): () => A = () => c.call()
 }
 
 abstract class ExceptionalFunction[-T1, +R] extends Function[T1, R] {

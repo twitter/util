@@ -1,13 +1,15 @@
 package com.twitter.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests are not currently run for java, but for our purposes, if the test compiles at all, it's
  * a success.
  */
-public class FunctionTest extends TestCase {
+public class FunctionCompilationTest {
+
   /** Confirm that we can extend ExceptionalFunction with applyE(). */
+  @Test
   public void testDefineWithException() {
     ExceptionalFunction<Integer, String> fun = new ExceptionalFunction<Integer, String>() {
       @Override
@@ -24,6 +26,7 @@ public class FunctionTest extends TestCase {
   }
 
   /** Confirm that we can extend ExceptionalFunction0 with applyE(). */
+  @Test
   public void testExceptionalFunction0() {
     ExceptionalFunction0<Integer> fun = new ExceptionalFunction0<Integer>() {
       @Override
@@ -38,5 +41,4 @@ public class FunctionTest extends TestCase {
       // pass: expected
     }
   }
-
 }
