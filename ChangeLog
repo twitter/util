@@ -1,3 +1,12 @@
+6.22.2  2014-10-29
+
+  * util, finagle: add missing @RunWith annotation
+  * Java tests for Duration, Time and Timer
+  * util-core: remove Sieve example
+  * Reader.writable.fail: make reentrant
+  * util-app: add an option so that we can let apps fail fast if reading argument before args are parsed.
+  * {finagle,util}-core: Slurry of PartialFunction micro-optimizations
+
 .. Author notes: this file is formatted with restructured text
    (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
    The changelog style is adapted from Apache Lucene.
