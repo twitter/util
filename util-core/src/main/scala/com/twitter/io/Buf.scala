@@ -2,7 +2,6 @@ package com.twitter.io
 
 import java.nio.CharBuffer
 import java.nio.charset.Charset
-import java.util.Arrays
 
 /**
  * Buf represents a fixed, immutable byte buffer. Buffers may be
@@ -47,6 +46,24 @@ trait Buf { outer =>
   }
 
   def isEmpty = length == 0
+
+  /** Helper to support 0-copy coersion to Buf.ByteArray. */
+  protected def unsafeByteArrayBuf: Option[Buf.ByteArray]
+
+  /** May require copying. */
+  protected def unsafeByteArray: Array[Byte] = unsafeByteArrayBuf match {
+    case Some(Buf.ByteArray.Unsafe(bytes, 0, end)) if end == bytes.length =>
+      bytes
+    case _ =>
+      copiedByteArray
+  }
+
+  /** Definitely requires copying. */
+  protected def copiedByteArray: Array[Byte] = {
+    val bytes = new Array[Byte](length)
+    write(bytes, 0)
+    bytes
+  }
 }
 
 private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
@@ -111,27 +128,46 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
       chain(start).slice(startBegin, startEnd)
     } else if (finish == -1) {
       val untrimmedFirst = chain(start)
-      val first: Buf = if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
-      else untrimmedFirst.slice(startBegin, startEnd)
-      ConcatBuf(if (first == null) chain.slice(start, length)
-      else first +: chain.slice(start + 1, length))
+      val first: Buf =
+        if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
+        else untrimmedFirst.slice(startBegin, startEnd)
+      ConcatBuf(
+        if (first == null) chain.slice(start, length)
+        else first +: chain.slice(start + 1, length))
     } else {
       val untrimmedFirst = chain(start)
-      val first: Buf = if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
-      else untrimmedFirst.slice(startBegin, startEnd)
+      val first: Buf =
+        if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
+        else untrimmedFirst.slice(startBegin, startEnd)
 
       val untrimmedLast = chain(finish)
-      val last: Buf = if (finishBegin == 0 && finishEnd >= untrimmedLast.length) null
-      else untrimmedLast.slice(finishBegin, finishEnd)
+      val last: Buf =
+        if (finishBegin == 0 && finishEnd >= untrimmedLast.length) null
+        else untrimmedLast.slice(finishBegin, finishEnd)
 
-      ConcatBuf(if (first == null && last == null) chain.slice(start, finish + 1)
-      else if (first == null) chain.slice(start, finish) :+ last
-      else if (last == null) first +: chain.slice(start + 1, finish + 1)
-      else first +: chain.slice(start + 1, finish) :+ last)
+      ConcatBuf(
+        if (first == null && last == null) chain.slice(start, finish + 1)
+        else if (first == null) chain.slice(start, finish) :+ last
+        else if (last == null) first +: chain.slice(start + 1, finish + 1)
+        else first +: chain.slice(start + 1, finish) :+ last)
     }
   }
+
+  protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
 }
 
+/**
+ * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Copied and
+ * Unsafe APIs, each of which with construction & extraction utilities.
+ *
+ * The Unsafe APIs may provide direct access to a Buf's underlying
+ * implementation; and so mutating the data structure invalidates a Buf's
+ * immutability constraint. Users must take care to handle this data
+ * immutably.
+ *
+ * The Copied variants, on the other hand, ensure that the Buf shares no state
+ * with the caller (at the cost of additional allocation).
+ */
 object Buf {
   private class NoopBuf extends Buf {
     def write(buf: Array[Byte], off: Int) = ()
@@ -142,6 +178,7 @@ object Buf {
       this
     }
     override def concat(right: Buf) = right
+    protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
   }
 
   /**
@@ -152,7 +189,11 @@ object Buf {
   /**
    * A buffer representing an array of bytes.
    */
-  class ByteArray(val bytes: Array[Byte], val begin: Int, val end: Int) extends Buf {
+  class ByteArray(
+    protected val bytes: Array[Byte],
+    protected val begin: Int,
+    protected val end: Int
+  ) extends Buf {
 
     def write(buf: Array[Byte], off: Int): Unit =
       System.arraycopy(bytes, begin, buf, off, length)
@@ -170,56 +211,125 @@ object Buf {
 
     def length = end-begin
 
-    override def toString = "ByteArray("+length+")"
+    override def toString = s"ByteArray($length)"
 
-    override def equals(other: Any): Boolean = {
-      def bytesEq(b1: Array[Byte], off1: Int, b2: Array[Byte], off2: Int, len: Int): Boolean = {
-        var i = 0
-        while (i < len) {
-          if (b1(off1 + i) != b2(off2 + i))
-            return false
-          i += 1
+    private[this] def equalsBytes(other: Array[Byte], offset: Int): Boolean = {
+      var i = 0
+      while (i < length) {
+        if (bytes(begin+i) != other(offset+i)) {
+          return false
         }
-        true
+        i += 1
       }
-
-      val len = length
-      other match {
-        case buf: ByteArray if buf.length == len =>
-          bytesEq(bytes, begin, buf.bytes, buf.begin, len)
-        case buf: Buf if buf.length == len =>
-          val bs = new Array[Byte](len)
-          buf.write(bs, 0)
-          bytesEq(bytes, begin, bs, 0, len)
-        case _ =>
-          false
-      }
+      true
     }
+
+    override def equals(other: Any): Boolean = other match {
+      case other: Buf.ByteArray if other.length == length =>
+        equalsBytes(other.bytes, other.begin)
+      case other: Buf if other.length == length =>
+        other.unsafeByteArrayBuf match {
+          case Some(other) =>
+            equalsBytes(other.bytes, other.begin)
+          case None =>
+            equalsBytes(other.copiedByteArray, 0)
+        }
+      case _ => false
+    }
+
+    protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = Some(this)
   }
 
   object ByteArray {
-    /**
-     * Construct a buffer representing an array of bytes
-     * at the given offsets.
-     */
-    def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
-      if (begin == end) Buf.Empty else new ByteArray(bytes, begin, end)
-
-    /**
-     * Construct a buffer representing the entire byte array.
-     */
-    def apply(buf: Array[Byte]): Buf =
-      ByteArray(buf, 0, buf.length)
 
     /**
      * Construct a buffer representing the given bytes.
      */
-    def apply(bytes: Byte*): Buf =
-      apply(Array[Byte](bytes:_*))
+    def apply(bytes: Byte*): Buf = Unsafe(bytes.toArray)
 
-    def unapply(buf: Buf): Option[(Array[Byte], Int, Int)] = buf match {
-      case ba: ByteArray => Some(ba.bytes, ba.begin, ba.end)
-      case _ => None
+    /**
+     * Construct a buffer representing the provided array of bytes without copying.
+     */
+    @deprecated("Use Buf.ByteArray.Copied or Buf.ByteArray.Unsafe.", "6.23.0")
+    def apply(bytes: Array[Byte]): Buf = Unsafe(bytes)
+
+    /**
+     * Construct a buffer representing the provided array of bytes
+     * at the given offsets without copying.
+     */
+    @deprecated("Use Buf.ByteArray.Copied or Buf.ByteArray.Unsafe.", "6.23.0")
+    def apply(bytes: Array[Byte], begin: Int, end: Int): Buf = Unsafe(bytes, begin, end)
+
+    /** Extract a ByteArray's underlying data and offsets. */
+    @deprecated("Use Buf.ByteArray.Copied or Buf.ByteArray.Unsafe.", "6.23.0")
+    def unapply(ba: ByteArray): Option[(Array[Byte], Int, Int)] = ByteArray.Unsafe.unapply(ba)
+
+    /**
+     * Safely coerce a buffer to a Buf.ByteArray, potentially without copying its underlying
+     * data.
+     */
+    def coerce(buf: Buf): Buf.ByteArray = buf match {
+      case buf: Buf.ByteArray => buf
+      case buf => buf.unsafeByteArrayBuf match {
+        case Some(buf) => buf
+        case None =>
+          val bytes = buf.copiedByteArray
+          new ByteArray(bytes, 0, bytes.length)
+      }
+    }
+
+    /** Unsafe non-copying constructors/extractors for Buf.ByteArray. */
+    object Unsafe {
+
+      /**
+       * Construct a buffer representing the provided array of bytes
+       * at the given offsets.
+       */
+      def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
+        if (begin == end) Buf.Empty
+        else new ByteArray(bytes, begin, end)
+
+      /** Construct a buffer representing the provided array of bytes. */
+      def apply(bytes: Array[Byte]): Buf = apply(bytes, 0, bytes.length)
+
+      /** Extract the buffer's underlying offsets and array of bytes. */
+      def unapply(buf: ByteArray): Option[(Array[Byte], Int, Int)] =
+        Some(buf.bytes, buf.begin, buf.end)
+
+      /**
+       * Get a reference to a Buf's data as an array of bytes.
+       *
+       * A copy may be performed if necessary.
+       */
+      def extract(buf: Buf): Array[Byte] = Buf.ByteArray.coerce(buf) match {
+        case Buf.ByteArray.Unsafe(bytes, 0, end) if end == bytes.length =>
+          bytes
+        case Buf.ByteArray.Copied(bytes) =>
+          // If the unsafe version included offsets, we need to create a new array
+          // containing only the relevant bytes.
+          bytes
+      }
+    }
+
+    /** Safe copying constructors / extractors for Buf.ByteArray. */
+    object Copied {
+
+      /** Construct a buffer representing a copy of an array of bytes at the given offsets. */
+      def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
+        if (begin == end) Buf.Empty
+        else {
+          val copy = java.util.Arrays.copyOfRange(bytes, begin, end-begin)
+          new ByteArray(copy, 0, end-begin)
+        }
+
+      /** Construct a buffer representing a copy of the entire byte array. */
+      def apply(bytes: Array[Byte]): Buf = apply(bytes, 0, bytes.length)
+
+      /** Extract a copy of the buffer's underlying array of bytes. */
+      def unapply(ba: ByteArray): Option[Array[Byte]] = Some(ba.copiedByteArray)
+
+      /** Get a copy of a a Buf's data as an array of bytes. */
+      def extract(buf: Buf): Array[Byte] = Buf.ByteArray.coerce(buf).copiedByteArray
     }
   }
 
@@ -232,12 +342,14 @@ object Buf {
    * visible to the resulting Buf. The ByteBuffer should
    * be immutable in practice.
    */
-  class ByteBuffer(val bb: java.nio.ByteBuffer) extends Buf {
-    val length = bb.remaining
+  class ByteBuffer(protected val underlying: java.nio.ByteBuffer) extends Buf {
+    def length = underlying.remaining
+
+    override def toString = s"ByteBuffer($length)"
 
     def write(output: Array[Byte], off: Int): Unit = {
       require(length <= output.length - off)
-      bb.duplicate.get(output, off, length)
+      underlying.duplicate.get(output, off, length)
     }
 
     def slice(from: Int, until: Int): Buf = {
@@ -245,64 +357,113 @@ object Buf {
       if (until <= from || from >= length) Buf.Empty
       else if (from == 0 && until >= length) this
       else {
-        val dup = bb.duplicate()
+        val dup = underlying.duplicate()
         val limit = dup.position + math.min(until, length)
         if (dup.limit > limit) dup.limit(limit)
         dup.position(dup.position + from)
-        ByteBuffer(dup)
+        new ByteBuffer(dup)
       }
     }
+
+    protected def unsafeByteArrayBuf: Option[Buf.ByteArray] =
+      if (underlying.hasArray) {
+        val array = underlying.array
+        val begin = underlying.arrayOffset + underlying.position
+        val end = begin + underlying.remaining
+        Some(new ByteArray(array, begin, end))
+      } else None
   }
 
   object ByteBuffer {
-    /**
-     * Construct a buffer representing the given ByteBuffer.
-     */
-    def apply(bb: java.nio.ByteBuffer): Buf =
-      if (bb.remaining == 0) Buf.Empty else new ByteBuffer(bb.duplicate())
 
-    def unapply(buf: Buf): Option[java.nio.ByteBuffer] = buf match {
-      case byteBuf: ByteBuffer => Some(byteBuf.bb.duplicate())
-      case _ => None
+    /**
+     * Construct a buffer representing the provided [[java.nio.ByteBuffer]].
+     *
+     * The ByteBuffer is duplicated but the underlying data is not copied.
+     */
+    @deprecated("Use Buf.ByteBuffer.Copied or Buf.ByteBuffer.Unsafe.", "6.23.0")
+    def apply(bb: java.nio.ByteBuffer): Buf = Unsafe(bb.duplicate)
+
+    /** Extract a read-only view of the underlying [[java.nio.ByteBuffer]]. */
+    def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] =
+      Some(buf.underlying.asReadOnlyBuffer)
+
+    /** Coerce a generic buffer to a Buf.ByteBuffer, potentially without copying data. */
+    def coerce(buf: Buf): ByteBuffer = buf match {
+      case buf: ByteBuffer => buf
+      case _ =>
+        val bb = buf.unsafeByteArrayBuf match {
+          case Some(ByteArray.Unsafe(bytes, begin, end)) =>
+            java.nio.ByteBuffer.wrap(bytes, begin, end-begin)
+          case None =>
+            java.nio.ByteBuffer.wrap(buf.copiedByteArray)
+        }
+        new ByteBuffer(bb)
+    }
+
+    /** Unsafe non-copying constructors/extractors for Buf.ByteBuffer. */
+    object Unsafe {
+
+      // N.B. We cannot use ByteBuffer.asReadOnly to ensure correctness because
+      // it prevents direct access to its underlying byte array.
+
+      /**
+       * Create a Buf.ByteBuffer by directly wrapping the provided [[java.nio.ByteBuffer]].
+       */
+      def apply(bb: java.nio.ByteBuffer): Buf =
+        if (bb.remaining == 0) Buf.Empty
+        else new ByteBuffer(bb)
+
+      /** Extract the buffer's underlying [[java.nio.ByteBuffer]]. */
+      def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] = Some(buf.underlying)
+
+      /**
+       * Get a reference to a Buf's data as a ByteBuffer.
+       *
+       * A copy may be performed if necessary.
+       */
+      def extract(buf: Buf): java.nio.ByteBuffer = Buf.ByteBuffer.coerce(buf).underlying
+    }
+
+    /** Safe copying constructors/extractors for Buf.ByteBuffer. */
+    object Copied {
+      private[this] def copy(orig: java.nio.ByteBuffer): java.nio.ByteBuffer = {
+        val copy = java.nio.ByteBuffer.allocate(orig.remaining)
+        copy.put(orig.duplicate)
+        copy.flip()
+        copy
+      }
+
+      def apply(bb: java.nio.ByteBuffer): Buf = Unsafe(copy(bb))
+      def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] = Unsafe.unapply(buf).map(copy)
+      def extract(buf: Buf): java.nio.ByteBuffer = copy(Unsafe.extract(buf))
     }
   }
 
-  /**
-   * Convert the Buf to a Java NIO ByteBuffer.
-   */
-  def toByteBuffer(buf: Buf): java.nio.ByteBuffer = buf match {
-    case ByteArray(bytes, i, j) =>
-      java.nio.ByteBuffer.wrap(bytes, i, j-i)
-    case ByteBuffer(bb) =>
-      bb
-    case buf =>
-      val bytes = new Array[Byte](buf.length)
-      buf.write(bytes, 0)
-      java.nio.ByteBuffer.wrap(bytes)
-  }
+  /** Convert the Buf to a [[java.nio.ByteBuffer]]. */
+  @deprecated("Use Buf.ByteBuffer.Unsafe.extract.", "6.23.0")
+  def toByteBuffer(buf: Buf): java.nio.ByteBuffer = Buf.ByteBuffer.Unsafe.extract(buf)
 
-  /** Byte equality between two buffers. Requires copies. */
+  /**
+   * Byte equality between two buffers. May copy.
+   *
+   * Relies on Buf.ByteArray.equals.
+   */
   def equals(x: Buf, y: Buf): Boolean = {
     if (x.length != y.length) return false
-    val a, b = new Array[Byte](x.length)
-    x.write(a, 0)
-    y.write(b, 0)
-    Arrays.equals(a, b)
+    Buf.ByteArray.coerce(x).equals(Buf.ByteArray.coerce(y))
   }
 
   /** The 32-bit FNV-1 of Buf */
-  def hash(buf: Buf): Int = buf match {
-    case ByteArray(bytes, begin, end) => hashBytes(bytes, begin, end)
-    case buf =>
-      val bytes = new Array[Byte](buf.length)
-      buf.write(bytes, 0)
-      hashBytes(bytes, 0, bytes.length)
+  def hash(buf: Buf): Int = {
+    val ByteArray.Unsafe(bytes, begin, end) = ByteArray.coerce(buf)
+    hashBytes(bytes, begin, end)
   }
 
   // Adapted from util-hashing.
   private[this] val UintMax: Long = 0xFFFFFFFFL
   private[this] val Fnv1a32Prime: Int = 16777619
-  private def hashBytes(bytes: Array[Byte], begin: Int, end: Int): Int = {
+  private[this] def hashBytes(bytes: Array[Byte], begin: Int, end: Int): Int = {
     var i = begin
     var h = 0x811c9dc5L
     while (i < end) {
@@ -316,11 +477,15 @@ object Buf {
    * Return a string representing the buffer
    * contents in hexadecimal.
    */
-  def slowHexString(buf: Buf): java.lang.String = {
-    val bytes = new Array[Byte](buf.length)
-    buf.write(bytes, 0)
-    val digits = for (b <- bytes) yield "%02x".format(b)
-    digits mkString ""
+  def slowHexString(buf: Buf): String = {
+    val ByteArray.Unsafe(bytes, begin, end) = ByteArray.coerce(buf)
+    val digits = new StringBuilder(2 * (end - begin))
+    var i = begin
+    while (i < end) {
+      digits ++= "%02x".format(bytes(i))
+      i += 1
+    }
+    digits.toString
   }
 
   /**
@@ -378,13 +543,14 @@ object Buf {
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
   private[io] abstract class StringCoder(charset: Charset) {
+
     /**
      * Encode the String to its Buf representation per the charset
      */
     def apply(s: String): Buf =  {
       val enc = Charsets.encoder(charset)
       val cb = CharBuffer.wrap(s.toCharArray)
-      ByteBuffer(enc.encode(cb))
+      Buf.ByteBuffer.Unsafe(enc.encode(cb))
     }
 
     /**
@@ -397,7 +563,7 @@ object Buf {
      */
     def unapply(buf: Buf): Option[String] = {
       val dec = Charsets.decoder(charset)
-      val bb = Buf.toByteBuffer(buf)
+      val bb = Buf.ByteBuffer.Unsafe.extract(buf).asReadOnlyBuffer
       Some(dec.decode(bb).toString)
     }
   }
@@ -416,7 +582,7 @@ object Buf {
       arr(1) = ((i >> 16) & 0xff).toByte
       arr(2) = ((i >>  8) & 0xff).toByte
       arr(3) = ((i      ) & 0xff).toByte
-      ByteArray(arr)
+      ByteArray.Unsafe(arr)
     }
 
     def unapply(buf: Buf): Option[(Int, Buf)] =
@@ -452,7 +618,7 @@ object Buf {
       arr(5) = ((l >> 16) & 0xff).toByte
       arr(6) = ((l >>  8) & 0xff).toByte
       arr(7) = ((l      ) & 0xff).toByte
-      ByteArray(arr)
+      ByteArray.Unsafe(arr)
     }
 
     def unapply(buf: Buf): Option[(Long, Buf)] =
@@ -488,7 +654,7 @@ object Buf {
       arr(1) = ((i >>  8) & 0xff).toByte
       arr(2) = ((i >> 16) & 0xff).toByte
       arr(3) = ((i >> 24) & 0xff).toByte
-      ByteArray(arr)
+      ByteArray.Unsafe(arr)
     }
 
     def unapply(buf: Buf): Option[(Int, Buf)] =
@@ -524,7 +690,7 @@ object Buf {
       arr(5) = ((l >> 40) & 0xff).toByte
       arr(6) = ((l >> 48) & 0xff).toByte
       arr(7) = ((l >> 56) & 0xff).toByte
-      ByteArray(arr)
+      ByteArray.Unsafe(arr)
     }
 
     def unapply(buf: Buf): Option[(Long, Buf)] =

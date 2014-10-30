@@ -11,7 +11,7 @@ import com.twitter.util.Await
 @RunWith(classOf[JUnitRunner])
 class InputStreamReaderTest extends FunSuite {
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
-  def buf(i: Int, j: Int) = Buf.ByteArray(arr(i, j))
+  def buf(i: Int, j: Int) = Buf.ByteArray.Unsafe(arr(i, j))
 
   test("InputStreamReader - read empty") {
     val a = Array.empty[Byte]

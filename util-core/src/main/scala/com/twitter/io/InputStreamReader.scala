@@ -36,7 +36,7 @@ class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
           if (c == -1)
             None
           else
-            Some(Buf.ByteArray(buffer, 0, c))
+            Some(Buf.ByteArray.Unsafe(buffer, 0, c))
         } catch { case exc: InterruptedException =>
             discarded = true
             throw exc

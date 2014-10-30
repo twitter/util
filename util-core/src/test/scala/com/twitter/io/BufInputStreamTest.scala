@@ -9,7 +9,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class BufInputStreamTest extends FunSuite {
   private[this] val fileString = "Test_All_Tests\nTest_java_io_BufferedInputStream\nTest_java_io_BufferedOutputStream\nTest_ByteArrayInputStream\nTest_java_io_ByteArrayOutputStream\nTest_java_io_DataInputStream\n"
-  private[this] val fileBuf = Buf.ByteArray(fileString.getBytes)
+  private[this] val fileBuf = Buf.ByteArray.Unsafe(fileString.getBytes)
 
   test("Constructor") {
     val is = new BufInputStream(fileBuf)
