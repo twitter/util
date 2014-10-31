@@ -341,6 +341,10 @@ object Logger extends Iterable[Logger] {
    */
   def iterator: Iterator[Logger] = loggersCache.values.iterator.asScala
 
+  /**
+   * Reset all the loggers and register new loggers
+   * @note Only one logger is permitted per namespace
+   */
   def configure(loggerFactories: List[() => Logger]) {
     loggerFactoryCache = loggerFactories
 

@@ -41,6 +41,10 @@ case class LoggerFactory(
     useParents: Boolean = true)
   extends (() => Logger) {
 
+  /**
+   * Registers new handlers and setting with the logger at `node`
+   * @note It clears all the existing handlers for the node
+   */
   def apply(): Logger = {
     val logger = Logger.get(node)
     logger.clearHandlers()
