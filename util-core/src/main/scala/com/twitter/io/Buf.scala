@@ -75,6 +75,26 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
     case buf => ConcatBuf(chain :+ right)
   }
 
+  // Incrementally determine equality over each segment of the ConcatBuf.
+  // TODO detect if the other Buf is a ConcatBuf and special-case.
+  override def equals(other: Any): Boolean = other match {
+    case other: Buf if isEmpty && other.isEmpty => true
+
+    case other: Buf if other.length == length =>
+      var i = 0
+      var offset = 0
+      while (i < chain.length) {
+        val buf = chain(i)
+        val sz = buf.length
+        if (!buf.equals(other.slice(offset, offset + sz))) return false
+        offset += sz
+        i += 1
+      }
+      true
+
+    case _ => false
+  }
+
   def length: Int = {
     var i = 0
     var sum = 0
@@ -190,9 +210,9 @@ object Buf {
    * A buffer representing an array of bytes.
    */
   class ByteArray(
-    protected val bytes: Array[Byte],
-    protected val begin: Int,
-    protected val end: Int
+    private[Buf] val bytes: Array[Byte],
+    private[Buf] val begin: Int,
+    private[Buf] val end: Int
   ) extends Buf {
 
     def write(buf: Array[Byte], off: Int): Unit =
@@ -342,7 +362,7 @@ object Buf {
    * visible to the resulting Buf. The ByteBuffer should
    * be immutable in practice.
    */
-  class ByteBuffer(protected val underlying: java.nio.ByteBuffer) extends Buf {
+  class ByteBuffer(private[Buf] val underlying: java.nio.ByteBuffer) extends Buf {
     def length = underlying.remaining
 
     override def toString = s"ByteBuffer($length)"
@@ -353,7 +373,7 @@ object Buf {
     }
 
     def slice(from: Int, until: Int): Buf = {
-      require(from >=0 && until >= 0, "Index out of bounds")
+      require(from >= 0 && until >= 0, "Index out of bounds")
       if (until <= from || from >= length) Buf.Empty
       else if (from == 0 && until >= length) this
       else {
@@ -455,22 +475,34 @@ object Buf {
   }
 
   /** The 32-bit FNV-1 of Buf */
-  def hash(buf: Buf): Int = {
-    val ByteArray.Unsafe(bytes, begin, end) = ByteArray.coerce(buf)
-    hashBytes(bytes, begin, end)
-  }
+  def hash(buf: Buf): Int = finishHash(hashBuf(buf))
 
   // Adapted from util-hashing.
   private[this] val UintMax: Long = 0xFFFFFFFFL
   private[this] val Fnv1a32Prime: Int = 16777619
-  private[this] def hashBytes(bytes: Array[Byte], begin: Int, end: Int): Int = {
-    var i = begin
-    var h = 0x811c9dc5L
-    while (i < end) {
-      h = (h ^ (bytes(i)&0xff)) * Fnv1a32Prime
-      i += 1
-    }
-    (h & UintMax).toInt
+  private[this] val Fnv1a32Init: Long = 0x811c9dc5L
+  private[this] def finishHash(hash: Long): Int = (hash & UintMax).toInt
+  private[this] def hashBuf(buf: Buf, init: Long = Fnv1a32Init): Long = buf match {
+    case buf if buf.isEmpty => init
+
+    case buf: ConcatBuf =>
+      var i = 0
+      var h = init
+      while (i < buf.chain.length) {
+        h = hashBuf(buf.chain(i), h)
+        i += 1
+      }
+      h
+
+    case buf =>
+      val ba = Buf.ByteArray.coerce(buf)
+      var i = ba.begin
+      var h = init
+      while (i < ba.end) {
+        h = (h ^ (ba.bytes(i) & 0xff)) * Fnv1a32Prime
+        i += 1
+      }
+      h
   }
 
   /**
@@ -478,11 +510,11 @@ object Buf {
    * contents in hexadecimal.
    */
   def slowHexString(buf: Buf): String = {
-    val ByteArray.Unsafe(bytes, begin, end) = ByteArray.coerce(buf)
-    val digits = new StringBuilder(2 * (end - begin))
-    var i = begin
-    while (i < end) {
-      digits ++= "%02x".format(bytes(i))
+    val ba = Buf.ByteArray.coerce(buf)
+    val digits = new StringBuilder(2 * (ba.length))
+    var i = ba.begin
+    while (i < ba.end) {
+      digits ++= "%02x".format(ba.bytes(i))
       i += 1
     }
     digits.toString

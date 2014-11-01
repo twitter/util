@@ -302,8 +302,13 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
 
     val string = "okthen"
     val bytes = Array[Byte](111, 107, 116, 104, 101, 110)
+    val bbuf = Buf.ByteArray.Unsafe(bytes)
 
-    ae(Buf.Utf8(string), Buf.ByteArray.Unsafe(bytes))
+    ae(Buf.Utf8(string), bbuf)
+    ae(Buf.Utf8(""), Buf.Empty)
+
+    val concat = bbuf.slice(0, 3) concat bbuf.slice(3, 6)
+    ae(concat, Buf.ByteArray.Unsafe(bytes))
 
     val shifted = new Array[Byte](bytes.length + 3)
     System.arraycopy(bytes, 0, shifted, 3, bytes.length)
