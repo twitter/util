@@ -6,5 +6,6 @@ jar_library(name='base',
     '3rdparty:scalatest',
     '3rdparty/jvm/com/twitter/common:objectsize',
     'util/util-core/src/main/scala',
+    'util/util-core/src/main/java'
   ],
 )

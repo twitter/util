@@ -2,6 +2,7 @@ maven_layout()
 
 jar_library(name='util-core',
   dependencies=[
+    'util/util-core/src/main/java',
     'util/util-core/src/main/scala'
   ]
 )

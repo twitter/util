@@ -2,6 +2,8 @@ package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
+import scala.collection.JavaConverters._
+
 
 /**
  * Wait for the result of some action. Awaitable is not used
@@ -100,6 +102,7 @@ object Await {
   /** $all */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
+  @scala.annotation.varargs
   def all(awaitables: Awaitable[_]*): Unit =
     all(awaitables, Duration.Top)
 
@@ -113,6 +116,16 @@ object Await {
   @throws(classOf[InterruptedException])
   def all(awaitables: Seq[Awaitable[_]], timeout: Duration): Unit =
     awaitables foreach { _.ready(timeout) }
+
+  /**
+   * $all
+   *
+   * @see Await.all(Seq, Duration)
+   */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  def all(awaitables: java.util.Collection[Awaitable[_]], timeout: Duration): Unit =
+    all(awaitables.asScala.toSeq, timeout)
 }
 
 /**

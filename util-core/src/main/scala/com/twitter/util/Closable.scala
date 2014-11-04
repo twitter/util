@@ -31,6 +31,11 @@ trait Closable { self =>
   def close(after: Duration): Future[Unit] = close(after.fromNow)
 }
 
+/**
+ * Abstract `Closable` class for Java compatibility.
+ */
+abstract class AbstractClosable extends Closable
+
 object Closable {
   private[this] val logger = Logger.getLogger("")
 
