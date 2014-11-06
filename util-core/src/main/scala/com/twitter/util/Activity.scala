@@ -1,6 +1,10 @@
 package com.twitter.util
 
+import java.util.{List => JList}
+
 import scala.collection.generic.CanBuild
+import scala.collection.JavaConverters._
+import scala.collection.mutable.Buffer
 
 /**
  * An Activity is a handle to a concurrently running process, producing
@@ -149,6 +153,17 @@ object Activity {
     Activity(stateVar map flip)
   }
 
+  /**
+   * A Java friendly method for `Activity.collect()`.
+   */
+  def collect[T <: Object](activities: JList[Activity[T]]): Activity[JList[T]] = {
+    val list = activities.asScala.asInstanceOf[Buffer[Activity[Object]]]
+    collect(list).map(_.asJava).asInstanceOf[Activity[JList[T]]]
+  }
+
+  /**
+   * Sample given `Activity`.
+   */
   def sample[T](act: Activity[T]): T =
     act.run.sample() match {
       case Ok(t) => t

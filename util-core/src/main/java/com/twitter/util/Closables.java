@@ -11,6 +11,11 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class Closables {
 
+  /**
+   * @see com.twitter.util.Closable$#nop()
+   */
+  public static final Closable NOP = Closable$.MODULE$.nop();
+
   private Closables() { }
 
   /**
@@ -34,14 +39,14 @@ public final class Closables {
   /**
    * @see com.twitter.util.Closable$#make(scala.Function1)
    */
-  public static Closable make(Function<Time, Future<BoxedUnit>> function) {
+  public static Closable newClosable(Function<Time, Future<BoxedUnit>> function) {
     return Closable$.MODULE$.make(function);
   }
 
   /**
    * @see com.twitter.util.Closable$#ref(java.util.concurrent.atomic.AtomicReference)
    */
-  public static Closable ref(AtomicReference<Closable> reference) {
+  public static Closable newClosable(AtomicReference<Closable> reference) {
     return Closable$.MODULE$.ref(reference);
   }
 
@@ -50,12 +55,5 @@ public final class Closables {
    */
   public static void closeOnCollect(Closable closable, Object object) {
     Closable$.MODULE$.closeOnCollect(closable, object);
-  }
-
-  /**
-   * @see com.twitter.util.Closable$#nop()
-   */
-  public static Closable nop() {
-    return Closable$.MODULE$.nop();
   }
 }

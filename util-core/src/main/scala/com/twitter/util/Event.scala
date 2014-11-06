@@ -268,6 +268,11 @@ trait Event[+T] { self =>
   }
 }
 
+/**
+ * Abstract `Event` class for Java compatibility.
+ */
+abstract class AbstractEvent[T] extends Event[T]
+
 object Event {
   private sealed trait JoinState[+T, +U]
   private object JoinState {
@@ -294,8 +299,8 @@ object Event {
     /**
      * Notifies registered witnesses
      *
-     * @note This method in synchronized to ensure that all witnesses
-     * recieve notifications in the same order. Consequently it will block
+     * @note This method is synchronized to ensure that all witnesses
+     * receive notifications in the same order. Consequently it will block
      * until the witnesses are notified.
      */
     def notify(t: T) = synchronized {
@@ -336,6 +341,11 @@ trait Witness[-N] { self =>
   }
 }
 
+/**
+ * Abstract `Witness` class for Java compatibility.
+ */
+abstract class AbstractWitness[T] extends Witness[T]
+
 object Witness {
   /**
    * Create a Witness from an atomic reference.
@@ -366,4 +376,16 @@ object Witness {
    * A Witness which prints to the console.
    */
   val printer: Witness[Any] = Witness(println(_))
+}
+
+/**
+ * A Java analog of `Event[A]()`.
+ */
+class WitnessedEvent[T] extends Event[T] with Witness[T] {
+
+  private[this] val underlying = Event[T]()
+
+  def register(s: Witness[T]): Closable = underlying.register(s)
+
+  def notify(note: T): Unit = underlying.notify(note)
 }

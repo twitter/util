@@ -40,7 +40,7 @@ public class ClosableCompilationTest {
 
   @Test
   public void testMake() {
-    Closable closable = Closables.make(
+    Closable closable = Closables.newClosable(
       new Function<Time, Future<BoxedUnit>>() {
         @Override
         public Future<BoxedUnit> apply(Time time) {

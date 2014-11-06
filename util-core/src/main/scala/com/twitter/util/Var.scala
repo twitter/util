@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.{AtomicLong, AtomicReference, AtomicReferenceArray}
+import java.util.{List => JList}
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
@@ -69,7 +70,7 @@ trait Var[+T] { self =>
         // TODO: Right now we rely on synchronous propagation; and
         // thus also synchronous closes. We should instead perform
         // asynchronous propagation so that it is is safe &
-        // predicatable to have asynchronously closing Vars, for
+        // predictable to have asynchronously closing Vars, for
         // example. Currently the only source of potentially
         // asynchronous closing is Var.async; here we have modified
         // the external process to close asynchronously with the Var
@@ -132,6 +133,11 @@ trait Var[+T] { self =>
 
   def sample(): T = Var.sample(this)
 }
+
+/**
+ * Abstract `Var` class for Java compatibility.
+ */
+abstract class AbstractVar[T] extends Var[T]
 
 object Var {
   /**
@@ -266,10 +272,10 @@ object Var {
    * @param vars a java.util.List of Vars
    * @return a Var[java.util.List[A]] containing the collected values from vars.
    */
-  def collect[T <: Object](vars: java.util.List[Var[T]]): Var[java.util.List[T]] = {
+  def collect[T <: Object](vars: JList[Var[T]]): Var[JList[T]] = {
     // we cast to Object and back because we need a ClassManifest[T]
-    val svars = vars.asScala.asInstanceOf[Buffer[Var[Object]]]
-    collect(svars).map(_.asJava).asInstanceOf[Var[java.util.List[T]]]
+    val list = vars.asScala.asInstanceOf[Buffer[Var[Object]]]
+    collect(list).map(_.asJava).asInstanceOf[Var[JList[T]]]
   }
 
   private object create {
@@ -374,7 +380,7 @@ private object UpdatableVar {
   }
 }
 
-private class UpdatableVar[T](init: T)
+private[util] class UpdatableVar[T](init: T)
     extends Var[T]
     with Updatable[T]
     with Extractable[T] {
@@ -422,3 +428,9 @@ private class UpdatableVar[T](init: T)
 
   override def toString = "Var("+state.get.value+")@"+hashCode
 }
+
+/**
+ * Java adaptation of `Var[T] with Updatable[T] with Extractable[T]`.
+ */
+class ReadWriteVar[T](init: T) extends UpdatableVar[T](init)
+
