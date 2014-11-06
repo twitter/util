@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 
 import com.twitter.util.Promise
@@ -64,7 +64,7 @@ class LocalSchedulerFifoTest extends LocalSchedulerTest(false)
 class LocalSchedulerLifoTest extends LocalSchedulerTest(true)
 
 @RunWith(classOf[JUnitRunner])
-class ThreadPoolSchedulerTest extends FunSuite with Eventually {
+class ThreadPoolSchedulerTest extends FunSuite with Eventually with IntegrationPatience {
   test("works") {
     val p = new Promise[Unit]
     val scheduler = new ThreadPoolScheduler("test")

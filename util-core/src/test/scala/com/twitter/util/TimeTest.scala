@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.concurrent.Eventually._
+import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 
 import com.twitter.util.TimeConversions._
@@ -358,7 +358,11 @@ class TimeFormatTest extends WordSpec {
 }
 
 @RunWith(classOf[JUnitRunner])
-class TimeTest extends  { val ops = Time } with TimeLikeSpec[Time] {
+class TimeTest extends { val ops = Time }
+  with TimeLikeSpec[Time]
+  with Eventually
+  with IntegrationPatience {
+
   "Time" should {
     "work in collections" in {
       val t0 = Time.fromSeconds(100)

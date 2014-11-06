@@ -2,13 +2,13 @@ package com.twitter.util
 
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.concurrent.Eventually._
+import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 
 import com.twitter.util.TimeConversions.intToTimeableNumber
 
 @RunWith(classOf[JUnitRunner])
-class ClosableTest extends FunSuite {
+class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
   test("Closable.close(Duration)") {
     Time.withCurrentTimeFrozen { _ =>
       var time: Option[Time] = None
