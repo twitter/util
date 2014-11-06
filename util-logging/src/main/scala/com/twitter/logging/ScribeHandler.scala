@@ -92,17 +92,26 @@ class ScribeHandler(
   private val loggerName = getClass.toString
 
   private var lastConnectAttempt = Time.epoch
-  private var lastLogStats = Time.epoch
+
+  private var _lastLogStats = Time.epoch
+  // visible for testing
+  private[logging] def updateLastLogStats(): Unit = synchronized {
+    _lastLogStats = Time.now
+  }
+
+  private var _lastTransmission = Time.epoch
+  // visible for testing
+  private[logging] def updateLastTransmission(): Unit = synchronized {
+    _lastTransmission = Time.now
+  }
 
   private var socket: Option[Socket] = None
   private var archaicServer = false
-  private val flusher =
+  private[logging] val flusher =
     Executors.newSingleThreadExecutor(
       new NamedPoolThreadFactory("ScribeFlusher-" + category, true)
     )
 
-  // the following should be private too, make visible for testing
-  @volatile private[logging] var lastTransmission = Time.epoch
   private[logging] val queue = new LinkedBlockingQueue[Array[Byte]](maxMessagesToBuffer)
   private[logging] val sentRecords = new AtomicLong()
   private[logging] val droppedRecords = new AtomicLong()
@@ -115,8 +124,8 @@ class ScribeHandler(
       if (!socket.isDefined) {
         if (Time.now.since(lastConnectAttempt) > connectBackoff) {
           try {
-            socket = Some(new Socket(hostname, port))
             lastConnectAttempt = Time.now
+            socket = Some(new Socket(hostname, port))
           } catch {
             case e: Exception =>
               log.error("Unable to open socket to scribe server at %s:%d: %s", hostname, port, e)
@@ -130,7 +139,7 @@ class ScribeHandler(
 
     // report stats
     def logStats() {
-      val period = Time.now.since(lastLogStats)
+      val period = Time.now.since(_lastLogStats)
       if (period > DefaultStatsReportPeriod) {
         val sent = sentRecords.getAndSet(0)
         val dropped = droppedRecords.getAndSet(0)
@@ -138,7 +147,7 @@ class ScribeHandler(
         val skipped = reconnectionSkipped.getAndSet(0)
         log.info("sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
                  sent, sent/period.inSeconds, dropped, failed, skipped)
-        lastLogStats = Time.now
+        updateLastLogStats()
       }
     }
 
@@ -189,7 +198,7 @@ class ScribeHandler(
                 closeSocket()
             }
           }
-          lastTransmission = Time.now
+          updateLastTransmission()
         }
         logStats()
       }
@@ -257,7 +266,7 @@ class ScribeHandler(
 
   def publish(record: Array[Byte]) {
     if (!queue.offer(record)) droppedRecords.incrementAndGet()
-    if (Time.now.since(lastTransmission) >= bufferTime) flush()
+    if (Time.now.since(_lastTransmission) >= bufferTime) flush()
   }
 
   override def toString = {

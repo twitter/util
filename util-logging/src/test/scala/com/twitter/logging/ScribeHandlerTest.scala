@@ -17,6 +17,7 @@
 package com.twitter
 package logging
 
+import java.util.concurrent.TimeUnit
 import java.util.{logging => javalog}
 
 import org.junit.runner.RunWith
@@ -36,6 +37,8 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
   record2.setLoggerName("hello")
   record2.setMillis(1206769996722L)
 
+  // This is a huge hack to make sure that the buffer doesn't
+  // get flushed.
   val portWithoutListener = 50506
 
   "ScribeHandler" should {
@@ -77,8 +80,6 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
 
     "be able to log binary data" in {
       val scribe = ScribeHandler(
-        // This is a huge hack to make sure that the buffer doesn't
-        // get flushed.
         port = portWithoutListener,
         bufferTime = 100.milliseconds,
         maxMessagesToBuffer = 10000,
@@ -96,19 +97,41 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
 
     "throw away log messages if scribe is too busy" in {
       val scribe = ScribeHandler(
-        // This is a huge hack to make sure that the buffer doesn't
-        // get flushed.
         port = portWithoutListener,
         bufferTime = 5.seconds,
         maxMessagesToBuffer = 1,
         formatter = BareFormatter,
         category = "test"
       ).apply()
-      scribe.lastTransmission = Time.now
+      scribe.updateLastTransmission()
       scribe.publish(record1)
       scribe.publish(record2)
       assert(scribe.droppedRecords.get() === 1)
       assert(scribe.sentRecords.get() === 0)
+    }
+
+    "have backoff on connection errors" in {
+      val scribe = ScribeHandler(
+        port = portWithoutListener,
+        bufferTime = 5.seconds,
+        maxMessagesToBuffer = 1,
+        formatter = BareFormatter,
+        category = "test"
+      ).apply()
+      scribe.updateLastLogStats()
+
+      scribe.publish(record1)
+      scribe.publish(record2)
+      scribe.publish(record1)
+      scribe.publish(record2)
+      scribe.publish(record1)
+      scribe.publish(record2)
+
+      scribe.flusher.shutdown()
+      scribe.flusher.awaitTermination(500, TimeUnit.MILLISECONDS)
+
+      assert(scribe.reconnectionFailure.get() === 1)
+      assert(scribe.reconnectionSkipped.get() === 5)
     }
   }
 }
