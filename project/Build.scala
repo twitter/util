@@ -100,7 +100,8 @@ object Util extends Build {
   ) aggregate(
     utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
-    utilZkCommon, utilClassPreloader, utilBenchmark, utilApp
+    utilZkCommon, utilClassPreloader, utilBenchmark, utilApp,
+    utilEvents
   )
 
   lazy val utilCore = Project(
@@ -302,7 +303,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "com.google.caliper" % "caliper" % "0.5-rc1"
     )
-  ).dependsOn(utilCore, utilJvm)
+  ).dependsOn(utilCore, utilJvm, utilEvents)
 
   lazy val utilApp = Project(
     id = "util-app",
@@ -312,4 +313,14 @@ object Util extends Build {
   ).settings(
     name := "util-app"
   ).dependsOn(utilCore)
+
+  lazy val utilEvents = Project(
+    id = "util-events",
+    base = file("util-events"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-events"
+  ).dependsOn(utilApp)
+
 }
