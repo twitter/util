@@ -3,10 +3,8 @@ package com.twitter.util;
 import org.junit.Assert;
 import org.junit.Test;
 import scala.Tuple2;
-import scala.runtime.Nothing$;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class ActivityCompilationTest {
@@ -20,7 +18,7 @@ public class ActivityCompilationTest {
     Activity<Object> c = Activities.newFutureActivity(Future.value(null));
     Activity<Object> d = Activities.newValueActivity(new Object());
     Tuple2<Activity<Object>, Witness<Try<Object>>> e = Activities.newActivity();
-    Activity<String> f = Activities.newActivity(Vars.newConstantVar(ok));
+    Activity<String> f = Activities.newActivity(Vars.newConstVar(ok));
 
     Activity<?> all = a.join(b).join(c).join(d).join(e._1()).join(f);
     Assert.assertTrue(all != null);

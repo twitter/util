@@ -17,7 +17,7 @@ import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
  * =The synchronization protocol=
  *
  * Synchronization is performed via a two-phase commit process.
- * `prepare()` commenses the transaction, and when the other party is
+ * `prepare()` commences the transaction, and when the other party is
  * ready, it returns with a transaction object, `Tx[T]`. This must then
  * be ackd or nackd. If both parties acknowledge, `Tx.ack()` returns
  * with a commit object, containing the value. This finalizes the
@@ -28,8 +28,10 @@ import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
  * synchronization should always be done with `sync()`.
  *
  * Future interrupts are propagated, and failure is passed through. It
- * is up to the implementor of the Offer to decide on failure semantics,
+ * is up to the implementer of the Offer to decide on failure semantics,
  * but they are always passed through in all of the combinators.
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.concurrent.AbstractOffer]].
  */
 trait Offer[+T] { self =>
   import Offer.LostSynchronization
@@ -90,6 +92,16 @@ trait Offer[+T] { self =>
    * Like {{map}}, but to a constant (call-by-name).
    */
   def const[U](f: => U): Offer[U] = map { _ => f }
+
+  /**
+   * Java-friendly analog of `const()`.
+   */
+  def mapConstFunction[U](f: => U): Offer[U] = const(f)
+
+  /**
+   * Java-friendly analog of `const()`.
+   */
+  def mapConst[U](c: U): Offer[U] = const(c)
 
   /**
    * An offer that, when synchronized, attempts to synchronize {{this}}
@@ -153,10 +165,20 @@ trait Offer[+T] { self =>
   def ?? = syncWait()
 }
 
+/**
+ * Abstract `Offer` class for Java compatibility.
+ */
+abstract class AbstractOffer[T] extends Offer[T]
+
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.concurrent.Offers]].
+ */
 object Offer {
   /**
    * A constant offer: synchronizes the given value always. This is
    * call-by-name and a new value is produced for each `prepare()`.
+   *
+   * Note: Updates here must also be done at [[com.twitter.concurrent.Offers.newConstOffer()]].
    */
   def const[T](x: => T): Offer[T] = new Offer[T] {
     def prepare() = Future.value(Tx.const(x))

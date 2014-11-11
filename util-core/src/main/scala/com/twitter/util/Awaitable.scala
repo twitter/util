@@ -141,6 +141,8 @@ object Await {
  *   }
  * }
  * }}}
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractCloseAwaitably]].
  */
 trait CloseAwaitably extends Awaitable[Unit] {
   private[this] val onClose = new Promise[Unit]

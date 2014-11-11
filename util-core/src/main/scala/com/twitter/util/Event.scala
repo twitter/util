@@ -14,6 +14,8 @@ import scala.collection.immutable.Queue
  *
  * Events are observed by registering [[com.twitter.util.Witness Witnesses]]
  * to which the Event's values are notified.
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractEvent]].
  */
 trait Event[+T] { self =>
   /**
@@ -273,6 +275,9 @@ trait Event[+T] { self =>
  */
 abstract class AbstractEvent[T] extends Event[T]
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.Events]].
+ */
 object Event {
   private sealed trait JoinState[+T, +U]
   private object JoinState {
@@ -329,6 +334,8 @@ object Event {
 
 /**
  * A witness is the recipient of [[com.twitter.util.Event Event]].
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractWitness]].
  */
 trait Witness[-N] { self =>
   /**
@@ -346,6 +353,9 @@ trait Witness[-N] { self =>
  */
 abstract class AbstractWitness[T] extends Witness[T]
 
+/**
+ * Note: There is Java-friendly API for this object: [[com.twitter.util.Witnesses]].
+ */
 object Witness {
   /**
    * Create a Witness from an atomic reference.

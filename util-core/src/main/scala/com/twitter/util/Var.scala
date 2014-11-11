@@ -23,6 +23,8 @@ import scala.collection.mutable.Buffer
  * @note There are no well-defined error semantics for Var. Vars are
  * computed lazily, and the updating thread will receive any
  * exceptions thrown while computing derived Vars.
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractVar]].
  */
 trait Var[+T] { self =>
   import Var.Observer
@@ -139,6 +141,9 @@ trait Var[+T] { self =>
  */
 abstract class AbstractVar[T] extends Var[T]
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.Vars]].
+ */
 object Var {
   /**
    * A Var observer. Observers are owned by exactly one producer,

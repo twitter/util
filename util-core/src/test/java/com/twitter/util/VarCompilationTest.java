@@ -122,7 +122,7 @@ public class VarCompilationTest {
 
   @Test
   public void testVal() {
-    Var<Integer> val = Vars.newConstantVar(100);
+    Var<Integer> val = Vars.newConstVar(100);
     Assert.assertFalse(val == null);
   }
 }

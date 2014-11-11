@@ -96,6 +96,9 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
   def sample(): T = Activity.sample(this)
 }
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.Activities]].
+ */
 object Activity {
   /**
    * Create a new pending activity. The activity's state is updated by

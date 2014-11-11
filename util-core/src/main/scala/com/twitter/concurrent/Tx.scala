@@ -31,8 +31,11 @@ trait Tx[+T] {
   def nack()
 }
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.concurrent.Txs]].
+ */
 object Tx {
-  sealed abstract trait Result[+T]
+  sealed trait Result[+T]
   case object Abort extends Result[Nothing]
   case class Commit[T](value: T) extends Result[T]
 
@@ -46,11 +49,18 @@ object Tx {
 
   /**
    * A `Tx` that will always commit the given value immediately.
+   *
+   * Note: Updates here must also be done at [[com.twitter.concurrent.Txs.newConstTx()]].
    */
   def const[T](msg: T): Tx[T] = new Tx[T] {
     def ack() = Future.value(Commit(msg))
     def nack() {}
   }
+
+  /**
+   * Analog of `Option.apply()` for Java compatibility.
+   */
+  def apply[T](msg: T): Tx[T] = if (msg == null) aborted else const(msg)
 
   /**
    * A constant `Tx` with the value of `Unit`.

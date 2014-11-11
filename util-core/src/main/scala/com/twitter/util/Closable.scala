@@ -7,6 +7,8 @@ import java.util.logging.{Level, Logger}
 
 /**
  * Closable is a mixin trait to describe a closable ``resource``.
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractClosable]].
  */
 trait Closable { self =>
 
@@ -36,6 +38,9 @@ trait Closable { self =>
  */
 abstract class AbstractClosable extends Closable
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.Closables]].
+ */
 object Closable {
   private[this] val logger = Logger.getLogger("")
 
