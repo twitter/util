@@ -1,9 +1,20 @@
 package com.twitter.app
 
+import com.twitter.util._
+
 import java.net.InetSocketAddress
+import java.lang.{
+  Boolean => JBoolean,
+  Double  => JDouble,
+  Float   => JFloat,
+  Integer => JInteger,
+  Long    => JLong
+}
+import java.util.{List => JList, Map => JMap, Set => JSet}
+
+import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable.{ArrayBuffer, HashMap}
-import com.twitter.util._
 
 /**
  * A type class providing evidence for parsing type `T` as a flag value.
@@ -42,7 +53,7 @@ import com.twitter.util._
  *
  * [1] http://en.wikipedia.org/wiki/Type_class
  */
-trait Flaggable[T] {
+abstract class Flaggable[T] {
   /**
    * Parse a string (i.e. a value set on the command line) into an object of
    * type `T`.
@@ -65,53 +76,79 @@ trait Flaggable[T] {
  * Default `Flaggable` implementations.
  */
 object Flaggable {
-  def mandatory[T](f: String => T) = new Flaggable[T] {
+  /**
+   * Create a `Flaggable[T]` according to a `String => T` conversion function.
+   *
+   * @param f Function that parses a string into an object of type `T`
+   */
+  def mandatory[T](f: String => T): Flaggable[T] = new Flaggable[T] {
     def parse(s: String) = f(s)
   }
 
-  implicit val ofBoolean = new Flaggable[Boolean] {
+  implicit val ofString: Flaggable[String] = mandatory(identity)
+
+  // Pairs of Flaggable conversions for types with corresponding Java boxed types.
+  implicit val ofBoolean: Flaggable[Boolean] = new Flaggable[Boolean] {
     override def default = Some(true)
     def parse(s: String) = s.toBoolean
   }
 
-  implicit val ofString = mandatory(identity)
-  implicit val ofInt = mandatory(_.toInt)
-  implicit val ofLong = mandatory(_.toLong)
-  implicit val ofFloat = mandatory(_.toFloat)
-  implicit val ofDouble = mandatory(_.toDouble)
-  implicit val ofDuration = mandatory(Duration.parse(_))
-  implicit val ofStorageUnit = mandatory(StorageUnit.parse(_))
-
-  private val defaultTimeFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
-  implicit val ofTime = mandatory(defaultTimeFormat.parse(_))
-
-  implicit object ofInetSocketAddress extends Flaggable[InetSocketAddress] {
-    def parse(v: String) =  v.split(":") match {
-      case Array("", p) =>
-        new InetSocketAddress(p.toInt)
-      case Array(h, p) =>
-        new InetSocketAddress(h, p.toInt)
-      case _ =>
-        throw new IllegalArgumentException
-    }
-
-    override def show(addr: InetSocketAddress) =
-      "%s:%d".format(
-        Option(addr.getAddress) match {
-          case Some(a) if a.isAnyLocalAddress => ""
-          case _ => addr.getHostName
-        },
-        addr.getPort)
+  implicit val ofJavaBoolean: Flaggable[JBoolean] = new Flaggable[JBoolean] {
+    override def default = Some(JBoolean.TRUE)
+    def parse(s: String) = JBoolean.valueOf(s.toBoolean)
   }
 
-  implicit def ofTuple[T: Flaggable, U: Flaggable] = new Flaggable[(T, U)] {
+  implicit val ofInt: Flaggable[Int] = mandatory(_.toInt)
+  implicit val ofJavaInteger: Flaggable[JInteger] =
+    mandatory { s: String => JInteger.valueOf(s.toInt) }
+
+  implicit val ofLong: Flaggable[Long] = mandatory(_.toLong)
+  implicit val ofJavaLong: Flaggable[JLong] =
+    mandatory { s: String => JLong.valueOf(s.toInt) }
+
+  implicit val ofFloat: Flaggable[Float] = mandatory(_.toFloat)
+  implicit val ofJavaFloat: Flaggable[JFloat] =
+    mandatory { s: String => JFloat.valueOf(s.toInt) }
+
+  implicit val ofDouble: Flaggable[Double] = mandatory(_.toDouble)
+  implicit val ofJavaDouble: Flaggable[JDouble] =
+    mandatory { s: String => JDouble.valueOf(s.toInt) }
+
+  // Conversions for common non-primitive types and collections.
+  implicit val ofDuration: Flaggable[Duration] = mandatory(Duration.parse(_))
+  implicit val ofStorageUnit: Flaggable[StorageUnit] = mandatory(StorageUnit.parse(_))
+
+  private val defaultTimeFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
+  implicit val ofTime: Flaggable[Time] = mandatory(defaultTimeFormat.parse(_))
+
+  implicit val ofInetSocketAddress: Flaggable[InetSocketAddress] =
+    new Flaggable[InetSocketAddress] {
+      def parse(v: String) =  v.split(":") match {
+        case Array("", p) =>
+          new InetSocketAddress(p.toInt)
+        case Array(h, p) =>
+          new InetSocketAddress(h, p.toInt)
+        case _ =>
+          throw new IllegalArgumentException
+      }
+
+      override def show(addr: InetSocketAddress) =
+        "%s:%d".format(
+          Option(addr.getAddress) match {
+            case Some(a) if a.isAnyLocalAddress => ""
+            case _ => addr.getHostName
+          },
+          addr.getPort)
+    }
+
+  implicit def ofTuple[T: Flaggable, U: Flaggable]: Flaggable[(T, U)] = new Flaggable[(T, U)] {
     private val tflag = implicitly[Flaggable[T]]
     private val uflag = implicitly[Flaggable[U]]
 
     assert(!tflag.default.isDefined)
     assert(!uflag.default.isDefined)
 
-    def parse(v: String) = v.split(",") match {
+    def parse(v: String): (T, U) = v.split(",") match {
       case Array(t, u) => (tflag.parse(t), uflag.parse(u))
       case _ => throw new IllegalArgumentException("not a 't,u'")
     }
@@ -122,21 +159,21 @@ object Flaggable {
     }
   }
 
-  implicit def ofSet[T: Flaggable] = new Flaggable[Set[T]] {
+  private[app] class SetFlaggable[T: Flaggable] extends Flaggable[Set[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(!flag.default.isDefined)
     override def parse(v: String): Set[T] = v.split(",").map(flag.parse(_)).toSet
     override def show(set: Set[T]) = set map flag.show mkString ","
   }
 
-  implicit def ofSeq[T: Flaggable] = new Flaggable[Seq[T]] {
+  private[app] class SeqFlaggable[T: Flaggable] extends Flaggable[Seq[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(!flag.default.isDefined)
     def parse(v: String): Seq[T] = v.split(",") map flag.parse
     override def show(seq: Seq[T]) = seq map flag.show mkString ","
   }
 
-  implicit def ofMap[K: Flaggable, V: Flaggable] = new Flaggable[Map[K, V]] {
+  private[app] class MapFlaggable[K: Flaggable, V: Flaggable] extends Flaggable[Map[K, V]] {
     private val kflag = implicitly[Flaggable[K]]
     private val vflag = implicitly[Flaggable[V]]
 
@@ -162,6 +199,31 @@ object Flaggable {
 
     override def show(out: Map[K, V]) = {
       out.toSeq map { case (k, v) => k.toString + "=" + v.toString } mkString(",")
+    }
+  }
+
+  implicit def ofSet[T: Flaggable]: Flaggable[Set[T]] = new SetFlaggable[T]
+  implicit def ofSeq[T: Flaggable]: Flaggable[Seq[T]] = new SeqFlaggable[T]
+  implicit def ofMap[K: Flaggable, V: Flaggable]: Flaggable[Map[K, V]] = new MapFlaggable[K, V]
+
+  implicit def ofJavaSet[T: Flaggable]: Flaggable[JSet[T]] = new Flaggable[JSet[T]] {
+    val setFlaggable = new SetFlaggable[T]
+    override def parse(v: String): JSet[T] = setFlaggable.parse(v).asJava
+    override def show(set: JSet[T]) = setFlaggable.show(set.asScala.toSet)
+  }
+
+  implicit def ofJavaList[T: Flaggable]: Flaggable[JList[T]] = new Flaggable[JList[T]] {
+    val seqFlaggable = new SeqFlaggable[T]
+    override def parse(v: String): JList[T] = seqFlaggable.parse(v).asJava
+    override def show(list: JList[T]) = seqFlaggable.show(list.asScala)
+  }
+
+  implicit def ofJavaMap[K: Flaggable, V: Flaggable]: Flaggable[JMap[K, V]] = {
+    val mapFlaggable = new MapFlaggable[K, V]
+
+    new Flaggable[JMap[K, V]] {
+      def parse(in: String): JMap[K, V] = mapFlaggable.parse(in).asJava
+      override def show(out: JMap[K, V]) = mapFlaggable.show(out.asScala.toMap)
     }
   }
 }
@@ -199,7 +261,7 @@ class Flag[T: Flaggable] private[app](
     defaultOrUsage: Either[() => T, String],
     failFastUntilParsed: Boolean)
 {
-  import Flag._
+  import com.twitter.app.Flag._
 
   private[app] def this(name: String, help: String, default: => T, failFastUntilParsed: Boolean) =
     this(name, help, Left(() => default), failFastUntilParsed)
@@ -396,7 +458,7 @@ object Flags {
  * application itself will be consulted.
  */
 class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean) {
-  import Flags._
+  import com.twitter.app.Flags._
 
   def this(argv0: String, includeGlobal: Boolean) = this(argv0, includeGlobal, false)
   def this(argv0: String) = this(argv0, false)
@@ -589,6 +651,32 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    */
   def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = {
     val f = new Flag[T](name, help, m.toString, failFastUntilParsed)
+    add(f)
+    f
+  }
+
+  /**
+   * A Java-friendly method for adding named flags.
+   *
+   * @param name The name of the flag.
+   * @param default A default value.
+   * @param help The help string of the flag.
+   */
+  def create[T](name: String, default: T, help: String, flaggable: Flaggable[T]): Flag[T] = {
+    implicit val impl = flaggable
+    apply(name, default, help)
+  }
+
+  /**
+   * A Java-friendly way to create mandatory flags
+   *
+   * @param name the name passed on the command-line
+   * @param help the help text explaining the purpose of the flag
+   * @param usage a string describing the type of the flag, i.e.: Integer
+   */
+  def createMandatory[T](name: String, help: String, usage: String, flaggable: Flaggable[T]): Flag[T] = {
+    implicit val impl = flaggable
+    val f = new Flag[T](name, help, usage, failFastUntilParsed)
     add(f)
     f
   }

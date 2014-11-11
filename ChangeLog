@@ -1,3 +1,15 @@
+
+.. Author notes: this file is formatted with restructured text
+   (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
+   The changelog style is adapted from Apache Lucene.
+
+Next Version
+
+API Chnages:
+  * util-app: Flaggable is now an Abstract Trait for Java compatibility
+
+6.x
+
 6.22.2  2014-10-29
 
   * util, finagle: add missing @RunWith annotation
@@ -6,12 +18,6 @@
   * Reader.writable.fail: make reentrant
   * util-app: add an option so that we can let apps fail fast if reading argument before args are parsed.
   * {finagle,util}-core: Slurry of PartialFunction micro-optimizations
-
-.. Author notes: this file is formatted with restructured text
-   (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
-   The changelog style is adapted from Apache Lucene.
-
-6.x
 
 API Changes:
   * util-core: Removed `Sieve` example.
