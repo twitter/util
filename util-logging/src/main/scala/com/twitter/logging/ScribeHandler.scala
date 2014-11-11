@@ -20,7 +20,7 @@ import java.io.IOException
 import java.net._
 import java.nio.{ByteBuffer, ByteOrder}
 import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.{Executors, LinkedBlockingQueue}
+import java.util.concurrent.{ArrayBlockingQueue, LinkedBlockingQueue, TimeUnit, ThreadPoolExecutor}
 import java.util.{Arrays, logging => javalog}
 
 import com.twitter.concurrent.NamedPoolThreadFactory
@@ -105,10 +105,17 @@ class ScribeHandler(
 
   private var socket: Option[Socket] = None
   private var archaicServer = false
-  private[logging] val flusher =
-    Executors.newSingleThreadExecutor(
-      new NamedPoolThreadFactory("ScribeFlusher-" + category, true)
-    )
+
+
+  // Could be rewritten using a simple Condition (await/notify) or producer/consumer
+  // with timed batching
+  private[logging] val flusher = {
+    val threadFactory = new NamedPoolThreadFactory("ScribeFlusher-" + category, true)
+    // should be 1, but this is a crude form of retry
+    val queue = new ArrayBlockingQueue[Runnable](5)
+    val rejectionHandler = new ThreadPoolExecutor.DiscardPolicy()
+    new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, queue, threadFactory, rejectionHandler)
+  }
 
   private[logging] val queue = new LinkedBlockingQueue[Array[Byte]](maxMessagesToBuffer)
   private[logging] val sentRecords = new AtomicLong()

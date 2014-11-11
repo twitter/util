@@ -20,13 +20,13 @@ package logging
 import java.util.concurrent.TimeUnit
 import java.util.{logging => javalog}
 
+import com.twitter.conversions.string._
+import com.twitter.conversions.time._
+import com.twitter.util.{RandomSocket, Time}
+
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, WordSpec}
-
-import com.twitter.conversions.string._
-import com.twitter.conversions.time._
-import com.twitter.util.Time
 
 @RunWith(classOf[JUnitRunner])
 class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
@@ -37,9 +37,9 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
   record2.setLoggerName("hello")
   record2.setMillis(1206769996722L)
 
-  // This is a huge hack to make sure that the buffer doesn't
-  // get flushed.
-  val portWithoutListener = 50506
+  // Ensure we get a free port. This assumes this port won't be reallocated
+  // while test is running even though SO_REUSEADDR is true
+  val portWithoutListener = RandomSocket.nextPort()
 
   "ScribeHandler" should {
     before {
@@ -47,14 +47,10 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
       Logger.get("").setLevel(Logger.FATAL)
     }
 
-    // TODO: the hack mentioned in several places below is not preventing flush from being
-    // called. if there's a service listening on localhost:50506 this test will hang again
-
     "build a scribe RPC call" in {
       Time.withCurrentTimeFrozen { _ =>
         val scribe = ScribeHandler(
-          // This is a huge hack to make sure that the buffer doesn't
-          // get flushed.
+          // Hack to make sure that the buffer doesn't get flushed.
           port = portWithoutListener,
           bufferTime = 100.milliseconds,
           maxMessagesToBuffer = 10000,
@@ -124,14 +120,38 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
       scribe.publish(record2)
       scribe.publish(record1)
       scribe.publish(record2)
-      scribe.publish(record1)
-      scribe.publish(record2)
 
       scribe.flusher.shutdown()
-      scribe.flusher.awaitTermination(500, TimeUnit.MILLISECONDS)
+      scribe.flusher.awaitTermination(5, TimeUnit.SECONDS)
 
       assert(scribe.reconnectionFailure.get() === 1)
-      assert(scribe.reconnectionSkipped.get() === 5)
+      assert(scribe.reconnectionSkipped.get() === 3)
+    }
+
+    // TODO rewrite deterministically when we rewrite ScribeHandler
+    "avoid unbounded flush queue growth" in {
+      val scribe = ScribeHandler(
+        port = portWithoutListener,
+        bufferTime = 5.seconds,
+        maxMessagesToBuffer = 1,
+        formatter = BareFormatter,
+        category = "test"
+      ).apply()
+      scribe.updateLastLogStats()
+
+      // crude form to allow all 100 submission and get predictable dropping of tasks
+      scribe.synchronized {
+        for (i <- 1 until 100) {
+          scribe.publish(record1)
+        }
+      }
+
+      scribe.flusher.shutdown()
+      scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
+
+      assert(scribe.reconnectionFailure.get() === 1)
+      // 4 if the first job didn't start executing until after synchronized block above ended
+      assert(scribe.reconnectionSkipped.get() === 4 || scribe.reconnectionSkipped.get() === 5)
     }
   }
 }
