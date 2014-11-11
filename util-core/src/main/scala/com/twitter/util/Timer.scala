@@ -134,13 +134,13 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
 
   def schedule(when: Time)(f: => Unit) = {
     val task = toJavaTimerTask(f)
-    underlying.schedule(task, when.toDate)
+    underlying.schedule(task, safeTime(when).toDate)
     toTimerTask(task)
   }
 
   def schedule(when: Time, period: Duration)(f: => Unit) = {
     val task = toJavaTimerTask(f)
-    underlying.schedule(task, when.toDate, period.inMillis)
+    underlying.schedule(task, safeTime(when).toDate, period.inMillis)
     toTimerTask(task)
   }
 
@@ -156,6 +156,13 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   def logError(t: Throwable) {
     System.err.println("WARNING: JavaTimer caught exception running task: %s".format(t))
     t.printStackTrace(System.err)
+  }
+
+  // Make sure Time is on or after the epoch.  j.u.Timer throws an
+  // IllegalArgumentException if the value is negative.  To allow `when` to be
+  // before the epoch (e.g. Time.Bottom), move any pre-epoch times to the epoch.
+  private[this] def safeTime(time: Time): Time = {
+    time.max(Time.epoch)
   }
 
   private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {

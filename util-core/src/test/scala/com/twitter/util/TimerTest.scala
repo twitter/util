@@ -150,6 +150,16 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
     timer.stop()
   }
 
+  test("JavaTimer should schedule(pre-epoch)") {
+    val timer = new JavaTimer
+    val counter = new AtomicInteger(0)
+    timer.schedule(Time.Bottom) {
+      counter.incrementAndGet()
+    }
+    eventually { assert(counter.get() == 1) }
+    timer.stop()
+  }
+
   test("JavaTimer should cancel schedule(when)") {
     val timer = new JavaTimer
     val counter = new AtomicInteger(0)
