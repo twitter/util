@@ -268,6 +268,44 @@ trait Event[+T] { self =>
     }
     p ensure { c.close() }
   }
+
+  /**
+   * The [[Event]] that stores the difference between successive
+   * updates to the parent event. This can be used to perform
+   * incremental computation on large data structures.
+   */
+  def diff[CC[_]: Diffable, U](implicit toCC: T <:< CC[U]): Event[Diff[CC, U]] = new Event[Diff[CC, U]] {
+    def register(s: Witness[Diff[CC, U]]) = {
+      var left: CC[U] = Diffable.empty
+      self respond { t =>
+        synchronized {
+          val right = toCC(t)
+          val diff = Diffable.diff(left, right)
+          left = right
+          s.notify(diff)
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Patch up an [[Event]] of differences (like those produced by
+   * [[Event.diff]]) into an [[Event]] that reflects the current
+   * version of a data structure. That is: `(event:
+   * Event[CC[T]]).diff.patch` is equivalent to `event`
+   */
+  def patch[CC[_]: Diffable, U](implicit ev: T <:< Diff[CC, U]): Event[CC[U]] = new Event[CC[U]] {
+    def register(s: Witness[CC[U]]) = {
+      var last: CC[U] = Diffable.empty
+      self respond { diff =>
+        synchronized {
+          last = diff.patch(last)
+          s.notify(last)
+        }
+      }
+    }
+  }
 }
 
 /**

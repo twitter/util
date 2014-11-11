@@ -106,6 +106,13 @@ trait Var[+T] { self =>
     def register(s: Witness[T]) =
       self observe { newv => s.notify(newv) }
   }
+  
+  /**
+   * Produce an [[Event]] reflecting the differences between
+   * each update to this [[Var]].
+   */ 
+  def diff[CC[_]: Diffable, U](implicit toCC: T <:< CC[U]): Event[Diff[CC, U]] = 
+    changes.diff
 
   /**
    * A one-shot predicate observation. The returned future
@@ -217,6 +224,23 @@ object Var {
   def apply[T](init: T, e: Event[T]): Var[T] = {
     val v = Var(init)
     Closable.closeOnCollect(e.register(Witness(v)), v)
+    v
+  }
+
+  /**
+   * Patch reconstructs a [[Var]] based on observing the incremental
+   * changes presented in the underlying [[Diff]]s.
+   * 
+   * Note that this eagerly subscribes to the event stream;
+   * it is unsubscribed whenever the returned Var is collected.
+   */
+  def patch[CC[_]: Diffable, T](diffs: Event[Diff[CC, T]]): Var[CC[T]] = {
+    val v = Var(Diffable.empty: CC[T])
+    Closable.closeOnCollect(diffs respond { diff =>
+      synchronized {
+        v() = diff.patch(v())
+      }
+    }, v)
     v
   }
 

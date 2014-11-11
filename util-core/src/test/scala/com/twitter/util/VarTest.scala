@@ -1,15 +1,15 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
-
-import scala.collection.mutable
-
 import org.junit.runner.RunWith
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
-class VarTest extends FunSuite {
+class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
   private case class U[T](init: T) extends UpdatableVar[T](init) {
     import Var.Observer
 
@@ -409,5 +409,19 @@ class VarTest extends FunSuite {
     assert(ref.get === Seq((0, 0)))
     a() = 1
     assert(ref.get === Seq((0, 0), (1, 1)))
+  }
+
+
+  test("Var: diff/patch") {
+    forAll(arbitrary[Seq[Set[Int]]].suchThat(_.nonEmpty)) { sets =>
+      val v = Var(sets.head)
+      val w = new AtomicReference[Set[Int]]
+      Var.patch[Set, Int](v.diff).changes.register(Witness(w))
+      
+      for (set <- sets) {
+        v() = set
+        assert(set === w.get)
+      }
+    }
   }
 }
