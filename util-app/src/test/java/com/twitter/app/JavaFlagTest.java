@@ -12,27 +12,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A class representing a named thing. Used to illustrate flag-construction for
- * classes defined in application code. See [[com.twitter.app.Flaggable]] for
- * details.
- */
-class Named {
-  String name;
-
-  public static Flaggable<Named> ofNamed =
-    Flaggable.mandatory(new Function<String, Named>() {
-      @Override public Named apply(String n) {
-        return new Named(n);
-      }
-    });
-
-  public Named(String name) {
-    this.name = name;
-  }
-}
-
 public class JavaFlagTest {
+
+  /**
+   * A class representing a named thing. Used to illustrate flag-construction for
+   * classes defined in application code. See [[com.twitter.app.Flaggable]] for
+   * details.
+   */
+  static class Named {
+    String name;
+
+    public static Flaggable<Named> ofNamed =
+      Flaggable.mandatory(new Function<String, Named>() {
+        @Override public Named apply(String n) {
+          return new Named(n);
+        }
+      });
+
+    public Named(String name) {
+      this.name = name;
+    }
+  }
 
   @Test
   public void testJavaFlags() {
