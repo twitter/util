@@ -1,15 +1,13 @@
 package com.twitter.app
 
+import com.twitter.conversions.time._
+import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.Logger
-
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-
-import com.twitter.conversions.time._
-import com.twitter.util._
 
 /**
  * A composable application trait that includes flag parsing as well
@@ -70,12 +68,6 @@ trait App extends Closable with CloseAwaitably {
     premains += (() => f)
   }
 
-  // onExit may use this pool to run hooks concurrently
-  private lazy val exitPool = FuturePool.unboundedPool
-
-  // finagle isn't available here, so no DefaultTimer
-  private val exitTimer = new JavaTimer(isDaemon = true)
-
   /** Minimum duration to allow for exits to be processed. */
   final val MinGrace: Duration = 1.second
 
@@ -105,7 +97,9 @@ trait App extends Closable with CloseAwaitably {
   protected final def onExit(f: => Unit) {
     closeOnExit {
       Closable.make { deadline => // close() ensures that this deadline is sane
-        exitPool(f).within(exitTimer, deadline - Time.now)
+        // finagle isn't available here, so no DefaultTimer
+        val exitTimer = new JavaTimer(isDaemon = true)
+        FuturePool.unboundedPool(f).within(exitTimer, deadline - Time.now)
       }
     }
   }
