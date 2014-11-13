@@ -5,6 +5,11 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 class TestApp(f: () => Unit) extends App {
+  var reason: Option[String] = None
+  protected override def exitOnError(reason: String) = {
+    this.reason = Some(reason)
+  }
+
   def main() = f()
 }
 
@@ -30,5 +35,17 @@ class AppTest extends FunSuite {
 
     test2.main(Array.empty)
     assert(App.registered === Some(test2))
+  }
+
+  test("App: pass in bad args and expect usage") {
+    val test1 = new TestApp(() => ())
+
+    test1.main(Array("-environment=staging", "-environment=staging"))
+    val theReason: String = test1.reason.getOrElse {
+      fail("There should have been a usage printed and was not")
+    }
+
+    assert(theReason.contains("""Error parsing flag "environment""""))
+
   }
 }

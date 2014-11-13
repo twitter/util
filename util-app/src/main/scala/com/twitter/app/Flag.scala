@@ -262,6 +262,7 @@ class Flag[T: Flaggable] private[app](
     failFastUntilParsed: Boolean)
 {
   import com.twitter.app.Flag._
+  import java.util.logging._
 
   private[app] def this(name: String, help: String, default: => T, failFastUntilParsed: Boolean) =
     this(name, help, Left(() => default), failFastUntilParsed)
@@ -274,6 +275,8 @@ class Flag[T: Flaggable] private[app](
 
   private[app] def this(name: String, help: String, usage: String) =
     this(name, help, usage, false)
+
+  private[this] val log = Logger.getLogger("")
 
   protected val flaggable = implicitly[Flaggable[T]]
 
@@ -311,7 +314,14 @@ class Flag[T: Flaggable] private[app](
 
   private lazy val default: Option[T] = defaultOrUsage match {
     case Right(_) => None
-    case Left(d) => Some(d())
+    case Left(d) =>
+      try {
+        Some(d())
+      } catch {
+        case e: Throwable =>
+          log.log(Level.SEVERE, s"Could not run default function for flag $name", e)
+          throw e
+      }
   }
 
   private def valueOrDefault: Option[T] = getValue match {
@@ -343,7 +353,7 @@ class Flag[T: Flaggable] private[app](
       if (failFastUntilParsed)
         throw new IllegalStateException(s"Flag $name read before parse.")
       else
-        java.util.logging.Logger.getLogger("").severe(s"Flag $name read before parse.")
+        log.log(Level.SEVERE, s"Flag $name read before parse.")
     }
     valueOrDefault match {
       case Some(v) => v
@@ -364,13 +374,33 @@ class Flag[T: Flaggable] private[app](
   def get: Option[T] = getValue
 
   /** String representation of this flag's default value */
-  def defaultString: String = flaggable.show(default getOrElse { throw flagNotFound })
-
-  def usageString: String =
-    defaultOrUsage match {
-      case Left(_) => "  -%s='%s': %s".format(name, defaultString, help)
-      case Right(usage) => "  -%s=<%s>: %s".format(name, usage, help)
+  def defaultString(): String = {
+    try {
+      flaggable.show(default getOrElse { throw flagNotFound })
+    } catch {
+      case e: Throwable =>
+        log.log(Level.SEVERE,
+          s"Flag $name default cannot be read",
+          e)
+        throw e
     }
+  }
+
+  def usageString: String = {
+    val defaultOrUsageStr = defaultOrUsage match {
+      case Left(_) => runDefaultString
+      case Right(usage) => usage
+    }
+    s"  -$name=<$defaultOrUsageStr>: $help"
+  }
+
+  private[this] def runDefaultString = {
+    try {
+      defaultString
+    } catch {
+      case e: Throwable => s"Error in reading default value for flag=$name.  See logs for exception"
+    }
+  }
 
   /**
    * String representation of this flag in -foo='bar' format,
@@ -694,7 +724,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
       for (k <- flags.keys.toArray.sorted)
       yield flags(k).usageString
     val globalLines = if (!includeGlobal) Seq.empty else {
-      GlobalFlag.getAll(getClass.getClassLoader).map(_.usageString).sorted
+      GlobalFlag.getAllOrEmptyArray(getClass.getClassLoader).map(_.usageString).sorted
     }
 
     val cmd = if (cmdUsage.nonEmpty) cmdUsage+"\n" else "usage: "
@@ -846,7 +876,23 @@ private object GlobalFlag {
       | _: IllegalArgumentException => None
   }
 
-  def getAll(loader: ClassLoader) = {
+  private[this] val log = java.util.logging.Logger.getLogger("")
+
+  def getAllOrEmptyArray(loader: ClassLoader): Seq[Flag[_]] = {
+    try {
+      getAll(loader)
+    } catch {
+      //NOTE: We catch Throwable as ExceptionInInitializerError and any errors really so that
+      //we don't hide the real issue that a developer just added an unparseable arg.
+      case e: Throwable =>
+        log.log(java.util.logging.Level.SEVERE,
+          "failure reading in flags",
+          e)
+        new ArrayBuffer[Flag[_]]
+    }
+  }
+
+  def getAll(loader: ClassLoader): Seq[Flag[_]] = {
     val markerClass = classOf[GlobalFlagVisible]
     val flags = new ArrayBuffer[Flag[_]]
 

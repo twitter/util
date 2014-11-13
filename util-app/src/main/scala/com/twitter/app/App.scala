@@ -49,6 +49,11 @@ trait App extends Closable with CloseAwaitably {
 
   protected def failfastOnFlagsNotParsed = false
 
+  protected def exitOnError(reason: String): Unit = {
+    System.err.println(reason)
+    System.exit(1)
+  }
+
   private val inits     = mutable.Buffer[() => Unit]()
   private val premains  = mutable.Buffer[() => Unit]()
   private val exits     = new ConcurrentLinkedQueue[Closable]
@@ -130,12 +135,10 @@ trait App extends Closable with CloseAwaitably {
         _args = remainder.toArray
 
       case Flags.Help(usage) =>
-        System.err.println(usage)
-        System.exit(1)
+        exitOnError(usage)
 
       case Flags.Error(reason) =>
-        System.err.println(reason)
-        System.exit(1)
+        exitOnError(reason)
     }
 
     for (f <- premains) f()
