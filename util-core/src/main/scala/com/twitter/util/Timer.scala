@@ -1,24 +1,43 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicBoolean
+import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent._
-
+import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.mutable.ArrayBuffer
 
-import com.twitter.concurrent.NamedPoolThreadFactory
-
+/**
+ * TimerTasks represent pending tasks scheduled by a [[Timer]].
+ */
 trait TimerTask extends Closable {
   def cancel()
   def close(deadline: Time) = Future(cancel())
 }
 
+/**
+ * Timers are used to schedule tasks in the future.
+ * They support both one-shot and recurring tasks.
+ *
+ * @note Scheduling tasks with [[Timer]]s should rarely 
+ * be done directly; for example, when programming 
+ * with [[Future]]s, prefer using [[Future$.sleep]].
+ */
 trait Timer {
+  /**
+   * Run `f` at time `when`.
+   */
   def schedule(when: Time)(f: => Unit): TimerTask
+  
+  /**
+   * Run `f` at time `when`; subsequently run `f` at every 
+   * elapsed `period`.
+   */
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask
 
-  def schedule(period: Duration)(f: => Unit): TimerTask = {
+  /**
+   * Run `f` every elapsed `period`, starting immediately.
+   */
+  def schedule(period: Duration)(f: => Unit): TimerTask =
     schedule(period.fromNow, period)(f)
-  }
 
   /**
    * Performs an operation after the specified delay.  Interrupting the Future
@@ -55,6 +74,10 @@ trait Timer {
     p
   }
 
+  /**
+   * Stop the timer. Pending tasks are cancelled.
+   * The timer is unusable after being stopped.
+   */
   def stop()
 }
 
