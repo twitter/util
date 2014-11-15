@@ -57,15 +57,20 @@ final object Local {
   }
 
   /**
+   * Execute a block with the given Locals, restoring current values upon completion.
+   */
+  def let[U](ctx: Context)(f: => U): U = {
+    val saved = save()
+    restore(ctx)
+    try f finally restore(saved)
+  }
+
+  /**
    * Execute a block with all Locals clear, restoring
    * current values upon completion.
    */
-  def letClear[U](f: => U): U = {
-    val saved = save()
-    clear()
-    try f finally restore(saved)
-  }
-  
+  def letClear[U](f: => U): U = let(null)(f)
+
   /**
    * Convert a closure `() => R` into another closure of the same
    * type whose Local context is saved when calling `closed`

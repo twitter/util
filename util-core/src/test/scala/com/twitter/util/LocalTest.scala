@@ -67,6 +67,26 @@ class LocalTest extends FunSuite {
     assert(local() === Some(123))
   }
 
+  test("Local.let: should set locals and restore previous value") {
+    val l1, l2 = new Local[Int]
+    l1() = 1
+    l2() = 2
+    val ctx = Local.save()
+    l1() = 2
+    l2() = 4
+    var executeCount = 0
+
+    Local.let(ctx) {
+      assert(l1() == Some(1))
+      assert(l2() == Some(2))
+      executeCount += 1
+    }
+
+    assert(l1() === Some(2))
+    assert(l2() === Some(4))
+    assert(executeCount === 1)
+  }
+
   test("Local.letClear: should clear all locals and restore previous value") {
     val l1, l2 = new Local[Int]
     l1() = 1
@@ -127,7 +147,7 @@ class LocalTest extends FunSuite {
     Local.restore(save0)
     assert(l() === Some(1))
   }
-  
+
   test("Local.closed") {
     val l = new Local[Int]
     l() = 1
