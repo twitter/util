@@ -1,7 +1,7 @@
-package com.twitter.util;
+package com.twitter.concurrent;
 
-import com.twitter.concurrent.Tx;
-import com.twitter.concurrent.Txs;
+import com.twitter.util.Await;
+import com.twitter.util.Future;
 import junit.framework.Assert;
 import org.junit.Test;
 import scala.Tuple2;
@@ -15,11 +15,13 @@ public class TxCompilationTest {
     Tx<BoxedUnit> b = Txs.UNIT;
     Tx<?> c = Txs.ABORTED;
     Tuple2<Tx<BoxedUnit>, Tx<String>> d = Txs.twoParty("11");
+    Tx<Integer> e = Txs.newAbortedTx();
 
     Assert.assertNotNull(a);
     Assert.assertNotNull(b);
     Assert.assertNotNull(c);
     Assert.assertNotNull(d);
+    Assert.assertNotNull(e);
   }
 
   @Test
@@ -28,7 +30,7 @@ public class TxCompilationTest {
     Future<Tx.Result<Integer>> futureResult = a.ack();
     Tx.Result<Integer> result = Await.result(futureResult);
 
-    Assert.assertTrue(Txs.isCommited(result));
+    Assert.assertTrue(Txs.isCommitted(result));
     Assert.assertFalse(Txs.isAborted(result));
   }
 
@@ -39,7 +41,7 @@ public class TxCompilationTest {
     Tx.Result<?> result = Await.result(futureResult);
 
     Assert.assertTrue(Txs.isAborted(result));
-    Assert.assertFalse(Txs.isCommited(result));
+    Assert.assertFalse(Txs.isCommitted(result));
   }
 
   @Test
@@ -49,7 +51,7 @@ public class TxCompilationTest {
     Tx.Result<String> result = Await.result(futureResult);
 
     Assert.assertTrue(Txs.isAborted(result));
-    Assert.assertFalse(Txs.isCommited(result));
+    Assert.assertFalse(Txs.isCommitted(result));
   }
 
   @Test
@@ -58,14 +60,14 @@ public class TxCompilationTest {
     Future<Tx.Result<String>> futureResult = a.ack();
     Tx.Result<String> result = Await.result(futureResult);
 
-    Assert.assertTrue(Txs.isCommited(result));
+    Assert.assertTrue(Txs.isCommitted(result));
     Assert.assertFalse(Txs.isAborted(result));
   }
 
   @Test(expected=IllegalArgumentException.class)
   public void testSample() throws Exception {
     Tx<String> a = Txs.newTx("42");
-    Tx<String> b = Txs.newTx(null);
+    Tx<String> b = Txs.newAbortedTx();
     Future<Tx.Result<String>> futureResultA = a.ack();
     Future<Tx.Result<String>> futureResultB = b.ack();
     Tx.Result<String> resultA = Await.result(futureResultA);

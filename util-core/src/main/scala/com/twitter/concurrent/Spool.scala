@@ -33,6 +33,8 @@ import com.twitter.util.{Await, Duration, Future, Return, Throw}
  *   fill(rest)
  *   firstElem *:: rest
  * }}}
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.concurrent.AbstractSpool]].
  */
 sealed trait Spool[+A] {
   // NB: Spools are always lazy internally in order to provide the expected behavior
@@ -166,10 +168,20 @@ sealed trait Spool[+A] {
     if (isEmpty) that else new LazyCons(head: B, tail map (_ ++ that))
 
   /**
+   * @see operator ++
+   */
+  def concat[B >: A](that: Spool[B]): Spool[B] = this ++ that
+
+  /**
    * Concatenates two spools.
    */
   def ++[B >: A](that: Future[Spool[B]]): Future[Spool[B]] =
     if (isEmpty) that else Future.value(new LazyCons(head: B, tail flatMap (_ ++ that)))
+
+  /**
+   * @see operator ++
+   */
+  def concat[B >: A](that: Future[Spool[B]]): Future[Spool[B]] = this ++ that
 
   /**
    * Applies a function that generates a spool to each element in this spool,
@@ -201,13 +213,21 @@ sealed trait Spool[+A] {
 
   /**
    * Eagerly executes all computation represented by this Spool (presumably for
-   * sideeffects), and returns a Future representing its completion.
+   * side-effects), and returns a Future representing its completion.
    */
   def force: Future[Unit] = foreach { _ => () }
 }
 
+/**
+ * Abstract `Spool` class for Java compatibility.
+ */
+abstract class AbstractSpool[A] extends Spool[A]
+
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.concurrent.Spools]].
+ */
 object Spool {
-  case class Cons[A](val head: A, val tail: Future[Spool[A]])
+  case class Cons[A](head: A, tail: Future[Spool[A]])
     extends Spool[A]
   {
     def isEmpty = false
@@ -248,18 +268,6 @@ object Spool {
   def empty[A]: Spool[A] = Empty
 
   /**
-   * Adds an implicit method to efficiently convert a Seq[A] to a Spool[A]
-   */
-  class ToSpool[A](s: Seq[A]) {
-    def toSpool: Spool[A] =
-      s.reverse.foldLeft(Spool.empty: Spool[A]) {
-        case (tail, head) => cons(head, tail)
-      }
-  }
-
-  implicit def seqToSpool[A](s: Seq[A]) = new ToSpool(s)
-
-  /**
    * Syntax support.  We retain different constructors for future
    * resolving vs. not.
    *
@@ -279,6 +287,7 @@ object Spool {
       else Some((s.head, s.tail))
     }
   }
+
   class Syntax1[A](tail: Spool[A]) {
     /**
      * @deprecated Deprecated in favor of {{*::}}. This will eventually be removed.
@@ -295,4 +304,16 @@ object Spool {
       else Some((s.head, Await.result(s.tail)))
     }
   }
+
+  /**
+   * Adds an implicit method to efficiently convert a Seq[A] to a Spool[A]
+   */
+  class ToSpool[A](s: Seq[A]) {
+    def toSpool: Spool[A] =
+      s.reverse.foldLeft(Spool.empty: Spool[A]) {
+        case (tail, head) => head *:: Future.value(tail)
+      }
+  }
+
+  implicit def seqToSpool[A](s: Seq[A]) = new ToSpool(s)
 }

@@ -1,6 +1,6 @@
-package com.twitter.util;
+package com.twitter.concurrent;
 
-import com.twitter.concurrent.*;
+import com.twitter.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 import scala.runtime.AbstractFunction0;

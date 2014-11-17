@@ -51,6 +51,13 @@ public final class Txs {
   }
 
   /**
+   * @see Tx$#aborted()
+   */
+  public static <T> Tx<T> newAbortedTx() {
+    return Txs.newTx(null);
+  }
+
+  /**
    * @see Tx$#twoParty(Object)
    */
   public static <T> Tuple2<Tx<BoxedUnit>, Tx<T>> twoParty(T message) {
@@ -61,7 +68,7 @@ public final class Txs {
    * Checks whether the given {@code result} is {@link com.twitter.concurrent.Tx.Commit}
    * or not.
    */
-  public static <T> boolean isCommited(Tx.Result<T> result) {
+  public static <T> boolean isCommitted(Tx.Result<T> result) {
     return result instanceof Tx.Commit;
   }
 
@@ -78,7 +85,7 @@ public final class Txs {
    * instance.
    */
   public static <T> T sample(Tx.Result<T> result) {
-    if (Txs.isCommited(result)) {
+    if (Txs.isCommitted(result)) {
       return ((Tx.Commit<T>) result).value();
     } else {
       throw new IllegalArgumentException("Given result is not committed.");
