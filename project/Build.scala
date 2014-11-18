@@ -101,8 +101,80 @@ object Util extends Build {
     utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilClassPreloader, utilBenchmark, utilApp,
-    utilEvents
+    utilEvents, utilStats
   )
+
+  lazy val utilApp = Project(
+    id = "util-app",
+    base = file("util-app"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-app"
+  ).dependsOn(utilCore)
+
+  lazy val utilBenchmark = Project(
+    id = "util-benchmark",
+    base = file("util-benchmark"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-benchmark",
+    libraryDependencies ++= Seq(
+      "com.google.caliper" % "caliper" % "0.5-rc1"
+    )
+  ).dependsOn(utilCore, utilJvm, utilEvents)
+
+  lazy val utilCache = Project(
+    id = "util-cache",
+    base = file("util-cache"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-cache",
+    libraryDependencies ++= Seq(
+      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
+      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
+      "com.google.guava"         % "guava"               % "16.0.1"
+    )
+  ).dependsOn(utilCore)
+
+  lazy val utilClassPreloader = Project(
+    id = "util-class-preloader",
+    base = file("util-class-preloader"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-class-preloader"
+  ).dependsOn(utilCore)
+
+  lazy val utilCodec = Project(
+    id = "util-codec",
+    base = file("util-codec"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-codec",
+    libraryDependencies ++= Seq(
+      "commons-codec" % "commons-codec" % "1.6"
+    )
+  ).dependsOn(utilCore)
+
+  lazy val utilCollection = Project(
+    id = "util-collection",
+    base = file("util-collection"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-collection",
+    libraryDependencies ++= Seq(
+      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
+      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
+      "javax.inject"             % "javax.inject"        % "1",
+      "com.google.guava"         % "guava"               % "16.0.1",
+      "commons-collections"      % "commons-collections" % "3.2.1"
+    )
+  ).dependsOn(utilCore % "compile->compile;test->test")
 
   lazy val utilCore = Project(
     id = "util-core",
@@ -140,47 +212,14 @@ object Util extends Build {
     libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-compiler" % _ % "compile" }
   ).dependsOn(utilCore)
 
-  lazy val utilCodec = Project(
-    id = "util-codec",
-    base = file("util-codec"),
+  lazy val utilEvents = Project(
+    id = "util-events",
+    base = file("util-events"),
     settings = Project.defaultSettings ++
       sharedSettings
   ).settings(
-    name := "util-codec",
-    libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.6"
-    )
-  ).dependsOn(utilCore)
-
-  lazy val utilCollection = Project(
-    id = "util-collection",
-    base = file("util-collection"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-collection",
-    libraryDependencies ++= Seq(
-      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
-      "javax.inject"             % "javax.inject"        % "1",
-      "com.google.guava"         % "guava"               % "16.0.1",
-      "commons-collections"      % "commons-collections" % "3.2.1"
-    )
-  ).dependsOn(utilCore % "compile->compile;test->test")
-
-  lazy val utilCache = Project(
-    id = "util-cache",
-    base = file("util-cache"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-cache",
-    libraryDependencies ++= Seq(
-      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
-      "com.google.guava"         % "guava"               % "16.0.1"
-    )
-  ).dependsOn(utilCore)
+    name := "util-events"
+  ).dependsOn(utilApp)
 
   lazy val utilReflect = Project(
     id = "util-reflect",
@@ -197,6 +236,27 @@ object Util extends Build {
     )
   ).dependsOn(utilCore)
 
+  lazy val utilHashing = Project(
+    id = "util-hashing",
+    base = file("util-hashing"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-hashing",
+    libraryDependencies ++= Seq(
+      "commons-codec" % "commons-codec" % "1.6" % "test"
+    )
+  ).dependsOn(utilCore % "test")
+
+  lazy val utilJvm = Project(
+    id = "util-jvm",
+    base = file("util-jvm"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-jvm"
+  ).dependsOn(utilApp, utilCore, utilTest % "test")
+
   lazy val utilLogging = Project(
     id = "util-logging",
     base = file("util-logging"),
@@ -205,6 +265,15 @@ object Util extends Build {
   ).settings(
     name := "util-logging"
   ).dependsOn(utilCore, utilApp)
+
+  lazy val utilStats = Project(
+    id = "util-stats",
+    base = file("util-stats"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-stats"
+  ).dependsOn(utilCore)
 
   lazy val utilTest = Project(
     id = "util-test",
@@ -231,27 +300,6 @@ object Util extends Build {
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.1"
     )
   ).dependsOn(utilCodec)
-
-  lazy val utilHashing = Project(
-    id = "util-hashing",
-    base = file("util-hashing"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-hashing",
-    libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.6" % "test"
-    )
-  ).dependsOn(utilCore % "test")
-
-  lazy val utilJvm = Project(
-    id = "util-jvm",
-    base = file("util-jvm"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-jvm"
-  ).dependsOn(utilApp, utilCore, utilTest % "test")
 
   lazy val utilZk = Project(
     id = "util-zk",
@@ -283,44 +331,5 @@ object Util extends Build {
     // that would otherwise cause incompatibilities. See above comment.
     utilCollection, utilHashing
   )
-
-  lazy val utilClassPreloader = Project(
-    id = "util-class-preloader",
-    base = file("util-class-preloader"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-class-preloader"
-  ).dependsOn(utilCore)
-
-  lazy val utilBenchmark = Project(
-    id = "util-benchmark",
-    base = file("util-benchmark"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-benchmark",
-    libraryDependencies ++= Seq(
-      "com.google.caliper" % "caliper" % "0.5-rc1"
-    )
-  ).dependsOn(utilCore, utilJvm, utilEvents)
-
-  lazy val utilApp = Project(
-    id = "util-app",
-    base = file("util-app"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-app"
-  ).dependsOn(utilCore)
-
-  lazy val utilEvents = Project(
-    id = "util-events",
-    base = file("util-events"),
-    settings = Project.defaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-events"
-  ).dependsOn(utilApp)
 
 }
