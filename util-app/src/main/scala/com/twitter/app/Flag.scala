@@ -896,9 +896,12 @@ private object GlobalFlag {
     val markerClass = classOf[GlobalFlagVisible]
     val flags = new ArrayBuffer[Flag[_]]
 
-    for (info <- ClassPath.browse(loader)) try {
+    // Search for Scala objects annotated with GlobalFlagVisible:
+    // Since Scala object classnames end with $, filter by name first
+    // before attempting to load the class.
+    for (info <- ClassPath.browse(loader) if (info.name endsWith "$")) try {
       val cls = info.load()
-      if (cls.isAnnotationPresent(markerClass) && (info.name endsWith "$")) {
+      if (cls.isAnnotationPresent(markerClass)) {
         get(info.name.dropRight(1)) match {
           case Some(f) => flags += f
           case None => println("failed for "+info.name)
