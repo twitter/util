@@ -55,9 +55,9 @@ public class SpoolCompilationTest {
     Spool<String> abNothing = ab.concat(Spools.<String>newEmptySpool());
     Spool<String> abc = Await.result(ab.concat(Future.value(c)));
 
-    Collection<String> listA = JavaConversions.asJavaList(Await.result(ab.toSeq()));
-    Collection<String> listB = JavaConversions.asJavaList(Await.result(abNothing.toSeq()));
-    Collection<String> listC = JavaConversions.asJavaList(Await.result(abc.toSeq()));
+    Collection<String> listA = JavaConversions.seqAsJavaList(Await.result(ab.toSeq()));
+    Collection<String> listB = JavaConversions.seqAsJavaList(Await.result(abNothing.toSeq()));
+    Collection<String> listC = JavaConversions.seqAsJavaList(Await.result(abc.toSeq()));
 
     Assert.assertArrayEquals(new String[] { "a", "b"}, listA.toArray());
     Assert.assertArrayEquals(new String[] { "a", "b"}, listB.toArray());
