@@ -17,13 +17,12 @@
 package com.twitter
 package logging
 
-import java.util.concurrent.TimeUnit
-import java.util.{logging => javalog}
-
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
+import com.twitter.finagle.stats.InMemoryStatsReceiver
 import com.twitter.util.{RandomSocket, Time}
-
+import java.util.concurrent.TimeUnit
+import java.util.{logging => javalog}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, WordSpec}
@@ -42,10 +41,6 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
   val portWithoutListener = RandomSocket.nextPort()
 
   "ScribeHandler" should {
-    before {
-      Logger.reset()
-      Logger.get("").setLevel(Logger.FATAL)
-    }
 
     "build a scribe RPC call" in {
       Time.withCurrentTimeFrozen { _ =>
@@ -58,8 +53,10 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
           category = "test",
           level = Some(Level.DEBUG)
         ).apply()
+
         scribe.publish(record1)
         scribe.publish(record2)
+
         assert(scribe.queue.size === 2)
         assert(scribe.makeBuffer(2).array.hexlify === (
           "000000b080010001000000034c6f67000000000f0001" +
@@ -92,29 +89,36 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
     }
 
     "throw away log messages if scribe is too busy" in {
+      val statsReceiver = new InMemoryStatsReceiver
+
       val scribe = ScribeHandler(
         port = portWithoutListener,
         bufferTime = 5.seconds,
         maxMessagesToBuffer = 1,
         formatter = BareFormatter,
-        category = "test"
+        category = "test",
+        statsReceiver = statsReceiver
       ).apply()
+
       scribe.updateLastTransmission()
       scribe.publish(record1)
       scribe.publish(record2)
-      assert(scribe.droppedRecords.get() === 1)
-      assert(scribe.sentRecords.get() === 0)
+
+      assert(statsReceiver.counter("dropped_records")() === 1l)
+      assert(statsReceiver.counter("sent_records")() === 0l)
     }
 
     "have backoff on connection errors" in {
+      val statsReceiver = new InMemoryStatsReceiver
+
       val scribe = ScribeHandler(
         port = portWithoutListener,
         bufferTime = 5.seconds,
         maxMessagesToBuffer = 1,
         formatter = BareFormatter,
-        category = "test"
+        category = "test",
+        statsReceiver = statsReceiver
       ).apply()
-      scribe.updateLastLogStats()
 
       scribe.publish(record1)
       scribe.publish(record2)
@@ -124,24 +128,26 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
       scribe.flusher.shutdown()
       scribe.flusher.awaitTermination(5, TimeUnit.SECONDS)
 
-      assert(scribe.reconnectionFailure.get() === 1)
-      assert(scribe.reconnectionSkipped.get() === 3)
+      assert(statsReceiver.counter("connection_failed")() === 1l)
+      assert(statsReceiver.counter("connection_skipped")() === 3l)
     }
 
     // TODO rewrite deterministically when we rewrite ScribeHandler
     "avoid unbounded flush queue growth" in {
+      val statsReceiver = new InMemoryStatsReceiver
+
       val scribe = ScribeHandler(
         port = portWithoutListener,
         bufferTime = 5.seconds,
         maxMessagesToBuffer = 1,
         formatter = BareFormatter,
-        category = "test"
+        category = "test",
+        statsReceiver = statsReceiver
       ).apply()
-      scribe.updateLastLogStats()
 
       // crude form to allow all 100 submission and get predictable dropping of tasks
       scribe.synchronized {
-        for (i <- 1 until 100) {
+        for (i <- 0 until 100) {
           scribe.publish(record1)
         }
       }
@@ -149,9 +155,10 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
       scribe.flusher.shutdown()
       scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
 
-      assert(scribe.reconnectionFailure.get() === 1)
+      assert(statsReceiver.counter("published")() === 100l)
+      assert(statsReceiver.counter("connection_failed")() === 1l)
       // 4 if the first job didn't start executing until after synchronized block above ended
-      assert(scribe.reconnectionSkipped.get() === 4 || scribe.reconnectionSkipped.get() === 5)
+      assert(statsReceiver.counter("connection_skipped")() === 4l || statsReceiver.counter("connection_skipped")() === 5l)
     }
   }
 }
