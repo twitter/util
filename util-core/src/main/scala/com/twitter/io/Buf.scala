@@ -52,7 +52,7 @@ trait Buf { outer =>
 
   /** May require copying. */
   protected def unsafeByteArray: Array[Byte] = unsafeByteArrayBuf match {
-    case Some(Buf.ByteArray.Unsafe(bytes, 0, end)) if end == bytes.length =>
+    case Some(Buf.ByteArray.Owned(bytes, 0, end)) if end == bytes.length =>
       bytes
     case _ =>
       copiedByteArray
@@ -177,15 +177,15 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
 }
 
 /**
- * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Copied and
- * Unsafe APIs, each of which with construction & extraction utilities.
+ * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+ * Owned APIs, each of which with construction & extraction utilities.
  *
- * The Unsafe APIs may provide direct access to a Buf's underlying
+ * The Owned APIs may provide direct access to a Buf's underlying
  * implementation; and so mutating the data structure invalidates a Buf's
  * immutability constraint. Users must take care to handle this data
  * immutably.
  *
- * The Copied variants, on the other hand, ensure that the Buf shares no state
+ * The Shared variants, on the other hand, ensure that the Buf shares no state
  * with the caller (at the cost of additional allocation).
  */
 object Buf {
@@ -265,24 +265,24 @@ object Buf {
     /**
      * Construct a buffer representing the given bytes.
      */
-    def apply(bytes: Byte*): Buf = Unsafe(bytes.toArray)
+    def apply(bytes: Byte*): Buf = Owned(bytes.toArray)
 
     /**
      * Construct a buffer representing the provided array of bytes without copying.
      */
-    @deprecated("Use Buf.ByteArray.Copied or Buf.ByteArray.Unsafe.", "6.23.0")
-    def apply(bytes: Array[Byte]): Buf = Unsafe(bytes)
+    @deprecated("Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.", "6.23.0")
+    def apply(bytes: Array[Byte]): Buf = Owned(bytes)
 
     /**
      * Construct a buffer representing the provided array of bytes
      * at the given offsets without copying.
      */
-    @deprecated("Use Buf.ByteArray.Copied or Buf.ByteArray.Unsafe.", "6.23.0")
-    def apply(bytes: Array[Byte], begin: Int, end: Int): Buf = Unsafe(bytes, begin, end)
+    @deprecated("Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.", "6.23.0")
+    def apply(bytes: Array[Byte], begin: Int, end: Int): Buf = Owned(bytes, begin, end)
 
     /** Extract a ByteArray's underlying data and offsets. */
-    @deprecated("Use Buf.ByteArray.Copied or Buf.ByteArray.Unsafe.", "6.23.0")
-    def unapply(ba: ByteArray): Option[(Array[Byte], Int, Int)] = ByteArray.Unsafe.unapply(ba)
+    @deprecated("Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.", "6.23.0")
+    def unapply(ba: ByteArray): Option[(Array[Byte], Int, Int)] = ByteArray.Owned.unapply(ba)
 
     /**
      * Safely coerce a buffer to a Buf.ByteArray, potentially without copying its underlying
@@ -298,8 +298,8 @@ object Buf {
       }
     }
 
-    /** Unsafe non-copying constructors/extractors for Buf.ByteArray. */
-    object Unsafe {
+    /** Owned non-copying constructors/extractors for Buf.ByteArray. */
+    object Owned {
 
       /**
        * Construct a buffer representing the provided array of bytes
@@ -322,9 +322,9 @@ object Buf {
        * A copy may be performed if necessary.
        */
       def extract(buf: Buf): Array[Byte] = Buf.ByteArray.coerce(buf) match {
-        case Buf.ByteArray.Unsafe(bytes, 0, end) if end == bytes.length =>
+        case Buf.ByteArray.Owned(bytes, 0, end) if end == bytes.length =>
           bytes
-        case Buf.ByteArray.Copied(bytes) =>
+        case Buf.ByteArray.Shared(bytes) =>
           // If the unsafe version included offsets, we need to create a new array
           // containing only the relevant bytes.
           bytes
@@ -332,7 +332,7 @@ object Buf {
     }
 
     /** Safe copying constructors / extractors for Buf.ByteArray. */
-    object Copied {
+    object Shared {
 
       /** Construct a buffer representing a copy of an array of bytes at the given offsets. */
       def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
@@ -401,8 +401,8 @@ object Buf {
      *
      * The ByteBuffer is duplicated but the underlying data is not copied.
      */
-    @deprecated("Use Buf.ByteBuffer.Copied or Buf.ByteBuffer.Unsafe.", "6.23.0")
-    def apply(bb: java.nio.ByteBuffer): Buf = Unsafe(bb.duplicate)
+    @deprecated("Use Buf.ByteBuffer.Shared or Buf.ByteBuffer.Owned.", "6.23.0")
+    def apply(bb: java.nio.ByteBuffer): Buf = Owned(bb.duplicate)
 
     /** Extract a read-only view of the underlying [[java.nio.ByteBuffer]]. */
     def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] =
@@ -413,7 +413,7 @@ object Buf {
       case buf: ByteBuffer => buf
       case _ =>
         val bb = buf.unsafeByteArrayBuf match {
-          case Some(ByteArray.Unsafe(bytes, begin, end)) =>
+          case Some(ByteArray.Owned(bytes, begin, end)) =>
             java.nio.ByteBuffer.wrap(bytes, begin, end-begin)
           case None =>
             java.nio.ByteBuffer.wrap(buf.copiedByteArray)
@@ -421,8 +421,8 @@ object Buf {
         new ByteBuffer(bb)
     }
 
-    /** Unsafe non-copying constructors/extractors for Buf.ByteBuffer. */
-    object Unsafe {
+    /** Owned non-copying constructors/extractors for Buf.ByteBuffer. */
+    object Owned {
 
       // N.B. We cannot use ByteBuffer.asReadOnly to ensure correctness because
       // it prevents direct access to its underlying byte array.
@@ -446,7 +446,7 @@ object Buf {
     }
 
     /** Safe copying constructors/extractors for Buf.ByteBuffer. */
-    object Copied {
+    object Shared {
       private[this] def copy(orig: java.nio.ByteBuffer): java.nio.ByteBuffer = {
         val copy = java.nio.ByteBuffer.allocate(orig.remaining)
         copy.put(orig.duplicate)
@@ -454,15 +454,15 @@ object Buf {
         copy
       }
 
-      def apply(bb: java.nio.ByteBuffer): Buf = Unsafe(copy(bb))
-      def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] = Unsafe.unapply(buf).map(copy)
-      def extract(buf: Buf): java.nio.ByteBuffer = copy(Unsafe.extract(buf))
+      def apply(bb: java.nio.ByteBuffer): Buf = Owned(copy(bb))
+      def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] = Owned.unapply(buf).map(copy)
+      def extract(buf: Buf): java.nio.ByteBuffer = copy(Owned.extract(buf))
     }
   }
 
   /** Convert the Buf to a [[java.nio.ByteBuffer]]. */
-  @deprecated("Use Buf.ByteBuffer.Unsafe.extract.", "6.23.0")
-  def toByteBuffer(buf: Buf): java.nio.ByteBuffer = Buf.ByteBuffer.Unsafe.extract(buf)
+  @deprecated("Use Buf.ByteBuffer.Owned.extract.", "6.23.0")
+  def toByteBuffer(buf: Buf): java.nio.ByteBuffer = Buf.ByteBuffer.Owned.extract(buf)
 
   /**
    * Byte equality between two buffers. May copy.
@@ -582,7 +582,7 @@ object Buf {
     def apply(s: String): Buf =  {
       val enc = Charsets.encoder(charset)
       val cb = CharBuffer.wrap(s.toCharArray)
-      Buf.ByteBuffer.Unsafe(enc.encode(cb))
+      Buf.ByteBuffer.Owned(enc.encode(cb))
     }
 
     /**
@@ -595,7 +595,7 @@ object Buf {
      */
     def unapply(buf: Buf): Option[String] = {
       val dec = Charsets.decoder(charset)
-      val bb = Buf.ByteBuffer.Unsafe.extract(buf).asReadOnlyBuffer
+      val bb = Buf.ByteBuffer.Owned.extract(buf).asReadOnlyBuffer
       Some(dec.decode(bb).toString)
     }
   }
@@ -614,7 +614,7 @@ object Buf {
       arr(1) = ((i >> 16) & 0xff).toByte
       arr(2) = ((i >>  8) & 0xff).toByte
       arr(3) = ((i      ) & 0xff).toByte
-      ByteArray.Unsafe(arr)
+      ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Int, Buf)] =
@@ -650,7 +650,7 @@ object Buf {
       arr(5) = ((l >> 16) & 0xff).toByte
       arr(6) = ((l >>  8) & 0xff).toByte
       arr(7) = ((l      ) & 0xff).toByte
-      ByteArray.Unsafe(arr)
+      ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Long, Buf)] =
@@ -686,7 +686,7 @@ object Buf {
       arr(1) = ((i >>  8) & 0xff).toByte
       arr(2) = ((i >> 16) & 0xff).toByte
       arr(3) = ((i >> 24) & 0xff).toByte
-      ByteArray.Unsafe(arr)
+      ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Int, Buf)] =
@@ -722,7 +722,7 @@ object Buf {
       arr(5) = ((l >> 40) & 0xff).toByte
       arr(6) = ((l >> 48) & 0xff).toByte
       arr(7) = ((l >> 56) & 0xff).toByte
-      ByteArray.Unsafe(arr)
+      ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Long, Buf)] =

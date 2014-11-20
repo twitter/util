@@ -17,7 +17,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
   import Spool.*::
 
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
-  def buf(i: Int, j: Int) = Buf.ByteArray.Unsafe(arr(i, j))
+  def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
 
   def toSeq(b: Option[Buf]) = b match {
     case None => fail("Expected full buffer")
@@ -36,7 +36,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
   }
 
   def assertWrite(w: Writer, i: Int, j: Int) {
-    val buf = Buf.ByteArray.Unsafe(Array.range(i, j).map(_.toByte))
+    val buf = Buf.ByteArray.Owned(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
     assert(Await.result(f) === ())
@@ -78,9 +78,9 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
       val w = Writer.fromOutputStream(bos, 31)
       val f = Reader.copy(rw, w) ensure w.close()
       val g =
-        rw.write(Buf.ByteArray.Unsafe(p)) before
-          rw.write(Buf.ByteArray.Unsafe(q)) before
-            rw.write(Buf.ByteArray.Unsafe(r)) before rw.close()
+        rw.write(Buf.ByteArray.Owned(p)) before
+          rw.write(Buf.ByteArray.Owned(q)) before
+            rw.write(Buf.ByteArray.Owned(r)) before rw.close()
 
       Await.result(Future.join(f, g))
 

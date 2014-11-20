@@ -26,7 +26,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
 
   test("Buf.ByteArray.slice") {
     val arr = Array.range(0, 16).map(_.toByte)
-    val buf = Buf.ByteArray.Unsafe(arr)
+    val buf = Buf.ByteArray.Owned(arr)
     for (i <- 0 until arr.length; j <- i until arr.length) {
       val w = new Array[Byte](j-i)
       buf.slice(i, j).write(w, 0)
@@ -34,9 +34,9 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     }
   }
 
-  test("Buf.ByteArray.Copied.apply is safe") {
+  test("Buf.ByteArray.Shared.apply is safe") {
     val array = Array.fill(10)(0.toByte)
-    val buf = Buf.ByteArray.Copied(array)
+    val buf = Buf.ByteArray.Shared(array)
     array(0) = 13
     val copy = new Array[Byte](10)
     buf.write(copy, 0)
@@ -45,23 +45,23 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
 
   test("Buf.ByteArray.Direct.apply is unsafe") {
     val array = Array.fill(10)(0.toByte)
-    val buf = Buf.ByteArray.Unsafe(array)
+    val buf = Buf.ByteArray.Owned(array)
     array(0) = 13
     val copy = new Array[Byte](10)
     buf.write(copy, 0)
     assert(copy(0) === 13)
   }
 
-  test("Buf.ByteArray.Copied.unapply is safe") {
+  test("Buf.ByteArray.Shared.unapply is safe") {
     val array = Array.fill(10)(0.toByte)
-    val Buf.ByteArray.Copied(copy) = Buf.ByteArray.Unsafe(array)
+    val Buf.ByteArray.Shared(copy) = Buf.ByteArray.Owned(array)
     array(0) = 13
     assert(copy(0) === 0)
   }
 
   test("Buf.ByteArray.Direct.unapply is unsafe") {
     val array = Array.fill(10)(0.toByte)
-    val Buf.ByteArray.Unsafe(copy, _, _) = Buf.ByteArray.Unsafe(array)
+    val Buf.ByteArray.Owned(copy, _, _) = Buf.ByteArray.Owned(array)
     array(0) = 13
     assert(copy(0) === 13)
   }
@@ -71,7 +71,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val a2 = Array[Byte](4,5,6)
     val a3 = Array[Byte](7,8,9)
 
-    val buf = Buf.ByteArray.Unsafe(a1) concat Buf.ByteArray.Unsafe(a2) concat Buf.ByteArray.Unsafe(a3)
+    val buf = Buf.ByteArray.Owned(a1) concat Buf.ByteArray.Owned(a2) concat Buf.ByteArray.Owned(a3)
     assert(buf.length === 9)
     val x = Array.fill(9) { 0.toByte }
     buf.write(x, 0)
@@ -83,7 +83,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val a2 = Array.range(8, 16).map(_.toByte)
     val a3 = Array.range(16, 24).map(_.toByte)
     val arr = a1 ++ a2 ++ a3
-    val buf = Buf.ByteArray.Unsafe(a1) concat Buf.ByteArray.Unsafe(a2) concat Buf.ByteArray.Unsafe(a3)
+    val buf = Buf.ByteArray.Owned(a1) concat Buf.ByteArray.Owned(a2) concat Buf.ByteArray.Owned(a3)
 
     for (i <- 0 until arr.length; j <- i until arr.length) {
       val w = new Array[Byte](j-i)
@@ -132,7 +132,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
   test("Buf.Utf8: English") {
     val buf = Buf.Utf8("Hello, world!")
     assert(buf.length === 13)
-    val chars = Buf.ByteArray.Unsafe.extract(buf).toSeq.map(_.toChar)
+    val chars = Buf.ByteArray.Owned.extract(buf).toSeq.map(_.toChar)
     assert("Hello, world!".toSeq === chars)
 
     val Buf.Utf8(s) = buf
@@ -183,9 +183,9 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
       val coder = new Buf.StringCoder(charset) {}
       val hw = "Hello, world!"
       val bb = charset.encode(hw)
-      val wrappedBuf = Buf.ByteBuffer.Unsafe(bb)
+      val wrappedBuf = Buf.ByteBuffer.Owned(bb)
       val coder(_) = wrappedBuf
-      val Buf.ByteBuffer.Unsafe(wbb) = wrappedBuf
+      val Buf.ByteBuffer.Owned(wbb) = wrappedBuf
       assert(wbb === bb)
       assert(wbb.position() === bb.position())
     }
@@ -204,9 +204,9 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
   test("Buf.ByteBuffer") {
     val bytes = Array[Byte](111, 107, 116, 104, 101, 110)
     val bb = java.nio.ByteBuffer.wrap(bytes)
-    val buf = Buf.ByteBuffer.Unsafe(bb)
+    val buf = Buf.ByteBuffer.Owned(bb)
 
-    assert(Buf.ByteArray.Unsafe(bytes) === buf)
+    assert(Buf.ByteArray.Owned(bytes) === buf)
 
     val written = new Array[Byte](buf.length)
     buf.write(written, 0)
@@ -216,39 +216,39 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     buf.write(offsetWritten, 2)
     assert(Arrays.equals(Array[Byte](0, 0) ++ bytes, offsetWritten))
 
-    assert(Buf.ByteArray.Unsafe(bytes.drop(2).take(2)) === buf.slice(2, 4))
+    assert(Buf.ByteArray.Owned(bytes.drop(2).take(2)) === buf.slice(2, 4))
     // overflow slice
-    assert(Buf.ByteArray.Unsafe(bytes.drop(2)) === buf.slice(2, 10))
+    assert(Buf.ByteArray.Owned(bytes.drop(2)) === buf.slice(2, 10))
 
-    assert(Buf.ByteBuffer.Unsafe(java.nio.ByteBuffer.allocate(0)) === Buf.Empty)
-    assert(Buf.ByteBuffer.Unsafe(java.nio.ByteBuffer.allocateDirect(0)) === Buf.Empty)
+    assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocate(0)) === Buf.Empty)
+    assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocateDirect(0)) === Buf.Empty)
 
     val bytes2 = Array[Byte](1,2,3,4,5,6,7,8,9,0)
-    val buf2 = Buf.ByteBuffer.Unsafe(java.nio.ByteBuffer.wrap(bytes2, 3, 4))
+    val buf2 = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes2, 3, 4))
     assert(buf2 === Buf.ByteArray(4,5,6,7))
 
-    val Buf.ByteBuffer.Unsafe(byteBuffer) = buf
+    val Buf.ByteBuffer.Owned(byteBuffer) = buf
     assert(byteBuffer === bb)
   }
 
-  test("Buf.ByteBuffer.Copied.apply is safe") {
+  test("Buf.ByteBuffer.Shared.apply is safe") {
     val bytes = Array.fill(10)(0.toByte)
-    val Buf.ByteBuffer.Unsafe(bb) = Buf.ByteBuffer.Copied(java.nio.ByteBuffer.wrap(bytes))
+    val Buf.ByteBuffer.Owned(bb) = Buf.ByteBuffer.Shared(java.nio.ByteBuffer.wrap(bytes))
     bytes(0) = 10.toByte
     assert(bb.get(0) !== 10)
   }
 
   test("Buf.ByteBuffer.Direct.apply is unsafe") {
     val bytes = Array.fill(10)(0.toByte)
-    val Buf.ByteBuffer.Unsafe(bb) = Buf.ByteBuffer.Unsafe(java.nio.ByteBuffer.wrap(bytes))
+    val Buf.ByteBuffer.Owned(bb) = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes))
     bytes(0) = 10.toByte
     assert(bb.get(0) === 10)
   }
 
-  test("Buf.ByteBuffer.Copied.unapply is safe") {
+  test("Buf.ByteBuffer.Shared.unapply is safe") {
     val bytes = Array.fill(10)(0.toByte)
     val bb0 = java.nio.ByteBuffer.wrap(bytes)
-    val Buf.ByteBuffer.Copied(bb1) = Buf.ByteBuffer.Unsafe(bb0)
+    val Buf.ByteBuffer.Shared(bb1) = Buf.ByteBuffer.Owned(bb0)
     bb1.position(3)
     assert(bb0.position === 0)
   }
@@ -256,7 +256,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
   test("Buf.ByteBuffer.Direct.unapply is unsafe") {
     val bytes = Array.fill(10)(0.toByte)
     val bb0 = java.nio.ByteBuffer.wrap(bytes)
-    val Buf.ByteBuffer.Unsafe(bb1) = Buf.ByteBuffer.Unsafe(bb0)
+    val Buf.ByteBuffer.Owned(bb1) = Buf.ByteBuffer.Owned(bb0)
     bytes(0) = 10.toByte
     assert(bb1.get(0) === 10.toByte)
   }
@@ -264,32 +264,32 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
   test("Buf.ByteBuffer.unapply is readonly") {
     val bytes = Array.fill(10)(0.toByte)
     val bb0 = java.nio.ByteBuffer.wrap(bytes)
-    val Buf.ByteBuffer(bb1) = Buf.ByteBuffer.Unsafe(bb0)
+    val Buf.ByteBuffer(bb1) = Buf.ByteBuffer.Owned(bb0)
     assert(bb1.isReadOnly)
     bb1.position(3)
     assert(bb0.position === 0)
   }
 
   test("ByteArray.coerce(ByteArray)") {
-    val orig = Buf.ByteArray.Unsafe(Array.fill(10)(0.toByte))
+    val orig = Buf.ByteArray.Owned(Array.fill(10)(0.toByte))
     val coerced = Buf.ByteArray.coerce(orig)
     assert(coerced eq orig)
   }
 
   test("ByteArray.coerce(ByteBuffer)") {
-    val orig = Buf.ByteBuffer.Unsafe(java.nio.ByteBuffer.wrap(Array.fill(10)(0.toByte)))
+    val orig = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(Array.fill(10)(0.toByte)))
     val coerced = Buf.ByteArray.coerce(orig)
     assert(coerced === orig)
   }
 
   test("ByteBuffer.coerce(ByteArray)") {
-    val orig = Buf.ByteArray.Unsafe(Array.fill(10)(0.toByte))
+    val orig = Buf.ByteArray.Owned(Array.fill(10)(0.toByte))
     val coerced = Buf.ByteBuffer.coerce(orig)
     assert(coerced === orig)
   }
 
   test("ByteBuffer.coerce(ByteBuffer)") {
-    val orig = Buf.ByteBuffer.Unsafe(java.nio.ByteBuffer.wrap(Array.fill(10)(0.toByte)))
+    val orig = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(Array.fill(10)(0.toByte)))
     val coerced = Buf.ByteBuffer.coerce(orig)
     assert(coerced eq orig)
   }
@@ -302,24 +302,24 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
 
     val string = "okthen"
     val bytes = Array[Byte](111, 107, 116, 104, 101, 110)
-    val bbuf = Buf.ByteArray.Unsafe(bytes)
+    val bbuf = Buf.ByteArray.Owned(bytes)
 
     ae(Buf.Utf8(string), bbuf)
     ae(Buf.Utf8(""), Buf.Empty)
 
     val concat = bbuf.slice(0, 3) concat bbuf.slice(3, 6)
-    ae(concat, Buf.ByteArray.Unsafe(bytes))
+    ae(concat, Buf.ByteArray.Owned(bytes))
 
     val shifted = new Array[Byte](bytes.length + 3)
     System.arraycopy(bytes, 0, shifted, 3, bytes.length)
-    ae(Buf.Utf8(string), Buf.ByteArray.Unsafe(shifted, 3, 3+bytes.length))
+    ae(Buf.Utf8(string), Buf.ByteArray.Owned(shifted, 3, 3+bytes.length))
   }
 
   check(Prop.forAll { (in: Int) =>
     val buf = Buf.U32BE(in)
     val Buf.U32BE(out, _) = buf
 
-    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Unsafe.extract(buf))
+    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Owned.extract(buf))
     outByteBuf.order(java.nio.ByteOrder.BIG_ENDIAN)
 
     out == in && outByteBuf.getInt == in
@@ -329,7 +329,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val buf = Buf.U32LE(in)
     val Buf.U32LE(out, _) = buf
 
-    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Unsafe.extract(buf))
+    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Owned.extract(buf))
     outByteBuf.order(java.nio.ByteOrder.LITTLE_ENDIAN)
 
     out == in && outByteBuf.getInt == in
@@ -339,7 +339,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val buf = Buf.U64BE(in)
     val Buf.U64BE(out, _) = buf
 
-    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Unsafe.extract(buf))
+    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Owned.extract(buf))
     outByteBuf.order(java.nio.ByteOrder.BIG_ENDIAN)
 
     out == in && outByteBuf.getLong == in
@@ -349,7 +349,7 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val buf = Buf.U64LE(in)
     val Buf.U64LE(out, _) = buf
 
-    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Unsafe.extract(buf))
+    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Owned.extract(buf))
     outByteBuf.order(java.nio.ByteOrder.LITTLE_ENDIAN)
 
     out == in && outByteBuf.getLong == in
@@ -394,8 +394,8 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
 
     val arr = a1 ++ a2 ++ a3 ++ a4
 
-    val cbuf1 = Buf.ByteArray.Unsafe(a1) concat Buf.ByteArray.Unsafe(a2)
-    val cbuf2 = Buf.ByteArray.Unsafe(a3) concat Buf.ByteArray.Unsafe(a4)
+    val cbuf1 = Buf.ByteArray.Owned(a1) concat Buf.ByteArray.Owned(a2)
+    val cbuf2 = Buf.ByteArray.Owned(a3) concat Buf.ByteArray.Owned(a4)
     val cbuf = cbuf1 concat cbuf2
 
     for (i <- 0 until arr.length; j <- i until arr.length) {
@@ -413,14 +413,14 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     }
 
     val expected = Array.fill(size) { 'x'.toByte }
-    val output = Buf.ByteArray.Unsafe.extract(bigBuf)
+    val output = Buf.ByteArray.Owned.extract(bigBuf)
     assert(bigBuf.length === size)
     assert(expected.toSeq === output.toSeq)
 
     val sliced = bigBuf.slice(1, size - 1)
     val size2 = size - 2
     val expected2 = Array.fill(size2) { 'x'.toByte }
-    val output2 = Buf.ByteArray.Unsafe.extract(sliced)
+    val output2 = Buf.ByteArray.Owned.extract(sliced)
     assert(sliced.length === size2)
     assert(expected2.toSeq === output2.toSeq)
   }
