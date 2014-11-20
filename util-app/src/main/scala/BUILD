@@ -9,5 +9,4 @@ scala_library(name='scala',
     'util/util-core/src/main/scala',
   ],
   sources=rglobs('*.scala'),
-  java_sources=['util/util-app/src/main/java',],
 )
