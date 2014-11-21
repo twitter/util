@@ -7,6 +7,8 @@ import java.nio.charset.Charset
  * Buf represents a fixed, immutable byte buffer. Buffers may be
  * sliced and concatenated, and thus be used to implement
  * bytestreams.
+ *
+ * Note: There is a Java-friendly API for this trait: [[com.twitter.io.AbstractBuf]].
 */
 trait Buf { outer =>
   /**
@@ -47,7 +49,7 @@ trait Buf { outer =>
 
   def isEmpty = length == 0
 
-  /** Helper to support 0-copy coersion to Buf.ByteArray. */
+  /** Helper to support 0-copy coercion to Buf.ByteArray. */
   protected def unsafeByteArrayBuf: Option[Buf.ByteArray]
 
   /** May require copying. */
@@ -177,6 +179,11 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
 }
 
 /**
+ * Abstract `Buf` class for Java compatibility.
+ */
+abstract class AbstractBuf extends Buf
+
+/**
  * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
  * Owned APIs, each of which with construction & extraction utilities.
  *
@@ -187,6 +194,8 @@ private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
  *
  * The Shared variants, on the other hand, ensure that the Buf shares no state
  * with the caller (at the cost of additional allocation).
+ *
+ * Note: There is a Java-friendly API for this object: [[com.twitter.io.Bufs]].
  */
 object Buf {
   private class NoopBuf extends Buf {
