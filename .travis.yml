@@ -2,10 +2,11 @@ language: scala
 
 scala:
   - 2.10.4
+  - 2.11.2
 
 jdk:
   - oraclejdk7
-  - openjdk6
+  - oraclejdk8
   - openjdk7
 
 before_script:
@@ -13,4 +14,4 @@ before_script:
   - unset SBT_OPTS
 
 script:
-  - ./sbt ++$TRAVIS_SCALA_VERSION +test
+  - ./sbt ++$TRAVIS_SCALA_VERSION test
