@@ -95,6 +95,16 @@ public class DurationCompilationTest {
   }
 
   @Test
+  public void testMulAndDivDouble() {
+    Duration a = Duration.fromSeconds(9);
+    Duration b = a.div(4.5);
+    Duration c = b.mul(4.5);
+
+    Assert.assertEquals(2, b.inSeconds());
+    Assert.assertEquals(9, c.inSeconds());
+  }
+
+  @Test
   public void testRem() {
     Duration a = Duration.fromSeconds(5);
     Duration b = a.rem(Duration.fromSeconds(2));

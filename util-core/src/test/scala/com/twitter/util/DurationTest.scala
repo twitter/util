@@ -31,6 +31,15 @@ class ScalaDurationTest extends { val ops = Duration } with TimeLikeSpec[Duratio
     "*" in {
       assert(1.second * 2 === 2.seconds)
       assert(500.milliseconds * 4 === 2.seconds)
+
+      assert(1.second * 2.0 === 2.seconds)
+      assert(500.milliseconds * 4.0 === 2.seconds)
+      assert(1.second * 0.5 === 500.milliseconds)
+      assert(1.second * Double.PositiveInfinity == Duration.Top)
+      assert(1.second * Double.NegativeInfinity == Duration.Bottom)
+      assert(1.second * Double.NaN == Duration.Undefined)
+      assert(1.nanosecond * (Long.MaxValue.toDouble + 1) == Duration.Top)
+      assert(1.nanosecond * (Long.MinValue.toDouble - 1) == Duration.Bottom)
     }
 
     "/" in {
@@ -41,6 +50,14 @@ class ScalaDurationTest extends { val ops = Duration } with TimeLikeSpec[Duratio
       assert(Top / 0 === Undefined)
       assert(Top / -1 === Bottom)
       assert(Top / 1 === Top)
+
+      assert(10.seconds / 2.0 == 5.seconds)
+      assert(1.seconds / 0.0 === Top)
+      assert((-1).seconds / 0.0 === Bottom)
+      assert(0.seconds / 0.0 === Undefined)
+      assert(Top / 0.0 === Undefined)
+      assert(Top / -1.0 === Bottom)
+      assert(Top / 1.0 === Top)
     }
 
     "%" in {

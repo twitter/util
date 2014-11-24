@@ -49,14 +49,24 @@ object Duration extends TimeLikeOps[Duration] {
       else if (that eq Top) 0
       else 1
 
-    override def *(x: Long) =
+    override def *(x: Long): Duration =
       if (x == 0) Undefined
       else if (x < 0) Bottom
       else Top
 
-    override def /(x: Long) =
+    override def *(x: Double): Duration =
+      if (x == 0.0) Undefined
+      else if (x < 0.0) Bottom
+      else Top
+
+    override def /(x: Long): Duration =
       if (x == 0) Undefined
       else if (x < 0) Bottom
+      else Top
+
+    override def /(x: Double): Duration =
+      if (x == 0.0) Undefined
+      else if (x < 0.0) Bottom
       else Top
 
     override def isFinite = false
@@ -87,17 +97,27 @@ object Duration extends TimeLikeOps[Duration] {
     override def compare(that: Duration) = if (this eq that) 0 else -1
 
     /** Scaling arithmetic is Bottom preserving. */
-    override def *(x: Long) =
+    override def *(x: Long): Duration =
       if (x == 0) Undefined
       else if (x < 0) Top
       else Bottom
 
-    override def /(x: Long) =
+    override def *(x: Double): Duration =
+      if (x == 0.0) Undefined
+      else if (x < 0.0) Top
+      else Bottom
+
+    override def /(x: Long): Duration =
       if (x == 0) Undefined
       else if (x < 0) Top
       else Bottom
 
-    override def %(x: Duration) = Undefined
+    override def /(x: Double): Duration =
+      if (x == 0.0) Undefined
+      else if (x < 0.0) Top
+      else Bottom
+
+    override def %(x: Duration): Duration = Undefined
 
     override def abs = Top
     override def fromNow = Time.Bottom
@@ -122,9 +142,11 @@ object Duration extends TimeLikeOps[Duration] {
 
     override def compare(that: Duration) = if (this eq that) 0 else 1
 
-    override def *(x: Long) = this
-    override def /(x: Long) = this
-    override def %(x: Duration) = this
+    override def *(x: Long): Duration = this
+    override def *(x: Double): Duration = this
+    override def /(x: Long): Duration = this
+    override def /(x: Double): Duration = this
+    override def %(x: Duration): Duration = this
     override def abs = this
     override def fromNow = Time.Undefined
     override def ago = Time.Undefined
@@ -358,6 +380,20 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
   }
 
   /**
+   * Scales this `Duration` by multiplying by `x`.
+   */
+  def *(x: Double): Duration = (nanos * x) match {
+    case product if java.lang.Double.isNaN(product) => Undefined
+    case Double.PositiveInfinity => Top
+    case Double.NegativeInfinity => Bottom
+    case product =>
+      val productLong = product.toLong
+      if (productLong == Long.MaxValue) Top
+      else if (productLong == Long.MinValue) Bottom
+      else fromNanoseconds(productLong)
+  }
+
+  /**
    * Scales this `Duration` by dividing by `x`.
    */
   def /(x: Long): Duration =
@@ -367,9 +403,16 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
     else Top
 
   /**
+   * Scales this `Duration` by dividing by `x`.
+   */
+  def /(x: Double): Duration =
+    if (x == 0.0) this / 0
+    else this * (1.0/x)
+
+  /**
    * Scales this `Duration` by modding by `x`.
    */
-  def %(x: Duration) = x match {
+  def %(x: Duration): Duration = x match {
     case Undefined | Nanoseconds(0) => Undefined
     case Nanoseconds(ns) => fromNanoseconds(nanos % ns)
     case Top | Bottom => this
@@ -417,9 +460,19 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
   def mul(x: Long): Duration = this * x
 
   /**
+   * @see operator *
+   */
+  def mul(x: Double): Duration = this * x
+
+  /**
    * @see operator /
    */
   def div(x: Long): Duration = this / x
+
+  /**
+   * @see operator /
+   */
+  def div(x: Double): Duration = this / x
 
   /**
    * @see operator %
