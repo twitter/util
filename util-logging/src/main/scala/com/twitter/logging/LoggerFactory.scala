@@ -67,7 +67,7 @@ class LoggerFactoryBuilder private[logging](factory: LoggerFactory) {
 
   def parentLevel(): LoggerFactoryBuilder = new LoggerFactoryBuilder(factory.copy(level = None))
 
-  def addHandler(handler: () => Handler): LoggerFactoryBuilder =
+  def addHandler[T <: Handler](handler: () => T): LoggerFactoryBuilder =
     new LoggerFactoryBuilder(factory.copy(handlers = handler :: factory.handlers))
 
   def unhandled(): LoggerFactoryBuilder = new LoggerFactoryBuilder(factory.copy(handlers = Nil))

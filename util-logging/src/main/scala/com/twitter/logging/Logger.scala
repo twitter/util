@@ -18,6 +18,7 @@ package com.twitter.logging
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.{logging => javalog}
+import scala.annotation.varargs
 import scala.collection.JavaConverters._
 import scala.collection.Map
 
@@ -70,6 +71,7 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   /**
    * Log a message, with sprintf formatting, at the desired level.
    */
+  @varargs
   final def log(level: Level, message: String, items: Any*): Unit =
     log(level, null: Throwable, message, items: _*)
 
@@ -78,6 +80,7 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
    * attach an exception and stack trace. The message is lazily formatted if
    * formatting is required.
    */
+  @varargs
   final def log(level: Level, thrown: Throwable, message: String, items: Any*) {
     val myLevel = getLevel
     if ((myLevel eq null) || (level.intValue >= myLevel.intValue)) {
@@ -98,19 +101,33 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   final def apply(level: Level, thrown: Throwable, message: String, items: Any*) = log(level, thrown, message, items)
 
   // convenience methods:
+  @varargs
   def fatal(msg: String, items: Any*) = log(Level.FATAL, msg, items: _*)
+  @varargs
   def fatal(thrown: Throwable, msg: String, items: Any*) = log(Level.FATAL, thrown, msg, items: _*)
+  @varargs
   def critical(msg: String, items: Any*) = log(Level.CRITICAL, msg, items: _*)
+  @varargs
   def critical(thrown: Throwable, msg: String, items: Any*) = log(Level.CRITICAL, thrown, msg, items: _*)
+  @varargs
   def error(msg: String, items: Any*) = log(Level.ERROR, msg, items: _*)
+  @varargs
   def error(thrown: Throwable, msg: String, items: Any*) = log(Level.ERROR, thrown, msg, items: _*)
+  @varargs
   def warning(msg: String, items: Any*) = log(Level.WARNING, msg, items: _*)
+  @varargs
   def warning(thrown: Throwable, msg: String, items: Any*) = log(Level.WARNING, thrown, msg, items: _*)
+  @varargs
   def info(msg: String, items: Any*) = log(Level.INFO, msg, items: _*)
+  @varargs
   def info(thrown: Throwable, msg: String, items: Any*) = log(Level.INFO, thrown, msg, items: _*)
+  @varargs
   def debug(msg: String, items: Any*) = log(Level.DEBUG, msg, items: _*)
+  @varargs
   def debug(thrown: Throwable, msg: String, items: Any*) = log(Level.DEBUG, thrown, msg, items: _*)
+  @varargs
   def trace(msg: String, items: Any*) = log(Level.TRACE, msg, items: _*)
+  @varargs
   def trace(thrown: Throwable, msg: String, items: Any*) = log(Level.TRACE, thrown, msg, items: _*)
 
   def debugLazy(msg: => AnyRef): Unit = logLazy(Level.DEBUG, null, msg)
