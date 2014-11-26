@@ -78,6 +78,29 @@ object ScribeHandler {
       formatter,
       level,
       statsReceiver)
+
+  def apply(
+    hostname: String,
+    port: Int,
+    category: String,
+    bufferTime: Duration,
+    connectBackoff: Duration,
+    maxMessagesPerTransaction: Int,
+    maxMessagesToBuffer: Int,
+    formatter: Formatter,
+    level: Option[Level]
+  ): () => ScribeHandler = apply(
+      hostname,
+      port,
+      category,
+      bufferTime,
+      connectBackoff,
+      maxMessagesPerTransaction,
+      maxMessagesToBuffer,
+      formatter,
+      level,
+      NullStatsReceiver)
+
 }
 
 class ScribeHandler(
@@ -90,9 +113,22 @@ class ScribeHandler(
     maxMessagesToBuffer: Int,
     formatter: Formatter,
     level: Option[Level],
-    statsReceiver: StatsReceiver = NullStatsReceiver)
+    statsReceiver: StatsReceiver)
   extends Handler(formatter, level) {
   import ScribeHandler._
+
+  def this(
+    hostname: String,
+    port: Int,
+    category: String,
+    bufferTime: Duration,
+    connectBackoff: Duration,
+    maxMessagesPerTransaction: Int,
+    maxMessagesToBuffer: Int,
+    formatter: Formatter,
+    level: Option[Level]
+  ) = this(hostname, port, category, bufferTime, connectBackoff,
+    maxMessagesPerTransaction, maxMessagesToBuffer, formatter, level, NullStatsReceiver)
 
   private[this] val stats = new ScribeHandlerStats(statsReceiver)
 
