@@ -1,7 +1,7 @@
 package com.twitter.util;
 
+import com.twitter.util.Awaitable.CanAwait;
 import scala.runtime.BoxedUnit;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

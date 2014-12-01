@@ -15,7 +15,7 @@ trait Stopwatch {
 
 /**
  * The system [[com.twitter.util.Stopwatch]] measures elapsed time
- * using [[System.nanoTime]].
+ * using `System.nanoTime`.
  */
 object Stopwatch extends Stopwatch {
 
