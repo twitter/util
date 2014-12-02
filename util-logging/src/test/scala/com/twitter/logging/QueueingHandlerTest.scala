@@ -17,21 +17,24 @@
 package com.twitter.logging
 
 import java.util.{logging => javalog}
-
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
+import org.scalatest.concurrent.{IntegrationPatience, Eventually}
 import org.scalatest.junit.JUnitRunner
 
-
 @RunWith(classOf[JUnitRunner])
-class QueueingHandlerTest extends WordSpec {
+class QueueingHandlerTest extends WordSpec
+  with Eventually
+  with IntegrationPatience
+{
+
   class MockHandler extends Handler(BareFormatter, None) {
     def publish(record: javalog.LogRecord) {}
     def close() {}
     def flush() {}
   }
 
-  def freshLogger():Logger = {
+  def freshLogger(): Logger = {
     val logger = Logger.get("test")
     logger.clearHandlers()
     logger.setLevel(Logger.INFO)
@@ -43,12 +46,14 @@ class QueueingHandlerTest extends WordSpec {
     "publish" in {
       val logger = freshLogger()
       val stringHandler = new StringHandler(BareFormatter, Some(Logger.INFO))
-      var queueHandler = new QueueingHandler(stringHandler)
+      val queueHandler = new QueueingHandler(stringHandler)
       logger.addHandler(queueHandler)
 
       logger.warning("oh noes!")
-      Thread.sleep(100) // let thread log
-      assert(stringHandler.get === ("oh noes!\n"))
+      eventually {
+        // let thread log
+        assert(stringHandler.get === "oh noes!\n")
+      }
     }
 
     "publish, drop on overflow" in {
@@ -59,7 +64,7 @@ class QueueingHandlerTest extends WordSpec {
         }
       }
       var droppedCount = 0
-      var queueHandler = new QueueingHandler(blockingHandler, 1) {
+      val queueHandler = new QueueingHandler(blockingHandler, 1) {
         override protected def onOverflow(record: javalog.LogRecord) {
           droppedCount += 1
         }
@@ -69,8 +74,11 @@ class QueueingHandlerTest extends WordSpec {
       logger.warning("1")
       logger.warning("2")
       logger.warning("3")
-      Thread.sleep(100) // let thread log and block
-      assert(droppedCount >= 1) // either 1 or 2, depending on race
+
+      eventually {
+        // let thread log and block
+        assert(droppedCount >= 1) // either 1 or 2, depending on race
+      }
     }
 
     "flush" in {
@@ -79,7 +87,7 @@ class QueueingHandlerTest extends WordSpec {
       val handler = new MockHandler {
         override def flush() { wasFlushed = true }
       }
-      var queueHandler = new QueueingHandler(handler, 1)
+      val queueHandler = new QueueingHandler(handler, 1)
       logger.addHandler(queueHandler)
 
       // smoke test: thread might write it, flush might write it
@@ -94,13 +102,15 @@ class QueueingHandlerTest extends WordSpec {
       val handler = new MockHandler {
         override def close() { wasClosed = true }
       }
-      var queueHandler = new QueueingHandler(handler)
+      val queueHandler = new QueueingHandler(handler)
       logger.addHandler(queueHandler)
 
       logger.warning("oh noes!")
-      Thread.sleep(100) // let thread log
-      queueHandler.close()
-      assert(wasClosed === true)
+      eventually {
+        // let thread log
+        queueHandler.close()
+        assert(wasClosed === true)
+      }
     }
 
     "handle exceptions in the underlying handler" in {
@@ -123,8 +133,11 @@ class QueueingHandlerTest extends WordSpec {
 
       logger.info("fizz")
       logger.info("buzz")
-      Thread.sleep(100) // let thread log
-      assert(didLog === true)
+
+      eventually {
+        // let thread log
+        assert(didLog === true)
+      }
     }
   }
 }
