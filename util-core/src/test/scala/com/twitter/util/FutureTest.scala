@@ -452,6 +452,31 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             assert((ps.count(_.handled.isDefined)) === 2)
           }
         }
+
+        "accept maps of futures" in {
+          val map = Map(
+            "1" -> Future.value("1"),
+            "2" -> Future.value("2")
+          )
+
+          assert(Await.result(Future.collect(map)) === Map("1" -> "1", "2" -> "2"))
+        }
+
+        "work correctly if the given map is empty" in {
+          val map = Map.empty[String, Future[String]]
+          assert(Await.result(Future.collect(map)).isEmpty)
+        }
+
+        "return future exception if one of the map values is future exception" in {
+          val map = Map(
+            "1" -> Future.value("1"),
+            "2" -> Future.exception(new Exception)
+          )
+
+          intercept[Exception] {
+            Await.result(Future.collect(map))
+          }
+        }
       }
 
       "collectToTry" should {

@@ -5,9 +5,18 @@
 
 Next Version
 
-API Chnages:
-  * util-app: Flaggable is now an Abstract Trait for Java compatibility
+New Features:
+  * util-core: Add Future.collect() method that collects over Map's values
+
+API Changes:
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
+
+Java Compatibility:
+  * util-app: Flaggable is now an abstract class for Java compatibility
+  * util-core: Make Futures an API entry point for Java users
+               (even for methods that take Scala collections)
+  * util-core: Add compilation tests to track Java compatibility of new API
+
 
 6.x
 
