@@ -244,7 +244,8 @@ object Util extends Build {
   ).settings(
     name := "util-hashing",
     libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.6" % "test"
+      "commons-codec" % "commons-codec" % "1.6" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
     )
   ).dependsOn(utilCore % "test")
 
