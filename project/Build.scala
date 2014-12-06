@@ -32,7 +32,7 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    crossScalaVersions := Seq("2.10.4", "2.11.2"),
+    crossScalaVersions := Seq("2.10.4", "2.11.4"),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
@@ -208,7 +208,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-eval",
-    crossScalaVersions ~= { versions => versions filter (_ != "2.11.2") },
+    crossScalaVersions ~= { versions => versions filter (_ != "2.11.4") },
     libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-compiler" % _ % "compile" }
   ).dependsOn(utilCore)
 
