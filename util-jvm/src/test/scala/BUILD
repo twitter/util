@@ -10,3 +10,10 @@ junit_tests(name='scala',
   ],
   sources=rglobs('*.scala')
 )
+
+jvm_binary(name='bin',
+  main='com.twitter.jvm.EstimatorApp',
+  dependencies=[
+    ':scala'
+  ]
+)
