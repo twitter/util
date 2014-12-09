@@ -5,9 +5,9 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:asm',
-    '3rdparty:asm-commons',
-    '3rdparty:asm-util',
+    '3rdparty/jvm/asm',
+    '3rdparty/jvm/asm:asm-commons',
+    '3rdparty/jvm/asm:asm-util',
     '3rdparty:cglib',
     'util/util-core/src/main/scala'
   ],
