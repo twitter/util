@@ -10,6 +10,7 @@ New Features:
 
 API Changes:
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
+  * util-core: Remove the com.twitter.util.repository package
 
 Java Compatibility:
   * util-app: Flaggable is now an abstract class for Java compatibility
@@ -33,11 +34,11 @@ API Changes:
   * util-core: Removed `Sieve` example.
   * util-core: Introduce new constructors and extractors for Buf types to
                support more efficient, correct uses.  Buf types now come with
-	       Copied and Direct management interfaces -- Direct tries to
-	       provide direct access to the Buf's backing byte array, while 
-	       Copied ensures that the caller cannot accidentally mutate a Buf's
-	       data. Additionally, helpers to support Buf-type coersion have
-	       been added.
+               Copied and Direct management interfaces -- Direct tries to
+               provide direct access to the Buf's backing byte array, while
+               Copied ensures that the caller cannot accidentally mutate a Buf's
+               data. Additionally, helpers to support Buf-type coersion have
+               been added.
 
 6.22.1  2014-10-23
 

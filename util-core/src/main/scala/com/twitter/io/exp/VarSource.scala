@@ -1,12 +1,12 @@
 package com.twitter.io.exp
 
-import java.io.File
+import java.io.{FileInputStream, File}
 import java.lang.ref.{ReferenceQueue, WeakReference}
 import java.util.HashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 import com.twitter.conversions.time._
-import com.twitter.io.{Buf, Reader}
+import com.twitter.io.{InputStreamReader, Buf, Reader}
 import com.twitter.util._
 
 /**
@@ -18,7 +18,7 @@ trait VarSource[+T] { self =>
   def flatMap[U](f: T => VarSource.Result[U]): VarSource[U] = new VarSource[U] {
     def get(varName: String): Var[VarSource.Result[U]] =
       self.get(varName) map { result =>
-        result flatMap { f(_) }
+        result flatMap f
       }
   }
 }
@@ -52,12 +52,12 @@ object VarSource {
     /**
      * Returns true if the result is Pending, false otherwise.
      */
-    def isPending: Boolean = (this == Pending)
+    def isPending: Boolean = this == Pending
 
     /**
      * Returns true if the result is Empty, false otherwise.
      */
-    def isEmpty: Boolean = (this == Empty)
+    def isEmpty: Boolean = this == Empty
 
     /**
      * Returns true if the result is Ok, false otherwise.
@@ -124,7 +124,7 @@ class FailoverVarSource[+T](primary: VarSource[T], failover: VarSource[T]) exten
  * underlying VarSource.
  */
 class CachingVarSource[T](underlying: VarSource[T]) extends VarSource[T] {
-  import VarSource._
+  import com.twitter.io.exp.VarSource._
 
   private[this] val refq = new ReferenceQueue[Var[Result[T]]]
   private[this] val forward = new HashMap[String, WeakReference[Var[Result[T]]]]
@@ -170,22 +170,29 @@ class CachingVarSource[T](underlying: VarSource[T]) extends VarSource[T] {
  * Note: java.nio.file provides WatchService, but Unfortunately we
  * still need to be java 6 compatible.
  */
-class FilePollingVarSource private[exp](period: Duration)(implicit timer: Timer) extends VarSource[Buf]
-{
-  import VarSource._
+class FilePollingVarSource private[exp](
+  period: Duration,
+  pool: FuturePool
+)(implicit timer: Timer) extends VarSource[Buf] {
+
+  private[exp] def this(period: Duration)(implicit timer: Timer) =
+    this(period, FuturePool.unboundedPool)
+
+  import com.twitter.io.exp.VarSource._
 
   def get(varName: String): Var[Result[Buf]] = {
     val v = Var.async[Result[Buf]](Pending) { v =>
       val f = () => {
         val file = new File(varName)
         if (file.exists()) {
-          Future { Reader.fromFile(file) } flatMap { reader =>
-            Reader.readAll(reader)
-          } respond {
-            case Return(buf) =>
-              v() = Ok(buf)
-            case Throw(cause) =>
-              v() = Failed(cause)
+          pool {
+            val reader = new InputStreamReader(new FileInputStream(file), InputStreamReader.DefaultMaxBufferSize, pool)
+            Reader.readAll(reader) respond {
+              case Return(buf) =>
+                v() = Ok(buf)
+              case Throw(cause) =>
+                v() = Failed(cause)
+            }
           }
         } else {
           v() = Empty
@@ -210,8 +217,10 @@ class FilePollingVarSource private[exp](period: Duration)(implicit timer: Timer)
 /**
  * A VarSource for ClassLoader resources.
  */
-class ClassLoaderVarSource private[exp](classLoader: ClassLoader) extends VarSource[Buf] {
-  import VarSource._
+class ClassLoaderVarSource private[exp](classLoader: ClassLoader, pool: FuturePool) extends VarSource[Buf] {
+  import com.twitter.io.exp.VarSource._
+
+  private[exp] def this(classLoader: ClassLoader) = this(classLoader, FuturePool.unboundedPool)
 
   def get(varName: String): Var[Result[Buf]] = {
     // This Var is updated at most once since ClassLoader
@@ -222,11 +231,11 @@ class ClassLoaderVarSource private[exp](classLoader: ClassLoader) extends VarSou
     // Defer loading until the first observation
     val v = Var.async[Result[Buf]](Pending) { v =>
       if (runOnce.compareAndSet(false, true)) {
-        FuturePool.unboundedPool {
+        pool {
           classLoader.getResourceAsStream(varName) match {
             case null => p.setValue(Empty)
             case stream =>
-              val reader = Reader.fromStream(stream)
+              val reader = new InputStreamReader(stream, InputStreamReader.DefaultMaxBufferSize, pool)
               Reader.readAll(reader) respond {
                 case Return(buf) =>
                   p.setValue(Ok(buf))

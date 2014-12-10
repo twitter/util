@@ -8,10 +8,13 @@ import com.twitter.util.{Closable, CloseAwaitably, Future, FuturePool, Time}
 /**
  * Provides the Reader API for an InputStream
  */
-class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
+class InputStreamReader private[io] (inputStream: InputStream, maxBufferSize: Int, pool: FuturePool)
     extends Reader with Closable with CloseAwaitably {
   private[this] val mutex = new AsyncMutex()
   @volatile private[this] var discarded = false
+
+  def this(inputStream: InputStream, maxBufferSize: Int) =
+    this(inputStream, maxBufferSize, FuturePool.interruptibleUnboundedPool)
 
   /**
    * Asynchronously read at most min(`n`, `maxBufferSize`) bytes from
@@ -26,7 +29,7 @@ class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
       return Future.value(Some(Buf.Empty))
 
     mutex.acquire() flatMap { permit =>
-      FuturePool.interruptibleUnboundedPool {
+      pool {
         try {
           if (discarded)
             throw new Reader.ReaderDiscarded()
@@ -57,7 +60,7 @@ class InputStreamReader(inputStream: InputStream, maxBufferSize: Int)
    */
   def close(deadline: Time) = closeAwaitably {
     discard()
-    FuturePool.unboundedPool { inputStream.close() }
+    pool { inputStream.close() }
   }
 }
 
