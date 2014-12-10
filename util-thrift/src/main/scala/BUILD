@@ -5,7 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:jackson-databind',
+    '3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind',
     '3rdparty:libthrift-0.5.0',
     '3rdparty:slf4j-api',
     'util/util-codec'
