@@ -39,7 +39,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Vars.html" class="extype" name="com.twitter.util.Vars">com.twitter.util.Vars</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -406,6 +407,23 @@ at all.</p><p>Updates from <code>update</code> are ignored after the returned
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Var#patch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="patch[CC[_],T](diffs:com.twitter.util.Event[com.twitter.util.Diff[CC,T]])(implicitevidence$2:com.twitter.util.Diffable[CC]):com.twitter.util.Var[CC[T]]"></a>
+      <a id="patch[CC[_],T](Event[Diff[CC,T]])(Diffable[CC]):Var[CC[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">patch</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="T">T</span>]</span><span class="params">(<span name="diffs">diffs: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Var.patch.CC">CC</span>, <span class="extype" name="com.twitter.util.Var.patch.T">T</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Var.patch.CC">CC</span>]</span>)</span><span class="result">: <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<span class="extype" name="com.twitter.util.Var.patch.CC">CC</span>[<span class="extype" name="com.twitter.util.Var.patch.T">T</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Patch reconstructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> based on observing the incremental
+changes presented in the underlying <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>s.</p><div class="fullcomment"><div class="comment cmt"><p>Patch reconstructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> based on observing the incremental
+changes presented in the underlying <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>s.</p><p>Note that this eagerly subscribes to the event stream;
+it is unsubscribed whenever the returned Var is collected.
+</p></div></div>
     </li><li name="com.twitter.util.Var#sample" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sample[T](v:com.twitter.util.Var[T]):T"></a>
       <a id="sample[T](Var[T]):T"></a>

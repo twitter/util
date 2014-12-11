@@ -362,8 +362,8 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.TimeLike#floor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="floor(x:com.twitter.util.Duration):This"></a>
+    </li><li name="com.twitter.util.Time#floor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="floor(x:com.twitter.util.Duration):com.twitter.util.Time"></a>
       <a id="floor(Duration):Time"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -378,7 +378,7 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
 127.seconds.floor(1.minute) =&gt; 2.minutes.  Taking the floor of a
 Time object with duration greater than 1.hour can have unexpected
 results because of timezones.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
     </li><li name="com.twitter.util.Time#format" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="format(pattern:String,locale:java.util.Locale):String"></a>
       <a id="format(String,Locale):String"></a>
@@ -620,6 +620,19 @@ grained values if possible (specifically: <code>TimeUnit.SECONDS</code> or
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+    </li><li name="com.twitter.util.Time#minus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="minus(delta:com.twitter.util.Duration):com.twitter.util.Time"></a>
+      <a id="minus(Duration):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">minus</span><span class="params">(<span name="delta">delta: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Time">Time</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Subtracts <code>delta</code> from this <code>Time</code>.</p>
     </li><li name="com.twitter.util.TimeLike#moreOrLessEquals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="moreOrLessEquals(other:This,maxDelta:com.twitter.util.Duration):Boolean"></a>
       <a id="moreOrLessEquals(Time,Duration):Boolean"></a>
@@ -698,6 +711,19 @@ grained values if possible (specifically: <code>TimeUnit.SECONDS</code> or
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+    </li><li name="com.twitter.util.Time#plus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="plus(delta:com.twitter.util.Duration):com.twitter.util.Time"></a>
+      <a id="plus(Duration):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">plus</span><span class="params">(<span name="delta">delta: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Time">Time</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Adds <code>delta</code> to this <code>Time</code>.</p>
     </li><li name="com.twitter.util.Time#since" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="since(that:com.twitter.util.Time):com.twitter.util.Duration"></a>
       <a id="since(Time):Duration"></a>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>Repository - com.twitter.util.repository.Repository</title>
-          <meta name="description" content="Repository - com.twitter.util.repository.Repository" />
-          <meta name="keywords" content="Repository com.twitter.util.repository.Repository" />
+          <title>Sink - com.twitter.util.events.Sink</title>
+          <meta name="description" content="Sink - com.twitter.util.events.Sink" />
+          <meta name="keywords" content="Sink com.twitter.util.events.Sink" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'com.twitter.util.repository.Repository';
+            var hash = 'com.twitter.util.events.Sink';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -24,9 +24,9 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../../lib/trait_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a>.<a href="package.html" class="extype" name="com.twitter.util.repository">repository</a></p>
-        <h1>Repository</h1>
+        <a href="Sink$.html" title="Go to companion"><img src="../../../../lib/trait_to_object_big.png" /></a>
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a>.<a href="package.html" class="extype" name="com.twitter.util.events">events</a></p>
+        <h1><a href="Sink$.html" title="Go to companion">Sink</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,16 +35,22 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Repository</span><span class="tparams">[<span name="Q">Q</span>, <span name="E">E</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">Sink</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis.</p><p><b>Note:</b> while the API is public it should be considered as experimental
+and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be thread-safe.</li><li>Implementations should have very low runtime overhead such that as
+   many events as possible can be sent here. In particular, object
+   allocations should be kept to a minimum.</li><li><code>event</code> is expected to be called many orders of magnitude
+   more frequently than <code>events</code>.
+</li></ul></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="CachingRepository.html" class="extype" name="com.twitter.util.repository.CachingRepository">CachingRepository</a></div>
+          <div class="subClasses hiddenContent"><a href="SizedSink.html" class="extype" name="com.twitter.util.events.SizedSink">SizedSink</a></div>
         </div></div>
         
 
@@ -62,7 +68,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.util.repository.Repository"><span>Repository</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.util.events.Sink"><span>Sink</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -86,32 +92,34 @@
 
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="com.twitter.util.repository.Repository#apply" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="apply(query:Q):com.twitter.util.Future[Seq[E]]"></a>
-      <a id="apply(Q):Future[Seq[E]]"></a>
+              <ol><li name="com.twitter.util.events.Sink#event" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="event(etype:com.twitter.util.events.Event.Type,longVal:Long,objectVal:Object,doubleVal:Double):Unit"></a>
+      <a id="event(Type,Long,AnyRef,Double):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="query">query: <span class="extype" name="com.twitter.util.repository.Repository.Q">Q</span></span>)</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.repository.Repository.E">E</span>]]</span>
+        <span class="name">event</span><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="longVal">longVal: <span class="extype" name="scala.Long">Long</span> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoLong</a></span></span></span>, <span name="objectVal">objectVal: <span class="extype" name="scala.AnyRef">AnyRef</span> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoObject</a></span></span></span>, <span name="doubleVal">doubleVal: <span class="extype" name="scala.Double">Double</span> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoDouble</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      
-    </li><li name="com.twitter.util.repository.Repository#apply" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="apply(id:Long):com.twitter.util.Future[Option[E]]"></a>
-      <a id="apply(Long):Future[Option[E]]"></a>
+      <p class="shortcomment cmt">Event input is captured as individual fields in service of
+avoiding an allocation to wrap the event.</p>
+    </li><li name="com.twitter.util.events.Sink#events" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="events:Iterator[com.twitter.util.events.Event]"></a>
+      <a id="events:Iterator[Event]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="com.twitter.util.repository.Repository.E">E</span>]]</span>
+        <span class="name">events</span><span class="result">: <span class="extype" name="scala.Iterator">Iterator</span>[<a href="Event.html" class="extype" name="com.twitter.util.events.Event">Event</a>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Returns all currently available events.</p><div class="fullcomment"><div class="comment cmt"><p>Returns all currently available events.</p><p><b>Note:</b> the events are not returned in any particular order.
+</p></div></div>
     </li></ol>
             </div>
 

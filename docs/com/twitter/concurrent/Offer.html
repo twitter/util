@@ -45,18 +45,21 @@ sends a value typically has type {{Unit}}. An offer is activated by
 synchronizing it, which is done with <code>sync()</code>.</p><p>Note that Offers are persistent values -- they may be synchronized
 multiple times. They represent a standing offer of communication, not
 a one-shot event.</p><h3>The synchronization protocol</h3><p>Synchronization is performed via a two-phase commit process.
-<code>prepare()</code> commenses the transaction, and when the other party is
+<code>prepare()</code> commences the transaction, and when the other party is
 ready, it returns with a transaction object, <code>Tx[T]</code>. This must then
 be ackd or nackd. If both parties acknowledge, <code>Tx.ack()</code> returns
 with a commit object, containing the value. This finalizes the
 transaction. Please see the <code>Tx</code> documentation for more details on
 that phase of the protocol.</p><p>Note that a user should never perform this protocol themselves --
 synchronization should always be done with <code>sync()</code>.</p><p>Future interrupts are propagated, and failure is passed through. It
-is up to the implementor of the Offer to decide on failure semantics,
-but they are always passed through in all of the combinators.
+is up to the implementer of the Offer to decide on failure semantics,
+but they are always passed through in all of the combinators.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractOffer.html" class="extype" name="com.twitter.concurrent.AbstractOffer">com.twitter.concurrent.AbstractOffer</a>.
 </p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="com.twitter.concurrent.Offer.T">T</span>]</dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="AbstractOffer.html" class="extype" name="com.twitter.concurrent.AbstractOffer">AbstractOffer</a></div>
         </div></div>
         
 
@@ -403,6 +406,32 @@ this to enumerate over all received values.
 translation (performed by {{f}}) is done after the {{Offer[T]}} has
 successfully synchronized.
 </p></div></div>
+    </li><li name="com.twitter.concurrent.Offer#mapConst" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="mapConst[U](c:U):com.twitter.concurrent.Offer[U]"></a>
+      <a id="mapConst[U](U):Offer[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapConst</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="c">c: <span class="extype" name="com.twitter.concurrent.Offer.mapConst.U">U</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="com.twitter.concurrent.Offer.mapConst.U">U</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Java-friendly analog of <code>const()</code>.</p>
+    </li><li name="com.twitter.concurrent.Offer#mapConstFunction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="mapConstFunction[U](f:=&gt;U):com.twitter.concurrent.Offer[U]"></a>
+      <a id="mapConstFunction[U](⇒U):Offer[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapConstFunction</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.concurrent.Offer.mapConstFunction.U">U</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="com.twitter.concurrent.Offer.mapConstFunction.U">U</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Java-friendly analog of <code>const()</code>.</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

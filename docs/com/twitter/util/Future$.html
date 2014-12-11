@@ -348,9 +348,27 @@ used for the next batch to be collected.
       </h4>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of
 Seq[A].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
-Seq[A]. If one or of the given futures is exceptional, the resulting
-future result will be the first exception encountered.
+Seq[A]. If one or more of the given futures is exceptional, the resulting
+future result will be the first exception encountered.</p><p>TODO: This method should be deprecated in favour of <code>Futures.collect()</code>.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[A]]</code> containing the collected values from fs.
+</p></dd></dl></div>
+    </li><li name="com.twitter.util.Future#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="collect[A,B](fs:Map[A,com.twitter.util.Future[B]]):com.twitter.util.Future[Map[A,B]]"></a>
+      <a id="collect[A,B](Map[A,Future[B]]):Future[Map[A,B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collect</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="com.twitter.util.Future.collect.A">A</span>, <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collect.B">B</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="com.twitter.util.Future.collect.A">A</span>, <span class="extype" name="com.twitter.util.Future.collect.B">B</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Collect the results from the given map <code>fs</code> of futures into a new future
+of map.</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given map <code>fs</code> of futures into a new future
+of map. If one or more of the given Futures is exceptional, the resulting Future
+result will the first exception encountered.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a map of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Map[A, B]]</code> containing the collected values from fs
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collect[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[A]]"></a>
@@ -366,7 +384,7 @@ future result will be the first exception encountered.
       </h4>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of
 Seq[A].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
-Seq[A]. If one or of the given Futures is exceptional, the resulting
+Seq[A]. If one or more of the given Futures is exceptional, the resulting
 Future result will be the first exception encountered.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[A]]</code> containing the collected values from fs.
 </p></dd></dl></div>
@@ -382,8 +400,7 @@ Future result will be the first exception encountered.
         <span class="name">collectToTry</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="java.util.List">List</span>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]]
-</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of Seq[Try[A]]
+      <p class="shortcomment cmt">Collect the results from the given futures into a new future of java.</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of java.util.List[Try[A]].</p><p>TODO: This method should be deprecated in favour of <code>Futures.collectToTry()</code>.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[Try[A]]]</code> containing the collected values from fs.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#collectToTry" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -398,8 +415,7 @@ Future result will be the first exception encountered.
         <span class="name">collectToTry</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="scala.Seq">Seq</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.collectToTry.A">A</span>]]]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]]
-</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of Seq[Try[A]]
+      <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of Seq[Try[A]].
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[Try[A]]]</code> containing the collected values from fs.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#const" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -529,7 +545,7 @@ Exception(&quot;boo&quot;)).
       <p class="shortcomment cmt">Take a sequence of Futures, wait till they all complete
 successfully.</p><div class="fullcomment"><div class="comment cmt"><p>Take a sequence of Futures, wait till they all complete
 successfully.  The future fails immediately if any of the joined
-Futures do, mimicking the semantics of exceptions.
+Futures do, mimicking the semantics of exceptions.</p><p>TODO: This method should be deprecated in favour of <code>Futures.join()</code>.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Unit] whose value is populated when all of the fs return.
 </p></dd></dl></div>
     </li><li name="com.twitter.util.Future#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -1002,7 +1018,7 @@ Exception(&quot;boo&quot;)). The exception is not wrapped in any way.
       </span>
       </h4>
       <p class="shortcomment cmt">&quot;Select&quot; off the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>&quot;Select&quot; off the first future to be satisfied.  Return this as a
-result, with the remainder of the Futures as a sequence.
+result, with the remainder of the Futures as a sequence.</p><p>TODO: This method should be deprecated in favour of <code>Futures.select()</code>.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Tuple2[Try[A], java.util.List[Future[A]]]]</code> representing the first future
 to be satisfied and the rest of the futures.
 </p></dd></dl></div>

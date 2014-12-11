@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>ofInetSocketAddress - com.twitter.app.Flaggable.ofInetSocketAddress</title>
-          <meta name="description" content="ofInetSocketAddress - com.twitter.app.Flaggable.ofInetSocketAddress" />
-          <meta name="keywords" content="ofInetSocketAddress com.twitter.app.Flaggable.ofInetSocketAddress" />
+          <title>AbstractCloseAwaitably - com.twitter.util.AbstractCloseAwaitably</title>
+          <meta name="description" content="AbstractCloseAwaitably - com.twitter.util.AbstractCloseAwaitably" />
+          <meta name="keywords" content="AbstractCloseAwaitably com.twitter.util.AbstractCloseAwaitably" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.app.Flaggable$$ofInetSocketAddress$';
+            var hash = 'com.twitter.util.AbstractCloseAwaitably';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,26 +22,26 @@
    	  </script>
     
         </head>
-        <body class="value">
+        <body class="type">
       <div id="definition">
-        <img src="../../../lib/object_big.png" />
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.app">app</a>.<a href="Flaggable$.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a></p>
-        <h1>ofInetSocketAddress</h1>
+        <img src="../../../lib/class_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
+        <h1>AbstractCloseAwaitably</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">object</span>
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">ofInetSocketAddress</span><span class="result"> extends <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>]</span>
+        <span class="name">AbstractCloseAwaitably</span><span class="result"> extends <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">AbstractClosable</a> with <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>]</span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>], <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>], <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">AbstractClosable</a>, <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +59,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.app.Flaggable.ofInetSocketAddress"><span>ofInetSocketAddress</span></li><li class="in" name="com.twitter.app.Flaggable"><span>Flaggable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.util.AbstractCloseAwaitably"><span>AbstractCloseAwaitably</span></li><li class="in" name="com.twitter.util.Awaitable"><span>Awaitable</span></li><li class="in" name="com.twitter.util.AbstractClosable"><span>AbstractClosable</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -77,14 +77,112 @@
 
       <div id="template">
         <div id="allMembers">
-        
-
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.twitter.util.AbstractCloseAwaitably#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;():com.twitter.util.AbstractCloseAwaitably"></a>
+      <a id="&lt;init&gt;:AbstractCloseAwaitably"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">AbstractCloseAwaitably</span><span class="params">()</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
 
         
 
         <div id="values" class="values members">
-              <h3>Value Members</h3>
+              <h3>Abstract Value Members</h3>
+              <ol><li name="com.twitter.util.Awaitable#isReady" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="isReady(implicitpermit:com.twitter.util.Awaitable.CanAwait):Boolean"></a>
+      <a id="isReady(CanAwait):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Is this Awaitable ready? In other words: would calling
+<a href="Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
+</p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
+<a href="Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+    </li><li name="com.twitter.util.AbstractCloseAwaitably#onClose" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="onClose(deadline:com.twitter.util.Time):com.twitter.util.Future[scala.runtime.BoxedUnit]"></a>
+      <a id="onClose(Time):Future[BoxedUnit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onClose</span><span class="params">(<span name="deadline">deadline: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.Awaitable#ready" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type"></a>
+      <a id="ready(Duration)(CanAwait):AbstractCloseAwaitably.this.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ready</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.AbstractCloseAwaitably">AbstractCloseAwaitably</a>.this.type</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Support for <code>Await.ready</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.ready</code>. The use of the implicit permit is an
+access control mechanism: only <code>Await.ready</code> may call this
+method.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[TimeoutException]</span>
+    </span>)</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[InterruptedException]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.util.Awaitable#result" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):T"></a>
+      <a id="result(Duration)(CanAwait):BoxedUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">result</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Support for <code>Await.result</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.result</code>. The use of the implicit permit is an
+access control mechanism: only <code>Await.result</code> may call this
+method.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[Exception]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -182,20 +280,53 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.app.Flaggable#default" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="default:Option[T]"></a>
-      <a id="default:Option[InetSocketAddress]"></a>
+    </li><li name="com.twitter.util.AbstractCloseAwaitably#close" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="close(deadline:com.twitter.util.Time):com.twitter.util.Future[scala.runtime.BoxedUnit]"></a>
+      <a id="close(Time):Future[BoxedUnit]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">default</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>]</span>
+        <span class="name">close</span><span class="params">(<span name="deadline">deadline: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">An optional default value for the Flaggable.</p><div class="fullcomment"><div class="comment cmt"><p>An optional default value for the Flaggable.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a></dd></dl></div>
+      <p class="shortcomment cmt">Close the resource with the given deadline.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given deadline. This deadline is advisory,
+giving the callee some leeway, for example to drain clients or finish
+up other tasks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.AbstractCloseAwaitably">AbstractCloseAwaitably</a> → <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
+    </li><li name="com.twitter.util.Closable#close" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="close(after:com.twitter.util.Duration):com.twitter.util.Future[Unit]"></a>
+      <a id="close(Duration):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">(<span name="after">after: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Close the resource with the given timeout.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given timeout. This timeout is advisory,
+giving the callee some leeway, for example to drain clients or finish
+up other tasks.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
+    </li><li name="com.twitter.util.Closable#close" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="close():com.twitter.util.Future[Unit]"></a>
+      <a id="close():Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">close</span><span class="params">()</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Close the resource.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource. The returned Future is completed when
+the resource has been fully relinquished.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -280,6 +411,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.util.AbstractCloseAwaitably#isReady" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="isReady(permit:com.twitter.util.Awaitable.CanAwait):Boolean"></a>
+      <a id="isReady(CanAwait):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isReady</span><span class="params">(<span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -319,36 +463,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.app.Flaggable.ofInetSocketAddress#parse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="parse(v:String):java.net.InetSocketAddress"></a>
-      <a id="parse(String):InetSocketAddress"></a>
+    </li><li name="com.twitter.util.AbstractCloseAwaitably#ready" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ready(timeout:com.twitter.util.Duration,permit:com.twitter.util.Awaitable.CanAwait):com.twitter.util.Awaitable[scala.runtime.BoxedUnit]"></a>
+      <a id="ready(Duration,CanAwait):Awaitable[BoxedUnit]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parse</span><span class="params">(<span name="v">v: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span></span>
+        <span class="name">ready</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Parse a string (i.</p><div class="fullcomment"><div class="comment cmt"><p>Parse a string (i.e. a value set on the command line) into an object of
-type <code>T</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.app.Flaggable.ofInetSocketAddress">ofInetSocketAddress</a> → <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a></dd></dl></div>
-    </li><li name="com.twitter.app.Flaggable.ofInetSocketAddress#show" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="show(addr:java.net.InetSocketAddress):String"></a>
-      <a id="show(InetSocketAddress):String"></a>
+      
+    </li><li name="com.twitter.util.AbstractCloseAwaitably#result" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="result(timeout:com.twitter.util.Duration,permit:com.twitter.util.Awaitable.CanAwait):scala.runtime.BoxedUnit"></a>
+      <a id="result(Duration,CanAwait):BoxedUnit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">show</span><span class="params">(<span name="addr">addr: <span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">result</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Create a string-representation of an object of type <code>T</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a string-representation of an object of type <code>T</code>. Used in
-<code>Flag.toString</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.app.Flaggable.ofInetSocketAddress">ofInetSocketAddress</a> → <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a></dd></dl></div>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -441,8 +581,12 @@ type <code>T</code>.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.app.Flaggable">
-              <h3>Inherited from <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>]</h3>
+        <div class="parent" name="com.twitter.util.Awaitable">
+              <h3>Inherited from <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>]</h3>
+            </div><div class="parent" name="com.twitter.util.AbstractClosable">
+              <h3>Inherited from <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">AbstractClosable</a></h3>
+            </div><div class="parent" name="com.twitter.util.Closable">
+              <h3>Inherited from <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">

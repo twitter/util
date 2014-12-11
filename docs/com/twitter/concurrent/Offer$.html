@@ -39,7 +39,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Offers.html" class="extype" name="com.twitter.concurrent.Offers">com.twitter.concurrent.Offers</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -223,7 +224,7 @@ Offers that are synchronizable immediately, one is chosen at random.
       </span>
       </h4>
       <p class="shortcomment cmt">A constant offer: synchronizes the given value always.</p><div class="fullcomment"><div class="comment cmt"><p>A constant offer: synchronizes the given value always. This is
-call-by-name and a new value is produced for each <code>prepare()</code>.
+call-by-name and a new value is produced for each <code>prepare()</code>.</p><p>Note: Updates here must also be done at <span class="extype" name="com.twitter.concurrent.Offers.newConstOffer()">com.twitter.concurrent.Offers.newConstOffer()</span>.
 </p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>

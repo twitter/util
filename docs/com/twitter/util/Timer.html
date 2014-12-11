@@ -39,7 +39,12 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Timers are used to schedule tasks in the future.
+They support both one-shot and recurring tasks.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Scheduling tasks with <a href="" class="extype" name="com.twitter.util.Timer">Timer</a>s should rarely
+be done directly; for example, when programming
+with <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>s, prefer using <a href="Future$.html#sleep(howlong:com.twitter.util.Duration)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Future#sleep">Future$.sleep</a>.
+</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
@@ -98,7 +103,8 @@
         <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Run <code>f</code> at time <code>when</code>; subsequently run <code>f</code> at every
+elapsed <code>period</code>.</p>
     </li><li name="com.twitter.util.Timer#schedule" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="schedule(when:com.twitter.util.Time)(f:=&gt;Unit):com.twitter.util.TimerTask"></a>
       <a id="schedule(Time)(⇒Unit):TimerTask"></a>
@@ -111,8 +117,8 @@
         <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
-      
-    </li><li name="com.twitter.util.Timer#stop" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Run <code>f</code> at time <code>when</code>.</p>
+    </li><li name="com.twitter.util.Timer#stop" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="stop():Unit"></a>
       <a id="stop():Unit"></a>
       <h4 class="signature">
@@ -124,7 +130,9 @@
         <span class="name">stop</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Stop the timer.</p><div class="fullcomment"><div class="comment cmt"><p>Stop the timer. Pending tasks are cancelled.
+The timer is unusable after being stopped.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -392,7 +400,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="name">schedule</span><span class="params">(<span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Run <code>f</code> every elapsed <code>period</code>, starting immediately.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

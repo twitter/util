@@ -151,6 +151,34 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Await#all" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="all(awaitables:java.util.Collection[com.twitter.util.Awaitable[_]],timeout:com.twitter.util.Duration):Unit"></a>
+      <a id="all(Collection[Awaitable[_]],Duration):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">all</span><span class="params">(<span name="awaitables">awaitables: <span class="extype" name="java.util.Collection">Collection</span>[<a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]]</span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns after all actions have completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns after all actions have completed. The timeout given is
+passed to each awaitable in turn, meaning max await time will be
+awaitables.size * timeout.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[TimeoutException]</span>
+    </span>)</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[InterruptedException]</span>
+    </span>)</span>
+              
+        </dd><dt>See also</dt><dd><span class="cmt"><p>Await.all(Seq, Duration)
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.Await#all" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="all(awaitables:Seq[com.twitter.util.Awaitable[_]],timeout:com.twitter.util.Duration):Unit"></a>
       <a id="all(Seq[Awaitable[_]],Duration):Unit"></a>
       <h4 class="signature">
@@ -202,6 +230,8 @@ awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotation
       
       <span class="symbol">classOf[InterruptedException]</span>
     </span>)</span>
+              
+                <span class="name">@varargs</span><span class="args">()</span>
               
         </dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>Sieve - com.twitter.examples.concurrent.Sieve</title>
-          <meta name="description" content="Sieve - com.twitter.examples.concurrent.Sieve" />
-          <meta name="keywords" content="Sieve com.twitter.examples.concurrent.Sieve" />
+          <title>BroadcastStatsReceiver - com.twitter.finagle.stats.BroadcastStatsReceiver</title>
+          <meta name="description" content="BroadcastStatsReceiver - com.twitter.finagle.stats.BroadcastStatsReceiver" />
+          <meta name="keywords" content="BroadcastStatsReceiver com.twitter.finagle.stats.BroadcastStatsReceiver" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'com.twitter.examples.concurrent.Sieve$';
+            var hash = 'com.twitter.finagle.stats.BroadcastStatsReceiver$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -25,8 +25,8 @@
         <body class="value">
       <div id="definition">
         <img src="../../../../lib/object_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.examples">examples</a>.<a href="package.html" class="extype" name="com.twitter.examples.concurrent">concurrent</a></p>
-        <h1>Sieve</h1>
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="package.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
+        <h1>BroadcastStatsReceiver</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,11 +35,13 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Sieve</span>
+        <span class="name">BroadcastStatsReceiver</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
+StatsReceivers (n).
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -59,7 +61,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.examples.concurrent.Sieve"><span>Sieve</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.finagle.stats.BroadcastStatsReceiver"><span>BroadcastStatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -150,6 +152,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.BroadcastStatsReceiver#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="apply(receivers:Seq[com.twitter.finagle.stats.StatsReceiver]):com.twitter.finagle.stats.StatsReceiver"></a>
+      <a id="apply(Seq[StatsReceiver]):StatsReceiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="receivers">receivers: <span class="extype" name="scala.Seq">Seq</span>[<a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>]</span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -208,19 +223,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.examples.concurrent.Sieve#filter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="filter(in:com.twitter.concurrent.Offer[Int],prime:Int):com.twitter.concurrent.Offer[Int]"></a>
-      <a id="filter(Offer[Int],Int):Offer[Int]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">filter</span><span class="params">(<span name="in">in: <a href="../../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="prime">prime: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="../../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="scala.Int">Int</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -266,19 +268,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.examples.concurrent.Sieve#integers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="integers(from:Int):com.twitter.concurrent.Offer[Int]"></a>
-      <a id="integers(Int):Offer[Int]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">integers</span><span class="params">(<span name="from">from: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="../../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="scala.Int">Int</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -292,19 +281,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.examples.concurrent.Sieve#main" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="main(args:Array[String]):Unit"></a>
-      <a id="main(Array[String]):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">main</span><span class="params">(<span name="args">args: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -344,19 +320,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.examples.concurrent.Sieve#sieve" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sieve:com.twitter.concurrent.Offer[Int]"></a>
-      <a id="sieve:Offer[Int]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sieve</span><span class="result">: <a href="../../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="scala.Int">Int</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

@@ -44,10 +44,13 @@ instants in time (cf. <a href="Var.html" class="extype" name="com.twitter.util.V
 defined at all times). It is possible to view Events as the
 discrete counterpart to <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>'s continuous
 nature.</p><p>Events are observed by registering <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witnesses</a>
-to which the Event's values are notified.
+to which the Event's values are notified.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractEvent.html" class="extype" name="com.twitter.util.AbstractEvent">com.twitter.util.AbstractEvent</a>.
 </p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="AbstractEvent.html" class="extype" name="com.twitter.util.AbstractEvent">AbstractEvent</a>, <a href="WitnessedEvent.html" class="extype" name="com.twitter.util.WitnessedEvent">WitnessedEvent</a></div>
         </div></div>
         
 
@@ -241,6 +244,23 @@ is notified for each incoming event.
 observed.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event by applying the given function to each value
 observed. Event values for which the partial function <code>f</code> does
 not apply are dropped; other values are transformed by <code>f</code>.
+</p></div></div>
+    </li><li name="com.twitter.util.Event#diff" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]"></a>
+      <a id="diff[CC[_],U](Diffable[CC],&lt;:&lt;[T,CC[U]]):Event[Diff[CC,U]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">diff</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="U">U</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Event.diff.CC">CC</span>]</span>, <span name="toCC">toCC: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.diff.CC">CC</span>[<span class="extype" name="com.twitter.util.Event.diff.U">U</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Event.diff.CC">CC</span>, <span class="extype" name="com.twitter.util.Event.diff.U">U</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The <a href="" class="extype" name="com.twitter.util.Event">Event</a> that stores the difference between successive
+updates to the parent event.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="" class="extype" name="com.twitter.util.Event">Event</a> that stores the difference between successive
+updates to the parent event. This can be used to perform
+incremental computation on large data structures.
 </p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -451,6 +471,25 @@ to each element in this Event.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Event#patch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="patch[CC[_],U](implicitevidence$2:com.twitter.util.Diffable[CC],implicitev:&lt;:&lt;[T,com.twitter.util.Diff[CC,U]]):com.twitter.util.Event[CC[U]]"></a>
+      <a id="patch[CC[_],U](Diffable[CC],&lt;:&lt;[T,Diff[CC,U]]):Event[CC[U]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">patch</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="U">U</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Event.patch.CC">CC</span>]</span>, <span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Event.patch.CC">CC</span>, <span class="extype" name="com.twitter.util.Event.patch.U">U</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.patch.CC">CC</span>[<span class="extype" name="com.twitter.util.Event.patch.U">U</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Patch up an <a href="" class="extype" name="com.twitter.util.Event">Event</a> of differences (like those produced by
+<a href="#diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]" class="extmbr" name="com.twitter.util.Event#diff">Event.diff</a>) into an <a href="" class="extype" name="com.twitter.util.Event">Event</a> that reflects the current
+version of a data structure.</p><div class="fullcomment"><div class="comment cmt"><p>Patch up an <a href="" class="extype" name="com.twitter.util.Event">Event</a> of differences (like those produced by
+<a href="#diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]" class="extmbr" name="com.twitter.util.Event#diff">Event.diff</a>) into an <a href="" class="extype" name="com.twitter.util.Event">Event</a> that reflects the current
+version of a data structure. That is: <code>(event:
+Event[CC[T]]).diff.patch</code> is equivalent to <code>event</code>
+</p></div></div>
     </li><li name="com.twitter.util.Event#respond" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="respond(s:T=&gt;Unit):com.twitter.util.Closable"></a>
       <a id="respond((T)⇒Unit):Closable"></a>

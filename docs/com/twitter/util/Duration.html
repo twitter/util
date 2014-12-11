@@ -150,7 +150,20 @@ that are truly infinite; for example the absence of a timeout.
         <span title="gt4s: $percent" class="name">%</span><span class="params">(<span name="x">x: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Scale the duration by the given denominator, returning its remainder</p>
+      <p class="shortcomment cmt">Scales this <code>Duration</code> by modding by <code>x</code>.</p>
+    </li><li name="com.twitter.util.Duration#*" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="*(x:Double):com.twitter.util.Duration"></a>
+      <a id="*(Double):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $times" class="name">*</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Scales this <code>Duration</code> by multiplying by <code>x</code>.</p>
     </li><li name="com.twitter.util.Duration#*" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="*(x:Long):com.twitter.util.Duration"></a>
       <a id="*(Long):Duration"></a>
@@ -163,7 +176,7 @@ that are truly infinite; for example the absence of a timeout.
         <span title="gt4s: $times" class="name">*</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Scale the duration by the given multiplier</p>
+      <p class="shortcomment cmt">Scales this <code>Duration</code> by multiplying by <code>x</code>.</p>
     </li><li name="com.twitter.util.TimeLike#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="+(delta:com.twitter.util.Duration):This"></a>
       <a id="+(Duration):Duration"></a>
@@ -194,6 +207,19 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#/" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="/(x:Double):com.twitter.util.Duration"></a>
+      <a id="/(Double):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $div" class="name">/</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Scales this <code>Duration</code> by dividing by <code>x</code>.</p>
+    </li><li name="com.twitter.util.Duration#/" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="/(x:Long):com.twitter.util.Duration"></a>
       <a id="/(Long):Duration"></a>
       <h4 class="signature">
@@ -205,7 +231,7 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
         <span title="gt4s: $div" class="name">/</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Scale the duration by the given denominator</p>
+      <p class="shortcomment cmt">Scales this <code>Duration</code> by dividing by <code>x</code>.</p>
     </li><li name="scala.math.Ordered#&lt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;(that:A):Boolean"></a>
       <a id="&lt;(Duration):Boolean"></a>
@@ -394,6 +420,34 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
       </span>
       </h4>
       <p class="shortcomment cmt">The difference between the two <code>TimeLike</code>s</p><div class="fullcomment"><div class="comment cmt"><p>The difference between the two <code>TimeLike</code>s</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#div" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="div(x:Double):com.twitter.util.Duration"></a>
+      <a id="div(Double):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">div</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator /
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#div" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="div(x:Long):com.twitter.util.Duration"></a>
+      <a id="div(Long):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">div</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator /
+</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -439,8 +493,8 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.TimeLike#floor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="floor(x:com.twitter.util.Duration):This"></a>
+    </li><li name="com.twitter.util.Duration#floor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="floor(x:com.twitter.util.Duration):com.twitter.util.Duration"></a>
       <a id="floor(Duration):Duration"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -455,7 +509,7 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
 127.seconds.floor(1.minute) =&gt; 2.minutes.  Taking the floor of a
 Time object with duration greater than 1.hour can have unexpected
 results because of timezones.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#fromNow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="fromNow:com.twitter.util.Time"></a>
       <a id="fromNow:Time"></a>
@@ -699,6 +753,20 @@ However, this is useful for more programmatic call sites.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#minus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="minus(delta:com.twitter.util.Duration):com.twitter.util.Duration"></a>
+      <a id="minus(Duration):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">minus</span><span class="params">(<span name="delta">delta: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator -
+</p></span></dd></dl></div>
     </li><li name="com.twitter.util.TimeLike#moreOrLessEquals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="moreOrLessEquals(other:This,maxDelta:com.twitter.util.Duration):Boolean"></a>
       <a id="moreOrLessEquals(Duration,Duration):Boolean"></a>
@@ -712,6 +780,34 @@ However, this is useful for more programmatic call sites.
       </span>
       </h4>
       <p class="shortcomment cmt">Equality within <code>maxDelta</code></p><div class="fullcomment"><div class="comment cmt"><p>Equality within <code>maxDelta</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#mul" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mul(x:Double):com.twitter.util.Duration"></a>
+      <a id="mul(Double):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mul</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator *
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#mul" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mul(x:Long):com.twitter.util.Duration"></a>
+      <a id="mul(Long):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mul</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator *
+</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Duration#nanos" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="nanos:Long"></a>
       <a id="nanos:Long"></a>
@@ -738,6 +834,19 @@ However, this is useful for more programmatic call sites.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Duration#neg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="neg:com.twitter.util.Duration"></a>
+      <a id="neg:Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">neg</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Negates this <code>Duration</code>.</p>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
@@ -777,6 +886,34 @@ However, this is useful for more programmatic call sites.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#plus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="plus(delta:com.twitter.util.Duration):com.twitter.util.Duration"></a>
+      <a id="plus(Duration):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">plus</span><span class="params">(<span name="delta">delta: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator +
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.Duration#rem" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="rem(x:com.twitter.util.Duration):com.twitter.util.Duration"></a>
+      <a id="rem(Duration):Duration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rem</span><span class="params">(<span name="x">x: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator %
+</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

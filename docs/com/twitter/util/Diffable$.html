@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>DistributionTester - com.twitter.hashing.DistributionTester</title>
-          <meta name="description" content="DistributionTester - com.twitter.hashing.DistributionTester" />
-          <meta name="keywords" content="DistributionTester com.twitter.hashing.DistributionTester" />
+          <title>Diffable - com.twitter.util.Diffable</title>
+          <meta name="description" content="Diffable - com.twitter.util.Diffable" />
+          <meta name="keywords" content="Diffable com.twitter.util.Diffable" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.hashing.DistributionTester';
+            var hash = 'com.twitter.util.Diffable$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,24 +22,25 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../../../lib/class_big.png" />
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.hashing">hashing</a></p>
-        <h1>DistributionTester</h1>
+        <a href="Diffable.html" title="Go to companion"><img src="../../../lib/object_to_trait_big.png" /></a>
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
+        <h1><a href="Diffable.html" title="Go to companion">Diffable</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">DistributionTester</span><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">Diffable</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Diffable defines common type class instances for <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -59,7 +60,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.hashing.DistributionTester"><span>DistributionTester</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.util.Diffable"><span>Diffable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -77,23 +78,7 @@
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.hashing.DistributionTester#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(distributor:com.twitter.hashing.Distributor[A]):com.twitter.hashing.DistributionTester[A]"></a>
-      <a id="&lt;init&gt;:DistributionTester[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">DistributionTester</span><span class="params">(<span name="distributor">distributor: <a href="Distributor.html" class="extype" name="com.twitter.hashing.Distributor">Distributor</a>[<span class="extype" name="com.twitter.hashing.DistributionTester.A">A</span>]</span>)</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
+        
 
         
 
@@ -198,22 +183,34 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.hashing.DistributionTester#distributionDeviation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="distributionDeviation(keys:Seq[Long]):Double"></a>
-      <a id="distributionDeviation(Seq[Long]):Double"></a>
+    </li><li name="com.twitter.util.Diffable#diff" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="diff[CC[_],T](left:CC[T],right:CC[T])(implicitevidence$1:com.twitter.util.Diffable[CC]):com.twitter.util.Diff[CC,T]"></a>
+      <a id="diff[CC[_],T](CC[T],CC[T])(Diffable[CC]):Diff[CC,T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">distributionDeviation</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Long">Long</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">diff</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="T">T</span>]</span><span class="params">(<span name="left">left: <span class="extype" name="com.twitter.util.Diffable.diff.CC">CC</span>[<span class="extype" name="com.twitter.util.Diffable.diff.T">T</span>]</span>, <span name="right">right: <span class="extype" name="com.twitter.util.Diffable.diff.CC">CC</span>[<span class="extype" name="com.twitter.util.Diffable.diff.T">T</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Diffable.diff.CC">CC</span>]</span>)</span><span class="result">: <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Diffable.diff.CC">CC</span>, <span class="extype" name="com.twitter.util.Diffable.diff.T">T</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns a normalized standard deviation indicating how well the keys
-are distributed between the nodes.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a normalized standard deviation indicating how well the keys
-are distributed between the nodes. The closer to 0 the better.
-</p></div></div>
+      <p class="shortcomment cmt">Compute a <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a> that may later be used to bring two
+versions of a data structure into agreement; that is:</p><div class="fullcomment"><div class="comment cmt"><p>Compute a <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a> that may later be used to bring two
+versions of a data structure into agreement; that is:</p><pre>Diffable.diff(left, right).patch(left) == right</pre></div></div>
+    </li><li name="com.twitter.util.Diffable#empty" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="empty[CC[_],T](implicitevidence$2:com.twitter.util.Diffable[CC]):CC[T]"></a>
+      <a id="empty[CC[_],T](Diffable[CC]):CC[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">empty</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Diffable.empty.CC">CC</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Diffable.empty.CC">CC</span>[<span class="extype" name="com.twitter.util.Diffable.empty.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The identity collection CC[T].</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -337,6 +334,32 @@ are distributed between the nodes. The closer to 0 the better.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Diffable#ofSeq" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofSeq:com.twitter.util.Diffable[Seq]"></a>
+      <a id="ofSeq:Diffable[Seq]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofSeq</span><span class="result">: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="scala.Seq">Seq</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.Diffable#ofSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofSet:com.twitter.util.Diffable[Set]"></a>
+      <a id="ofSet:Diffable[Set]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofSet</span><span class="result">: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="scala.Predef.Set">Set</span>]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

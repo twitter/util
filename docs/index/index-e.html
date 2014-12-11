@@ -39,11 +39,8 @@
       <div class="name">Estimator</div>
       <div class="occurrences"><a href="../com/twitter/jvm/package.html" class="extype" name="com.twitter.jvm">jvm</a> </div>
     </div><div class="entry">
-      <div class="name">EstimatorTest</div>
-      <div class="occurrences"><a href="../com/twitter/jvm/package.html" class="extype" name="com.twitter.jvm">jvm</a> </div>
-    </div><div class="entry">
       <div class="name">Event</div>
-      <div class="occurrences"><a href="../com/twitter/util/package.html" class="extype" name="com.twitter.util">util</a> <a href="../com/twitter/zk/package.html" class="extype" name="com.twitter.zk">zk</a> </div>
+      <div class="occurrences"><a href="../com/twitter/util/package.html" class="extype" name="com.twitter.util">util</a> <a href="../com/twitter/util/events/package.html" class="extype" name="com.twitter.util.events">events</a> <a href="../com/twitter/zk/package.html" class="extype" name="com.twitter.zk">zk</a> </div>
     </div><div class="entry">
       <div class="name">EventBroker</div>
       <div class="occurrences"><a href="../com/twitter/zk/package.html" class="extype" name="com.twitter.zk">zk</a> </div>
@@ -53,6 +50,9 @@
     </div><div class="entry">
       <div class="name">EventPromise</div>
       <div class="occurrences"><a href="../com/twitter/zk/package.html" class="extype" name="com.twitter.zk">zk</a> </div>
+    </div><div class="entry">
+      <div class="name">Events</div>
+      <div class="occurrences"><a href="../com/twitter/util/package.html" class="extype" name="com.twitter.util">util</a> </div>
     </div><div class="entry">
       <div class="name">EvictingCache</div>
       <div class="occurrences"><a href="../com/twitter/cache/package.html" class="extype" name="com.twitter.cache">cache</a> </div>
@@ -93,14 +93,14 @@
       <div class="name">edenPool</div>
       <div class="occurrences"><a href="../com/twitter/jvm/Hotspot.html" class="extype" name="com.twitter.jvm.Hotspot">Hotspot</a> <a href="../com/twitter/jvm/Jvm.html" class="extype" name="com.twitter.jvm.Jvm">Jvm</a> <a href="../com/twitter/jvm/NilJvm$.html" class="extype" name="com.twitter.jvm.NilJvm">NilJvm</a> </div>
     </div><div class="entry">
-      <div class="name">elapsed</div>
-      <div class="occurrences"><a href="../com/twitter/jvm/EstimatorTest$.html" class="extype" name="com.twitter.jvm.EstimatorTest">EstimatorTest</a> </div>
-    </div><div class="entry">
       <div class="name">element</div>
       <div class="occurrences"><a href="../com/twitter/util/LastWriteWinsQueue.html" class="extype" name="com.twitter.util.LastWriteWinsQueue">LastWriteWinsQueue</a> </div>
     </div><div class="entry">
       <div class="name">empty</div>
-      <div class="occurrences"><a href="../com/twitter/collection/BucketGenerationalQueue$TimeBucket$.html" class="extype" name="com.twitter.collection.BucketGenerationalQueue.TimeBucket">TimeBucket</a> <a href="../com/twitter/concurrent/Spool$.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> <a href="../com/twitter/util/JMapWrapper.html" class="extype" name="com.twitter.util.JMapWrapper">JMapWrapper</a> <a href="../com/twitter/util/JMapWrapperLike.html" class="extype" name="com.twitter.util.JMapWrapperLike">JMapWrapperLike</a> </div>
+      <div class="occurrences"><a href="../com/twitter/collection/BucketGenerationalQueue$TimeBucket$.html" class="extype" name="com.twitter.collection.BucketGenerationalQueue.TimeBucket">TimeBucket</a> <a href="../com/twitter/concurrent/Spool$.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> <a href="../com/twitter/util/Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a> <a href="../com/twitter/util/JMapWrapper.html" class="extype" name="com.twitter.util.JMapWrapper">JMapWrapper</a> <a href="../com/twitter/util/JMapWrapperLike.html" class="extype" name="com.twitter.util.JMapWrapperLike">JMapWrapperLike</a> </div>
+    </div><div class="entry">
+      <div class="name">enabled</div>
+      <div class="occurrences"><a href="../com/twitter/util/events/Sink$.html" class="extype" name="com.twitter.util.events.Sink">Sink</a> </div>
     </div><div class="entry">
       <div class="name">encode</div>
       <div class="occurrences"><a href="../com/twitter/util/Base64StringEncoder.html" class="extype" name="com.twitter.util.Base64StringEncoder">Base64StringEncoder</a> <a href="../com/twitter/util/BinaryCodec$.html" class="extype" name="com.twitter.util.BinaryCodec">BinaryCodec</a> <a href="../com/twitter/util/Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a> <a href="../com/twitter/util/EncoderCompanion.html" class="extype" name="com.twitter.util.EncoderCompanion">EncoderCompanion</a> <a href="../com/twitter/util/GZIPStringEncoder.html" class="extype" name="com.twitter.util.GZIPStringEncoder">GZIPStringEncoder</a> <a href="../com/twitter/util/StringEncoder.html" class="extype" name="com.twitter.util.StringEncoder">StringEncoder</a> <a href="../com/twitter/util/ThriftCodec.html" class="extype" name="com.twitter.util.ThriftCodec">ThriftCodec</a> </div>
@@ -110,9 +110,6 @@
     </div><div class="entry">
       <div class="name">encoder</div>
       <div class="occurrences"><a href="../com/twitter/io/Charsets$.html" class="extype" name="com.twitter.io.Charsets">Charsets</a> </div>
-    </div><div class="entry">
-      <div class="name">end</div>
-      <div class="occurrences"><a href="../com/twitter/io/Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> </div>
     </div><div class="entry">
       <div class="name">ensure</div>
       <div class="occurrences"><a href="../com/twitter/util/Future.html" class="extype" name="com.twitter.util.Future">Future</a> <a href="../com/twitter/util/Try.html" class="extype" name="com.twitter.util.Try">Try</a> </div>
@@ -138,23 +135,26 @@
       <div class="name">estimateAllocRate</div>
       <div class="occurrences"><a href="../com/twitter/jvm/Pool.html" class="extype" name="com.twitter.jvm.Pool">Pool</a> </div>
     </div><div class="entry">
-      <div class="name">estimator</div>
-      <div class="occurrences"><a href="../com/twitter/jvm/EstimatorTest$.html" class="extype" name="com.twitter.jvm.EstimatorTest">EstimatorTest</a> </div>
-    </div><div class="entry">
       <div class="name"><strike>eternity</strike></div>
       <div class="occurrences"><strike><a href="../com/twitter/util/Duration$.html" class="extype" name="com.twitter.util.Duration">Duration</a></strike> </div>
     </div><div class="entry">
+      <div class="name">etype</div>
+      <div class="occurrences"><a href="../com/twitter/util/events/Event.html" class="extype" name="com.twitter.util.events.Event">Event</a> </div>
+    </div><div class="entry">
+      <div class="name">event</div>
+      <div class="occurrences"><a href="../com/twitter/util/events/Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a> <a href="../com/twitter/util/events/SizedSink.html" class="extype" name="com.twitter.util.events.SizedSink">SizedSink</a> </div>
+    </div><div class="entry">
       <div class="name">eventType</div>
       <div class="occurrences"><a href="../com/twitter/zk/NodeEvent.html" class="extype" name="com.twitter.zk.NodeEvent">NodeEvent</a> <a href="../com/twitter/zk/NodeEvent$$ChildrenChanged$.html" class="extype" name="com.twitter.zk.NodeEvent.ChildrenChanged">ChildrenChanged</a> <a href="../com/twitter/zk/NodeEvent$$Created$.html" class="extype" name="com.twitter.zk.NodeEvent.Created">Created</a> <a href="../com/twitter/zk/NodeEvent$$DataChanged$.html" class="extype" name="com.twitter.zk.NodeEvent.DataChanged">DataChanged</a> <a href="../com/twitter/zk/NodeEvent$$Deleted$.html" class="extype" name="com.twitter.zk.NodeEvent.Deleted">Deleted</a> <a href="../com/twitter/zk/StateEvent.html" class="extype" name="com.twitter.zk.StateEvent">StateEvent</a> </div>
+    </div><div class="entry">
+      <div class="name">events</div>
+      <div class="occurrences"><a href="../com/twitter/util/package.html" class="extype" name="com.twitter.util">util</a> <a href="../com/twitter/util/events/Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a> <a href="../com/twitter/util/events/SizedSink.html" class="extype" name="com.twitter.util.events.SizedSink">SizedSink</a> </div>
     </div><div class="entry">
       <div class="name">every</div>
       <div class="occurrences"><a href="../com/twitter/cache/Refresh$.html" class="extype" name="com.twitter.cache.Refresh">Refresh</a> </div>
     </div><div class="entry">
       <div class="name">evict</div>
       <div class="occurrences"><a href="../com/twitter/cache/ConcurrentMapCache.html" class="extype" name="com.twitter.cache.ConcurrentMapCache">ConcurrentMapCache</a> <a href="../com/twitter/cache/FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">FutureCache</a> <a href="../com/twitter/cache/FutureCacheProxy.html" class="extype" name="com.twitter.cache.FutureCacheProxy">FutureCacheProxy</a> <a href="../com/twitter/cache/guava/LoadingFutureCache.html" class="extype" name="com.twitter.cache.guava.LoadingFutureCache">LoadingFutureCache</a> </div>
-    </div><div class="entry">
-      <div class="name">examples</div>
-      <div class="occurrences"><a href="../com/twitter/package.html" class="extype" name="com.twitter">twitter</a> </div>
     </div><div class="entry">
       <div class="name">exc</div>
       <div class="occurrences"><a href="../com/twitter/util/Activity$$Failed.html" class="extype" name="com.twitter.util.Activity.Failed">Failed</a> </div>
@@ -171,7 +171,13 @@
       <div class="name">exists</div>
       <div class="occurrences"><a href="../com/twitter/util/Return.html" class="extype" name="com.twitter.util.Return">Return</a> <a href="../com/twitter/util/Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a> <a href="../com/twitter/util/Try.html" class="extype" name="com.twitter.util.Try">Try</a> <a href="../com/twitter/zk/ZNode.html" class="extype" name="com.twitter.zk.ZNode">ZNode</a> </div>
     </div><div class="entry">
+      <div class="name">exitOnError</div>
+      <div class="occurrences"><a href="../com/twitter/app/App.html" class="extype" name="com.twitter.app.App">App</a> </div>
+    </div><div class="entry">
       <div class="name">exp</div>
       <div class="occurrences"><a href="../com/twitter/io/package.html" class="extype" name="com.twitter.io">io</a> </div>
+    </div><div class="entry">
+      <div class="name">extract</div>
+      <div class="occurrences"><a href="../com/twitter/io/Buf$$ByteArray$$Owned$.html" class="extype" name="com.twitter.io.Buf.ByteArray.Owned">Owned</a> <a href="../com/twitter/io/Buf$$ByteArray$$Shared$.html" class="extype" name="com.twitter.io.Buf.ByteArray.Shared">Shared</a> <a href="../com/twitter/io/Buf$$ByteBuffer$$Owned$.html" class="extype" name="com.twitter.io.Buf.ByteBuffer.Owned">Owned</a> <a href="../com/twitter/io/Buf$$ByteBuffer$$Shared$.html" class="extype" name="com.twitter.io.Buf.ByteBuffer.Shared">Shared</a> </div>
     </div></body>
       </html>

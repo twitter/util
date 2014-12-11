@@ -45,12 +45,15 @@ recomputed automatically when independent variables change -- they
 implement a form of self-adjusting computation.</p><p>Vars are observed, notifying users whenever the variable changes.
 </p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.util.Var">Var</a>[<span class="extype" name="com.twitter.util.Var.T">T</span>]</dd><dt>Note</dt><dd><span class="cmt"><p>There are no well-defined error semantics for Var. Vars are
 computed lazily, and the updating thread will receive any
-exceptions thrown while computing derived Vars.
+exceptions thrown while computing derived Vars.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractVar.html" class="extype" name="com.twitter.util.AbstractVar">com.twitter.util.AbstractVar</a>.
 </p></span>, <span class="cmt"><p>Vars do not always perform the minimum amount of
 re-computation.
 </p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="AbstractVar.html" class="extype" name="com.twitter.util.AbstractVar">AbstractVar</a>, <a href="ReadWriteVar.html" class="extype" name="com.twitter.util.ReadWriteVar">ReadWriteVar</a></div>
         </div></div>
         
 
@@ -231,6 +234,20 @@ Event.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Var#diff" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]"></a>
+      <a id="diff[CC[_],U](Diffable[CC],&lt;:&lt;[T,CC[U]]):Event[Diff[CC,U]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">diff</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="U">U</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Var.diff.CC">CC</span>]</span>, <span name="toCC">toCC: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Var.T">T</span>, <span class="extype" name="com.twitter.util.Var.diff.CC">CC</span>[<span class="extype" name="com.twitter.util.Var.diff.U">U</span>]]</span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Var.diff.CC">CC</span>, <span class="extype" name="com.twitter.util.Var.diff.U">U</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Produce an <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a> reflecting the differences between
+each update to this <a href="" class="extype" name="com.twitter.util.Var">Var</a>.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

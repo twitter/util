@@ -180,32 +180,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.io.Buf.ByteArray#begin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="begin:Int"></a>
-      <a id="begin:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">begin</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="com.twitter.io.Buf.ByteArray#bytes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="bytes:Array[Byte]"></a>
-      <a id="bytes:Array[Byte]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">bytes</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -239,19 +213,19 @@
       </h4>
       <p class="shortcomment cmt">Concatenate this buffer with the given buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Concatenate this buffer with the given buffer.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
-    </li><li name="com.twitter.io.Buf.ByteArray#end" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="end:Int"></a>
-      <a id="end:Int"></a>
+    </li><li name="com.twitter.io.Buf#copiedByteArray" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copiedByteArray:Array[Byte]"></a>
+      <a id="copiedByteArray:Array[Byte]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">end</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">copiedByteArray</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Definitely requires copying.</p><div class="fullcomment"><div class="comment cmt"><p>Definitely requires copying.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -442,10 +416,36 @@ Out of bounds indices are truncated. Negative indices are not accepted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.io.Buf#unsafeByteArray" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsafeByteArray:Array[Byte]"></a>
+      <a id="unsafeByteArray:Array[Byte]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsafeByteArray</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">May require copying.</p><div class="fullcomment"><div class="comment cmt"><p>May require copying.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#unsafeByteArrayBuf" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsafeByteArrayBuf:Option[com.twitter.io.Buf.ByteArray]"></a>
+      <a id="unsafeByteArrayBuf:Option[ByteArray]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsafeByteArrayBuf</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Helper to support 0-copy coercion to Buf.</p><div class="fullcomment"><div class="comment cmt"><p>Helper to support 0-copy coercion to Buf.ByteArray.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

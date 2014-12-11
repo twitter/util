@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>events - com.twitter.util.events</title>
+          <meta name="description" content="events - com.twitter.util.events" />
+          <meta name="keywords" content="events com.twitter.util.events" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.twitter.util.events.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a></p>
+        <h1>events</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">events</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.twitter.util.events"><span>events</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.twitter.util.events.Event" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EventextendsProductwithSerializable"></a>
+      <a id="Event:Event"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Event.html"><span class="name">Event</span></a><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="when">when: <a href="../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="longVal">longVal: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">Event.NoLong</span></span>, <span name="objectVal">objectVal: <span class="extype" name="scala.AnyRef">AnyRef</span> = <span class="symbol">Event.NoObject</span></span>, <span name="doubleVal">doubleVal: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">Event.NoDouble</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A somewhat flexible schema representing various event types.</p>
+    </li><li name="com.twitter.util.events.Sink" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SinkextendsAnyRef"></a>
+      <a id="Sink:Sink"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Sink.html"><span class="name">Sink</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis.</p>
+    </li><li name="com.twitter.util.events.SinkBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SinkBenchmarkextendsSimpleBenchmark"></a>
+      <a id="SinkBenchmark:SinkBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SinkBenchmark.html"><span class="name">SinkBenchmark</span></a><span class="result"> extends <span class="extype" name="com.google.caliper.SimpleBenchmark">SimpleBenchmark</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.events.SizedSink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SizedSinkextendsSink"></a>
+      <a id="SizedSink:SizedSink"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SizedSink.html"><span class="name">SizedSink</span></a><span class="result"> extends <a href="Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">An in-memory circular buffer of events.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.twitter.util.events.Event" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Event"></a>
+      <a id="Event:Event"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Event$.html"><span class="name">Event</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.events.Sink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Sink"></a>
+      <a id="Sink:Sink"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Sink$.html"><span class="name">Sink</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.events.SizedSink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SizedSink"></a>
+      <a id="SizedSink:SizedSink"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SizedSink$.html"><span class="name">SizedSink</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+    </body>
+      </html>

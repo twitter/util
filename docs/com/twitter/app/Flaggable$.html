@@ -24,7 +24,7 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="Flaggable.html" title="Go to companion"><img src="../../../lib/object_to_trait_big.png" /></a>
+        <a href="Flaggable.html" title="Go to companion"><img src="../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.app">app</a></p>
         <h1><a href="Flaggable.html" title="Go to companion">Flaggable</a></h1>
       </div>
@@ -267,7 +267,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.app.Flaggable#mandatory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.Flaggable#mandatory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mandatory[T](f:String=&gt;T):com.twitter.app.Flaggable[T]"></a>
       <a id="mandatory[T]((String)⇒T):Flaggable[T]"></a>
       <h4 class="signature">
@@ -279,7 +279,9 @@
         <span class="name">mandatory</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="com.twitter.app.Flaggable.mandatory.T">T</span></span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.mandatory.T">T</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Create a <code>Flaggable[T]</code> according to a <code>String =&gt; T</code> conversion function.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <code>Flaggable[T]</code> according to a <code>String =&gt; T</code> conversion function.
+</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>Function that parses a string into an object of type <code>T</code>
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -320,15 +322,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.app.Flaggable#ofBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ofBoolean:com.twitter.app.Flaggable[Boolean]{defdefault:Some[Boolean]}"></a>
-      <a id="ofBoolean:Flaggable[Boolean]{defdefault:Some[Boolean]}"></a>
+      <a id="ofBoolean:com.twitter.app.Flaggable[Boolean]"></a>
+      <a id="ofBoolean:Flaggable[Boolean]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ofBoolean</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="scala.Boolean">Boolean</span>] { def default: Some[Boolean] }</span>
+        <span class="name">ofBoolean</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>
       </span>
       </h4>
       
@@ -371,16 +373,16 @@
       </span>
       </h4>
       
-    </li><li name="com.twitter.app.Flaggable.ofInetSocketAddress" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ofInetSocketAddress"></a>
-      <a id="ofInetSocketAddress:ofInetSocketAddress"></a>
+    </li><li name="com.twitter.app.Flaggable#ofInetSocketAddress" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofInetSocketAddress:com.twitter.app.Flaggable[java.net.InetSocketAddress]"></a>
+      <a id="ofInetSocketAddress:Flaggable[InetSocketAddress]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
-        <span class="kind">object</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <a href="Flaggable$$ofInetSocketAddress$.html"><span class="name">ofInetSocketAddress</span></a><span class="result"> extends <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>]</span>
+        <span class="name">ofInetSocketAddress</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>]</span>
       </span>
       </h4>
       
@@ -394,6 +396,110 @@
       </span>
       <span class="symbol">
         <span class="name">ofInt</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaBoolean:com.twitter.app.Flaggable[Boolean]"></a>
+      <a id="ofJavaBoolean:Flaggable[Boolean]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaBoolean</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Boolean">Boolean</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaDouble:com.twitter.app.Flaggable[Double]"></a>
+      <a id="ofJavaDouble:Flaggable[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaDouble</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Double">Double</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaFloat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaFloat:com.twitter.app.Flaggable[Float]"></a>
+      <a id="ofJavaFloat:Flaggable[Float]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaFloat</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Float">Float</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaInteger" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaInteger:com.twitter.app.Flaggable[Integer]"></a>
+      <a id="ofJavaInteger:Flaggable[Integer]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaInteger</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Integer">Integer</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaList[T](implicitevidence$12:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[java.util.List[T]]"></a>
+      <a id="ofJavaList[T](Flaggable[T]):Flaggable[List[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaList</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaList.T">T</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaList.T">T</span>]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaLong" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaLong:com.twitter.app.Flaggable[Long]"></a>
+      <a id="ofJavaLong:Flaggable[Long]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaLong</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Long">Long</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaMap[K,V](implicitevidence$13:com.twitter.app.Flaggable[K],implicitevidence$14:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[java.util.Map[K,V]]"></a>
+      <a id="ofJavaMap[K,V](Flaggable[K],Flaggable[V]):Flaggable[Map[K,V]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaMap</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.K">K</span>]</span>, <span name="arg1">arg1: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.V">V</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.K">K</span>, <span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.V">V</span>]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flaggable#ofJavaSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofJavaSet[T](implicitevidence$11:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[java.util.Set[T]]"></a>
+      <a id="ofJavaSet[T](Flaggable[T]):Flaggable[Set[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofJavaSet</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaSet.T">T</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.util.Set">Set</span>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaSet.T">T</span>]]</span>
       </span>
       </h4>
       
@@ -411,7 +517,7 @@
       </h4>
       
     </li><li name="com.twitter.app.Flaggable#ofMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ofMap[K,V](implicitevidence$5:com.twitter.app.Flaggable[K],implicitevidence$6:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[Map[K,V]]"></a>
+      <a id="ofMap[K,V](implicitevidence$9:com.twitter.app.Flaggable[K],implicitevidence$10:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[Map[K,V]]"></a>
       <a id="ofMap[K,V](Flaggable[K],Flaggable[V]):Flaggable[Map[K,V]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -424,7 +530,7 @@
       </h4>
       
     </li><li name="com.twitter.app.Flaggable#ofSeq" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ofSeq[T](implicitevidence$4:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Seq[T]]"></a>
+      <a id="ofSeq[T](implicitevidence$8:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Seq[T]]"></a>
       <a id="ofSeq[T](Flaggable[T]):Flaggable[Seq[T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -437,7 +543,7 @@
       </h4>
       
     </li><li name="com.twitter.app.Flaggable#ofSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ofSet[T](implicitevidence$3:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Set[T]]"></a>
+      <a id="ofSet[T](implicitevidence$7:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Set[T]]"></a>
       <a id="ofSet[T](Flaggable[T]):Flaggable[Set[T]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">

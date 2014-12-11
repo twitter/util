@@ -60,7 +60,7 @@ explicitly (ie: {{import Spool.{*::, **::
 }
 <span class="kw">val</span> rest = <span class="kw">new</span> Promise[Spool[<span class="std">Int</span>]]
 fill(rest)
-firstElem *:: rest</pre><p>explicitly (ie: {{import Spool.{*::, **::
+firstElem *:: rest</pre><p>Note: There is a Java-friendly API for this trait: <a href="AbstractSpool.html" class="extype" name="com.twitter.concurrent.AbstractSpool">com.twitter.concurrent.AbstractSpool</a>.</p><p>explicitly (ie: {{import Spool.{*::, **::
 }}}</p><pre><span class="kw">def</span> fill(rest: Promise[Spool[<span class="std">Int</span>]]) {
   asyncProcess foreach { result <span class="kw">=&gt;</span>
     <span class="kw">if</span> (result.last) {
@@ -74,12 +74,13 @@ firstElem *:: rest</pre><p>explicitly (ie: {{import Spool.{*::, **::
 }
 <span class="kw">val</span> rest = <span class="kw">new</span> Promise[Spool[<span class="std">Int</span>]]
 fill(rest)
-firstElem *:: rest</pre></div><div class="toggleContainer block">
+firstElem *:: rest</pre><p>Note: There is a Java-friendly API for this trait: <a href="AbstractSpool.html" class="extype" name="com.twitter.concurrent.AbstractSpool">com.twitter.concurrent.AbstractSpool</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="Spool$$Cons.html" class="extype" name="com.twitter.concurrent.Spool.Cons">Cons</a>, <a href="Spool$$Empty$.html" class="extype" name="com.twitter.concurrent.Spool.Empty">Empty</a></div>
+          <div class="subClasses hiddenContent"><a href="AbstractSpool.html" class="extype" name="com.twitter.concurrent.AbstractSpool">AbstractSpool</a>, <a href="Spool$$Cons.html" class="extype" name="com.twitter.concurrent.Spool.Cons">Cons</a>, <a href="Spool$$Empty$.html" class="extype" name="com.twitter.concurrent.Spool.Empty">Empty</a></div>
         </div></div>
         
 
@@ -306,6 +307,34 @@ firstElem *:: rest</pre></div><div class="toggleContainer block">
 know whether the first element exists until we have applied its
 filter.
 </p></div></div>
+    </li><li name="com.twitter.concurrent.Spool#concat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="concat[B&gt;:A](that:com.twitter.util.Future[com.twitter.concurrent.Spool[B]]):com.twitter.util.Future[com.twitter.concurrent.Spool[B]]"></a>
+      <a id="concat[B&gt;:A](Future[Spool[B]]):Future[Spool[B]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">concat</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.concurrent.Spool.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.concat.B">B</span>]]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.concat.B">B</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator ++
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.Spool#concat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="concat[B&gt;:A](that:com.twitter.concurrent.Spool[B]):com.twitter.concurrent.Spool[B]"></a>
+      <a id="concat[B&gt;:A](Spool[B]):Spool[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">concat</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.concurrent.Spool.A">A</span></span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.concat.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.concat.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>operator ++
+</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -404,7 +433,7 @@ flattening the result into a single spool.</p>
       </span>
       </h4>
       <p class="shortcomment cmt">Eagerly executes all computation represented by this Spool (presumably for
-sideeffects), and returns a Future representing its completion.</p>
+side-effects), and returns a Future representing its completion.</p>
     </li><li name="com.twitter.concurrent.Spool#foreach" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="foreach[B](f:A=&gt;B):com.twitter.util.Future[Unit]"></a>
       <a id="foreach[B]((A)⇒B):Future[Unit]"></a>

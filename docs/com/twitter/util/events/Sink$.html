@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>CachingRepository - com.twitter.util.repository.CachingRepository</title>
-          <meta name="description" content="CachingRepository - com.twitter.util.repository.CachingRepository" />
-          <meta name="keywords" content="CachingRepository com.twitter.util.repository.CachingRepository" />
+          <title>Sink - com.twitter.util.events.Sink</title>
+          <meta name="description" content="Sink - com.twitter.util.events.Sink" />
+          <meta name="keywords" content="Sink com.twitter.util.events.Sink" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'com.twitter.util.repository.CachingRepository';
+            var hash = 'com.twitter.util.events.Sink$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,26 +22,26 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../../../../lib/class_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a>.<a href="package.html" class="extype" name="com.twitter.util.repository">repository</a></p>
-        <h1>CachingRepository</h1>
+        <a href="Sink.html" title="Go to companion"><img src="../../../../lib/object_to_trait_big.png" /></a>
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a>.<a href="package.html" class="extype" name="com.twitter.util.events">events</a></p>
+        <h1><a href="Sink.html" title="Go to companion">Sink</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">CachingRepository</span><span class="tparams">[<span name="Q">Q</span>, <span name="E">E</span>]</span><span class="result"> extends <a href="Repository.html" class="extype" name="com.twitter.util.repository.Repository">Repository</a>[<span class="extype" name="com.twitter.util.repository.CachingRepository.Q">Q</span>, <span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]</span>
+        <span class="name">Sink</span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Repository.html" class="extype" name="com.twitter.util.repository.Repository">Repository</a>[<span class="extype" name="com.twitter.util.repository.CachingRepository.Q">Q</span>, <span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>], <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +59,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.util.repository.CachingRepository"><span>CachingRepository</span></li><li class="in" name="com.twitter.util.repository.Repository"><span>Repository</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.util.events.Sink"><span>Sink</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -77,23 +77,7 @@
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.util.repository.CachingRepository#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(map:scala.collection.mutable.Map[Long,com.twitter.util.Future[Option[E]]],index:scala.collection.mutable.Map[Q,com.twitter.util.Future[Seq[E]]],underlying:com.twitter.util.repository.Repository[Q,E]):com.twitter.util.repository.CachingRepository[Q,E]"></a>
-      <a id="&lt;init&gt;:CachingRepository[Q,E]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">CachingRepository</span><span class="params">(<span name="map">map: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Long">Long</span>, <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]]]</span>, <span name="index">index: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="com.twitter.util.repository.CachingRepository.Q">Q</span>, <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]]]</span>, <span name="underlying">underlying: <a href="Repository.html" class="extype" name="com.twitter.util.repository.Repository">Repository</a>[<span class="extype" name="com.twitter.util.repository.CachingRepository.Q">Q</span>, <span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]</span>)</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
+        
 
         
 
@@ -166,32 +150,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.repository.CachingRepository#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(query:Q):com.twitter.util.Future[Seq[E]]"></a>
-      <a id="apply(Q):Future[Seq[E]]"></a>
+    </li><li name="com.twitter.util.events.Sink#Null" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Null:com.twitter.util.events.Sink"></a>
+      <a id="Null:Sink"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="query">query: <span class="extype" name="com.twitter.util.repository.CachingRepository.Q">Q</span></span>)</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]]</span>
+        <span class="name">Null</span><span class="result">: <a href="Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.repository.CachingRepository">CachingRepository</a> → <a href="Repository.html" class="extype" name="com.twitter.util.repository.Repository">Repository</a></dd></dl></div>
-    </li><li name="com.twitter.util.repository.CachingRepository#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(id:Long):com.twitter.util.Future[Option[E]]"></a>
-      <a id="apply(Long):Future[Option[E]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.repository.CachingRepository">CachingRepository</a> → <a href="Repository.html" class="extype" name="com.twitter.util.repository.Repository">Repository</a></dd></dl></div>
+      <p class="shortcomment cmt">A sink that ignores all input.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -224,6 +195,32 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.events.Sink#default" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="default:com.twitter.util.events.Sink"></a>
+      <a id="default:Sink"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">default</span><span class="result">: <a href="Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The global default <code>Sink</code>.</p>
+    </li><li name="com.twitter.util.events.Sink#enabled" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="enabled:Boolean"></a>
+      <a id="enabled:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enabled</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns whether or not any event capture is enabled.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -439,9 +436,7 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.util.repository.Repository">
-              <h3>Inherited from <a href="Repository.html" class="extype" name="com.twitter.util.repository.Repository">Repository</a>[<span class="extype" name="com.twitter.util.repository.CachingRepository.Q">Q</span>, <span class="extype" name="com.twitter.util.repository.CachingRepository.E">E</span>]</h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

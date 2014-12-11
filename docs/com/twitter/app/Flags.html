@@ -100,7 +100,7 @@ accessible to all, are defined by <a href="GlobalFlag.html" class="extype" name=
       </span>
       </h4>
       
-    </li><li name="com.twitter.app.Flags#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.app.Flags#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="&lt;init&gt;(argv0:String,includeGlobal:Boolean):com.twitter.app.Flags"></a>
       <a id="&lt;init&gt;:Flags"></a>
       <h4 class="signature">
@@ -110,6 +110,19 @@ accessible to all, are defined by <a href="GlobalFlag.html" class="extype" name=
       </span>
       <span class="symbol">
         <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="includeGlobal">includeGlobal: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.app.Flags#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(argv0:String,includeGlobal:Boolean,failFastUntilParsed:Boolean):com.twitter.app.Flags"></a>
+      <a id="&lt;init&gt;:Flags"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Flags</span><span class="params">(<span name="argv0">argv0: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="includeGlobal">includeGlobal: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="failFastUntilParsed">failFastUntilParsed: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">argv0</dt><dd class="cmt"><p>The name of the application that is to be configured via flags</p></dd><dt class="param">includeGlobal</dt><dd class="cmt"><p>If true, <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlags</a> will
@@ -222,7 +235,7 @@ method is left public for any rare edge cases where it is necessary.
 </p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the flag.</p></dd><dt class="param">help</dt><dd class="cmt"><p>The help string of the flag.
 </p></dd></dl></div>
     </li><li name="com.twitter.app.Flags#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply[T](name:String,default:=&gt;T,help:String)(implicitevidence$10:com.twitter.app.Flaggable[T]):com.twitter.app.Flag[T]"></a>
+      <a id="apply[T](name:String,default:=&gt;T,help:String)(implicitevidence$20:com.twitter.app.Flaggable[T]):com.twitter.app.Flag[T]"></a>
       <a id="apply[T](String,⇒T,String)(Flaggable[T]):Flag[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -268,6 +281,37 @@ method is left public for any rare edge cases where it is necessary.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.app.Flags#create" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="create[T](name:String,default:T,help:String,flaggable:com.twitter.app.Flaggable[T]):com.twitter.app.Flag[T]"></a>
+      <a id="create[T](String,T,String,Flaggable[T]):Flag[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">create</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="default">default: <span class="extype" name="com.twitter.app.Flags.create.T">T</span></span>, <span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="flaggable">flaggable: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flags.create.T">T</span>]</span>)</span><span class="result">: <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.Flags.create.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Java-friendly method for adding named flags.</p><div class="fullcomment"><div class="comment cmt"><p>A Java-friendly method for adding named flags.
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the flag.</p></dd><dt class="param">default</dt><dd class="cmt"><p>A default value.</p></dd><dt class="param">help</dt><dd class="cmt"><p>The help string of the flag.
+</p></dd></dl></div>
+    </li><li name="com.twitter.app.Flags#createMandatory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="createMandatory[T](name:String,help:String,usage:String,flaggable:com.twitter.app.Flaggable[T]):com.twitter.app.Flag[T]"></a>
+      <a id="createMandatory[T](String,String,String,Flaggable[T]):Flag[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createMandatory</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="usage">usage: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="flaggable">flaggable: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flags.createMandatory.T">T</span>]</span>)</span><span class="result">: <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.Flags.createMandatory.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Java-friendly way to create mandatory flags
+</p><div class="fullcomment"><div class="comment cmt"><p>A Java-friendly way to create mandatory flags
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>the name passed on the command-line</p></dd><dt class="param">help</dt><dd class="cmt"><p>the help text explaining the purpose of the flag</p></dd><dt class="param">usage</dt><dd class="cmt"><p>a string describing the type of the flag, i.e.: Integer
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

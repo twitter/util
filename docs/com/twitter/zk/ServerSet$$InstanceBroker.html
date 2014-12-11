@@ -405,6 +405,34 @@ completion.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
+    </li><li name="com.twitter.concurrent.Broker#recvAndAwait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="recvAndAwait():T"></a>
+      <a id="recvAndAwait():Set[ServiceInstance]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">recvAndAwait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.Set">Set</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>??</code>
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.Broker#recvAndSync" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="recvAndSync():com.twitter.util.Future[T]"></a>
+      <a id="recvAndSync():Future[Set[ServiceInstance]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">recvAndSync</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.collection.Set">Set</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>?</code>
+</p></span></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#send" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="send(msg:T):com.twitter.concurrent.Offer[Unit]"></a>
       <a id="send(Set[ServiceInstance]):Offer[Unit]"></a>
@@ -418,6 +446,34 @@ completion.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
+    </li><li name="com.twitter.concurrent.Broker#sendAndAwait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sendAndAwait(message:T):Unit"></a>
+      <a id="sendAndAwait(Set[ServiceInstance]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sendAndAwait</span><span class="params">(<span name="message">message: <span class="extype" name="scala.collection.Set">Set</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>!!</code>
+</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.Broker#sendAndSync" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sendAndSync(message:T):com.twitter.util.Future[Unit]"></a>
+      <a id="sendAndSync(Set[ServiceInstance]):Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sendAndSync</span><span class="params">(<span name="message">message: <span class="extype" name="scala.collection.Set">Set</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>!</code>
+</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

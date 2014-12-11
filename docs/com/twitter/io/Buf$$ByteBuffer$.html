@@ -150,19 +150,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.io.Buf.ByteBuffer#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply(bb:java.nio.ByteBuffer):com.twitter.io.Buf"></a>
-      <a id="apply(java.nio.ByteBuffer):Buf"></a>
+    </li><li name="com.twitter.io.Buf.ByteBuffer.Owned" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Owned"></a>
+      <a id="Owned:Owned"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="bb">bb: <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+        <a href="Buf$$ByteBuffer$$Owned$.html"><span class="name">Owned</span></a>
       </span>
       </h4>
-      <p class="shortcomment cmt">Construct a buffer representing the given ByteBuffer.</p>
+      <p class="comment cmt">Owned non-copying constructors/extractors for Buf.</p>
+    </li><li name="com.twitter.io.Buf.ByteBuffer.Shared" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Shared"></a>
+      <a id="Shared:Shared"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$ByteBuffer$$Shared$.html"><span class="name">Shared</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Safe copying constructors/extractors for Buf.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -195,6 +208,19 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteBuffer#coerce" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="coerce(buf:com.twitter.io.Buf):com.twitter.io.Buf.ByteBuffer"></a>
+      <a id="coerce(Buf):ByteBuffer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">coerce</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Coerce a generic buffer to a Buf.</p><div class="fullcomment"><div class="comment cmt"><p>Coerce a generic buffer to a Buf.ByteBuffer, potentially without copying data.</p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -345,18 +371,18 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.io.Buf.ByteBuffer#unapply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="unapply(buf:com.twitter.io.Buf):Option[java.nio.ByteBuffer]"></a>
-      <a id="unapply(Buf):Option[java.nio.ByteBuffer]"></a>
+      <a id="unapply(buf:com.twitter.io.Buf.ByteBuffer):Option[java.nio.ByteBuffer]"></a>
+      <a id="unapply(ByteBuffer):Option[java.nio.ByteBuffer]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">unapply</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>]</span>
+        <span class="name">unapply</span><span class="params">(<span name="buf">buf: <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Extract a read-only view of the underlying <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -419,7 +445,27 @@
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.io.Buf.ByteBuffer#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(bb:java.nio.ByteBuffer):com.twitter.io.Buf"></a>
+      <a id="apply(java.nio.ByteBuffer):Buf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.23.0) Use Buf.ByteBuffer.Shared or Buf.ByteBuffer.Owned.">apply</span><span class="params">(<span name="bb">bb: <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Construct a buffer representing the provided <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a buffer representing the provided <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p><p>The ByteBuffer is duplicated but the underlying data is not copied.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.23.0)</i> Use Buf.ByteBuffer.Shared or Buf.ByteBuffer.Owned.</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

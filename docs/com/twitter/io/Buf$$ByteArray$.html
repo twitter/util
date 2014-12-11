@@ -150,6 +150,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray.Owned" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Owned"></a>
+      <a id="Owned:Owned"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$ByteArray$$Owned$.html"><span class="name">Owned</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Owned non-copying constructors/extractors for Buf.</p>
+    </li><li name="com.twitter.io.Buf.ByteArray.Shared" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Shared"></a>
+      <a id="Shared:Shared"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$ByteArray$$Shared$.html"><span class="name">Shared</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Safe copying constructors / extractors for Buf.</p>
     </li><li name="com.twitter.io.Buf.ByteArray#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply(bytes:Byte*):com.twitter.io.Buf"></a>
       <a id="apply(Byte*):Buf"></a>
@@ -163,33 +189,6 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Construct a buffer representing the given bytes.</p>
-    </li><li name="com.twitter.io.Buf.ByteArray#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply(buf:Array[Byte]):com.twitter.io.Buf"></a>
-      <a id="apply(Array[Byte]):Buf"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="buf">buf: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Construct a buffer representing the entire byte array.</p>
-    </li><li name="com.twitter.io.Buf.ByteArray#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply(bytes:Array[Byte],begin:Int,end:Int):com.twitter.io.Buf"></a>
-      <a id="apply(Array[Byte],Int,Int):Buf"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="bytes">bytes: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>, <span name="begin">begin: <span class="extype" name="scala.Int">Int</span></span>, <span name="end">end: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Construct a buffer representing an array of bytes
-at the given offsets.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -222,6 +221,21 @@ at the given offsets.</p>
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#coerce" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="coerce(buf:com.twitter.io.Buf):com.twitter.io.Buf.ByteArray"></a>
+      <a id="coerce(Buf):ByteArray"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">coerce</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Safely coerce a buffer to a Buf.</p><div class="fullcomment"><div class="comment cmt"><p>Safely coerce a buffer to a Buf.ByteArray, potentially without copying its underlying
+data.
+</p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -371,19 +385,6 @@ at the given offsets.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.io.Buf.ByteArray#unapply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="unapply(buf:com.twitter.io.Buf):Option[(Array[Byte],Int,Int)]"></a>
-      <a id="unapply(Buf):Option[(Array[Byte],Int,Int)]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unapply</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -446,7 +447,62 @@ at the given offsets.</p>
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.io.Buf.ByteArray#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(bytes:Array[Byte],begin:Int,end:Int):com.twitter.io.Buf"></a>
+      <a id="apply(Array[Byte],Int,Int):Buf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.23.0) Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.">apply</span><span class="params">(<span name="bytes">bytes: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>, <span name="begin">begin: <span class="extype" name="scala.Int">Int</span></span>, <span name="end">end: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Construct a buffer representing the provided array of bytes
+at the given offsets without copying.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a buffer representing the provided array of bytes
+at the given offsets without copying.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.23.0)</i> Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.</p></dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(bytes:Array[Byte]):com.twitter.io.Buf"></a>
+      <a id="apply(Array[Byte]):Buf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.23.0) Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.">apply</span><span class="params">(<span name="bytes">bytes: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Construct a buffer representing the provided array of bytes without copying.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a buffer representing the provided array of bytes without copying.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.23.0)</i> Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.</p></dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#unapply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unapply(ba:com.twitter.io.Buf.ByteArray):Option[(Array[Byte],Int,Int)]"></a>
+      <a id="unapply(ByteArray):Option[(Array[Byte],Int,Int)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.23.0) Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.">unapply</span><span class="params">(<span name="ba">ba: <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Extract a ByteArray's underlying data and offsets.</p><div class="fullcomment"><div class="comment cmt"><p>Extract a ByteArray's underlying data and offsets.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.23.0)</i> Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

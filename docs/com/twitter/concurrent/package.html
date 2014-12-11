@@ -58,7 +58,33 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.concurrent.AsyncMutex" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.concurrent.AbstractOffer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractOffer[T]extendsOffer[T]"></a>
+      <a id="AbstractOffer[T]:AbstractOffer[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractOffer.html"><span class="name">AbstractOffer</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="com.twitter.concurrent.AbstractOffer.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Abstract <code>Offer</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.concurrent.AbstractSpool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractSpool[A]extendsSpool[A]"></a>
+      <a id="AbstractSpool[A]:AbstractSpool[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractSpool.html"><span class="name">AbstractSpool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.AbstractSpool.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Abstract <code>Spool</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.concurrent.AsyncMutex" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AsyncMutexextendsAsyncSemaphore"></a>
       <a id="AsyncMutex:AsyncMutex"></a>
       <h4 class="signature">
@@ -206,6 +232,19 @@ indicating the pool from which they originated.</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.concurrent.Offers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OffersextendsObject"></a>
+      <a id="Offers:Offers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Offers.html"><span class="name">Offers</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.concurrent.Permit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PermitextendsAnyRef"></a>
       <a id="Permit:Permit"></a>
@@ -284,6 +323,19 @@ indicating the pool from which they originated.</p>
       </span>
       </h4>
       <p class="comment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p>
+    </li><li name="com.twitter.concurrent.Spools" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SpoolsextendsObject"></a>
+      <a id="Spools:Spools"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Spools.html"><span class="name">Spools</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.concurrent.ThreadPoolScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ThreadPoolSchedulerextendsSchedulerwithExecutorScheduler"></a>
       <a id="ThreadPoolScheduler:ThreadPoolScheduler"></a>
@@ -312,6 +364,19 @@ cached threadpool executor.</p>
       </h4>
       <p class="comment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
 protocol:</p>
+    </li><li name="com.twitter.concurrent.Txs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TxsextendsObject"></a>
+      <a id="Txs:Txs"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Txs.html"><span class="name">Txs</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.concurrent.ConcurrentMultiMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConcurrentMultiMap[K,V]extendsAnyRef"></a>
       <a id="ConcurrentMultiMap[K,V]:ConcurrentMultiMap[K,V]"></a>
@@ -387,7 +452,7 @@ java.</p>
         <a href="Offer$.html"><span class="name">Offer</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Offers.html" class="extype" name="com.twitter.concurrent.Offers">com.twitter.concurrent.Offers</a>.</p>
     </li><li name="com.twitter.concurrent.Scheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Scheduler"></a>
       <a id="Scheduler:Scheduler"></a>
@@ -413,7 +478,7 @@ java.</p>
         <a href="Spool$.html"><span class="name">Spool</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Spools.html" class="extype" name="com.twitter.concurrent.Spools">com.twitter.concurrent.Spools</a>.</p>
     </li><li name="com.twitter.concurrent.SpoolSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SpoolSource"></a>
       <a id="SpoolSource:SpoolSource"></a>
@@ -439,7 +504,7 @@ java.</p>
         <a href="Tx$.html"><span class="name">Tx</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Txs.html" class="extype" name="com.twitter.concurrent.Txs">com.twitter.concurrent.Txs</a>.</p>
     </li></ol>
             </div>
 

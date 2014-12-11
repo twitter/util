@@ -81,7 +81,85 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.util.Activity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.util.AbstractClosable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractClosableextendsClosable"></a>
+      <a id="AbstractClosable:AbstractClosable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractClosable.html"><span class="name">AbstractClosable</span></a><span class="result"> extends <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Abstract <code>Closable</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.util.AbstractCloseAwaitably" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractCloseAwaitablyextendsAbstractClosablewithAwaitable[scala.runtime.BoxedUnit]"></a>
+      <a id="AbstractCloseAwaitably:AbstractCloseAwaitably"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractCloseAwaitably.html"><span class="name">AbstractCloseAwaitably</span></a><span class="result"> extends <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">AbstractClosable</a> with <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.AbstractEvent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractEvent[T]extendsEvent[T]"></a>
+      <a id="AbstractEvent[T]:AbstractEvent[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractEvent.html"><span class="name">AbstractEvent</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.AbstractEvent.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Abstract <code>Event</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.util.AbstractVar" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractVar[T]extendsVar[T]"></a>
+      <a id="AbstractVar[T]:AbstractVar[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractVar.html"><span class="name">AbstractVar</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<span class="extype" name="com.twitter.util.AbstractVar.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Abstract <code>Var</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.util.AbstractWitness" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractWitness[T]extendsWitness[T]"></a>
+      <a id="AbstractWitness[T]:AbstractWitness[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AbstractWitness.html"><span class="name">AbstractWitness</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.AbstractWitness.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Abstract <code>Witness</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.util.Activities" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ActivitiesextendsObject"></a>
+      <a id="Activities:Activities"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Activities.html"><span class="name">Activities</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.Activity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Activity[+T]extendsProductwithSerializable"></a>
       <a id="Activity[+T]:Activity[T]"></a>
       <h4 class="signature">
@@ -199,6 +277,19 @@ T-typed values.</p>
       </span>
       </h4>
       <p class="comment cmt">Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p>
+    </li><li name="com.twitter.util.Closables" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClosablesextendsObject"></a>
+      <a id="Closables:Closables"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Closables.html"><span class="name">Closables</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.util.CloseAwaitably" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="CloseAwaitablyextendsAwaitable[Unit]"></a>
       <a id="CloseAwaitably:CloseAwaitably"></a>
@@ -332,6 +423,34 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
       </span>
       </h4>
       
+    </li><li name="com.twitter.util.Diff" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Diff[CC[_],T]extendsAnyRef"></a>
+      <a id="Diff[CC[_],T]:Diff[CC,T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Diff.html"><span class="name">Diff</span></a><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Diff stores the necessary instructions required to bring two
+version of a data structure into agreement.</p>
+    </li><li name="com.twitter.util.Diffable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Diffable[CC[_]]extendsAnyRef"></a>
+      <a id="Diffable[CC[_]]:Diffable[CC]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Diffable.html"><span class="name">Diffable</span></a><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A type class that tells how to compute a <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a> between
+two versions of a collection <code>CC[T]</code>.</p>
     </li><li name="com.twitter.util.Disposable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Disposable[+T]extendsAnyRef"></a>
       <a id="Disposable[+T]:Disposable[T]"></a>
@@ -412,6 +531,19 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
       </h4>
       <p class="comment cmt">Events are instantaneous values, defined only at particular
 instants in time (cf.</p>
+    </li><li name="com.twitter.util.Events" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EventsextendsObject"></a>
+      <a id="Events:Events"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Events.html"><span class="name">Events</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.util.ExceptionalFunction" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ExceptionalFunction[-T1,+R]extendsFunction[T1,R]"></a>
       <a id="ExceptionalFunction[-T1,+R]:ExceptionalFunction[T1,R]"></a>
@@ -899,6 +1031,19 @@ and inline.</p>
       </span>
       </h4>
       <p class="comment cmt">A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.</p>
+    </li><li name="com.twitter.util.ReadWriteVar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReadWriteVar[T]extendsUpdatableVar[T]"></a>
+      <a id="ReadWriteVar[T]:ReadWriteVar[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReadWriteVar.html"><span class="name">ReadWriteVar</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="com.twitter.util.UpdatableVar">UpdatableVar</span>[<span class="extype" name="com.twitter.util.ReadWriteVar.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Java adaptation of <code>Var[T] with Updatable[T] with Extractable[T]</code>.</p>
     </li><li name="com.twitter.util.ReferenceCountedTimer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ReferenceCountedTimerextendsTimer"></a>
       <a id="ReferenceCountedTimer:ReferenceCountedTimer"></a>
@@ -1251,7 +1396,7 @@ nanoseconds since the Unix epoch.</p>
         <a href="Timer.html"><span class="name">Timer</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Timers are used to schedule tasks in the future.</p>
     </li><li name="com.twitter.util.TimerTask" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="TimerTaskextendsClosable"></a>
       <a id="TimerTask:TimerTask"></a>
@@ -1264,7 +1409,7 @@ nanoseconds since the Unix epoch.</p>
         <a href="TimerTask.html"><span class="name">TimerTask</span></a><span class="result"> extends <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">TimerTasks represent pending tasks scheduled by a <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a>.</p>
     </li><li name="com.twitter.util.Try" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Try[+R]extendsAnyRef"></a>
       <a id="Try[+R]:Try[R]"></a>
@@ -1304,6 +1449,19 @@ nanoseconds since the Unix epoch.</p>
       </span>
       </h4>
       <p class="comment cmt">Trait Var represents a variable.</p>
+    </li><li name="com.twitter.util.Vars" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="VarsextendsObject"></a>
+      <a id="Vars:Vars"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Vars.html"><span class="name">Vars</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.util.Witness" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Witness[-N]extendsAnyRef"></a>
       <a id="Witness[-N]:Witness[N]"></a>
@@ -1317,6 +1475,32 @@ nanoseconds since the Unix epoch.</p>
       </span>
       </h4>
       <p class="comment cmt">A witness is the recipient of <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>.</p>
+    </li><li name="com.twitter.util.WitnessedEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WitnessedEvent[T]extendsEvent[T]withWitness[T]"></a>
+      <a id="WitnessedEvent[T]:WitnessedEvent[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="WitnessedEvent.html"><span class="name">WitnessedEvent</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>] with <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A Java analog of <code>Event[A]()</code>.</p>
+    </li><li name="com.twitter.util.Witnesses" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WitnessesextendsObject"></a>
+      <a id="Witnesses:Witnesses"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Witnesses.html"><span class="name">Witnesses</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.util.Bijection" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Bijection[A,B]extendsA=&gt;B"></a>
       <a id="Bijection[A,B]:Bijection[A,B]"></a>
@@ -1356,13 +1540,13 @@ which turns this config into an object of type T.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RingBuffer.html"><span class="name deprecated" title="Deprecated: Use com.google.common.collect.EvictingQueue instead">RingBuffer</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.RingBuffer.A">A</span>]</span>
+        <a href="RingBuffer.html"><span class="name deprecated" title="Deprecated: (Since version 2014-10-11) Use com.google.common.collect.EvictingQueue instead">RingBuffer</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.RingBuffer.A">A</span>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
-        </dd><dt>Deprecated</dt><dd class="cmt"><p>Use com.google.common.collect.EvictingQueue instead</p></dd></dl></div>
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2014-10-11)</i> Use com.google.common.collect.EvictingQueue instead</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -1382,7 +1566,7 @@ which turns this config into an object of type T.</p>
         <a href="Activity$.html"><span class="name">Activity</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Activities.html" class="extype" name="com.twitter.util.Activities">com.twitter.util.Activities</a>.</p>
     </li><li name="com.twitter.util.Await" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Await"></a>
       <a id="Await:Await"></a>
@@ -1473,7 +1657,7 @@ which turns this config into an object of type T.</p>
         <a href="Closable$.html"><span class="name">Closable</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Closables.html" class="extype" name="com.twitter.util.Closables">com.twitter.util.Closables</a>.</p>
     </li><li name="com.twitter.util.Codec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Codec"></a>
       <a id="Codec:Codec"></a>
@@ -1513,6 +1697,19 @@ which turns this config into an object of type T.</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.util.Diffable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Diffable"></a>
+      <a id="Diffable:Diffable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Diffable$.html"><span class="name">Diffable</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Diffable defines common type class instances for <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>.</p>
     </li><li name="com.twitter.util.Disposable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Disposable"></a>
       <a id="Disposable:Disposable"></a>
@@ -1564,7 +1761,7 @@ which turns this config into an object of type T.</p>
         <a href="Event$.html"><span class="name">Event</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Events.html" class="extype" name="com.twitter.util.Events">com.twitter.util.Events</a>.</p>
     </li><li name="com.twitter.util.Function" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Function"></a>
       <a id="Function:Function"></a>
@@ -1934,7 +2131,7 @@ ephemeral ports.</p>
       </span>
       </h4>
       <p class="comment cmt">The system <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">com.twitter.util.Stopwatch</a> measures elapsed time
-using <span class="extype" name="System.nanoTime">System.nanoTime</span>.</p>
+using <code>System.nanoTime</code>.</p>
     </li><li name="com.twitter.util.StorageUnit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StorageUnit"></a>
       <a id="StorageUnit:StorageUnit"></a>
@@ -1997,6 +2194,19 @@ using <span class="extype" name="System.nanoTime">System.nanoTime</span>.</p>
       </span>
       <span class="symbol">
         <a href="ThriftCodec$.html"><span class="name">ThriftCodec</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.Throw" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Throw"></a>
+      <a id="Throw:Throw"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Throw$.html"><span class="name">Throw</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -2094,7 +2304,7 @@ or return a success value.</p>
         <a href="Var$.html"><span class="name">Var</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Vars.html" class="extype" name="com.twitter.util.Vars">com.twitter.util.Vars</a>.</p>
     </li><li name="com.twitter.util.Witness" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Witness"></a>
       <a id="Witness:Witness"></a>
@@ -2107,7 +2317,7 @@ or return a success value.</p>
         <a href="Witness$.html"><span class="name">Witness</span></a>
       </span>
       </h4>
-      
+      <p class="comment cmt">Note: There is Java-friendly API for this object: <a href="Witnesses.html" class="extype" name="com.twitter.util.Witnesses">com.twitter.util.Witnesses</a>.</p>
     </li><li name="com.twitter.util.benchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="benchmark"></a>
       <a id="benchmark:benchmark"></a>
@@ -2121,6 +2331,19 @@ or return a success value.</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.util.events" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="events"></a>
+      <a id="events:events"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="events/package.html"><span class="name">events</span></a>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.util.reflect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="reflect"></a>
       <a id="reflect:reflect"></a>
@@ -2131,19 +2354,6 @@ or return a success value.</p>
       </span>
       <span class="symbol">
         <a href="reflect/package.html"><span class="name">reflect</span></a>
-      </span>
-      </h4>
-      
-    </li><li name="com.twitter.util.repository" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="repository"></a>
-      <a id="repository:repository"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">package</span>
-      </span>
-      <span class="symbol">
-        <a href="repository/package.html"><span class="name">repository</span></a>
       </span>
       </h4>
       

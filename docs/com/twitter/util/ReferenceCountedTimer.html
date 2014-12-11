@@ -111,7 +111,10 @@
         <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
+      <p class="shortcomment cmt">Run <code>f</code> at time <code>when</code>; subsequently run <code>f</code> at every
+elapsed <code>period</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Run <code>f</code> at time <code>when</code>; subsequently run <code>f</code> at every
+elapsed <code>period</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
     </li><li name="com.twitter.util.Timer#schedule" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="schedule(when:com.twitter.util.Time)(f:=&gt;Unit):com.twitter.util.TimerTask"></a>
       <a id="schedule(Time)(⇒Unit):TimerTask"></a>
@@ -124,7 +127,8 @@
         <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
+      <p class="shortcomment cmt">Run <code>f</code> at time <code>when</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Run <code>f</code> at time <code>when</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
     </li><li name="com.twitter.util.Timer#stop" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="stop():Unit"></a>
       <a id="stop():Unit"></a>
@@ -137,7 +141,9 @@
         <span class="name">stop</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
+      <p class="shortcomment cmt">Stop the timer.</p><div class="fullcomment"><div class="comment cmt"><p>Stop the timer. Pending tasks are cancelled.
+The timer is unusable after being stopped.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
     </li></ol>
             </div>
 
@@ -405,7 +411,8 @@ will cancel the scheduled timer task, if not too late.
         <span class="name">schedule</span><span class="params">(<span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
+      <p class="shortcomment cmt">Run <code>f</code> every elapsed <code>period</code>, starting immediately.</p><div class="fullcomment"><div class="comment cmt"><p>Run <code>f</code> every elapsed <code>period</code>, starting immediately.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

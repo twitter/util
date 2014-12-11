@@ -41,12 +41,12 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Buf represents a fixed, immutable byte buffer. Buffers may be
 sliced and concatenated, and thus be used to implement
-bytestreams.</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl><div class="toggleContainer block">
+bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractBuf.html" class="extype" name="com.twitter.io.AbstractBuf">com.twitter.io.AbstractBuf</a>.</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>, <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a></div>
+          <div class="subClasses hiddenContent"><a href="AbstractBuf.html" class="extype" name="com.twitter.io.AbstractBuf">AbstractBuf</a>, <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>, <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a></div>
         </div></div>
         
 
@@ -119,6 +119,19 @@ by the indices <code>from</code> inclusive and <code>until</code> exclusive: <co
 by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[from, until)</code>.
 Out of bounds indices are truncated. Negative indices are not accepted.
 </p></div></div>
+    </li><li name="com.twitter.io.Buf#unsafeByteArrayBuf" visbl="prt" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="unsafeByteArrayBuf:Option[com.twitter.io.Buf.ByteArray]"></a>
+      <a id="unsafeByteArrayBuf:Option[ByteArray]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsafeByteArrayBuf</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Helper to support 0-copy coercion to Buf.</p><div class="fullcomment"><div class="comment cmt"><p>Helper to support 0-copy coercion to Buf.ByteArray.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.io.Buf#write" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="write(output:Array[Byte],off:Int):Unit"></a>
       <a id="write(Array[Byte],Int):Unit"></a>
@@ -259,6 +272,19 @@ contain all the data.
       </span>
       </h4>
       <p class="shortcomment cmt">Concatenate this buffer with the given buffer.</p>
+    </li><li name="com.twitter.io.Buf#copiedByteArray" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copiedByteArray:Array[Byte]"></a>
+      <a id="copiedByteArray:Array[Byte]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copiedByteArray</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Definitely requires copying.</p><div class="fullcomment"><div class="comment cmt"><p>Definitely requires copying.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -421,6 +447,19 @@ contain all the data.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.io.Buf#unsafeByteArray" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsafeByteArray:Array[Byte]"></a>
+      <a id="unsafeByteArray:Array[Byte]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsafeByteArray</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">May require copying.</p><div class="fullcomment"><div class="comment cmt"><p>May require copying.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

@@ -39,7 +39,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Txs.html" class="extype" name="com.twitter.concurrent.Txs">com.twitter.concurrent.Txs</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -257,6 +258,19 @@
       </span>
       </h4>
       <p class="shortcomment cmt">A transaction that will always <code>ack()</code> with <code>Abort</code>.</p>
+    </li><li name="com.twitter.concurrent.Tx#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="apply[T](msg:T):com.twitter.concurrent.Tx[T]"></a>
+      <a id="apply[T](T):Tx[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="msg">msg: <span class="extype" name="com.twitter.concurrent.Tx.apply.T">T</span></span>)</span><span class="result">: <a href="Tx.html" class="extype" name="com.twitter.concurrent.Tx">Tx</a>[<span class="extype" name="com.twitter.concurrent.Tx.apply.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Analog of <code>Option.apply()</code> for Java compatibility.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -289,7 +303,7 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.concurrent.Tx#const" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.Tx#const" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="const[T](msg:T):com.twitter.concurrent.Tx[T]"></a>
       <a id="const[T](T):Tx[T]"></a>
       <h4 class="signature">
@@ -301,7 +315,8 @@
         <span class="name">const</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="msg">msg: <span class="extype" name="com.twitter.concurrent.Tx.const.T">T</span></span>)</span><span class="result">: <a href="Tx.html" class="extype" name="com.twitter.concurrent.Tx">Tx</a>[<span class="extype" name="com.twitter.concurrent.Tx.const.T">T</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A <code>Tx</code> that will always commit the given value immediately.</p>
+      <p class="shortcomment cmt">A <code>Tx</code> that will always commit the given value immediately.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>Tx</code> that will always commit the given value immediately.</p><p>Note: Updates here must also be done at <span class="extype" name="com.twitter.concurrent.Txs.newConstTx()">com.twitter.concurrent.Txs.newConstTx()</span>.
+</p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

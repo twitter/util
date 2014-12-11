@@ -39,7 +39,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Activities.html" class="extype" name="com.twitter.util.Activities">com.twitter.util.Activities</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -252,6 +253,19 @@ the given witness.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Activity#collect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="collect[T&lt;:Object](activities:java.util.List[com.twitter.util.Activity[T]]):com.twitter.util.Activity[java.util.List[T]]"></a>
+      <a id="collect[T&lt;:AnyRef](List[Activity[T]]):Activity[List[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collect</span><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="scala.AnyRef">AnyRef</span></span>]</span><span class="params">(<span name="activities">activities: <span class="extype" name="java.util.List">List</span>[<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Java friendly method for <code>Activity.collect()</code>.</p>
     </li><li name="com.twitter.util.Activity#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collect[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]"></a>
       <a id="collect[T](&lt;error&gt;):Activity[&lt;error&gt;]"></a>
@@ -458,7 +472,7 @@ cancellation of the original <code>Future</code>.
         <span class="name">sample</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="act">act: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.sample.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Activity.sample.T">T</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Sample given <code>Activity</code>.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

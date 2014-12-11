@@ -39,7 +39,13 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+Owned APIs, each of which with construction &amp; extraction utilities.</p><p>The Owned APIs may provide direct access to a Buf's underlying
+implementation; and so mutating the data structure invalidates a Buf's
+immutability constraint. Users must take care to handle this data
+immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
+with the caller (at the cost of additional allocation).</p><p>Note: There is a Java-friendly API for this object: <a href="Bufs.html" class="extype" name="com.twitter.io.Bufs">com.twitter.io.Bufs</a>.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -415,7 +421,8 @@ with little-endian byte order.</p>
         <span class="name">equals</span><span class="params">(<span name="x">x: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>, <span name="y">y: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Byte equality between two buffers.</p><div class="fullcomment"><div class="comment cmt"><p>Byte equality between two buffers. Requires copies.</p></div></div>
+      <p class="shortcomment cmt">Byte equality between two buffers.</p><div class="fullcomment"><div class="comment cmt"><p>Byte equality between two buffers. May copy.</p><p>Relies on Buf.ByteArray.equals.
+</p></div></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
       <a id="equals(Any):Boolean"></a>
@@ -548,7 +555,7 @@ with little-endian byte order.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">slowHexString</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">slowHexString</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Return a string representing the buffer
@@ -566,19 +573,6 @@ contents in hexadecimal.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.io.Buf#toByteBuffer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="toByteBuffer(buf:com.twitter.io.Buf):java.nio.ByteBuffer"></a>
-      <a id="toByteBuffer(Buf):java.nio.ByteBuffer"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toByteBuffer</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Convert the Buf to a Java NIO ByteBuffer.</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -654,7 +648,26 @@ contents in hexadecimal.</p>
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.io.Buf#toByteBuffer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toByteBuffer(buf:com.twitter.io.Buf):java.nio.ByteBuffer"></a>
+      <a id="toByteBuffer(Buf):java.nio.ByteBuffer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 6.23.0) Use Buf.ByteBuffer.Owned.extract.">toByteBuffer</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convert the Buf to a <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Convert the Buf to a <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.23.0)</i> Use Buf.ByteBuffer.Owned.extract.</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">
