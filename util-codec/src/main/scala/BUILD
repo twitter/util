@@ -5,7 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:commons-codec',
+    '3rdparty/jvm/commons-codec',
     'util/util-core/src/main/scala'
   ],
   sources=rglobs('*.scala'),

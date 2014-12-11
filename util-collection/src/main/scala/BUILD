@@ -5,7 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:commons-collections',
+    '3rdparty/jvm/commons-collections',
     '3rdparty:guava',
     'util/util-core/src/main/scala',
   ],
