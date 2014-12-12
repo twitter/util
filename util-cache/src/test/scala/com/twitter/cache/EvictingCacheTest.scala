@@ -3,10 +3,7 @@ package com.twitter.cache
 import com.twitter.util.{Promise, Future}
 import java.util.concurrent.ConcurrentHashMap
 import org.junit.runner.RunWith
-import org.mockito.invocation.InvocationOnMock
-import org.mockito.Matchers.{anyString, anyObject}
-import org.mockito.Mockito.{verify, never, when}
-import org.mockito.stubbing.Answer
+import org.mockito.Mockito.{verify, never}
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar

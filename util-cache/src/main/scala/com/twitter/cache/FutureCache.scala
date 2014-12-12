@@ -56,14 +56,6 @@ abstract class FutureCache[K, V] {
   def size: Int
 }
 
-sealed trait Mod[+A]
-
-object Mod {
-  case object Delete extends Mod[Nothing]
-  case object Keep extends Mod[Nothing]
-  final case class Write[K](k: K) extends Mod[K]
-}
-
 /**
  * A proxy for [[FutureCache]]s, useful for wrap-but-modify.
  */

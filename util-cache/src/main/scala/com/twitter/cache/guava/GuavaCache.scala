@@ -67,7 +67,6 @@ object GuavaCache {
     { key: K => evicting.get(key).get.interruptible() }
   }
 
-
   /**
    * Creates a function which caches the results of `fn` in a
    * [[com.google.common.cache.Cache]].

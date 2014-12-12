@@ -18,6 +18,7 @@ Deprecation:
                 from java.
 
 API Changes:
+  * util-cache: Remove unused com.twitter.cache.Mod trait and object
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
   * util-core: Remove the com.twitter.util.repository package
 
