@@ -512,7 +512,7 @@ sealed class Time private[util] (protected val nanos: Long) extends {
 
   override def isFinite = true
 
-  def diff(that: Time) =  that match {
+  def diff(that: Time) = that match {
     case Undefined => Duration.Undefined
     case Top => Duration.Bottom
     case Bottom => Duration.Top

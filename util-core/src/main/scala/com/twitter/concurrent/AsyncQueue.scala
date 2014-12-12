@@ -88,7 +88,7 @@ class AsyncQueue[T] {
   final def fail(exc: Throwable): Unit = fail(exc, true)
 
   /**
-   * Fail the queue. When ``discard`` is true, the queue contents is discarded
+   * Fail the queue. When `discard` is true, the queue contents is discarded
    * and all pollers are failed immediately. When this flag is false, subsequent
    * pollers are not failed until the queue becomes empty.
    *

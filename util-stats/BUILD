@@ -8,6 +8,7 @@ jar_library(name='util-stats',
 
 jar_library(name='tests',
   dependencies=[
-    'util/util-stats/src/test/scala'
+    'util/util-stats/src/test/scala',
+    'util/util-stats/src/test/java'
   ]
 )

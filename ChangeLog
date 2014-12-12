@@ -7,6 +7,15 @@ Next Version
 
 New Features:
   * util-core: Add Future.collect() method that collects over Map's values
+  * util-stats: Create a new module, `util-stats` to move `finagle-core`
+                StatsReceivers to.  They retain the `com.twitter.finagle`
+                namespace to ease the transition.
+
+Deprecation:
+  * util-stats: Deprecate `com.twitter.finagle.stats.StatsReceiver#time{,TimeFuture}`.
+                Instead, please use the `com.twitter.finagle.stats.Stat` helpers
+                from scala, and the `com.twitter.finagle.stats.JStats` helpers
+                from java.
 
 API Changes:
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
