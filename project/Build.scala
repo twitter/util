@@ -2,7 +2,7 @@ import sbt.Keys._
 import sbt._
 
 object Util extends Build {
-  val libVersion = "6.22.2"
+  val libVersion = "6.23.0"
   val zkVersion = "3.3.4"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
