@@ -39,13 +39,39 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"></div>
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>These stats are scoped to <code>com.twitter.finagle.stats</code> for historical reasons.</p><p>They used to be in the <code>finagle-core</code> package, although we moved them
+because we found they didn't depend on anything finagle-specific.  To ease
+the transition, we kept the namespace.
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
         
 
       <div id="mbrsel">
         <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
-        
-        
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.twitter.finagle.stats"><span>stats</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
             <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -112,7 +138,7 @@
       <p class="comment cmt">A StatsReceiver receiver proxy that translates all counter, stat, and gauge
 names according to a <code>translate</code> function.</p>
     </li><li name="com.twitter.finagle.stats.NullStatsReceiver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="NullStatsReceiverextendsStatsReceiverwithJavaSingleton"></a>
+      <a id="NullStatsReceiverextendsStatsReceiver"></a>
       <a id="NullStatsReceiver:NullStatsReceiver"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -120,7 +146,7 @@ names according to a <code>translate</code> function.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="NullStatsReceiver.html"><span class="name">NullStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="../../util/JavaSingleton.html" class="extype" name="com.twitter.util.JavaSingleton">JavaSingleton</a></span>
+        <a href="NullStatsReceiver.html"><span class="name">NullStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       </h4>
       <p class="comment cmt">A noop StatsReceiver.</p>
@@ -265,6 +291,19 @@ Stats (n).</p>
       </h4>
       <p class="comment cmt">BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
 StatsReceivers (n).</p>
+    </li><li name="com.twitter.finagle.stats.JStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JStats"></a>
+      <a id="JStats:JStats"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JStats$.html"><span class="name">JStats</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Stat utility methods for ease of use from java.</p>
     </li><li name="com.twitter.finagle.stats.NullStatsReceiver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NullStatsReceiver"></a>
       <a id="NullStatsReceiver:NullStatsReceiver"></a>
@@ -278,6 +317,19 @@ StatsReceivers (n).</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.finagle.stats.Stat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Stat"></a>
+      <a id="Stat:Stat"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Stat$.html"><span class="name">Stat</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Helpers for working with histograms.</p>
     </li><li name="com.twitter.finagle.stats.StatsReceiver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StatsReceiver"></a>
       <a id="StatsReceiver:StatsReceiver"></a>
@@ -291,6 +343,19 @@ StatsReceivers (n).</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.finagle.stats.StatsReceivers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StatsReceivers"></a>
+      <a id="StatsReceivers:StatsReceivers"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="StatsReceivers$.html"><span class="name">StatsReceivers</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">com.twitter.finagle.stats.StatsReceiver</a> utility methods for ease of use from java.</p>
     </li></ol>
             </div>
 
@@ -300,7 +365,11 @@ StatsReceivers (n).</p>
         </div>
 
         <div id="inheritedMembers">
-        
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
         
         </div>
 

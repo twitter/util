@@ -2,17 +2,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>JavaSingleton - com.twitter.util.JavaSingleton</title>
-          <meta name="description" content="JavaSingleton - com.twitter.util.JavaSingleton" />
-          <meta name="keywords" content="JavaSingleton com.twitter.util.JavaSingleton" />
+          <title>Stat - com.twitter.finagle.stats.Stat</title>
+          <meta name="description" content="Stat - com.twitter.finagle.stats.Stat" />
+          <meta name="keywords" content="Stat com.twitter.finagle.stats.Stat" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
-      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
       <script type="text/javascript">
          if(top === self) {
-            var url = '../../../index.html';
-            var hash = 'com.twitter.util.JavaSingleton';
+            var url = '../../../../index.html';
+            var hash = 'com.twitter.finagle.stats.Stat$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,24 +22,25 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../../../lib/trait_big.png" />
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1>JavaSingleton</h1>
+        <a href="Stat.html" title="Go to companion"><img src="../../../../lib/object_to_trait_big.png" /></a>
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="package.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
+        <h1><a href="Stat.html" title="Go to companion">Stat</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">JavaSingleton</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">Stat</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A mixin to allow scala objects to be used from java.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Helpers for working with histograms.  Java-friendly versions can be found in
+<a href="JStats$.html" class="extype" name="com.twitter.finagle.stats.JStats">com.twitter.finagle.stats.JStats</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -60,7 +61,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.util.JavaSingleton"><span>JavaSingleton</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.finagle.stats.Stat"><span>Stat</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -176,7 +177,7 @@
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
@@ -221,26 +222,13 @@
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="symbol">classOf[java.lang.Throwable]</span>
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.JavaSingleton#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="get:com.twitter.util.JavaSingleton"></a>
-      <a id="get:JavaSingleton"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="result">: <a href="" class="extype" name="com.twitter.util.JavaSingleton">JavaSingleton</a></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -332,6 +320,58 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.Stat#time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A"></a>
+      <a id="time[A](Stat)(⇒A):A"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">time</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="stat">stat: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.finagle.stats.Stat.time.A">A</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.finagle.stats.Stat.time.A">A</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Time a given <code>fn</code> using milliseconds.</p>
+    </li><li name="com.twitter.finagle.stats.Stat#time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="time[A](stat:com.twitter.finagle.stats.Stat,unit:java.util.concurrent.TimeUnit)(f:=&gt;A):A"></a>
+      <a id="time[A](Stat,TimeUnit)(⇒A):A"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">time</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="stat">stat: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.finagle.stats.Stat.time.A">A</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.finagle.stats.Stat.time.A">A</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Time a given <code>fn</code> using the given <code>unit</code>.</p>
+    </li><li name="com.twitter.finagle.stats.Stat#timeFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="timeFuture[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]"></a>
+      <a id="timeFuture[A](Stat)(⇒Future[A]):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">timeFuture</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="stat">stat: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.Stat.timeFuture.A">A</span>]</span>)</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.Stat.timeFuture.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Time a given asynchronous <code>fn</code> using milliseconds.</p>
+    </li><li name="com.twitter.finagle.stats.Stat#timeFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="timeFuture[A](stat:com.twitter.finagle.stats.Stat,unit:java.util.concurrent.TimeUnit)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]"></a>
+      <a id="timeFuture[A](Stat,TimeUnit)(⇒Future[A]):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">timeFuture</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="stat">stat: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.Stat.timeFuture.A">A</span>]</span>)</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.Stat.timeFuture.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Time a given asynchronous <code>fn</code> using the given <code>unit</code>.</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -431,6 +471,6 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
     </body>
       </html>

@@ -41,7 +41,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>, <a href="../../util/JavaSingleton.html" class="extype" name="com.twitter.util.JavaSingleton">JavaSingleton</a>, <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>, <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +59,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.finagle.stats.NullStatsReceiver"><span>NullStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.NullStatsReceiver"><span>NullStatsReceiver</span></li><li class="in" name="com.twitter.util.JavaSingleton"><span>JavaSingleton</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.finagle.stats.NullStatsReceiver"><span>NullStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.NullStatsReceiver"><span>NullStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -162,21 +162,14 @@
         <span class="name">addGauge</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Add the function <code><code>f<i> as a gauge with the given name. The
+      <p class="shortcomment cmt">Add the function <code>f</code> as a gauge with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Add the function <code>f</code> as a gauge with the given name. The
 returned gauge value is only weakly referenced by the
 StatsReceiver, and if garbage collected will cease to be a part
 of this measurement: thus, it needs to be retained by the
-caller. Immortal measurements are made with <code><code>provideGauge<i>. As
-with <code><code>provideGauge<i>, gauges with equal names are added
+caller. Immortal measurements are made with <code>provideGauge</code>. As
+with <code>provideGauge</code>, gauges with equal names are added
 together.
-</i></code></code></i></code></code></i></code></code></p><div class="fullcomment"><div class="comment cmt"><p>Add the function <code><code>f<i> as a gauge with the given name. The
-returned gauge value is only weakly referenced by the
-StatsReceiver, and if garbage collected will cease to be a part
-of this measurement: thus, it needs to be retained by the
-caller. Immortal measurements are made with <code><code>provideGauge<i>. As
-with <code><code>provideGauge<i>, gauges with equal names are added
-together.
-</i></code></code></i></code></code></i></code></code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -221,8 +214,7 @@ together.
         <span class="name">counter</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counter</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Get a Counter with the description
-</p><div class="fullcomment"><div class="comment cmt"><p>Get a Counter with the description
+      <p class="shortcomment cmt">Get a Counter with the prefix <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get a Counter with the prefix <code>name</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#counter0" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter0(name:String):com.twitter.finagle.stats.Counter"></a>
@@ -236,7 +228,9 @@ together.
         <span class="name">counter0</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counter</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Get a Counter with the description.</p><div class="fullcomment"><div class="comment cmt"><p>Get a Counter with the description. This method is a convenience for Java program.
+      <p class="shortcomment cmt">Get a Counter with the prefix <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get a Counter with the prefix <code>name</code>. This method is a convenience for Java
+programs, but is no longer needed because StatsReceiver#counter is usable
+from java.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -283,19 +277,19 @@ together.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.JavaSingleton#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="get:com.twitter.util.JavaSingleton"></a>
-      <a id="get:JavaSingleton"></a>
+    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="get():com.twitter.finagle.stats.NullStatsReceiver.type"></a>
+      <a id="get():NullStatsReceiver.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">get</span><span class="result">: <a href="../../util/JavaSingleton.html" class="extype" name="com.twitter.util.JavaSingleton">JavaSingleton</a></span>
+        <span class="name">get</span><span class="params">()</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.type</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../util/JavaSingleton.html" class="extype" name="com.twitter.util.JavaSingleton">JavaSingleton</a></dd></dl></div>
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -434,9 +428,8 @@ are only reported once per receiver.
         <span class="name">scope</span><span class="params">(<span name="namespace">namespace: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Prepend <code><code>namespace<i> to the names of this receiver.
-</i></code></code></p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code><code>namespace<i> to the names of this receiver.
-</i></code></code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+      <p class="shortcomment cmt">Prepend <code>namespace</code> to the names of this receiver.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> to the names of this receiver.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scopeSuffix" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver"></a>
       <a id="scopeSuffix(String):StatsReceiver"></a>
@@ -480,7 +473,9 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
         <span class="name">stat0</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Get a Stat with the description.</p><div class="fullcomment"><div class="comment cmt"><p>Get a Stat with the description. This method is a convenience for Java programs.
+      <p class="shortcomment cmt">Get a Stat with the description.</p><div class="fullcomment"><div class="comment cmt"><p>Get a Stat with the description. This method is a convenience for Java
+programs, but is no longer needed because StatsReceiver#counter is usable
+from java.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -508,7 +503,8 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
       </span>
       </h4>
       <p class="shortcomment cmt">Time a given function in milliseconds
-</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function in milliseconds
+This method will soon be deprecated in favor of <a href="Stat$.html#time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A" class="extmbr" name="com.twitter.finagle.stats.Stat#time">com.twitter.finagle.stats.Stat.time</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function in milliseconds
+This method will soon be deprecated in favor of <a href="Stat$.html#time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A" class="extmbr" name="com.twitter.finagle.stats.Stat#time">com.twitter.finagle.stats.Stat.time</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#time" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="time[T](unit:java.util.concurrent.TimeUnit,name:String*)(f:=&gt;T):T"></a>
@@ -523,7 +519,8 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
       </span>
       </h4>
       <p class="shortcomment cmt">Time a given function using the given TimeUnit
-</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A" class="extmbr" name="com.twitter.finagle.stats.Stat#time">com.twitter.finagle.stats.Stat.time</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A" class="extmbr" name="com.twitter.finagle.stats.Stat#time">com.twitter.finagle.stats.Stat.time</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#time" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="time[T](unit:java.util.concurrent.TimeUnit,stat:com.twitter.finagle.stats.Stat)(f:=&gt;T):T"></a>
@@ -538,7 +535,8 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
       </span>
       </h4>
       <p class="shortcomment cmt">Time a given function using the given TimeUnit
-</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A" class="extmbr" name="com.twitter.finagle.stats.Stat#time">com.twitter.finagle.stats.Stat.time</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#time[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;A):A" class="extmbr" name="com.twitter.finagle.stats.Stat#time">com.twitter.finagle.stats.Stat.time</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#timeFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="timeFuture[T](name:String*)(f:=&gt;com.twitter.util.Future[T]):com.twitter.util.Future[T]"></a>
@@ -552,8 +550,8 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
         <span class="name">timeFuture</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>)</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Time a given future in milliseconds
-</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future in milliseconds
+      <p class="shortcomment cmt">Time a given future in milliseconds.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future in milliseconds.
+This method will soon be deprecated in favor of <a href="Stat$.html#timeFuture[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.finagle.stats.Stat#timeFuture">com.twitter.finagle.stats.Stat.timeFuture</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#timeFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="timeFuture[T](unit:java.util.concurrent.TimeUnit,name:String*)(f:=&gt;com.twitter.util.Future[T]):com.twitter.util.Future[T]"></a>
@@ -568,7 +566,8 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
       </span>
       </h4>
       <p class="shortcomment cmt">Time a given future using the given TimeUnit
-</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#timeFuture[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.finagle.stats.Stat#timeFuture">com.twitter.finagle.stats.Stat.timeFuture</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#timeFuture[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.finagle.stats.Stat#timeFuture">com.twitter.finagle.stats.Stat.timeFuture</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#timeFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="timeFuture[T](unit:java.util.concurrent.TimeUnit,stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[T]):com.twitter.util.Future[T]"></a>
@@ -583,7 +582,8 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
       </span>
       </h4>
       <p class="shortcomment cmt">Time a given future using the given TimeUnit
-</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#timeFuture[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.finagle.stats.Stat#timeFuture">com.twitter.finagle.stats.Stat.timeFuture</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future using the given TimeUnit
+This method will soon be deprecated in favor of <a href="Stat$.html#timeFuture[A](stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.finagle.stats.Stat#timeFuture">com.twitter.finagle.stats.Stat.timeFuture</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.NullStatsReceiver#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -666,8 +666,6 @@ stats.scopeSuffix(&quot;toto&quot;).scope(&quot;client&quot;).counter(&quot;adds
         <div id="inheritedMembers">
         <div class="parent" name="com.twitter.finagle.stats.NullStatsReceiver">
               <h3>Inherited from <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a></h3>
-            </div><div class="parent" name="com.twitter.util.JavaSingleton">
-              <h3>Inherited from <a href="../../util/JavaSingleton.html" class="extype" name="com.twitter.util.JavaSingleton">JavaSingleton</a></h3>
             </div><div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
               <h3>Inherited from <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></h3>
             </div><div class="parent" name="scala.AnyRef">
