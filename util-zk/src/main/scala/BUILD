@@ -5,7 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:zookeeper',
+    '3rdparty/jvm/org/apache/zookeeper',
     'util/util-core/src/main/scala',
     'util/util-logging/src/main/scala'
   ],

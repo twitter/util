@@ -1,11 +1,11 @@
 junit_tests(name='scala',
   dependencies=[
+    '3rdparty/jvm/org/apache/zookeeper',
     '3rdparty:cglib',
     '3rdparty:jmock',
     '3rdparty:junit',
     '3rdparty:mockito-all',
     '3rdparty:scalatest',
-    '3rdparty:zookeeper',
     'util/util-core/src/main/scala',
     'util/util-zk/src/main/scala',
   ],
