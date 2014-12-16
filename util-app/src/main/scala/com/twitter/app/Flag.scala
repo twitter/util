@@ -1,7 +1,6 @@
 package com.twitter.app
 
 import com.twitter.util._
-
 import java.net.InetSocketAddress
 import java.lang.{
   Boolean => JBoolean,
@@ -11,10 +10,10 @@ import java.lang.{
   Long    => JLong
 }
 import java.util.{List => JList, Map => JMap, Set => JSet}
-
 import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
-import scala.collection.mutable.{ArrayBuffer, HashMap}
+import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * A type class providing evidence for parsing type `T` as a flag value.
@@ -367,11 +366,31 @@ class Flag[T: Flaggable] private[app](
     _parsingDone = false
   }
 
-  /** True if the flag has been set */
+  /**
+   * True if the flag has been set.
+   *
+   * @note if no user-defined value has been set, `false` will be
+   * returned even when a default value is supplied.
+   */
   def isDefined: Boolean = getValue.isDefined
 
-  /** Get the value if it has been set */
+  /**
+   * Get the value if it has been set.
+   *
+   * @note if no user-defined value has been set, `None` will be
+   * returned even when a default value is supplied.
+   *
+   * @see [[Flag.getWithDefault]]
+   */
   def get: Option[T] = getValue
+
+  /**
+   * Get the value if it has been set or if there is a default value supplied.
+   *
+   * @see [[Flag.get]] and [[Flag.isDefined]] if you are interested in
+   *      determining if there is a supplied value.
+   */
+  def getWithDefault: Option[T] = valueOrDefault
 
   /** String representation of this flag's default value */
   def defaultString(): String = {
@@ -493,7 +512,8 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
   def this(argv0: String, includeGlobal: Boolean) = this(argv0, includeGlobal, false)
   def this(argv0: String) = this(argv0, false)
 
-  private[this] val flags = new HashMap[String, Flag[_]]
+  // thread-safety is provided by synchronization on `this`
+  private[this] val flags = new mutable.HashMap[String, Flag[_]]
 
   @volatile private[this] var cmdUsage = ""
 

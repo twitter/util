@@ -1,6 +1,5 @@
 package com.twitter.app
 
-import com.twitter.util.RandomSocket
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -25,19 +24,20 @@ class FlagTest extends FunSuite {
   }
 
   test("Flaggable: parse/show inet addresses") {
-    val port = RandomSocket.nextPort()
-    val local = Flaggable.ofInetSocketAddress.parse(":" + port)
+    // we aren't binding to this port, so any one will do.
+    val port = 1589
+    val local = Flaggable.ofInetSocketAddress.parse(s":$port")
     assert(local.getAddress.isAnyLocalAddress)
     assert(local.getPort === port)
 
     val ip = "141.211.133.111"
-    val remote = Flaggable.ofInetSocketAddress.parse(ip + ":" + port)
+    val remote = Flaggable.ofInetSocketAddress.parse(s"$ip:$port")
 
     assert(remote.getHostName === remote.getHostName)
     assert(remote.getPort === port)
 
-    assert(Flaggable.ofInetSocketAddress.show(local) === ":" + port)
-    assert(Flaggable.ofInetSocketAddress.show(remote) === remote.getHostName + ":" + port)
+    assert(Flaggable.ofInetSocketAddress.show(local) === s":$port")
+    assert(Flaggable.ofInetSocketAddress.show(remote) === s"${remote.getHostName}:$port")
   }
 
   test("Flaggable: parse seqs") {
@@ -208,6 +208,61 @@ class FlagTest extends FunSuite {
     val ctx = new Dctx
     import ctx._
     assert(quuxFlag.usageString === "  -quux=<Int>: an int")
+  }
+
+  private class GetCtx {
+    private val flags = new Flags("test")
+    val withDefault = flags[Int]("f1", 1, "an f1")
+    val noDefault = flags[Int]("f2", "an f2")
+    val noDefaultAndSupplied = flags[Int]("f3", "an f3")
+
+    assert(flags.parseArgs(Array("-f3=3")) === Flags.Ok(Nil))
+  }
+
+  test("Flag.get") {
+    val ctx = new GetCtx()
+    import ctx._
+
+    assert(withDefault.get === None)
+    assert(noDefault.get === None)
+    assert(noDefaultAndSupplied.get === Some(3))
+  }
+
+  test("Flag.getWithDefault") {
+    val ctx = new GetCtx()
+    import ctx._
+
+    assert(withDefault.getWithDefault === Some(1))
+    assert(noDefault.getWithDefault === None)
+    assert(noDefaultAndSupplied.getWithDefault === Some(3))
+  }
+
+  test("GlobalFlag.get") {
+    assert(MyGlobalBooleanFlag.get === None)
+    assert(MyGlobalFlagNoDefault.get === None)
+
+    assert(MyGlobalFlag.get === None)
+    val flag = new Flags("my", includeGlobal = true)
+    try {
+      flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "supplied"))
+      assert(MyGlobalFlag.get === Some("supplied"))
+    } finally {
+      MyGlobalFlag.reset()
+    }
+  }
+
+  test("GlobalFlag.getWithDefault") {
+    assert(MyGlobalBooleanFlag.getWithDefault === Some(false))
+    assert(MyGlobalFlagNoDefault.getWithDefault === None)
+
+    assert(MyGlobalFlag.getWithDefault === Some("a test flag"))
+    val flag = new Flags("my", includeGlobal = true)
+    try {
+      flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "supplied"))
+      assert(MyGlobalFlag.getWithDefault === Some("supplied"))
+    } finally {
+      MyGlobalFlag.reset()
+    }
   }
 
   test("GlobalFlag: no default usage") {
