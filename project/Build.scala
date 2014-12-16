@@ -101,7 +101,7 @@ object Util extends Build {
     utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilClassPreloader, utilBenchmark, utilApp,
-    utilEvents, utilStats
+    utilEvents, utilStats, utilEval
   )
 
   lazy val utilApp = Project(
@@ -208,8 +208,9 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-eval",
-    crossScalaVersions ~= { versions => versions filter (_ != "2.11.4") },
-    libraryDependencies <+= scalaVersion { "org.scala-lang" % "scala-compiler" % _ % "compile" }
+    libraryDependencies <+= scalaVersion {
+      "org.scala-lang" % "scala-compiler" % _ % "compile"
+    }
   ).dependsOn(utilCore)
 
   lazy val utilEvents = Project(

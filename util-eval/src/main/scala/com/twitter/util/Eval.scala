@@ -80,7 +80,7 @@ class Eval(target: Option[File]) {
   }
 
   private lazy val libPath = try {
-    classPathOfClass("scala.ScalaObject")
+    classPathOfClass("scala.AnyVal")
   } catch {
     case e: Throwable =>
       throw new RuntimeException("Unable to load scala base object from classpath (scala-library jar is missing?)", e)
