@@ -5,6 +5,9 @@ import scala.collection.mutable.{Map, Set}
 
 import com.google.common.collect.{MapMaker => GoogleMapMaker}
 
+/**
+ * Use guava `MapMaker` to create a scala `Set`
+ */
 object SetMaker {
   def apply[A](f: Config[A] => Any): Set[A] = {
     val config = new Config[A]
@@ -20,7 +23,7 @@ object SetMaker {
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
 
     def apply() = new MapToSetAdapter[A](
-      mapMaker.makeMap().asScala)
+      mapMaker.makeMap[A, A]().asScala)
   }
 }
 
