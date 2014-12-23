@@ -14,6 +14,9 @@ trait FuturePool {
   def apply[T](f: => T): Future[T]
 }
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.FuturePools]].
+ */
 object FuturePool {
   /**
    * Creates a FuturePool backed by an ExecutorService.
