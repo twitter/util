@@ -1,6 +1,6 @@
 A bunch of idiomatic, small General Purpose tools.
 
-[![Build Status](https://secure.travis-ci.org/twitter/util.png)](https://travis-ci.org/twitter/util)
+[![Build Status](https://secure.travis-ci.org/twitter/util.png?branch=master)](https://travis-ci.org/twitter/util)
 
 See the Scaladoc [here](https://twitter.github.com/util)
 
