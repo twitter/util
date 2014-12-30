@@ -1,98 +1,9 @@
 package com.twitter.finagle.stats
 
-import com.twitter.util.{Future, JavaSingleton, Time}
+import com.twitter.util.Future
 import java.lang.{Float => JFloat}
 import java.util.concurrent.{Callable, TimeUnit}
 import scala.annotation.varargs
-
-/**
- * A writeable Counter. Only sums are kept of Counters. An example
- * Counter is "number of requests served".
- */
-trait Counter {
-  def incr(delta: Int)
-  def incr() { incr(1) }
-}
-
-/**
- * An append-only collection of time-series data. Example Stats are
- * "queue depth" or "query width in a stream of requests".
- */
-trait Stat {
-  def add(value: Float): Unit
-}
-
-/**
- * Helpers for working with histograms.  Java-friendly versions can be found in
- * [[com.twitter.finagle.stats.JStats]].
- */
-object Stat {
-  /**
-   * Time a given `fn` using the given `unit`.
-   */
-  def time[A](stat: Stat, unit: TimeUnit)(f: => A): A = {
-    val start = Time.now
-    val result = f
-    stat.add((Time.now - start).inUnit(unit))
-    result
-  }
-
-  /**
-   * Time a given `fn` using milliseconds.
-   */
-  def time[A](stat: Stat)(f: => A): A = time(stat, TimeUnit.MILLISECONDS)(f)
-
-  /**
-   * Time a given asynchronous `fn` using the given `unit`.
-   */
-  def timeFuture[A](stat: Stat, unit: TimeUnit)(f: => Future[A]): Future[A] = {
-    val start = Time.now
-    f ensure {
-      stat.add((Time.now - start).inUnit(unit))
-    }
-  }
-
-  /**
-   * Time a given asynchronous `fn` using milliseconds.
-   */
-  def timeFuture[A](stat: Stat)(f: => Future[A]): Future[A] =
-    timeFuture(stat, TimeUnit.MILLISECONDS)(f)
-}
-
-/**
- * Stat utility methods for ease of use from java.
- */
-object JStats {
-  /**
-   * Time a given `fn` using the given `unit`.
-   */
-  def time[A](stat: Stat, fn: Callable[A], unit: TimeUnit): A = Stat.time(stat, unit)(fn.call())
-
-  /**
-   * Time a given `fn` using milliseconds.
-   */
-  def time[A](stat: Stat, fn: Callable[A]): A = Stat.time(stat)(fn.call())
-
-  /**
-   * Time a given asynchronous `fn` using the given `unit`.
-   */
-  def timeFuture[A](stat: Stat, fn: Callable[Future[A]], unit: TimeUnit): Future[A] =
-    Stat.timeFuture(stat, unit)(fn.call())
-
-  /**
-   * Time a given asynchronous `fn` using milliseconds.
-   */
-  def timeFuture[A](stat: Stat, fn: Callable[Future[A]]): Future[A] =
-    Stat.timeFuture(stat)(fn.call())
-}
-
-/**
- * Exposes the value of a function. For example, one could add a gauge for a
- * computed health metric.
- */
-trait Gauge {
-  def remove()
-}
 
 object StatsReceiver {
   private[StatsReceiver] var immortalGauges: List[Gauge] = Nil
@@ -135,6 +46,8 @@ object StatsReceivers {
  * [[com.twitter.finagle.stats.Stat Stats]], and
  * [[com.twitter.finagle.stats.Gauge Gauges]] can be accessed through the
  * corresponding methods of this class.
+ *
+ * @see [[StatsReceivers]] for a Java-friendly API.
  */
 trait StatsReceiver {
   /**
@@ -270,56 +183,4 @@ trait StatsReceiver {
       }
     }
   }
-}
-
-trait StatsReceiverProxy extends StatsReceiver {
-  def self: StatsReceiver
-
-  val repr = self
-  override def isNull = self.isNull
-  def counter(names: String*) = self.counter(names:_*)
-  def stat(names: String*) = self.stat(names:_*)
-  def addGauge(names: String*)(f: => Float) = self.addGauge(names:_*)(f)
-}
-
-/**
- * A StatsReceiver receiver proxy that translates all counter, stat, and gauge
- * names according to a `translate` function.
- *
- * @param self The underlying StatsReceiver to which translated names are passed
- */
-abstract class NameTranslatingStatsReceiver(val self: StatsReceiver)
-  extends StatsReceiver
-{
-  protected[this] def translate(name: Seq[String]): Seq[String]
-  val repr = self.repr
-  override def isNull = self.isNull
-
-  def counter(name: String*) = self.counter(translate(name): _*)
-  def stat(name: String*)    = self.stat(translate(name): _*)
-  def addGauge(name: String*)(f: => Float) = self.addGauge(translate(name): _*)(f)
-}
-
-/**
- * A noop StatsReceiver. Metrics are not recorded, making this receiver useful
- * in unit tests and as defaults in situations where metrics are not strictly
- * required.
- */
-class NullStatsReceiver extends StatsReceiver {
-  val repr = this
-  override def isNull = true
-
-  private[this] val NullCounter = new Counter { def incr(delta: Int) {} }
-  private[this] val NullStat = new Stat { def add(value: Float) {}}
-  private[this] val NullGauge = new Gauge { def remove() {} }
-
-  def counter(name: String*) = NullCounter
-  def stat(name: String*) = NullStat
-  def addGauge(name: String*)(f: => Float) = NullGauge
-
-  override def toString = "NullStatsReceiver"
-}
-
-object NullStatsReceiver extends NullStatsReceiver {
-  def get() = this
 }
