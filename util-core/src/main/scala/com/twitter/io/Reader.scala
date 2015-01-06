@@ -62,7 +62,7 @@ object Reader {
    * (i.e. end-of-stream) when it is closed; it may only be closed
    * while there are no pending writes.
    */
-  def writable(): Reader with Writer with Closable = new Reader with Writer with Closable {
+  def writable(): Reader with Writer = new Reader with Writer {
     private[this] var state: State = Idle
 
     def close(deadline: Time): Future[Unit] = synchronized {
@@ -259,7 +259,7 @@ object Reader {
  * A Writer represents a sink for a stream of bytes, providing
  * a convenient interface for the producer of such streams.
  */
-trait Writer {
+trait Writer extends Closable {
   /**
     * Write a chunk. The returned future is completed
     * when the chunk has been fully read by the sink.
@@ -288,7 +288,7 @@ object Writer {
    *
    * @param bufsize Size of the copy buffer between Writer and OutputStream.
    */
-  def fromOutputStream(out: OutputStream, bufsize: Int): Writer with Closable =
+  def fromOutputStream(out: OutputStream, bufsize: Int): Writer =
     new OutputStreamWriter(out, bufsize)
 
   /**
@@ -298,6 +298,6 @@ object Writer {
    * behavior is identical to multiple threads calling `write` on the underlying
    * OutputStream.
    */
-  def fromOutputStream(out: OutputStream): Writer with Closable =
+  def fromOutputStream(out: OutputStream): Writer =
     fromOutputStream(out, BufferSize)
 }
