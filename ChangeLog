@@ -8,6 +8,8 @@ API Changes:
   * util-core: `Future.willEqual()` now returns `Future[Boolean]` instead of
                `Promise[Boolean]`.
   * util-core: Writer now extends Closable.
+  * util-core: `TimeFormat` now throws IllegalArgumentException if the pattern
+	              uses the week year ('Y') without the week number ('w')
 
 
 6.24.0 2014-12-12

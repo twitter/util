@@ -16,7 +16,9 @@
 
 package com.twitter.logging
 
-import java.text.{MessageFormat, SimpleDateFormat}
+import com.twitter.util.TwitterDateFormat
+
+import java.text.{MessageFormat, DateFormat}
 import java.util.regex.Pattern
 import java.util.{Date, GregorianCalendar, TimeZone, logging => javalog}
 
@@ -93,13 +95,13 @@ class Formatter(
 
   private val matcher = Formatter.DateFormatRegex.matcher(prefix)
 
-  private val DATE_FORMAT = new SimpleDateFormat(if (matcher.find()) matcher.group(1) else "yyyyMMdd-HH:mm:ss.SSS")
+  private val DATE_FORMAT = TwitterDateFormat(if (matcher.find()) matcher.group(1) else "yyyyMMdd-HH:mm:ss.SSS")
   private val FORMAT = matcher.replaceFirst("%3\\$s")
 
   /**
    * Return the date formatter to use for log messages.
    */
-  def dateFormat: SimpleDateFormat = DATE_FORMAT
+  def dateFormat: DateFormat = DATE_FORMAT
 
   /**
    * Calendar to use for time zone display in date-time formatting.

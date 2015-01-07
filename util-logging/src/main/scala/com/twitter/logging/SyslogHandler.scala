@@ -17,12 +17,11 @@
 package com.twitter.logging
 
 import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
-import java.text.SimpleDateFormat
 import java.util.concurrent.Executors
 import java.util.{logging => javalog}
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.util.NetUtil
+import com.twitter.util.{TwitterDateFormat, NetUtil}
 
 object SyslogHandler {
   val DEFAULT_PORT = 514
@@ -66,8 +65,8 @@ object SyslogHandler {
     }
   }
 
-  val ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-  val OLD_SYSLOG_DATE_FORMAT = new SimpleDateFormat("MMM dd HH:mm:ss")
+  val ISO_DATE_FORMAT = TwitterDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+  val OLD_SYSLOG_DATE_FORMAT = TwitterDateFormat("MMM dd HH:mm:ss")
 
   /**
    * Generates a HandlerFactory that returns a SyslogHandler.

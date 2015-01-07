@@ -17,7 +17,6 @@
 package com.twitter.util
 
 import java.io.Serializable
-import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale, TimeZone}
 
@@ -447,8 +446,8 @@ trait TimeControl {
  */
 class TimeFormat(pattern: String, locale: Option[Locale]) {
   private[this] val format = locale map {
-    new SimpleDateFormat(pattern, _)
-  } getOrElse new SimpleDateFormat(pattern)
+    TwitterDateFormat(pattern, _)
+  } getOrElse TwitterDateFormat(pattern)
   format.setTimeZone(TimeZone.getTimeZone("UTC"))
 
   // jdk6 and jdk7 pick up the default locale differently in SimpleDateFormat

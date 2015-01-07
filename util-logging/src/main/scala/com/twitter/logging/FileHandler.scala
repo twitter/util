@@ -18,10 +18,9 @@ package com.twitter.logging
 
 import java.io.{File, FileOutputStream, FilenameFilter, OutputStream}
 import java.nio.charset.Charset
-import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, logging => javalog}
 
-import com.twitter.util.{HandleSignal, Return, StorageUnit, Time, Try}
+import com.twitter.util.{TwitterDateFormat, HandleSignal, Return, StorageUnit, Time, Try}
 
 sealed abstract class Policy
 object Policy {
@@ -184,12 +183,12 @@ class FileHandler(
    */
   def timeSuffix(date: Date) = {
     val dateFormat = rollPolicy match {
-      case Policy.Never => new SimpleDateFormat("yyyy")
-      case Policy.SigHup => new SimpleDateFormat("yyyy")
-      case Policy.Hourly => new SimpleDateFormat("yyyyMMdd-HH")
-      case Policy.Daily => new SimpleDateFormat("yyyyMMdd")
-      case Policy.Weekly(_) => new SimpleDateFormat("yyyyMMdd")
-      case Policy.MaxSize(_) => new SimpleDateFormat("yyyyMMdd-HHmmss")
+      case Policy.Never => TwitterDateFormat("yyyy")
+      case Policy.SigHup => TwitterDateFormat("yyyy")
+      case Policy.Hourly => TwitterDateFormat("yyyyMMdd-HH")
+      case Policy.Daily => TwitterDateFormat("yyyyMMdd")
+      case Policy.Weekly(_) => TwitterDateFormat("yyyyMMdd")
+      case Policy.MaxSize(_) => TwitterDateFormat("yyyyMMdd-HHmmss")
     }
     dateFormat.setCalendar(formatter.calendar)
     dateFormat.format(date)
