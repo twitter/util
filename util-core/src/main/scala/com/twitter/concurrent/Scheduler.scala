@@ -1,13 +1,12 @@
 package com.twitter.concurrent
 
+import com.twitter.util.Awaitable.CanAwait
 import java.lang.management.ManagementFactory
 import java.util.ArrayDeque
 import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
-
+import scala.collection.mutable
 import scala.util.Random
-
-import com.twitter.util.Awaitable.CanAwait
 
 /**
  * An interface for scheduling [[java.lang.Runnable]] tasks.
@@ -16,13 +15,13 @@ trait Scheduler {
   /**
    * Schedule `r` to be run at some time in the future.
    */
-  def submit(r: Runnable)
+  def submit(r: Runnable): Unit
 
   /**
    * Flush the schedule. Returns when there is no more
    * work to do.
    */
-  def flush()
+  def flush(): Unit
 
   // A note on Hotspot's ThreadMXBean's CPU time. On Linux, this
   // uses clock_gettime[1] which should both be fast and accurate.
@@ -79,7 +78,7 @@ object Scheduler extends Scheduler {
    * @param sched the other Scheduler to swap in for the one that is
    * currently set
    */
-  def setUnsafe(sched: Scheduler) {
+  def setUnsafe(sched: Scheduler): Unit = {
     self = sched
   }
 
@@ -103,7 +102,10 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
   private[this] val bean = ManagementFactory.getThreadMXBean()
   private[this] val cpuTimeSupported = bean.isCurrentThreadCpuTimeSupported()
 
-  @volatile private[this] var activations = Set[Activation]()
+  // use weak refs to prevent Activations from causing a memory leak
+  // thread-safety provided by synchronizing on `activations`
+  private[this] val activations = new mutable.WeakHashMap[Activation, Boolean]()
+
   private[this] val local = new ThreadLocal[Activation] {
     override def initialValue = null
   }
@@ -123,7 +125,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     @volatile var wallTime = 0L
     @volatile var numDispatches = 0L
 
-    def submit(r: Runnable) {
+    def submit(r: Runnable): Unit = {
       assert(r != null)
 
       if (lifo) {
@@ -159,7 +161,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
       }
     }
 
-    def flush() {
+    def flush(): Unit = {
       if (running) run()
     }
 
@@ -178,7 +180,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
       r
     }
 
-    private[this] def run() {
+    private[this] def run(): Unit = {
       val save = running
       running = true
       try {
@@ -197,9 +199,12 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     if (a != null)
       return a
 
-    local.set(new Activation)
-    synchronized { activations += local.get() }
-    local.get()
+    val activation = new Activation()
+    local.set(activation)
+    activations.synchronized {
+      activations.put(activation, java.lang.Boolean.TRUE)
+    }
+    activation
   }
 
   /** An implementaiton of Iterator over runnable tasks */
@@ -209,15 +214,20 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
   @inline def next(): Runnable = get().next()
 
   // Scheduler implementation:
-  def submit(r: Runnable) = get().submit(r)
-  def flush() = get().flush()
+  def submit(r: Runnable): Unit = get().submit(r)
+  def flush(): Unit = get().flush()
 
-  def usrTime = (activations.iterator map (_.usrTime)).sum
-  def cpuTime = (activations.iterator map (_.cpuTime)).sum
-  def wallTime = (activations.iterator map (_.wallTime)).sum
-  def numDispatches = (activations.iterator map (_.numDispatches)).sum
+  private[this] def activationsSum(f: Activation => Long): Long =
+    activations.synchronized {
+      activations.keysIterator.map(f).sum
+    }
 
-  def blocking[T](f: => T)(implicit perm: CanAwait) = f
+  def usrTime: Long = activationsSum(_.usrTime)
+  def cpuTime: Long = activationsSum(_.cpuTime)
+  def wallTime: Long = activationsSum(_.wallTime)
+  def numDispatches: Long = activationsSum(_.numDispatches)
+
+  def blocking[T](f: => T)(implicit perm: CanAwait): T = f
 }
 
 /**
@@ -243,7 +253,7 @@ trait ExecutorScheduler { self: Scheduler =>
     }
   }
 
-  protected def threads() = {
+  protected def threads(): Array[Thread] = {
     // We add 2x slop here because it's inherently racy to enumerate
     // threads. Since this is used only for monitoring purposes, we
     // don't try too hard.
