@@ -47,6 +47,58 @@ object Function {
    * Creates `() => A` function from given `Callable`.
    */
   def ofCallable[A](c: Callable[A]): () => A = () => c.call()
+
+  /**
+   * Creates a T => R from a JavaFunction. Used for easier interop
+   * between Java 8 and Twitter Util libraries.
+   */
+  def function[T, R](f: JavaFunction[T, R]) = new Function[T, R] {
+    override def apply(value: T): R = f(value)
+  }
+
+  /**
+   * Short form of `function`
+   */
+  def f[T, R](f: JavaFunction[T, R]) : Function[T, R] = function(f)
+
+  /**
+   * Creates a T => Unit from a JavaConsumer.
+   * Useful for e.g. future.onSuccess
+   */
+  def consumer[T](f: JavaConsumer[T]) = new Function[T, Unit] {
+    override def apply(value: T): Unit = f(value)
+  }
+
+  /**
+   * Short form of `consumer`
+   */
+  def c[T](f: JavaConsumer[T]) : Function[T, Unit] = consumer(f)
+
+  /**
+   * like `function`, but deals with checked exceptions as well
+   */
+  def exceptionalFunction[T, R](f: ExceptionalJavaFunction[T, R]) = new ExceptionalFunction[T, R] {
+    @throws(classOf[Throwable])
+    override def applyE(value: T): R = f(value)
+  }
+
+  /**
+   * Short form of `exceptionalFunction`
+   */
+  def xf[T, R](f: ExceptionalJavaFunction[T, R]) : ExceptionalFunction[T, R] = exceptionalFunction(f)
+
+  /**
+   * like `consumer`, but deals with checked exceptions as well
+   */
+  def exceptionalConsumer[T](f: ExceptionalJavaConsumer[T]) = new ExceptionalFunction[T, Unit] {
+    @throws(classOf[Throwable])
+    override def applyE(value: T): Unit = f(value)
+  }
+
+  /**
+   * Short form of `exceptionalConsumer`
+   */
+  def xc[T](f: ExceptionalJavaConsumer[T]) : ExceptionalFunction[T, Unit] = exceptionalConsumer(f)
 }
 
 abstract class ExceptionalFunction[-T1, +R] extends Function[T1, R] {
