@@ -16,6 +16,8 @@
 
 package com.twitter.util
 
+import java.util.Locale
+
 object StorageUnit {
   val infinite = new StorageUnit(Long.MaxValue)
   val zero = new StorageUnit(0)
@@ -110,7 +112,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
     if (prefixIndex < 0) {
       "%d B".format(bytes)
     } else {
-      "%.1f %ciB".format(display*bytes.signum, prefix.charAt(prefixIndex))
+      "%.1f %ciB".formatLocal(Locale.ENGLISH, display*bytes.signum, prefix.charAt(prefixIndex))
     }
   }
 }
