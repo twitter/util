@@ -5,7 +5,7 @@ import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
-import java.util.logging.Logger
+import java.util.logging.{Level, Logger}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -40,6 +40,7 @@ trait App extends Closable with CloseAwaitably {
   //failfastOnFlagsNotParsed is called in the ctor of App.scala here which is a bad idea
   //as things like this can happen http://stackoverflow.com/questions/18138397/calling-method-from-constructor
   val flag = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
+
   private var _args = Array[String]()
   /** The remaining, unparsed arguments */
   def args = _args
@@ -49,8 +50,9 @@ trait App extends Closable with CloseAwaitably {
 
   protected def failfastOnFlagsNotParsed = false
 
-  protected def exitOnError(reason: String): Unit = {
+  protected def exitOnError(reason: String) {
     System.err.println(reason)
+    close()
     System.exit(1)
   }
 
@@ -126,6 +128,20 @@ trait App extends Closable with CloseAwaitably {
   }
 
   final def main(args: Array[String]) {
+    try {
+      nonExitingMain(args)
+    } catch {
+      case FlagUsageError(reason) =>
+        exitOnError(reason)
+      case FlagParseException(reason, _) =>
+        exitOnError(reason)
+      case e: Throwable =>
+        e.printStackTrace()
+        exitOnError("Exception thrown in main on startup")
+    }
+  }
+
+  final def nonExitingMain(args: Array[String]) {
     App.register(this)
 
     for (f <- inits) f()
@@ -133,12 +149,10 @@ trait App extends Closable with CloseAwaitably {
     flag.parseArgs(args, allowUndefinedFlags) match {
       case Flags.Ok(remainder) =>
         _args = remainder.toArray
-
       case Flags.Help(usage) =>
-        exitOnError(usage)
-
+        throw FlagUsageError(usage)
       case Flags.Error(reason) =>
-        exitOnError(reason)
+        throw FlagParseException(reason)
     }
 
     for (f <- premains) f()

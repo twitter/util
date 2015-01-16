@@ -13,13 +13,30 @@ class TestApp(f: () => Unit) extends App {
   def main() = f()
 }
 
+object VeryBadApp extends App {
+  var reason: String = throwRuntime()
+
+  protected def throwRuntime(): String = {
+    throw new RuntimeException("this is a bad app")
+  }
+
+  def main() = {
+  }
+}
+
 @RunWith(classOf[JUnitRunner])
 class AppTest extends FunSuite {
-  test("App: propagate underlying exception from app") {
-    val throwApp = new TestApp(() => throw new RuntimeException)
+  test("App: make sure system.exit called on exception from main") {
+    val test1 = new TestApp(() => throw new RuntimeException("simulate main failing"))
 
-    intercept[RuntimeException] {
-      throwApp.main(Array.empty)
+    test1.main(Array())
+
+    assert(test1.reason == Some("Exception thrown in main on startup"))
+  }
+
+  test("App: propagate underlying exception from fields in app") {
+    intercept[ExceptionInInitializerError] {
+      VeryBadApp.main(Array.empty)
     }
   }
 

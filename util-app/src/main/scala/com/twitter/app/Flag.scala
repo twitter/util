@@ -318,8 +318,7 @@ class Flag[T: Flaggable] private[app](
         Some(d())
       } catch {
         case e: Throwable =>
-          log.log(Level.SEVERE, s"Could not run default function for flag $name", e)
-          throw e
+          throw new RuntimeException( s"Could not run default function for flag $name", e)
       }
   }
 
