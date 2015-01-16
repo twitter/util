@@ -6,14 +6,14 @@ import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
 
 import com.twitter.util.{
-  Future, FuturePool, Time, Throw, Return, Promise
+  Future, FuturePool, Closable, Time, Throw, Return, Promise
 }
 
 /**
  * Construct a Writer from a given OutputStream.
  */
 private[io]
-class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Writer {
+class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Writer with Closable {
   import OutputStreamWriter._
 
   private[this] val done = new Promise[Unit]

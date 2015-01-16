@@ -44,6 +44,24 @@ abstract class AbstractClosable extends Closable
 object Closable {
   private[this] val logger = Logger.getLogger("")
 
+  /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
+  def close(o: AnyRef): Future[Unit] = o match {
+    case c: Closable => c.close()
+    case _ => Future.Done
+  }
+
+  /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
+  def close(o: AnyRef, deadline: Time): Future[Unit] = o match {
+    case c: Closable => c.close(deadline)
+    case _ => Future.Done
+  }
+
+  /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
+  def close(o: AnyRef, after: Duration): Future[Unit] = o match {
+    case c: Closable => c.close(after)
+    case _ => Future.Done
+  }
+
   /**
    * Concurrent composition: creates a new closable which, when
    * closed, closes all of the underlying resources simultaneously.

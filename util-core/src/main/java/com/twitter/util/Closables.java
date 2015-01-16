@@ -19,6 +19,27 @@ public final class Closables {
   private Closables() { }
 
   /**
+   * @see com.twitter.util.Closable$#close(scala.AnyRef)
+   */
+  public static Future<BoxedUnit> close(Object o) {
+    return Closable$.MODULE$.close(o);
+  }
+
+  /**
+   * @see com.twitter.util.Closable$#close(scala.AnyRef, com.twitter.util.Time)
+   */
+  public static Future<BoxedUnit> close(Object o, Time deadline) {
+    return Closable$.MODULE$.close(o, deadline);
+  }
+
+  /**
+   * @see com.twitter.util.Closable$#close(scala.AnyRef, com.twitter.util.Duration)
+   */
+  public static Future<BoxedUnit> close(Object o, Duration after) {
+    return Closable$.MODULE$.close(o, after);
+  }
+
+  /**
    * @see com.twitter.util.Closable$#all(scala.collection.Seq)
    */
   public static Closable all(Closable... closables) {
