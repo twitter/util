@@ -68,16 +68,21 @@ trait Var[+T] { self =>
   def flatMap[U](f: T => Var[U]): Var[U] = new Var[U] {
     def observe(depth: Int, obs: Observer[U]) = {
       val inner = new AtomicReference(Closable.nop)
-      val outer = self.observe(depth, Observer(t =>
-        // TODO: Right now we rely on synchronous propagation; and
-        // thus also synchronous closes. We should instead perform
-        // asynchronous propagation so that it is is safe &
-        // predictable to have asynchronously closing Vars, for
-        // example. Currently the only source of potentially
-        // asynchronous closing is Var.async; here we have modified
-        // the external process to close asynchronously with the Var
-        // itself so that it is safe to Await here.
-        Await.ready(inner.getAndSet(f(t).observe(depth+1, obs)).close())
+      val outer = self.observe(depth, Observer(t => {
+          // TODO: Right now we rely on synchronous propagation; and
+          // thus also synchronous closes. We should instead perform
+          // asynchronous propagation so that it is is safe &
+          // predictable to have asynchronously closing Vars, for
+          // example. Currently the only source of potentially
+          // asynchronous closing is Var.async; here we have modified
+          // the external process to close asynchronously with the Var
+          // itself. Thus we know the code path here is synchronous:
+          // we control all Var implementations, and also all Closable
+          // combinators have been modified to evaluate their respective
+          // Futures eagerly.
+          val done = inner.getAndSet(f(t).observe(depth+1, obs)).close()
+          assert(done.isDone)
+        }
       ))
 
       Closable.sequence(outer, Closable.ref(inner))

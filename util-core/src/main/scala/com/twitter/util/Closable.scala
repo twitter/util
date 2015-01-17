@@ -67,7 +67,17 @@ object Closable {
    * closed, closes all of the underlying resources simultaneously.
    */
   def all(closables: Closable*): Closable = new Closable {
-    def close(deadline: Time) = Future.join(closables map(_.close(deadline)))
+    def close(deadline: Time): Future[Unit] = {
+      val fs = closables.map(_.close(deadline))
+      for (f <- fs) {
+        f.poll match {
+          case Some(Return(_)) => 
+          case _ => return Future.join(fs)
+        }
+      }
+      
+      Future.Done
+    }
   }
 
   /**
@@ -79,7 +89,12 @@ object Closable {
     private final def closeSeq(deadline: Time, closables: Seq[Closable]): Future[Unit] =
       closables match {
         case Seq() => Future.Done
-        case Seq(hd, tl@_*) => hd.close(deadline) flatMap { _ => closeSeq(deadline, tl) }
+        case Seq(hd, tl@_*) => 
+          val f = hd.close(deadline)
+          f.poll match {
+            case Some(Return.Unit) => closeSeq(deadline, tl)
+            case _ => f before closeSeq(deadline, tl)
+          }
       }
 
     def close(deadline: Time) = closeSeq(deadline, closables)
