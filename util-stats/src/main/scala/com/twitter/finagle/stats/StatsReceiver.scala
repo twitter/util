@@ -10,31 +10,31 @@ object StatsReceiver {
 }
 
 /**
- * [[com.twitter.finagle.stats.StatsReceiver]] utility methods for ease of use from java.
+ * [[StatsReceiver]] utility methods for ease of use from java.
  */
 object StatsReceivers {
   /**
-   * Java compatible version of `StatsReceiver#counter`.
+   * Java compatible version of [[StatsReceiver.counter]].
    */
   @varargs
   def counter(statsReceiver: StatsReceiver, name: String*): Counter = statsReceiver.counter(name: _*)
 
   /**
-   * Java compatible version of `StatsReceiver#addGauge`.
+   * Java compatible version of [[StatsReceiver.addGauge]].
    */
   @varargs
   def addGauge(statsReceiver: StatsReceiver, callable: Callable[JFloat], name: String*): Gauge =
     statsReceiver.addGauge(name: _*)(callable.call())
 
   /**
-   * Java compatible version of `StatsReceiver#provideGauge`.
+   * Java compatible version of [[StatsReceiver.provideGauge]].
    */
   @varargs
   def provideGauge(statsReceiver: StatsReceiver, callable: Callable[JFloat], name: String*): Unit =
     statsReceiver.provideGauge(name: _*)(callable.call())
 
   /**
-   * Java compatible version of `StatsReceiver#stat`.
+   * Java compatible version of [[StatsReceiver.stat]].
    */
   @varargs
   def stat(statsReceiver: StatsReceiver, name: String*): Stat = statsReceiver.stat(name: _*)
@@ -42,10 +42,8 @@ object StatsReceivers {
 
 /**
  * An interface for recording metrics. Named
- * [[com.twitter.finagle.stats.Counter Counters]],
- * [[com.twitter.finagle.stats.Stat Stats]], and
- * [[com.twitter.finagle.stats.Gauge Gauges]] can be accessed through the
- * corresponding methods of this class.
+ * [[Counter Counters]], [[Stat Stats]], and [[Gauge Gauges]] can be accessed
+ * through the corresponding methods of this class.
  *
  * @see [[StatsReceivers]] for a Java-friendly API.
  */
@@ -58,79 +56,86 @@ trait StatsReceiver {
   val repr: AnyRef
 
   /**
-   * Accurately indicates if this is a NullStatsReceiver.
+   * Accurately indicates if this is a [[NullStatsReceiver]].
    * Because equality is not forwarded via scala.Proxy, this
-   * is helpful to check for a NullStatsReceiver.
+   * is helpful to check for a [[NullStatsReceiver]].
    */
   def isNull: Boolean = false
 
   /**
-   * Time a given function using the given TimeUnit
-   * This method will soon be deprecated in favor of [[com.twitter.finagle.stats.Stat.time]].
+   * Time a given function using the given TimeUnit.
+   * This method will soon be deprecated in favor of [[Stat.time]].
    */
   def time[T](unit: TimeUnit, stat: Stat)(f: => T): T = Stat.time(stat, unit)(f)
 
   /**
-   * Time a given function using the given TimeUnit
-   * This method will soon be deprecated in favor of [[com.twitter.finagle.stats.Stat.time]].
+   * Time a given function using the given TimeUnit.
+   * This method will soon be deprecated in favor of [[Stat.time]].
    */
   def time[T](unit: TimeUnit, name: String*)(f: => T): T = time(unit, stat(name: _*))(f)
 
   /**
-   * Time a given function in milliseconds
-   * This method will soon be deprecated in favor of [[com.twitter.finagle.stats.Stat.time]].
+   * Time a given function in milliseconds.
+   * This method will soon be deprecated in favor of [[Stat.time]].
    */
   def time[T](name: String*)(f: => T): T = time(TimeUnit.MILLISECONDS, name: _*)(f)
 
   /**
-   * Time a given future using the given TimeUnit
-   * This method will soon be deprecated in favor of [[com.twitter.finagle.stats.Stat.timeFuture]].
+   * Time a given future using the given TimeUnit.
+   * This method will soon be deprecated in favor of [[Stat.timeFuture]].
    */
   def timeFuture[T](unit: TimeUnit, stat: Stat)(f: => Future[T]): Future[T] =
     Stat.timeFuture(stat, unit)(f)
 
   /**
-   * Time a given future using the given TimeUnit
-   * This method will soon be deprecated in favor of [[com.twitter.finagle.stats.Stat.timeFuture]].
+   * Time a given future using the given TimeUnit.
+   * This method will soon be deprecated in favor of [[Stat.timeFuture]].
    */
   def timeFuture[T](unit: TimeUnit, name: String*)(f: => Future[T]): Future[T] =
     timeFuture(unit, stat(name: _*))(f)
 
   /**
    * Time a given future in milliseconds.
-   * This method will soon be deprecated in favor of [[com.twitter.finagle.stats.Stat.timeFuture]].
+   * This method will soon be deprecated in favor of [[Stat.timeFuture]].
    */
   def timeFuture[T](name: String*)(f: => Future[T]): Future[T] =
     timeFuture(TimeUnit.MILLISECONDS, name: _*)(f)
 
   /**
-   * Get a Counter with the prefix `name`.
+   * Get a [[Counter counter]] with the given `name`.
    */
   def counter(name: String*): Counter
 
   /**
-   * Get a Counter with the prefix `name`. This method is a convenience for Java
-   * programs, but is no longer needed because StatsReceiver#counter is usable
-   * from java.
+   * Get a [[Counter counter]] with the given `name`.
+   *
+   * This method is a convenience for Java programs, but is no longer needed because
+   * [[StatsReceivers.counter]] is usable from java.
    */
   def counter0(name: String): Counter = counter(name)
 
   /**
-   * Get a Stat with the description
+   * Get a [[Stat stat]] with the given name.
    */
   def stat(name: String*): Stat
 
   /**
-   * Get a Stat with the description. This method is a convenience for Java
-   * programs, but is no longer needed because StatsReceiver#counter is usable
-   * from java.
+   * Get a [[Stat stat]] with the given name. This method is a convenience for Java
+   * programs, but is no longer needed because [[StatsReceivers.counter]] is
+   * usable from java.
    */
   def stat0(name: String): Stat = stat(name)
 
   /**
-   * Register a function to be periodically measured. This measurement
-   * exists in perpetuity. Measurements under the same name are added
-   * together.
+   * Register a function `f` as a [[Gauge gauge]] with the given name that has
+   * a lifecycle with no end.
+   *
+   * This measurement exists in perpetuity.
+   *
+   * Measurements under the same name are added together.
+   *
+   * @see [[StatsReceiver.addGauge]] if you can properly control the lifecycle
+   *     of the returned [[Gauge gauge]].
    */
   def provideGauge(name: String*)(f: => Float): Unit = {
     val gauge = addGauge(name: _*)(f)
@@ -140,18 +145,34 @@ trait StatsReceiver {
   }
 
   /**
-   * Add the function `f` as a gauge with the given name. The
-   * returned gauge value is only weakly referenced by the
-   * StatsReceiver, and if garbage collected will cease to be a part
-   * of this measurement: thus, it needs to be retained by the
-   * caller. Immortal measurements are made with `provideGauge`. As
-   * with `provideGauge`, gauges with equal names are added
-   * together.
+   * Add the function `f` as a [[Gauge gauge]] with the given name.
+   *
+   * The returned [[Gauge gauge]] value is only weakly referenced by the
+   * [[StatsReceiver]], and if garbage collected will eventually cease to
+   * be a part of this measurement: thus, it needs to be retained by the
+   * caller. Or put another way, the measurement is only guaranteed to exist
+   * as long as there exists a strong reference to the returned
+   * [[Gauge gauge]] and typically should be stored in a member variable.
+   *
+   * Measurements under the same name are added together.
+   *
+   * @see [[StatsReceiver.provideGauge]] when there is not a good location
+   *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
+   *
+   * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(name: String*)(f: => Float): Gauge
 
   /**
-   * Prepend `namespace` to the names of this receiver.
+   * Prepend `namespace` to the names of the returned [[StatsReceiver]].
+   *
+   * For example:
+   * {{{
+   * statsReceiver.scope("client").counter("adds")
+   * statsReceiver.scope("client").scope("backend").counter("adds")
+   * }}}
+   * will generate [[Counter counters]] named `/client/adds`
+   * and `/client/backend/adds`.
    */
   def scope(namespace: String): StatsReceiver = {
     if (namespace == "") this
@@ -165,8 +186,12 @@ trait StatsReceiver {
 
   /**
    * Prepend a suffix value to the next scope.
-   * stats.scopeSuffix("toto").scope("client").counter("adds") will generate
-   * /client/toto/adds
+   *
+   * For example:
+   * {{{
+   * statsReceiver.scopeSuffix("toto").scope("client").counter("adds")
+   * }}}
+   * will generate a [[Counter counter]] named `/client/toto/adds`.
    */
   def scopeSuffix(suffix: String): StatsReceiver = {
     if (suffix == "") this
