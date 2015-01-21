@@ -135,7 +135,7 @@ class OfferTest extends WordSpec with MockitoSugar {
         val h = new AllTxsReadyHelper
         import h._
 
-        val shuffledOffer = Offer.choose(new Random(Time.now.inNanoseconds), offers)
+        val shuffledOffer = Offer.choose(Some(new Random(Time.now.inNanoseconds)), offers)
         val histo = new Array[Int](3)
         for (_ <- 0 until 1000) {
           for (tx <- shuffledOffer.prepare())
@@ -371,6 +371,21 @@ class OfferTest extends WordSpec with MockitoSugar {
       assert(item.poll === Some(Return(5)))
       assert(timer.tasks.size === 0)
       assert(timer.nCancelled === 1)
+    }
+  }
+
+  "Offer.prioritize" should {
+    "prioritize high priority offer" in {
+      val offers = 0 until 10 map { i =>
+        val tx = mock[Tx[Int]]
+        val result = Future.value(Commit(i))
+        when(tx.ack()).thenReturn(result)
+        new SimpleOffer(Future.value(tx))
+      }
+      val chosenOffer = Offer.prioritize(offers:_*)
+      val of = chosenOffer.sync()
+      assert(of.isDefined === true)
+      assert(Await.result(of) === 0)
     }
   }
 

@@ -191,7 +191,7 @@ object Offer {
     def prepare() = Future.never
   }
 
-  private[this] val rng = new Random(Time.now.inNanoseconds)
+  private[this] val rng = Some(new Random(Time.now.inNanoseconds))
 
   /**
    * The offer that chooses exactly one of the given offers. If there are any
@@ -201,11 +201,20 @@ object Offer {
 
   /**
    * The offer that chooses exactly one of the given offers. If there are any
-   * Offers that are synchronizable immediately, one is chosen at random.
+   * Offers that are synchronizable immediately, the first available in the sequence is selected.
+   */
+  def prioritize[T](evs: Offer[T]*): Offer[T] = choose(None, evs)
+
+  /**
+   * The offer that chooses exactly one of the given offers.
+   *
+   * If there are any Offers that are synchronizable immediately, one is chosen
+   * - at random if {{random}} is defined.
+   * - in order if {{random}} is None.
    *
    * Package-exposed for testing.
    */
-  private[concurrent] def choose[T](random: Random, evs: Seq[Offer[T]]): Offer[T] = {
+  private[concurrent] def choose[T](random: Option[Random], evs: Seq[Offer[T]]): Offer[T] = {
     if (evs.isEmpty) Offer.never else new Offer[T] {
       def prepare(): Future[Tx[T]] = {
         // to avoid unnecessary allocations we do a bunch of manual looping and shuffling
@@ -217,12 +226,18 @@ object Offer {
           prepd(i) = iter.next().prepare()
           i += 1
         }
-        while (i > 1) { // i starts at evs.size
-          val nextPos = random.nextInt(i)
-          val tmp = prepd(i - 1)
-          prepd(i - 1) = prepd(nextPos)
-          prepd(nextPos) = tmp
-          i -= 1
+        // We use match instead of foreach to reduce allocations.
+        random match {
+          case None =>
+            // Shuffle only if random is defined
+          case Some(r) =>
+            while (i > 1) { // i starts at evs.size
+              val nextPos = r.nextInt(i)
+              val tmp = prepd(i - 1)
+              prepd(i - 1) = prepd(nextPos)
+              prepd(nextPos) = tmp
+              i -= 1
+            }
         }
         i = 0
         var foundPos = -1
