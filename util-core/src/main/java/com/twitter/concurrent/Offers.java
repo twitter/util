@@ -62,4 +62,11 @@ public final class Offers {
   public static <T> Offer<T> choose(Collection<Offer<T>> offers) {
     return Offer$.MODULE$.choose(JavaConversions.asScalaBuffer(new ArrayList<Offer<T>>(offers)));
   }
+
+  /**
+   * @see Offer$#select(scala.collection.Seq)
+   */
+  public static <T> Future<T> select(Collection<Offer<T>> offers) {
+    return Offers.choose(offers).sync();
+  }
 }

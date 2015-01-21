@@ -13,7 +13,7 @@ public class EventAndWitnessCompilationTest {
   private static class OwnEvent extends AbstractEvent<String> {
     @Override
     public Closable register(Witness<String> s) {
-      return Closable$.MODULE$.nop();
+      return Closables.NOP;
     }
 
     public int fiftySeven() {

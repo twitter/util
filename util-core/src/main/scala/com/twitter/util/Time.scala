@@ -577,5 +577,10 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    */
   def minus(delta: Duration): Time = this - delta
 
+  /**
+   *  Finds a diff between this and ''that'' time.
+   */
+  def minus(that: Time): Duration = this - that
+
   override def floor(x: Duration): Time = super.floor(x) // for Java-compatibility
 }

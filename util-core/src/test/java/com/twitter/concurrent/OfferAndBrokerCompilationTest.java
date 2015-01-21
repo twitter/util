@@ -46,11 +46,12 @@ public class OfferAndBrokerCompilationTest {
   }
 
   @Test
-  public void testChoose() {
+  public void testChooseAndSelect() {
     ArrayList<Offer<String>> offers = new ArrayList<Offer<String>>();
     offers.add(Offers.newConstOffer("911"));
     offers.add(Offers.newConstOffer("112"));
     Offer<String> c = Offers.choose(offers);
+    Future<String> f = Offers.select(offers);
 
     Assert.assertNotNull(c);
   }
