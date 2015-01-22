@@ -6,6 +6,7 @@ scala_library(name='scala',
   ),
   dependencies=[
     '3rdparty:scalatest',
+    '3rdparty:mockito-all',
     'util/util-logging/src/main/scala',
     'util/util-core/src/main/scala',
   ],
