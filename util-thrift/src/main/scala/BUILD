@@ -6,8 +6,8 @@ scala_library(name='scala',
   ),
   dependencies=[
     '3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind',
-    '3rdparty:libthrift-0.5.0',
-    '3rdparty:slf4j-api',
+    '3rdparty/jvm/org/apache/thrift:libthrift-0.5.0',
+    '3rdparty/jvm/org/slf4j:slf4j-api',
     'util/util-codec'
   ],
   sources=rglobs('*.scala'),

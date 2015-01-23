@@ -1,7 +1,7 @@
 benchmark(name='scala',
   dependencies=[
-    '3rdparty:caliper',
-    '3rdparty:scala-library',
+    '3rdparty/jvm/com/google/caliper',
+    '3rdparty/jvm/org/scala-lang:scala-library',
     'util/util-core/src/main/scala',
     'util/util-events/src/main/scala',
     'util/util-jvm/src/main/scala'

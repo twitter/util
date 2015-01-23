@@ -5,7 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:scala-compiler',
+    '3rdparty/jvm/org/scala-lang:scala-compiler',
     'util/util-core/src/main/scala'
   ],
   sources=rglobs('*.scala'),
