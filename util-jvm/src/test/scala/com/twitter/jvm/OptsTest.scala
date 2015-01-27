@@ -1,5 +1,6 @@
 package com.twitter.jvm
 
+import java.lang.{Boolean => JBool}
 import java.lang.management.ManagementFactory
 import javax.management.ObjectName
 import org.junit.runner.RunWith
@@ -15,21 +16,37 @@ class OptsTest extends FunSuite  {
 
       val originalValue: String = Opt("MaxHeapFreeRatio").getOrElse("100")
 
-      ManagementFactory.getPlatformMBeanServer().invoke(
-        DiagnosticName, "setVMOption",
-        Array("MaxHeapFreeRatio", "99"),
-        Array("java.lang.String", "java.lang.String"))
+      val option = ManagementFactory.getPlatformMBeanServer().invoke(
+        DiagnosticName, "getVMOption",
+        Array("MaxHeapFreeRatio"),
+        Array("java.lang.String"))
 
-      assert(Opt("MaxHeapFreeRatio") === Some("99"))
+      val writable = option.getClass match {
+        case clazz: Class[_] if clazz.getCanonicalName == "com.sun.management.VMOption" =>
+          clazz.getMethod("isWriteable").invoke(option) match {
+            case bool: JBool => bool: Boolean
+            case _ => fail()
+          }
+        case _ => false
+      }
 
-      ManagementFactory.getPlatformMBeanServer().invoke(
-        DiagnosticName, "setVMOption",
-        Array("MaxHeapFreeRatio", originalValue),
-        Array("java.lang.String", "java.lang.String"))
+      if (writable) {
+        ManagementFactory.getPlatformMBeanServer().invoke(
+          DiagnosticName, "setVMOption",
+          Array("MaxHeapFreeRatio", "99"),
+          Array("java.lang.String", "java.lang.String"))
 
-      assert(Opt("MaxHeapFreeRatio") === Some(originalValue))
+        assert(Opt("MaxHeapFreeRatio") === Some("99"))
 
-      assert(Opt("NonexistentOption") === None)
+        ManagementFactory.getPlatformMBeanServer().invoke(
+          DiagnosticName, "setVMOption",
+          Array("MaxHeapFreeRatio", originalValue),
+          Array("java.lang.String", "java.lang.String"))
+
+        assert(Opt("MaxHeapFreeRatio") === Some(originalValue))
+
+        assert(Opt("NonexistentOption") === None)
+      }
     }
   }
 }
