@@ -29,7 +29,7 @@ class OfferBenchmark extends SimpleBenchmark {
     var i = 0
     while (i < reps) {
       val offers = data(i)
-      Offer.choose(rnd, offers)
+      Offer.choose(Some(rnd), offers)
       i += 1
     }
   }
