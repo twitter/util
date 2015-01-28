@@ -110,4 +110,48 @@ class PromiseTest extends FunSuite {
     q.detach()
     assert(p.waitqLength === 0)
   }
+
+  test("Promise.respond should monitor fatal exceptions") {
+    val p = new Promise[Int]
+    val m = new Monitor {
+      var handled = null: Throwable
+      def handle(exc: Throwable) = {
+        handled = exc
+        true
+      }
+    }
+    val exc = new NoSuchMethodException
+
+    Monitor.using(m) {
+      p ensure { throw exc }
+    }
+
+    assert(m.handled === null)
+    p.update(Return(1))
+    assert(m.handled === exc)
+  }
+
+  test("Promise.transform should monitor fatal exceptions") {
+    val m = new Monitor {
+      var handled = null: Throwable
+      def handle(exc: Throwable) = {
+        handled = exc
+        true
+      }
+    }
+    val exc = new NoSuchMethodException
+    val p = new Promise[Int]
+
+    Monitor.using(m) {
+      p transform { case _ => throw exc }
+    }
+
+    assert(m.handled === null)
+    val actual = intercept[NoSuchMethodException] {
+      p.update(Return(1))
+    }
+    assert(actual === exc)
+    assert(m.handled === exc)
+  }
+
 }

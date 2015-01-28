@@ -108,6 +108,10 @@ object Promise {
       val current = Local.save()
       Local.restore(saved)
       try k(result)
+      catch { case t: Throwable =>
+        Monitor.handle(t)
+        throw t
+      }
       finally Local.restore(current)
     }
   }

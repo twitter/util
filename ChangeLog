@@ -14,6 +14,9 @@ API Changes:
   * util-core: `TimeFormat` now throws IllegalArgumentException if the pattern
 	              uses the week year ('Y') without the week number ('w')
 
+Changes in Runtime Behavior:
+  * util-core: Futures still rethrow on fatals, but now also Monitor.handle on
+               them.
 
 6.24.0 2014-12-12
 
@@ -43,13 +46,6 @@ Java Compatibility:
 
 6.22.2  2014-10-29
 
-  * util, finagle: add missing @RunWith annotation
-  * Java tests for Duration, Time and Timer
-  * util-core: remove Sieve example
-  * Reader.writable.fail: make reentrant
-  * util-app: add an option so that we can let apps fail fast if reading argument before args are parsed.
-  * {finagle,util}-core: Slurry of PartialFunction micro-optimizations
-
 API Changes:
   * util-core: Removed `Sieve` example.
   * util-core: Introduce new constructors and extractors for Buf types to
@@ -59,6 +55,18 @@ API Changes:
                Copied ensures that the caller cannot accidentally mutate a Buf's
                data. Additionally, helpers to support Buf-type coersion have
                been added.
+
+New Features:
+  * util-app: add an option so that we can let apps fail fast if reading
+              argument before args are parsed.
+
+Bug Fixes:
+  * util: add missing @RunWith annotation
+  * util-core: Java tests for Duration, Time and Timer
+  * util-core: Reader.writable.fail: make reentrant
+
+Optimizations:
+  * util-core: Slurry of PartialFunction micro-optimizations
 
 6.22.1  2014-10-23
 

@@ -889,6 +889,28 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           }
           assert(actual === e)
         }
+
+        "monitors fatal exceptions" in {
+          val m = new Monitor {
+            var handled = null: Throwable
+            def handle(exc: Throwable) = {
+              handled = exc
+              true
+            }
+          }
+          val exc = new FatalException()
+
+          assert(m.handled === null)
+
+          val actual = intercept[FatalException] {
+            Monitor.using(m) {
+              const.value(1) transform { case _ => throw exc }
+            }
+          }
+
+          assert(actual === exc)
+          assert(m.handled === exc)
+        }
       }
 
       "transformedBy" should {
@@ -1186,14 +1208,13 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             }
           }
           val exc = new Exception
-          val p = new Promise[Int]
-
-          m {
-            p ensure { throw exc }
-          }
 
           assert(m.handled === null)
-          p.update(Return(1))
+
+          Monitor.using(m) {
+            const.value(1) ensure { throw exc }
+          }
+
           assert(m.handled === exc)
         }
       }

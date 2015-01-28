@@ -1213,12 +1213,22 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
-    respond({ r =>
-      val result = try f(r) catch {
-        case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
-        case NonFatal(e) => Future.exception(e)
+    val saved = Local.save()
+    Scheduler.submit(new Runnable {
+      def run() {
+        val current = Local.save()
+        Local.restore(saved)
+        val computed = try f(result)
+        catch {
+          case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
+          case NonFatal(e) => Future.exception(e)
+          case t: Throwable =>
+            Monitor.handle(t)
+            throw t
+        }
+        finally Local.restore(current)
+        p.become(computed)
       }
-      p.become(result)
     })
     p
   }
