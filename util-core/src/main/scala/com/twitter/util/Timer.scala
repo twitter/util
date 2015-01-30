@@ -9,32 +9,32 @@ import scala.collection.mutable.ArrayBuffer
  * TimerTasks represent pending tasks scheduled by a [[Timer]].
  */
 trait TimerTask extends Closable {
-  def cancel()
-  def close(deadline: Time) = Future(cancel())
+  def cancel(): Unit
+  def close(deadline: Time): Future[Unit] = Future(cancel())
 }
 
 /**
  * Timers are used to schedule tasks in the future.
  * They support both one-shot and recurring tasks.
  *
- * @note Scheduling tasks with [[Timer]]s should rarely 
- * be done directly; for example, when programming 
- * with [[Future]]s, prefer using [[Future$.sleep]].
+ * @note Scheduling tasks with [[Timer]]s should rarely
+ * be done directly; for example, when programming
+ * with [[Future]]s, prefer using [[Future.sleep]].
  */
 trait Timer {
   /**
    * Run `f` at time `when`.
    */
   def schedule(when: Time)(f: => Unit): TimerTask
-  
+
   /**
-   * Run `f` at time `when`; subsequently run `f` at every 
+   * Run `f` at time `when`; subsequently run `f` at every
    * elapsed `period`.
    */
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask
 
   /**
-   * Run `f` every elapsed `period`, starting immediately.
+   * Run `f` every elapsed `period`, starting `period` from now.
    */
   def schedule(period: Duration)(f: => Unit): TimerTask =
     schedule(period.fromNow, period)(f)
@@ -78,7 +78,7 @@ trait Timer {
    * Stop the timer. Pending tasks are cancelled.
    * The timer is unusable after being stopped.
    */
-  def stop()
+  def stop(): Unit
 }
 
 object Timer {
@@ -99,11 +99,11 @@ class NullTimer extends Timer {
     NullTimerTask
   }
 
-  def stop() {}
+  def stop(): Unit = ()
 }
 
 object NullTimerTask extends TimerTask {
-  def cancel() {}
+  def cancel(): Unit = ()
 }
 
 class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
@@ -112,13 +112,13 @@ class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends 
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
     underlying.schedule(when, period)(f)
 
-  def stop() {
+  def stop(): Unit = {
     executor.submit(new Runnable { def run() = underlying.stop() })
   }
 }
 
 trait ReferenceCountedTimer extends Timer {
-  def acquire()
+  def acquire(): Unit
 }
 
 class ReferenceCountingTimer(factory: () => Timer)
@@ -127,7 +127,7 @@ class ReferenceCountingTimer(factory: () => Timer)
   private[this] var refcount = 0
   private[this] var underlying: Timer = null
 
-  def acquire() = synchronized {
+  def acquire(): Unit = synchronized {
     refcount += 1
     if (refcount == 1) {
       require(underlying == null)
@@ -135,7 +135,7 @@ class ReferenceCountingTimer(factory: () => Timer)
     }
   }
 
-  def stop() = synchronized {
+  def stop(): Unit = synchronized {
     refcount -= 1
     if (refcount == 0) {
       underlying.stop()
@@ -146,8 +146,11 @@ class ReferenceCountingTimer(factory: () => Timer)
   // Just dispatch to the underlying timer. It's the responsibility of
   // the API consumer to not call into the timer once it has been
   // stopped.
-  def schedule(when: Time)(f: => Unit) = underlying.schedule(when)(f)
-  def schedule(when: Time, period: Duration)(f: => Unit) = underlying.schedule(when, period)(f)
+  def schedule(when: Time)(f: => Unit): TimerTask =
+    underlying.schedule(when)(f)
+
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+    underlying.schedule(when, period)(f)
 }
 
 class JavaTimer(isDaemon: Boolean) extends Timer {
@@ -155,19 +158,19 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
 
   private[this] val underlying = new java.util.Timer(isDaemon)
 
-  def schedule(when: Time)(f: => Unit) = {
+  def schedule(when: Time)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(f)
     underlying.schedule(task, safeTime(when).toDate)
     toTimerTask(task)
   }
 
-  def schedule(when: Time, period: Duration)(f: => Unit) = {
+  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(f)
     underlying.schedule(task, safeTime(when).toDate, period.inMillis)
     toTimerTask(task)
   }
 
-  def stop() = underlying.cancel()
+  def stop(): Unit = underlying.cancel()
 
   /**
    * log any Throwables caught by the internal TimerTask.
@@ -176,7 +179,7 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
    *
    * This method MUST NOT throw or else your Timer will die.
    */
-  def logError(t: Throwable) {
+  def logError(t: Throwable): Unit = {
     System.err.println("WARNING: JavaTimer caught exception running task: %s".format(t))
     t.printStackTrace(System.err)
   }
@@ -189,7 +192,7 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 
   private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
-    def run {
+    def run(): Unit = {
       try {
         f
       } catch {
@@ -202,7 +205,7 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
   }
 
   private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
-    def cancel() { task.cancel() }
+    def cancel(): Unit = { task.cancel() }
   }
 }
 
@@ -232,7 +235,7 @@ extends Timer {
     val runnable = new Runnable { def run = f }
     val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
     new TimerTask {
-      def cancel() {
+      def cancel(): Unit = {
         javaFuture.cancel(true)
         underlying.remove(runnable)
       }
@@ -247,14 +250,14 @@ extends Timer {
     val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
     new TimerTask {
-      def cancel() {
+      def cancel(): Unit = {
         javaFuture.cancel(true)
         underlying.remove(runnable)
       }
     }
   }
 
-  def stop() = underlying.shutdown()
+  def stop(): Unit = underlying.shutdown()
 }
 
 // Exceedingly useful for writing well-behaved tests.
