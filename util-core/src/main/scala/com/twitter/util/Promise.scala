@@ -308,7 +308,10 @@ object Promise {
  * compressed OOPS. See comments on [[com.twitter.util.Promise.State]]
  * for details.
  */
-class Promise[A] extends Future[A] with Promise.Responder[A] {
+class Promise[A]
+  extends Future[A]
+  with Promise.Responder[A]
+  with Updatable[Try[A]] {
   import Promise._
 
   protected[util] final def depth = 0

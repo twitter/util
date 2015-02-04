@@ -380,16 +380,6 @@ object Var {
   }
 }
 
-/** Denotes an updatable container. */
-trait Updatable[T] {
-  /** Update the container with value `t` */
-  def update(t: T)
-}
-
-trait Extractable[T] {
-  def apply(): T
-}
-
 private object UpdatableVar {
   import Var.Observer
 
