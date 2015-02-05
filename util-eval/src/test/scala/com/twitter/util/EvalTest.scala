@@ -5,10 +5,14 @@ import java.io.{File, FileWriter}
 import scala.io.Source
 
 import org.junit.runner.RunWith
+import org.scalatest.DiagrammedAssertions._
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 
 import com.twitter.io.TempFile
+import scala.tools.nsc.reporters.{AbstractReporter, Reporter}
+import scala.tools.nsc.Settings
+import scala.tools.nsc.util.Position
 
 @RunWith(classOf[JUnitRunner])
 class EvalTest extends WordSpec {
@@ -165,6 +169,56 @@ class EvalTest extends WordSpec {
       assert(e.fileToClassName(new File("foo-bar-baz.scala")) == "foo$2dbar$2dbaz")
       // with crazy things
       assert(e.fileToClassName(new File("foo$! -@@@")) == "foo$24$21$20$2d$40$40$40")
+    }
+
+    "allow custom error reporting" when {
+      class Ctx {
+        val eval = new Eval {
+          @volatile var errors: Seq[(String, String)] = Nil
+
+          override lazy val compilerMessageHandler: Option[Reporter] = Some(new AbstractReporter {
+            override val settings: Settings = compilerSettings
+            override def displayPrompt(): Unit = ()
+            override def display(pos: Position, msg: String, severity: this.type#Severity): Unit = {
+              errors = errors :+ (msg, severity.toString)
+            }
+            override def reset() = {
+              super.reset()
+              errors = Nil
+            }
+          })
+        }
+      }
+
+      "not report errors on success" in {
+        val ctx = new Ctx
+        import ctx._
+
+        assert(eval[Int]("val a = 3; val b = 2; a + b", true) == 5)
+        assert(eval.errors.isEmpty)
+      }
+
+      "report errors on bad code" in {
+        val ctx = new Ctx
+        import ctx._
+
+        intercept[Throwable] {
+          eval[Int]("val a = 3; val b = q; a + b", true)
+        }
+        assert(eval.errors.nonEmpty)
+      }
+
+      "reset reporter between invocations" in {
+        val ctx = new Ctx
+        import ctx._
+
+        intercept[Throwable] {
+          eval[Int]("val a = 3; val b = q; a + b", true)
+        }
+        assert(eval.errors.nonEmpty)
+        assert(eval[Int]("val d = 3; val e = 2; d + e", true) == 5)
+        assert(eval.errors.isEmpty)
+      }
     }
   }
 }
