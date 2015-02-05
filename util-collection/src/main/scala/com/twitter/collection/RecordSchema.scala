@@ -56,7 +56,17 @@ final class RecordSchema {
     def get[A](field: Field[A]): Option[A] = {
       val value = fields.get(field)
       if (value eq null) {
-        field.default
+        // The field is not already present, so if there is a default value defined, we want to
+        // return it instead. But there's a catch: assume that type parameter `A` might reference a
+        // mutable data type. In this case, we need to store the specific instance obtained from
+        // `field.default` in the map, so that subsequent accesses find it (along with all of its
+        // filthy, filthy state changes), rather than another fresh default.
+        val default = field.default()
+        default match {
+          case Some(value) => updateImpl(field, value)
+          case None =>
+        }
+        default
       } else if (value eq NullSentinel) {
         Some(null.asInstanceOf[A])
       } else {
@@ -117,31 +127,27 @@ final class RecordSchema {
    * [[com.twitter.collection.RecordSchema.Record Record]]. A field may also declare a default
    * value, which is returned from `get` and `apply` when there is no value associated it in a
    * record.
-   *
-   * The identity semantics of Field are intentionally inherited from [[java.lang.Object]].
-   *
-   * @param default the default value to use, when there is no value associated with this field in a
-   *        given record
    */
-  sealed class Field[A] private[RecordSchema] (val default: Option[A])
+  sealed trait Field[A] {
+    /**
+     * The default value to use, when there is no value associated with this field in a given
+     * record.
+     */
+    def default(): Option[A]
+  }
 
-  /*
+  /**
    * MutableField is a [[com.twitter.collection.RecordSchema.Field Field]] which can be `update`d
    * in a [[com.twitter.collection.RecordSchema.Record Record]].
-   *
-   * The identity semantics of MutableField are intentionally inherited from [[java.lang.Object]].
-   *
-   * @param default the default value to use, when there is no value associated with this field in a
-   *        given record
    */
-  final class MutableField[A] private[RecordSchema] (default: Option[A]) extends Field(default)
+  sealed trait MutableField[A] extends Field[A]
 
   /**
    * Creates a new [[com.twitter.collection.RecordSchema.Record Record]] from this Schema.
    *
    * @return a new [[com.twitter.collection.RecordSchema.Record Record]]
    */
-  def newRecord: Record = new Record
+  def newRecord(): Record = new Record
 
   /**
    * Creates a new immutable [[com.twitter.collection.RecordSchema.Field Field]] with no default
@@ -150,19 +156,23 @@ final class RecordSchema {
    *
    * @return an immutable [[com.twitter.collection.RecordSchema.Field Field]] with no default value
    */
-  def newField[A]: Field[A] = new Field(None)
+  def newField[A](): Field[A] = new Field[A] {
+    def default(): Option[A] = None
+  }
 
   /**
    * Creates a new immutable [[com.twitter.collection.RecordSchema.Field Field]] with the given
-   * `default` value, to be used only with [[com.twitter.collection.RecordSchema.Record Records]]
+   * `defaultValue`, to be used only with [[com.twitter.collection.RecordSchema.Record Records]]
    * from this schema.
    *
-   * @param default the default value to use, when there is no value associated with this field in a
-   *        given record
+   * @param defaultValue the default value to use, when there is no value associated with this field
+   *        in a given record
    * @return an immutable [[com.twitter.collection.RecordSchema.Field Field]] with the given
-   *         `default` value
+   *         `defaultValue`
    */
-  def newField[A](default: A): Field[A] = new Field(Some(default))
+  def newField[A](defaultValue: => A): Field[A] = new Field[A] {
+    def default(): Option[A] = Some(defaultValue)
+  }
 
   /**
    * Creates a new [[com.twitter.collection.RecordSchema.MutableField MutableField]] with no default
@@ -172,19 +182,23 @@ final class RecordSchema {
    * @return a [[com.twitter.collection.RecordSchema.MutableField MutableField]] with no default
    *         value
    */
-  def newMutableField[A]: MutableField[A] = new MutableField(None)
+  def newMutableField[A](): MutableField[A] = new MutableField[A] {
+    def default(): Option[A] = None
+  }
 
   /**
    * Creates a new [[com.twitter.collection.RecordSchema.MutableField MutableField]] with the given
-   * `default` value, to be used only with [[com.twitter.collection.RecordSchema.Record Records]]
+   * `defaultValue`, to be used only with [[com.twitter.collection.RecordSchema.Record Records]]
    * from this schema.
    *
-   * @param default the default value to use, when there is no value associated with this field in a
-   *        given record
+   * @param defaultValue the default value to use, when there is no value associated with this field
+   *        in a given record
    * @return a [[com.twitter.collection.RecordSchema.MutableField MutableField]] with the given
-   *         `default` value
+   *         `defaultValue`
    */
-  def newMutableField[A](default: A): MutableField[A] = new MutableField(Some(default))
+  def newMutableField[A](defaultValue: => A): MutableField[A] = new MutableField[A] {
+    def default(): Option[A] = Some(defaultValue)
+  }
 }
 
 object RecordSchema {
