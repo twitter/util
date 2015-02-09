@@ -315,7 +315,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           batcher(1)
           batcher(2)
           batcher(3)
-          batcher.flushBatch
+          batcher.flushBatch()
 
           verify(f).apply(Seq(1,2,3))
         }
@@ -329,7 +329,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           batcher(3)
           batcher(4)
           batcher(5)
-          batcher.flushBatch
+          batcher.flushBatch()
 
           verify(f, times(1)).apply(Seq(1,2,3,4))
           verify(f, times(1)).apply(Seq(5))
@@ -343,7 +343,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             batcher(1)
             batcher(2)
             batcher(3)
-            batcher.flushBatch
+            batcher.flushBatch()
             control.advance(10.seconds)
             timer.tick()
 
@@ -361,7 +361,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             batcher(3)
             control.advance(10.seconds)
             timer.tick()
-            batcher.flushBatch
+            batcher.flushBatch()
 
             verify(f, times(1)).apply(Seq(1, 2, 3))
           }
