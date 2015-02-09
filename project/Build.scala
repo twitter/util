@@ -66,6 +66,8 @@ object Util extends Build {
     publishArtifact in Test := false,
     pomIncludeRepository := { _ => false },
     publishMavenStyle := true,
+    autoAPIMappings := true,
+    apiURL := Some(url("https://twitter.github.io/util/docs/")),
     pomExtra := (
       <url>https://github.com/twitter/util</url>
       <licenses>
