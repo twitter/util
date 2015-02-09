@@ -4,21 +4,23 @@ import java.util.logging.{Level, Logger}
 
 import scala.collection.mutable
 
+/** Provides a clean, lightweight interface for controlling a BatchExecutor
+  *
+  * @constructor create a new Batcher for a BatchExecutor
+  * @param executor the BatchExector to be used
+  */
 class Batcher[In, Out](
-  sizeThreshold: Int,
-  timeThreshold: Duration = Duration.Top,
-  sizePercentile: => Float = 1.0f,
-  f: Seq[In] => Future[Seq[Out]]
+  executor: BatchExecutor[In, Out]
 )(
   implicit timer: Timer
 ) extends Function1[In, Future[Out]] { batcher =>
   import java.util.logging.Level.WARNING
 
-  val executor = new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f)
-
+  /** Enqueues requests for the BatchExecutor */
   def apply(t: In): Future[Out] = executor.enqueue(t)
 
-  def flushBatch() = {
+  /** Immediately processes all unprocessed requests */
+  def flushBatch(): Unit = {
     val doAfter = synchronized {
       executor.flushBatch()
     }
