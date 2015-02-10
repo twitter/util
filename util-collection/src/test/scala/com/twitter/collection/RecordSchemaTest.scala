@@ -7,118 +7,80 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class RecordSchemaTest extends FunSuite {
 
-  val schema                       = new RecordSchema
-  val field                        = schema.newMutableField[Int]()
-  val fieldWithDefault             = schema.newMutableField[Int](42)
-  val nullableField                = schema.newMutableField[String]()
-  val nullableFieldWithNullDefault = schema.newMutableField[String](null)
+  val schema           = new RecordSchema
+  val field            = schema.newField[Object]()
+  val fieldWithDefault = schema.newField[Object](new Object)
+  val fields           = Seq(field, fieldWithDefault)
 
-  // filthy: the default value is allocated freshly each time it's accessed
-  val fieldWithFilthyDefault       = schema.newField[Object](new Object)
-
-  test("get should return None when field with no default is missing") {
+  test("apply should throw IllegalStateException when field is uninitialized") {
     val record = schema.newRecord()
-    assert(record.get(field) == None)
-    assert(record.get(nullableField) == None)
-  }
-
-  test("get should return Some(default) when field with default is missing") {
-    val record = schema.newRecord()
-    assert(record.get(fieldWithDefault) == Some(42))
-    assert(record.get(nullableFieldWithNullDefault) == Some(null))
-  }
-
-  test("get should return Some(field value) when field with no default is present") {
-    val record = schema.newRecord()
-      .put(field, 31337)
-      .put(nullableField, null)
-    assert(record.get(field) == Some(31337))
-    assert(record.get(nullableField) == Some(null))
-  }
-
-  test("get should return Some(field value) when field with default is present") {
-    val record = schema.newRecord()
-      .put(fieldWithDefault, 31337)
-      .put(nullableFieldWithNullDefault, null)
-    assert(record.get(fieldWithDefault) == Some(31337))
-    assert(record.get(nullableFieldWithNullDefault) == Some(null))
-  }
-
-  test("apply should throw NoSuchElementException when field with no default is missing") {
-    val record = schema.newRecord()
-    intercept[java.util.NoSuchElementException] {
+    intercept[IllegalStateException] {
       record(field)
     }
-    intercept[java.util.NoSuchElementException] {
-      record(nullableField)
+  }
+
+  test("apply should compute, store and return default when field is initialized with default") {
+    val record = schema.newRecord()
+    assert(record(fieldWithDefault) eq record(fieldWithDefault))
+  }
+
+  test("apply should return field value when field is explicitly initialized") {
+    val record = schema.newRecord()
+    val value = new Object
+
+    for (f <- fields) {
+      record(f) = value
+      assert(record(f) eq value)
     }
   }
 
-  test("apply should return default when field with default is missing") {
+  test("lock should throw IllegalStateException when field is uninitialized") {
     val record = schema.newRecord()
-    assert(record(fieldWithDefault) == 42)
-    assert(record(nullableFieldWithNullDefault) == null)
-  }
-
-  test("apply should return field value when field with no default is present") {
-    val record = schema.newRecord()
-      .put(field, 31337)
-      .put(nullableField, null)
-    assert(record(field) == 31337)
-    assert(record(nullableField) == null)
-  }
-
-  test("apply should return field value when field with default is present") {
-    val record = schema.newRecord()
-      .put(fieldWithDefault, 31337)
-      .put(nullableFieldWithNullDefault, null)
-    assert(record(fieldWithDefault) == 31337)
-    assert(record(nullableFieldWithNullDefault) == null)
-  }
-
-  test("put should insert when field is not already present") {
-    // case covered above, in "when field is present" tests
-  }
-
-  test("put should throw IllegalStateException when field is already present") {
-    val record = schema.newRecord()
-      .put(field, 31337)
-      .put(nullableField, null)
-    intercept[java.lang.IllegalStateException] {
-      record.put(field, 31338)
-    }
-    intercept[java.lang.IllegalStateException] {
-      record.put(nullableField, "not null")
+    intercept[IllegalStateException] {
+      record.lock(field)
     }
   }
 
-  test("update should insert when field is not already present") {
+  test("lock should compute and store default when field is initialized with default") {
     val record = schema.newRecord()
-      .update(field, 31337)
-      .update(nullableField, null)
-    assert(record(field) == 31337)
-    assert(record(nullableField) == null)
+    record.lock(fieldWithDefault)
+    assert(record(fieldWithDefault) ne null)
   }
 
-  test("update should overwrite when field is already present") {
+  test("update should reassign when field is not locked") {
     val record = schema.newRecord()
-      .update(field, 31337)
-      .update(field, 31338)
-      .update(nullableField, null)
-      .update(nullableField, "not null")
-    assert(record(field) == 31338)
-    assert(record(nullableField) == "not null")
+    val value = new Object
+
+    for (f <- fields) {
+      record(f) = new Object
+      record(f) = value
+      assert(record(f) eq value)
+    }
   }
 
-  test("default values should be evaluated freshly for each record instance") {
-    val record1 = schema.newRecord()
-    val record2 = schema.newRecord()
-    assert(record1(fieldWithFilthyDefault) != record2(fieldWithFilthyDefault))
+  test("update should throw IllegalStateException when field is locked") {
+    val record = schema.newRecord()
+    val value = new Object
+
+    for (f <- fields) {
+      record(f) = value
+      record.lock(f)
+      intercept[IllegalStateException] {
+        record(f) = value
+      }
+    }
   }
 
-  test("default values should be evaluated only once for each record instance") {
+  test("updateAndLock should update and lock") {
     val record = schema.newRecord()
-    assert(record(fieldWithFilthyDefault) == record(fieldWithFilthyDefault))
+    val value = new Object
+
+    for (f <- fields) {
+      record.updateAndLock(f, value)
+      intercept[IllegalStateException] {
+        record(f) = value
+      }
+    }
   }
 
 }
