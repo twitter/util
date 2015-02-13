@@ -4,9 +4,10 @@ import java.nio.charset.Charset
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 
 import org.apache.zookeeper.{CreateMode, KeeperException}
+import org.apache.zookeeper.KeeperException.NoNodeException
 
 import com.twitter.concurrent.Permit
-import com.twitter.util.{Future, Promise}
+import com.twitter.util.{Throw, Return, Future, Promise}
 import com.twitter.zk.{StateEvent, ZNode, ZkClient}
 
 /**
@@ -262,12 +263,15 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
   }
 
   private[this] def numPermitsOf(node: ZNode): Future[Int] = {
-    node.getData() map { data =>
-      try {
-        new String(data.bytes, Charset.forName("UTF8")).toInt
-      } catch {
-        case err: NumberFormatException => -1
-      }
+    node.getData().transform {
+      case Return(data: ZNode.Data) =>
+        try {
+          Future(new String(data.bytes, Charset.forName("UTF8")).toInt)
+        } catch {
+          case err: NumberFormatException => Future(-1)
+        }
+      case Throw(t) =>
+        Future(-1)
     }
   }
 
