@@ -271,6 +271,7 @@ object Logger extends Iterable[Logger] {
    */
   def reset() = {
     clearHandlers()
+    loggersCache.clear()
     root.addHandler(new ConsoleHandler(new Formatter(), None))
   }
 
@@ -288,12 +289,19 @@ object Logger extends Iterable[Logger] {
    * Execute a block with a given set of handlers, reverting back to the original
    * handlers upon completion.
    */
-  def withLoggers(loggerFactories: List[() => Logger])(f: => Unit) {
+  def withLoggers(loggerFactories: List[() => Logger])(f: => Unit): Unit =
+    withLazyLoggers(loggerFactories.map(_()))(f)
+
+  /**
+   * Execute a block with a given set of handlers, reverting back to the original
+   * handlers upon completion.
+   */
+  def withLazyLoggers(loggers: => List[Logger])(f: => Unit): Unit = {
     // Hold onto a local copy of loggerFactoryCache in case Logger.configure is called within f.
     val localLoggerFactoryCache = loggerFactoryCache
 
     clearHandlers()
-    loggerFactories.foreach { _() }
+    loggers
 
     f
 
