@@ -11,7 +11,6 @@ import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.PrivateMethodTester
 import org.scalatest.time.{Millis, Seconds, Span}
 
 import com.twitter.concurrent.Permit
@@ -20,7 +19,7 @@ import com.twitter.util._
 import com.twitter.zk.{NativeConnector, RetryPolicy, ZkClient, ZNode}
 
 @RunWith(classOf[JUnitRunner])
-class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions with PrivateMethodTester {
+class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
 
   "ZkAsyncSemaphore" should {
 
@@ -147,21 +146,19 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
 
       "numPermitsOf" should {
         "get a node's value" in {
-          val numPermitsOfMethod = PrivateMethod[Future[Int]]('numPermitsOf)
           withClient { zk =>
             val sem = new ZkAsyncSemaphore(zk, "/aoeu/aoeu", 2)
             val znode = ZNode(zk, "/testing/twitter/uuu")
             znode.create("7".getBytes)
-            val permits: Future[Int] = sem invokePrivate numPermitsOfMethod(znode)
+            val permits: Future[Int] = sem.numPermitsOf(znode)
             assert(permits.get() == 7)
           }
         }
 
         "not error on NoNode" in {
-          val numPermitsOfMethod = PrivateMethod[Future[Int]]('numPermitsOf)
           withClient { zk =>
             val sem = new ZkAsyncSemaphore(zk, "/aoeu/aoeu", 2)
-            val permits: Future[Int] = sem invokePrivate numPermitsOfMethod(ZNode(zk, "/aoeu/aoeu/aoeu"))
+            val permits: Future[Int] = sem.numPermitsOf(ZNode(zk, "/aoeu/aoeu/node_that_does_not_exist"))
             Await.result(permits)
           }
         }

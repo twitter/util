@@ -262,7 +262,7 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
     path.substring(permitNodePathPrefix.length).toInt
   }
 
-  private[this] def numPermitsOf(node: ZNode): Future[Int] = {
+  private[coordination] def numPermitsOf(node: ZNode): Future[Int] = {
     node.getData().transform {
       case Return(data: ZNode.Data) =>
         try {
