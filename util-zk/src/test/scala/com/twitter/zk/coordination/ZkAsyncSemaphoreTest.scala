@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 import scala.collection.JavaConverters._
 
+import org.apache.zookeeper.KeeperException.NoNodeException
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
@@ -148,8 +149,9 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
         "get a node's value" in {
           withClient { zk =>
             val sem = new ZkAsyncSemaphore(zk, "/aoeu/aoeu", 2)
-            val znode = ZNode(zk, "/testing/twitter/uuu")
-            znode.create("7".getBytes)
+            val znode = ZNode(zk, "/testing/twitter/node_with_data_7")
+            Await.result(znode.delete().rescue{ case e: NoNodeException => Future.value(0) })
+            Await.result(znode.create("7".getBytes))
             val permits: Future[Int] = sem.numPermitsOf(znode)
             assert(permits.get() == 7)
           }
