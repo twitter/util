@@ -7,8 +7,8 @@ import org.apache.zookeeper.{CreateMode, KeeperException}
 import org.apache.zookeeper.KeeperException.NoNodeException
 
 import com.twitter.concurrent.Permit
-import com.twitter.util.{Throw, Return, Future, Promise}
-import com.twitter.zk.{StateEvent, ZNode, ZkClient}
+import com.twitter.util.{Future, Promise, Return, Throw}
+import com.twitter.zk.{StateEvent, ZkClient, ZNode}
 
 /**
  * ZkAsyncSemaphore is a distributed semaphore with asynchronous execution.
