@@ -270,8 +270,8 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
         } catch {
           case err: NumberFormatException => Future(-1)
         }
-      case Throw(t) =>
-        Future(-1)
+      case Throw(t: NoNodeException) => Future(-1)
+      case Throw(t) => Future.exception(t)
     }
   }
 
