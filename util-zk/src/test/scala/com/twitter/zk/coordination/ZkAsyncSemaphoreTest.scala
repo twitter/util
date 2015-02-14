@@ -153,7 +153,7 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
             Await.result(znode.delete().rescue{ case e: NoNodeException => Future.value(0) })
             Await.result(znode.create("7".getBytes))
             val permits: Future[Int] = sem.numPermitsOf(znode)
-            assert(permits.get() == 7)
+            assert(Await.result(permits) == 7)
           }
         }
 
