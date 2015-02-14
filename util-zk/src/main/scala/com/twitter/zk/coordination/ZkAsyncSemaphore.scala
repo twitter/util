@@ -266,11 +266,13 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
     node.getData().transform {
       case Return(data: ZNode.Data) =>
         try {
-          Future(new String(data.bytes, Charset.forName("UTF8")).toInt)
+          Future.value(new String(data.bytes, Charset.forName("UTF8")).toInt)
         } catch {
-          case err: NumberFormatException => Future(-1)
+          case err: NumberFormatException => Future.value(-1)
         }
-      case Throw(t: NoNodeException) => Future(-1)
+      case Throw(t: NoNodeException) =>
+        // This permit was released (i.e. after we got the list of permits).
+        Future.value(-1)
       case Throw(t) => Future.exception(t)
     }
   }
