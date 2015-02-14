@@ -162,7 +162,7 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
           withClient { zk =>
             val sem = new ZkAsyncSemaphore(zk, "/aoeu/aoeu", 2)
             val permits: Future[Int] = sem invokePrivate numPermitsOfMethod(ZNode(zk, "/aoeu/aoeu/aoeu"))
-            permits.get()
+            Await.result(permits)
           }
         }
       }
