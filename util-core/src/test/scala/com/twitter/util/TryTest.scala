@@ -20,6 +20,16 @@ class TryTest extends FunSuite {
     }
   }
 
+  test("Try.throwable: should return e for Throw:s") {
+    assert(Throw(e).throwable === e)
+  }
+
+  test("Try.throwable: should throw IllegalStateException for Return:s") {
+    intercept[IllegalStateException] {
+      Return(1).throwable
+    }
+  }
+
   test("Try.rescue") {
     val result1 = Return(1) rescue { case _ => Return(2) }
     val result2 = Throw(e) rescue { case _ => Return(2) }

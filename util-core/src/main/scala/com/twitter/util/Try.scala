@@ -40,6 +40,17 @@ sealed abstract class Try[+R] {
   def isReturn: Boolean
 
   /**
+   * Returns the throwable if this is a Throw, else raises IllegalStateException.
+   *
+   * Callers should consult isThrow() prior to calling this method to determine whether
+   * or not this is a Throw.
+   *
+   * This method is intended for Java compatibility. Scala consumers are encouraged to
+   * pattern match for Throw(t).
+   */
+  def throwable: Throwable
+
+  /**
    * Returns the value from this Return or the given argument if this is a Throw.
    */
   def getOrElse[R2 >: R](default: => R2) = if (isReturn) apply() else default
@@ -161,6 +172,7 @@ object Throw {
 final case class Throw[+R](e: Throwable) extends Try[R] {
   def isThrow = true
   def isReturn = false
+  def throwable: Throwable = e
   def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = {
     try {
       val result = rescueException.applyOrElse(e, Throw.AlwaysNotApplied)
@@ -198,6 +210,7 @@ object Return {
 final case class Return[+R](r: R) extends Try[R] {
   def isThrow = false
   def isReturn = true
+  def throwable: Throwable = throw new IllegalStateException("this Try is not a Throw; did you fail to check isThrow?")
   def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = Return(r)
   def apply() = r
   def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case NonFatal(e) => Throw(e) }
