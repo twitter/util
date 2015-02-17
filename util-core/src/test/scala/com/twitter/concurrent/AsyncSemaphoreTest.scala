@@ -1,14 +1,11 @@
 package com.twitter.concurrent
 
+import com.twitter.util.{Await, Future, Promise, Try}
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
-
-import scala.collection.mutable
-
 import org.junit.runner.RunWith
 import org.scalatest.fixture.FunSpec
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.util.{Await, Future, Promise, Try}
+import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
 class AsyncSemaphoreTest extends FunSpec {
@@ -33,6 +30,16 @@ class AsyncSemaphoreTest extends FunSpec {
         s.permits add permit
       }
       fPermit
+    }
+
+    it("should validate constructor parameters") { _ =>
+      intercept[IllegalArgumentException] {
+        new AsyncSemaphore(0)
+      }
+
+      intercept[IllegalArgumentException] {
+        new AsyncSemaphore(1, -1)
+      }
     }
 
     it("should execute immediately while permits are available") { semHelper =>

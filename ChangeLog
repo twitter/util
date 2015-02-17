@@ -18,6 +18,8 @@ Changes in Runtime Behavior:
   * util-core: Futures still rethrow on fatals, but now also Monitor.handle on
                them.
 
+  * util-core: `AsyncSemaphore` now requires that `initialPermits` be positive.
+
 6.24.0 2014-12-12
 
 New Features:

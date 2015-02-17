@@ -1,20 +1,49 @@
 package com.twitter.concurrent
 
+import com.twitter.util.{Future, NonFatal, Promise, Throw}
 import java.util.ArrayDeque
 import java.util.concurrent.RejectedExecutionException
 
-import com.twitter.util.{Future, NonFatal, Promise, Throw}
-
 /**
  * An AsyncSemaphore is a traditional semaphore but with asynchronous
- * execution. Grabbing a permit returns a Future[Permit]
+ * execution.
+ *
+ * Grabbing a permit returns a `Future[Permit]`.
+ *
+ * Basic usage:
+ * {{{
+ *   val semaphore = new AsyncSemaphore(n)
+ *   ...
+ *   semaphore.acquireAndRun() {
+ *     somethingThatReturnsFutureT()
+ *   }
+ * }}}
+ *
+ * @see [[AsyncMutex]] for a mutex version.
  */
 class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
   import AsyncSemaphore._
 
-  def this(initialPermits: Int = 0) = this(initialPermits, None)
+  /**
+   * Constructs a semaphore with no limit on the max number
+   * of waiters for permits.
+   *
+   * @param initialPermits must be positive
+   */
+  def this(initialPermits: Int) = this(initialPermits, None)
+
+  /**
+   * Constructs a semaphore with `maxWaiters` as the limit on the
+   * number of waiters for permits.
+   *
+   * @param initialPermits must be positive
+   * @param maxWaiters must be non-negative
+   */
   def this(initialPermits: Int, maxWaiters: Int) = this(initialPermits, Some(maxWaiters))
-  require(maxWaiters.getOrElse(0) >= 0)
+
+  require(maxWaiters.getOrElse(0) >= 0, s"maxWaiters must be non-negative: $maxWaiters")
+  require(initialPermits > 0, s"initialPermits must be positive: $initialPermits")
+
   private[this] val waitq = new ArrayDeque[Promise[Permit]]
   private[this] var availablePermits = initialPermits
 
