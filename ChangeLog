@@ -7,6 +7,8 @@ Next Version
 
 New Features:
   * util-core: Add Future.collect() method that collects over Map's values
+  * util-core: Add method .flushBatch() to batched future returned by Future.batched()
+               that immediately initiates processing of all remaining queued requests
   * util-stats: Create a new module, `util-stats` to move `finagle-core`
                 StatsReceivers to.  They retain the `com.twitter.finagle`
                 namespace to ease the transition.
@@ -20,6 +22,7 @@ Deprecation:
 API Changes:
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
   * util-core: Remove the com.twitter.util.repository package
+  * util-core: Change return type of Future.batched() to com.twitter.util.Batcher
 
 Java Compatibility:
   * util-app: Flaggable is now an abstract class for Java compatibility
@@ -56,7 +59,7 @@ Bug Fixes:
 
 Deprecation:
   * util-core: Add deprecation of RingBuffer to changelog
-  * util-core: Removed IVar and IVarField 
+  * util-core: Removed IVar and IVarField
 
 Documentation:
   * util-core: Clarify Scaladoc of `Promise.attached`
@@ -65,7 +68,7 @@ Documentation:
 
 New Features:
   * util-app: Add App registration
-  * util-cache Add asynchronous cache with TTL 
+  * util-cache Add asynchronous cache with TTL
   * util-core: Add `Activity.future`
 
 Package factoring:

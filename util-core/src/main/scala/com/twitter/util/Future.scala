@@ -533,6 +533,10 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    *       ...
    *     }
    *
+   * To force the batcher to immediately process all unprocessed requests:
+   *
+   *     batcher.flushBatch()
+   *
    * A batcher's size can be controlled at runtime with the `sizePercentile`
    * function argument. This function returns a float between 0.0 and 1.0,
    * representing the fractional size of the `sizeThreshold` that should be
@@ -546,8 +550,8 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     f: Seq[In] => Future[Seq[Out]]
   )(
     implicit timer: Timer
-  ): In => Future[Out] = {
-    new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f)
+  ): Batcher[In, Out] = {
+    new Batcher[In, Out](new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f))
   }
 }
 

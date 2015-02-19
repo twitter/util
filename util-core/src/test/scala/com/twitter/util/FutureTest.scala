@@ -5,7 +5,7 @@ import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
-import org.mockito.Mockito.{never, verify, when}
+import org.mockito.Mockito.{never, verify, when, times}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalacheck.{Gen, Arbitrary}
@@ -305,6 +305,65 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             timer.tick()
 
             verify(f).apply(Seq(1,2,3))
+          }
+        }
+
+        "execute when flushBatch is called" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(4)(f)
+
+          batcher(1)
+          batcher(2)
+          batcher(3)
+          batcher.flushBatch()
+
+          verify(f).apply(Seq(1,2,3))
+        }
+
+        "only execute for remaining items when flushBatch is called after size threshold is reached" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(4)(f)
+
+          batcher(1)
+          batcher(2)
+          batcher(3)
+          batcher(4)
+          batcher(5)
+          verify(f, times(1)).apply(Seq(1,2,3,4))
+
+          batcher.flushBatch()
+          verify(f, times(1)).apply(Seq(5))
+        }
+
+        "only execute once when time threshold is reached after flushBatch is called" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(4, 3.seconds)(f)
+
+          Time.withCurrentTimeFrozen { control =>
+            batcher(1)
+            batcher(2)
+            batcher(3)
+            batcher.flushBatch()
+            control.advance(10.seconds)
+            timer.tick()
+
+            verify(f, times(1)).apply(Seq(1, 2, 3))
+          }
+        }
+
+        "only execute once when time threshold is reached before flushBatch is called" in {
+          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val batcher = Future.batched(4, 3.seconds)(f)
+
+          Time.withCurrentTimeFrozen { control =>
+            batcher(1)
+            batcher(2)
+            batcher(3)
+            control.advance(10.seconds)
+            timer.tick()
+            batcher.flushBatch()
+
+            verify(f, times(1)).apply(Seq(1, 2, 3))
           }
         }
 
@@ -1566,7 +1625,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       f mustProduce Throw(e)
       assert(task.isCancelled)
     }
-    
+
     "Return Future.Done for durations <= 0" in {
       implicit val timer = new MockTimer
       assert(Future.sleep(Duration.Zero) eq Future.Done)
