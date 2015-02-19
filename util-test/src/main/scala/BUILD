@@ -5,6 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
+    '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalatest',
     'util/util-logging/src/main/scala',
     'util/util-core/src/main/scala',

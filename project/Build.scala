@@ -300,7 +300,10 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-test",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2"
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "2.2.2",
+      "org.mockito" % "mockito-all" % "1.8.5"
+    )
   ).dependsOn(utilCore, utilLogging)
 
 
