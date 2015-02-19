@@ -103,7 +103,7 @@ object Util extends Build {
       sharedSettings ++
       Unidoc.settings
   ) aggregate(
-    utilCore, utilCodec, utilCollection, utilCache, utilReflect,
+    utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilClassPreloader, utilBenchmark, utilApp,
     utilEvents, utilStats, utilEval
@@ -273,6 +273,16 @@ object Util extends Build {
   ).settings(
     name := "util-logging"
   ).dependsOn(utilCore, utilApp, utilStats)
+
+
+  lazy val utilRegistry = Project(
+    id = "util-registry",
+    base = file("util-registry"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-registry"
+  )
 
   lazy val utilStats = Project(
     id = "util-stats",
