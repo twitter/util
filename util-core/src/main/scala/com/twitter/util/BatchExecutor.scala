@@ -98,6 +98,7 @@ private[util] class BatchExecutor[In, Out](
     promise
   }
 
+  /** Immediately processes all unprocessed requests */
   def flushNow(): Unit = {
     val doAfter = synchronized {
       flushBatch()

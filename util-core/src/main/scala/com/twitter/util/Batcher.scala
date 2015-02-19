@@ -14,7 +14,5 @@ class Batcher[In, Out] private[util](
   def apply(t: In): Future[Out] = executor.enqueue(t)
 
   /** Immediately processes all unprocessed requests */
-  def flushBatch(): Unit = {
-    executor.flushNow()
-  }
+  def flushBatch(): Unit = executor.flushNow()
 }
