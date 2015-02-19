@@ -15,10 +15,6 @@ class Batcher[In, Out] private[util](
 
   /** Immediately processes all unprocessed requests */
   def flushBatch(): Unit = {
-    val doAfter = executor.synchronized {
-      executor.flushBatch()
-    }
-
-    doAfter()
+    executor.flushNow()
   }
 }

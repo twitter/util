@@ -98,6 +98,14 @@ private[util] class BatchExecutor[In, Out](
     promise
   }
 
+  def flushNow(): Unit = {
+    val doAfter = synchronized {
+      flushBatch()
+    }
+
+    doAfter()
+  }
+
   def scheduleFlushIfNecessary() {
     if (timeThreshold < Duration.Top && scheduled.isEmpty)
       scheduled = Some(new ScheduledFlush(timeThreshold, timer))
