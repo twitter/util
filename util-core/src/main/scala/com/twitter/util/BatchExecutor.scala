@@ -22,9 +22,8 @@ import scala.collection.mutable
  * - Rather than having separate sizeThreshold and sizePercentile parameters,
  *   just have a single call-by-name sizeThreshold parameter, and let the
  *   caller implement whatever logic they want to compute the next batch size.
- * - Return an instance of a new class (Batcher?) which extends
- *   `In => Future[Out]`. Could support things like querying the queue size,
- *   forcing a flush, attaching callbacks to flush operations, etc.
+ * - Add more functionality to class Batcher. Could support things like querying the queue size,
+ *   attaching callbacks to flush operations, etc.
  */
 private[util] class BatchExecutor[In, Out](
   sizeThreshold: Int,
@@ -97,6 +96,15 @@ private[util] class BatchExecutor[In, Out](
 
     doAfter()
     promise
+  }
+
+  /** Immediately processes all unprocessed requests */
+  def flushNow(): Unit = {
+    val doAfter = synchronized {
+      flushBatch()
+    }
+
+    doAfter()
   }
 
   def scheduleFlushIfNecessary() {

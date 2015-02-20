@@ -23,6 +23,8 @@ Changes in Runtime Behavior:
 6.24.0 2014-12-12
 
 New Features:
+  * util-core: Add method .flushBatch() to batched future returned by Future.batched()
+               that immediately initiates processing of all remaining queued requests
   * util-core: Add Future.collect() method that collects over Map's values
   * util-stats: Create a new module, `util-stats` to move `finagle-core`
                 StatsReceivers to.  They retain the `com.twitter.finagle`
@@ -38,6 +40,7 @@ API Changes:
   * util-cache: Remove unused com.twitter.cache.Mod trait and object
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
   * util-core: Remove the com.twitter.util.repository package
+  * util-core: Change return type of Future.batched() to com.twitter.util.Batcher
 
 Java Compatibility:
   * util-app: Flaggable is now an abstract class for Java compatibility
