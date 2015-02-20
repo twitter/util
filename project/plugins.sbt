@@ -18,3 +18,5 @@ resolvers <<= (resolvers) { r =>
 }
 
 externalResolvers <<= (resolvers) map identity
+
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.4")

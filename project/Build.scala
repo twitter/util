@@ -1,5 +1,6 @@
 import sbt.Keys._
 import sbt._
+import pl.project13.scala.sbt.SbtJmh.jmhSettings
 
 object Util extends Build {
   val branch = Process("git" :: "symbolic-ref" :: "--short" :: "HEAD" :: Nil).!!.trim
@@ -122,11 +123,12 @@ object Util extends Build {
     id = "util-benchmark",
     base = file("util-benchmark"),
     settings = Project.defaultSettings ++
-      sharedSettings
+      sharedSettings ++ jmhSettings
   ).settings(
     name := "util-benchmark",
     libraryDependencies ++= Seq(
-      "com.google.caliper" % "caliper" % "0.5-rc1"
+      "com.google.caliper" % "caliper" % "0.5-rc1",
+      "org.openjdk.jmh" % "jmh-core" % "0.9"
     )
   ).dependsOn(utilCore, utilJvm, utilEvents)
 

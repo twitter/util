@@ -6,7 +6,6 @@ import java.util.ArrayDeque
 import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
 import scala.collection.mutable
-import scala.util.Random
 
 /**
  * An interface for scheduling [[java.lang.Runnable]] tasks.
@@ -117,7 +116,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
-    private[this] val rng = new Random
+    private[this] val rng = ThreadLocalRandom.current()
 
     // This is safe: there's only one updater.
     @volatile var usrTime = 0L
