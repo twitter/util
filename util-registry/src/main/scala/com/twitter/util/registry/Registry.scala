@@ -1,4 +1,4 @@
-package com.twitter.registry
+package com.twitter.util.registry
 
 import java.util.NoSuchElementException
 
