@@ -3,6 +3,7 @@ package com.twitter.util
 import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when, times}
@@ -23,16 +24,22 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
   implicit def futureMatcher[A](future: Future[A]) = new {
     def mustProduce(expected: Try[A]) {
       expected match {
-        case Throw(ex) => {
+        case Throw(ex) =>
           val t = intercept[Throwable] {
             Await.result(future, 1.second)
           }
           assert(t === ex)
-        }
-        case Return(v) => {
+        case Return(v) =>
           assert(Await.result(future, 1.second) === v)
-        }
       }
+    }
+  }
+
+  class HandledMonitor extends Monitor {
+    var handled = null: Throwable
+    def handle(exc: Throwable): Boolean = {
+      handled = exc
+      true
     }
   }
 
@@ -444,7 +451,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
 
       "interruptible" should {
         "properly ignore the underlying future on interruption" in {
-          val p = Promise[Unit]
+          val p = Promise[Unit]()
           val i = p.interruptible()
           val e = new Exception
           i.raise(e)
@@ -454,7 +461,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
 
         "respect the underlying future" in {
-          val p = Promise[Unit]
+          val p = Promise[Unit]()
           val i = p.interruptible()
           p.setDone()
           assert(p.poll === Some(Return(())))
@@ -506,9 +513,9 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         "propagate interrupts" in {
           new CollectHelper {
             val ps = Seq(p0, p1)
-            assert((ps.count(_.handled.isDefined)) === 0)
+            assert(ps.count(_.handled.isDefined) === 0)
             f.raise(new Exception)
-            assert((ps.count(_.handled.isDefined)) === 2)
+            assert(ps.count(_.handled.isDefined) === 2)
           }
         }
 
@@ -950,13 +957,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
 
         "monitors fatal exceptions" in {
-          val m = new Monitor {
-            var handled = null: Throwable
-            def handle(exc: Throwable) = {
-              handled = exc
-              true
-            }
-          }
+          val m = new HandledMonitor()
           val exc = new FatalException()
 
           assert(m.handled === null)
@@ -1259,13 +1260,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
 
         "monitor exceptions" in {
-          val m = new Monitor {
-            var handled = null: Throwable
-            def handle(exc: Throwable) = {
-              handled = exc
-              true
-            }
-          }
+          val m = new HandledMonitor()
           val exc = new Exception
 
           assert(m.handled === null)
@@ -1279,7 +1274,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       }
 
       "willEqual" in {
-        assert(Await.result((const.value(1) willEqual(const.value(1))), 1.second) === true)
+        assert(Await.result(const.value(1) willEqual(const.value(1)), 1.second) === true)
       }
 
       "Future() handles exceptions" in {
@@ -1614,6 +1609,33 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
 
     "always time out" in {
       intercept[TimeoutException] { Await.ready(Future.never, 0.milliseconds) }
+    }
+  }
+
+  "Future.onFailure" should {
+    val nonfatal = Future.exception(new RuntimeException())
+    val fatal = Future.exception(new FatalException())
+
+    "with Function1" in {
+      val counter = new AtomicInteger()
+      val f: Throwable => Unit = _ => counter.incrementAndGet()
+      nonfatal.onFailure(f)
+      fatal.onFailure(f)
+      assert(counter.get() == 2)
+    }
+
+    "with PartialFunction" in {
+      val monitor = new HandledMonitor()
+      Monitor.using(monitor) {
+        val counter = new AtomicInteger()
+        val pf: PartialFunction[Throwable, Unit] = {
+          case NonFatal(_) => counter.incrementAndGet()
+        }
+        nonfatal.onFailure(pf)
+        fatal.onFailure(pf)
+        assert(counter.get() == 1)
+      }
+      assert(monitor.handled == null)
     }
   }
 

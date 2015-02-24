@@ -18,6 +18,9 @@ Changes in Runtime Behavior:
   * util-core: Futures still rethrow on fatals, but now also Monitor.handle on
                them.
 
+  * util-core: `Future.onFailure` now only applies a `PartialFunction` if
+               `PartialFunction.isDefinedAt` returns true.
+
   * util-core: `AsyncSemaphore` now requires that `initialPermits` be positive.
 
 6.24.0 2014-12-12

@@ -32,6 +32,8 @@ object Future {
   private val toVoid: Any => Future[Void] = scala.Function.const(Void)
   private val AlwaysMasked: PartialFunction[Throwable, Boolean] = { case _ => true }
 
+  private val ThrowableToUnit: Throwable => Unit = _ => ()
+
   // Exception used to raise on Futures.
   private[this] val RaiseException = new Exception with NoStacktrace
   @inline private final def raiseException = RaiseException
@@ -632,7 +634,7 @@ abstract class FutureTransformer[-A, +B] {
  * be delivered when the promise has not yet completed.
  */
 abstract class Future[+A] extends Awaitable[A] {
-  import com.twitter.util.Future.DEFAULT_TIMEOUT
+  import Future.{DEFAULT_TIMEOUT, ThrowableToUnit}
 
   /**
    * When the computation completes, invoke the given callback
@@ -942,6 +944,10 @@ abstract class Future[+A] extends Awaitable[A] {
    * Invoke the function on the error, if the computation was
    * unsuccessful.  Returns a chained Future as in `respond`.
    *
+   * @param rescueException if this is a `PartialFunction`, it will only be
+   *                        applied if `PartialFunction.isDefinedAt` returns
+   *                        true for the `Throwable` input.
+   *
    * @note this should be used for side-effects.
    *
    * @return chained Future
@@ -949,10 +955,14 @@ abstract class Future[+A] extends Awaitable[A] {
    *     the computation.
    */
   def onFailure(rescueException: Throwable => Unit): Future[A] =
-    respond({
-      case Throw(throwable) => rescueException(throwable)
+    respond {
+      case Throw(t) =>
+        rescueException match {
+          case pf: PartialFunction[Throwable, Unit] => pf.applyOrElse(t, ThrowableToUnit)
+          case _ => rescueException(t)
+        }
       case _ =>
-    })
+    }
 
   /**
    * Register a FutureEventListener to be invoked when the
