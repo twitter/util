@@ -83,4 +83,48 @@ class RecordSchemaTest extends FunSuite {
     }
   }
 
+  test("copy should copy") {
+    val record = schema.newRecord()
+    val value = new Object
+
+    for (f <- fields) {
+      record.update(f, value)
+      val copy = record.copy()
+      assert(record(f) eq copy(f))
+    }
+  }
+
+  test("copy should not be modified when the original is updated") {
+    val record = schema.newRecord()
+    val copy = record.copy
+
+    for (f <- fields) {
+      record.update(f, new Object)
+      val copy = record.copy()
+      record.update(f, new Object)
+      assert(record(f) ne copy(f))
+    }
+  }
+
+  test("locked state should be copied") {
+    val record = schema.newRecord()
+
+    for (f <- fields) {
+      record.updateAndLock(f, new Object)
+      intercept[IllegalStateException] {
+        record.copy().update(f, new Object)
+      }
+    }
+  }
+
+  test("copy should be able to overwrite a locked field") {
+    val record = schema.newRecord()
+
+    for (f <- fields) {
+      record.updateAndLock(f, new Object)
+      val value = new Object
+      val copy = record.copy(f, value)
+      assert(copy(f) eq value)
+    }
+  }
 }

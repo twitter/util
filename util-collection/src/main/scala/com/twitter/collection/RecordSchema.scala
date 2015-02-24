@@ -1,5 +1,7 @@
 package com.twitter.collection
 
+import java.util.IdentityHashMap
+
 /**
  * RecordSchema represents the declaration of a heterogeneous
  * [[com.twitter.collection.RecordSchema.Record Record]] type, with
@@ -17,6 +19,10 @@ package com.twitter.collection
  */
 final class RecordSchema {
 
+  private[RecordSchema] final class Entry(var value: Any) {
+    var locked: Boolean = false
+  }
+
   /**
    * Record is an instance of a [[com.twitter.collection.RecordSchema RecordSchema]] declaration.
    * Records are mutable; the `update` method assigns or reassigns a value to a given field. If
@@ -27,13 +33,8 @@ final class RecordSchema {
    * concurrently, and at least one of the threads modifies the record, it ''must'' be synchronized
    * externally.
    */
-  final class Record private[RecordSchema] {
-
-    private[this] final class Entry(var value: Any) {
-      var locked: Boolean = false
-    }
-
-    private[this] val fields = new java.util.IdentityHashMap[Field[_], Entry]
+  final class Record private[RecordSchema] (
+      fields: IdentityHashMap[Field[_], Entry] = new IdentityHashMap[Field[_], Entry]) {
 
     private[this] def getOrInitializeEntry(field: Field[_]): Entry = {
       var entry = fields.get(field)
@@ -126,6 +127,54 @@ final class RecordSchema {
     @throws(classOf[IllegalStateException])
     def updateAndLock[A](field: Field[A], value: A): Record =
       update(field, value).lock(field)
+
+    private[this] def copyFields(): IdentityHashMap[Field[_], Entry] = {
+      val newFields = new IdentityHashMap[Field[_], Entry]
+      val iter = fields.entrySet().iterator()
+      while (iter.hasNext()) {
+        val kv = iter.next()
+        val entry = kv.getValue()
+        val newEntry = new Entry(entry.value)
+        newEntry.locked = entry.locked
+        newFields.put(kv.getKey(), newEntry)
+      }
+      newFields
+    }
+
+    /**
+     * Create a copy of this record.  Fields are locked in the copy iff they were locked in the
+     * original record.
+     *
+     * @return a copy of this record
+     */
+    def copy(): Record = {
+      new Record(copyFields())
+    }
+
+    /**
+     * Create a copy of this record with `value` assigned to `field`.  `field` will be locked in the
+     * copy iff it was present and locked in the original record.  If `field` was not present in the
+     * original then the following are equivalent:
+     *
+     * {{{
+     * record.copy(field, value)
+     * record.copy().update(field, value)
+     * }}}
+     *
+     * @param field the field to assign in the copy
+     * @param value the value to assign to `field` in the copy
+     * @return a copy of this record
+     */
+    def copy[A](field: Field[A], value: A): Record = {
+      val newFields = copyFields()
+      val entry = newFields.get(field)
+      if (entry eq null) {
+        newFields.put(field, new Entry(value))
+      } else {
+        entry.value = value
+      }
+      new Record(newFields)
+    }
   }
 
   /**
