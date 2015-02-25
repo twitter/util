@@ -57,8 +57,8 @@ object Util extends Build {
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions += "-deprecation",
 
-    javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
-    javacOptions in doc := Seq("-source", "1.6"),
+    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
+    javacOptions in doc := Seq("-source", "1.7"),
 
     // This is bad news for things like com.twitter.util.Time
     parallelExecution in Test := false,
@@ -117,7 +117,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-app"
-  ).dependsOn(utilCore)
+  ).dependsOn(utilCore, utilRegistry)
 
   lazy val utilBenchmark = Project(
     id = "util-benchmark",
@@ -284,7 +284,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-registry"
-  )
+  ).dependsOn(utilCore)
 
   lazy val utilStats = Project(
     id = "util-stats",

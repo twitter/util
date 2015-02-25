@@ -4,5 +4,8 @@ scala_library(name='scala',
     name = 'util-registry',
     repo = artifactory,
   ),
+  dependencies=[
+    'util/util-core/src/main/scala',
+  ],
   sources=rglobs('*.scala')
 )

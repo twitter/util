@@ -1,10 +1,17 @@
 package com.twitter.util.registry
 
 import java.util.NoSuchElementException
+import com.twitter.util.Local
 
-private[registry] final case class Entry(key: Seq[String], value: String)
+/**
+ * This is an expert-level API; it is not meant for end-users.
+ */
+final case class Entry(key: Seq[String], value: String)
 
-private[registry] object Entry {
+/**
+ * This is an expert-level API; it is not meant for end-users.
+ */
+object Entry {
   val TupledMethod: ((Seq[String], String)) => Entry = (Entry.apply _).tupled
 }
 
@@ -19,7 +26,7 @@ private[registry] object Entry {
  * silently be removed.  If this makes your key clash with another key, it will
  * overwrite.
  */
-private[registry] trait Registry extends Iterable[Entry] {
+trait Registry extends Iterable[Entry] {
   /**
    * Provides an iterator over the registry.
    *
@@ -35,7 +42,10 @@ private[registry] trait Registry extends Iterable[Entry] {
   def put(key: Seq[String], value: String): Option[String]
 }
 
-private[registry] class NaiveRegistry extends Registry {
+/**
+ * This is an expert-level API; it is not meant for end-users.
+ */
+class SimpleRegistry extends Registry {
   private[this] var registry = Map.empty[Seq[String], String]
 
   def iterator(): Iterator[Entry] = synchronized(registry).iterator.map(Entry.TupledMethod)
@@ -54,8 +64,38 @@ private[registry] class NaiveRegistry extends Registry {
     key.filter { char => char > 31 && char <= 127 && char != '/' }
 }
 
-private[registry] object GlobalRegistry {
-  private[this] val registry = new NaiveRegistry
+/**
+ * This is an expert-level API; it is not meant for end-users.
+ */
+object GlobalRegistry {
+  private[this] val registry: Registry = new SimpleRegistry
 
-  def get: Registry = registry
+  /**
+   * Gets the global registry.
+   *
+   * If it's call inside of a `withRegistry` context then it's a temporary
+   * registry, useful for writing isolated tests.
+   */
+  def get: Registry = localRegistry() match {
+    case None => registry
+    case Some(local) => local
+  }
+
+  /**
+   * Note, this should only ever be updated by methods used for testing.
+   */
+  private[this] val localRegistry = new Local[Registry]
+
+  /**
+   * Changes the global registry to instead return a local one.
+   *
+   * Takes the registry context with it when moved to a different thread via
+   * Twitter concurrency primitives, like `flatMap` on a
+   * [[com.twitter.util.Future]].
+   */
+  def withRegistry[A](replacement: Registry)(fn: => A): A = {
+    localRegistry.let(replacement) {
+      fn
+    }
+  }
 }

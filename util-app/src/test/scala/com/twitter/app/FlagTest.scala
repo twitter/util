@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import com.twitter.util.registry.{SimpleRegistry, GlobalRegistry, Entry}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -80,6 +81,57 @@ class FlagTest extends FunSuite {
     flag.finishParsing()
     assert(fooFlag() === 973)
     assert(barFlag() === "hello there")
+  }
+
+  test("Flag: registers after getting flag") {
+    val ctx = new Ctx
+    import ctx._
+    val naive = new SimpleRegistry()
+    GlobalRegistry.withRegistry(naive) {
+      assert(flag.parseArgs(Array("-foo", "973", "-bar", "hello there")) == Flags.Ok(Nil))
+      flag.finishParsing()
+      assert(fooFlag() === 973)
+      assert(barFlag() === "hello there")
+      assert(naive.toSet == Set(
+        Entry(Seq("flags", "foo"), "973"),
+        Entry(Seq("flags", "bar"), "hello there"),
+        Entry(Seq("flags", "help"), "false")
+      ))
+    }
+  }
+
+  test("Flag: registers when you don't parse a required argument") {
+    val ctx = new Ctx
+    import ctx._
+    val naive = new SimpleRegistry()
+    GlobalRegistry.withRegistry(naive) {
+      val bazFlag = flag[String]("baz", "help help help")
+
+      assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
+      flag.finishParsing()
+      intercept[IllegalArgumentException] {
+        bazFlag()
+      }
+      assert(naive.toSet == Set(
+        Entry(Seq("flags", "baz"), Flag.EmptyRequired),
+        Entry(Seq("flags", "help"), "false")
+      ))
+    }
+  }
+
+  test("Flag: registers the default when you don't parse an argument") {
+    val ctx = new Ctx
+    import ctx._
+    val naive = new SimpleRegistry()
+    GlobalRegistry.withRegistry(naive) {
+      assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
+      flag.finishParsing()
+      assert(fooFlag() == 123)
+      assert(naive.toSet == Set(
+        Entry(Seq("flags", "foo"), "123"),
+        Entry(Seq("flags", "help"), "false")
+      ))
+    }
   }
 
   test("Flag: override a flag") {

@@ -1,6 +1,7 @@
 package com.twitter.app
 
 import com.twitter.util._
+import com.twitter.util.registry.GlobalRegistry
 import java.net.InetSocketAddress
 import java.lang.{
   Boolean => JBoolean,
@@ -10,6 +11,7 @@ import java.lang.{
   Long    => JLong
 }
 import java.util.{List => JList, Map => JMap, Set => JSet}
+import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable
@@ -245,6 +247,7 @@ object Flag {
 
   // stores Local overrides for a Flag's value
   private val localFlagValues = new Local[Map[Flag[_], Any]]
+  private[app] val EmptyRequired = "__EMPTY_REQUIRED_FLAG"
 
 }
 
@@ -302,10 +305,21 @@ class Flag[T: Flaggable] private[app](
   }
 
   @volatile private[this] var value: Option[T] = None
+  private[this] val registered = new AtomicBoolean(false)
 
-  protected def getValue: Option[T] = localValue match {
-    case lv@Some(_) => lv
-    case None => value
+  private[this] def register(): Unit = {
+    val shown = valueOrDefault.map(flaggable.show).getOrElse(EmptyRequired)
+    GlobalRegistry.get.put(Seq("flags", name), shown)
+  }
+
+  protected def getValue: Option[T] = {
+    if (registered.compareAndSet(false, true)) {
+      register()
+    }
+    localValue match {
+      case lv@Some(_) => lv
+      case None => value
+    }
   }
 
   @volatile private[this] var _parsingDone = false
