@@ -75,7 +75,7 @@ object Reader {
           p.setValue(None)
         case Writing(_, p) =>
           state = Eof
-          p.setValue(new IllegalStateException("close while write is pending"))
+          p.setException(new IllegalStateException("close while write is pending"))
       }
 
       Future.Done

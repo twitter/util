@@ -3,18 +3,14 @@ package com.twitter.io
 import java.io.{ByteArrayOutputStream, OutputStream}
 
 import com.twitter.concurrent.Spool
-import com.twitter.util.{Await, Future, Promise, Return}
+import com.twitter.util.{Await, Future, Promise}
 import org.junit.runner.RunWith
-import org.scalacheck.Prop.forAll
-import org.scalacheck.{Arbitrary, Prop}
-import org.scalatest.FunSuite
+import org.scalatest.{Matchers, FunSuite}
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 @RunWith(classOf[JUnitRunner])
-class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with ShouldMatchers {
-  import Spool.*::
+class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matchers {
 
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
@@ -218,6 +214,17 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Should
     assert(Await.result(rw.read(6)) === Some(buf(0, 6)))
     Await.result(wf)
     assert(Await.result(rw.read(6)) === None)
+  }
+
+  test("Reader.writable - close while write pending") {
+    val rw = Reader.writable()
+    val wf = rw.write(buf(0, 6))
+    assert(!wf.isDefined)
+    Await.ready(rw.close())
+
+    intercept[IllegalStateException] {
+      Await.result(wf)
+    }
   }
 
   test("Reader.concat") {
