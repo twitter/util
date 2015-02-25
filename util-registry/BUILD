@@ -2,12 +2,12 @@ maven_layout()
 
 jar_library(name='util-registry',
   dependencies=[
-    'util/util-core/src/main/scala',
+    'util/util-registry/src/main/scala'
   ]
 )
 
 jar_library(name='tests',
   dependencies=[
-    'util/util-core/src/test/scala'
+    'util/util-registry/src/test/scala'
   ]
 )
