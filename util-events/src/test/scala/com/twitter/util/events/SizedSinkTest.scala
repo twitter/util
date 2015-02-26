@@ -22,9 +22,9 @@ class SizedSinkTest extends FunSuite {
   }
 
   test("event and events") {
-    val type1 = new Event.Type { }
-    val type2 = new Event.Type { }
-    val type3 = new Event.Type { }
+    val type1 = Event.nullType
+    val type2 = Event.nullType
+    val type3 = Event.nullType
     Time.withCurrentTimeFrozen { _ =>
       def event(etype: Type) =
         Event(etype, Time.now, NoLong, NoObject, 1.0f)
@@ -43,5 +43,4 @@ class SizedSinkTest extends FunSuite {
       assert(sink.events.toSeq === Seq(event(type3), event(type2)))
     }
   }
-
 }

@@ -47,6 +47,11 @@ object Reader {
     loop(Buf.Empty)
   }
 
+  /**
+   * Reader from a Buf.
+   */
+  def fromBuf(buf: Buf): Reader = BufReader(buf)
+
   class ReaderDiscarded
     extends Exception("This writer's reader has been discarded")
 

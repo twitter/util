@@ -400,4 +400,16 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       }
     }
   }
+
+  "Levels.parse" should {
+    "return Levels for valid names" in {
+      assert(Level.parse("INFO") == Some(Level.INFO))
+      assert(Level.parse("TRACE") == Some(Level.TRACE))
+    }
+
+    "return None for invalid names" in {
+      assert(Level.parse("") == None)
+      assert(Level.parse("FOO") == None)
+    }
+  }
 }

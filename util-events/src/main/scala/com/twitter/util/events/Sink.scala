@@ -55,6 +55,16 @@ object Sink {
     override def events: Iterator[Event] = Iterator.empty
   }
 
+  /**
+   * An unsized sink. Convenient for testing.
+   */
+  def of(buffer: scala.collection.mutable.Buffer[Event]): Sink =
+    new Sink {
+      def events = buffer.iterator
+      def event(e: Event.Type, l: Long, o: Object, d: Double) =
+        buffer += Event(e, com.twitter.util.Time.now, l, o, d)
+    }
+
   // exposed for testing
   private[events] def newDefault: Sink = {
     if (!sinkEnabled.apply()) {
@@ -75,5 +85,4 @@ object Sink {
    * Returns whether or not any event capture is enabled.
    */
   def enabled: Boolean = default ne Null
-
 }

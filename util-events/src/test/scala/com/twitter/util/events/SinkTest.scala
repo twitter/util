@@ -11,7 +11,7 @@ class SinkTest extends FunSuite {
     val sink = Sink.Null
     assert(sink.events.size === 0)
 
-    sink.event(new Event.Type { }, objectVal = "hi")
+    sink.event(Event.nullType, objectVal = "hi")
     assert(sink.events.size === 0)
   }
 

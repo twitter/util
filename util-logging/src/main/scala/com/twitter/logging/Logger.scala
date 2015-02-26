@@ -41,6 +41,8 @@ object Level {
 
   private[logging] val AllLevels: Seq[Level] =
     Seq(OFF, FATAL, CRITICAL, ERROR, WARNING, INFO, DEBUG, TRACE, ALL)
+
+  def parse(name: String): Option[Level] = AllLevels.find(_.name == name)
 }
 
 class LoggingException(reason: String) extends Exception(reason)

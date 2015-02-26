@@ -1,6 +1,7 @@
 package com.twitter.util.events
 
-import com.twitter.util.Time
+import com.twitter.util.{Time, Return, Throw, Try}
+import com.twitter.io.Buf
 
 object Event {
 
@@ -15,8 +16,34 @@ object Event {
    * in the companion object and use that for all events
    * of that type.
    */
-  abstract class Type
+  abstract class Type {
+    /**
+     * An identifier for this Type construction. These should be unique across
+     * types for any given sink, though no efforts are made to ensure this.
+     *
+     * @param id A name for this Type.
+     */
+    def id: String
 
+    /**
+     * A serializer for events of this type.
+     */
+    def serialize(event: Event): Try[Buf]
+
+    /**
+     * A deserializer for Events.
+     */
+    def deserialize(buf: Buf): Try[Event]
+
+    override def toString() = id
+  }
+
+  // Note: Not a val so we can discriminate between constructions in tests.
+  private[twitter] def nullType: Type = new Type {
+    val id = "Null"
+    def serialize(event: Event) = Return(Buf.Empty)
+    def deserialize(buf: Buf) = Return(Event(this, Time.Bottom))
+  }
 }
 
 /**

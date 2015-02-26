@@ -5,7 +5,7 @@ import com.google.caliper.SimpleBenchmark
 class SinkBenchmark extends SimpleBenchmark {
 
   private[this] val sizedSink = SizedSink(10000)
-  private[this] val eventType = new Event.Type { }
+  private[this] val eventType = Event.nullType
 
   private[this] def event(sink: Sink, reps: Int): Unit = {
     var i = 0
