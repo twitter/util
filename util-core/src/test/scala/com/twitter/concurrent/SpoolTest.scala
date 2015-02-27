@@ -357,6 +357,11 @@ class SpoolTest extends WordSpec {
     }
   }
 
+  // These set of tests assert that any method called on Spool consumes only the
+  // head, and doesn't force the tail. An exception is collect, which consumes
+  // up to the first defined value. This is because collect takes a
+  // PartialFunction, which if not defined for head, recurses on the tail,
+  // forcing it.
   "Lazily evaluated Spool" should {
     "be constructed lazily" in {
       applyLazily(Future.value _)
@@ -406,13 +411,6 @@ class SpoolTest extends WordSpec {
       }
     }
 
-    "++ lazily" in {
-      val prefix = -2 **:: -1 **:: Spool.empty[Int]
-      applyLazily { spool =>
-        Future.value(prefix ++ spool)
-      }
-    }
-
     "act eagerly when forced" in {
       val (spool, tailReached) =
         applyLazily { spool =>
@@ -426,24 +424,42 @@ class SpoolTest extends WordSpec {
      * Confirms that the given operation does not consume an entire Spool, and then
      * returns the resulting Spool and tail check for further validation.
      */
-    def applyLazily(f: Spool[Int]=>Future[Spool[Int]]): (Future[Spool[Int]], Future[Unit]) = {
-      val tailReached = new Promise[Unit]
-      def poisonedSpool(i: Int = 0): Future[Spool[Int]] =
-        Future.value {
-          if (i < 10) {
-            i *:: poisonedSpool(i + 1)
-          } else {
-            tailReached() = Return.Unit
-            throw new AssertionError("Should not have produced " + i)
-          }
-        }
+    def applyLazily(f: Spool[Int]=>Future[Spool[Int]]): (Future[Spool[Int]], Future[Spool[Int]]) = {
+      val tail = new Promise[Spool[Int]]
+
+      // A spool where only the head is valid.
+      def spool: Spool[Int] = 0 *:: { tail.setException(new Exception); tail }
 
       // create, apply, poll
-      val s = poisonedSpool().flatMap(f)
-      s.poll
-      assert(tailReached.isDefined === false)
-      (s, tailReached)
+      val s = f(spool)
+      assert(!tail.isDefined)
+      (s, tail)
     }
   }
 
+  // Note: ++ is different from the other methods because it doesn't force its
+  // argument.
+  "lazy ++" in {
+    val nil = Future.value(Spool.empty[Unit])
+    val a = () *:: nil
+    val p = new Promise[Unit]
+
+    def spool = {
+      p.setDone()
+      () *:: nil
+    }
+
+    def f = Future.value(spool)
+
+    assert(!p.isDefined)
+
+    val b = a ++ spool
+    assert(!p.isDefined)
+
+    val c = a ++ f
+    assert(!p.isDefined)
+
+    Await.result(c.flatMap(_.tail).select(b.tail))
+    assert(p.isDefined)
+  }
 }

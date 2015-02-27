@@ -12,7 +12,10 @@ API Changes:
                instead of Var[VarSource.Result[T]]. Remove FailoverVarSource in
                favor of ActivitySource.orElse.
   * util-core: `TimeFormat` now throws IllegalArgumentException if the pattern
-	              uses the week year ('Y') without the week number ('w')
+               uses the week year ('Y') without the week number ('w')
+  * util-core: `Spool.++` used to force its argument, but now it is evaluated
+               only if `this` Spool is empty. To revert to existing behavior,
+               simply force the argument before passing it to ++.
 
 Changes in Runtime Behavior:
   * util-core: Futures still rethrow on fatals, but now also Monitor.handle on

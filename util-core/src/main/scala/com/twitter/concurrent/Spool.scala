@@ -120,8 +120,9 @@ sealed trait Spool[+A] {
   }
 
   /**
-   * Applies a function that generates a Future[B] to each element of this spool
-   * The returned future is satisfied with the head of the resulting spool is available
+   * Applies a function that generates a Future[B] for each element of this
+   * spool. The returned future is satisfied when the head of the resulting
+   * spool is available.
    */
   def mapFuture[B](f: A => Future[B]): Future[Spool[B]] = {
     if (isEmpty) Future.value(empty[B])
@@ -164,7 +165,7 @@ sealed trait Spool[+A] {
   /**
    * Concatenates two spools.
    */
-  def ++[B >: A](that: Spool[B]): Spool[B] =
+  def ++[B >: A](that: => Spool[B]): Spool[B] =
     if (isEmpty) that else new LazyCons(head: B, tail map (_ ++ that))
 
   /**
@@ -175,7 +176,7 @@ sealed trait Spool[+A] {
   /**
    * Concatenates two spools.
    */
-  def ++[B >: A](that: Future[Spool[B]]): Future[Spool[B]] =
+  def ++[B >: A](that: => Future[Spool[B]]): Future[Spool[B]] =
     if (isEmpty) that else Future.value(new LazyCons(head: B, tail flatMap (_ ++ that)))
 
   /**
@@ -184,23 +185,12 @@ sealed trait Spool[+A] {
   def concat[B >: A](that: Future[Spool[B]]): Future[Spool[B]] = this ++ that
 
   /**
-   * Applies a function that generates a spool to each element in this spool,
+   * Applies a function that generates a spool for each element in this spool,
    * flattening the result into a single spool.
    */
   def flatMap[B](f: A => Future[Spool[B]]): Future[Spool[B]] =
-    if (isEmpty) {
-      Future.value(empty[B])
-    } else {
-      f(head) flatMap { headSpool =>
-        // NB: this is a form of `++` that makes the append lazily
-        def _tail = tail flatMap (_ flatMap f)
-        if (headSpool.isEmpty) {
-          _tail
-        } else {
-          Future.value(new LazyCons(headSpool.head: B, headSpool.tail flatMap (_ ++ _tail)))
-        }
-      }
-    }
+    if (isEmpty) Future.value(empty[B])
+    else f(head).flatMap(headSpool => headSpool ++ tail.flatMap(_.flatMap(f)))
 
   /**
    * Fully buffer the spool to a {{Seq}}.  The returned future is
