@@ -64,40 +64,40 @@ trait StatsReceiver {
 
   /**
    * Time a given function using the given TimeUnit.
-   * This method will soon be deprecated in favor of [[Stat.time]].
    */
+  @deprecated("Use Stat.time instead", "2015-2-22")
   def time[T](unit: TimeUnit, stat: Stat)(f: => T): T = Stat.time(stat, unit)(f)
 
   /**
    * Time a given function using the given TimeUnit.
-   * This method will soon be deprecated in favor of [[Stat.time]].
    */
+  @deprecated("Use Stat.time instead", "2015-2-22")
   def time[T](unit: TimeUnit, name: String*)(f: => T): T = time(unit, stat(name: _*))(f)
 
   /**
    * Time a given function in milliseconds.
-   * This method will soon be deprecated in favor of [[Stat.time]].
    */
+  @deprecated("Use Stat.time instead", "2015-2-22")
   def time[T](name: String*)(f: => T): T = time(TimeUnit.MILLISECONDS, name: _*)(f)
 
   /**
    * Time a given future using the given TimeUnit.
-   * This method will soon be deprecated in favor of [[Stat.timeFuture]].
    */
+  @deprecated("Use Stat.timeFuture instead", "2015-2-22")
   def timeFuture[T](unit: TimeUnit, stat: Stat)(f: => Future[T]): Future[T] =
     Stat.timeFuture(stat, unit)(f)
 
   /**
    * Time a given future using the given TimeUnit.
-   * This method will soon be deprecated in favor of [[Stat.timeFuture]].
    */
+  @deprecated("Use Stat.timeFuture instead", "2015-2-22")
   def timeFuture[T](unit: TimeUnit, name: String*)(f: => Future[T]): Future[T] =
     timeFuture(unit, stat(name: _*))(f)
 
   /**
    * Time a given future in milliseconds.
-   * This method will soon be deprecated in favor of [[Stat.timeFuture]].
    */
+  @deprecated("Use Stat.timeFuture instead", "2015-2-22")
   def timeFuture[T](name: String*)(f: => Future[T]): Future[T] =
     timeFuture(TimeUnit.MILLISECONDS, name: _*)(f)
 

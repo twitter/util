@@ -130,11 +130,11 @@ class BroadcastStatsReceiverTest extends FunSuite
     recv1.stats.get(statName).isEmpty should be(true)
     recv2.stats.get(statName).isEmpty should be(true)
 
-    Await.result(recv.timeFuture("meh")(Future.Unit))
+    Await.result(Stat.timeFuture(recv.stat("meh"))(Future.Unit))
     recv1.stats(statName).size should be(1)
     recv2.stats(statName).size should be(1)
 
-    Await.result(recv.timeFuture("meh")(Future.Unit))
+    Await.result(Stat.timeFuture(recv.stat("meh"))(Future.Unit))
     recv1.stats(statName).size should be(2)
     recv2.stats(statName).size should be(2)
   }
