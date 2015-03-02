@@ -37,12 +37,14 @@ object SizedSink {
       var whenMillis: Long,
       var longVal: Long,
       var objectVal: Object,
-      var doubleVal: Double)
+      var doubleVal: Double,
+      var traceIdVal: Long,
+      var spanIdVal: Long)
   {
     def isDefined: Boolean = etype != null
 
     def toEvent: Event =
-      Event(etype, Time.fromMilliseconds(whenMillis), longVal, objectVal, doubleVal)
+      Event(etype, Time.fromMilliseconds(whenMillis), longVal, objectVal, doubleVal, traceIdVal, spanIdVal)
   }
 
 }
@@ -81,7 +83,9 @@ class SizedSink private[events](
       whenMillis = -1L,
       longVal = Event.NoLong,
       objectVal = Event.NoObject,
-      doubleVal = Event.NoDouble
+      doubleVal = Event.NoDouble,
+      traceIdVal = Event.NoTraceId,
+      spanIdVal = Event.NoSpanId
     )
   }
 
@@ -89,7 +93,9 @@ class SizedSink private[events](
     etype: Type,
     longVal: Long = Event.NoLong,
     objectVal: Object = Event.NoObject,
-    doubleVal: Double = Event.NoDouble
+    doubleVal: Double = Event.NoDouble,
+    traceIdVal: Long = Event.NoTraceId,
+    spanIdVal: Long = Event.NoSpanId
   ): Unit = {
     require(etype != null)
 
@@ -107,6 +113,8 @@ class SizedSink private[events](
       ev.longVal = longVal
       ev.objectVal = objectVal
       ev.doubleVal = doubleVal
+      ev.traceIdVal = traceIdVal
+      ev.spanIdVal = spanIdVal
     }
   }
 

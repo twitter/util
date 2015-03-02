@@ -8,6 +8,8 @@ object Event {
   val NoObject: AnyRef = new Object()
   val NoLong: Long = Long.MinValue
   val NoDouble: Double = Double.NegativeInfinity
+  val NoTraceId: Long = Long.MinValue
+  val NoSpanId: Long = Long.MinValue
 
   /**
    * Represents a type of event that can be recorded.
@@ -35,6 +37,12 @@ object Event {
      */
     def deserialize(buf: Buf): Try[Event]
 
+    protected def serializeTrace(traceId: Long, spanId: Long): (Option[Long], Option[Long]) = {
+      val sid = if (spanId == NoSpanId) None else Some(spanId)
+      val tid = if (traceId == NoTraceId) None else Some(traceId)
+      (tid, sid)
+    }
+
     override def toString() = id
   }
 
@@ -53,10 +61,14 @@ object Event {
  * @param longVal should be `Event.NoLong` if there is no supplied value.
  * @param objectVal should be `Event.NoObject` if there is no supplied value.
  * @param doubleVal should be `Event.NoDouble` if there is no supplied value.
+ * @param traceIdVal should be `Event.NoTraceId` if there is no supplied value.
+ * @param spanIdVal should be `Event.NoSpanId` if there is no supplied value.
  */
 case class Event(
     etype: Event.Type,
     when: Time,
     longVal: Long = Event.NoLong,
     objectVal: Object = Event.NoObject,
-    doubleVal: Double = Event.NoDouble)
+    doubleVal: Double = Event.NoDouble,
+    traceIdVal: Long = Event.NoTraceId,
+    spanIdVal: Long = Event.NoSpanId)
