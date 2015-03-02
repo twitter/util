@@ -259,7 +259,7 @@ class FlagTest extends FunSuite {
   test("Flag: no default usage") {
     val ctx = new Dctx
     import ctx._
-    assert(quuxFlag.usageString === "  -quux=<Int>: an int")
+    assert(quuxFlag.usageString === "  -quux='Int': an int")
   }
 
   private class GetCtx {
@@ -319,7 +319,7 @@ class FlagTest extends FunSuite {
 
   test("GlobalFlag: no default usage") {
     assert(MyGlobalFlagNoDefault.usageString ===
-      "  -com.twitter.app.MyGlobalFlagNoDefault=<Int>: a global test flag with no default")
+      "  -com.twitter.app.MyGlobalFlagNoDefault='Int': a global test flag with no default")
   }
 
   test("GlobalFlag: implicit value of true for booleans") {

@@ -423,7 +423,7 @@ class Flag[T: Flaggable] private[app](
       case Left(_) => runDefaultString
       case Right(usage) => usage
     }
-    s"  -$name=<$defaultOrUsageStr>: $help"
+    s"  -$name='$defaultOrUsageStr': $help"
   }
 
   private[this] def runDefaultString = {
@@ -440,7 +440,7 @@ class Flag[T: Flaggable] private[app](
    */
   override def toString = {
     valueOrDefault match {
-      case None => "-" + name + "=<unset>"
+      case None => "-" + name + "=unset"
       case Some(v) => "-" + name + "='" + flaggable.show(v).replaceAll("'", "'\"'\"'") + "'"
     }
   }
