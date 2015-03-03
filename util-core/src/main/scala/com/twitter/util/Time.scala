@@ -20,12 +20,40 @@ import java.io.Serializable
 import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale, TimeZone}
 
+/**
+ * @define now
+ *
+ * The current time can be manipulated via [[Time.withTimeAt]],
+ * [[Time.withCurrentTimeFrozen]], [[Time.withTimeFunction]] and
+ * [[Time.sleep]].
+ *
+ * While `now` is not a "global" it is however properly propagated through
+ * to other code via the standard usage of [[Local Locals]] throughout `util`.
+ * Specifically, code using [[Future Futures]], [[FuturePool FuturePools]],
+ * and [[MockTimer MockTimers]] will have their code see the manipulated
+ * values.
+ *
+ * @define nowusage
+ *
+ * {{{
+ *   val time = Time.fromMilliseconds(123456L)
+ *   Time.withTimeAt(time) { timeControl =>
+ *     assert(Time.now == time)
+ *
+ *     // you can control time via the `TimeControl` instance.
+ *     timeControl.advance(2.seconds)
+ *     FuturePool.unboundedPool {
+ *       assert(Time.now == time + 2.seconds)
+ *     }
+ *   }
+ * }}}
+ */
 trait TimeLikeOps[This <: TimeLike[This]] {
   /** The top value is the greatest possible value. It is akin to an infinity. */
   val Top: This
   /** The bottom value is the smallest possible value. */
   val Bottom: This
-  /** An undefined value: behaves like Double.NaN */
+  /** An undefined value: behaves like `Double.NaN` */
   val Undefined: This
 
   /** The zero value */
@@ -110,9 +138,9 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
     else if (inLongSeconds < Int.MinValue) Int.MinValue
     else inLongSeconds.toInt
   // Units larger than seconds safely fit into 32-bits when converting from a 64-bit nanosecond basis
-  def inMinutes: Int       = (inNanoseconds / Duration.NanosPerMinute) toInt
-  def inHours: Int         = (inNanoseconds / Duration.NanosPerHour) toInt
-  def inDays: Int          = (inNanoseconds / Duration.NanosPerDay) toInt
+  def inMinutes: Int       = (inNanoseconds / Duration.NanosPerMinute).toInt
+  def inHours: Int         = (inNanoseconds / Duration.NanosPerHour).toInt
+  def inDays: Int          = (inNanoseconds / Duration.NanosPerDay).toInt
   def inMillis: Long       = inMilliseconds // (Backwards compatibility)
 
   /**
@@ -213,14 +241,15 @@ private[util] object TimeBox {
 }
 
 /**
- * Use `Time.now` in your program instead of
- * `System.currentTimeMillis`, and unit tests will be able to adjust
+ * By using [[Time.now]] in your program instead of
+ * `System.currentTimeMillis` unit tests are able to adjust
  * the current time to verify timeouts and other time-dependent
- * behavior, without calling `sleep`.
+ * behavior, without calling `sleep`, and providing deterministic
+ * tests.
  *
- * If you import the [[com.twitter.conversions.time]] implicits you
- * can write human-readable values such as `1.minute` or
- * `250.millis`.
+ * $now
+ *
+ * $nowusage
  */
 object Time extends TimeLikeOps[Time] {
   def fromNanoseconds(nanoseconds: Long): Time = new Time(nanoseconds)
@@ -294,6 +323,11 @@ object Time extends TimeLikeOps[Time] {
     private def writeReplace(): Object = TimeBox.Undefined()
   }
 
+  /**
+   * Returns the current [[Time]].
+   *
+   * $now
+   */
   def now: Time = {
     localGetTime() match {
       case None =>
@@ -374,10 +408,9 @@ object Time extends TimeLikeOps[Time] {
    * Runs the given body at a specified time.
    * Makes for simple, fast, predictable unit tests that are dependent on time.
    *
-   * Note, this intended for use in tests.
+   * @note this intended for use in tests.
    *
-   * Since this updates shared global state, there are risks about memory visibility
-   * with multi-threaded tests.
+   * $nowusage
    */
   def withTimeAt[A](time: Time)(body: TimeControl => A): A =
     withTimeFunction(time)(body)
@@ -386,10 +419,9 @@ object Time extends TimeLikeOps[Time] {
    * Runs the given body at the current time.
    * Makes for simple, fast, predictable unit tests that are dependent on time.
    *
-   * Note, this intended for use in tests.
+   * @note this intended for use in tests.
    *
-   * Since this updates shared global state, there are risks about memory visibility
-   * with multi-threaded tests.
+   * $nowusage
    */
   def withCurrentTimeFrozen[A](body: TimeControl => A): A = {
     withTimeAt(Time.now)(body)
@@ -400,6 +432,8 @@ object Time extends TimeLikeOps[Time] {
    * according to object Time.
    *
    * This is useful for testing.
+   *
+   * $nowusage
    */
   def sleep(duration: Duration) {
     localGetTimer() match {
