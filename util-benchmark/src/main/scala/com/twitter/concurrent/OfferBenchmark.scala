@@ -7,6 +7,19 @@ import org.openjdk.jmh.annotations._
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
+
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(Array(Mode.AverageTime))
+class OfferBenchmark {
+  import OfferBenchmark._
+
+  @Benchmark
+  def timeChoose(state: OfferBenchmarkState) {
+    val offers = state.toChooseFrom()
+    Offer.choose(state.rngOpt, offers).prepare()
+  }
+}
+
 object OfferBenchmark {
   // to focus on the benchmarking the impl of `choose`, use dumbed-down impls
   // of the offer and tx classes.
@@ -47,17 +60,5 @@ object OfferBenchmark {
 
       ofs
     }
-  }
-}
-
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@BenchmarkMode(Array(Mode.AverageTime))
-class OfferBenchmark {
-  import OfferBenchmark._
-
-  @Benchmark
-  def timeChoose(state: OfferBenchmarkState) {
-    val offers = state.toChooseFrom()
-    Offer.choose(state.rngOpt, offers).prepare()
   }
 }

@@ -126,10 +126,7 @@ object Util extends Build {
       sharedSettings ++ jmhSettings
   ).settings(
     name := "util-benchmark",
-    libraryDependencies ++= Seq(
-      "com.google.caliper" % "caliper" % "0.5-rc1",
-      "org.openjdk.jmh" % "jmh-core" % "1.6.1"
-    )
+    libraryDependencies += "org.openjdk.jmh" % "jmh-core" % "1.6.1"
   ).dependsOn(utilCore, utilJvm, utilEvents)
 
   lazy val utilCache = Project(

@@ -1,5 +1,6 @@
 package com.twitter.concurrent
 
+import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 
@@ -10,6 +11,30 @@ import org.openjdk.jmh.infra.Blackhole
 //  - threads, -t, should be 2x number of logical cores.
 //  - to run a specific benchmark, use: .*SchedulerBenchmark.timeSubmit
 //  - to send specific params, use: -p lifo=false -p m=1,8,16
+/**
+ * Measure Scheduler.submit/run time when there are multiple threads.  Previous
+ * to changing SampleScale from 50 to 1000, there was sometimes contention for
+ * the global threads lock in getCurrentThreadCpuTime().
+ */
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(Array(Mode.AverageTime))
+class SchedulerBenchmark {
+  import SchedulerBenchmark._
+
+  @Benchmark
+  def timeSubmit(state: SchedulerState): Unit = {
+    state.scheduler.submit(state.cpuRunnable)
+    state.scheduler.flush()
+  }
+
+  @Benchmark
+  def timeLocalQueue(state: SchedulerState): Unit = {
+    state.scheduler.submit(state.runnable)
+    state.scheduler.flush()
+  }
+
+}
+
 object SchedulerBenchmark {
 
   @State(Scope.Benchmark)
@@ -42,28 +67,6 @@ object SchedulerBenchmark {
         }
       }
     }
-  }
-
-}
-
-/**
- * Measure Scheduler.submit/run time when there are multiple threads.  Previous
- * to changing SampleScale from 50 to 1000, there was sometimes contention for
- * the global threads lock in getCurrentThreadCpuTime().
- */
-class SchedulerBenchmark {
-  import SchedulerBenchmark._
-
-  @Benchmark
-  def timeSubmit(state: SchedulerState): Unit = {
-    state.scheduler.submit(state.cpuRunnable)
-    state.scheduler.flush()
-  }
-
-  @Benchmark
-  def timeLocalQueue(state: SchedulerState): Unit = {
-    state.scheduler.submit(state.runnable)
-    state.scheduler.flush()
   }
 
 }

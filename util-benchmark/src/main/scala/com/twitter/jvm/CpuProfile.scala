@@ -1,0 +1,83 @@
+package com.twitter.jvm
+
+import java.lang.management.ManagementFactory
+import java.util.concurrent.TimeUnit
+import org.openjdk.jmh.annotations._
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.{Options, OptionsBuilder}
+import scala.util.Random
+
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(Array(Mode.AverageTime))
+class CpuProfileBenchmark {
+  import CpuProfileBenchmark._
+
+  @Benchmark
+  def timeThreadGetStackTraces(state: ThreadState) {
+    Thread.getAllStackTraces()
+  }
+
+  @Benchmark
+  def timeThreadInfoBare(state: ThreadState) {
+    state.bean.dumpAllThreads(false, false)
+  }
+
+  // Note: we should actually simulate some contention, too.
+  @Benchmark
+  def timeThreadInfoFull(state: ThreadState) {
+    state.bean.dumpAllThreads(true, true)
+  }
+}
+
+object CpuProfileBenchmark {
+  @State(Scope.Benchmark)
+  class ThreadState {
+    val bean = ManagementFactory.getThreadMXBean()
+
+    // TODO: change dynamically.  bounce up & down
+    // the stack.  μ and σ are for *this* stack.
+    class Stack(rng: Random, μ: Int, σ: Int) {
+      def apply() = {
+        val depth = math.max(1, μ + (rng.nextGaussian*σ).toInt)
+        dive(depth)
+      }
+
+      private def dive(depth: Int): Int = {
+        if (depth == 0) {
+          while (true) {
+            Thread.sleep(10<<20)
+          }
+          1
+        } else
+          1+dive(depth-1)  // make sure we don't tail recurse
+      }
+    }
+
+    val stackMeanSize = 40
+    val stackStddev = 10
+    val nthreads = 16
+    val rngSeed = 131451732492626L
+
+    @Setup(Level.Iteration)
+    def setUp() {
+      val stack = new Stack(new Random(rngSeed), stackMeanSize, stackStddev)
+      threads = for (_ <- 0 until nthreads) yield new Thread {
+        override def run() {
+          try stack() catch {
+            case _: InterruptedException =>
+          }
+        }
+      }
+
+      threads foreach { t => t.start() }
+    }
+
+    @TearDown(Level.Iteration)
+    def tearDown() {
+      threads foreach { t => t.interrupt() }
+      threads foreach { t => t.join() }
+      threads = Seq()
+    }
+    var threads = Seq[Thread]()
+  }
+}

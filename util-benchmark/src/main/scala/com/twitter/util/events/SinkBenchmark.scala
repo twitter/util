@@ -1,22 +1,24 @@
 package com.twitter.util.events
 
-import com.google.caliper.SimpleBenchmark
+import java.util.concurrent.TimeUnit
+import org.openjdk.jmh.annotations._
 
-class SinkBenchmark extends SimpleBenchmark {
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(Array(Mode.AverageTime))
+class SinkBenchmark {
+  import SinkBenchmark._
 
-  private[this] val sizedSink = SizedSink(10000)
-  private[this] val eventType = Event.nullType
-
-  private[this] def event(sink: Sink, reps: Int): Unit = {
-    var i = 0
-    while (i < reps) {
-      sink.event(eventType, doubleVal = 2.5d)
-      i += 1
-    }
+  @Benchmark
+  def timeEventSizedSink(state: SinkState): Unit = {
+    import state._
+    sizedSink.event(eventType, doubleVal = 2.5d)
   }
+}
 
-  def timeEventSizedSink(reps: Int): Unit = {
-    event(sizedSink, reps)
+object SinkBenchmark {
+  @State(Scope.Benchmark)
+  class SinkState {
+    val sizedSink = SizedSink(10000)
+    val eventType = Event.nullType
   }
-
 }

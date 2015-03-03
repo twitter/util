@@ -3,6 +3,17 @@ package com.twitter.io
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(Array(Mode.AverageTime))
+class BufBenchmark {
+  import BufBenchmark._
+
+  @Benchmark
+  def timeSlice(state: BufBenchmarkState) {
+    state.buf.slice(state.startIndex, state.endIndex)
+  }
+}
+
 object BufBenchmark {
   @State(Scope.Benchmark)
   class BufBenchmarkState {
@@ -35,16 +46,5 @@ object BufBenchmark {
         startIndex = math.max(0, endIndex - sliceSize)
       }
     }
-  }
-}
-
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@BenchmarkMode(Array(Mode.AverageTime))
-class BufBenchmark {
-  import BufBenchmark._
-
-  @Benchmark
-  def timeSlice(state: BufBenchmarkState) {
-    state.buf.slice(state.startIndex, state.endIndex)
   }
 }
