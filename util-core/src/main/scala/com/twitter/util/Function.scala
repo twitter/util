@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.function._
 import java.util.concurrent.Callable
 
 abstract class Function0[+R] extends (() => R)
@@ -47,6 +48,38 @@ object Function {
    * Creates `() => A` function from given `Callable`.
    */
   def ofCallable[A](c: Callable[A]): () => A = () => c.call()
+
+  /**
+   * Creates a T => R from a JavaFunction. Used for easier interop
+   * between Java 8 and Twitter Util libraries.
+   */
+  def func[T, R](f: JavaFunction[T, R]) = new Function[T, R] {
+    override def apply(value: T): R = f(value)
+  }
+
+  /**
+   * Creates a T => Unit from a JavaConsumer.
+   * Useful for e.g. future.onSuccess
+   */
+  def cons[T](f: JavaConsumer[T]) = new Function[T, Unit] {
+    override def apply(value: T): Unit = f(value)
+  }
+
+  /**
+   * like `func`, but deals with checked exceptions as well
+   */
+  def exfunc[T, R](f: ExceptionalJavaFunction[T, R]) = new ExceptionalFunction[T, R] {
+    @throws(classOf[Throwable])
+    override def applyE(value: T): R = f(value)
+  }
+
+  /**
+   * like `cons`, but deals with checked exceptions as well
+   */
+  def excons[T](f: ExceptionalJavaConsumer[T]) = new ExceptionalFunction[T, Unit] {
+    @throws(classOf[Throwable])
+    override def applyE(value: T): Unit = f(value)
+  }
 }
 
 abstract class ExceptionalFunction[-T1, +R] extends Function[T1, R] {
