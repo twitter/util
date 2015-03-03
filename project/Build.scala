@@ -3,7 +3,7 @@ import sbt._
 import pl.project13.scala.sbt.SbtJmh.jmhSettings
 
 object Util extends Build {
-  val branch = Process("git" :: "symbolic-ref" :: "--short" :: "HEAD" :: Nil).!!.trim
+  val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
   val suffix = if (branch == "master") "" else "-SNAPSHOT"
 
   val libVersion = "6.23.0" + suffix
