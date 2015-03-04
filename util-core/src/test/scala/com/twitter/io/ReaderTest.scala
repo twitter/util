@@ -1,13 +1,13 @@
 package com.twitter.io
 
-import java.io.{ByteArrayOutputStream, OutputStream}
-
 import com.twitter.concurrent.Spool
+import com.twitter.io.Reader.ReaderDiscarded
 import com.twitter.util.{Await, Future, Promise}
+import java.io.{ByteArrayOutputStream, OutputStream}
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, FunSuite}
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatest.{FunSuite, Matchers}
 
 @RunWith(classOf[JUnitRunner])
 class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matchers {
@@ -26,6 +26,10 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
   def assertRead(r: Reader, i: Int, j: Int) {
     val n = j-i
     val f = r.read(n)
+    assertRead(f, i, j)
+  }
+
+  private def assertRead(f: Future[Option[Buf]], i: Int, j: Int): Unit = {
     assert(f.isDefined)
     val b = Await.result(f)
     assert(toSeq(b) === Seq.range(i, j))
@@ -64,6 +68,23 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     intercept[Exception] { Await.result(f) }
     intercept[Exception] { Await.result(r.read(0)) }
     intercept[Exception] { Await.result(r.read(1)) }
+  }
+
+  private def assertReadNone(r: Reader): Unit =
+    assert(Await.result(r.read(1)) === None)
+
+  private def assertReadEofAndClosed(rw: Reader.Writable): Unit = {
+    assertReadNone(rw)
+    assert(rw.close().isDone)
+  }
+
+  private val failedEx = new RuntimeException("ʕ •ᴥ•ʔ")
+
+  private def assertFailedEx(f: Future[_]): Unit = {
+    val thrown = intercept[RuntimeException] {
+      Await.result(f)
+    }
+    assert(thrown === failedEx)
   }
 
   test("Reader.copy - source and destination equality") {
@@ -212,23 +233,244 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val wf = rw.write(buf(0, 6)) before rw.close()
     assert(!wf.isDefined)
     assert(Await.result(rw.read(6)) === Some(buf(0, 6)))
-    Await.result(wf)
-    assert(Await.result(rw.read(6)) === None)
+    assert(!wf.isDefined)
+    assertReadEofAndClosed(rw)
   }
 
-  test("Reader.writable - close while write pending") {
+  test("Reader.writable - write then reads then close") {
     val rw = Reader.writable()
     val wf = rw.write(buf(0, 6))
-    assert(!wf.isDefined)
-    Await.ready(rw.close())
+
+    assert(!wf.isDone)
+    assertRead(rw, 0, 3)
+    assert(!wf.isDone)
+    assertRead(rw, 3, 6)
+    assert(wf.isDone)
+
+    assert(!rw.close().isDone)
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - read then write then close") {
+    val rw = Reader.writable()
+
+    val rf = rw.read(6)
+    assert(!rf.isDefined)
+
+    val wf = rw.write(buf(0, 6))
+    assert(wf.isDone)
+    assertRead(rf, 0, 6)
+
+    assert(!rw.close().isDone)
+    assertReadEofAndClosed(rw)
+  }
+
+
+  test("Reader.writable - write after fail") {
+    val rw = Reader.writable()
+    rw.fail(failedEx)
+
+    assertFailedEx(rw.write(buf(0, 6)))
+    val cf = rw.close()
+    assert(!cf.isDone)
+
+    assertFailedEx(rw.read(1))
+    assertFailedEx(cf)
+  }
+
+  test("Reader.writable - write after close") {
+    val rw = Reader.writable()
+    val cf = rw.close()
+    assert(!cf.isDone)
+    assertReadEofAndClosed(rw)
+    assert(cf.isDone)
 
     intercept[IllegalStateException] {
+      Await.result(rw.write(buf(0, 1)))
+    }
+  }
+
+  test("Reader.writable - write smaller buf than read is waiting for") {
+    val rw = Reader.writable()
+    val rf = rw.read(6)
+    assert(!rf.isDefined)
+
+    val wf = rw.write(buf(0, 5))
+    assert(wf.isDone)
+    assertRead(rf, 0, 5)
+
+    assert(!rw.read(1).isDefined) // nothing pending
+    rw.close()
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - write larger buf than read is waiting for") {
+    val rw = Reader.writable()
+    val rf = rw.read(3)
+    assert(!rf.isDefined)
+
+    val wf = rw.write(buf(0, 6))
+    assert(!wf.isDone)
+    assertRead(rf, 0, 3)
+    assert(!wf.isDone)
+
+    assertRead(rw.read(5), 3, 6) // read the rest
+    assert(wf.isDone)
+
+    assert(!rw.read(1).isDefined) // nothing pending to read
+    assert(rw.close().isDone)
+  }
+
+  test("Reader.writable - write while write pending") {
+    val rw = Reader.writable()
+    val wf = rw.write(buf(0, 1))
+    assert(!wf.isDone)
+
+    intercept[IllegalStateException] {
+      Await.result(rw.write(buf(0, 1)))
+    }
+
+    // the extraneous write should not mess with the 1st one.
+    assertRead(rw, 0, 1)
+  }
+
+  test("Reader.writable - read after fail") {
+    val rw = Reader.writable()
+    rw.fail(failedEx)
+    assertFailedEx(rw.read(1))
+  }
+
+  test("Reader.writable - read after close with no pending reads") {
+    val rw = Reader.writable()
+    assert(!rw.close().isDone)
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - read after close with pending data") {
+    val rw = Reader.writable()
+
+    val wf = rw.write(buf(0, 1))
+    assert(!wf.isDone)
+
+    // close before the write is satisfied wipes the pending write
+    assert(!rw.close().isDone)
+    intercept[IllegalStateException] {
+      Await.result(wf)
+    }
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - read while reading") {
+    val rw = Reader.writable()
+    val rf = rw.read(1)
+    intercept[IllegalStateException] {
+      Await.result(rw.read(1))
+    }
+    assert(!rf.isDefined)
+  }
+
+  test("Reader.writable - discard with pending read") {
+    val rw = Reader.writable()
+
+    val rf = rw.read(1)
+    rw.discard()
+
+    intercept[ReaderDiscarded] {
+      Await.result(rf)
+    }
+  }
+
+  test("Reader.writable - discard with pending write") {
+    val rw = Reader.writable()
+
+    val wf = rw.write(buf(0, 1))
+    rw.discard()
+
+    intercept[ReaderDiscarded] {
       Await.result(wf)
     }
   }
 
+  test("Reader.writable - close not satisfied until writes are read") {
+    val rw = Reader.writable()
+    val cf = rw.write(buf(0, 6)).before(rw.close())
+    assert(!cf.isDone)
+
+    assertRead(rw, 0, 3)
+    assert(!cf.isDone)
+
+    assertRead(rw, 3, 6)
+    assert(!cf.isDone)
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - close not satisfied until reads are fulfilled") {
+    val rw = Reader.writable()
+    val rf = rw.read(6)
+    val cf = rf.flatMap { _ => rw.close() }
+    assert(!rf.isDefined)
+    assert(!cf.isDone)
+
+    assert(rw.write(buf(0, 3)).isDone)
+
+    assertRead(rf, 0, 3)
+    assert(!cf.isDone)
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - close while read pending") {
+    val rw = Reader.writable()
+    val rf = rw.read(6)
+    assert(!rf.isDefined)
+
+    assert(rw.close().isDone)
+    assert(rf.isDefined)
+  }
+
+  test("Reader.writable - close then close") {
+    val rw = Reader.writable()
+    assert(!rw.close().isDone)
+    assertReadEofAndClosed(rw)
+    assert(rw.close().isDone)
+    assertReadEofAndClosed(rw)
+  }
+
+  test("Reader.writable - close after fail") {
+    val rw = Reader.writable()
+    rw.fail(failedEx)
+    val cf = rw.close()
+    assert(!cf.isDone)
+
+    assertFailedEx(rw.read(1))
+    assertFailedEx(cf)
+  }
+
+  test("Reader.writable - close before fail") {
+    val rw = Reader.writable()
+    val cf = rw.close()
+    assert(!cf.isDone)
+
+    rw.fail(failedEx)
+    assert(!cf.isDone)
+
+    assertFailedEx(rw.read(1))
+    assertFailedEx(cf)
+  }
+
+  test("Reader.writable - close while write pending") {
+    val rw = Reader.writable()
+    val wf = rw.write(buf(0, 1))
+    assert(!wf.isDone)
+    val cf = rw.close()
+    assert(!cf.isDone)
+    intercept[IllegalStateException] {
+      Await.result(wf)
+    }
+    assertReadEofAndClosed(rw)
+  }
+
   test("Reader.concat") {
-    import Spool.seqToSpool
+    import com.twitter.concurrent.Spool.seqToSpool
 
     forAll { (ss: List[String]) =>
       val readers = ss map { s => BufReader(Buf.Utf8(s)) }
