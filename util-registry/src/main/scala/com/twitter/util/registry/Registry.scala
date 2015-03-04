@@ -93,9 +93,7 @@ object GlobalRegistry {
    * Twitter concurrency primitives, like `flatMap` on a
    * [[com.twitter.util.Future]].
    */
-  def withRegistry[A](replacement: Registry)(fn: => A): A = {
-    localRegistry.let(replacement) {
-      fn
-    }
+  def withRegistry[A](replacement: Registry)(fn: => A): A = localRegistry.let(replacement) {
+    fn
   }
 }

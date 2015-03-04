@@ -1,6 +1,7 @@
 junit_tests(name='scala',
   dependencies=[
     '3rdparty/jvm/junit',
+    '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalatest',
     'util/util-registry/src/main/scala',
   ],
