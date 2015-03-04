@@ -14,27 +14,39 @@ trait Stopwatch {
 }
 
 /**
- * The system [[com.twitter.util.Stopwatch]] measures elapsed time
- * using `System.nanoTime`.
+ * The system [[Stopwatch]] measures elapsed time using `System.nanoTime`.
+ *
+ * Note that it works well with unit tests by respecting
+ * time manipulation on [[Time]].
  */
 object Stopwatch extends Stopwatch {
 
+  private[this] val systemNanoFn = () => Time.fromNanoseconds(System.nanoTime())
+
   def start(): Elapsed = {
-    val timeFn = Time.localGetTime().getOrElse(() => Time.fromNanoseconds(System.nanoTime()))
-    val off = timeFn()
-      () => timeFn() - off
+    val timeFn = Time.localGetTime() match {
+      case Some(local) => local
+      case None => systemNanoFn
+    }
+    val startAt = timeFn()
+    () => timeFn() - startAt
   }
 
+  /**
+   * A [[Stopwatch]] that always returns `dur` for the
+   * elapsed [[Duration duration]].
+   */
   def const(dur: Duration): Stopwatch = new Stopwatch {
     private[this] val fn = () => dur
-    def start() = fn
+    def start(): Elapsed = fn
   }
 }
 
 /**
- * A trivial implementation of [[com.twitter.util.Stopwatch]] for use as a null
+ * A trivial implementation of [[Stopwatch]] for use as a null
  * object.
  */
 object NilStopwatch extends Stopwatch {
-  def start(): Elapsed = () => Duration.Bottom
+  private[this] val fn = () => Duration.Bottom
+  def start(): Elapsed = fn
 }
