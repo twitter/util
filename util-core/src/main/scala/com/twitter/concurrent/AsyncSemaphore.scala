@@ -19,6 +19,9 @@ import java.util.concurrent.RejectedExecutionException
  *   }
  * }}}
  *
+ * Calls to acquire() and acquireAndRun are serialized, and tickets are
+ * given out fairly (in order of arrival).
+ *
  * @see [[AsyncMutex]] for a mutex version.
  */
 class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
