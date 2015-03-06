@@ -124,6 +124,10 @@ object Reader {
     // thread-safety provided by synchronization on `this`
     private[this] var state: State = Idle
 
+    override def toString: String = synchronized {
+      s"Reader.writable(state=$state)"
+    }
+
     /**
      * The returned [[com.twitter.util.Future]] is satisfied when this has either been
      * [[discard discarded]], a [[read]] has seen the EOF, or a [[read]]
