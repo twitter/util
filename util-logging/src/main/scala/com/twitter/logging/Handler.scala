@@ -32,6 +32,41 @@ abstract class Handler(val formatter: Formatter, val level: Option[Level]) exten
   }
 }
 
+/**
+ * A log handler class which delegates to another handler. This allows to implement filtering
+ * log handlers.
+ */
+abstract class ProxyHandler(val handler: Handler) 
+  extends Handler(handler.formatter, handler.level) {
+    override def close() = handler.close()
+    
+    override def flush() = handler.flush()
+
+    override def getEncoding() = handler.getEncoding()
+
+    override def getErrorManager() = handler.getErrorManager()
+
+    override def getFilter() = handler.getFilter()
+
+    override def getFormatter() = handler.getFormatter()
+
+    override def getLevel() = handler.getLevel()
+
+    override def isLoggable(record: javalog.LogRecord) = handler.isLoggable(record)
+    
+    override def publish(record: javalog.LogRecord) = handler.publish(record)
+
+    override def setEncoding(encoding: String) = handler.setEncoding(encoding)
+
+    override def setErrorManager(errorManager: javalog.ErrorManager) = handler.setErrorManager(errorManager)
+
+    override def setFilter(filter: javalog.Filter) = handler.setFilter(filter)
+
+    override def setFormatter(formatter: javalog.Formatter) = handler.setFormatter(formatter)
+
+    override def setLevel(level: javalog.Level) = handler.setLevel(level)
+}
+
 object NullHandler extends Handler(BareFormatter, None) {
   def publish(record: javalog.LogRecord) {}
   def close() {}

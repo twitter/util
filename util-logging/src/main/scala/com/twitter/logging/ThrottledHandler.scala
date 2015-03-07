@@ -58,10 +58,10 @@ object ThrottledHandler {
  * Maximum duplicate log entries to pass before suppressing them.
  */
 class ThrottledHandler(
-  val handler: Handler,
+  handler: Handler,
   val duration: Duration,
   val maxToDisplay: Int
-) extends Handler(handler.formatter, handler.level) {
+) extends ProxyHandler(handler) {
 
   private class Throttle(startTime: Time, name: String, level: javalog.Level) {
     private[this] var expired = false
@@ -79,7 +79,7 @@ class ThrottledHandler(
         }
       }
 
-      if (shouldPublish) handler.publish(record)
+      if (shouldPublish) doPublish(record)
       added
     }
 
@@ -98,15 +98,12 @@ class ThrottledHandler(
       val throttledRecord = new javalog.LogRecord(
         level, "(swallowed %d repeating messages)".format(count - maxToDisplay))
       throttledRecord.setLoggerName(name)
-      handler.publish(throttledRecord)
+      doPublish(throttledRecord)
     }
   }
 
   private val lastFlushCheck = new AtomicReference(Time.epoch)
   private val throttleMap = new mutable.HashMap[String, Throttle]
-
-  def close() = handler.close()
-  def flush() = handler.flush()
 
   @deprecated("Use flushThrottled() instead", "5.3.13")
   def reset() {
@@ -129,7 +126,7 @@ class ThrottledHandler(
    * Log a message, with sprintf formatting, at the desired level, and
    * attach an exception and stack trace.
    */
-  def publish(record: javalog.LogRecord) {
+  override def publish(record: javalog.LogRecord) {
     val now = Time.now
     val last = lastFlushCheck.get
 
@@ -154,5 +151,9 @@ class ThrottledHandler(
     }
 
     tryPublish()
+  }
+
+  private def doPublish(record: javalog.LogRecord) = {
+    super.publish(record)
   }
 }

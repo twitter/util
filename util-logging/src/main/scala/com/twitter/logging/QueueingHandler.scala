@@ -47,8 +47,8 @@ object QueueingHandler {
  * @param maxQueueSize
  * Maximum queue size.  Records are dropped when queue overflows.
  */
-class QueueingHandler(val handler: Handler, val maxQueueSize: Int = Int.MaxValue)
-  extends Handler(handler.formatter, handler.level) {
+class QueueingHandler(handler: Handler, val maxQueueSize: Int = Int.MaxValue)
+  extends ProxyHandler(handler) {
 
   protected val dropLogNode: String = ""
   protected val log: Logger = Logger(dropLogNode)
@@ -61,7 +61,7 @@ class QueueingHandler(val handler: Handler, val maxQueueSize: Int = Int.MaxValue
         while (true) {
           val record = queue.take()
           try {
-            handler.publish(record)
+            doPublish(record)
           } catch {
             case e: InterruptedException =>
               throw e // re-raise
@@ -84,28 +84,32 @@ class QueueingHandler(val handler: Handler, val maxQueueSize: Int = Int.MaxValue
   thread.setName("QueueingHandler")
   thread.start()
 
-  def publish(record: javalog.LogRecord) = {
+  override def publish(record: javalog.LogRecord) = {
     if (queue.offer(record) == false)
       onOverflow(record)
   }
 
-  def close() {
+  private def doPublish(record: javalog.LogRecord) = {
+    super.publish(record)
+  }
+
+  override def close() {
     // Stop thread
     thread.interrupt()
     closeLatch.await()
     // Propagate close
-    handler.close()
+    super.close()
   }
 
-  def flush() {
+  override def flush() {
     // Publish all records in queue
     var record = queue.poll()
     while (record ne null) {
-      handler.publish(record)
+      doPublish(record)
       record = queue.poll()
     }
     // Propagate flush
-    handler.flush()
+    super.flush()
   }
 
   /**

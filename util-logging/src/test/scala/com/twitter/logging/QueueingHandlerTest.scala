@@ -139,5 +139,18 @@ class QueueingHandlerTest extends WordSpec
         assert(didLog === true)
       }
     }
+
+    "forward formatter to the underlying handler" in {
+      val logger = freshLogger()
+      val handler = new MockHandler {
+      }
+
+      val queueHandler = new QueueingHandler(handler)
+      val formatter = new Formatter()
+
+      queueHandler.setFormatter(formatter)
+
+      assert(handler.getFormatter eq formatter)
+    }
   }
 }
