@@ -10,10 +10,14 @@ package object events {
 
   private[events] object sinkEnabled extends GlobalFlag[Boolean](
     false,
-    "Whether or not event capture is enabled. Prefer setting via System properties.")
+    "Whether or not event capture is enabled. Prefer setting via System properties.") {
+    override val name = "com.twitter.util.events.sinkEnabled"
+  }
 
   private[events] object approxNumEvents extends GlobalFlag[Int](
     0,
-    "Approximate number of events to keep in memory. Prefer setting via System properties.")
+    "Approximate number of events to keep in memory. Prefer setting via System properties.") {
+    override val name = "com.twitter.util.events.approxNumEvents"
+  }
 
 }
