@@ -21,10 +21,9 @@ object Entry {
  * The registry is a hierarchical key/value store, where all keys are sequences
  * of Strings, and values are Strings.
  *
- * Keys and values must be non-control ascii, and must not contain the '/'
- * character.  If you pass in a key or value with an invalid character, it will
- * silently be removed.  If this makes your key clash with another key, it will
- * overwrite.
+ * Keys and values must be non-control ascii.  If you pass in a key or value
+ * with an invalid character, the character will silently be removed.  If this
+ * makes your key clash with another key, it will overwrite.
  */
 trait Registry extends Iterable[Entry] {
   /**
@@ -61,7 +60,7 @@ class SimpleRegistry extends Registry {
   }
 
   private[this] def sanitize(key: String): String =
-    key.filter { char => char > 31 && char <= 127 && char != '/' }
+    key.filter { char => char > 31 && char <= 127 }
 }
 
 /**

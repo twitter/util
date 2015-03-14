@@ -57,7 +57,7 @@ abstract class RegistryTest extends FunSuite {
 
   test(s"$name can sanitize bad values") {
     val registry = mkRegistry()
-    registry.put(Seq("foo"), "q/ux")
+    registry.put(Seq("foo"), "q☃ux")
     assert(registry.toSet == Set(Entry(Seq("foo"), "qux")))
   }
 
