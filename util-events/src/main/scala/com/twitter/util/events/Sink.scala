@@ -41,6 +41,9 @@ trait Sink {
 
 }
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.events.Sinks]].
+ */
 object Sink {
 
   /**
@@ -84,6 +87,9 @@ object Sink {
    * The global default `Sink`.
    */
   val default: Sink = newDefault
+
+  // Java compatibility.
+  private[events] val getDefault: Sink = default
 
   /**
    * Returns whether or not any event capture is enabled.

@@ -3,6 +3,9 @@ package com.twitter.util.events
 import com.twitter.util.{Time, Return, Throw, Try}
 import com.twitter.io.Buf
 
+/**
+ * Note: There is a Java-friendly API for this object: [[com.twitter.util.events.Events]].
+ */
 object Event {
 
   val NoObject: AnyRef = new Object()
