@@ -296,6 +296,21 @@ object Spool {
   }
 
   /**
+   * Lazily builds a Spool from a Seq.
+   *
+   * The main difference between this and `seqToSpool` is that this method also
+   * consumes the Seq lazily, which means if used with Streams, it will
+   * preserve laziness.
+   */
+  def fromSeq[A](seq: Seq[A]): Spool[A] = {
+    def go(as: Seq[A]): Future[Spool[A]] =
+      if (as.isEmpty) Future.value(Spool.empty)
+      else Future.value(as.head *:: go(as.tail))
+
+    if (seq.isEmpty) Spool.empty else seq.head *:: go(seq.tail)
+  }
+
+  /**
    * Adds an implicit method to efficiently convert a Seq[A] to a Spool[A]
    */
   class ToSpool[A](s: Seq[A]) {
