@@ -106,7 +106,7 @@ object Util extends Build {
   ) aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
-    utilZkCommon, utilClassPreloader, utilBenchmark, utilApp,
+    utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
     utilEvents, utilStats, utilEval
   )
 
@@ -359,6 +359,19 @@ object Util extends Build {
     // These are dependended on to provide transitive dependencies
     // that would otherwise cause incompatibilities. See above comment.
     utilCollection, utilHashing
+  )
+
+  lazy val utilZkTest = Project(
+    id = "util-zk-test",
+    base = file("util-zk-test"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-zk-test",
+    libraryDependencies ++= Seq(
+      "com.twitter.common" % "io" % "0.0.58" % "test",
+      zkDependency
+    )
   )
 
 }

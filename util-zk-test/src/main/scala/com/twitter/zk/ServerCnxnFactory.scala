@@ -23,9 +23,22 @@ object ServerCnxnFactory {
    *
    * @return ServerCnxnFactory
    */
-  def apply(addr: InetAddress): ServerCnxnFactory = {
+  def apply(addr: InetAddress): ServerCnxnFactory =
     this(new InetSocketAddress(addr, 0), UnlimitedClients)
-  }
+
+  /**
+   * Create a ServerCnxnFactory
+   *
+   * Required for creating a in-process ZooKeeperServer for integration
+   * testing. Given an InetSocketAddress, bind to an available port and
+   * accept unlimited clients.
+   *
+   * @param sockAddr InetSocketAddress to bind to
+   *
+   * @return ServerCnxnFactory
+   */
+  def apply(sockAddr: InetSocketAddress): ServerCnxnFactory =
+    this(sockAddr, UnlimitedClients)
 
   /**
    * Create a ServerCnxnFactory
