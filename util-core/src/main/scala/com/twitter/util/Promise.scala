@@ -560,8 +560,26 @@ class Promise[A]
    *
    * By becoming `other`, its waitlists are now merged into `this`'s,
    * and `this` becomes canonical. The same is true of interrupt
-   * handlers: `other`'s interrupt handler becomes active, but is
-   * stored canonically by `this` - further references are forwarded.
+   * handlers: `other`'s interrupt handler is overwritten with the
+   * handlers installed for `this`.
+   *
+   * Note: Using `become` and `setInterruptHandler` on the same
+   * promise is not recommended. Consider the following, which
+   * demonstrates unexpected behavior related to this usage.
+   *
+   * {{{
+   * val a, b = new Promise[Unit]
+   * a.setInterruptHandler { case _ => println("A") }
+   * b.become(a)
+   * b.setInterruptHandler { case _ => println("B") }
+   * a.raise(new Exception)
+   * }}}
+   *
+   * This prints "B", the action in the interrupt handler for `b`,
+   * which is unexpected because we raised on `a`. In this case and
+   * others, using [[com.twitter.util.Future.proxyTo]] may be more
+   * appropriate.
+   *
    * Note that `this` must be unsatisfied at the time of the call,
    * and not race with any other setters. `become` is a form of
    * satisfying the promise.
@@ -575,6 +593,8 @@ class Promise[A]
    * '''Note:''' do not use become with cyclic graphs of futures: the
    * behavior of racing `a.become(b)` with `b.become(a)` is undefined
    * (where `a` and `b` may resolve as such transitively).
+   *
+   * @see: [[com.twitter.util.Future.proxyTo]]
    */
   def become(other: Future[A]) {
     if (isDefined) {

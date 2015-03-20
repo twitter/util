@@ -1082,6 +1082,13 @@ abstract class Future[+A] extends Awaitable[A] {
    * Send updates from this Future to the other.
    * `other` must not yet be satisfied at the time of the call.
    * After this call, nobody else should satisfy `other`.
+   *
+   * Note: using proxyTo will mask interrupts to this future, and it's
+   * the user's responsibility to set an interrupt handler on `other`
+   * to raise on f. In some cases, using
+   * [[com.twitter.util.Promise.become]] may be more appropriate.
+   *
+   * @see: [[com.twitter.util.Promise.become]]
    */
   def proxyTo[B >: A](other: Promise[B]) {
     if (other.isDefined) {
