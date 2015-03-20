@@ -153,7 +153,7 @@ object Promise {
   private val stateOff = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
   private val AlwaysUnit: Any => Unit = scala.Function.const(()) _
 
-  sealed trait Responder[A] extends Future[A] {
+  sealed trait Responder[A] { this: Future[A] =>
     protected[util] def depth: Short
     protected def parent: Promise[A]
     protected[util] def continue(k: K[A])
