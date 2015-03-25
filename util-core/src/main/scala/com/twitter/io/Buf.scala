@@ -393,6 +393,13 @@ object Buf {
         new ByteBuffer(dup)
       }
     }
+    
+    override def equals(other: Any): Boolean = other match {
+      case ByteBuffer(otherBB) => 
+        underlying.equals(otherBB)
+      case buf: Buf => Buf.equals(this, buf)
+      case _ => false
+    }
 
     protected def unsafeByteArrayBuf: Option[Buf.ByteArray] =
       if (underlying.hasArray) {
