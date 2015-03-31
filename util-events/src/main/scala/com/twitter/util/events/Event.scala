@@ -74,4 +74,20 @@ case class Event(
     objectVal: Object = Event.NoObject,
     doubleVal: Double = Event.NoDouble,
     traceIdVal: Long = Event.NoTraceId,
-    spanIdVal: Long = Event.NoSpanId)
+    spanIdVal: Long = Event.NoSpanId) {
+
+  def getLong: Option[Long] =
+    if (Event.NoLong == longVal) None else Some(longVal)
+
+  def getObject: Option[AnyRef] =
+    if (Event.NoObject == objectVal) None else Some(objectVal)
+
+  def getDouble: Option[Double] =
+    if (Event.NoDouble == doubleVal) None else Some(doubleVal)
+
+  def getTraceId: Option[Long] =
+    if (Event.NoTraceId == traceIdVal) None else Some(traceIdVal)
+
+  def getSpanId: Option[Long] =
+    if (Event.NoSpanId == spanIdVal) None else Some(spanIdVal)
+}
