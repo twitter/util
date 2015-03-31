@@ -944,23 +944,21 @@ abstract class Future[+A] extends Awaitable[A] {
    * Invoke the function on the error, if the computation was
    * unsuccessful.  Returns a chained Future as in `respond`.
    *
-   * @param rescueException if this is a `PartialFunction`, it will only be
-   *                        applied if `PartialFunction.isDefinedAt` returns
-   *                        true for the `Throwable` input.
-   *
    * @note this should be used for side-effects.
+   *
+   * @note if `fn` is a `PartialFunction` and the input is not defined for a given
+   *       Throwable, the resulting `MatchError` will propogate to the current
+   *       `Monitor`. This will happen if you use a construct such as
+   *       `future.onFailure { case NonFatal(e) => ... }` when the Throwable
+   *       is "fatal".
    *
    * @return chained Future
    * @see [[handle]] and [[rescue]] to produce a new `Future` from the result of
    *     the computation.
    */
-  def onFailure(rescueException: Throwable => Unit): Future[A] =
+  def onFailure(fn: Throwable => Unit): Future[A] =
     respond {
-      case Throw(t) =>
-        rescueException match {
-          case pf: PartialFunction[Throwable, Unit] => pf.applyOrElse(t, ThrowableToUnit)
-          case _ => rescueException(t)
-        }
+      case Throw(t) => fn(t)
       case _ =>
     }
 

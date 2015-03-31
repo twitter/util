@@ -55,7 +55,7 @@ object Refresh {
           val p = Promise[T]()
           val nextTuple = (p, now)
           if (ref.compareAndSet(tuple, nextTuple)) {
-            val nextResult = provider onFailure { case NonFatal(e) =>
+            val nextResult = provider onFailure { _ =>
               // evict failed result lazily, next request will kick off a new request
               ref.compareAndSet(nextTuple, empty) // OK if we lose so no need to examine result
             }

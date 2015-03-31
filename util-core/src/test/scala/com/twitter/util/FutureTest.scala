@@ -1620,6 +1620,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       val counter = new AtomicInteger()
       val f: Throwable => Unit = _ => counter.incrementAndGet()
       nonfatal.onFailure(f)
+      assert(counter.get() == 1)
       fatal.onFailure(f)
       assert(counter.get() == 2)
     }
@@ -1628,14 +1629,15 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       val monitor = new HandledMonitor()
       Monitor.using(monitor) {
         val counter = new AtomicInteger()
-        val pf: PartialFunction[Throwable, Unit] = {
-          case NonFatal(_) => counter.incrementAndGet()
-        }
-        nonfatal.onFailure(pf)
-        fatal.onFailure(pf)
+        nonfatal.onFailure { case NonFatal(_) => counter.incrementAndGet() }
         assert(counter.get() == 1)
+        assert(monitor.handled == null)
+
+        // this will throw a MatchError and propagated to the monitor
+        fatal.onFailure { case NonFatal(_) => counter.incrementAndGet() }
+        assert(counter.get() == 1)
+        assert(monitor.handled.getClass == classOf[MatchError])
       }
-      assert(monitor.handled == null)
     }
   }
 
