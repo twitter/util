@@ -1807,4 +1807,52 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       assert(fs.forall(_.handled.isDefined))
     }
   }
+
+  "Future.each" should {
+    "iterate until an exception is thrown" in {
+      val exc = new Exception("done")
+      var next: Future[Int] = Future.value(10)
+      val done = Future.each(next) {
+        case 0 => next = Future.exception(exc)
+        case n => next = Future.value(n-1)
+      }
+      
+      assert(done.poll == Some(Throw(exc)))
+    }
+    
+    "evaluate next one time per iteration" in {
+      var i, j = 0
+      def next() =
+        if (i == 10) Future.exception(new Exception) else {
+          i += 1
+          Future.value(i)
+        }
+
+      Future.each(next) { i => 
+        j += 1
+        assert(i == j)
+      }
+    }
+    
+    "terminate if the body throws an exception" in {
+      val exc = new Exception("body exception")
+      var i = 0
+      def next() = Future.value({i += 1; i})
+      val done = Future.each(next) {
+        case 10 => throw exc
+        case _ =>
+      }
+      
+      assert(done.poll == Some(Throw(exc)))
+      assert(i == 10)
+    }
+    
+    "terminate when 'next' throws" in {
+      val exc = new Exception
+      def next(): Future[Int] = throw exc
+      val done = Future.each(next) { _ => throw exc }
+      
+      assert(done.poll == Some(Throw(Future.NextThrewException(exc))))
+    }
+  }
 }

@@ -25,6 +25,11 @@ object Future {
   val Nil: Future[Seq[Nothing]] = new ConstFuture(Return.Nil)
   val True: Future[Boolean] = new ConstFuture(Return.True)
   val False: Future[Boolean] = new ConstFuture(Return.False)
+  
+  /** 
+   * Analogous to [[Predef.???]]
+   */
+  val ??? : Future[Nothing] = Future.exception(new NotImplementedError("an implementation is missing"))
 
   private val NotApplied: Future[Nothing] = new NoFuture
   private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied) _
@@ -507,6 +512,25 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     }
 
     loop()
+  }
+  
+  case class NextThrewException(cause: Throwable) 
+    extends IllegalArgumentException("'next' threw an exception", cause)
+  
+  /**
+   * Produce values from `next` until it fails, synchronously 
+   * applying `body` to each iteration. The returned future
+   * indicates completion (via an exception).
+   */
+  def each[A](next: => Future[A])(body: A => Unit): Future[Nothing] = {
+    def go(): Future[Nothing] =
+      try next flatMap { a => body(a); go() }
+      catch {
+        case NonFatal(exc) => 
+          Future.exception(NextThrewException(exc))
+      }
+
+    go()
   }
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
