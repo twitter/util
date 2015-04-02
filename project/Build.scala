@@ -7,7 +7,7 @@ object Util extends Build {
   val suffix = if (branch == "master") "" else "-SNAPSHOT"
 
   val libVersion = "6.23.0" + suffix
-  val zkVersion = "3.3.4"
+  val zkVersion = "3.4.6"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
     ExclusionRule("com.sun.jmx", "jmxri"),
