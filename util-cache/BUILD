@@ -2,6 +2,7 @@ maven_layout()
 
 jar_library(name='util-cache',
   dependencies=[
+    'util/util-cache/src/main/java',
     'util/util-cache/src/main/scala'
   ]
 )

@@ -66,11 +66,19 @@ public class BufCompilationTest {
     Assert.assertArrayEquals(bytes, c.copiedByteArray());
   }
 
+
   @Test
   public void testUtf8Decoding() {
     byte bytes[] = "hello world!".getBytes();
     Buf ba = Bufs.ownedBuf(bytes);
     Assert.assertEquals("hello world!", Bufs.asUtf8String(ba));
+  }
+
+  @Test
+  public void testStrings() {
+    Buf b = Bufs.utf8Buf("hi");
+    String s = Bufs.asUtf8String(b);
+    Assert.assertEquals("hi", s);
   }
 
   @Test

@@ -2,7 +2,6 @@ package com.twitter.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import scala.None$;
 
 public class TryCompilationTest {
     @Test

@@ -3,6 +3,8 @@ package com.twitter.util;
 import org.junit.Assert;
 import org.junit.Test;
 
+import scala.runtime.BoxedUnit;
+
 public class TimeCompilationTest {
 
   @Test
@@ -98,4 +100,27 @@ public class TimeCompilationTest {
     Assert.assertTrue(b.untilEpoch().inSeconds() <= 10);
     Assert.assertEquals(Long.MAX_VALUE, c.until(Time.Top()).inNanoseconds());
   }
+
+  @Test
+  public void testWithTimeAt() {
+    Time time = Time.fromMilliseconds(123456L);
+    Time.withTimeAt(time, new Function<TimeControl, BoxedUnit>() {
+      public BoxedUnit apply(TimeControl timeControl) {
+        // Time.now() == time
+
+        // you can control time via the `TimeControl` instance.
+        timeControl.advance(Duration.fromSeconds(2));
+        FuturePools.unboundedPool().apply(
+          new Function0<BoxedUnit>() {
+            public BoxedUnit apply() {
+              // Time.now() == time + 2.seconds
+              return BoxedUnit.UNIT;
+            }
+          }
+        );
+        return null;
+      }
+    });
+  }
+
 }

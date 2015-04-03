@@ -119,6 +119,8 @@ object Reader {
   /**
    * Create a new [[Writable]] which is a [[Reader]] that is linked
    * with a [[Writer]].
+   *
+   * @see Readers.writable() for a Java API.
    */
   def writable(): Writable = new Writable {
     // thread-safety provided by synchronization on `this`
@@ -257,6 +259,8 @@ object Reader {
 
   /**
    * Create a new Reader for a File
+   *
+   * @see Readers.fromFile for a Java API
    */
   @throws(classOf[FileNotFoundException])
   @throws(classOf[SecurityException])
@@ -264,6 +268,8 @@ object Reader {
 
   /**
    * Wrap InputStream s in with a Reader
+   *
+   * @see Readers.fromStream for a Java API
    */
   def fromStream(s: InputStream): Reader = InputStreamReader(s)
 
@@ -377,28 +383,39 @@ trait Writer {
   def fail(cause: Throwable)
 }
 
+/**
+ * @see Writers for Java friendly APIs.
+ */
 object Writer {
+
+  /**
+   * Represents a [[Writer]] which is [[Closable]].
+   *
+   * Exists primarily for Java compatibility.
+   */
+  trait ClosableWriter extends Writer with Closable
+
   val BufferSize = 4096
 
   /**
-   * Construct a Writer from a given OutputStream.
+   * Construct a [[ClosableWriter]] from a given OutputStream.
    *
-   * This Writer is not thread safe. If multiple threads attempt to `write`, the
+   * This [[Writer]] is not thread safe. If multiple threads attempt to `write`, the
    * behavior is identical to multiple threads calling `write` on the underlying
    * OutputStream.
    *
    * @param bufsize Size of the copy buffer between Writer and OutputStream.
    */
-  def fromOutputStream(out: OutputStream, bufsize: Int): Writer with Closable =
+  def fromOutputStream(out: OutputStream, bufsize: Int): ClosableWriter =
     new OutputStreamWriter(out, bufsize)
 
   /**
-   * Construct a Writer from a given OutputStream.
+   * Construct a [[ClosableWriter]] from a given OutputStream.
    *
-   * This Writer is not thread safe. If multiple threads attempt to `write`, the
+   * This [[Writer]] is not thread safe. If multiple threads attempt to `write`, the
    * behavior is identical to multiple threads calling `write` on the underlying
    * OutputStream.
    */
-  def fromOutputStream(out: OutputStream): Writer with Closable =
+  def fromOutputStream(out: OutputStream): ClosableWriter =
     fromOutputStream(out, BufferSize)
 }

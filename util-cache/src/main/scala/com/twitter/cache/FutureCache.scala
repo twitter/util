@@ -87,7 +87,7 @@ abstract class FutureCacheProxy[K, V](underlying: FutureCache[K, V]) extends Fut
 object FutureCache {
   /**
    * A [[com.twitter.cache.FutureCache]] backed by a
-   * [[scala.collection.mutable.ConcurrentMap]]
+   * [[java.util.concurrent.ConcurrentMap]].
    */
   def fromMap[K, V](fn: K => Future[V], map: ConcurrentMap[K, Future[V]]): K => Future[V] =
     default(fn, new ConcurrentMapCache(map))
@@ -95,13 +95,23 @@ object FutureCache {
   /**
    * Encodes keys, producing a Cache that takes keys of a different type.
    */
-  def keyEncoded[K, V, U](encode: K => V, cache: FutureCache[V, U]): FutureCache[K, U] = new KeyEncodingCache(encode, cache)
+  def keyEncoded[K, V, U](encode: K => V, cache: FutureCache[V, U]): FutureCache[K, U] =
+    new KeyEncodingCache(encode, cache)
 
   /**
    * Creates a function which caches the results of `fn` in an
    * [[com.twitter.cache.FutureCache]].  Ensures that failed Futures are evicted,
    * and that interrupting a Future returned to you by this function is safe.
+   *
+   * @see [[standard]] for the equivalent Java API.
    */
   def default[K, V](fn: K => Future[V], cache: FutureCache[K, V]): K => Future[V] =
     AsyncMemoize(fn, new EvictingCache(cache)) andThen { f: Future[V] => f.interruptible() }
+
+  /**
+   * Alias for [[default]] which can be called from Java.
+   */
+  def standard[K, V](fn: K => Future[V], cache: FutureCache[K, V]): K => Future[V] =
+    default(fn, cache)
+
 }

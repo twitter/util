@@ -124,4 +124,12 @@ public final class Bufs {
   public static String slowHexString(Buf buf) {
     return Buf$.MODULE$.slowHexString(buf);
   }
+
+  /**
+   * @see Buf.Utf8.apply(String)
+   */
+  public static Buf utf8Buf(String s) {
+    return Buf.Utf8$.MODULE$.apply(s);
+  }
+
 }

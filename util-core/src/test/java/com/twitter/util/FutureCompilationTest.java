@@ -6,12 +6,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
-import scala.Predef;
-import scala.Tuple2;
 import scala.Tuple3;
-import scala.Tuple4;
-import scala.collection.JavaConverters;
-import scala.collection.Seq;
 import scala.runtime.BoxedUnit;
 
 public class FutureCompilationTest {
