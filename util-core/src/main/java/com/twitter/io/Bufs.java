@@ -84,6 +84,13 @@ public final class Bufs {
   }
 
   /**
+   * @see Buf.Utf8#unapply(Buf)
+   */
+  public static String asUtf8String(Buf buf) {
+    return Buf.Utf8$.MODULE$.unapply(buf).get();
+  }
+
+  /**
    * @see Buf.ByteBuffer.Shared#extract(Buf)
    */
   public static ByteBuffer sharedByteBuffer(Buf buf) {

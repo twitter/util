@@ -67,6 +67,13 @@ public class BufCompilationTest {
   }
 
   @Test
+  public void testUtf8Decoding() {
+    byte bytes[] = "hello world!".getBytes();
+    Buf ba = Bufs.ownedBuf(bytes);
+    Assert.assertEquals("hello world!", Bufs.asUtf8String(ba));
+  }
+
+  @Test
   public void testExtractByteBuffer() {
     byte bytes[] = new byte[] { 0x1, 0x2, 0x3, 0x4 };
     Buf a = Bufs.ownedBuf(bytes);
