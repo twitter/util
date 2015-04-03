@@ -187,3 +187,11 @@ It's used simply:
 which is read by applying `elapsed`:
 
 	val duration: Duration = elapsed()
+
+## Contributing
+
+The `master` branch of this repository contains the latest stable release of
+Util, and weekly snapshots are published to the `develop` branch. In general
+pull requests should be submitted against `develop`. See
+[CONTRIBUTING.md](https://github.com/twitter/util/blob/master/CONTRIBUTING.md)
+for more details about how to contribute.
