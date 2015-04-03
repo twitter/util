@@ -1,17 +1,17 @@
 package com.twitter.finagle.stats
 
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.mockito.Mockito.{times, verify}
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
 import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito.{times, verify}
-import org.mockito.Mockito
 
 @RunWith(classOf[JUnitRunner])
 class CumulativeGaugeTest extends FunSuite with MockitoSugar {
   class TestGauge extends CumulativeGauge {
-    def register() {}
-    def deregister() {}
+    def register(): Unit = ()
+    def deregister(): Unit = ()
   }
 
   test("an empty CumulativeGauge should register on the first gauge added") {
@@ -24,7 +24,7 @@ class CumulativeGaugeTest extends FunSuite with MockitoSugar {
 
   test("a CumulativeGauge with size = 1 should deregister when all gauges are removed") {
     val gauge = Mockito.spy(new TestGauge)
-    var added = gauge.addGauge { 1.0f }
+    val added = gauge.addGauge { 1.0f }
     verify(gauge, times(0)).deregister()
 
     added.remove()
@@ -33,8 +33,8 @@ class CumulativeGaugeTest extends FunSuite with MockitoSugar {
 
   test("a CumulativeGauge with size = 1 should not deregister after a System.gc when there are still valid references to the gauge") {
     val gauge = Mockito.spy(new TestGauge)
-    var added = gauge.addGauge { 1.0f }
     verify(gauge, times(0)).deregister()
+    val added = gauge.addGauge { 1.0f }
 
     System.gc()
 

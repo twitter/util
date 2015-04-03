@@ -1,7 +1,7 @@
 package com.twitter.finagle.stats
 
+import java.util.concurrent.ConcurrentHashMap
 import scala.ref.WeakReference
-import scala.collection.mutable.HashMap
 
 /**
  * CumulativeGauge provides a gauge that is composed of the (addition)
@@ -10,7 +10,7 @@ import scala.collection.mutable.HashMap
  */
 private[finagle] trait CumulativeGauge {
   private[this] case class UnderlyingGauge(f: () => Float) extends Gauge {
-    def remove() { removeGauge(this) }
+    def remove(): Unit = removeGauge(this)
   }
 
   @volatile private[this] var underlying: List[WeakReference[UnderlyingGauge]] = Nil
@@ -19,13 +19,15 @@ private[finagle] trait CumulativeGauge {
    * Returns a buffered version of the current gauges
    */
   private[this] def get(): Seq[UnderlyingGauge] = {
-    removeGauge(null)  // GC.
-    underlying map { _.get } flatten
+    removeGauge(null) // clean up weakrefs
+    underlying.flatMap(_.get)
   }
 
-  private[this] def removeGauge(underlyingGauge: UnderlyingGauge) = synchronized {
-    // This does a GC also.
-    underlying = underlying filter { _.get map { _ ne underlyingGauge } getOrElse false }
+  private[this] def removeGauge(underlyingGauge: UnderlyingGauge): Unit = synchronized {
+    // This cleans up weakrefs
+    underlying = underlying.filter { weakRef =>
+      weakRef.get.exists(_ ne underlyingGauge)
+    }
     if (underlying.isEmpty)
       deregister()
   }
@@ -39,7 +41,8 @@ private[finagle] trait CumulativeGauge {
     underlyingGauge
   }
 
-  def getValue = get() map { _.f() } sum
+  def getValue: Float =
+    get().map(_.f()).sum
 
   /**
    * These need to be implemented by the gauge provider. They indicate
@@ -52,27 +55,34 @@ private[finagle] trait CumulativeGauge {
   def deregister(): Unit
 }
 
-trait StatsReceiverWithCumulativeGauges extends StatsReceiver {
-  private[this] val gaugeMap = new HashMap[Seq[String], CumulativeGauge]
+trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
+
+  private[this] val gauges = new ConcurrentHashMap[Seq[String], CumulativeGauge]()
 
   /**
    * The StatsReceiver implements these. They provide the cumulated
    * gauges.
    */
-  protected[this] def registerGauge(name: Seq[String], f: => Float)
-  protected[this] def deregisterGauge(name: Seq[String])
+  protected[this] def registerGauge(name: Seq[String], f: => Float): Unit
+  protected[this] def deregisterGauge(name: Seq[String]): Unit
 
-  def addGauge(name: String*)(f: => Float) = synchronized {
-    val cumulativeGauge = gaugeMap getOrElseUpdate(name, {
-      new CumulativeGauge {
-        def register()   = StatsReceiverWithCumulativeGauges.this.registerGauge(name, getValue)
-        def deregister() = StatsReceiverWithCumulativeGauges.this synchronized {
-          gaugeMap.remove(name)
-          StatsReceiverWithCumulativeGauges.this.deregisterGauge(name)
+  def addGauge(name: String*)(f: => Float): Gauge = {
+    var cumulativeGauge = gauges.get(name)
+    if (cumulativeGauge == null) {
+      val insert = new CumulativeGauge {
+        override def register(): Unit = synchronized {
+          self.registerGauge(name, getValue)
+        }
+
+        override def deregister(): Unit = synchronized {
+          gauges.remove(name)
+          self.deregisterGauge(name)
         }
       }
-    })
-
+      val prev = gauges.putIfAbsent(name, insert)
+      cumulativeGauge = if (prev == null) insert else prev
+    }
     cumulativeGauge.addGauge(f)
   }
+
 }
