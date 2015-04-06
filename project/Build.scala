@@ -1,6 +1,7 @@
 import sbt.Keys._
 import sbt._
 import pl.project13.scala.sbt.SbtJmh.jmhSettings
+import sbtunidoc.Plugin.unidocSettings
 
 object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
@@ -103,7 +104,7 @@ object Util extends Build {
     base = file("."),
     settings = Project.defaultSettings ++
       sharedSettings ++
-      Unidoc.settings
+      unidocSettings
   ) aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
