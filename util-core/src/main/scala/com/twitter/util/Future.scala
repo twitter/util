@@ -1280,6 +1280,8 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   override def isDefined = true
 
+  override def toString: String = s"ConstFuture($result)"
+
   // Awaitable
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])

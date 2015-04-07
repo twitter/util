@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.concurrent.Spool
+import com.twitter.concurrent.exp.AsyncStream
 import com.twitter.io.Reader.ReaderDiscarded
 import com.twitter.util.{Await, Future, Promise}
 import java.io.{ByteArrayOutputStream, OutputStream}
@@ -28,6 +28,8 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val f = r.read(n)
     assertRead(f, i, j)
   }
+
+  def undefined: AsyncStream[Reader] = throw new Exception
 
   private def assertRead(f: Future[Option[Buf]], i: Int, j: Int): Unit = {
     assert(f.isDefined)
@@ -470,11 +472,9 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
   }
 
   test("Reader.concat") {
-    import com.twitter.concurrent.Spool.seqToSpool
-
     forAll { (ss: List[String]) =>
       val readers = ss map { s => BufReader(Buf.Utf8(s)) }
-      val buf = Reader.readAll(Reader.concat(readers.toSpool))
+      val buf = Reader.readAll(Reader.concat(AsyncStream.fromSeq(readers)))
       Await.result(buf) should equal(Buf.Utf8(ss.mkString))
     }
   }
@@ -485,10 +485,9 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
       def read(n: Int) = p
       def discard() = p.setException(new Reader.ReaderDiscarded)
     }
-    val tail = new Promise[Spool[Reader]]
-    val reader = Reader.concat(head *:: tail)
+    val reader = Reader.concat(head +:: undefined)
     reader.discard()
-    assert(p.isDefined === true)
+    assert(p.isDefined)
   }
 
   test("Reader.concat - read while reading") {
@@ -497,8 +496,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
       def read(n: Int) = p
       def discard() = p.setException(new Reader.ReaderDiscarded)
     }
-    val tail = new Promise[Spool[Reader]]
-    val reader = Reader.concat(head *:: tail)
+    val reader = Reader.concat(head +:: undefined)
     assertReadWhileReading(reader)
   }
 
@@ -508,8 +506,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
       def read(n: Int) = p
       def discard() = p.setException(new Reader.ReaderDiscarded)
     }
-    val tail = new Promise[Spool[Reader]]
-    val reader = Reader.concat(head *:: tail)
+    val reader = Reader.concat(head +:: undefined)
     assertFailed(reader, p)
   }
 
@@ -518,14 +515,14 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
       def read(n: Int) = Future.exception(new Exception)
       def discard() { }
     }
-    val p = new Promise[Spool[Reader]]
-    def tail: Future[Spool[Reader]] = {
-      p.setException(new Exception)
-      p
+    val p = new Promise[Unit]
+    def tail: AsyncStream[Reader] = {
+      p.setDone()
+      AsyncStream.empty
     }
-    val combined = Reader.concat(head *:: tail)
+    val combined = Reader.concat(head +:: tail)
     val buf = Reader.readAll(combined)
     intercept[Exception] { Await.result(buf) }
-    assert(p.isDefined === false)
+    assert(!p.isDefined)
   }
 }

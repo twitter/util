@@ -4,7 +4,7 @@ package com.twitter.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import com.twitter.concurrent.Spool;
+import com.twitter.concurrent.exp.AsyncStream;
 import com.twitter.util.Future;
 import scala.runtime.BoxedUnit;
 
@@ -39,7 +39,7 @@ public final class Readers {
   /**
    * See {@code com.twitter.io.Reader.concat}.
    */
-  public static Reader concat(Spool<Reader> readers) {
+  public static Reader concat(AsyncStream<Reader> readers) {
     return Reader$.MODULE$.concat(readers);
   }
 
@@ -60,14 +60,14 @@ public final class Readers {
   /**
    * See {@code com.twitter.io.Reader.copyMany}.
    */
-  public static Future<BoxedUnit> copyMany(Spool<Reader> readers, Writer w) {
+  public static Future<BoxedUnit> copyMany(AsyncStream<Reader> readers, Writer w) {
     return Reader$.MODULE$.copyMany(readers, w);
   }
 
   /**
    * See {@code com.twitter.io.Reader.copyMany}.
    */
-  public static Future<BoxedUnit> copyMany(Spool<Reader> readers, Writer w, int readSize) {
+  public static Future<BoxedUnit> copyMany(AsyncStream<Reader> readers, Writer w, int readSize) {
     return Reader$.MODULE$.copyMany(readers, w, readSize);
   }
 

@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.concurrent.Spool
+import com.twitter.concurrent.exp.AsyncStream
 import com.twitter.util._
 import java.io.{
   File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
@@ -274,10 +274,10 @@ object Reader {
   def fromStream(s: InputStream): Reader = InputStreamReader(s)
 
   /**
-   * Convenient abstraction to read from a spool of Readers as if it were a
+   * Convenient abstraction to read from a stream of Readers as if it were a
    * single Reader.
    */
-  def concat(readers: Spool[Reader]): Reader = {
+  def concat(readers: AsyncStream[Reader]): Reader = {
     val target = Reader.writable()
     val f = copyMany(readers, target) respond {
       case Throw(exc) => target.fail(exc)
@@ -309,10 +309,8 @@ object Reader {
    *
    * @param bufsize The number of bytes to read each time.
    */
-  def copyMany(readers: Spool[Reader], target: Writer, bufsize: Int): Future[Unit] =
-    if (readers.isEmpty) Future.Done else
-      Reader.copy(readers.head, target, bufsize) before
-        readers.tail flatMap { tail => copyMany(tail, target, bufsize) }
+  def copyMany(readers: AsyncStream[Reader], target: Writer, bufsize: Int): Future[Unit] =
+    readers.foreachF(Reader.copy(_, target, bufsize))
 
   /**
    * Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
@@ -322,7 +320,7 @@ object Reader {
    * Reader.copyMany(readers, writer) ensure writer.close()
    * }}}
    */
-  def copyMany(readers: Spool[Reader], target: Writer): Future[Unit] =
+  def copyMany(readers: AsyncStream[Reader], target: Writer): Future[Unit] =
     copyMany(readers, target, Writer.BufferSize)
 
   /**

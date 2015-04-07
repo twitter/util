@@ -4,6 +4,9 @@
 
 Next Version
 
+New Features:
+  * util-core: Introduce AsyncStream, an experimental replacement for Spool.
+
 API Changes:
   * util-core: `Future.willEqual()` now returns `Future[Boolean]` instead of
                `Promise[Boolean]`.
@@ -21,6 +24,8 @@ API Changes:
 
   * util-core: `Reader.writable()` returns a new type, `Reader.Writable`, which
                combines `Reader`, `Writer` and `Closable`.
+  * util-core: `Reader.concat` and `Reader.copyMany` now take an AsyncStream
+               argument instead of Spool.
 
 Changes in Runtime Behavior:
   * util-core: Futures still rethrow on fatals, but now also Monitor.handle on

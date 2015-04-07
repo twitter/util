@@ -1,10 +1,10 @@
 /* Copyright 2015 Twitter, Inc. */
 package com.twitter.io;
 
+import com.twitter.concurrent.exp.AsyncStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
-import com.twitter.concurrent.Spools;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -28,7 +28,7 @@ public class ReaderCompilationTest {
 
   @Test
   public void testConcat() {
-    Readers.concat(Spools.<Reader>newEmptySpool());
+    Readers.concat(AsyncStream.<Reader>empty());
   }
 
 
