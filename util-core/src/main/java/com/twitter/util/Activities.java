@@ -1,7 +1,6 @@
 package com.twitter.util;
 
 import scala.Tuple2;
-import scala.runtime.Nothing$;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,15 +43,38 @@ public final class Activities {
   /**
    * @see com.twitter.util.Activity$#pending()
    */
-  public static Activity<Nothing$> newPendingActivity() {
-    return Activity$.MODULE$.pending();
+  @SuppressWarnings("unchecked cast")
+  public static <T> Activity<T> newPendingActivity() {
+    return (Activity<T>) Activity$.MODULE$.pending();
   }
 
   /**
    * @see com.twitter.util.Activity$#exception(Throwable)
    */
-  public static Activity<Nothing$> newFailedActivity(Throwable throwable) {
-    return Activity$.MODULE$.exception(throwable);
+  @SuppressWarnings("unchecked cast")
+  public static <T> Activity<T> newFailedActivity(Throwable throwable) {
+    return (Activity<T>) Activity$.MODULE$.exception(throwable);
+  }
+
+  /**
+   * Checks whether the given {@code state} is a value activity state.
+   */
+  public static boolean isValueState(Activity.State<?> state) {
+    return state instanceof Activity.Ok;
+  }
+
+  /**
+   * Checks whether the given {@code state} is a failed activity state.
+   */
+  public static boolean isFailedState(Activity.State<?> state) {
+    return state instanceof Activity.Failed;
+  }
+
+  /**
+   * Checks whether the given {@code state} is a pending activity state.
+   */
+  public static boolean isPendingState(Activity.State<?> state) {
+    return state instanceof Activity.Pending$;
   }
 
   /**

@@ -13,8 +13,8 @@ public class ActivityCompilationTest {
 
   @Test
   public void testActivityCreation() {
-    Activity<?> a = Activities.newPendingActivity();
-    Activity<?> b = Activities.newFailedActivity(new Exception());
+    Activity<String> a = Activities.newPendingActivity();
+    Activity<Integer> b = Activities.newFailedActivity(new Exception());
     Activity<Object> c = Activities.newFutureActivity(Future.value(null));
     Activity<Object> d = Activities.newValueActivity(new Object());
     Tuple2<Activity<Object>, Witness<Try<Object>>> e = Activities.newActivity();
@@ -31,12 +31,30 @@ public class ActivityCompilationTest {
   }
 
   @Test
-  public void testS() {
+  public void testCollect() {
     ArrayList<Activity<String>> list = new ArrayList<Activity<String>>();
     list.add(Activities.newValueActivity("42"));
     list.add(Activities.newValueActivity("24"));
 
     Activity<Collection<String>> activities = Activities.collect(list);
     Assert.assertArrayEquals(new String[]{"42", "24"}, Activities.sample(activities).toArray());
+  }
+
+  private static <T> Activity.State<T> getActivityState(Activity<T> activity) throws Exception {
+    return Await.result(activity.states().toFuture());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testChecks() throws Exception {
+    Activity<String> a = Activities.newPendingActivity();
+    Activity<Integer> b = Activities.newFailedActivity(new IllegalArgumentException());
+    Activity<Boolean> c = Activities.newValueActivity(true);
+
+    Assert.assertTrue(Activities.isPendingState(getActivityState(a)));
+    Assert.assertTrue(Activities.isFailedState(getActivityState(b)));
+    Assert.assertTrue(Activities.isValueState(getActivityState(c)));
+
+    Assert.assertEquals(true, c.sample());
+    b.sample();
   }
 }

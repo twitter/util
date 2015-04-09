@@ -68,7 +68,7 @@ public final class Txs {
    * Checks whether the given {@code result} is {@link com.twitter.concurrent.Tx.Commit}
    * or not.
    */
-  public static <T> boolean isCommitted(Tx.Result<T> result) {
+  public static boolean isCommitted(Tx.Result<?> result) {
     return result instanceof Tx.Commit;
   }
 
