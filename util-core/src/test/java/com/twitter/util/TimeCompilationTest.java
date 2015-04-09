@@ -34,7 +34,9 @@ public class TimeCompilationTest {
     Time b = Time.fromMilliseconds(1000);
     Time c = Time.fromMicroseconds(1000000);
     Time d = Time.fromNanoseconds(1000000000);
+    Time e = Time.fromFractionalSeconds(1.0);
 
+    Assert.assertEquals(e, a);
     Assert.assertEquals(a, b);
     Assert.assertEquals(b, c);
     Assert.assertEquals(c, d);

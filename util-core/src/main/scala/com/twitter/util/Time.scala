@@ -93,6 +93,15 @@ trait TimeLikeOps[This <: TimeLike[This]] {
 
   def fromSeconds(seconds: Int): This = fromMilliseconds(1000L * seconds)
 
+  /**
+   * Make a new `This` from the given number of seconds.
+   * Because this method takes a Double, it can represent values less than a second.
+   * Note however that there is some slop in floating-point conversion that
+   * limits precision.  Currently we can assume at least microsecond precision.
+   */
+  def fromFractionalSeconds(seconds: Double): This =
+    fromNanoseconds((1000L * 1000L * 1000L * seconds).toLong)
+
   def fromMilliseconds(millis: Long): This =
     if (millis > 9223372036854L) Top
     else if (millis < -9223372036854L) Bottom
@@ -255,6 +264,7 @@ object Time extends TimeLikeOps[Time] {
   def fromNanoseconds(nanoseconds: Long): Time = new Time(nanoseconds)
 
   // This is needed for Java compatibility.
+  override def fromFractionalSeconds(seconds: Double): Time = super.fromFractionalSeconds(seconds)
   override def fromSeconds(seconds: Int): Time = super.fromSeconds(seconds)
   override def fromMilliseconds(millis: Long): Time = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Time = super.fromMicroseconds(micros)

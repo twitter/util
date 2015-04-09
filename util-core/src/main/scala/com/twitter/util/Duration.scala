@@ -8,6 +8,7 @@ object Duration extends TimeLikeOps[Duration] {
   def fromNanoseconds(nanoseconds: Long): Duration = new Duration(nanoseconds)
 
   // This is needed for Java compatibility.
+  override def fromFractionalSeconds(seconds: Double): Duration = super.fromFractionalSeconds(seconds)
   override def fromSeconds(seconds: Int): Duration = super.fromSeconds(seconds)
   override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)

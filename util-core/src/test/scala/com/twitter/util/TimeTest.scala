@@ -8,10 +8,11 @@ import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import com.twitter.util.TimeConversions._
 
-trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec {
+trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenPropertyChecks {
   val ops: TimeLikeOps[T]
   import ops._
 
@@ -128,12 +129,14 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec {
 
     "always be max" in {
       assert((Top max fromSeconds(1)) === Top)
+      assert((Top max fromFractionalSeconds(1.0)) === Top)
       assert((Top max fromNanoseconds(Long.MaxValue)) === Top)
       assert((Top max Bottom) === Top)
     }
 
     "greater than everything else" in {
       assert(fromSeconds(0) < Top)
+      assert(fromFractionalSeconds(Double.MaxValue) < Top)
       assert(fromNanoseconds(Long.MaxValue) < Top)
     }
 
@@ -542,6 +545,27 @@ class TimeTest extends { val ops = Time }
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now + 100.hours
         assert(t0.sinceNow === 100.hours)
+      }
+    }
+
+    "fromSeconds(Double)" in {
+      val tolerance = 2.microseconds // we permit 1us slop
+
+      forAll { i: Int =>
+        assert(Time.fromSeconds(i).moreOrLessEquals(Time.fromFractionalSeconds(i.toDouble), tolerance))
+      }
+
+      forAll { d: Double =>
+        val magic = 9223372036854775L // cribbed from Time.fromMicroseconds
+        val microseconds = d * 1.second.inMicroseconds
+        whenever (microseconds > -magic && microseconds < magic) {
+          assert(Time.fromMicroseconds(microseconds.toLong).moreOrLessEquals(Time.fromFractionalSeconds(d), tolerance))
+        }
+      }
+
+      forAll { l: Long =>
+        val seconds: Double = l.toDouble / 1.second.inNanoseconds
+        assert(Time.fromFractionalSeconds(seconds).moreOrLessEquals(Time.fromNanoseconds(l), tolerance))
       }
     }
 
