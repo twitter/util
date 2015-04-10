@@ -217,7 +217,7 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * Note: this forces all of the intermediate dropped elements.
    */
   def drop(n: Int): AsyncStream[A] =
-    if (n < 1) empty else AsyncStream(
+    if (n < 1) this else AsyncStream(
       underlying.flatMap {
         case Empty | One(_) => empty.underlying
         case cons: Cons[A] => cons.tail.drop(n - 1).underlying

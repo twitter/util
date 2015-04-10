@@ -217,13 +217,14 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
   test("take") {
-    val genInputs = for {
-      as <- Arbitrary.arbitrary[List[Int]]
-      n <- Gen.choose(0, as.length)
-    } yield (as, n)
-
-    forAll(genInputs) { case (as, n) =>
+    forAll(genListAndN) { case (as, n) =>
       assert(toSeq(fromSeq(as).take(n)) == as.take(n))
+    }
+  }
+
+  test("drop") {
+    forAll(genListAndN) { case (as, n) =>
+      assert(toSeq(fromSeq(as).drop(n)) == as.drop(n))
     }
   }
 
@@ -274,6 +275,11 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
 }
 
 private object AsyncStreamTest {
+  val genListAndN = for {
+    as <- Arbitrary.arbitrary[List[Int]]
+    n <- Gen.choose(0, as.length)
+  } yield (as, n)
+
   def undefined[A]: A = throw new Exception
 
   def toSeq[A](s: AsyncStream[A]): Seq[A] = Await.result(s.toSeq())
