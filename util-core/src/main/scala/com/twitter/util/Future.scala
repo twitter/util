@@ -21,16 +21,18 @@ object Future {
   val Unit: Future[Unit] = apply(())
   val Void: Future[Void] = apply[Void](null: Void)
   val Done: Future[Unit] = Unit
+
   val None: Future[Option[Nothing]] = new ConstFuture(Return.None)
   val Nil: Future[Seq[Nothing]] = new ConstFuture(Return.Nil)
   val True: Future[Boolean] = new ConstFuture(Return.True)
   val False: Future[Boolean] = new ConstFuture(Return.False)
-  
-  /** 
+
+  /**
    * Analogous to [[Predef.???]]
    */
   val ??? : Future[Nothing] = Future.exception(new NotImplementedError("an implementation is missing"))
 
+  private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
   private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied) _
   private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
@@ -513,12 +515,12 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
     loop()
   }
-  
-  case class NextThrewException(cause: Throwable) 
+
+  case class NextThrewException(cause: Throwable)
     extends IllegalArgumentException("'next' threw an exception", cause)
-  
+
   /**
-   * Produce values from `next` until it fails, synchronously 
+   * Produce values from `next` until it fails, synchronously
    * applying `body` to each iteration. The returned future
    * indicates completion (via an exception).
    */
@@ -526,7 +528,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     def go(): Future[Nothing] =
       try next flatMap { a => body(a); go() }
       catch {
-        case NonFatal(exc) => 
+        case NonFatal(exc) =>
           Future.exception(NextThrewException(exc))
       }
 
@@ -736,7 +738,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * for signalling.
    */
   def isDone(implicit ev: this.type <:< Future[Unit]) =
-    ev(this).poll == Some(Return.Unit)
+    ev(this).poll == Future.SomeReturnUnit
 
   /**
    * Demands that the result of the future be available within

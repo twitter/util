@@ -21,5 +21,7 @@ class NullStatsReceiver extends StatsReceiver {
   def stat(name: String*) = NullStat
   def addGauge(name: String*)(f: => Float) = NullGauge
 
+  override def provideGauge(name: String*)(f: => Float): Unit = ()
+
   override def toString = "NullStatsReceiver"
 }

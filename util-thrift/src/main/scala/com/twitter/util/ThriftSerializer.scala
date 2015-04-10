@@ -1,11 +1,10 @@
 package com.twitter.util
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
-
 import com.fasterxml.jackson.databind.MappingJsonFactory
 import org.apache.thrift.TBase
-import org.apache.thrift.protocol.{TBinaryProtocol, TCompactProtocol, TProtocolFactory, TSimpleJSONProtocol}
+import org.apache.thrift.protocol._
 import org.apache.thrift.transport.TIOStreamTransport
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
 
 trait ThriftSerializer extends StringEncoder {
   def protocolFactory: TProtocolFactory
@@ -33,20 +32,32 @@ trait ThriftSerializer extends StringEncoder {
   def fromString(obj: TBase[_, _], str: String): Unit = fromBytes(obj, decode(str))
 }
 
+/**
+ * A thread-safe [[ThriftSerializer]] that uses [[TSimpleJSONProtocol]].
+ */
 class JsonThriftSerializer extends ThriftSerializer {
   override def protocolFactory = new TSimpleJSONProtocol.Factory
 
   override def fromBytes(obj: TBase[_, _], bytes: Array[Byte]): Unit = {
     val binarySerializer = new BinaryThriftSerializer
-    val newObj = new MappingJsonFactory().createJsonParser(bytes).readValueAs(obj.getClass)
+    val newObj = new MappingJsonFactory().createParser(bytes).readValueAs(obj.getClass)
     binarySerializer.fromBytes(obj, binarySerializer.toBytes(newObj.asInstanceOf[TBase[_, _]]))
   }
 }
 
+/**
+ * A thread-safe [[ThriftSerializer]] that uses [[TBinaryProtocol]].
+ *
+ * @note an implementation using `com.twitter.finagle.thrift.Protocols.binaryFactory`
+ *       instead of this is recommended.
+ */
 class BinaryThriftSerializer extends ThriftSerializer with Base64StringEncoder {
   override def protocolFactory = new TBinaryProtocol.Factory
 }
 
+/**
+ * A thread-safe [[ThriftSerializer]] that uses [[TCompactProtocol]].
+ */
 class CompactThriftSerializer extends ThriftSerializer with Base64StringEncoder {
   override def protocolFactory = new TCompactProtocol.Factory
 }

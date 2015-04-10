@@ -234,7 +234,7 @@ object Buf {
       else if (from == 0 && until >= length) this
       else {
         val cap = math.min(until, length)
-        ByteArray(bytes, begin+from, math.min(begin+cap, end))
+        ByteArray.Owned(bytes, begin+from, math.min(begin+cap, end))
       }
     }
 
@@ -393,9 +393,9 @@ object Buf {
         new ByteBuffer(dup)
       }
     }
-    
+
     override def equals(other: Any): Boolean = other match {
-      case ByteBuffer(otherBB) => 
+      case ByteBuffer(otherBB) =>
         underlying.equals(otherBB)
       case buf: Buf => Buf.equals(this, buf)
       case _ => false
@@ -527,10 +527,10 @@ object Buf {
    */
   def slowHexString(buf: Buf): String = {
     val ba = Buf.ByteArray.coerce(buf)
-    val digits = new StringBuilder(2 * (ba.length))
+    val digits = new StringBuilder(2 * ba.length)
     var i = ba.begin
     while (i < ba.end) {
-      digits ++= "%02x".format(ba.bytes(i))
+      digits ++= f"${ba.bytes(i)}%02x"
       i += 1
     }
     digits.toString

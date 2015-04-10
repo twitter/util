@@ -1,8 +1,7 @@
 package com.twitter.io
 
 import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAction}
-
-import scala.collection.mutable
+import java.util
 
 /**
  * Provides a set of frequently used [[java.nio.charset.Charset]] instances and
@@ -42,12 +41,12 @@ object Charsets {
    */
   val UsAscii: Charset = Charset.forName("US-ASCII")
 
-  private[this] val encoders = new ThreadLocal[mutable.Map[Charset, CharsetEncoder]] {
-    protected override def initialValue = new mutable.HashMap()
+  private[this] val encoders = new ThreadLocal[util.Map[Charset, CharsetEncoder]] {
+    protected override def initialValue = new util.HashMap()
   }
 
-  private[this] val decoders = new ThreadLocal[mutable.Map[Charset, CharsetDecoder]] {
-    protected override def initialValue = new mutable.HashMap()
+  private[this] val decoders = new ThreadLocal[util.Map[Charset, CharsetDecoder]] {
+    protected override def initialValue = new util.HashMap()
   }
 
   /**
@@ -57,8 +56,12 @@ object Charsets {
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
   def encoder(charset: Charset): CharsetEncoder = {
-    val e = encoders.get.getOrElseUpdate(charset, charset.newEncoder());
-    e.reset
+    var e = encoders.get.get(charset)
+    if (e == null) {
+      e = charset.newEncoder()
+      encoders.get.put(charset, e)
+    }
+    e.reset()
     e.onMalformedInput(CodingErrorAction.REPLACE)
     e.onUnmappableCharacter(CodingErrorAction.REPLACE)
   }
@@ -70,8 +73,12 @@ object Charsets {
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
   def decoder(charset: Charset): CharsetDecoder = {
-    val d = decoders.get.getOrElseUpdate(charset, charset.newDecoder())
-    d.reset
+    var d = decoders.get.get(charset)
+    if (d == null) {
+      d = charset.newDecoder()
+      decoders.get.put(charset, d)
+    }
+    d.reset()
     d.onMalformedInput(CodingErrorAction.REPLACE)
     d.onUnmappableCharacter(CodingErrorAction.REPLACE)
   }
