@@ -6,14 +6,16 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CloseAwaitablyTest extends FunSuite {
-  def make() = new Closable with CloseAwaitably {
+  class Context extends Closable with CloseAwaitably {
     val p = new Promise[Unit]
     var n = 0
-    def close(deadline: Time) = closeAwaitably {
+    def close(deadline: Time): Future[Unit] = closeAwaitably {
       n += 1
       p
     }
   }
+
+  def make(): Context = new Context()
 
   test("close") {
     val c = make()

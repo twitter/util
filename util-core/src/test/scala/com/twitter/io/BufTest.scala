@@ -3,10 +3,6 @@ package com.twitter.io
 import java.nio.CharBuffer
 import java.util.Arrays
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
-import org.mockito.Mockito.{verify, when}
-import org.mockito.invocation.InvocationOnMock
-import org.mockito.stubbing.Answer
 import org.scalacheck.{Arbitrary, Gen, Prop}
 import org.scalatest.FunSuite
 import org.scalatest.junit.{AssertionsForJUnit, JUnitRunner}
@@ -14,7 +10,12 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatest.prop.{GeneratorDrivenPropertyChecks, Checkers}
 
 @RunWith(classOf[JUnitRunner])
-class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChecks  with Checkers with AssertionsForJUnit {
+class BufTest extends FunSuite
+  with MockitoSugar
+  with GeneratorDrivenPropertyChecks
+  with Checkers
+  with AssertionsForJUnit {
+
   val AllCharsets = Seq(
     Charsets.Iso8859_1,
     Charsets.UsAscii,
@@ -96,8 +97,9 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val a1 = Array.range(0, 8).map(_.toByte)
     val a2 = Array.range(8, 16).map(_.toByte)
     val a3 = Array.range(16, 24).map(_.toByte)
-    val arr = a1 ++ a2 ++ a3
-    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+    val buf = Buf.ByteArray.Owned(a1) concat
+      Buf.ByteArray.Owned(a2) concat
+      Buf.ByteArray.Owned(a3)
 
     assert(buf.slice(25, 30) === Buf.Empty)
   }
@@ -106,8 +108,9 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val a1 = Array.range(0, 8).map(_.toByte)
     val a2 = Array.range(8, 16).map(_.toByte)
     val a3 = Array.range(16, 24).map(_.toByte)
-    val arr = a1 ++ a2 ++ a3
-    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+    val buf = Buf.ByteArray.Owned(a1) concat
+      Buf.ByteArray.Owned(a2) concat
+      Buf.ByteArray.Owned(a3)
 
     assert(buf.slice(20, 30) === buf.slice(20, 24)) // just last
     assert(buf.slice(12, 30) === buf.slice(12, 24)) // two bufs
@@ -118,8 +121,9 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
     val a1 = Array.range(0, 8).map(_.toByte)
     val a2 = Array.range(8, 16).map(_.toByte)
     val a3 = Array.range(16, 24).map(_.toByte)
-    val arr = a1 ++ a2 ++ a3
-    val buf = Buf.ByteArray(a1) concat Buf.ByteArray(a2) concat Buf.ByteArray(a3)
+    val buf = Buf.ByteArray.Owned(a1) concat
+      Buf.ByteArray.Owned(a2) concat
+      Buf.ByteArray.Owned(a3)
 
     intercept[IllegalArgumentException] {
       buf.slice(-1, 0)
@@ -434,8 +438,8 @@ class BufTest extends FunSuite with MockitoSugar with GeneratorDrivenPropertyChe
       Buf.Utf16.apply,
       Buf.Utf16BE.apply,
       Buf.Utf16LE.apply,
-      s => Buf.ByteArray(s.getBytes("UTF-8")),
-      s => Buf.ByteBuffer(UTF_8.encode(CharBuffer.wrap(s))))
+      s => Buf.ByteArray.Owned(s.getBytes("UTF-8")),
+      s => Buf.ByteBuffer.Owned(UTF_8.encode(CharBuffer.wrap(s))))
 
     Arbitrary(for {
       s <- Arbitrary.arbitrary[String]

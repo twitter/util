@@ -166,7 +166,7 @@ trait Jvm {
     (since: Time) => buffer takeWhile(_.timestamp > since)
   }
 
-  def forceGc()
+  def forceGc(): Unit
 
   /**
    * Get the main class name for the currently running application.

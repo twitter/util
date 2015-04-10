@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
-
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -50,7 +49,7 @@ class ActivityTest extends FunSuite {
   }
 
   test("Activity.collect") {
-    val (acts, wits) = Seq.fill(10) { Activity[Int]() } unzip
+    val (acts, wits) = Seq.fill(10) { Activity[Int]() }.unzip
     val ref = new AtomicReference(Seq.empty: Seq[Try[Seq[Int]]])
     Activity.collect(acts).values.build.register(Witness(ref))
 

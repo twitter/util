@@ -1,10 +1,9 @@
 package com.twitter.concurrent
 
-import java.io.EOFException
-
-import scala.collection.mutable.ArrayBuffer
-
 import com.twitter.util.{Await, Duration, Future, Return, Throw}
+import scala.collection.mutable.ArrayBuffer
+import scala.language.implicitConversions
+import java.io.EOFException
 
 /**
  * A spool is an asynchronous stream. It more or less mimics the scala
@@ -269,7 +268,7 @@ object Spool {
     def *::(head: A): Spool[A] = new LazyCons(head, tail)
   }
 
-  implicit def syntax[A](s: => Future[Spool[A]]) = new Syntax[A](s)
+  implicit def syntax[A](s: => Future[Spool[A]]): Syntax[A] = new Syntax[A](s)
 
   object *:: {
     def unapply[A](s: Spool[A]): Option[(A, Future[Spool[A]])] = {
@@ -286,7 +285,7 @@ object Spool {
     def **::(head: A) = cons(head, tail)
   }
 
-  implicit def syntax1[A](s: Spool[A]) = new Syntax1(s)
+  implicit def syntax1[A](s: Spool[A]): Syntax1[A] = new Syntax1[A](s)
 
   object **:: {
     def unapply[A](s: Spool[A]): Option[(A, Spool[A])] = {
@@ -320,5 +319,5 @@ object Spool {
       }
   }
 
-  implicit def seqToSpool[A](s: Seq[A]) = new ToSpool(s)
+  implicit def seqToSpool[A](s: Seq[A]): ToSpool[A] = new ToSpool[A](s)
 }

@@ -1,7 +1,6 @@
 package com.twitter.util.registry
 
 import com.twitter.util.NoStacktrace
-import com.twitter.util.registry.SimpleRegistry
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

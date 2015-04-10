@@ -224,7 +224,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       Var(2),
       Var(3))
 
-    val coll = Var.collect(vars map (v => v: Var[Int]) toSet)
+    val coll = Var.collect(vars.map { v => v: Var[Int] }.toSet)
     val ref = new AtomicReference[Set[Int]]
     coll.observeTo(ref)
     assert(ref.get === Set(1,2,3))
@@ -323,7 +323,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     v() = 333
     v match {
       case Var.Sampled(333) =>
-      case _ => fail
+      case _ => fail()
     }
   }
 
@@ -383,7 +383,6 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val c = a.flatMap(_ => b)
 
     @volatile var j = -1
-    @volatile var n = 0
     c observe { i =>
       assert(i === j+1)
       j = i
@@ -417,7 +416,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       val v = Var(sets.head)
       val w = new AtomicReference[Set[Int]]
       Var.patch[Set, Int](v.diff).changes.register(Witness(w))
-      
+
       for (set <- sets) {
         v() = set
         assert(set === w.get)

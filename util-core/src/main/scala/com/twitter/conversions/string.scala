@@ -16,6 +16,7 @@
 
 package com.twitter.conversions
 
+import scala.language.implicitConversions
 import scala.util.matching.Regex
 
 object string {
@@ -42,7 +43,7 @@ object string {
      *     returns a string to substitute
      * @return the resulting string with replacements made
      */
-    def regexSub(re: Regex)(replace: (Regex.MatchData => String)): String = {
+    def regexSub(re: Regex)(replace: Regex.MatchData => String): String = {
       var offset = 0
       val out = new StringBuilder()
 
@@ -96,7 +97,7 @@ object string {
 
     /**
      * Unquote an ASCII string that has been quoted in a style like
-     * {@link #quoteC} and convert it into a standard unicode string.
+     * [[quoteC()]] and convert it into a standard unicode string.
      * `"\\uHHHH"` and `"\xHH"` expressions are unpacked
      * into unicode characters, as well as `"\r"`, `"\n"`,
      * `"\t"`, `"\\"`, and `'\"'`.
@@ -124,7 +125,7 @@ object string {
      */
     def unhexlify(): Array[Byte] = {
       val buffer = new Array[Byte]((wrapped.length + 1) / 2)
-      (wrapped.grouped(2).toSeq zipWithIndex) foreach { case (substr, i) =>
+      wrapped.grouped(2).toSeq.zipWithIndex.foreach { case (substr, i) =>
         buffer(i) = Integer.parseInt(substr, 16).toByte
       }
       buffer
@@ -151,6 +152,6 @@ object string {
     def hexlify: String = string.hexlify(wrapped, 0, wrapped.length)
   }
 
-  implicit def stringToConfiggyString(s: String) = new RichString(s)
-  implicit def byteArrayToConfiggyByteArray(b: Array[Byte]) = new RichByteArray(b)
+  implicit def stringToConfiggyString(s: String): RichString = new RichString(s)
+  implicit def byteArrayToConfiggyByteArray(b: Array[Byte]): RichByteArray = new RichByteArray(b)
 }

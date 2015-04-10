@@ -5,29 +5,31 @@
 package com.twitter.util
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream}
+import scala.language.implicitConversions
 
 class RichU64Long(l64: Long) {
   import U64._
 
-  def u64_<(y: Long) = u64_lt(l64, y)
+  def u64_<(y: Long): Boolean = u64_lt(l64, y)
 
-  // exclusive: (a, b)
-  def u64_within(a: Long, b: Long) = u64_lt(a, l64) && u64_lt(l64, b)
-  // inclusive: [a, b]
-  def u64_contained(a: Long, b: Long) = !u64_lt(l64, a) && !u64_lt(b, l64)
+  /** exclusive: (a, b) */
+  def u64_within(a: Long, b: Long): Boolean = u64_lt(a, l64) && u64_lt(l64, b)
 
-  def u64ToBigInt = u64ToBigint(l64)
+  /** inclusive: [a, b] */
+  def u64_contained(a: Long, b: Long): Boolean = !u64_lt(l64, a) && !u64_lt(b, l64)
 
-  def u64_/(y: Long) =
+  def u64ToBigInt: BigInt = u64ToBigint(l64)
+
+  def u64_/(y: Long): Long =
     (u64ToBigInt / u64ToBigint(y)).longValue
 
-  def u64_%(y: Long) =
+  def u64_%(y: Long): Long =
     (u64ToBigInt % u64ToBigint(y)).longValue
 
   // Other arithmetic operations don't need unsigned equivalents
   // with 2s complement.
 
-  def toU64ByteArray = {
+  def toU64ByteArray: Array[Byte] = {
     val bytes = new ByteArrayOutputStream(8)
     new DataOutputStream(bytes).writeLong(l64)
     bytes.toByteArray
@@ -59,7 +61,7 @@ class RichU64ByteArray(bytes: Array[Byte]) {
  * string
  */
 class RichU64String(string: String) {
-  private[this] def validateHexDigit(c: Char) {
+  private[this] def validateHexDigit(c: Char): Unit = {
     if (!(('0' <= c && c <= '9') ||
       ('a' <= c && c <= 'f') ||
       ('A' <= c && c <= 'F'))) {
@@ -74,7 +76,7 @@ class RichU64String(string: String) {
   }
   string.foreach(validateHexDigit)
 
-  def toU64ByteArray = {
+  def toU64ByteArray: Array[Byte] = {
     val padded = "0" * (16-string.length()) + string
     (0 until 16 by 2).map(i => {
       val parsed = Integer.parseInt(padded.slice(i, i + 2), 16)
@@ -83,7 +85,7 @@ class RichU64String(string: String) {
     }).toArray
   }
 
-  def toU64Long = (new RichU64ByteArray(toU64ByteArray)).toU64Long
+  def toU64Long: Long = (new RichU64ByteArray(toU64ByteArray)).toU64Long
 }
 
 object U64 {
@@ -99,13 +101,16 @@ object U64 {
       x: BigInt
 
   // compares x < y
-  def u64_lt(x: Long, y: Long) =
+  def u64_lt(x: Long, y: Long): Boolean =
     if (x < 0 == y < 0)
       x < y  // signed comparison, straightforward!
     else
       x > y  // x is less if it doesn't have its high bit set (<0)
 
-  implicit def longToRichU64Long(x: Long)                      = new RichU64Long(x)
-  implicit def byteArrayToRichU64ByteArray(bytes: Array[Byte]) = new RichU64ByteArray(bytes)
-  implicit def stringToRichU64String(string: String)           = new RichU64String(string)
+  implicit def longToRichU64Long(x: Long): RichU64Long = new RichU64Long(x)
+
+  implicit def byteArrayToRichU64ByteArray(bytes: Array[Byte]): RichU64ByteArray
+    = new RichU64ByteArray(bytes)
+
+  implicit def stringToRichU64String(string: String): RichU64String = new RichU64String(string)
 }

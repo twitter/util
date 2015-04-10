@@ -7,7 +7,7 @@ public class TryCompilationTest {
     @Test
     public void testThrowThrowable() {
         final Exception e = new Exception("exc");
-        final Throw t = new Throw(e);
+        final Throw<Void> t = new Throw<Void>(e);
         Assert.assertEquals(t.throwable(), e);
     }
 

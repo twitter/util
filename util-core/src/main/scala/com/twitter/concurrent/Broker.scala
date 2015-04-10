@@ -138,7 +138,7 @@ class Broker[T] {
   /**
    * Retrieve an item from the broker, blocking.
    */
-  def ?? : T = Await.result(this ?)
+  def ?? : T = Await.result(?)
 
   /* Java-friendly API */
 
@@ -155,10 +155,10 @@ class Broker[T] {
   /**
    * @see operator `?`
    */
-  def recvAndSync(): Future[T] = this ?
+  def recvAndSync(): Future[T] = ?
 
   /**
    * @see operator `??`
    */
-  def recvAndAwait(): T = this ??
+  def recvAndAwait(): T = ??
 }

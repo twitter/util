@@ -111,15 +111,17 @@ class PromiseTest extends FunSuite {
     assert(p.waitqLength === 0)
   }
 
+  class HandledMonitor extends Monitor {
+    var handled = null: Throwable
+    def handle(exc: Throwable) = {
+      handled = exc
+      true
+    }
+  }
+
   test("Promise.respond should monitor fatal exceptions") {
     val p = new Promise[Int]
-    val m = new Monitor {
-      var handled = null: Throwable
-      def handle(exc: Throwable) = {
-        handled = exc
-        true
-      }
-    }
+    val m = new HandledMonitor()
     val exc = new NoSuchMethodException
 
     Monitor.using(m) {
@@ -132,13 +134,7 @@ class PromiseTest extends FunSuite {
   }
 
   test("Promise.transform should monitor fatal exceptions") {
-    val m = new Monitor {
-      var handled = null: Throwable
-      def handle(exc: Throwable) = {
-        handled = exc
-        true
-      }
-    }
+    val m = new HandledMonitor()
     val exc = new NoSuchMethodException
     val p = new Promise[Int]
 

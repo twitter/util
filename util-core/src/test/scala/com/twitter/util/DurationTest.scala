@@ -16,15 +16,13 @@
 
 package com.twitter.util
 
+import com.twitter.conversions.time._
 import java.util.concurrent.TimeUnit
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import com.twitter.conversions.time._
-
 @RunWith(classOf[JUnitRunner])
-class ScalaDurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
+class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
   import ops._
 
   "Duration" should {

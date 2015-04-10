@@ -170,8 +170,13 @@ class MinimumThroughputTest
       0d,
       Timer.Nil)
 
-    assert(Await.result(writer.write(buf)) == ())
-    assert(Await.result(writer.write(buf)) == ())
+    val w1 = writer.write(buf)
+    Await.ready(w1)
+    assert(w1.isDone)
+
+    val w2 = writer.write(buf)
+    Await.ready(w2)
+    assert(w2.isDone)
   }
 
   test("Writer - below threshold after write") {
@@ -200,7 +205,9 @@ class MinimumThroughputTest
         Timer.Nil)
 
       // do a write of 1 byte in 0 time — which is ok.
-      assert(Await.result(writer.write(buf)) == ())
+      val w1 = writer.write(buf)
+      Await.ready(w1)
+      assert(w1.isDone)
 
       val ex = intercept[BelowThroughputException] {
         // note in the mock above, the 2nd write takes 10 seconds

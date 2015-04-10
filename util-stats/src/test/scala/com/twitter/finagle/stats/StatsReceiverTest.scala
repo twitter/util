@@ -1,8 +1,7 @@
 package com.twitter.finagle.stats
 
 import com.twitter.conversions.time._
-import com.twitter.util.{Await, Future, Promise}
-import java.net.InetSocketAddress
+import com.twitter.util.{Await, Future}
 import java.util.concurrent.TimeUnit
 import org.junit.runner.RunWith
 import org.mockito.Mockito._

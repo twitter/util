@@ -17,8 +17,8 @@
 package com.twitter.util
 
 import java.io.Serializable
-
 import scala.collection.mutable
+import scala.language.implicitConversions
 
 /**
  * You can import Config._ if you want the auto-conversions in a class

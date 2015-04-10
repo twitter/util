@@ -3,13 +3,12 @@ package com.twitter.finagle.stats
 import com.twitter.util.{Future, Await}
 
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
+import org.scalatest.{Matchers, FunSuite}
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.matchers.ShouldMatchers
 
 @RunWith(classOf[JUnitRunner])
 class BroadcastStatsReceiverTest extends FunSuite
-  with ShouldMatchers
+  with Matchers
 {
 
   test("counter") {
@@ -112,11 +111,13 @@ class BroadcastStatsReceiverTest extends FunSuite
     recv1.stats.get(statName).isEmpty should be(true)
     recv2.stats.get(statName).isEmpty should be(true)
 
-    recv.time("meh")()
+    val stat = recv.stat("meh")
+
+    Stat.time(stat) { () }
     recv1.stats(statName).size should be(1)
     recv2.stats(statName).size should be(1)
 
-    recv.time("meh")()
+    Stat.time(stat) { () }
     recv1.stats(statName).size should be(2)
     recv2.stats(statName).size should be(2)
   }

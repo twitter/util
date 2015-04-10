@@ -1,14 +1,12 @@
 package com.twitter.util
 
+import com.twitter.conversions.time._
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{TimeUnit, CountDownLatch => JavaCountDownLatch}
-
 import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
 class MemoizeTest extends FunSuite {
@@ -111,7 +109,7 @@ class MemoizeTest extends FunSuite {
     assert(2 == memoizer(1))
     assert(2 === memoizer(1))
     assert(3 == memoizer(2))
-    expectResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
+    assertResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
   }
 
   test("Memoize.snappable: snap ignores in-process computations") {
@@ -127,17 +125,17 @@ class MemoizeTest extends FunSuite {
     assert(memoizer.snap.isEmpty)
 
     val result = FuturePool.unboundedPool {
-      callTriggeredLatch.countDown
+      callTriggeredLatch.countDown()
       memoizer(2)
     }
 
     callTriggeredLatch.await(10, TimeUnit.SECONDS)
     assert(2 === memoizer(1))
-    expectResult(Map(1 -> 2))(memoizer.snap)
+    assertResult(Map(1 -> 2))(memoizer.snap)
     callReadyLatch.countDown()
 
     assert(3 == Await.result(result))
-    expectResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
+    assertResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
   }
 
   test("Memoize.snappable: snap ignores failed computations") {
@@ -153,6 +151,6 @@ class MemoizeTest extends FunSuite {
     assert(memoizer.snap.isEmpty)
 
     assert(2 == memoizer(1))
-    expectResult(Map(1 -> 2))(memoizer.snap)
+    assertResult(Map(1 -> 2))(memoizer.snap)
   }
 }

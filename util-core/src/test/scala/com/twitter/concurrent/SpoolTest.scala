@@ -90,7 +90,7 @@ class SpoolTest extends WordSpec {
     }
 
     "map" in {
-      assert(Await.result(s map { _ * 2 } toSeq) === Seq(2, 4))
+      assert(Await.result(s.map { _ * 2 }.toSeq) === Seq(2, 4))
     }
 
     "mapFuture" in {
@@ -416,7 +416,7 @@ class SpoolTest extends WordSpec {
         applyLazily { spool =>
           Future.value(spool.map(_ + 1))
         }
-      Await.ready { spool map (_ force) }
+      Await.ready { spool.map(_.force) }
       assert(tailReached.isDefined)
     }
 

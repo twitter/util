@@ -9,7 +9,7 @@ import org.scalatest.junit.JUnitRunner
 class OnceTest extends FunSuite {
   test("Once.apply should only be applied once") {
     var x = 0
-    val once = Once { x += 1; 1 }
+    val once = Once { x += 1 }
     once()
     assert(x == 1)
     once()
@@ -18,17 +18,17 @@ class OnceTest extends FunSuite {
 
   test("Once.apply should be visible from the other thread") {
     @volatile var x = 0
-    val once = Once { x += 1; 1 }
-    val p = Promise[Unit]
+    val once = Once { x += 1 }
+    val p = Promise[Unit]()
     val t = new Thread(new Runnable {
       def run(): Unit = {
         once()
         try {
           assert(x == 1)
         } catch {
-          case t =>
-            p.setException(t)
-            throw t
+          case thr: Throwable =>
+            p.setException(thr)
+            throw thr
         }
         p.setDone()
       }

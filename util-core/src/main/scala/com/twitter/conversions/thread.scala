@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.twitter
-package conversions
+package com.twitter.conversions
 
 import java.util.concurrent.Callable
+import scala.language.implicitConversions
 
 /**
  * Implicits for turning a block of code into a Runnable or Callable.
  */
 object thread {
-  implicit def makeRunnable(f: => Unit): Runnable = new Runnable() { def run() = f }
+  implicit def makeRunnable(f: => Unit): Runnable = new Runnable() { def run(): Unit = f }
 
-  implicit def makeCallable[T](f: => T): Callable[T] = new Callable[T]() { def call() = f }
+  implicit def makeCallable[T](f: => T): Callable[T] = new Callable[T]() { def call(): T = f }
 }

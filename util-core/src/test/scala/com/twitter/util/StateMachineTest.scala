@@ -8,7 +8,7 @@ import org.scalatest.junit.JUnitRunner
 class StateMachineTest extends WordSpec {
   "StateMachine" should {
     class StateMachineHelper {
-      val stateMachine = new StateMachine {
+      class Machine extends StateMachine {
         case class State1() extends State
         case class State2() extends State
         state = State1()
@@ -19,6 +19,8 @@ class StateMachineTest extends WordSpec {
           }
         }
       }
+
+      val stateMachine = new Machine()
     }
 
     "allows transitions that are permitted" in {

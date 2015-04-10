@@ -21,7 +21,7 @@ import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
 class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
-  implicit def futureMatcher[A](future: Future[A]) = new {
+  implicit class FutureMatcher[A](future: Future[A]) {
     def mustProduce(expected: Try[A]) {
       expected match {
         case Throw(ex) =>
@@ -1702,7 +1702,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
     "not accumulate listeners when losing or" in {
       val p = new Promise[Unit]
       val q = new Promise[Unit]
-      (p or q)
+      p or q
       assert(p.waitqLength === 1)
       q.setDone()
       assert(p.waitqLength === 0)
@@ -1816,10 +1816,10 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         case 0 => next = Future.exception(exc)
         case n => next = Future.value(n-1)
       }
-      
+
       assert(done.poll == Some(Throw(exc)))
     }
-    
+
     "evaluate next one time per iteration" in {
       var i, j = 0
       def next() =
@@ -1828,30 +1828,30 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           Future.value(i)
         }
 
-      Future.each(next) { i => 
+      Future.each(next()) { i =>
         j += 1
         assert(i == j)
       }
     }
-    
+
     "terminate if the body throws an exception" in {
       val exc = new Exception("body exception")
       var i = 0
       def next() = Future.value({i += 1; i})
-      val done = Future.each(next) {
+      val done = Future.each(next()) {
         case 10 => throw exc
         case _ =>
       }
-      
+
       assert(done.poll == Some(Throw(exc)))
       assert(i == 10)
     }
-    
+
     "terminate when 'next' throws" in {
       val exc = new Exception
       def next(): Future[Int] = throw exc
-      val done = Future.each(next) { _ => throw exc }
-      
+      val done = Future.each(next()) { _ => throw exc }
+
       assert(done.poll == Some(Throw(Future.NextThrewException(exc))))
     }
   }

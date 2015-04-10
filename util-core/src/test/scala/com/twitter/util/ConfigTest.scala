@@ -2,13 +2,12 @@ package com.twitter.util
 
 
 import org.junit.runner.RunWith
-import org.scalatest.WordSpec
+import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.mock.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
-class ConfigTest extends WordSpec with MockitoSugar with ShouldMatchers {
+class ConfigTest extends WordSpec with MockitoSugar with Matchers {
   import Config._
 
   "Config" should {

@@ -16,6 +16,7 @@ public class JavaRefreshTest {
 
   @Test
   public void testRefreshWorksFromJava() throws Exception {
+    @SuppressWarnings("unchecked")
     Function0<Future<Integer>> provider = mock(Function0.class);
     when(provider.apply()).thenReturn(Future.value(1));
     Function0<Future<Integer>> memoized = Refresh.every(Duration.fromSeconds(10), provider);
