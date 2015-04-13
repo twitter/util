@@ -36,6 +36,19 @@ abstract class RegistryTest extends FunSuite {
     assert(registry.toSet == Set(Entry(Seq("foo"), "baz")))
   }
 
+  test(s"$name can remove old element") {
+    val registry = mkRegistry()
+    registry.put(Seq("foo"), "bar")
+    assert(registry.remove(Seq("foo")) == Some("bar"))
+    assert((registry.toSet) == Set.empty)
+  }
+
+  test(s"$name can remove nothing") {
+    val registry = mkRegistry()
+    assert(registry.remove(Seq("foo")) == None)
+    assert(registry.toSet == Set.empty)
+  }
+
   test(s"$name can support multiple elements") {
     val registry = mkRegistry()
     registry.put(Seq("foo"), "bar")

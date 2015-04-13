@@ -39,6 +39,11 @@ trait Registry extends Iterable[Entry] {
    * Registers a value in the registry, and returns the old value (if any).
    */
   def put(key: Seq[String], value: String): Option[String]
+
+  /**
+   * Removes a key from the registry, if it was registered, and returns the old value (if any).
+   */
+  def remove(key: Seq[String]): Option[String]
 }
 
 /**
@@ -55,6 +60,15 @@ class SimpleRegistry extends Registry {
     synchronized {
       val result = registry.get(sanitizedKey)
       registry += sanitizedKey -> sanitizedValue
+      result
+    }
+  }
+
+  def remove(key: Seq[String]): Option[String] = {
+    val sanitizedKey = key.map(sanitize)
+    synchronized {
+      val result = registry.get(sanitizedKey)
+      registry -= sanitizedKey
       result
     }
   }
