@@ -45,7 +45,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
       "org.mockito" % "mockito-all" % "1.8.5" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.2" % "test"
+      "org.scalatest" %% "scalatest" % "2.2.4" % "test"
     ),
 
     resolvers += "twitter repo" at "http://maven.twttr.com",
@@ -179,7 +179,7 @@ object Util extends Build {
       "javax.inject"             % "javax.inject"        % "1",
       "com.google.guava"         % "guava"               % "16.0.1",
       "commons-collections"      % "commons-collections" % "3.2.1",
-      "org.scalacheck"          %% "scalacheck"          % "1.11.5" % "test"
+      "org.scalacheck"          %% "scalacheck"          % "1.12.2" % "test"
     )
   ).dependsOn(utilCore % "compile->compile;test->test")
 
@@ -192,7 +192,7 @@ object Util extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
+      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
     ),
     libraryDependencies <++= parserCombinators,
     resourceGenerators in Compile <+=
@@ -262,7 +262,7 @@ object Util extends Build {
     name := "util-hashing",
     libraryDependencies ++= Seq(
       "commons-codec" % "commons-codec" % "1.6" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
+      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
     )
   ).dependsOn(utilCore % "test")
 
@@ -311,7 +311,7 @@ object Util extends Build {
   ).settings(
     name := "util-test",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.2",
+      "org.scalatest" %% "scalatest" % "2.2.4",
       "org.mockito" % "mockito-all" % "1.8.5"
     )
   ).dependsOn(utilCore, utilLogging)
