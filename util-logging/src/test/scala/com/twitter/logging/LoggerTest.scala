@@ -401,6 +401,24 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     }
   }
 
+  "Levels.fromJava" should {
+    "return a corresponding level if it exists" in {
+      assert(Level.fromJava(javalog.Level.OFF) == Some(Level.OFF))
+      assert(Level.fromJava(javalog.Level.SEVERE) == Some(Level.FATAL))
+      // No corresponding level for ERROR and CRITICAL in javalog.
+      assert(Level.fromJava(javalog.Level.WARNING) == Some(Level.WARNING))
+      assert(Level.fromJava(javalog.Level.INFO) == Some(Level.INFO))
+      assert(Level.fromJava(javalog.Level.FINE) == Some(Level.DEBUG))
+      assert(Level.fromJava(javalog.Level.FINER) == Some(Level.TRACE))
+      assert(Level.fromJava(javalog.Level.ALL) == Some(Level.ALL))
+    }
+
+    "return None for non corresponding levels" in {
+      assert(Level.fromJava(javalog.Level.CONFIG) == None)
+      assert(Level.fromJava(javalog.Level.FINEST) == None)
+    }
+  }
+
   "Levels.parse" should {
     "return Levels for valid names" in {
       assert(Level.parse("INFO") == Some(Level.INFO))

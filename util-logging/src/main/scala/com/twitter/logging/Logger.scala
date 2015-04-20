@@ -42,6 +42,16 @@ object Level {
   private[logging] val AllLevels: Seq[Level] =
     Seq(OFF, FATAL, CRITICAL, ERROR, WARNING, INFO, DEBUG, TRACE, ALL)
 
+  /**
+   * Associate [[java.util.logging.Level]] and `Level` by their integer
+   * values. If there is no match, we return `None`.
+   */
+  def fromJava(level: javalog.Level): Option[Level] =
+    AllLevels.find(_.value == level.intValue)
+
+  /**
+   * Get a `Level` by its name, or `None` if there is no match.
+   */
   def parse(name: String): Option[Level] = AllLevels.find(_.name == name)
 }
 
