@@ -1,8 +1,10 @@
 .. Author notes: this file is formatted with restructured text
-   (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
-   The changelog style is adapted from Apache Lucene.
+(http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
+The changelog style is adapted from Apache Lucene.
 
 Next Version
+
+6.24.0  2015-04-12
 
 New Features:
   * util-core: Introduce AsyncStream, an experimental replacement for Spool.

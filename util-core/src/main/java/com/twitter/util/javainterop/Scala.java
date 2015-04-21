@@ -47,7 +47,7 @@ public final class Scala {
       java.util.Set<E> jSet
   ) {
     if (jSet == null) {
-      return scala.collection.immutable.Set$.MODULE$.empty();
+      return scala.collection.immutable.Set$.MODULE$.<E>empty();
     } else {
       return asScalaSet(jSet).toSet();
     }
