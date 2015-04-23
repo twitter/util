@@ -96,7 +96,8 @@
         <a href="AsyncMutex.html"><span class="name">AsyncMutex</span></a><span class="result"> extends <a href="AsyncSemaphore.html" class="extype" name="com.twitter.concurrent.AsyncSemaphore">AsyncSemaphore</a></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">An <a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> is a traditional mutex but with asynchronous
+execution.</p>
     </li><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AsyncQueue[T]extendsAnyRef"></a>
       <a id="AsyncQueue[T]:AsyncQueue[T]"></a>
@@ -106,7 +107,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An asynchronous FIFO queue.</p>
@@ -119,7 +120,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An AsyncSemaphore is a traditional semaphore but with asynchronous
@@ -147,7 +148,7 @@ executor threads.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An unbuffered FIFO queue, brokered by <code>Offer</code>s.</p>
@@ -160,7 +161,7 @@ executor threads.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="com.twitter.concurrent.ConcurrentBijection.A">A</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentBijection.B">B</span>]</span>
+        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentBijection.A">A</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentBijection.B">B</span>]</span>
       </span>
       </h4>
       
@@ -173,7 +174,7 @@ executor threads.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A named Scheduler mix-in that causes submitted tasks to be dispatched according to
@@ -215,12 +216,12 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An offer to communicate with another process.</p>
-    </li><li name="com.twitter.concurrent.OfferBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="OfferBenchmarkextendsSimpleBenchmark"></a>
+    </li><li name="com.twitter.concurrent.OfferBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="OfferBenchmarkextendsAnyRef"></a>
       <a id="OfferBenchmark:OfferBenchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -228,10 +229,15 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="OfferBenchmark.html"><span class="name">OfferBenchmark</span></a><span class="result"> extends <span class="extype" name="com.google.caliper.SimpleBenchmark">SimpleBenchmark</span></span>
+        <a href="OfferBenchmark.html"><span class="name">OfferBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
+              
+                <span class="name">@BenchmarkMode</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.concurrent.Offers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="OffersextendsObject"></a>
       <a id="Offers:Offers"></a>
@@ -241,10 +247,28 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Offers.html"><span class="name">Offers</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Offers.html"><span class="name">Offers</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
+    </li><li name="com.twitter.concurrent.OnceBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="OnceBenchmarkextendsAnyRef"></a>
+      <a id="OnceBenchmark:OnceBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OnceBenchmark.html"><span class="name">OnceBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
+              
+                <span class="name">@BenchmarkMode</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.concurrent.Permit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PermitextendsAnyRef"></a>
       <a id="Permit:Permit"></a>
@@ -254,7 +278,7 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
@@ -267,12 +291,12 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An interface for scheduling <span class="extype" name="java.lang.Runnable">java.lang.Runnable</span> tasks.</p>
     </li><li name="com.twitter.concurrent.SchedulerBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SchedulerBenchmarkextendsSimpleBenchmark"></a>
+      <a id="SchedulerBenchmarkextendsAnyRef"></a>
       <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -280,7 +304,7 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SchedulerBenchmark.html"><span class="name">SchedulerBenchmark</span></a><span class="result"> extends <span class="extype" name="com.google.caliper.SimpleBenchmark">SimpleBenchmark</span></span>
+        <a href="SchedulerBenchmark.html"><span class="name">SchedulerBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Measure Scheduler.</p>
@@ -293,7 +317,7 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Efficient ordered <i>serialization</i> of operations.</p>
@@ -306,7 +330,7 @@ indicating the pool from which they originated.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A spool is an asynchronous stream.</p>
@@ -319,7 +343,7 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p>
@@ -332,7 +356,7 @@ indicating the pool from which they originated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Spools.html"><span class="name">Spools</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Spools.html"><span class="name">Spools</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
@@ -359,7 +383,7 @@ cached threadpool executor.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
@@ -373,7 +397,7 @@ protocol:</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Txs.html"><span class="name">Txs</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Txs.html"><span class="name">Txs</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
@@ -386,7 +410,7 @@ protocol:</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentMultiMap.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ConcurrentMultiMap.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -402,7 +426,7 @@ protocol:</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentPool.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use finagle's BufferingPool">ConcurrentPool</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ConcurrentPool.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use finagle's BufferingPool">ConcurrentPool</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">The ConcurrentPool provides a concurrent object pool on top of the
@@ -453,6 +477,45 @@ java.</p>
       </span>
       </h4>
       <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Offers.html" class="extype" name="com.twitter.concurrent.Offers">com.twitter.concurrent.Offers</a>.</p>
+    </li><li name="com.twitter.concurrent.OfferBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OfferBenchmark"></a>
+      <a id="OfferBenchmark:OfferBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OfferBenchmark$.html"><span class="name">OfferBenchmark</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.concurrent.Once" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Once"></a>
+      <a id="Once:Once"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Once$.html"><span class="name">Once</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.concurrent.OnceBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OnceBenchmark"></a>
+      <a id="OnceBenchmark:OnceBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OnceBenchmark$.html"><span class="name">OnceBenchmark</span></a>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.concurrent.Scheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Scheduler"></a>
       <a id="Scheduler:Scheduler"></a>
@@ -466,6 +529,19 @@ java.</p>
       </span>
       </h4>
       <p class="comment cmt">A global scheduler.</p>
+    </li><li name="com.twitter.concurrent.SchedulerBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SchedulerBenchmark"></a>
+      <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SchedulerBenchmark$.html"><span class="name">SchedulerBenchmark</span></a>
+      </span>
+      </h4>
+      
     </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Spool"></a>
       <a id="Spool:Spool"></a>
@@ -505,6 +581,19 @@ java.</p>
       </span>
       </h4>
       <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Txs.html" class="extype" name="com.twitter.concurrent.Txs">com.twitter.concurrent.Txs</a>.</p>
+    </li><li name="com.twitter.concurrent.exp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="exp"></a>
+      <a id="exp:exp"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="exp/package.html"><span class="name">exp</span></a>
+      </span>
+      </h4>
+      
     </li></ol>
             </div>
 

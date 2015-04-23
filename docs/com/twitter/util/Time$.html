@@ -35,19 +35,32 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Time</span><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>] with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Time</span><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Use <code>Time.now</code> in your program instead of
-<code>System.currentTimeMillis</code>, and unit tests will be able to adjust
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>By using <a href="#now:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#now">Time.now</a> in your program instead of
+<code>System.currentTimeMillis</code> unit tests are able to adjust
 the current time to verify timeouts and other time-dependent
-behavior, without calling <code>sleep</code>.</p><p>If you import the <a href="../conversions/time$.html" class="extype" name="com.twitter.conversions.time">com.twitter.conversions.time</a> implicits you
-can write human-readable values such as <code>1.minute</code> or
-<code>250.millis</code>.
-</p></div><div class="toggleContainer block">
+behavior, without calling <code>sleep</code>, and providing deterministic
+tests.</p><p>The current time can be manipulated via <a href="#withTimeAt[A](time:com.twitter.util.Time)(body:com.twitter.util.TimeControl=&gt;A):A" class="extmbr" name="com.twitter.util.Time#withTimeAt">Time.withTimeAt</a>,
+<a href="#withCurrentTimeFrozen[A](body:com.twitter.util.TimeControl=&gt;A):A" class="extmbr" name="com.twitter.util.Time#withCurrentTimeFrozen">Time.withCurrentTimeFrozen</a>, <a href="#withTimeFunction[A](timeFunction:=&gt;com.twitter.util.Time)(body:com.twitter.util.TimeControl=&gt;A):A" class="extmbr" name="com.twitter.util.Time#withTimeFunction">Time.withTimeFunction</a> and
+<a href="#sleep(duration:com.twitter.util.Duration):Unit" class="extmbr" name="com.twitter.util.Time#sleep">Time.sleep</a>.</p><p>While <code>now</code> is not a &quot;global&quot; it is however properly propagated through
+to other code via the standard usage of <a href="Local.html" class="extype" name="com.twitter.util.Local">Locals</a> throughout <code>util</code>.
+Specifically, code using <a href="Future.html" class="extype" name="com.twitter.util.Future">Futures</a>, <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePools</a>,
+and <a href="MockTimer.html" class="extype" name="com.twitter.util.MockTimer">MockTimers</a> will have their code see the manipulated
+values.</p><pre><span class="kw">val</span> time = Time.fromMilliseconds(<span class="num">123456</span>L)
+Time.withTimeAt(time) { timeControl <span class="kw">=&gt;</span>
+  assert(Time.now == time)
+
+  <span class="cmt">// you can control time via the `TimeControl` instance.</span>
+  timeControl.advance(<span class="num">2.</span>seconds)
+  FuturePool.unboundedPool {
+    assert(Time.now == time + <span class="num">2.</span>seconds)
+  }
+}</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>], <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -100,7 +113,7 @@ can write human-readable values such as <code>1.minute</code> or
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -113,7 +126,7 @@ can write human-readable values such as <code>1.minute</code> or
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -126,7 +139,7 @@ can write human-readable values such as <code>1.minute</code> or
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -139,7 +152,7 @@ can write human-readable values such as <code>1.minute</code> or
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -152,7 +165,7 @@ can write human-readable values such as <code>1.minute</code> or
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -228,7 +241,7 @@ representing a time infinitely far into the future.
         <span class="name">Undefined</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">An undefined value: behaves like Double.</p><div class="fullcomment"><div class="comment cmt"><p>An undefined value: behaves like Double.NaN</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
+      <p class="shortcomment cmt">An undefined value: behaves like <code>Double.NaN</code></p><div class="fullcomment"><div class="comment cmt"><p>An undefined value: behaves like <code>Double.NaN</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.TimeLikeOps#Zero" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Zero:This"></a>
       <a id="Zero:Time"></a>
@@ -290,7 +303,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -323,7 +336,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -336,7 +349,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -349,7 +362,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -359,6 +372,23 @@ representing a time infinitely far into the future.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Time#fromFractionalSeconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fromFractionalSeconds(seconds:Double):com.twitter.util.Time"></a>
+      <a id="fromFractionalSeconds(Double):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromFractionalSeconds</span><span class="params">(<span name="seconds">seconds: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Make a new <code>This</code> from the given number of seconds.</p><div class="fullcomment"><div class="comment cmt"><p>Make a new <code>This</code> from the given number of seconds.
+Because this method takes a Double, it can represent values less than a second.
+Note however that there is some slop in floating-point conversion that
+limits precision.  Currently we can assume at least microsecond precision.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Time#fromMicroseconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromMicroseconds(micros:Long):com.twitter.util.Time"></a>
       <a id="fromMicroseconds(Long):Time"></a>
@@ -368,7 +398,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromMicroseconds</span><span class="params">(<span name="micros">micros: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+        <span class="name">fromMicroseconds</span><span class="params">(<span name="micros">micros: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
@@ -381,7 +411,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromMilliseconds</span><span class="params">(<span name="millis">millis: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+        <span class="name">fromMilliseconds</span><span class="params">(<span name="millis">millis: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
@@ -394,7 +424,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromNanoseconds</span><span class="params">(<span name="nanoseconds">nanoseconds: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+        <span class="name">fromNanoseconds</span><span class="params">(<span name="nanoseconds">nanoseconds: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Make a new <code>This</code> from the given number of nanoseconds</p><div class="fullcomment"><div class="comment cmt"><p>Make a new <code>This</code> from the given number of nanoseconds</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
@@ -420,7 +450,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromSeconds</span><span class="params">(<span name="seconds">seconds: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+        <span class="name">fromSeconds</span><span class="params">(<span name="seconds">seconds: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
@@ -446,7 +476,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -459,7 +489,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -472,7 +502,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -485,7 +515,7 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -498,11 +528,11 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Time#now" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Time#now" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="now:com.twitter.util.Time"></a>
       <a id="now:Time"></a>
       <h4 class="signature">
@@ -514,7 +544,13 @@ representing a time infinitely far into the future.
         <span class="name">now</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Returns the current <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the current <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>.</p><p>The current time can be manipulated via <a href="#withTimeAt[A](time:com.twitter.util.Time)(body:com.twitter.util.TimeControl=&gt;A):A" class="extmbr" name="com.twitter.util.Time#withTimeAt">Time.withTimeAt</a>,
+<a href="#withCurrentTimeFrozen[A](body:com.twitter.util.TimeControl=&gt;A):A" class="extmbr" name="com.twitter.util.Time#withCurrentTimeFrozen">Time.withCurrentTimeFrozen</a>, <a href="#withTimeFunction[A](timeFunction:=&gt;com.twitter.util.Time)(body:com.twitter.util.TimeControl=&gt;A):A" class="extmbr" name="com.twitter.util.Time#withTimeFunction">Time.withTimeFunction</a> and
+<a href="#sleep(duration:com.twitter.util.Duration):Unit" class="extmbr" name="com.twitter.util.Time#sleep">Time.sleep</a>.</p><p>While <code>now</code> is not a &quot;global&quot; it is however properly propagated through
+to other code via the standard usage of <a href="Local.html" class="extype" name="com.twitter.util.Local">Locals</a> throughout <code>util</code>.
+Specifically, code using <a href="Future.html" class="extype" name="com.twitter.util.Future">Futures</a>, <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePools</a>,
+and <a href="MockTimer.html" class="extype" name="com.twitter.util.MockTimer">MockTimers</a> will have their code see the manipulated
+values.</p></div></div>
     </li><li name="com.twitter.util.Time#sleep" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sleep(duration:com.twitter.util.Duration):Unit"></a>
       <a id="sleep(Duration):Unit"></a>
@@ -524,13 +560,21 @@ representing a time infinitely far into the future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sleep</span><span class="params">(<span name="duration">duration: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">sleep</span><span class="params">(<span name="duration">duration: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Puts the currently executing thread to sleep for the given duration,
 according to object Time.</p><div class="fullcomment"><div class="comment cmt"><p>Puts the currently executing thread to sleep for the given duration,
-according to object Time.</p><p>This is useful for testing.
-</p></div></div>
+according to object Time.</p><p>This is useful for testing.</p><pre><span class="kw">val</span> time = Time.fromMilliseconds(<span class="num">123456</span>L)
+Time.withTimeAt(time) { timeControl <span class="kw">=&gt;</span>
+  assert(Time.now == time)
+
+  <span class="cmt">// you can control time via the `TimeControl` instance.</span>
+  timeControl.advance(<span class="num">2.</span>seconds)
+  FuturePool.unboundedPool {
+    assert(Time.now == time + <span class="num">2.</span>seconds)
+  }
+}</pre></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -566,7 +610,7 @@ according to object Time.</p><p>This is useful for testing.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -585,7 +629,7 @@ according to object Time.</p><p>This is useful for testing.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -604,7 +648,7 @@ according to object Time.</p><p>This is useful for testing.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -627,9 +671,17 @@ according to object Time.</p><p>This is useful for testing.
       </span>
       </h4>
       <p class="shortcomment cmt">Runs the given body at the current time.</p><div class="fullcomment"><div class="comment cmt"><p>Runs the given body at the current time.
-Makes for simple, fast, predictable unit tests that are dependent on time.</p><p>Note, this intended for use in tests.</p><p>Since this updates shared global state, there are risks about memory visibility
-with multi-threaded tests.
-</p></div></div>
+Makes for simple, fast, predictable unit tests that are dependent on time.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this intended for use in tests.</p><pre><span class="kw">val</span> time = Time.fromMilliseconds(<span class="num">123456</span>L)
+Time.withTimeAt(time) { timeControl <span class="kw">=&gt;</span>
+  assert(Time.now == time)
+
+  <span class="cmt">// you can control time via the `TimeControl` instance.</span>
+  timeControl.advance(<span class="num">2.</span>seconds)
+  FuturePool.unboundedPool {
+    assert(Time.now == time + <span class="num">2.</span>seconds)
+  }
+}</pre></span></dd></dl></div>
     </li><li name="com.twitter.util.Time#withTimeAt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withTimeAt[A](time:com.twitter.util.Time)(body:com.twitter.util.TimeControl=&gt;A):A"></a>
       <a id="withTimeAt[A](Time)((TimeControl)⇒A):A"></a>
@@ -643,9 +695,17 @@ with multi-threaded tests.
       </span>
       </h4>
       <p class="shortcomment cmt">Runs the given body at a specified time.</p><div class="fullcomment"><div class="comment cmt"><p>Runs the given body at a specified time.
-Makes for simple, fast, predictable unit tests that are dependent on time.</p><p>Note, this intended for use in tests.</p><p>Since this updates shared global state, there are risks about memory visibility
-with multi-threaded tests.
-</p></div></div>
+Makes for simple, fast, predictable unit tests that are dependent on time.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this intended for use in tests.</p><pre><span class="kw">val</span> time = Time.fromMilliseconds(<span class="num">123456</span>L)
+Time.withTimeAt(time) { timeControl <span class="kw">=&gt;</span>
+  assert(Time.now == time)
+
+  <span class="cmt">// you can control time via the `TimeControl` instance.</span>
+  timeControl.advance(<span class="num">2.</span>seconds)
+  FuturePool.unboundedPool {
+    assert(Time.now == time + <span class="num">2.</span>seconds)
+  }
+}</pre></span></dd></dl></div>
     </li><li name="com.twitter.util.Time#withTimeFunction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withTimeFunction[A](timeFunction:=&gt;com.twitter.util.Time)(body:com.twitter.util.TimeControl=&gt;A):A"></a>
       <a id="withTimeFunction[A](⇒Time)((TimeControl)⇒A):A"></a>
@@ -679,7 +739,7 @@ with nested calls if you have an outstanding Future executing in a worker pool.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2011-09-12) use Time.fromMilliseconds(...) instead">apply</span><span class="params">(<span name="millis">millis: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 2011-09-12) use Time.fromMilliseconds(...) instead">apply</span><span class="params">(<span name="millis">millis: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -695,7 +755,7 @@ with nested calls if you have an outstanding Future executing in a worker pool.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Stopwatch">measure</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Stopwatch">measure</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -711,7 +771,7 @@ with nested calls if you have an outstanding Future executing in a worker pool.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Stopwatch">measureMany</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Stopwatch">measureMany</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -727,7 +787,7 @@ with nested calls if you have an outstanding Future executing in a worker pool.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) nanoTimeOffset may be dangerous to use">nanoTimeOffset</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
+        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) nanoTimeOffset may be dangerous to use">nanoTimeOffset</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">On some systems (os x), nanoTime is just epoch time with greater
@@ -761,15 +821,15 @@ runtime, and so the offset effectively changes.
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="com.twitter.util.TimeLikeOps">
               <h3>Inherited from <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

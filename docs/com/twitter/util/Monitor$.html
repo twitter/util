@@ -39,11 +39,11 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Defines the (Future)-{{Local}} monitor as well as some monitor
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Defines the (Future)-<code>Local</code> monitor as well as some monitor
 utilities.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -96,7 +96,7 @@ utilities.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -109,7 +109,7 @@ utilities.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -122,7 +122,7 @@ utilities.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -135,7 +135,7 @@ utilities.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -148,7 +148,7 @@ utilities.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -164,10 +164,10 @@ utilities.
         <span class="name">andThen</span><span class="params">(<span name="next">next: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="result">: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A new monitor which first handles the exception with {{this}},
-then passes it onto {{next}} unconditionally.</p><div class="fullcomment"><div class="comment cmt"><p>A new monitor which first handles the exception with {{this}},
-then passes it onto {{next}} unconditionally. The new monitor
-handles the exception if either {{this}} or {{next}} does.
+      <p class="shortcomment cmt">A new monitor which first handles the exception with <code>this</code>,
+then passes it onto <code>next</code> unconditionally.</p><div class="fullcomment"><div class="comment cmt"><p>A new monitor which first handles the exception with <code>this</code>,
+then passes it onto <code>next</code> unconditionally. The new monitor
+handles the exception if either <code>this</code> or <code>next</code> does.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
     </li><li name="com.twitter.util.Monitor#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(f:=&gt;Unit):Unit"></a>
@@ -178,11 +178,11 @@ handles the exception if either {{this}} or {{next}} does.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">apply</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Run the computation {{f}} in the context of the current {{Local}}
-monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Run the computation {{f}} in the context of the current {{Local}}
+      <p class="shortcomment cmt">Run the computation <code>f</code> in the context of the current <code>Local</code>
+monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Run the computation <code>f</code> in the context of the current <code>Local</code>
 monitor.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Monitor">Monitor</a> → <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -207,7 +207,7 @@ monitor.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">catcher</span><span class="result">: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Throwable">Throwable</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">catcher</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">An exception catcher that attempts to handle exceptions with
@@ -221,7 +221,7 @@ the current monitor.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -240,7 +240,7 @@ the current monitor.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -253,7 +253,7 @@ the current monitor.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -266,7 +266,7 @@ the current monitor.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -288,7 +288,7 @@ the current monitor.</p>
         <span class="name">get</span><span class="result">: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Get the current {{Local}} monitor</p>
+      <p class="shortcomment cmt">Get the current <code>Local</code> monitor</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -311,12 +311,12 @@ the current monitor.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">handle</span><span class="params">(<span name="exc">exc: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">handle</span><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Handle {{exc}} with the current {{Local}} monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Handle {{exc}} with the current {{Local}} monitor.  If the
-{{Local}} monitor fails to handle the exception, it is handled by
-the {{RootMonitor}}.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>whether the exception was handled by this Monitor</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Monitor">Monitor</a> → <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
+      <p class="shortcomment cmt">Handle <code>exc</code> with the current <code>Local</code> monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Handle <code>exc</code> with the current <code>Local</code> monitor.  If the
+<code>Local</code> monitor fails to handle the exception, it is handled by
+the <code>RootMonitor</code>.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>whether the exception was handled by this Monitor</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Monitor">Monitor</a> → <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -326,7 +326,7 @@ the {{RootMonitor}}.</p></div><dl class="paramcmts block"><dt>returns</dt><dd cl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -339,7 +339,7 @@ the {{RootMonitor}}.</p></div><dl class="paramcmts block"><dt>returns</dt><dd cl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isActive</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isActive</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Checks whether or not monitoring is activated, meaning that the
@@ -356,7 +356,7 @@ currently-set Monitor is non-null.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -369,7 +369,7 @@ currently-set Monitor is non-null.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mk</span><span class="params">(<span name="f">f: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Throwable">Throwable</span>, <span class="extype" name="scala.Boolean">Boolean</span>]</span>)</span><span class="result">: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
+        <span class="name">mk</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>)</span><span class="result">: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Create a new monitor from a partial function.</p>
@@ -382,7 +382,7 @@ currently-set Monitor is non-null.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -395,7 +395,7 @@ currently-set Monitor is non-null.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -408,7 +408,7 @@ currently-set Monitor is non-null.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -424,9 +424,9 @@ currently-set Monitor is non-null.
         <span class="name">orElse</span><span class="params">(<span name="next">next: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="result">: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A new monitor which, if {{this}} fails to handle the exception,
-attempts to let {{next}} handle it.</p><div class="fullcomment"><div class="comment cmt"><p>A new monitor which, if {{this}} fails to handle the exception,
-attempts to let {{next}} handle it.
+      <p class="shortcomment cmt">A new monitor which, if <code>this</code> fails to handle the exception,
+attempts to let <code>next</code> handle it.</p><div class="fullcomment"><div class="comment cmt"><p>A new monitor which, if <code>this</code> fails to handle the exception,
+attempts to let <code>next</code> handle it.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
     </li><li name="com.twitter.util.Monitor#restoring" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="restoring[T](f:=&gt;T):T"></a>
@@ -440,7 +440,7 @@ attempts to let {{next}} handle it.
         <span class="name">restoring</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Monitor.restoring.T">T</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Monitor.restoring.T">T</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Restore the {{Local}} monitor after running computation {{f}}</p><div class="fullcomment"><div class="comment cmt"><p>Restore the {{Local}} monitor after running computation {{f}}</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">Restore the <code>Local</code> monitor after running computation <code>f</code></p><div class="fullcomment"><div class="comment cmt"><p>Restore the <code>Local</code> monitor after running computation <code>f</code></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -453,10 +453,10 @@ attempts to let {{next}} handle it.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">set</span><span class="params">(<span name="m">m: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">set</span><span class="params">(<span name="m">m: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Set the {{Locall}} monitor</p>
+      <p class="shortcomment cmt">Set the <code>Local</code> monitor</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -492,14 +492,14 @@ attempts to let {{next}} handle it.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">tryHandle</span><span class="params">(<span name="exc">exc: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">tryHandle</span><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">An implementation widget: attempts to handle {{exc}} returning a
-{{com.</p><div class="fullcomment"><div class="comment cmt"><p>An implementation widget: attempts to handle {{exc}} returning a
-{{com.twitter.util.Try[Unit]}}.  If the exception is unhandled,
-we return {{Throw(exc)}}, if the handler throws an exception, we
-wrap it in a {{MonitorException}}.
+      <p class="shortcomment cmt">An implementation widget: attempts to handle <code>exc</code> returning a
+<code>com.twitter.util.Try[Unit]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>An implementation widget: attempts to handle <code>exc</code> returning a
+<code>com.twitter.util.Try[Unit]</code>. If the exception is unhandled,
+we return <code>Throw(exc)</code>, if the handler throws an exception, we
+wrap it in a <a href="MonitorException.html" class="extype" name="com.twitter.util.MonitorException">MonitorException</a>.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
     </li><li name="com.twitter.util.Monitor#using" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="using[T](m:com.twitter.util.Monitor)(f:=&gt;T):T"></a>
@@ -513,7 +513,7 @@ wrap it in a {{MonitorException}}.
         <span class="name">using</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="m">m: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Monitor.using.T">T</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Monitor.using.T">T</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Compute {{f}} with the {{Local}} monitor set to {{m}}</p><div class="fullcomment"><div class="comment cmt"><p>Compute {{f}} with the {{Local}} monitor set to {{m}}</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">Compute <code>f</code> with the <code>Local</code> monitor set to <code>m</code></p><div class="fullcomment"><div class="comment cmt"><p>Compute <code>f</code> with the <code>Local</code> monitor set to <code>m</code></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -526,7 +526,7 @@ wrap it in a {{MonitorException}}.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -545,7 +545,7 @@ wrap it in a {{MonitorException}}.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -564,7 +564,7 @@ wrap it in a {{MonitorException}}.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -586,9 +586,9 @@ wrap it in a {{MonitorException}}.
         <div class="parent" name="com.twitter.util.Monitor">
               <h3>Inherited from <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

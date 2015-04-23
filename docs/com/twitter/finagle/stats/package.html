@@ -44,7 +44,7 @@ because we found they didn't depend on anything finagle-specific.  To ease
 the transition, we kept the namespace.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -84,7 +84,34 @@ the transition, we kept the namespace.
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.finagle.stats.Counter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.finagle.stats.BlacklistStatsReceiver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BlacklistStatsReceiverextendsStatsReceiver"></a>
+      <a id="BlacklistStatsReceiver:BlacklistStatsReceiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BlacklistStatsReceiver.html"><span class="name">BlacklistStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p>
+    </li><li name="com.twitter.finagle.stats.CategorizingExceptionStatsHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CategorizingExceptionStatsHandlerextendsExceptionStatsHandler"></a>
+      <a id="CategorizingExceptionStatsHandler:CategorizingExceptionStatsHandler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CategorizingExceptionStatsHandler.html"><span class="name">CategorizingExceptionStatsHandler</span></a><span class="result"> extends <a href="ExceptionStatsHandler.html" class="extype" name="com.twitter.finagle.stats.ExceptionStatsHandler">ExceptionStatsHandler</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Basic implementation of exception stat recording that
+allows exceptions to be categorised and optional rollup.</p>
+    </li><li name="com.twitter.finagle.stats.Counter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="CounterextendsAnyRef"></a>
       <a id="Counter:Counter"></a>
       <h4 class="signature">
@@ -93,10 +120,23 @@ the transition, we kept the namespace.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Counter.html"><span class="name">Counter</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Counter.html"><span class="name">Counter</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">A writeable Counter.</p>
+    </li><li name="com.twitter.finagle.stats.ExceptionStatsHandler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ExceptionStatsHandlerextendsAnyRef"></a>
+      <a id="ExceptionStatsHandler:ExceptionStatsHandler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExceptionStatsHandler.html"><span class="name">ExceptionStatsHandler</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Exception Stats Recorder.</p>
     </li><li name="com.twitter.finagle.stats.Gauge" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="GaugeextendsAnyRef"></a>
       <a id="Gauge:Gauge"></a>
@@ -106,7 +146,7 @@ the transition, we kept the namespace.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Gauge.html"><span class="name">Gauge</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Gauge.html"><span class="name">Gauge</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">Exposes the value of a function.</p>
@@ -149,7 +189,7 @@ names according to a <code>translate</code> function.</p>
         <a href="NullStatsReceiver.html"><span class="name">NullStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       </h4>
-      <p class="comment cmt">A noop StatsReceiver.</p>
+      <p class="comment cmt">A no-op StatsReceiver.</p>
     </li><li name="com.twitter.finagle.stats.ReadableCounter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ReadableCounterextendsCounter"></a>
       <a id="ReadableCounter:ReadableCounter"></a>
@@ -199,7 +239,7 @@ names you pass.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="Stat.html"><span class="name">Stat</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="Stat.html"><span class="name">Stat</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An append-only collection of time-series data.</p>
@@ -212,7 +252,7 @@ names you pass.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="StatsReceiver.html"><span class="name">StatsReceiver</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="StatsReceiver.html"><span class="name">StatsReceiver</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <p class="comment cmt">An interface for recording metrics.</p>
@@ -291,6 +331,19 @@ Stats (n).</p>
       </h4>
       <p class="comment cmt">BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
 StatsReceivers (n).</p>
+    </li><li name="com.twitter.finagle.stats.ExceptionStatsHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExceptionStatsHandler"></a>
+      <a id="ExceptionStatsHandler:ExceptionStatsHandler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ExceptionStatsHandler$.html"><span class="name">ExceptionStatsHandler</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">API for deciding where request exceptions are reported in stats.</p>
     </li><li name="com.twitter.finagle.stats.JStats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JStats"></a>
       <a id="JStats:JStats"></a>
@@ -355,7 +408,7 @@ StatsReceivers (n).</p>
         <a href="StatsReceivers$.html"><span class="name">StatsReceivers</span></a>
       </span>
       </h4>
-      <p class="comment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">com.twitter.finagle.stats.StatsReceiver</a> utility methods for ease of use from java.</p>
+      <p class="comment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p>
     </li></ol>
             </div>
 
@@ -366,9 +419,9 @@ StatsReceivers (n).</p>
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

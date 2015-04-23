@@ -35,17 +35,15 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">ImmutableLRU</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">ImmutableLRU</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>&quot;map&quot; is the backing store used to hold key-&gt;(index,value)
-pairs. The index tracks the access time for a particular key. &quot;ord&quot;
-is used to determine the Least-Recently-Used key in &quot;map&quot; by taking
-the minimum index.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An immutable key/value store that evicts the least recently accessed elements
+to stay constrained in a maximum size bound.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -98,7 +96,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -111,7 +109,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -124,11 +122,11 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.ImmutableLRU#+" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.ImmutableLRU#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="+(kv:(K,V)):(Option[K],com.twitter.util.ImmutableLRU[K,V])"></a>
       <a id="+((K,V)):(Option[K],ImmutableLRU[K,V])"></a>
       <h4 class="signature">
@@ -137,10 +135,14 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $plus" class="name">+</span><span class="params">(<span name="kv">kv: (<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>)</span>)</span><span class="result">: (<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>], <a href="" class="extype" name="com.twitter.util.ImmutableLRU">ImmutableLRU</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>])</span>
+        <span title="gt4s: $plus" class="name">+</span><span class="params">(<span name="kv">kv: (<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>)</span>)</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>], <a href="" class="extype" name="com.twitter.util.ImmutableLRU">ImmutableLRU</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>])</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Build a new LRU containing the given key/value</p><div class="fullcomment"><div class="comment cmt"><p>Build a new LRU containing the given key/value</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a tuple with of the following two items:
+         _1 represents the evicted entry (if the given lru is at the maximum size)
+            or None if the lru is not at capacity yet.
+         _2 is the new lru with the given key/value pair inserted.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:AnyRef):Boolean"></a>
       <a id="==(AnyRef):Boolean"></a>
@@ -150,7 +152,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -163,7 +165,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -189,7 +191,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -208,7 +210,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -221,7 +223,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -234,7 +236,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -244,7 +246,7 @@ the minimum index.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.ImmutableLRU#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.ImmutableLRU#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get(k:K):(Option[V],com.twitter.util.ImmutableLRU[K,V])"></a>
       <a id="get(K):(Option[V],ImmutableLRU[K,V])"></a>
       <h4 class="signature">
@@ -253,10 +255,14 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="k">k: <span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span></span>)</span><span class="result">: (<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>], <a href="" class="extype" name="com.twitter.util.ImmutableLRU">ImmutableLRU</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>])</span>
+        <span class="name">get</span><span class="params">(<span name="k">k: <span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span></span>)</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>], <a href="" class="extype" name="com.twitter.util.ImmutableLRU">ImmutableLRU</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>])</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">If the key is present in the cache, returns the pair of
+Some(value) and the cache with the key's entry as the most recently accessed.</p><div class="fullcomment"><div class="comment cmt"><p>If the key is present in the cache, returns the pair of
+Some(value) and the cache with the key's entry as the most recently accessed.
+Else, returns None and the unmodified cache.
+</p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -279,7 +285,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -292,7 +298,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -305,12 +311,12 @@ the minimum index.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">kOrd</span><span class="result">: <span class="extype" name="scala.Ordering">Ordering</span>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>]</span>
+        <span class="name">kOrd</span><span class="result">: <a href="../../../scala/package.html#Ordering[T]=scala.math.Ordering[T]" class="extmbr" name="scala.Ordering">Ordering</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
-    </li><li name="com.twitter.util.ImmutableLRU#keySet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="keySet:scala.collection.immutable.Set[K]"></a>
+    </li><li name="com.twitter.util.ImmutableLRU#keySet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="keySet:Set[K]"></a>
       <a id="keySet:Set[K]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -318,10 +324,11 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">keySet</span><span class="result">: <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>]</span>
+        <span class="name">keySet</span><span class="result">: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">the <code>Set</code> of all keys in the LRU</p><div class="fullcomment"><div class="comment cmt"><p>the <code>Set</code> of all keys in the LRU</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>accessing this set does not update the element LRU ordering
+</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -331,7 +338,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -344,7 +351,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -357,11 +364,11 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.ImmutableLRU#remove" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.ImmutableLRU#remove" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="remove(k:K):(Option[V],com.twitter.util.ImmutableLRU[K,V])"></a>
       <a id="remove(K):(Option[V],ImmutableLRU[K,V])"></a>
       <h4 class="signature">
@@ -370,10 +377,14 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">remove</span><span class="params">(<span name="k">k: <span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span></span>)</span><span class="result">: (<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>], <a href="" class="extype" name="com.twitter.util.ImmutableLRU">ImmutableLRU</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>])</span>
+        <span class="name">remove</span><span class="params">(<span name="k">k: <span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span></span>)</span><span class="result">: (<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>], <a href="" class="extype" name="com.twitter.util.ImmutableLRU">ImmutableLRU</a>[<span class="extype" name="com.twitter.util.ImmutableLRU.K">K</span>, <span class="extype" name="com.twitter.util.ImmutableLRU.V">V</span>])</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">If the key is present in the cache, returns the pair of
+Some(value) and the cache with the key removed.</p><div class="fullcomment"><div class="comment cmt"><p>If the key is present in the cache, returns the pair of
+Some(value) and the cache with the key removed.
+Else, returns None and the unmodified cache.
+</p></div></div>
     </li><li name="com.twitter.util.ImmutableLRU#size" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="size:Int"></a>
       <a id="size:Int"></a>
@@ -383,10 +394,11 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">size</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">size</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">the number of entries in the cache
+</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -422,7 +434,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -441,7 +453,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -460,7 +472,7 @@ the minimum index.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -480,9 +492,9 @@ the minimum index.
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

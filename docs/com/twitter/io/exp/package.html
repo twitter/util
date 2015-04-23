@@ -58,73 +58,74 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.io.exp.CachingVarSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CachingVarSource[T]extendsVarSource[T]"></a>
-      <a id="CachingVarSource[T]:CachingVarSource[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="CachingVarSource.html"><span class="name">CachingVarSource</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="VarSource.html" class="extype" name="com.twitter.io.exp.VarSource">VarSource</a>[<span class="extype" name="com.twitter.io.exp.CachingVarSource.T">T</span>]</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A convenient wrapper for caching the results returned by the
-underlying VarSource.</p>
-    </li><li name="com.twitter.io.exp.ClassLoaderVarSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ClassLoaderVarSourceextendsVarSource[com.twitter.io.Buf]"></a>
-      <a id="ClassLoaderVarSource:ClassLoaderVarSource"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="ClassLoaderVarSource.html"><span class="name">ClassLoaderVarSource</span></a><span class="result"> extends <a href="VarSource.html" class="extype" name="com.twitter.io.exp.VarSource">VarSource</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A VarSource for ClassLoader resources.</p>
-    </li><li name="com.twitter.io.exp.FailoverVarSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FailoverVarSource[+T]extendsVarSource[T]"></a>
-      <a id="FailoverVarSource[+T]:FailoverVarSource[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="FailoverVarSource.html"><span class="name">FailoverVarSource</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="VarSource.html" class="extype" name="com.twitter.io.exp.VarSource">VarSource</a>[<span class="extype" name="com.twitter.io.exp.FailoverVarSource.T">T</span>]</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A VarSource which queries a primary underlying source, and queries
-a failover source only when the primary result is VarSource.</p>
-    </li><li name="com.twitter.io.exp.FilePollingVarSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FilePollingVarSourceextendsVarSource[com.twitter.io.Buf]"></a>
-      <a id="FilePollingVarSource:FilePollingVarSource"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="FilePollingVarSource.html"><span class="name">FilePollingVarSource</span></a><span class="result"> extends <a href="VarSource.html" class="extype" name="com.twitter.io.exp.VarSource">VarSource</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A VarSource for observing the contents of a file with periodic polling.</p>
-    </li><li name="com.twitter.io.exp.VarSource" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="VarSource[+T]extendsAnyRef"></a>
-      <a id="VarSource[+T]:VarSource[T]"></a>
+              <ol><li name="com.twitter.io.exp.ActivitySource" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ActivitySource[+T]extendsAnyRef"></a>
+      <a id="ActivitySource[+T]:ActivitySource[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="VarSource.html"><span class="name">VarSource</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ActivitySource.html"><span class="name">ActivitySource</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
-      <p class="comment cmt">A VarSource provides access to observerable named variables.</p>
+      <p class="comment cmt">An ActivitySource provides access to observerable named variables.</p>
+    </li><li name="com.twitter.io.exp.BelowThroughputException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BelowThroughputExceptionextendsTimeoutExceptionwithProductwithSerializable"></a>
+      <a id="BelowThroughputException:BelowThroughputException"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BelowThroughputException.html"><span class="name">BelowThroughputException</span></a><span class="params">(<span name="elapsed">elapsed: <a href="../../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="currentBps">currentBps: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Double" class="extype" target="_top">Double</a></span>, <span name="expectedBps">expectedBps: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result"> extends <a href="../../util/TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">TimeoutException</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Indicates a <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">reader</a> or
+<a href="../Writer.html" class="extype" name="com.twitter.io.Writer">writer</a> dropped below
+the minimum required bytes per second threshold.</p>
+    </li><li name="com.twitter.io.exp.CachingActivitySource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CachingActivitySource[T]extendsActivitySource[T]"></a>
+      <a id="CachingActivitySource[T]:CachingActivitySource[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CachingActivitySource.html"><span class="name">CachingActivitySource</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="ActivitySource.html" class="extype" name="com.twitter.io.exp.ActivitySource">ActivitySource</a>[<span class="extype" name="com.twitter.io.exp.CachingActivitySource.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A convenient wrapper for caching the results returned by the
+underlying ActivitySource.</p>
+    </li><li name="com.twitter.io.exp.ClassLoaderActivitySource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassLoaderActivitySourceextendsActivitySource[com.twitter.io.Buf]"></a>
+      <a id="ClassLoaderActivitySource:ClassLoaderActivitySource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassLoaderActivitySource.html"><span class="name">ClassLoaderActivitySource</span></a><span class="result"> extends <a href="ActivitySource.html" class="extype" name="com.twitter.io.exp.ActivitySource">ActivitySource</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An ActivitySource for ClassLoader resources.</p>
+    </li><li name="com.twitter.io.exp.FilePollingActivitySource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FilePollingActivitySourceextendsActivitySource[com.twitter.io.Buf]"></a>
+      <a id="FilePollingActivitySource:FilePollingActivitySource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FilePollingActivitySource.html"><span class="name">FilePollingActivitySource</span></a><span class="result"> extends <a href="ActivitySource.html" class="extype" name="com.twitter.io.exp.ActivitySource">ActivitySource</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An ActivitySource for observing the contents of a file with periodic polling.</p>
     </li></ol>
             </div>
 
@@ -132,19 +133,33 @@ a failover source only when the primary result is VarSource.</p>
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="com.twitter.io.exp.VarSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="VarSource"></a>
-      <a id="VarSource:VarSource"></a>
+              <ol><li name="com.twitter.io.exp.ActivitySource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ActivitySource"></a>
+      <a id="ActivitySource:ActivitySource"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="VarSource$.html"><span class="name">VarSource</span></a>
+        <a href="ActivitySource$.html"><span class="name">ActivitySource</span></a>
       </span>
       </h4>
       
+    </li><li name="com.twitter.io.exp.MinimumThroughput" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MinimumThroughput"></a>
+      <a id="MinimumThroughput:MinimumThroughput"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MinimumThroughput$.html"><span class="name">MinimumThroughput</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt"><a href="../Reader.html" class="extype" name="com.twitter.io.Reader">Readers</a> and <a href="../Writer.html" class="extype" name="com.twitter.io.Writer">Writers</a> that have minimum bytes
+per second throughput limits.</p>
     </li></ol>
             </div>
 

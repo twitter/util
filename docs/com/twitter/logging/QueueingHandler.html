@@ -35,7 +35,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">QueueingHandler</span><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
+        <span class="name">QueueingHandler</span><span class="result"> extends <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a></span>
       </span>
       </h4>
       
@@ -43,7 +43,7 @@
 a nested handler. Useful for when a handler may block.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a>, <span class="extype" name="java.util.logging.Handler">java.util.logging.Handler</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a>, <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a>, <span class="extype" name="java.util.logging.Handler">java.util.logging.Handler</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -61,7 +61,7 @@ a nested handler. Useful for when a handler may block.
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.logging.QueueingHandler"><span>QueueingHandler</span></li><li class="in" name="com.twitter.logging.Handler"><span>Handler</span></li><li class="in" name="java.util.logging.Handler"><span>Handler</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.logging.QueueingHandler"><span>QueueingHandler</span></li><li class="in" name="com.twitter.logging.ProxyHandler"><span>ProxyHandler</span></li><li class="in" name="com.twitter.logging.Handler"><span>Handler</span></li><li class="in" name="java.util.logging.Handler"><span>Handler</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -90,7 +90,7 @@ a nested handler. Useful for when a handler may block.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">QueueingHandler</span><span class="params">(<span name="handler">handler: <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>, <span name="maxQueueSize">maxQueueSize: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">scala.Int.MaxValue</span></span>)</span>
+        <span class="name">QueueingHandler</span><span class="params">(<span name="handler">handler: <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>, <span name="maxQueueSize">maxQueueSize: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">scala.Int.MaxValue</span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">handler</dt><dd class="cmt"><p>
@@ -116,7 +116,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -129,7 +129,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -142,7 +142,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -155,7 +155,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -168,7 +168,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -194,7 +194,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -213,10 +213,10 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">close</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">close</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.logging.QueueingHandler">QueueingHandler</a> → Handler</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.logging.QueueingHandler">QueueingHandler</a> → <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
     </li><li name="com.twitter.logging.QueueingHandler#dropLogNode" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="dropLogNode:String"></a>
       <a id="dropLogNode:String"></a>
@@ -239,7 +239,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -252,7 +252,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -265,7 +265,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -284,10 +284,10 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">flush</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">flush</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.logging.QueueingHandler">QueueingHandler</a> → Handler</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.logging.QueueingHandler">QueueingHandler</a> → <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
     </li><li name="com.twitter.logging.Handler#formatter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="formatter:com.twitter.logging.Formatter"></a>
       <a id="formatter:Formatter"></a>
@@ -314,7 +314,7 @@ Maximum queue size.  Records are dropped when queue overflows.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="java.util.logging.Handler#getEncoding" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.logging.ProxyHandler#getEncoding" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getEncoding():String"></a>
       <a id="getEncoding():String"></a>
       <h4 class="signature">
@@ -326,8 +326,8 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="name">getEncoding</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="java.util.logging.Handler#getErrorManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#getErrorManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getErrorManager():java.util.logging.ErrorManager"></a>
       <a id="getErrorManager():ErrorManager"></a>
       <h4 class="signature">
@@ -339,8 +339,8 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="name">getErrorManager</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.logging.ErrorManager">ErrorManager</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="java.util.logging.Handler#getFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#getFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getFilter():java.util.logging.Filter"></a>
       <a id="getFilter():Filter"></a>
       <h4 class="signature">
@@ -352,8 +352,8 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="name">getFilter</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.logging.Filter">Filter</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="java.util.logging.Handler#getFormatter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#getFormatter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getFormatter():java.util.logging.Formatter"></a>
       <a id="getFormatter():java.util.logging.Formatter"></a>
       <h4 class="signature">
@@ -365,8 +365,8 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="name">getFormatter</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.logging.Formatter">java.util.logging.Formatter</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="java.util.logging.Handler#getLevel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#getLevel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getLevel():java.util.logging.Level"></a>
       <a id="getLevel():java.util.logging.Level"></a>
       <h4 class="signature">
@@ -378,21 +378,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="name">getLevel</span><span class="params">()</span><span class="result">: <span class="extype" name="java.util.logging.Level">java.util.logging.Level</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="com.twitter.logging.QueueingHandler#handler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="handler:com.twitter.logging.Handler"></a>
-      <a id="handler:Handler"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">handler</span><span class="result">: <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">
-Wrapped handler.</p>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -402,7 +388,7 @@ Wrapped handler.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -415,12 +401,12 @@ Wrapped handler.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="java.util.logging.Handler#isLoggable" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isLoggable(x$1:java.util.logging.LogRecord):Boolean"></a>
+    </li><li name="com.twitter.logging.ProxyHandler#isLoggable" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isLoggable(record:java.util.logging.LogRecord):Boolean"></a>
       <a id="isLoggable(java.util.logging.LogRecord):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -428,10 +414,10 @@ Wrapped handler.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isLoggable</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">isLoggable</span><span class="params">(<span name="record">record: <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
     </li><li name="com.twitter.logging.Handler#level" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="level:Option[com.twitter.logging.Level]"></a>
       <a id="level:Option[Level]"></a>
@@ -441,7 +427,7 @@ Wrapped handler.</p>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">level</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a>]</span>
+        <span class="name">level</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></dd></dl></div>
@@ -467,7 +453,7 @@ Wrapped handler.</p>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">maxQueueSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">maxQueueSize</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">
@@ -483,7 +469,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -496,7 +482,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -509,7 +495,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -522,7 +508,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onOverflow</span><span class="params">(<span name="record">record: <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">onOverflow</span><span class="params">(<span name="record">record: <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Called when record dropped.</p><div class="fullcomment"><div class="comment cmt"><p>Called when record dropped.  Default is to log to console.
@@ -536,10 +522,10 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">publish</span><span class="params">(<span name="record">record: <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">publish</span><span class="params">(<span name="record">record: <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.logging.QueueingHandler">QueueingHandler</a> → Handler</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.logging.QueueingHandler">QueueingHandler</a> → <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
     </li><li name="java.util.logging.Handler#reportError" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="reportError(x$1:String,x$2:Exception,x$3:Int):Unit"></a>
       <a id="reportError(String,Exception,Int):Unit"></a>
@@ -549,12 +535,12 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">reportError</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.Exception">Exception</span></span>, <span name="arg2">arg2: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">reportError</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>, <span name="arg1">arg1: <span class="extype" name="java.lang.Exception">Exception</span></span>, <span name="arg2">arg2: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$util$logging.html" class="extype" name="java.util.logging">java.util.logging</a>] </dd><dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="java.util.logging.Handler#setEncoding" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setEncoding(x$1:String):Unit"></a>
+    </li><li name="com.twitter.logging.ProxyHandler#setEncoding" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setEncoding(encoding:String):Unit"></a>
       <a id="setEncoding(String):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -562,23 +548,12 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setEncoding</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.lang.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">setEncoding</span><span class="params">(<span name="encoding">encoding: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.io.UnsupportedEncodingException]">...</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.lang.SecurityException]">...</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="java.util.logging.Handler#setErrorManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setErrorManager(x$1:java.util.logging.ErrorManager):Unit"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#setErrorManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setErrorManager(errorManager:java.util.logging.ErrorManager):Unit"></a>
       <a id="setErrorManager(ErrorManager):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -586,12 +561,12 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setErrorManager</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.util.logging.ErrorManager">ErrorManager</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">setErrorManager</span><span class="params">(<span name="errorManager">errorManager: <span class="extype" name="java.util.logging.ErrorManager">ErrorManager</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd></dl></div>
-    </li><li name="java.util.logging.Handler#setFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setFilter(x$1:java.util.logging.Filter):Unit"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#setFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setFilter(filter:java.util.logging.Filter):Unit"></a>
       <a id="setFilter(Filter):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -599,18 +574,12 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setFilter</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.util.logging.Filter">Filter</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">setFilter</span><span class="params">(<span name="filter">filter: <span class="extype" name="java.util.logging.Filter">Filter</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.lang.SecurityException]">...</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="java.util.logging.Handler#setFormatter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setFormatter(x$1:java.util.logging.Formatter):Unit"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#setFormatter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setFormatter(formatter:java.util.logging.Formatter):Unit"></a>
       <a id="setFormatter(java.util.logging.Formatter):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -618,18 +587,12 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setFormatter</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.util.logging.Formatter">java.util.logging.Formatter</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">setFormatter</span><span class="params">(<span name="formatter">formatter: <span class="extype" name="java.util.logging.Formatter">java.util.logging.Formatter</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.lang.SecurityException]">...</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="java.util.logging.Handler#setLevel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setLevel(x$1:java.util.logging.Level):Unit"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
+    </li><li name="com.twitter.logging.ProxyHandler#setLevel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setLevel(level:java.util.logging.Level):Unit"></a>
       <a id="setLevel(java.util.logging.Level):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -637,16 +600,10 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setLevel</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="java.util.logging.Level">java.util.logging.Level</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">setLevel</span><span class="params">(<span name="level">level: <span class="extype" name="java.util.logging.Level">java.util.logging.Level</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Handler</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="defval" name="classOf[java.lang.SecurityException]">...</span>
-    </span>)</span>
-              
-        </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a> → Handler</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -682,7 +639,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -701,7 +658,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -720,7 +677,7 @@ Maximum queue size.  Records are dropped when queue overflows.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -739,14 +696,16 @@ Maximum queue size.  Records are dropped when queue overflows.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.logging.Handler">
+        <div class="parent" name="com.twitter.logging.ProxyHandler">
+              <h3>Inherited from <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a></h3>
+            </div><div class="parent" name="com.twitter.logging.Handler">
               <h3>Inherited from <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></h3>
             </div><div class="parent" name="java.util.logging.Handler">
               <h3>Inherited from <span class="extype" name="java.util.logging.Handler">java.util.logging.Handler</span></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>
