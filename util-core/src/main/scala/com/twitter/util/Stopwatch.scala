@@ -21,15 +21,15 @@ trait Stopwatch {
  */
 object Stopwatch extends Stopwatch {
 
-  private[this] val systemNanoFn = () => System.nanoTime()
+  private[this] val systemNanoFn = () => Time.fromNanoseconds(System.nanoTime())
 
-  def start(): Elapsed = Time.localGetTime() match {
-    case Some(local) =>
-      val startAt: Time = local()
-      () => local() - startAt
-    case None =>
-      val startAt: Long = systemNanoFn()
-      () => Duration.fromNanoseconds(systemNanoFn() - startAt)
+  def start(): Elapsed = {
+    val timeFn = Time.localGetTime() match {
+      case Some(local) => local
+      case None => systemNanoFn
+    }
+    val startAt = timeFn()
+    () => timeFn() - startAt
   }
 
   /**
