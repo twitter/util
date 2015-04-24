@@ -157,4 +157,25 @@ class TryTest extends FunSuite {
   test("Try.collect: with Returns") {
     assert(Try.collect(Seq(Return(1), Return(2))) == Return(Seq(1, 2)))
   }
+
+  test("Try.orThrow: returns on Some") {
+    val exc = new Exception("boom!")
+    assert(Try.orThrow(Some("OK")) { () => exc } == Return("OK"))
+  }
+
+  test("Try.orThrow: fails on empty on Some") {
+    val exc = new Exception("boom!")
+    assert(Try.orThrow(None) { () => exc } == Throw(exc))
+  }
+
+  test("Try.orThrow: OK if you throw") {
+    val exc = new Exception("boom!")
+    assert(Try.orThrow(None) { () => throw exc } == Throw(exc))
+  }
+
+  test("OrThrow implicits in nicely") {
+    import Try._
+    val exc = new Exception("boom!")
+    assert(Some("OK").orThrow { exc } == Return("OK"))
+  }
 }

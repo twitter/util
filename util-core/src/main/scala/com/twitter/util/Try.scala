@@ -22,6 +22,34 @@ object Try {
   def collect[A](ts: Seq[Try[A]]): Try[Seq[A]] = {
     if (ts.isEmpty) Return(Seq.empty[A]) else Try { ts map { t => t() } }
   }
+
+  /**
+   * Convert an [[scala.Option]] to a [[Try]].
+   *
+   * For users from scala, there's also the implicit class [[OrThrow]] which
+   * allows
+   *
+   * {{{
+   * import Try._
+   * Option(null).orThrow { new Exception("boom!") }
+   * }}}
+   *
+   * @param o the Option to convert to a Try
+   * @param failure a function that returns the Throwable that should be
+   * returned if the option is None
+   */
+  def orThrow[A](o: Option[A])(failure: () => Throwable): Try[A] = try {
+    o match {
+      case Some(item) => Return(item)
+      case None => Throw(failure())
+    }
+  } catch {
+    case NonFatal(e) => Throw(e)
+  }
+
+  implicit class OrThrow[A](val option: Option[A]) extends AnyVal {
+    def orThrow(failure: => Throwable): Try[A] = Try.orThrow(option)(() => failure)
+  }
 }
 
 /**
