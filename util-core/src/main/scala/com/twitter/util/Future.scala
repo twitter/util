@@ -1280,7 +1280,9 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def poll: Option[Try[A]] = Some(result)
 
-  override def isDefined = true
+  override def isDefined: Boolean = true
+
+  override def isDone(implicit ev: this.type <:< Future[Unit]): Boolean = result.isReturn
 
   override def toString: String = s"ConstFuture($result)"
 
