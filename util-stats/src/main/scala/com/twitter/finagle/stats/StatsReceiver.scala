@@ -209,3 +209,5 @@ trait StatsReceiver {
     }
   }
 }
+
+abstract class AbstractStatsReceiver extends StatsReceiver

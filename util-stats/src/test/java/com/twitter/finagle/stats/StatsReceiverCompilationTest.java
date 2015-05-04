@@ -9,6 +9,9 @@ import java.lang.Integer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import scala.Function0;
+import scala.collection.Seq;
+
 /**
  * Java compatibility layer for {@link com.twitter.finagle.stats.StatsReceiver}.
  */
@@ -62,5 +65,37 @@ public final class StatsReceiverCompilationTest {
     Counter counter = StatsReceivers.counter(sr.scopeSuffix("bah").scope("foo"), "hello", "world");
     counter.incr();
     counter.incr(100);
+  }
+
+  @Test
+  public void testAbstractStatsReceiver() {
+    final StatsReceiver nullSr = NullStatsReceiver.get();
+    StatsReceiver sr = new AbstractStatsReceiver() {
+
+      @Override
+      public Object repr() {
+        return this;
+      }
+
+      @Override
+      public boolean isNull() {
+        return false;
+      }
+
+      @Override
+      public Counter counter(Seq<String> name) {
+        return nullSr.counter(name);
+      }
+
+      @Override
+      public Stat stat(Seq<String> name) {
+        return nullSr.stat(name);
+      }
+
+      @Override
+      public Gauge addGauge(Seq<String> name, Function0<Object> f) {
+        return nullSr.addGauge(name, f);
+      }
+    };
   }
 }
