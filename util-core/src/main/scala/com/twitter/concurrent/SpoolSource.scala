@@ -52,25 +52,29 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * the resulting order of values in the spool is non-deterministic.
    */
   final def offer(value: A) {
+    import Spool.*::
+
     val nextPromise = new Promise[Spool[A]]
     nextPromise.setInterruptHandler(interruptHandler)
     updatingTailCall(nextPromise) { currentPromise =>
-      currentPromise.setValue(Spool.cons(value, nextPromise))
+      currentPromise.setValue(value *:: nextPromise)
     }
   }
 
   /**
    * Puts a value into the spool and closes this SpoolSource.  Unless
    * this SpoolSource has been closed, the current Future[Spool[A]]
-   * value will be fulfilled with Spool.cons(value, Spool.empty[A]).
+   * value will be fulfilled with `value *:: Future.value(Spool.empty[A])`.
    * If the SpoolSource has been closed, then this value is ignored.
    * If multiple threads call offer simultaneously, the operation is
    * thread-safe but the resulting order of values in the spool is
    * non-deterministic.
    */
   final def offerAndClose(value: A) {
+    import Spool.*::
+
     updatingTailCall(emptyPromise) { currentPromise =>
-      currentPromise.setValue(Spool.cons(value, Spool.empty[A]))
+      currentPromise.setValue(value *:: Future.value(Spool.empty[A]))
       closedp.setDone()
     }
   }

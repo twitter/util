@@ -1,7 +1,8 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Await, Duration, Future, Return, Throw}
+import com.twitter.util.{Await, Duration, Future, Return, Throw, ConstFuture}
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
 import scala.language.implicitConversions
 import java.io.EOFException
 
@@ -109,8 +110,19 @@ sealed trait Spool[+A] {
     if (isEmpty) Future.value(empty[B])
     else {
       def _tail = tail flatMap (_.collect(f))
-      if (f.isDefinedAt(head)) Future.value(new LazyCons(f(head), _tail))
-      else _tail
+
+      // NB: we use lift instead of isDefinedAt to avoid calling isDefinedAt
+      // twice, since in some places we depend upon the assumption that f can
+      // have side effects.
+      //
+      // PartialFunction#lift is implemented using applyOrElse,
+      // and PartialFunction literals override applyOrElse to not call isDefinedAt
+      // more than once, freeing us up to have if-guards or unapplies that are
+      // mutating.
+      f.lift(head) match {
+        case Some(result) => Future.value(new LazyCons(result, _tail))
+        case None => _tail
+      }
     }
 
   def map[B](f: A => B): Spool[B] = {
@@ -171,6 +183,36 @@ sealed trait Spool[+A] {
    * @see operator ++
    */
   def concat[B >: A](that: Spool[B]): Spool[B] = this ++ that
+
+  /**
+   *
+   * Builds a new Spool from this one by filtering out duplicate elements,
+   * elements for which fn returns the same value.
+   *
+   * NB: this has space consumption O(N) of the number of distinct items
+   */
+  def distinctBy[B](fn: A => B): Spool[A] =
+    if (isEmpty) this else distinctByNonEmpty(fn)
+
+  private[this] def distinctByNonEmpty[B](fn: A => B): Spool[A] = {
+    val set = mutable.HashSet[B]()
+    set.synchronized {
+      set += fn(head)
+    }
+    head *:: tail.flatMap { spool =>
+      spool.filter { item =>
+        val fned = fn(item)
+        set.synchronized {
+          fned match {
+            case alreadySeen if set(alreadySeen) => false
+            case distinctItem =>
+              set += distinctItem
+              true
+          }
+        }
+      }
+    }
+  }
 
   /**
    * Concatenates two spools.
@@ -320,4 +362,22 @@ object Spool {
   }
 
   implicit def seqToSpool[A](s: Seq[A]): ToSpool[A] = new ToSpool[A](s)
+
+  /**
+   * Merges spools as they're ready, or evenly between the ready spools if
+   * there's more than one ready, until every spool is empty. Fails the tail of
+   * the returned Spool when any of the Spools you're merging over fails.
+   */
+  def merge[A](spools: Seq[Future[Spool[A]]]): Future[Spool[A]] =
+    if (spools.isEmpty) Future.value(Spool.Empty) else mergeNonempty(spools)
+
+  private[this] def mergeNonempty[A](spools: Seq[Future[Spool[A]]]): Future[Spool[A]] =
+    Future.select(spools).flatMap {
+      case (anything, Nil) => new ConstFuture(anything)
+      case (Return(Spool.Empty), rest) => merge(rest)
+      case (Return(spool), rest) =>
+        Future.value(new LazyCons(spool.head, merge(rest :+ spool.tail)))
+      case (Throw(exc), _) => Future.exception(exc)
+    }
+
 }

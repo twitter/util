@@ -1,18 +1,18 @@
 package com.twitter.concurrent
 
+import com.twitter.concurrent.Spool.{*::, seqToSpool}
+import com.twitter.conversions.time.intToTimeableNumber
+import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
-
-import scala.collection.mutable.ArrayBuffer
-
 import org.junit.runner.RunWith
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.concurrent.Spool.{**::, *::, seqToSpool}
-import com.twitter.util.{Await, Future, Promise, Return, Throw}
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import scala.collection.mutable.ArrayBuffer
 
 @RunWith(classOf[JUnitRunner])
-class SpoolTest extends WordSpec {
+class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
   "Empty Spool" should {
     val s = Spool.empty[Int]
 
@@ -33,7 +33,7 @@ class SpoolTest extends WordSpec {
 
     "deconstruct" in {
       assert(s match {
-        case x **:: rest => false
+        case x *:: Future(rest) => false
         case _ => true
       })
     }
@@ -42,7 +42,7 @@ class SpoolTest extends WordSpec {
       assert((s ++ Spool.empty[Int]) === Spool.empty[Int])
       assert((Spool.empty[Int] ++ s) === Spool.empty[Int])
 
-      val s2 = s ++ (3 **:: 4 **:: Spool.empty[Int])
+      val s2 = s ++ (3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
       assert(Await.result(s2.toSeq) === Seq(3, 4))
     }
 
@@ -50,12 +50,12 @@ class SpoolTest extends WordSpec {
       assert(Await.result(s ++ Future(Spool.empty[Int])) === Spool.empty[Int])
       assert(Await.result(Spool.empty[Int] ++ Future(s)) === Spool.empty[Int])
 
-      val s2 = s ++ Future(3 **:: 4 **:: Spool.empty[Int])
+      val s2 = s ++ Future(3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
       assert(Await.result(s2 flatMap (_.toSeq)) === Seq(3, 4))
     }
 
     "flatMap" in {
-      val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
+      val f = (x: Int) => Future(x.toString *:: Future.value((x * 2).toString *:: Future.value(Spool.empty[String])))
       assert(Await.result(s flatMap f) === Spool.empty[Int])
     }
 
@@ -77,7 +77,7 @@ class SpoolTest extends WordSpec {
   }
 
   "Simple resolved Spool" should {
-    val s = 1 **:: 2 **:: Spool.empty
+    val s = 1 *:: Future.value(2 *:: Future.value(Spool.empty[Int]))
 
     "iterate over all elements" in {
       val xs = new ArrayBuffer[Int]
@@ -100,10 +100,10 @@ class SpoolTest extends WordSpec {
 
     "deconstruct" in {
       assert(s match {
-        case x **:: rest =>
+        case x *:: Future(Return(rest)) =>
           assert(x === 1)
           rest match {
-            case y **:: rest if y == 2 && rest.isEmpty => true
+            case y *:: Future(Return(rest)) if y == 2 && rest.isEmpty => true
           }
       })
     }
@@ -112,20 +112,20 @@ class SpoolTest extends WordSpec {
       assert(Await.result((s ++ Spool.empty[Int]).toSeq) === Seq(1, 2))
       assert(Await.result((Spool.empty[Int] ++ s).toSeq) === Seq(1, 2))
 
-      val s2 = s ++ (3 **:: 4 **:: Spool.empty)
+      val s2 = s ++ (3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
       assert(Await.result(s2.toSeq) === Seq(1, 2, 3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      assert(Await.result(s ++ Future(Spool.empty[Int]) flatMap (_.toSeq)) === Seq(1, 2))
-      assert(Await.result(Spool.empty[Int] ++ Future(s) flatMap (_.toSeq)) === Seq(1, 2))
+      assert(Await.result(s ++ Future.value(Spool.empty[Int]) flatMap (_.toSeq)) === Seq(1, 2))
+      assert(Await.result(Spool.empty[Int] ++ Future.value(s) flatMap (_.toSeq)) === Seq(1, 2))
 
-      val s2 = s ++ Future(3 **:: 4 **:: Spool.empty)
+      val s2 = s ++ Future.value(3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
       assert(Await.result(s2 flatMap (_.toSeq)) === Seq(1, 2, 3, 4))
     }
 
     "flatMap" in {
-      val f = (x: Int) => Future(x.toString **:: (x * 2).toString **:: Spool.empty)
+      val f = (x: Int) => Future(Seq(x.toString, (x * 2).toString).toSpool)
       val s2 = s flatMap f
       assert(Await.result(s2 flatMap (_.toSeq)) === Seq("1", "2", "2", "4"))
     }
@@ -146,7 +146,7 @@ class SpoolTest extends WordSpec {
     }
 
     "flatten via flatMap of toSpool" in {
-      val spool = Seq(1, 2) **:: Seq(3, 4) **:: Spool.empty
+      val spool = Seq(Seq(1, 2), Seq(3, 4)).toSpool
       val seq = Await.result(spool.toSeq)
 
       val flatSpool =
@@ -168,7 +168,7 @@ class SpoolTest extends WordSpec {
 
   "Simple resolved spool with EOFException" should {
     val p = new Promise[Spool[Int]](Throw(new EOFException("sad panda")))
-    val s = 1 **:: 2 *:: p
+    val s = 1 *:: Future.value(2 *:: p)
 
     "EOF iteration on EOFException" in {
         val xs = new ArrayBuffer[Option[Int]]
@@ -179,7 +179,7 @@ class SpoolTest extends WordSpec {
 
   "Simple resolved spool with error" should {
     val p = new Promise[Spool[Int]](Throw(new Exception("sad panda")))
-    val s = 1 **:: 2 *:: p
+    val s = 1 *:: Future.value(2 *:: p)
 
     "return with exception on error" in {
       val xs = new ArrayBuffer[Option[Int]]
@@ -319,7 +319,7 @@ class SpoolTest extends WordSpec {
         case x *:: rest if x == 4 && !rest.isDefined => true
         case _ => false
       })
-      p2() = Return(4 **:: Spool.empty)
+      p2() = Return(4 *:: Future.value(Spool.empty[Int]))
       val s1s = s1.toSeq
       assert(s1s.isDefined === true)
       assert(Await.result(s1s) === Seq(4, 8))
@@ -461,5 +461,39 @@ class SpoolTest extends WordSpec {
 
     Await.result(c.flatMap(_.tail).select(b.tail))
     assert(p.isDefined)
+  }
+
+  "Spool.merge should merge" in {
+    forAll(Arbitrary.arbitrary[List[List[Int]]]) { ss =>
+      val all = Spool.merge(ss.map(s => Future.value(s.toSpool)))
+      val interleaved = ss.flatMap(_.zipWithIndex).sortBy(_._2).map(_._1)
+      assert(Await.result(all.flatMap(_.toSeq)) == interleaved)
+    }
+  }
+
+  "Spool.merge should merge round robin" in {
+    val spools: Seq[Future[Spool[String]]] = Seq(
+      "a" *:: Future.value("b" *:: Future.value("c" *:: Future.value(Spool.empty[String]))),
+      "1" *:: Future.value("2" *:: Future.value("3" *:: Future.value(Spool.empty[String]))),
+      Spool.empty,
+      "foo" *:: Future.value("bar" *:: Future.value("baz" *:: Future.value(Spool.empty[String])))
+    ).map(Future.value)
+    assert(
+      Await.result(Spool.merge(spools).flatMap(_.toSeq), 5.seconds) ==
+        Seq("a", "1", "foo", "b", "2", "bar", "c", "3", "baz")
+    )
+  }
+
+  "Spool.distinctBy should distinct" in {
+    forAll { (s: List[Char]) =>
+      val d = s.toSpool.distinctBy(x => x).toSeq
+      assert(Await.result(d).toSet == s.toSet)
+    }
+  }
+
+  "Spool.distinctBy should distinct by in order" in {
+    val spool: Spool[String] =
+      "ac" *:: Future.value("bbe" *:: Future.value("ab" *:: Future.value(Spool.empty[String])))
+    assert(Await.result(spool.distinctBy(_.length).toSeq, 5.seconds) == Seq("ac", "bbe"))
   }
 }
