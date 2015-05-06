@@ -81,6 +81,21 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
   }
 
   /**
+   * The head and tail of this stream, if not empty. Note the tail thunk which
+   * preserves the tail's laziness.
+   *
+   * {{{
+   * empty.uncons     == Future.None
+   * (a +:: m).uncons == Future.value(Some(a, () => m))
+   * }}}
+   */
+  def uncons: Future[Option[(A, () => AsyncStream[A])]] = underlying.flatMap {
+    case Empty => Future.None
+    case One(a) => Future.value(Some(a -> (() => empty)))
+    case cons: Cons[A] => Future.value(Some(cons.head -> (() => cons.tail)))
+  }
+
+  /**
    * Note: forces the stream. For infinite streams, the future never resolves.
    */
   def foreach(f: A => Unit): Future[Unit] =

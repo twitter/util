@@ -20,6 +20,27 @@ class TryTest extends FunSuite {
     }
   }
 
+  test("Try.withFatals works like Try.apply, but can handle fatals") {
+    val nonFatal = new Exception
+    val fatal = new AbstractMethodError
+    val handler: PartialFunction[Throwable, Try[Int]] = {
+      case e: AbstractMethodError => Throw(e)
+      case e: Exception => Return(1)
+    }
+
+    // Works like Try.apply for non fatal errors.
+    assert(Try.withFatals(1)(handler) == Return(1))
+    assert(Try.withFatals(throw nonFatal)(handler) == Throw(nonFatal))
+
+    // Handles fatal errors
+    assert(Try.withFatals(throw fatal)(handler) == Throw(fatal))
+
+    // Unhandled fatals are propagated
+    intercept[NoClassDefFoundError] {
+      Try.withFatals(throw new NoClassDefFoundError)(handler)
+    }
+  }
+
   test("Try.throwable: should return e for Throw:s") {
     assert(Throw(e).throwable === e)
   }

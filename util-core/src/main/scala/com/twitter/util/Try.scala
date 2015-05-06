@@ -16,6 +16,15 @@ object Try {
   }
 
   /**
+   * Like [[Try.apply]] but allows the caller to specify a handler for fatal
+   * errors.
+   */
+  def withFatals[R](r: => R)(f: PartialFunction[Throwable, Try[R]]): Try[R] =
+    try Try(r) catch {
+      case e: Throwable if f.isDefinedAt(e) => f(e)
+    }
+
+  /**
    * Collect the results from the given Trys into a new Try. The result will be a Throw if any of
    * the argument Trys are Throws. The first Throw in the Seq is the one which is surfaced.
    */

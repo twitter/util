@@ -114,6 +114,9 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     s.takeWhile(_ => true)
     assert(!p.isDefined)
 
+    s.uncons
+    assert(!p.isDefined)
+
     s.foldRight(Future.Done) { (_, _) => Future.Done }
     assert(!p.isDefined)
 
@@ -213,6 +216,15 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
         case Nil => assert(tail == None)
         case _ => assert(toSeq(tail.get) == a.tail)
       }
+    }
+  }
+
+  test("uncons") {
+    assert(Await.result(AsyncStream.empty.uncons) == None)
+    forAll(Gen.nonEmptyListOf(Arbitrary.arbitrary[Int])) { (a: List[Int]) =>
+      val Some((h, t)) = Await.result(fromSeq(a).uncons)
+      assert(h == a.head)
+      assert(toSeq(t()) == a.tail)
     }
   }
 
