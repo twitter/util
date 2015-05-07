@@ -63,16 +63,87 @@ class CategorizingExceptionStatsHandler(
 {
   import ExceptionStatsHandler._
 
-  def record(statsReceiver: StatsReceiver, t: Throwable): Unit = {
-    val categoryLabel = Seq(categorizer(t).getOrElse(Failures))
+  private[this] val underlying: ExceptionStatsHandler = {
+    val mkLabel: Throwable => String =
+      t => categorizer(t).getOrElse(Failures)
+    new MultiCategorizingExceptionStatsHandler(mkLabel, _ => Set.empty, sourceFunction, rollup)
+  }
 
-    val labels = sourceFunction(t) match {
-      case Some(service) => Seq(categoryLabel, Seq(SourcedFailures, service))
-      case None => Seq(categoryLabel)
+  def record(statsReceiver: StatsReceiver, t: Throwable): Unit =
+    underlying.record(statsReceiver, t)
+}
+
+/**
+ * Basic implementation of exception stat recording that
+ * supports flags and source labeling, and rollup.
+ *
+ * For example,
+ *
+ * {{{
+ *     import java.net.{ConnectException, InetSocketAddress}
+ *     val f1 =
+ *       Failure.adapt(
+ *         new CancelledConnectionException(new ConnectException),
+ *         Failure.Restartable|Failure.Interrupted)
+ *     val f2 =
+ *       new IndividualRequestTimeoutException(1.seconds)
+ *     f2.serviceName = "myservice"
+ *
+ *     val handler =
+ *       new MultiCategorizingExceptionStatsHandler(
+ *         mkFlags = Failure.flagsOf,
+ *         mkSource= SourcedException.unapply)
+ *
+ * }}}
+ *
+ * `f1` is recorded as:
+ *   failures: 1
+ *   failures/interrupted: 1
+ *   failures/interrupted/com.twitter.finagle.Failure: 1
+ *   failures/interrupted/com.twitter.finagle.Failure/com.twitter.finagle.CancelledConnectionException: 1
+ *   failures/interrupted/com.twitter.finagle.Failure/com.twitter.finagle.CancelledConnectionException/java.net.ConnectException: 1
+ *   failures/restartable: 1
+ *   failures/restartable/com.twitter.finagle.Failure: 1
+ *   failures/restartable/com.twitter.finagle.Failure/com.twitter.finagle.CancelledConnectionException: 1
+ *   failures/restartable/com.twitter.finagle.Failure/com.twitter.finagle.CancelledConnectionException/java.net.ConnectException: 1
+ *
+ * `f2` is recorded as:
+ *   failures
+ *   failures/com.twitter.finagle.IndividualRequestTimeoutException
+ *   sourcedfailures/myservice
+ *   sourcedfailures/myservice/com.twitter.finagle.IndividualRequestTimeoutException
+ *
+ * @param mkLabel label prefix, default to 'failures'
+ * @param mkFlags  extracting flags if the Throwable is a Failure
+ * @param mkSource extracting source when configured
+ * @param rollup whether to report chained exceptions like RollupStatsReceiver
+ *
+ */
+private[finagle] class MultiCategorizingExceptionStatsHandler(
+    mkLabel: Throwable => String = _ => ExceptionStatsHandler.Failures,
+    mkFlags: Throwable => Set[String] = _ => Set.empty,
+    mkSource: Throwable => Option[String] = _ => None,
+    rollup: Boolean = true)
+  extends ExceptionStatsHandler
+{
+  import ExceptionStatsHandler._
+
+  def record(statsReceiver: StatsReceiver, t: Throwable): Unit = {
+    val parentLabel: String = mkLabel(t)
+
+    val flags = mkFlags(t)
+    val flagLabels: Seq[Seq[String]] =
+      if (flags.isEmpty) Seq(Seq(parentLabel))
+      else flags.toSeq.map(Seq(parentLabel, _))
+
+    val labels: Seq[Seq[String]] = mkSource(t) match {
+      case Some(service) => flagLabels :+ Seq(SourcedFailures, service)
+      case None => flagLabels
     }
 
-    val paths = statPaths(t, labels, rollup)
+    val paths: Seq[Seq[String]] = statPaths(t, labels, rollup)
 
+    if (flags.nonEmpty) statsReceiver.counter(parentLabel).incr()
     paths.foreach { path =>
       statsReceiver.counter(path: _*).incr()
     }

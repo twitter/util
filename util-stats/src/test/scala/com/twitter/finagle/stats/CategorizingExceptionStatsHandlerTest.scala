@@ -5,10 +5,10 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class CategorisingExceptionStatsHandlerTest extends FunSuite {
-  val categoriser = (t: Throwable) => { "clienterrors" }
+class CategorizingExceptionStatsHandlerTest extends FunSuite {
+  val categorizer = (t: Throwable) => { "clienterrors" }
 
-  test("CategorisingExceptionStatsHandler uses exports sensible set of stats") {
+  test("uses category, source, exception chains and rollup") {
     val receiver = new InMemoryStatsReceiver
 
     val esh = new CategorizingExceptionStatsHandler(_ => Some("clienterrors"),
@@ -18,25 +18,6 @@ class CategorisingExceptionStatsHandlerTest extends FunSuite {
     esh.record(receiver, cwe)
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
-
-    assert(keys === Seq(
-      "clienterrors",
-      "clienterrors/java.lang.RuntimeException",
-      "clienterrors/java.lang.RuntimeException/java.lang.Exception",
-      "sourcedfailures/service",
-      "sourcedfailures/service/java.lang.RuntimeException",
-      "sourcedfailures/service/java.lang.RuntimeException/java.lang.Exception"
-    ))
-  }
-
-  test("CategorisingExceptionStatsHandler uses category, source, exception chains and rollup") {
-    val receiver = new InMemoryStatsReceiver
-
-    val esh = new CategorizingExceptionStatsHandler(_ => Some("clienterrors"),
-      _ => Some("service"), true)
-
-    val cwe = new RuntimeException(new Exception("e"))
-    esh.record(receiver, cwe)
 
     assert(receiver.counters.filterKeys(_.contains("failures")).size === 0)
 
@@ -52,21 +33,37 @@ class CategorisingExceptionStatsHandlerTest extends FunSuite {
       classOf[RuntimeException].getName)) === 1)
     assert(receiver.counters(Seq("sourcedfailures", "service",
       classOf[RuntimeException].getName, classOf[Exception].getName)) === 1)
+
+    assert(keys == Seq(
+      "clienterrors",
+      "clienterrors/java.lang.RuntimeException",
+      "clienterrors/java.lang.RuntimeException/java.lang.Exception",
+      "sourcedfailures/service",
+      "sourcedfailures/service/java.lang.RuntimeException",
+      "sourcedfailures/service/java.lang.RuntimeException/java.lang.Exception"
+    ))
   }
 
-  test("CategorisingExceptionStatsHandler skips unknown source and defaults to failures") {
+  test("skips unknown source and defaults to failures") {
     val receiver = new InMemoryStatsReceiver
 
     val esh = new CategorizingExceptionStatsHandler(_ => None, _ => None, true)
 
     esh.record(receiver, new RuntimeException(new Exception("e")))
 
-    assert(receiver.counters.filterKeys(_.contains("failures")).size === 3)
+    val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
+    assert(receiver.counters.filterKeys(_.contains("failures")).size === 3)
     assert(receiver.counters.filterKeys(_.contains("sourcedfailures")).size === 0)
+
+    assert(keys == Seq(
+      "failures",
+      "failures/java.lang.RuntimeException",
+      "failures/java.lang.RuntimeException/java.lang.Exception"
+    ))
   }
 
-  test("CategorisingExceptionStatsHandler supports no rollup") {
+  test("supports no rollup") {
     val receiver = new InMemoryStatsReceiver
 
     val esh = new CategorizingExceptionStatsHandler(_ => Some("clienterrors"),
@@ -74,6 +71,8 @@ class CategorisingExceptionStatsHandlerTest extends FunSuite {
 
     val cwe = new RuntimeException(new Exception("e"))
     esh.record(receiver, cwe)
+
+    val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
     assert(receiver.counters.filterKeys(_.contains("failures")).size === 0)
 
@@ -86,5 +85,12 @@ class CategorisingExceptionStatsHandlerTest extends FunSuite {
     assert(receiver.counters(Seq("sourcedfailures", "service")) === 1)
     assert(receiver.counters(Seq("sourcedfailures", "service",
       classOf[RuntimeException].getName, classOf[Exception].getName)) === 1)
+
+    assert(keys == Seq(
+      "clienterrors",
+      "clienterrors/java.lang.RuntimeException/java.lang.Exception",
+      "sourcedfailures/service",
+      "sourcedfailures/service/java.lang.RuntimeException/java.lang.Exception"
+    ))
   }
 }
