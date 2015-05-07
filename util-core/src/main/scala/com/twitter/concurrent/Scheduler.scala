@@ -127,37 +127,43 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     def submit(r: Runnable): Unit = {
       assert(r != null)
 
-      if (lifo) {
-        if (r2 != null) {
-          rs.addFirst(r2)
-          r2 = r1
-          r1 = r0
-        } else if (r1 != null) {
-          r2 = r1
-          r1 = r0
-        } else if (r0 != null) {
-          r1 = r0
-        }
-        r0 = r
-      } else if (r0 == null) r0 = r
+      if (lifo) reorderLifo(r)
+      else if (r0 == null) r0 = r
       else if (r1 == null) r1 = r
       else if (r2 == null) r2 = r
       else rs.addLast(r)
 
       if (!running) {
-        if (cpuTimeSupported && rng.nextInt(SampleScale) == 0) {
-          numDispatches += SampleScale
-          val cpu0 = bean.getCurrentThreadCpuTime()
-          val usr0 = bean.getCurrentThreadUserTime()
-          val wall0 = System.nanoTime()
+        if (cpuTimeSupported && rng.nextInt(SampleScale) == 0)
+          instrumentAndRun()
+        else
           run()
-          cpuTime += (bean.getCurrentThreadCpuTime() - cpu0)*SampleScale
-          usrTime += (bean.getCurrentThreadUserTime() - usr0)*SampleScale
-          wallTime += (System.nanoTime() - wall0)*SampleScale
-        } else {
-          run()
-        }
       }
+    }
+
+    private[this] final def instrumentAndRun(): Unit = {
+      numDispatches += SampleScale
+      val cpu0 = bean.getCurrentThreadCpuTime
+      val usr0 = bean.getCurrentThreadUserTime
+      val wall0 = System.nanoTime()
+      run()
+      cpuTime += (bean.getCurrentThreadCpuTime - cpu0) * SampleScale
+      usrTime += (bean.getCurrentThreadUserTime - usr0) * SampleScale
+      wallTime += (System.nanoTime() - wall0) * SampleScale
+    }
+
+    private[this] final def reorderLifo(r: Runnable): Unit = {
+      if (r2 != null) {
+        rs.addFirst(r2)
+        r2 = r1
+        r1 = r0
+      } else if (r1 != null) {
+        r2 = r1
+        r1 = r0
+      } else if (r0 != null) {
+        r1 = r0
+      }
+      r0 = r
     }
 
     def flush(): Unit = {
