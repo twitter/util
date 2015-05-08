@@ -27,7 +27,9 @@ object Policy {
   case object Never extends Policy
   case object Hourly extends Policy
   case object Daily extends Policy
-  case class Weekly(dayOfWeek: Int) extends Policy
+  case class Weekly(dayOfWeek: Int) extends Policy {
+    assert(dayOfWeek >= Calendar.SUNDAY && dayOfWeek <= Calendar.SATURDAY)
+  }
   case object SigHup extends Policy
   case class MaxSize(size: StorageUnit) extends Policy
 
@@ -44,7 +46,7 @@ object Policy {
    * - Case-insensitive names of singleton Policy objects (e.g. Never, Hourly,
    *   Daily) are parsed into their corresponding objects.
    * - "Weekly(n)" is parsed into `Weekly` objects with `n` as the day-of-week
-   *   integer.
+   *   integer, as defined by the constants in java.util.Calendar.
    * - util-style data size strings (e.g. 3.megabytes, 1.gigabyte) are
    *   parsed into `StorageUnit` objects and used to produce `MaxSize` policies.
    *   See `StorageUnit.parse(String)` for more details.
