@@ -314,6 +314,22 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
     }
 
   /**
+   * Concatenate a stream of streams.
+   *
+   * {{{
+   * val a = AsyncStream(1)
+   * AsyncStream(a, a, a).flatten = AsyncStream(1, 1, 1)
+   * }}}
+   *
+   * Java users see [[AsyncStream.flattens]].
+   */
+  def flatten[B](implicit ev: A <:< AsyncStream[B]): AsyncStream[B] = AsyncStream(
+    foldRight(empty[B].underlying) { (b, tail) =>
+      (b ++ AsyncStream(tail)).underlying
+    }
+  )
+
+  /**
    * A Future of the stream realized as a list. This future completes when all
    * elements of the stream are resolved.
    *
@@ -428,23 +444,8 @@ object AsyncStream {
     }
 
   /**
-   * Collapses the Future structure into the AsyncStream. This is possible
-   * because we can unnaply the AsyncStream constructor to access
-   * Future[LazySeq[A]], and now we have two Futures which we can flatten using
-   * `flatMap`, e.g.:
-   *
-   * {{{
-   *     Future[AsyncStream[A]]     // The input `f`.
-   *   = Future[Future[LazySeq[A]]] // Unapply the AsyncStream constructor.
-   *   = Future[LazySeq[A]]         // Future.flatMap(identity).
-   *   = AsyncStream[A]             // Apply the AsyncStream constructor.
-   * }}}
+   * Java friendly [[AsyncStream.flatten]].
    */
-  def flatten[A](f: Future[AsyncStream[A]]): AsyncStream[A] = AsyncStream(
-    f.flatMap(_.underlying.flatMap {
-      case Empty => empty.underlying
-      case o@One(a) => Future.value(o)
-      case cons: Cons[A] => (cons.head +:: cons.tail).underlying
-    })
-  )
+  def flattens[A](as: AsyncStream[AsyncStream[A]]): AsyncStream[A] =
+    as.flatten
 }

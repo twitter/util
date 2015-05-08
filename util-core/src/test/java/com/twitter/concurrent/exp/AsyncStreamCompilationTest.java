@@ -43,5 +43,7 @@ public class AsyncStreamCompilationTest {
         }
       }
     );
+
+    AsyncStream.flattens(AsyncStream.of(AsyncStream.of(1)));
   }
 }

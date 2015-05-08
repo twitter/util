@@ -197,6 +197,13 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
   }
 
+  test("flatten") {
+    val small = Gen.resize(10, Arbitrary.arbitrary[List[List[Int]]])
+    forAll(small) { s =>
+      assert(toSeq(fromSeq(s.map(fromSeq)).flatten) == s.flatten)
+    }
+  }
+
   test("head") {
     forAll { (a: List[Int]) =>
       assert(Await.result(fromSeq(a).head) == a.headOption)
