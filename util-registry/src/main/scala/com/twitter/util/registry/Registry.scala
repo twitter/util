@@ -74,7 +74,7 @@ class SimpleRegistry extends Registry {
   }
 
   private[this] def sanitize(key: String): String =
-    key.filter { char => char > 31 && char <= 127 }
+    key.filter { char => char > 31 && char < 127 }
 }
 
 /**

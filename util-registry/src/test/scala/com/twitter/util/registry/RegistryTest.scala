@@ -74,6 +74,14 @@ abstract class RegistryTest extends FunSuite {
     assert(registry.toSet == Set(Entry(Seq("foo"), "qux")))
   }
 
+  test(s"$name sanitizes ASCII DEL and US characters") {
+    val registry = mkRegistry()
+    // ASCII US and DEL are the lower and upper control characters
+    // space and tilde are the lower and upper permitted printable chars
+    registry.put(Seq("foo"), "us" + 0x1f.toChar + " ~del" + 0x7f.toChar)
+    assert(registry.toSet == Set(Entry(Seq("foo"), "us ~del")))
+  }
+
   test(s"$name can sanitize bad keys") {
     val registry = mkRegistry()
     registry.put(Seq("fo☃o", s"bar${JCharacter.toString(31)}"), "qux")
