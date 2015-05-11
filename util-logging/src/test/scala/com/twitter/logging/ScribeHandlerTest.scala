@@ -54,6 +54,7 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
           level = Some(Level.DEBUG)
         ).apply()
 
+        scribe.updateLastTransmission()
         scribe.publish(record1)
         scribe.publish(record2)
 
@@ -72,20 +73,23 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
     }
 
     "be able to log binary data" in {
-      val scribe = ScribeHandler(
-        port = portWithoutListener,
-        bufferTime = 100.milliseconds,
-        maxMessagesToBuffer = 10000,
-        formatter = new Formatter(timezone = Some("UTC")),
-        category = "test",
-        level = Some(Level.DEBUG)
-      ).apply()
+      Time.withCurrentTimeFrozen { _ =>
+        val scribe = ScribeHandler(
+          port = portWithoutListener,
+          bufferTime = 100.milliseconds,
+          maxMessagesToBuffer = 10000,
+          formatter = new Formatter(timezone = Some("UTC")),
+          category = "test",
+          level = Some(Level.DEBUG)
+        ).apply()
 
-      val bytes = Array[Byte](1,2,3,4,5)
+        val bytes = Array[Byte](1,2,3,4,5)
 
-      scribe.publish(bytes)
+        scribe.updateLastTransmission()
+        scribe.publish(bytes)
 
-      assert(scribe.queue.peek() === bytes)
+        assert(scribe.queue.peek() === bytes)
+      }
     }
 
     "throw away log messages if scribe is too busy" in {
