@@ -178,6 +178,12 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       mustLog("duck")
     }
 
+    "log & trace a message with percent signs" in {
+      traceLogger(Level.INFO)
+      Logger.get("")(Level.INFO, "%i")
+      mustLog("%i")
+    }
+
     "log a message, with timestamp" in {
       before()
 
