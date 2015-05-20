@@ -1,12 +1,12 @@
 maven_layout()
 
-jar_library(name='util-stats',
+target(name='util-stats',
   dependencies=[
     'util/util-stats/src/main/scala'
   ]
 )
 
-jar_library(name='tests',
+target(name='tests',
   dependencies=[
     'util/util-stats/src/test/scala',
     'util/util-stats/src/test/java'

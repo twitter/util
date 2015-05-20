@@ -1,12 +1,12 @@
 maven_layout()
 
-jar_library(name='util-collection',
+target(name='util-collection',
   dependencies=[
     'util/util-collection/src/main/scala'
   ]
 )
 
-jar_library(name='tests',
+target(name='tests',
   dependencies=[
     'util/util-collection/src/test/scala'
   ]

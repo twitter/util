@@ -1,12 +1,12 @@
 maven_layout()
 
-jar_library(name='util-zk',
+target(name='util-zk',
   dependencies=[
     'util/util-zk/src/main/scala'
   ]
 )
 
-jar_library(name='tests',
+target(name='tests',
   dependencies=[
     'util/util-zk/src/test/scala'
   ]

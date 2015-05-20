@@ -1,12 +1,12 @@
 maven_layout()
 
-jar_library(name='util-hashing',
+target(name='util-hashing',
   dependencies=[
     'util/util-hashing/src/main/scala'
   ]
 )
 
-jar_library(name='tests',
+target(name='tests',
   dependencies=[
     'util/util-hashing/src/test/scala'
   ]

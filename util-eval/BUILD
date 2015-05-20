@@ -1,12 +1,12 @@
 maven_layout()
 
-jar_library(name='util-eval',
+target(name='util-eval',
   dependencies=[
     'util/util-eval/src/main/scala'
   ]
 )
 
-jar_library(name='tests',
+target(name='tests',
   dependencies=[
     'util/util-eval/src/test/scala'
   ]
