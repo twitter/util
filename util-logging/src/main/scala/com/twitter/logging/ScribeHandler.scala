@@ -28,11 +28,14 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
 import com.twitter.io.Charsets
-import com.twitter.util.{Duration, Time}
-
-private class Retry extends Exception("retry")
+import com.twitter.util.{Duration, NonFatal, Time}
 
 object ScribeHandler {
+  private sealed trait ServerType
+  private case object Unknown extends ServerType
+  private case object Archaic extends ServerType
+  private case object Modern extends ServerType
+
   val OK = 0
   val TRY_LATER = 1
 
@@ -142,7 +145,10 @@ class ScribeHandler(
   private[logging] def updateLastTransmission(): Unit = _lastTransmission = Time.now
 
   private var socket: Option[Socket] = None
-  private var archaicServer = false
+
+  private var serverType: ServerType = Unknown
+
+  private def isArchaicServer() = { serverType == Archaic }
 
   // Could be rewritten using a simple Condition (await/notify) or producer/consumer
   // with timed batching
@@ -168,6 +174,7 @@ class ScribeHandler(
             socket = Some(new Socket(hostname, port))
 
             stats.incrConnection()
+            serverType = Unknown
           } catch {
             case e: Exception =>
               log.error("Unable to open socket to scribe server at %s:%d: %s", hostname, port, e)
@@ -179,15 +186,48 @@ class ScribeHandler(
       }
     }
 
+    def detectArchaicServer(): Unit = {
+      if (serverType != Unknown) return
+
+      serverType = socket match {
+        case None => Unknown
+        case Some(s) => {
+          val outStream = s.getOutputStream()
+
+          try {
+            val fakeMessageWithOldScribePrefix: Array[Byte] = {
+              val prefix = OLD_SCRIBE_PREFIX
+              val messageSize = prefix.length + 5
+              val buffer = ByteBuffer.wrap(new Array[Byte](messageSize + 4))
+              buffer.order(ByteOrder.BIG_ENDIAN)
+              buffer.putInt(messageSize)
+              buffer.put(prefix)
+              buffer.putInt(0)
+              buffer.put(0: Byte)
+              buffer.array
+            }
+
+            outStream.write(fakeMessageWithOldScribePrefix)
+            readResponseExpecting(s, OLD_SCRIBE_REPLY)
+
+            // Didn't get exception, so the server must be archaic.
+            log.debug("Scribe server is archaic; changing to old protocol for future requests.")
+            Archaic
+          } catch {
+            case NonFatal(_) => Modern
+          }
+        }
+      }
+    }
+
     // TODO we should send any remaining messages before the app terminates
     def sendBatch() {
       synchronized {
         connect()
+        detectArchaicServer()
         socket.foreach { s =>
           val outStream = s.getOutputStream()
-          val inStream = s.getInputStream()
           var remaining = queue.size
-
           // try to send the log records in batch
           // need to check if socket is closed due to exception
           while (remaining > 0 && socket.isDefined) {
@@ -197,34 +237,13 @@ class ScribeHandler(
 
             try {
               outStream.write(buffer.array)
-              val expectedReply = if (archaicServer) OLD_SCRIBE_REPLY else SCRIBE_REPLY
+              val expectedReply = if (isArchaicServer()) OLD_SCRIBE_REPLY else SCRIBE_REPLY
 
-              // read response:
-              val response = new Array[Byte](expectedReply.length)
-              while (offset < response.length) {
-                val n = inStream.read(response, offset, response.length - offset)
-                if (n < 0) {
-                  throw new IOException("End of stream")
-                }
-                offset += n
-                if (!archaicServer && (offset > 0) && (response(0) == 0)) {
-                  // TODO resend with the old protocol, since presumably the scribe server failed the request
-                  // this currently closes the socket and breaks out of the loop
-                  archaicServer = true
-                  lastConnectAttempt = Time.epoch
-                  log.debug("Scribe server is archaic; changing to old protocol for future requests.")
-                  throw new Retry
-                }
-              }
-              if (!Arrays.equals(response, expectedReply)) {
-                throw new IOException("Error response from scribe server: " + response.hexlify)
-              }
+              readResponseExpecting(s, expectedReply)
+
               stats.incrSentRecords(count)
               remaining -= count
             } catch {
-              case _: Retry =>
-                stats.incrDroppedRecords(count)
-                closeSocket()
               case e: Exception =>
                 stats.incrDroppedRecords(count)
                 log.error(e, "Failed to send %s %d log entries to scribe server at %s:%d",
@@ -235,6 +254,25 @@ class ScribeHandler(
           updateLastTransmission()
         }
         stats.log()
+      }
+    }
+
+    def readResponseExpecting(socket: Socket, expectedReply: Array[Byte]): Unit = {
+      var offset = 0
+
+      val inStream = socket.getInputStream()
+
+      // read response:
+      val response = new Array[Byte](expectedReply.length)
+      while (offset < response.length) {
+        val n = inStream.read(response, offset, response.length - offset)
+        if (n < 0) {
+          throw new IOException("End of stream")
+        }
+        offset += n
+      }
+      if (!Arrays.equals(response, expectedReply)) {
+        throw new IOException("Error response from scribe server: " + response.hexlify)
       }
     }
 
@@ -256,7 +294,7 @@ class ScribeHandler(
     recordHeader.put(11: Byte)
     recordHeader.putShort(2)
 
-    val prefix = if (archaicServer) OLD_SCRIBE_PREFIX else SCRIBE_PREFIX
+    val prefix = if (isArchaicServer()) OLD_SCRIBE_PREFIX else SCRIBE_PREFIX
     val messageSize = (count * (recordHeader.capacity + 5)) + texts.foldLeft(0) { _ + _.length } + prefix.length + 5
     val buffer = ByteBuffer.wrap(new Array[Byte](messageSize + 4))
     buffer.order(ByteOrder.BIG_ENDIAN)
@@ -285,7 +323,6 @@ class ScribeHandler(
       }
       socket = None
     }
-
   }
 
   override def close() {
