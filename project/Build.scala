@@ -1,6 +1,6 @@
 import sbt.Keys._
 import sbt._
-import pl.project13.scala.sbt.SbtJmh.jmhSettings
+import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
 
 object Util extends Build {
@@ -125,10 +125,11 @@ object Util extends Build {
     id = "util-benchmark",
     base = file("util-benchmark"),
     settings = Project.defaultSettings ++
-      sharedSettings ++ jmhSettings
-  ).settings(
-    name := "util-benchmark",
-    libraryDependencies += "org.openjdk.jmh" % "jmh-core" % "1.6.1"
+      sharedSettings ++ JmhPlugin.projectSettings
+  )
+  .enablePlugins(JmhPlugin)
+  .settings(
+    name := "util-benchmark"
   ).dependsOn(utilCore, utilJvm, utilEvents)
 
   lazy val utilCache = Project(
