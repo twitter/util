@@ -52,10 +52,5 @@ password  : last_0f-the/international:playboys
       assert(jmap.get("username") === "root")
       assert(jmap.get("password") === "hellokitty")
     }
-
-    "handle \r\n line breaks" in {
-      val content = "username: root\r\npassword: hellokitty\r\n"
-      assert(Credentials(content) === Map("username" -> "root", "password" -> "hellokitty"))
-    }
   }
 }

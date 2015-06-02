@@ -29,10 +29,10 @@ import scala.util.parsing.combinator._
  */
 object Credentials {
   object parser extends RegexParsers {
-    override val whiteSpace = "(?:\\s+|#.*\\r?\\n)+".r
+    override val whiteSpace = "(?:\\s+|#.*\\n)+".r
 
     val token = "[\\w-_]+".r
-    def auth = (token <~ ":") ~ "[^\\r?\\n]+".r ^^ { case k ~ v => (k, v) }
+    def auth = (token <~ ":") ~ "[^\\n]+".r ^^ { case k ~ v => (k, v) }
     def content: Parser[Map[String, String]] = rep(auth) ^^ { auths => Map(auths: _*) }
 
     def apply(in: String): Map[String, String] = {
