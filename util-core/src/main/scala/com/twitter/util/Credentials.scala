@@ -26,13 +26,17 @@ import scala.util.parsing.combinator._
  * Simple helper to read authentication credentials from a text file.
  *
  * The file's format is assumed to be trivialized yaml, containing lines of the form ``key: value``.
+ * Keys can be any word character or '-' and values can be any character except new lines.
  */
 object Credentials {
   object parser extends RegexParsers {
-    override val whiteSpace = "(?:\\s+|#.*\\n)+".r
 
-    val token = "[\\w-_]+".r
-    def auth = (token <~ ":") ~ "[^\\n]+".r ^^ { case k ~ v => (k, v) }
+    override val whiteSpace = "(?:\\s+|#.*\\r?\\n)+".r
+
+    private[this] val key = "[\\w-]+".r
+    private[this] val value = ".+".r
+
+    def auth = key ~ ":" ~ value ^^ { case k ~ ":" ~ v => (k, v) }
     def content: Parser[Map[String, String]] = rep(auth) ^^ { auths => Map(auths: _*) }
 
     def apply(in: String): Map[String, String] = {
