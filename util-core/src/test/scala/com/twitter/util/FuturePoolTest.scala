@@ -13,7 +13,7 @@ import scala.runtime.NonLocalReturnControl
 class FuturePoolTest extends FunSuite with Eventually {
 
   implicit override val patienceConfig =
-    PatienceConfig(timeout = scaled(Span(2, Seconds)), interval = scaled(Span(5, Millis)))
+    PatienceConfig(timeout = scaled(Span(15, Seconds)), interval = scaled(Span(5, Millis)))
 
   test("FuturePool should dispatch to another thread") {
     val executor = Executors.newFixedThreadPool(1)
