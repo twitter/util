@@ -160,9 +160,9 @@ object Promise {
 
     /**
      * Note: exceptions in responds are monitored.  That is, if the
-     * computation {{k}} throws a raw (ie.  not encoded in a Future)
+     * computation `k` throws a raw (ie.  not encoded in a Future)
      * exception, it is handled by the current monitor, see
-     * {{com.twitter.util.Monitor}} for details.
+     * [[Monitor]] for details.
      */
     def respond(k: Try[A] => Unit): Future[A] = {
       continue(new Monitored(Local.save(), k, depth))
@@ -337,51 +337,86 @@ class Promise[A]
 
   private[this] def runq(first: K[A], rest: List[K[A]], result: Try[A]) = Scheduler.submit(
     new Runnable {
-      def run() {
-        // It's always safe to run ``first'' ahead of everything else
+      def run(): Unit = {
+        // It's always safe to run `first` ahead of everything else
         // since the only way to get a chainer is to register a
         // callback (which would always have depth 0).
-        if (first ne null) first(result)
+        if (first ne null)
+          first(result)
         var k: K[A] = null
+        var moreDepth = false
 
-        // Depth 0
+        // Depth 0, about 77% only at this depth
         var ks = rest
         while (ks ne Nil) {
           k = ks.head
           if (k.depth == 0)
             k(result)
+          else
+            moreDepth = true
           ks = ks.tail
         }
 
-        // Depth 1
+        // depth >= 1, about 23%
+        if (!moreDepth)
+          return
+
+        var maxDepth = 1
         ks = rest
         while (ks ne Nil) {
           k = ks.head
           if (k.depth == 1)
             k(result)
+          else if (k.depth > maxDepth)
+            maxDepth = k.depth
           ks = ks.tail
         }
+        // Depth > 1, about 7%
+        if (maxDepth > 1)
+          runDepth2Plus(rest, result, maxDepth)
+      }
 
-        // Depth > 1 (Rare: ~6%)
-        var rem: mutable.Buffer[K[A]] = null
-        ks = rest
-        while (ks ne Nil) {
-          k = ks.head
-          if (k.depth > 1) {
-            if (rem == null) rem = mutable.ArrayBuffer()
-            rem += k
+      private[this] def runDepth2Plus(
+        rest: List[K[A]],
+        result: Try[A],
+        maxDepth: Int
+      ): Unit = {
+        // empirically via JMH `FutureBenchmark.runqSize` the performance
+        // is better once the the list gets larger. that cutoff point
+        // was 14 in tests. however, it should be noted that this number
+        // was picked for how it performs for that single distribution.
+        // should it turn out that many users have a large `rest` with
+        // shallow distributions, this number should likely be higher.
+        // that said, this number is empirically large and should be a
+        // rare run code path.
+        if (rest.size > 13) {
+          var rem = mutable.ArrayBuffer[K[A]]()
+          var ks = rest
+          while (ks ne Nil) {
+            val k = ks.head
+            if (k.depth > 1)
+              rem += k
+            ks = ks.tail
           }
-          ks = ks.tail
-        }
 
-        if (rem eq null)
-          return
-
-        val sorted = rem.sortBy(K.depthOfK)
-        var i = 0
-        while (i < sorted.size) {
-          sorted(i).apply(result)
-          i += 1
+          val sorted = rem.sortBy(K.depthOfK)
+          var i = 0
+          while (i < sorted.size) {
+            sorted(i).apply(result)
+            i += 1
+          }
+        } else {
+          var depth = 2
+          while (depth <= maxDepth) {
+            var ks = rest
+            while (ks ne Nil) {
+              val k = ks.head
+              if (k.depth == depth)
+                k(result)
+              ks = ks.tail
+            }
+            depth += 1
+          }
         }
       }
     })
@@ -594,7 +629,7 @@ class Promise[A]
    * behavior of racing `a.become(b)` with `b.become(a)` is undefined
    * (where `a` and `b` may resolve as such transitively).
    *
-   * @see: [[com.twitter.util.Future.proxyTo]]
+   * @see [[com.twitter.util.Future.proxyTo]]
    */
   def become(other: Future[A]) {
     if (isDefined) {

@@ -61,6 +61,34 @@ class FutureBenchmark {
     Future.selectIndex(futures)
   }
 
+  @Benchmark
+  def runqBaseline(state: RunqState): Promise[Int] = {
+    val p = new Promise[Int]()
+    var next: Future[Int] = p
+    var sum = 0
+    var i = 0
+    while (i < state.depth) {
+      next = next.ensure { sum += 1 }
+      i += 1
+    }
+    p
+  }
+
+  @Benchmark
+  def runqSize(state: RunqState): Int = {
+    // This setup really should be done in the fixture and for that
+    // we need a fresh `Promise` each time through here.
+    // While JMH's `Level.Invocation` is what we are looking for,
+    // as the docs note, it is actually not appropriate here given
+    // that it takes nowhere close to a millisecond per invocation.
+    // By factoring it out into a benchmark, we can at least separate
+    // that from the work we are interested in.
+    val p = runqBaseline(state)
+    // trigger the callbacks
+    p.setValue(5)
+    Await.result(p)
+  }
+
 }
 
 object FutureBenchmark {
@@ -69,6 +97,12 @@ object FutureBenchmark {
   private val RespondFn: Try[Unit] => Unit = { _ => () }
 
   private val NumToSelect = 5
+
+  @State(Scope.Benchmark)
+  private class RunqState {
+    @Param(Array("1", "2", "3", "10", "20"))
+    var depth: Int = 0
+  }
 
   @State(Scope.Thread)
   private class CollectState {
@@ -100,14 +134,14 @@ object FutureBenchmark {
 
   @State(Scope.Benchmark)
   private class SelectState {
-    val p = Promise[Unit]
+    val p = new Promise[Unit]
     val futures: Seq[Future[Unit]] =
       Seq.fill(NumToSelect - 1) { p } :+ Future.Done
   }
 
   @State(Scope.Benchmark)
   private class SelectIndexState {
-    val p = Promise[Unit]
+    val p = new Promise[Unit]
     val futures: IndexedSeq[Future[Unit]] =
       IndexedSeq.fill(NumToSelect - 1) { p } :+ Future.Done
   }
