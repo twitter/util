@@ -3,7 +3,6 @@ package com.twitter.app
 import java.io.{File, IOException}
 import java.net.{URI, URISyntaxException, URLClassLoader}
 import java.util.jar.JarFile
-
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -27,7 +26,7 @@ private object ClassPath {
    * Information about a classpath entry.
    */
   case class Info(path: String, loader: ClassLoader) {
-    val name =
+    val name: String =
       if (path.endsWith(".class"))
         (path take (path.length - 6)).replace('/', '.')
       else
@@ -46,9 +45,12 @@ private object ClassPath {
    */
   def browse(loader: ClassLoader): Seq[Info] = {
     val buf = mutable.Buffer[Info]()
+    val seenUris = mutable.HashSet[URI]()
 
-    for ((uri, loader) <- getEntries(loader))
-      browseUri(uri, loader, buf)
+    for ((uri, loader) <- getEntries(loader)) {
+      seenUris += uri
+      browseUri(uri, loader, buf, seenUris)
+    }
 
     buf
   }
@@ -73,7 +75,12 @@ private object ClassPath {
     ents
   }
 
-  private def browseUri(uri: URI, loader: ClassLoader, buf: mutable.Buffer[Info]) {
+  private def browseUri(
+    uri: URI,
+    loader: ClassLoader,
+    buf: mutable.Buffer[Info],
+    seenUris: mutable.Set[URI]
+  ): Unit = {
     if (uri.getScheme != "file")
       return
     val f = new File(uri)
@@ -83,11 +90,16 @@ private object ClassPath {
    if (f.isDirectory)
       browseDir(f, loader, "", buf)
     else
-      browseJar(f, loader, buf)
+      browseJar(f, loader, buf, seenUris)
   }
 
-  private def browseDir(dir: File, loader: ClassLoader, prefix: String, buf: mutable.Buffer[Info]) {
-    if (ignoredPackages exists (_ == prefix)) {
+  private def browseDir(
+    dir: File,
+    loader: ClassLoader,
+    prefix: String,
+    buf: mutable.Buffer[Info]
+  ): Unit = {
+    if (ignoredPackages.contains(prefix)) {
       println("ignored "+prefix)
       return
     }
@@ -99,14 +111,23 @@ private object ClassPath {
         buf += Info(prefix + f.getName, loader)
   }
 
-  private def browseJar(file: File, loader: ClassLoader, buf: mutable.Buffer[Info]) {
+  private def browseJar(
+    file: File,
+    loader: ClassLoader,
+    buf: mutable.Buffer[Info],
+    seenUris: mutable.Set[URI]
+  ): Unit = {
     val jarFile = try new JarFile(file) catch {
       case _: IOException => return  // not a Jar file
     }
 
     try {
-      for (uri <- jarClasspath(file, jarFile.getManifest))
-        browseUri(uri, loader, buf)
+      for (uri <- jarClasspath(file, jarFile.getManifest)) {
+        if (!seenUris.contains(uri)) {
+          seenUris += uri
+          browseUri(uri, loader, buf, seenUris)
+        }
+      }
 
       for {
         e <- jarFile.entries.asScala
@@ -129,7 +150,7 @@ private object ClassPath {
     uri <- uriFromJarClasspath(jarFile, el)
   } yield uri
 
-  def uriFromJarClasspath(jarFile: File, path: String) = try {
+  def uriFromJarClasspath(jarFile: File, path: String): Option[URI] = try {
     val uri = new URI(path)
     if (uri.isAbsolute)
       Some(uri)
