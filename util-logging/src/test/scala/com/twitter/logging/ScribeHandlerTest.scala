@@ -21,14 +21,17 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.finagle.stats.InMemoryStatsReceiver
 import com.twitter.util.{RandomSocket, Time}
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.{ArrayBlockingQueue, RejectedExecutionHandler, TimeUnit, ThreadPoolExecutor}
 import java.util.{logging => javalog}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, WordSpec}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.time.{Millis, Minutes, Span}
 
 @RunWith(classOf[JUnitRunner])
-class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
+class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")
@@ -115,17 +118,41 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
     "have backoff on connection errors" in {
       val statsReceiver = new InMemoryStatsReceiver
 
-      val scribe = ScribeHandler(
-        port = portWithoutListener,
-        bufferTime = 5.seconds,
-        connectBackoff = 15.seconds,
-        maxMessagesToBuffer = 1,
-        formatter = BareFormatter,
-        category = "test",
-        statsReceiver = statsReceiver
-      ).apply()
+      // Use a mock ThreadPoolExecutor to force syncronize execution,
+      // to ensure reliably test connection backoff.
+      class MockThreadPoolExecutor extends ThreadPoolExecutor(1, 1, 0L,
+          TimeUnit.MILLISECONDS,
+          new ArrayBlockingQueue[Runnable](5)) {
+          override def execute(command: Runnable): Unit = command.run()
+      }
 
-      scribe.publish(record1)
+      // In a loaded test environment, we can't reliably assume the port is not used,
+      // although the test just checked a short moment ago.
+      // Solution: try multiple times until it gets a connection failure.
+      def scribeWithConnectionFailure(retries: Int): ScribeHandler = {
+        val scribe = new ScribeHandler(hostname = "localhost",
+            port = portWithoutListener,
+            category = "test",
+            bufferTime = 5.seconds,
+            connectBackoff = 15.seconds,
+            maxMessagesPerTransaction = 1,
+            maxMessagesToBuffer = 4,
+            formatter = BareFormatter,
+            level = None,
+            statsReceiver = statsReceiver
+            ){
+            override private[logging] val flusher = new MockThreadPoolExecutor
+          }
+          scribe.publish(record1)
+          if (retries > 0 && statsReceiver.counter("connection_failed")() < 1l)
+            scribeWithConnectionFailure(retries - 1)
+          else
+            scribe
+      }
+      val scribe = scribeWithConnectionFailure(2)
+
+      assert(statsReceiver.counter("connection_failed")() == 1l)
+
       scribe.publish(record2)
       scribe.publish(record1)
       scribe.publish(record2)
@@ -133,8 +160,7 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
       scribe.flusher.shutdown()
       scribe.flusher.awaitTermination(5, TimeUnit.SECONDS)
 
-      assert(statsReceiver.counter("connection_failed")() === 1l)
-      assert(statsReceiver.counter("connection_skipped")() > 1l)
+      assert(statsReceiver.counter("connection_skipped")() == 3l)
     }
 
     // TODO rewrite deterministically when we rewrite ScribeHandler
@@ -150,20 +176,38 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter {
         statsReceiver = statsReceiver
       ).apply()
 
+      // Set up a rejectedExecutionHandler to count number of rejected tasks.
+      val rejected = new AtomicInteger(0)
+      scribe.flusher.setRejectedExecutionHandler(
+        new RejectedExecutionHandler {
+          val inner = scribe.flusher.getRejectedExecutionHandler()
+          def rejectedExecution(r: Runnable, executor: ThreadPoolExecutor): Unit = {
+            rejected.getAndIncrement()
+            inner.rejectedExecution(r, executor)
+          }
+        })
+
       // crude form to allow all 100 submission and get predictable dropping of tasks
       scribe.synchronized {
-        for (i <- 0 until 100) {
+        scribe.publish(record1)
+        // wait till the ThreadPoolExecutor dequeue the first tast.
+        eventually(timeout(Span(2, Minutes)), interval(Span(100, Millis))) {
+          assert(scribe.flusher.getQueue().size() == 0)
+        }
+        // publish the rest.
+        for (i <- 1 until 100) {
           scribe.publish(record1)
         }
       }
-
       scribe.flusher.shutdown()
       scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
 
-      assert(statsReceiver.counter("published")() === 100l)
-      assert(statsReceiver.counter("connection_failed")() === 1l)
-      // 4 if the first job didn't start executing until after synchronized block above ended
-      assert(statsReceiver.counter("connection_skipped")() === 4l || statsReceiver.counter("connection_skipped")() === 5l)
+      assert(statsReceiver.counter("published")() == 100l)
+      // 100 publish requests, each creates a flush task enqueued to ThreadPoolExecutor
+      // There will be 5 tasks stay in the threadpool's task queue.
+      // There will be 1 task dequeued by the executor.
+      // That leaves either 94 rejected tasks.
+      assert(rejected.get() == 94)
     }
   }
 }
