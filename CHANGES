@@ -2,6 +2,8 @@
 (http://docutils.sourceforge.net/docs/user/rst/quickstart.html).
 The changelog style is adapted from Apache Lucene.
 
+Note that ``RB_ID=#`` correspond to associated messages in commits.
+
 Next Version
 
 6.24.0  2015-04-12
