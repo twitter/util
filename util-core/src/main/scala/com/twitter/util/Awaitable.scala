@@ -128,6 +128,33 @@ object Await {
     all(awaitables.asScala.toSeq, timeout)
 }
 
+// See http://stackoverflow.com/questions/26643045/java-interoperability-woes-with-scala-generics-and-boxing
+private[util] trait CloseAwaitably0[U <: Unit] extends Awaitable[U] {
+  private[this] val onClose = new Promise[U]
+  private[this] val closed = new AtomicBoolean(false)
+
+  /**
+   * closeAwaitably is intended to be used as a wrapper for
+   * `close`. The underlying `f` will be called at most once.
+   */
+  protected def closeAwaitably(f: => Future[U]): Future[U] = {
+    if (closed.compareAndSet(false, true))
+      onClose.become(f)
+    onClose
+  }
+
+  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
+    onClose.ready(timeout)
+    this
+  }
+
+  def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): U =
+    onClose.result(timeout)
+
+  def isReady(implicit permit: Awaitable.CanAwait): Boolean =
+    onClose.isReady
+}
+
 /**
  * A mixin to make an [[com.twitter.util.Awaitable]] out
  * of a [[com.twitter.util.Closable]].
@@ -144,28 +171,4 @@ object Await {
  *
  * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractCloseAwaitably]].
  */
-trait CloseAwaitably extends Awaitable[Unit] {
-  private[this] val onClose = new Promise[Unit]
-  private[this] val closed = new AtomicBoolean(false)
-
-  /**
-   * closeAwaitably is intended to be used as a wrapper for
-   * `close`. The underlying `f` will be called at most once.
-   */
-  protected def closeAwaitably(f: => Future[Unit]): Future[Unit] = {
-    if (closed.compareAndSet(false, true))
-      onClose.become(f)
-    onClose
-  }
-
-  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
-    onClose.ready(timeout)
-    this
-  }
-
-  def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): Unit =
-    onClose.result(timeout)
-
-  def isReady(implicit permit: Awaitable.CanAwait): Boolean =
-    onClose.isReady
-}
+trait CloseAwaitably extends CloseAwaitably0[Unit]

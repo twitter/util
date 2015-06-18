@@ -5,7 +5,7 @@ import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
-import java.util.logging.{Level, Logger}
+import java.util.logging.Logger
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -35,43 +35,43 @@ import scala.collection.mutable
  */
 trait App extends Closable with CloseAwaitably {
   /** The name of the application, based on the classname */
-  val name = getClass.getName stripSuffix "$"
+  val name: String = getClass.getName.stripSuffix("$")
   /** The [[com.twitter.app.Flags]] instance associated with this application */
   //failfastOnFlagsNotParsed is called in the ctor of App.scala here which is a bad idea
   //as things like this can happen http://stackoverflow.com/questions/18138397/calling-method-from-constructor
-  val flag = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
+  val flag: Flags = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
 
   private var _args = Array[String]()
   /** The remaining, unparsed arguments */
-  def args = _args
+  def args: Array[String] = _args
 
   /** Whether or not to accept undefined flags */
-  protected def allowUndefinedFlags = false
+  protected def allowUndefinedFlags: Boolean = false
 
-  protected def failfastOnFlagsNotParsed = false
+  protected def failfastOnFlagsNotParsed: Boolean = false
 
-  protected def exitOnError(reason: String) {
+  protected def exitOnError(reason: String): Unit = {
     System.err.println(reason)
     close()
     System.exit(1)
   }
 
-  private val inits     = mutable.Buffer[() => Unit]()
-  private val premains  = mutable.Buffer[() => Unit]()
-  private val exits     = new ConcurrentLinkedQueue[Closable]
-  private val postmains = new ConcurrentLinkedQueue[() => Unit]
+  private val inits: mutable.Buffer[() => Unit] = mutable.Buffer.empty
+  private val premains: mutable.Buffer[() => Unit] = mutable.Buffer.empty
+  private val exits: ConcurrentLinkedQueue[Closable] = new ConcurrentLinkedQueue
+  private val postmains: ConcurrentLinkedQueue[() => Unit] = new ConcurrentLinkedQueue
 
   /**
    * Invoke `f` before anything else (including flag parsing).
    */
-  protected final def init(f: => Unit) {
+  protected final def init(f: => Unit): Unit = {
     inits += (() => f)
   }
 
   /**
    * Invoke `f` right before the user's main is invoked.
    */
-  protected final def premain(f: => Unit) {
+  protected final def premain(f: => Unit): Unit = {
     premains += (() => f)
   }
 
@@ -93,7 +93,7 @@ trait App extends Closable with CloseAwaitably {
   /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
    */
-  protected final def closeOnExit(closable: Closable) {
+  protected final def closeOnExit(closable: Closable): Unit = {
     exits.add(closable)
   }
 
@@ -101,7 +101,7 @@ trait App extends Closable with CloseAwaitably {
    * Invoke `f` when shutdown is requested. Exit hooks run in parallel and all must complete before
    * postmains are executed.
    */
-  protected final def onExit(f: => Unit) {
+  protected final def onExit(f: => Unit): Unit = {
     closeOnExit {
       Closable.make { deadline => // close() ensures that this deadline is sane
         // finagle isn't available here, so no DefaultTimer
@@ -114,7 +114,7 @@ trait App extends Closable with CloseAwaitably {
   /**
    * Invoke `f` after the user's main has exited.
    */
-  protected final def postmain(f: => Unit) {
+  protected final def postmain(f: => Unit): Unit = {
     postmains.add(() => f)
   }
 
@@ -127,7 +127,7 @@ trait App extends Closable with CloseAwaitably {
     Closable.all(exits.asScala.toSeq: _*).close(closeDeadline)
   }
 
-  final def main(args: Array[String]) {
+  final def main(args: Array[String]): Unit = {
     try {
       nonExitingMain(args)
     } catch {
@@ -141,7 +141,7 @@ trait App extends Closable with CloseAwaitably {
     }
   }
 
-  final def nonExitingMain(args: Array[String]) {
+  final def nonExitingMain(args: Array[String]): Unit = {
     App.register(this)
 
     for (f <- inits) f()
@@ -188,7 +188,7 @@ object App {
    */
   def registered: Option[App] = ref.get
 
-  private[App] def register(app: App): Unit =
+  private[app] def register(app: App): Unit =
     ref.getAndSet(Some(app)).foreach { existing =>
       log.warning(
         s"Multiple com.twitter.app.App main methods called. ${existing.name}, then ${app.name}")
