@@ -332,6 +332,21 @@ no elements match.
       </h4>
       <p class="shortcomment cmt">Map a function <code>f</code> over the elements in this stream and concatenate the
 results.</p>
+    </li><li name="com.twitter.concurrent.exp.AsyncStream#flatten" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatten[B](implicitev:&lt;:&lt;[A,com.twitter.concurrent.exp.AsyncStream[B]]):com.twitter.concurrent.exp.AsyncStream[B]"></a>
+      <a id="flatten[B](&lt;:&lt;[A,AsyncStream[B]]):AsyncStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.A">A</span>, <a href="" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.flatten.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Concatenate a stream of streams.</p><div class="fullcomment"><div class="comment cmt"><p>Concatenate a stream of streams.</p><pre><span class="kw">val</span> a = AsyncStream(<span class="num">1</span>)
+AsyncStream(a, a, a).flatten = AsyncStream(<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>)</pre><p>Java users see <a href="AsyncStream$.html#flattens[A](as:com.twitter.concurrent.exp.AsyncStream[com.twitter.concurrent.exp.AsyncStream[A]]):com.twitter.concurrent.exp.AsyncStream[A]" class="extmbr" name="com.twitter.concurrent.exp.AsyncStream#flattens">AsyncStream.flattens</a>.
+</p></div></div>
     </li><li name="com.twitter.concurrent.exp.AsyncStream#foldLeft" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="foldLeft[B](z:B)(f:(B,A)=&gt;B):com.twitter.util.Future[B]"></a>
       <a id="foldLeft[B](B)((B,A)⇒B):Future[B]"></a>
@@ -656,6 +671,21 @@ the aggregated result.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.concurrent.exp.AsyncStream#uncons" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="uncons:com.twitter.util.Future[Option[(A,()=&gt;com.twitter.concurrent.exp.AsyncStream[A])]]"></a>
+      <a id="uncons:Future[Option[(A,()⇒AsyncStream[A])]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">uncons</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[(<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.A">A</span>, () ⇒ <a href="" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.A">A</span>])]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The head and tail of this stream, if not empty.</p><div class="fullcomment"><div class="comment cmt"><p>The head and tail of this stream, if not empty. Note the tail thunk which
+preserves the tail's laziness.</p><pre>empty.uncons     == Future.<span class="std">None</span>
+(a +:: m).uncons == Future.value(<span class="std">Some</span>(a, () <span class="kw">=&gt;</span> m))</pre></div></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

@@ -85,7 +85,20 @@ is analogous to try/finally).
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.util.Try.PredicateDoesNotObtain" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.util.Try.OrThrow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OrThrow[A]extendsAnyVal"></a>
+      <a id="OrThrow[A]:OrThrow[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Try$$OrThrow.html"><span class="name">OrThrow</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.AnyVal" class="extype" target="_top">AnyVal</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.twitter.util.Try.PredicateDoesNotObtain" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="PredicateDoesNotObtainextendsExceptionwithProductwithSerializable"></a>
       <a id="PredicateDoesNotObtain:PredicateDoesNotObtain"></a>
       <h4 class="signature">
@@ -353,6 +366,23 @@ the argument Trys are Throws. The first Throw in the Seq is the one which is sur
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Try#orThrow" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="orThrow[A](o:Option[A])(failure:()=&gt;Throwable):com.twitter.util.Try[A]"></a>
+      <a id="orThrow[A](Option[A])(()⇒Throwable):Try[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">orThrow</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="o">o: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Try.orThrow.A">A</span>]</span>)</span><span class="params">(<span name="failure">failure: () ⇒ <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.orThrow.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convert an <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">scala.Option</a> to a <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Convert an <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">scala.Option</a> to a <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>.</p><p>For users from scala, there's also the implicit class <a href="Try$$OrThrow.html" class="extype" name="com.twitter.util.Try.OrThrow">OrThrow</a> which
+allows</p><pre><span class="kw">import</span> Try._
+<span class="std">Option</span>(<span class="kw">null</span>).orThrow { <span class="kw">new</span> Exception(<span class="lit">"boom!"</span>) }</pre></div><dl class="paramcmts block"><dt class="param">o</dt><dd class="cmt"><p>the Option to convert to a Try</p></dd><dt class="param">failure</dt><dd class="cmt"><p>a function that returns the Throwable that should be
+returned if the option is None
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -436,6 +466,20 @@ the argument Trys are Throws. The first Throw in the Seq is the one which is sur
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Try#withFatals" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="withFatals[R](r:=&gt;R)(f:PartialFunction[Throwable,com.twitter.util.Try[R]]):com.twitter.util.Try[R]"></a>
+      <a id="withFatals[R](⇒R)(PartialFunction[Throwable,Try[R]]):Try[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withFatals</span><span class="tparams">[<span name="R">R</span>]</span><span class="params">(<span name="r">r: ⇒ <span class="extype" name="com.twitter.util.Try.withFatals.R">R</span></span>)</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.withFatals.R">R</span>]]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.withFatals.R">R</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Like <a href="#apply[R](r:=&gt;R):com.twitter.util.Try[R]" class="extmbr" name="com.twitter.util.Try#apply">Try.apply</a> but allows the caller to specify a handler for fatal
+errors.</p>
     </li></ol>
             </div>
 

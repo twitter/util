@@ -226,7 +226,8 @@ other combinator) use this to compress Futures, freeing them
 from space leaks when used with recursive constructions.</p><p><b>Note:</b> do not use become with cyclic graphs of futures: the
 behavior of racing <code>a.become(b)</code> with <code>b.become(a)</code> is undefined
 (where <code>a</code> and <code>b</code> may resolve as such transitively).
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../util/Future.html#proxyTo[B&gt;:A](other:com.twitter.util.Promise[B]):Unit" class="extmbr" name="com.twitter.util.Future#proxyTo">com.twitter.util.Future.proxyTo</a>
+</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#before" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="before[B](f:=&gt;com.twitter.util.Future[B])(implicitev:&lt;:&lt;[Future.this.type,com.twitter.util.Future[Unit]]):com.twitter.util.Future[B]"></a>
       <a id="before[B](⇒Future[B])(&lt;:&lt;[AsyncCallbackPromise.this.type,Future[Unit]]):Future[B]"></a>
@@ -1000,9 +1001,9 @@ future and the callback, <code>rescueException</code>, are done.</p><p>This is t
       </span>
       </h4>
       <p class="shortcomment cmt">Note: exceptions in responds are monitored.</p><div class="fullcomment"><div class="comment cmt"><p>Note: exceptions in responds are monitored.  That is, if the
-computation {{k}} throws a raw (ie.  not encoded in a Future)
+computation <code>k</code> throws a raw (ie.  not encoded in a Future)
 exception, it is handled by the current monitor, see
-{{com.twitter.util.Monitor}} for details.
+<span class="extype" name="Monitor">Monitor</span> for details.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise$$Responder.html" class="extype" name="com.twitter.util.Promise.Responder">Responder</a></dd></dl></div>
     </li><li name="com.twitter.util.Promise#result" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):A"></a>

@@ -413,7 +413,7 @@ the resulting order of values in the spool is non-deterministic.
       </h4>
       <p class="shortcomment cmt">Puts a value into the spool and closes this SpoolSource.</p><div class="fullcomment"><div class="comment cmt"><p>Puts a value into the spool and closes this SpoolSource.  Unless
 this SpoolSource has been closed, the current Future[Spool[A]]
-value will be fulfilled with Spool.cons(value, Spool.empty[A]).
+value will be fulfilled with <code>value *:: Future.value(Spool.empty[A])</code>.
 If the SpoolSource has been closed, then this value is ignored.
 If multiple threads call offer simultaneously, the operation is
 thread-safe but the resulting order of values in the spool is

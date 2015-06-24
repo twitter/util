@@ -272,25 +272,19 @@ more recent scala version so we will revisit this soon.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.concurrent.exp.AsyncStream#flatten" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="flatten[A](f:com.twitter.util.Future[com.twitter.concurrent.exp.AsyncStream[A]]):com.twitter.concurrent.exp.AsyncStream[A]"></a>
-      <a id="flatten[A](Future[AsyncStream[A]]):AsyncStream[A]"></a>
+    </li><li name="com.twitter.concurrent.exp.AsyncStream#flattens" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="flattens[A](as:com.twitter.concurrent.exp.AsyncStream[com.twitter.concurrent.exp.AsyncStream[A]]):com.twitter.concurrent.exp.AsyncStream[A]"></a>
+      <a id="flattens[A](AsyncStream[AsyncStream[A]]):AsyncStream[A]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="f">f: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.flatten.A">A</span>]</span>
+        <span class="name">flattens</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="as">as: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.flattens.A">A</span>]]</span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.flattens.A">A</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Collapses the Future structure into the AsyncStream.</p><div class="fullcomment"><div class="comment cmt"><p>Collapses the Future structure into the AsyncStream. This is possible
-because we can unnaply the AsyncStream constructor to access
-Future[LazySeq[A]], and now we have two Futures which we can flatten using
-<code>flatMap</code>, e.g.:</p><pre>Future[AsyncStream[A]]     <span class="cmt">// The input `f`.</span>
-= Future[Future[LazySeq[A]]] <span class="cmt">// Unapply the AsyncStream constructor.</span>
-= Future[LazySeq[A]]         <span class="cmt">// Future.flatMap(identity).</span>
-= AsyncStream[A]             <span class="cmt">// Apply the AsyncStream constructor.</span></pre></div></div>
+      <p class="shortcomment cmt">Java friendly <a href="AsyncStream.html#flatten[B](implicitev:&lt;:&lt;[A,com.twitter.concurrent.exp.AsyncStream[B]]):com.twitter.concurrent.exp.AsyncStream[B]" class="extmbr" name="com.twitter.concurrent.exp.AsyncStream#flatten">AsyncStream.flatten</a>.</p>
     </li><li name="com.twitter.concurrent.exp.AsyncStream#fromFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="fromFuture[A](f:com.twitter.util.Future[A]):com.twitter.concurrent.exp.AsyncStream[A]"></a>
       <a id="fromFuture[A](Future[A]):AsyncStream[A]"></a>

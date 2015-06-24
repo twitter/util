@@ -391,6 +391,23 @@ preserve laziness.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.concurrent.Spool#merge" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="merge[A](spools:Seq[com.twitter.util.Future[com.twitter.concurrent.Spool[A]]]):com.twitter.util.Future[com.twitter.concurrent.Spool[A]]"></a>
+      <a id="merge[A](Seq[Future[Spool[A]]]):Future[Spool[A]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">merge</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="spools">spools: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.merge.A">A</span>]]]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.merge.A">A</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Merges spools as they're ready, or evenly between the ready spools if
+there's more than one ready, until every spool is empty.</p><div class="fullcomment"><div class="comment cmt"><p>Merges spools as they're ready, or evenly between the ready spools if
+there's more than one ready, until every spool is empty. Fails the tail of
+the returned Spool when any of the Spools you're merging over fails.
+</p></div></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

@@ -265,6 +265,27 @@ See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4513817 for
 example.
 </p></div><dl class="paramcmts block"><dt class="param">path</dt><dd class="cmt"><p>the resource-relative path to make a temp file from</p></dd><dt>returns</dt><dd class="cmt"><p>the temp File object
 </p></dd></dl></div>
+    </li><li name="com.twitter.io.TempFile#fromSystemResourcePath" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fromSystemResourcePath(path:String):java.io.File"></a>
+      <a id="fromSystemResourcePath(String):File"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromSystemResourcePath</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.io.File">File</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create a temporary file from the given system resource path
+(i.</p><div class="fullcomment"><div class="comment cmt"><p>Create a temporary file from the given system resource path
+(i.e. via ClassLoader.getSystemResource). The tempfile is deleted
+on JVM exit.</p><p>Note, due to the usage of <code>File.deleteOnExit()</code> callers should
+be careful using this as it can leak memory.
+See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4513817 for
+example.
+</p></div><dl class="paramcmts block"><dt class="param">path</dt><dd class="cmt"><p>the path to make a temp file from</p></dd><dt>returns</dt><dd class="cmt"><p>the temp File object
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

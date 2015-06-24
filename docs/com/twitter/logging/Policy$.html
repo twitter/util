@@ -401,7 +401,7 @@
       <p class="shortcomment cmt">Parse a string into a Policy object.</p><div class="fullcomment"><div class="comment cmt"><p>Parse a string into a Policy object. Parsing rules are as follows:</p><p>- Case-insensitive names of singleton Policy objects (e.g. Never, Hourly,
   Daily) are parsed into their corresponding objects.
 - &quot;Weekly(n)&quot; is parsed into <code>Weekly</code> objects with <code>n</code> as the day-of-week
-  integer.
+  integer, as defined by the constants in java.util.Calendar.
 - util-style data size strings (e.g. 3.megabytes, 1.gigabyte) are
   parsed into <code>StorageUnit</code> objects and used to produce <code>MaxSize</code> policies.
   See <code>StorageUnit.parse(String)</code> for more details.

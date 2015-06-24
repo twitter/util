@@ -315,6 +315,22 @@ filter.
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator ++
 </p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.Spool#distinctBy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="distinctBy[B](fn:A=&gt;B):com.twitter.concurrent.Spool[A]"></a>
+      <a id="distinctBy[B]((A)⇒B):Spool[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">distinctBy</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="fn">fn: (<span class="extype" name="com.twitter.concurrent.AbstractSpool.A">A</span>) ⇒ <span class="extype" name="com.twitter.concurrent.Spool.distinctBy.B">B</span></span>)</span><span class="result">: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.AbstractSpool.A">A</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Builds a new Spool from this one by filtering out duplicate elements,
+elements for which fn returns the same value.</p><div class="fullcomment"><div class="comment cmt"><p>Builds a new Spool from this one by filtering out duplicate elements,
+elements for which fn returns the same value.</p><p>NB: this has space consumption O(N) of the number of distinct items
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
