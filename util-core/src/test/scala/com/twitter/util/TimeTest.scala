@@ -288,35 +288,47 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenProper
     }
   }
 
-  "floor" should {
-    "round down" in {
-      assert(fromSeconds(60).floor(1.minute) === fromSeconds(60))
-      assert(fromSeconds(100).floor(1.minute) === fromSeconds(60))
-      assert(fromSeconds(119).floor(1.minute) === fromSeconds(60))
-      assert(fromSeconds(120).floor(1.minute) === fromSeconds(120))
-    }
+  "rounding" should {
 
     "maintain top and bottom" in {
-      assert(Top.floor(1.hour) === Top)
+      assert(Top.floor(1.hour) == Top)
+      assert(Bottom.floor(1.hour) == Bottom)
     }
 
     "divide by zero" in {
-      assert(Zero.floor(Duration.Zero) === Undefined)
-      assert(fromSeconds(1).floor(Duration.Zero) === Top)
-      assert(fromSeconds(-1).floor(Duration.Zero) === Bottom)
+      assert(Zero.floor(Duration.Zero) == Undefined)
+      assert(fromSeconds(1).floor(Duration.Zero) == Top)
+      assert(fromSeconds(-1).floor(Duration.Zero) == Bottom)
     }
 
     "deal with undefineds" in {
-      assert(Bottom.floor(1.second) === Bottom)
-      assert(Undefined.floor(0.seconds) === Undefined)
-      assert(Undefined.floor(Duration.Top) === Undefined)
-      assert(Undefined.floor(Duration.Bottom) === Undefined)
-      assert(Undefined.floor(Duration.Undefined) === Undefined)
+      assert(Undefined.floor(0.seconds) == Undefined)
+      assert(Undefined.floor(Duration.Top) == Undefined)
+      assert(Undefined.floor(Duration.Bottom) == Undefined)
+      assert(Undefined.floor(Duration.Undefined) == Undefined)
     }
 
-    "floor itself" in {
-      for (s <- Seq(Long.MinValue, -1, 1, Long.MaxValue); t = fromNanoseconds(s))
-        assert(t.floor(Duration.fromNanoseconds(t.inNanoseconds)) === t)
+    "round to itself" in {
+      for (s <- Seq(Long.MinValue, -1, 1, Long.MaxValue); t = s.nanoseconds)
+        assert(t.floor(t.inNanoseconds.nanoseconds) == t)
+    }
+  }
+
+  "floor" should {
+    "round down" in {
+      assert(60.seconds.floor(1.minute) == 60.seconds)
+      assert(100.seconds.floor(1.minute) == 60.seconds)
+      assert(119.seconds.floor(1.minute) == 60.seconds)
+      assert(120.seconds.floor(1.minute) == 120.seconds)
+    }
+  }
+
+  "ceiling" should {
+    "round up" in {
+      assert(60.seconds.ceil(1.minute) == 60.seconds)
+      assert(100.seconds.ceil(1.minute) == 120.seconds)
+      assert(119.seconds.ceil(1.minute) == 120.seconds)
+      assert(120.seconds.ceil(1.minute) == 120.seconds)
     }
   }
 

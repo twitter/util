@@ -480,5 +480,7 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
    */
   def rem(x: Duration): Duration = this % x
 
-  override def floor(x: Duration): Duration = super.floor(x) // for Java-compatibility
+  // for Java-compatibility
+  override def floor(increment: Duration): Duration = super.floor(increment)
+  override def ceil(increment: Duration): Duration = super.ceil(increment)
 }
