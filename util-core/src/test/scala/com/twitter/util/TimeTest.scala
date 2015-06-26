@@ -288,16 +288,11 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenProper
     }
   }
 
-  "floor" should {
-    "round down" in {
-      assert(fromSeconds(60).floor(1.minute) === fromSeconds(60))
-      assert(fromSeconds(100).floor(1.minute) === fromSeconds(60))
-      assert(fromSeconds(119).floor(1.minute) === fromSeconds(60))
-      assert(fromSeconds(120).floor(1.minute) === fromSeconds(120))
-    }
-
+  "rounding" should {
+    
     "maintain top and bottom" in {
       assert(Top.floor(1.hour) === Top)
+      assert(Bottom.floor(1.second) === Bottom)
     }
 
     "divide by zero" in {
@@ -307,16 +302,33 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenProper
     }
 
     "deal with undefineds" in {
-      assert(Bottom.floor(1.second) === Bottom)
       assert(Undefined.floor(0.seconds) === Undefined)
       assert(Undefined.floor(Duration.Top) === Undefined)
       assert(Undefined.floor(Duration.Bottom) === Undefined)
       assert(Undefined.floor(Duration.Undefined) === Undefined)
     }
 
-    "floor itself" in {
+    "round to itself" in {
       for (s <- Seq(Long.MinValue, -1, 1, Long.MaxValue); t = fromNanoseconds(s))
         assert(t.floor(Duration.fromNanoseconds(t.inNanoseconds)) === t)
+    }
+  }
+
+  "floor" should {
+    "round down" in {
+      assert(fromSeconds(60).floor(1.minute) === fromSeconds(60))
+      assert(fromSeconds(100).floor(1.minute) === fromSeconds(60))
+      assert(fromSeconds(119).floor(1.minute) === fromSeconds(60))
+      assert(fromSeconds(120).floor(1.minute) === fromSeconds(120))
+    }
+  }
+
+  "ceiling" should {
+    "round up" in {
+      assert(fromSeconds(60).ceiling(1.minute) === fromSeconds(60))
+      assert(fromSeconds(100).ceiling(1.minute) === fromSeconds(120))
+      assert(fromSeconds(119).ceiling(1.minute) === fromSeconds(120))
+      assert(fromSeconds(120).ceiling(1.minute) === fromSeconds(120))
     }
   }
 

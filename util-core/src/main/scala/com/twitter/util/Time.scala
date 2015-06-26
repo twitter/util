@@ -195,19 +195,29 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   /** The difference between the two `TimeLike`s */
   def diff(that: This): Duration
 
+  private[this] def round(f: (Long, Long) => Long, x: Duration): This = (this, x) match {
+    case (Nanoseconds(0), Duration.Nanoseconds(0)) => Undefined
+    case (Nanoseconds(num), Duration.Nanoseconds(0)) => if (num < 0) Bottom else Top
+    case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds(f(num, denom))
+    case (self, Duration.Nanoseconds(_)) => self
+    case (_, _) => Undefined
+  }
+
+  /**
+   * Rounds up to the nearest multiple of the given duration.  For example:
+   * 127.seconds.ceiling(1.minute) => 3.minutes.  Taking the ceiling of a
+   * Time object with duration greater than 1.hour can have unexpected
+   * results because of timezones.
+   */
+  def ceiling(x: Duration): This = round((num, denom) => ((num + denom - 1)/denom) * denom, x)
+
   /**
    * Rounds down to the nearest multiple of the given duration.  For example:
    * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
    * Time object with duration greater than 1.hour can have unexpected
    * results because of timezones.
    */
-  def floor(x: Duration): This = (this, x) match {
-    case (Nanoseconds(0), Duration.Nanoseconds(0)) => Undefined
-    case (Nanoseconds(num), Duration.Nanoseconds(0)) => if (num < 0) Bottom else Top
-    case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds((num/denom) * denom)
-    case (self, Duration.Nanoseconds(_)) => self
-    case (_, _) => Undefined
-  }
+  def floor(x: Duration): This = round((num, denom) => (num/denom) * denom, x)
 
   def max(that: This): This =
     if ((this compare that) < 0) that else this
