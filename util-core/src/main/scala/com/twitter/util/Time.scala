@@ -20,6 +20,8 @@ import java.io.Serializable
 import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale, TimeZone}
 
+import com.twitter.conversions.time.intToTimeableNumber
+
 /**
  * @define now
  *
@@ -201,7 +203,9 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
    * Time object with duration greater than 1.hour can have unexpected
    * results because of timezones.
    */
-  def ceil(increment: Duration): This = floor(increment) + increment
+  // the impl might seem weird but consider the case where this is an exact multiple of the 
+  // increment.
+  def ceil(increment: Duration): This = (this - 1.nanoseconds).floor(increment) + increment
 
   /**
    * Rounds down to the nearest multiple of the given duration.  For example:
