@@ -2,6 +2,7 @@ import sbt.Keys._
 import sbt._
 import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
+import scoverage.ScoverageSbtPlugin
 
 object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
@@ -49,6 +50,13 @@ object Util extends Build {
     ),
 
     resolvers += "twitter repo" at "http://maven.twttr.com",
+
+    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := (
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 10)) => false
+        case _ => true
+      }
+    ),
 
     publishM2Configuration <<= (packagedArtifacts, checksums in publish, ivyLoggingLevel) map { (arts, cs, level) =>
       Classpaths.publishConfig(arts, None, resolverName = m2Repo.name, checksums = cs, logging = level)

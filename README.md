@@ -1,19 +1,26 @@
-A bunch of idiomatic, small General Purpose tools.
+# Twitter Util
 
-[![Build Status](https://secure.travis-ci.org/twitter/util.png?branch=master)](https://travis-ci.org/twitter/util)
+[![Build status](https://travis-ci.org/twitter/util.svg?branch=develop)](https://travis-ci.org/twitter/util)
+[![Coverage status](https://img.shields.io/coveralls/twitter/util/develop.svg)](https://coveralls.io/r/twitter/util?branch=develop)
+[![Project status](https://img.shields.io/badge/status-active-brightgreen.svg)](#status)
 
-See the Scaladoc [here](https://twitter.github.com/util)
+A bunch of idiomatic, small, general purpose tools.
 
-# Using in your Project
+See the Scaladoc [here](https://twitter.github.com/util).
 
-Pre-compiled jars for each set of tools (`util-core`, `util-collection` etc) are available in the Twitter Maven repository, here: http://maven.twttr.com/
+## Status
 
-We use [Semantic Versioning](http://semver.org/) for published artifacts.
+This project is used in production at Twitter (and many other organizations),
+and is being actively developed and maintained. Please note that some
+sub-projects (including util-eval), classes, and methods may be deprecated,
+however.
+
+# Using in your project
 
 An example SBT dependency string for the `util-collection` tools would look like this:
 
 ```scala
-val collUtils = "com.twitter" %% "util-collection" % "6.23.0"
+val collUtils = "com.twitter" %% "util-collection" % "6.25.0"
 ```
 
 # Units
