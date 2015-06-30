@@ -98,8 +98,9 @@ trait App extends Closable with CloseAwaitably {
   }
 
   /**
-   * Invoke `f` when shutdown is requested. Exit hooks run in parallel and all must complete before
-   * postmains are executed.
+   * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
+   * executed after all postmains complete. The thread resumes when all exit
+   * hooks complete or `closeDeadline` expires.
    */
   protected final def onExit(f: => Unit): Unit = {
     closeOnExit {
@@ -170,6 +171,9 @@ trait App extends Closable with CloseAwaitably {
 
     for (f <- postmains.asScala) f()
 
+    // We discard this future but we `Await.result` on `this` which is a
+    // `CloseAwaitable`, and this means the thread waits for the future to
+    // complete.
     close(defaultCloseGracePeriod)
 
     // The deadline to 'close' is advisory; we enforce it here.

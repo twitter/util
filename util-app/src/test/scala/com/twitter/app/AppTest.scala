@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import java.util.concurrent.ConcurrentLinkedQueue
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -63,6 +64,18 @@ class AppTest extends FunSuite {
     }
 
     assert(theReason.contains("""Error parsing flag "environment""""))
+  }
 
+  test("App: order of hooks") {
+    val q = new ConcurrentLinkedQueue[Int]
+    object test1 extends App {
+      init(q.add(0))
+      premain(q.add(1))
+      def main() = q.add(2)
+      postmain(q.add(3))
+      onExit(q.add(4))
+    }
+    test1.main(Array.empty)
+    assert(q.toArray.toSeq == Seq(0, 1, 2, 3, 4))
   }
 }
