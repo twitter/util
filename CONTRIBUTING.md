@@ -8,7 +8,7 @@ The workflow that we support:
 
 1.  Fork util
 2.  Check out the `develop` branch
-3.  Make a feature branch
+3.  Make a feature branch (use `git checkout -b "cool-new-feature"`)
 4.  Make your cool new feature or bugfix on your branch
 5.  Write a test for your change
 6.  From your branch, make a pull request against `twitter/util/develop`
@@ -24,6 +24,13 @@ Because ScalaTest has such a big surface area, we use a restricted subset of it
 in our tests to keep them easy to read.  We've chosen the `assert` API, not the
 `Matchers` one, and we use the [`FunSuite` mixin][funsuite], which supports
 xUnit-like semantics.
+
+We encourage our contributors to ensure Java compatibility for any new public APIs
+they introduce. The easiest way to do so is to provide _Java compilation tests_
+and make sure the new API is easily accessible (typing `X$.MODULE$` is not easy)
+from Java. These compilation tests also provide Java users with testable examples
+of the API usage. For an example of a Java compilation test see
+[VarCompilationTest.java][1].
 
 Note that while you will see a [Travis CI][travis-ci] status message in your
 pull request, this may not always be accurate, and in any case all changes will
@@ -82,6 +89,7 @@ metadata will be preserved.
 Please let us know if you have any questions about this process!
 
 [0]: https://github.com/twitter/util/pull/109
+[1]: https://github.com/twitter/util/blob/master/util-core/src/test/java/com/twitter/util/VarCompilationTest.java
 [es]: https://twitter.github.io/effectivescala/
 [funsuite]: http://www.scalatest.org/getting_started_with_fun_suite
 [scalatest]: http://www.scalatest.org/
