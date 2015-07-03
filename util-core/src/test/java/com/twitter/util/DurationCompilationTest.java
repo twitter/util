@@ -127,4 +127,12 @@ public class DurationCompilationTest {
 
     Assert.assertEquals(2, b.inSeconds());
   }
+
+  @Test
+  public void testCeil() {
+    Duration a = Duration.fromMilliseconds(3333);
+    Duration b = a.ceil(Duration.fromSeconds(1));
+
+    Assert.assertEquals(4, b.inSeconds());
+  }
 }

@@ -196,12 +196,23 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def diff(that: This): Duration
 
   /**
+   * Rounds up to the nearest multiple of the given duration.  For example:
+   * 127.seconds.ceiling(1.minute) => 3.minutes.  Taking the ceiling of a
+   * Time object with duration greater than 1.hour can have unexpected
+   * results because of timezones.
+   */
+  def ceil(increment: Duration): This = {
+    val floored = floor(increment)
+    if (this == floored) floored else floored + increment
+  }
+
+  /**
    * Rounds down to the nearest multiple of the given duration.  For example:
    * 127.seconds.floor(1.minute) => 2.minutes.  Taking the floor of a
    * Time object with duration greater than 1.hour can have unexpected
    * results because of timezones.
    */
-  def floor(x: Duration): This = (this, x) match {
+  def floor(increment: Duration): This = (this, increment) match {
     case (Nanoseconds(0), Duration.Nanoseconds(0)) => Undefined
     case (Nanoseconds(num), Duration.Nanoseconds(0)) => if (num < 0) Bottom else Top
     case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds((num/denom) * denom)
@@ -625,6 +636,8 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    *  Finds a diff between this and ''that'' time.
    */
   def minus(that: Time): Duration = this - that
-
-  override def floor(x: Duration): Time = super.floor(x) // for Java-compatibility
+  
+  // for Java-compatibility
+  override def floor(increment: Duration): Time = super.floor(increment)
+  override def ceil(increment: Duration): Time = super.ceil(increment) 
 }

@@ -82,6 +82,14 @@ public class TimeCompilationTest {
   }
 
   @Test
+  public void testCeil() {
+    Time a = Time.fromNanoseconds(6666);
+    Time b = a.ceil(Duration.fromMicroseconds(1));
+
+    Assert.assertEquals(7, b.inMicroseconds());
+  }
+
+  @Test
   public void testSince() {
     Time a = Time.now().plus(Duration.fromSeconds(10));
     Time b = Time.epoch().plus(Duration.fromSeconds(10));
