@@ -120,6 +120,9 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     s.foldRight(Future.Done) { (_, _) => Future.Done }
     assert(!p.isDefined)
 
+    s.scanLeft(Future.Done) { (_, _) => Future.Done }
+    assert(!p.isDefined)
+
     s ++ s
     assert(!p.isDefined)
 
@@ -179,6 +182,13 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       def g(q: Int, p: => Future[String]): Future[String] = p.map(f(q, _))
       val m = fromSeq(a).foldRight(Future.value("0"))(g)
       assert(Await.result(m) == a.foldRight("0")(f))
+    }
+  }
+
+  test("scanLeft") {
+    forAll { (a: List[Int]) =>
+      def f(s: String, n: Int) = (s.toLong + n).toString
+      assert(toSeq(fromSeq(a).scanLeft("0")(f)) == a.scanLeft("0")(f))
     }
   }
 

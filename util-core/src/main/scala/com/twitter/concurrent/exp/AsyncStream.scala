@@ -254,6 +254,28 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
   )
 
   /**
+   * Similar to foldLeft, but produces a stream from the result of each
+   * successive fold:
+   *
+   * {{{
+   * AsyncStream(1, 2, ...).scanLeft(z)(f) == z +:: f(z, 1) +:: f(f(z, 1), 2) +:: ...
+   * }}}
+   *
+   * Note that for an `AsyncStream as`:
+   *
+   * {{{
+   * as.scanLeft(z)(f).last == as.foldLeft(z)(f)
+   * }}}
+   */
+  def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] = AsyncStream(
+    underlying.flatMap {
+      case Empty => of(z).underlying
+      case One(a) => (z +:: of(f(z, a))).underlying
+      case cons: Cons[A] => (z +:: cons.tail.scanLeft(f(z, cons.head))(f)).underlying
+    }
+  )
+
+  /**
    * Applies a binary operator to a start value and all elements of the stream,
    * from head to tail.
    *
