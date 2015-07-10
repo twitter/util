@@ -54,7 +54,7 @@ case class CpuProfile(
     for (w <- Seq(0, 3, 0, 1, 0))
       putWord(w)
 
-    for ((stack, n) <- counts if !stack.isEmpty) {
+    for ((stack, n) <- counts if stack.nonEmpty) {
       putWord(n)
       putWord(stack.size)
       for (frame <- stack)
@@ -68,6 +68,26 @@ case class CpuProfile(
 }
 
 object CpuProfile {
+
+  // (class name, method names) that say they are runnable, but are actually doing nothing.
+  private[this] val IdleClassAndMethod: Set[(String, String)] = Set(
+    ("sun.nio.ch.EPollArrayWrapper", "epollWait"),
+    ("sun.nio.ch.KQueueArrayWrapper", "kevent0"),
+    ("java.net.SocketInputStream", "socketRead0"),
+    ("java.net.SocketOutputStream", "socketWrite0"),
+    ("java.net.PlainSocketImpl", "socketAvailable"),
+    ("java.net.PlainSocketImpl", "socketAccept")
+  )
+
+  /**
+   * When looking for RUNNABLEs, the JVM's notion of runnable differs from the
+   * from kernel's definition and for some well known cases, we can filter
+   * out threads that are actually asleep.
+   * See http://www.brendangregg.com/blog/2014-06-09/java-cpu-sampling-using-hprof.html
+   */
+  private[jvm] def isRunnable(stackElem: StackTraceElement): Boolean =
+    !IdleClassAndMethod.contains((stackElem.getClassName, stackElem.getMethodName))
+
   /**
    * Profile CPU usage of threads in `state` for `howlong`, sampling
    * stacks at `frequency` Hz.
@@ -111,8 +131,11 @@ object CpuProfile {
           if thread.getThreadState() == state
           && thread.getThreadId() != myId) {
         val s = thread.getStackTrace().toSeq
-        if (!s.isEmpty)
-          counts(s) = counts.getOrElse(s, 0L) + 1L
+        if (s.nonEmpty) {
+          val include = state != Thread.State.RUNNABLE || isRunnable(s.head)
+          if (include)
+            counts(s) = counts.getOrElse(s, 0L) + 1L
+        }
       }
 
       n += 1
