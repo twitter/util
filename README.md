@@ -173,11 +173,13 @@ Major version 6 introduced some breaking changes:
 
 Method `raise` on `Future` (`def raise(cause: Throwable)`) raises the interrupt described by `cause` to the producer of this `Future`. Interrupt handlers are installed on a `Promise` using `setInterruptHandler`, which takes a partial function:
 
-	val p = new Promise[T]
-	p.setInterruptHandler {
-	  case exc: MyException =>
-	    // deal with interrupt..
-	}
+```scala
+val p = new Promise[T]
+p.setInterruptHandler {
+  case exc: MyException =>
+    // deal with interrupt..
+}
+```
 
 Interrupts differ in semantics from cancellation in important ways: there can only be one interrupt handler per promise, and interrupts are only delivered if the promise is not yet complete.
 
@@ -189,11 +191,15 @@ Since the resolution of `Time.now` has been reduced (and is also more expensive 
 
 It's used simply:
 
-	val elapsed: () => Duration = Stopwatch.start()
+```scala
+val elapsed: () => Duration = Stopwatch.start()
+```
 
 which is read by applying `elapsed`:
 
-	val duration: Duration = elapsed()
+```scala
+val duration: Duration = elapsed()
+```
 
 ## Contributing
 
