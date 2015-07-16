@@ -150,4 +150,32 @@ class PromiseTest extends FunSuite {
     assert(m.handled === exc)
   }
 
+  test("Promise can only forwardInterruptsTo one other future") {
+    val a = new Promise[Int]
+    val b = new HandledPromise[Int]
+    val c = new HandledPromise[Int]
+
+    a.forwardInterruptsTo(b)
+    a.forwardInterruptsTo(c)
+
+    val ex = new Exception("expected")
+    a.raise(ex)
+
+    assert(b.handled === None)
+    assert(c.handled === Some(ex))
+  }
+
+  test("forwardInterruptsTo does not forward to a completed future") {
+    val a = new Promise[Int]
+    val b = new HandledPromise[Int]
+
+    b.update(Return(3))
+
+    val ex = new Exception("expected")
+
+    a.forwardInterruptsTo(b)
+    a.raise(ex)
+
+    assert(b.handled === None)
+  }
 }

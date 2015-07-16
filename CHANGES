@@ -6,6 +6,10 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Changes in Runtime Behavior:
+  * util-core: `Promise.forwardInterruptsTo(other)` is a no-op if the 
+                other future is fulfilled. ``RB_ID=714420``
+
 6.25.0  2015-06-22
 
 Changes in Runtime Behavior:

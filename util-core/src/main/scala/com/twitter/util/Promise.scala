@@ -464,11 +464,16 @@ class Promise[A]
 
   /**
    * Forward interrupts to another future.
+   * If the other future is fulfilled, this is a no-op.
+   * Calling this multiple times is not recommended as
+   * the resulting state may not be as expected.
    *
    * @param other the Future to which interrupts are forwarded.
    */
   @tailrec final
   def forwardInterruptsTo(other: Future[_]) {
+    // This reduces allocations in the common case.
+    if (other.isDefined) return
     state match {
       case Linked(p) => p.forwardInterruptsTo(other)
 
