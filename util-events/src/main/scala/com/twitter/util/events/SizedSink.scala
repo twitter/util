@@ -71,6 +71,12 @@ class SizedSink private[events](
 
   require(capacity > 0, s"capacity must be positive: $capacity")
 
+  @volatile
+  private[this] var _recording = false
+
+  override def recording: Boolean = _recording
+  override def recording_=(enabled: Boolean): Unit = _recording = enabled
+
   // require capacity be a power of 2:
   // http://en.wikipedia.org/wiki/Power_of_two#Fast_algorithm_to_check_if_a_positive_number_is_a_power_of_two
   require((capacity & (capacity - 1)) == 0, s"capacity must be power of 2: $capacity")

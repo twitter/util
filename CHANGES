@@ -7,8 +7,13 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 Next Version
 
 Changes in Runtime Behavior:
-  * util-core: `Promise.forwardInterruptsTo(other)` is a no-op if the 
+
+  * util-core: `Promise.forwardInterruptsTo(other)` is a no-op if the
                 other future is fulfilled. ``RB_ID=714420``
+
+  * util-events: Recording of events is disabled by default and can be updated
+                 at runtime via TwitterServer's `/admin/events` page or
+                 `/admin/events/{recordOn,recordOff}`. ``RB_ID=715712``
 
 6.25.0  2015-06-22
 

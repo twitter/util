@@ -25,8 +25,6 @@ object Event {
     /**
      * An identifier for this Type construction. These should be unique across
      * types for any given sink, though no efforts are made to ensure this.
-     *
-     * @param id A name for this Type.
      */
     def id: String
 
