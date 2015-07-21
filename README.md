@@ -12,7 +12,7 @@ See the Scaladoc [here](https://twitter.github.com/util).
 
 This project is used in production at Twitter (and many other organizations),
 and is being actively developed and maintained. Please note that some
-sub-projects (including util-eval), classes, and methods may be deprecated,
+sub-projects (including `util-eval`), classes, and methods may be deprecated,
 however.
 
 # Using in your project
@@ -49,15 +49,16 @@ amount.inKilobytes // => 8192L
 A Non-actor re-implementation of Scala Futures.
 
 ```scala
-import com.twitter.util.{Future, Promise}
+import com.twitter.conversions.time._
+import com.twitter.util.{Await, Future, Promise}
 
 val f = new Promise[Int]
-val g = f map { result => result + 1 }
+val g = f.map { result => result + 1 }
 f.setValue(1)
-g.get(1.second) // => This blocks for the futures result (and eventually returns 2)
+Await.result(g, 1.second) // => this blocks for the futures result (and eventually returns 2)
 
 // Another option:
-g respond { result =>
+g.onSuccess { result =>
   println(result) // => prints "2"
 }
 
@@ -65,10 +66,10 @@ g respond { result =>
 val xFuture = Future(1)
 val yFuture = Future(2)
 
-for (
+for { 
   x <- xFuture
   y <- yFuture
-) {
+} {
   println(x + y) // => prints "3"
 }
 ```
@@ -82,32 +83,25 @@ The LruMap is an LRU with a maximum size passed in. If the map is full it expire
 ```scala
 import com.twitter.util.LruMap
 
-val f = new LruMap[Key, Value](15) // this is of type mutable.Map[Key, Value]
-```
-
-## Google MapMaker
-
-```scala
-import com.twitter.util.MapMaker
-
-val map = MapMaker[Key, Value] { config =>
-  config.weakKeys()
-  config.weakValues()
-} // this is of type mutable.Map[Key, Value]
+val map = new LruMap[String, String](15) // this is of type mutable.Map[String, String]
 ```
 
 # Object Pool
 
-The pool order is FIFO
+The pool order is FIFO.
 
 ## A pool of constants
 
 ```scala
+import scala.collection.mutable
+import com.twitter.util.{Await, SimplePool}
+
 val queue = new mutable.Queue[Int] ++ List(1, 2, 3)
 val pool = new SimplePool(queue)
+
 // Note that the pool returns Futures, it doesn't block on exhaustion.
-pool.reserve()() mustEqual 1
-pool.reserve { item =>
+assert(Await.result(pool.reserve()) == 1)
+pool.reserve().onSuccess { item =>
   println(item) // prints "2"
 }
 ```
@@ -117,6 +111,8 @@ pool.reserve { item =>
 Here is a pool of even-number generators. It stores 4 numbers at a time:
 
 ```scala
+import com.twitter.util.{Future, FactoryPool}
+
 val pool = new FactoryPool[Int](4) {
   var count = 0
   def makeItem() = { count += 1; Future(count) }
@@ -126,38 +122,228 @@ val pool = new FactoryPool[Int](4) {
 
 It checks the health when you successfully reserve an object (i.e., when the Future yields).
 
-# Eval
+```
+# Hashing
 
-Dynamically evaluates Scala strings and files.
+`util-hashing` is a collection of hash functions and hashing distributors (eg. ketama).
 
-This is motivated by the desire to have a type-safe alternative to textual configuration formats such as
-YAML, JSON, or .properties files.  Its advantages over these text
-formats are
-
-*   Strong typing and compiler checking.  If it doesn't compile and
-    doesn't conform to the type you expect, you get an exception
-*   The full power of Scala in your config.  You don't have to use
-    it.  But you can.
-
-## in config/Development.scala
+To use one of the available hash functions:
 
 ```scala
-import com.xxx.MyConfig
+import com.twitter.hashing.KeyHasher
 
-new MyConfig {
-  val myValue = 1
-  val myTime = 2.seconds
-  val myStorage = 14.kilobytes
+KeyHasher.FNV1_32.hashKey("string".getBytes)
+```
+
+Available hash functions are:
+
+```
+FNV1_32
+FNV1A_32
+FNV1_64
+FNV1A_64
+KETAMA
+CRC32_ITU
+HSIEH
+```
+
+To use `KetamaDistributor`:
+
+```scala
+import com.twitter.hashing.{KetamaDistributor, KetamaNode, KeyHasher}
+
+val nodes = List(KetamaNode("host:port", 1 /* weight */, "foo" /* handle */))
+val distributor = new KetamaDistributor(nodes, 1 /* num reps */)
+distributor.nodeForHash("abc".##) // => client
+```
+
+# Logging
+
+`util-logging` is a small wrapper around Java's built-in logging to make it more
+Scala-friendly.
+
+## Using
+
+To access logging, you can usually just use:
+
+```scala
+import com.twitter.logging.Logger
+private val log = Logger.get(getClass)
+```
+
+This creates a `Logger` object that uses the current class or object's
+package name as the logging node, so class "com.example.foo.Lamp" will log to
+node `com.example.foo` (generally showing "foo" as the name in the logfile).
+You can also get a logger explicitly by name:
+
+```scala
+private val log = Logger.get("com.example.foo")
+```
+
+Logger objects wrap everything useful from `java.util.logging.Logger`, as well
+as adding some convenience methods:
+
+```scala
+// log a string with sprintf conversion:
+log.info("Starting compaction on zone %d...", zoneId)
+
+try {
+  ...
+} catch {
+  // log an exception backtrace with the message:
+  case e: IOException =>
+    llog.error(e, "I/O exception: %s", e.getMessage)
 }
 ```
 
-## in Main.scala
+Each of the log levels (from "fatal" to "trace") has these two convenience
+methods. You may also use `log` directly:
 
 ```scala
-import com.xxx.MyConfig
-
-val config = Eval[MyConfig](new File("config/Development.scala"))
+import com.twitter.logging.Level
+log(Level.DEBUG, "Logging %s at debug level.", name)
 ```
+
+An advantage to using sprintf ("%s", etc) conversion, as opposed to:
+
+```scala
+log(Level.DEBUG, s"Logging $name at debug level.")
+```
+
+is that Java & Scala perform string concatenation at runtime, even if nothing
+will be logged because the log file isn't writing debug messages right now.
+With `sprintf` parameters, the arguments are just bundled up and passed directly
+to the logging level before formatting. If no log message would be written to
+any file or device, then no formatting is done and the arguments are thrown
+away. That makes it very inexpensive to include verbose debug logging which
+can be turned off without recompiling and re-deploying.
+
+If you prefer, there are also variants that take lazily evaluated parameters,
+and only evaluate them if logging is active at that level:
+
+```scala
+log.ifDebug(s"Login from $name at $date.")
+```
+
+The logging classes are done as an extension to the `java.util.logging` API,
+and so you can use the Java interface directly, if you want to. Each of the
+Java classes (Logger, Handler, Formatter) is just wrapped by a Scala class.
+
+
+## Configuring
+
+In the Java style, log nodes are in a tree, with the root node being "" (the
+empty string). If a node has a filter level set, only log messages of that
+priority or higher are passed up to the parent. Handlers are attached to nodes
+for sending log messages to files or logging services, and may have formatters
+attached to them.
+
+Logging levels are, in priority order of highest to lowest:
+
+- `FATAL` - the server is about to exit
+- `CRITICAL` - an event occurred that is bad enough to warrant paging someone
+- `ERROR` - a user-visible error occurred (though it may be limited in scope)
+- `WARNING` - a coder may want to be notified, but the error was probably not
+  user-visible
+- `INFO` - normal informational messages
+- `DEBUG` - coder-level debugging information
+- `TRACE` - intensive debugging information
+
+Each node may also optionally choose to *not* pass messages up to the parent
+node.
+
+The `LoggerFactory` builder is used to configure individual log nodes, by
+filling in fields and calling the `apply` method. For example, to configure
+the root logger to filter at `INFO` level and write to a file:
+
+```scala
+import com.twitter.logging._
+
+val factory = LoggerFactory(
+  node = "",
+  level = Some(Level.INFO),
+  handlers = List(
+    FileHandler(
+      filename = "/var/log/example/example.log",
+      rollPolicy = Policy.SigHup
+    )
+  )
+)
+
+val logger = factory()
+```
+
+As many `LoggerFactory`s can be configured as you want, so you can attach to
+several nodes if you like. To remove all previous configurations, use:
+
+```scala
+Logger.clearHandlers()
+```
+
+## Handlers
+
+- `QueueingHandler`
+
+  Queues log records and publishes them in another thread thereby enabling "async logging".
+
+- `ConsoleHandler`
+
+  Logs to the console.
+
+- `FileHandler`
+
+  Logs to a file, with an optional file rotation policy. The policies are:
+
+  - `Policy.Never` - always use the same logfile (default)
+  - `Policy.Hourly` - roll to a new logfile at the top of every hour
+  - `Policy.Daily` - roll to a new logfile at midnight every night
+  - `Policy.Weekly(n)` - roll to a new logfile at midnight on day N (0 = Sunday)
+  - `Policy.SigHup` - reopen the logfile on SIGHUP (for logrotate and similar services)
+
+  When a logfile is rolled, the current logfile is renamed to have the date
+  (and hour, if rolling hourly) attached, and a new one is started. So, for
+  example, `test.log` may become `test-20080425.log`, and `test.log` will be
+  reopened as a new file.
+
+- `SyslogHandler`
+
+  Log to a syslog server, by host and port.
+
+- `ScribeHandler`
+
+  Log to a scribe server, by host, port, and category. Buffering and backoff
+  can also be configured: You can specify how long to collect log lines
+  before sending them in a single burst, the maximum burst size, and how long
+  to backoff if the server seems to be offline.
+
+- `ThrottledHandler`
+
+  Wraps another handler, tracking (and squelching) duplicate messages. If you
+  use a format string like `"Error %d at %s"`, the log messages will be
+  de-duped based on the format string, even if they have different parameters.
+
+
+## Formatters
+
+Handlers usually have a formatter attached to them, and these formatters
+generally just add a prefix containing the date, log level, and logger name.
+
+- `Formatter`
+
+  A standard log prefix like `"ERR [20080315-18:39:05.033] jobs: "`, which
+  can be configured to truncate log lines to a certain length, limit the lines
+  of an exception stack trace, and use a special time zone.
+
+  You can override the format string used to generate the prefix, also.
+
+- `BareFormatterConfig`
+
+  No prefix at all. May be useful for logging info destined for scripts.
+
+- `SyslogFormatterConfig`
+
+  A formatter required by the syslog protocol, with configurable syslog
+  priority and date format.
 
 
 # Version 6.x
@@ -192,6 +378,7 @@ Since the resolution of `Time.now` has been reduced (and is also more expensive 
 It's used simply:
 
 ```scala
+import com.twitter.util.{Duration, Stopwatch}
 val elapsed: () => Duration = Stopwatch.start()
 ```
 
