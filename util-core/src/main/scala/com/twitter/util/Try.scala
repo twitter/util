@@ -245,18 +245,35 @@ object Return {
 }
 
 final case class Return[+R](r: R) extends Try[R] {
-  def isThrow = false
-  def isReturn = true
-  def throwable: Throwable = throw new IllegalStateException("this Try is not a Throw; did you fail to check isThrow?")
-  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = Return(r)
-  def apply() = r
-  def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case NonFatal(e) => Throw(e) }
+  def isThrow: Boolean = false
+
+  def isReturn: Boolean = true
+
+  def throwable: Throwable =
+    throw new IllegalStateException("this Try is not a Throw; did you fail to check isThrow?")
+
+  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]): Try[R2] =
+    this
+
+  def apply(): R = r
+
+  def flatMap[R2](f: R => Try[R2]): Try[R2] =
+    try f(r) catch { case NonFatal(e) => Throw(e) }
+
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
-  def map[X](f: R => X) = Try[X](f(r))
-  def exists(p: R => Boolean) = p(r)
-  def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
-  def withFilter(p: R => Boolean) = filter(p)
-  def onFailure(rescueException: Throwable => Unit) = this
-  def onSuccess(f: R => Unit) = { f(r); this }
-  def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]) = this
+
+  def map[X](f: R => X): Try[X] = Try[X](f(r))
+
+  def exists(p: R => Boolean): Boolean = p(r)
+
+  def filter(p: R => Boolean): Try[R] =
+    if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
+
+  def withFilter(p: R => Boolean): Try[R] = filter(p)
+
+  def onFailure(rescueException: Throwable => Unit): Try[R] = this
+
+  def onSuccess(f: R => Unit): Try[R] = { f(r); this }
+
+  def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]): Try[R2] = this
 }
