@@ -50,6 +50,11 @@ object Duration extends TimeLikeOps[Duration] {
       else if (that eq Top) 0
       else 1
 
+    override def equals(other: Any) = other match {
+      case d: Duration => d eq this
+      case _ => false
+    }
+
     override def *(x: Long): Duration =
       if (x == 0) Undefined
       else if (x < 0) Bottom
@@ -97,6 +102,11 @@ object Duration extends TimeLikeOps[Duration] {
     /** Bottom is equal to Bottom, but smaller than everything else */
     override def compare(that: Duration) = if (this eq that) 0 else -1
 
+    override def equals(other: Any) = other match {
+      case d: Duration => d eq this
+      case _ => false
+    }
+
     /** Scaling arithmetic is Bottom preserving. */
     override def *(x: Long): Duration =
       if (x == 0) Undefined
@@ -142,6 +152,11 @@ object Duration extends TimeLikeOps[Duration] {
     override def hashCode = System.identityHashCode(this)
 
     override def compare(that: Duration) = if (this eq that) 0 else 1
+
+    override def equals(other: Any) = other match {
+      case d: Duration => d eq this
+      case _ => false
+    }
 
     override def *(x: Long): Duration = this
     override def *(x: Double): Duration = this
@@ -321,7 +336,7 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
 } with TimeLike[Duration] with Serializable {
   import ops._
 
-  def inNanoseconds = nanos
+  def inNanoseconds: Long = nanos
 
   /**
    * Returns the length of the duration in the given TimeUnit.
@@ -365,17 +380,26 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
     s.toString()
   }
 
-  override def equals(other: Any) = other match {
-    case d: Duration => (this compare d) == 0
-    case _ => false
+  override def equals(other: Any): Boolean = {
+    // in order to ensure that the sentinels are only equal
+    // to themselves, we need to make sure we only compare nanos
+    // when both instances are `Duration`s and not a sentinel subclass.
+    if (other != null && (other.getClass eq getClass)) {
+      other.asInstanceOf[Duration].nanos == nanos
+    } else {
+      false
+    }
   }
 
-  override def hashCode = nanos.hashCode
+  override def hashCode: Int =
+    // inline java.lang.Long.hashCode to avoid the BoxesRunTime.boxToLong
+    // and then Long.hashCode code.
+    (nanos ^ (nanos >>> 32)).toInt
 
   /**
    * Scales this `Duration` by multiplying by `x`.
    */
-  def *(x: Long) = try fromNanoseconds(LongOverflowArith.mul(nanos, x)) catch {
+  def *(x: Long): Duration = try fromNanoseconds(LongOverflowArith.mul(nanos, x)) catch {
     case _: LongOverflowException if nanos < 0 == x < 0 => Top
     case _: LongOverflowException => Bottom
   }
@@ -422,21 +446,21 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
   /**
    * Converts negative durations to positive durations.
    */
-  def abs = if (nanos < 0) -this else this
+  def abs: Duration = if (nanos < 0) -this else this
 
-  def fromNow = Time.now + this
-  def ago = Time.now - this
-  def afterEpoch = Time.epoch + this
+  def fromNow: Time = Time.now + this
+  def ago: Time = Time.now - this
+  def afterEpoch: Time = Time.epoch + this
 
   // Note that Long.MinValue receives special treatment here because
   // of two's complement: -Long.MinValue == Long.MinValue.
-  def unary_-  =
+  def unary_- : Duration =
     if (inNanoseconds == Long.MinValue) Top
     else ops.fromNanoseconds(-inNanoseconds)
 
-  def diff(that: Duration) = this - that
+  def diff(that: Duration): Duration = this - that
 
-  def isFinite = true
+  def isFinite: Boolean = true
 
   private def writeReplace(): Object = DurationBox.Finite(inNanoseconds)
 

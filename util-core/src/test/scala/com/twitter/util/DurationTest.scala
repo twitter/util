@@ -105,6 +105,25 @@ class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
       assert(new Duration(Long.MaxValue) > 0.seconds)
     }
 
+    "equals" in {
+      assert(Duration.Top == Duration.Top)
+      assert(Duration.Top != Duration.Bottom)
+      assert(Duration.Top != Duration.Undefined)
+
+      assert(Duration.Bottom != Duration.Top)
+      assert(Duration.Bottom == Duration.Bottom)
+      assert(Duration.Bottom != Duration.Undefined)
+
+      assert(Duration.Undefined != Duration.Top)
+      assert(Duration.Undefined != Duration.Bottom)
+      assert(Duration.Undefined == Duration.Undefined)
+
+      val tenSecs = 10.seconds
+      assert(tenSecs == tenSecs)
+      assert(tenSecs == 10.seconds)
+      assert(tenSecs != 11.seconds)
+    }
+
     "+ delta" in {
       assert(10.seconds + 5.seconds === 15.seconds)
     }

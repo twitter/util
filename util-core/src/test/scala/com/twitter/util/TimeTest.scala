@@ -500,6 +500,25 @@ class TimeTest extends { val ops = Time }
       assert(Time.fromMilliseconds(Long.MaxValue) > Time.now)
     }
 
+    "equals" in {
+      assert(Time.Top == Time.Top)
+      assert(Time.Top != Time.Bottom)
+      assert(Time.Top != Time.Undefined)
+
+      assert(Time.Bottom != Time.Top)
+      assert(Time.Bottom == Time.Bottom)
+      assert(Time.Bottom != Time.Undefined)
+
+      assert(Time.Undefined != Time.Top)
+      assert(Time.Undefined != Time.Bottom)
+      assert(Time.Undefined == Time.Undefined)
+
+      val now = Time.now
+      assert(now == now)
+      assert(now == Time.fromNanoseconds(now.inNanoseconds))
+      assert(now != now + 1.nanosecond)
+    }
+
     "+ delta" in {
       assert(10.seconds.afterEpoch + 5.seconds === 15.seconds.afterEpoch)
     }

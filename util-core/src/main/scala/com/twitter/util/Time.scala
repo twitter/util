@@ -293,6 +293,11 @@ object Time extends TimeLikeOps[Time] {
       else if (that eq Top) 0
       else 1
 
+    override def equals(other: Any) = other match {
+      case t: Time => t eq this
+      case _ => false
+    }
+
     override def +(delta: Duration) = delta match {
       case Duration.Bottom | Duration.Undefined => Undefined
       case _ => this  // Top or finite.
@@ -318,6 +323,11 @@ object Time extends TimeLikeOps[Time] {
 
     override def compare(that: Time) = if (this eq that) 0 else -1
 
+    override def equals(other: Any) = other match {
+      case t: Time => t eq this
+      case _ => false
+    }
+
     override def +(delta: Duration) = delta match {
       case Duration.Top | Duration.Undefined => Undefined
       case _ => this
@@ -335,6 +345,11 @@ object Time extends TimeLikeOps[Time] {
 
   val Undefined: Time = new Time(0) {
     override def toString = "Time.Undefined"
+
+    override def equals(other: Any) = other match {
+      case t: Time => t eq this
+      case _ => false
+    }
 
     override def compare(that: Time) = if (this eq that) 0 else 1
     override def +(delta: Duration) = this
@@ -535,38 +550,48 @@ sealed class Time private[util] (protected val nanos: Long) extends {
 } with TimeLike[Time] with Serializable {
   import ops._
 
-  def inNanoseconds = nanos
+  def inNanoseconds: Long = nanos
 
   /**
    * Renders this time using the default format.
    */
-  override def toString = defaultFormat.format(this)
+  override def toString: String = defaultFormat.format(this)
 
-  override def equals(other: Any) = other match {
-    case t: Time => (this compare t) == 0
-    case _ => false
+  override def equals(other: Any): Boolean = {
+    // in order to ensure that the sentinels are only equal
+    // to themselves, we need to make sure we only compare nanos
+    // when both instances are `Time`s and not a sentinel subclass.
+    if (other != null && (other.getClass eq getClass)) {
+      other.asInstanceOf[Time].nanos == nanos
+    } else {
+      false
+    }
   }
 
-  override def hashCode = nanos.hashCode
+  override def hashCode: Int =
+    // inline java.lang.Long.hashCode to avoid the BoxesRunTime.boxToLong
+    // and then Long.hashCode code.
+    (nanos ^ (nanos >>> 32)).toInt
 
   /**
    * Formats this Time according to the given SimpleDateFormat pattern.
    */
-  def format(pattern: String) = new TimeFormat(pattern).format(this)
+  def format(pattern: String): String = new TimeFormat(pattern).format(this)
 
   /**
    * Formats this Time according to the given SimpleDateFormat pattern and locale.
    */
-  def format(pattern: String, locale: Locale) = new TimeFormat(pattern, Some(locale)).format(this)
+  def format(pattern: String, locale: Locale): String =
+    new TimeFormat(pattern, Some(locale)).format(this)
 
   /**
    * Creates a duration between two times.
    */
-  def -(that: Time) = diff(that)
+  def -(that: Time): Duration = diff(that)
 
-  override def isFinite = true
+  override def isFinite: Boolean = true
 
-  def diff(that: Time) = that match {
+  def diff(that: Time): Duration = that match {
     case Undefined => Duration.Undefined
     case Top => Duration.Bottom
     case Bottom => Duration.Top
@@ -582,43 +607,43 @@ sealed class Time private[util] (protected val nanos: Long) extends {
   /**
    * Duration that has passed between the given time and the current time.
    */
-  def since(that: Time) = this - that
+  def since(that: Time): Duration = this - that
 
   /**
    * Duration that has passed between the epoch and the current time.
    */
-  def sinceEpoch = since(epoch)
+  def sinceEpoch: Duration = since(epoch)
 
   /**
    * Gets the current time as Duration since now
    */
-  def sinceNow = since(now)
+  def sinceNow: Duration = since(now)
 
   /**
    * Duration that has passed between the epoch and the current time.
    */
   @deprecated("use sinceEpoch", "2011-05-23") // date is a guess
-  def fromEpoch = this - epoch
+  def fromEpoch: Duration = this - epoch
 
   /**
    * Duration between current time and the givne time.
    */
-  def until(that: Time) = that - this
+  def until(that: Time): Duration = that - this
 
   /**
    * Gets the duration between this time and the epoch.
    */
-  def untilEpoch = until(epoch)
+  def untilEpoch: Duration = until(epoch)
 
   /**
    * Gets the duration between this time and now.
    */
-  def untilNow = until(now)
+  def untilNow: Duration = until(now)
 
   /**
    * Converts this Time object to a java.util.Date
    */
-  def toDate = new Date(inMillis)
+  def toDate: Date = new Date(inMillis)
 
   private def writeReplace(): Object = TimeBox.Finite(inNanoseconds)
 
@@ -636,8 +661,8 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    *  Finds a diff between this and ''that'' time.
    */
   def minus(that: Time): Duration = this - that
-  
+
   // for Java-compatibility
   override def floor(increment: Duration): Time = super.floor(increment)
-  override def ceil(increment: Duration): Time = super.ceil(increment) 
+  override def ceil(increment: Duration): Time = super.ceil(increment)
 }
