@@ -41,15 +41,33 @@ object Awaitable {
 }
 
 /**
- * Await the result of some action.
+ * Synchronously await the result of some action by blocking the current
+ * thread.
+ *
+ * The two main uses of `Await` are (a) you have synchronous code that needs to
+ * wait on some action performed by asynchronous code, or (b) you have synchronous code
+ * that needs to wait on some action performed on a thread pool or otherwise a different
+ * thread.
+ *
+ * A common type of `Awaitable` is the [[com.twitter.util.Future]].
+ *
+ * In the context of an event loop (such as when you are on a Finagle thread),
+ * never synchronously wait for completion - favoring asynchronous methods such as
+ * combinators or callbacks registered on a Future.
  *
  * @define ready
  *
- * Returns the object when the action has completed.
+ * Returns the awaitable object itself when the action has completed.
+ * Completion of this method merely indicates action completion, regardless
+ * of whether it was successful or not. In order to determine whether the action was
+ * successful, the awaitable must be queried separately. Prefer using
+ * `result()` when you wish failures to be thrown as exceptions.
  *
  * @define result
  *
- * Returns the result of the action when it has completed.
+ * Waits until the action has completed. If the action was successful,
+ * returns the result of the action. If the action failed, the corresponding
+ * exception representing the failure is thrown.
  *
  * If you want the results as a [[com.twitter.util.Try]],
  * use `Await.result(future.liftToTry)`.
