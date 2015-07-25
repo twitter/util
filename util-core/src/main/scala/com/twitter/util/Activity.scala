@@ -5,6 +5,7 @@ import java.util.{List => JList}
 import scala.collection.generic.CanBuild
 import scala.collection.JavaConverters._
 import scala.collection.mutable.Buffer
+import scala.reflect.ClassTag
 
 /**
  * An Activity is a handle to a concurrently running process, producing
@@ -122,8 +123,8 @@ object Activity {
    *
    *   @inheritdoc
    */
-  def collect[T, CC[X] <: Traversable[X]](acts: CC[Activity[T]])
-      (implicit newBuilder: CanBuild[T, CC[T]], cm: ClassManifest[T])
+  def collect[T: ClassTag, CC[X] <: Traversable[X]](acts: CC[Activity[T]])
+      (implicit newBuilder: CanBuild[T, CC[T]])
       : Activity[CC[T]] = {
     if (acts.isEmpty)
       return Activity.value(newBuilder().result)

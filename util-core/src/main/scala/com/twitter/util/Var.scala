@@ -8,6 +8,7 @@ import scala.collection.JavaConverters._
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
 import scala.collection.mutable.Buffer
+import scala.reflect.ClassTag
 
 /**
  * Trait Var represents a variable. It is a reference cell which is
@@ -265,8 +266,8 @@ object Var {
   /**
    * Collect a collection of Vars into a Var of collection.
    */
-  def collect[T, CC[X] <: Traversable[X]](vars: CC[Var[T]])
-      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]], cm: ClassManifest[T])
+  def collect[T: ClassTag, CC[X] <: Traversable[X]](vars: CC[Var[T]])
+      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]])
       : Var[CC[T]] = async(newBuilder().result) { v =>
     val N = vars.size
     val cur = new AtomicReferenceArray[T](N)
@@ -307,7 +308,7 @@ object Var {
    * @return a Var[java.util.List[A]] containing the collected values from vars.
    */
   def collect[T <: Object](vars: JList[Var[T]]): Var[JList[T]] = {
-    // we cast to Object and back because we need a ClassManifest[T]
+    // we cast to Object and back because we need a ClassTag[T]
     val list = vars.asScala.asInstanceOf[Buffer[Var[Object]]]
     collect(list).map(_.asJava).asInstanceOf[Var[JList[T]]]
   }
