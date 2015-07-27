@@ -4,7 +4,7 @@ target(name='base',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalacheck',
     '3rdparty/jvm/org/scalatest',
-    '3rdparty/jvm/com/twitter/common:objectsize',
+    'science/src/java/com/twitter/common/objectsize:objectsize',
     'util/util-core/src/main/scala',
     'util/util-core/src/main/java'
   ],

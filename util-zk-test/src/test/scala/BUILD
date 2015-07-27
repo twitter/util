@@ -1,6 +1,6 @@
 junit_tests(name='scala',
   dependencies=[
-    '3rdparty/jvm/com/twitter/common:io',
+    'science/src/java/com/twitter/common/io:io',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalatest',
