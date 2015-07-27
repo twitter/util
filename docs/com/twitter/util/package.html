@@ -503,6 +503,22 @@ two versions of a collection <code>CC[T]</code>.</p>
       </span>
       </h4>
       <p class="comment cmt">A <code>Duration</code> represents the span between two points in time.</p>
+    </li><li name="com.twitter.util.DurationBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DurationBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="DurationBenchmark:DurationBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DurationBenchmark.html"><span class="name">DurationBenchmark</span></a><span class="result"> extends <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.util.Encoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Encoder[T,S]extendsT=&gt;S"></a>
       <a id="Encoder[T,S]:Encoder[T,S]"></a>
@@ -1220,6 +1236,30 @@ outputting a signed Long or a byte array.</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.util.StdBenchAnnotations" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="StdBenchAnnotationsextendsAnyRef"></a>
+      <a id="StdBenchAnnotations:StdBenchAnnotations"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StdBenchAnnotations.html"><span class="name">StdBenchAnnotations</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Fork</span><span class="args">()</span>
+              
+                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
+              
+                <span class="name">@BenchmarkMode</span><span class="args">()</span>
+              
+                <span class="name">@Warmup</span><span class="args">()</span>
+              
+                <span class="name">@Measurement</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.util.Stopwatch" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StopwatchextendsAnyRef"></a>
       <a id="Stopwatch:Stopwatch"></a>
@@ -1383,6 +1423,22 @@ outputting a signed Long or a byte array.</p>
       </h4>
       <p class="comment cmt">An absolute point in time, represented as the number of
 nanoseconds since the Unix epoch.</p>
+    </li><li name="com.twitter.util.TimeBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TimeBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="TimeBenchmark:TimeBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TimeBenchmark.html"><span class="name">TimeBenchmark</span></a><span class="result"> extends <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.util.TimeControl" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="TimeControlextendsAnyRef"></a>
       <a id="TimeControl:TimeControl"></a>
@@ -1487,6 +1543,22 @@ nanoseconds since the Unix epoch.</p>
       </span>
       </h4>
       <p class="comment cmt">This class represents a computation that can succeed or fail.</p>
+    </li><li name="com.twitter.util.TryBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TryBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="TryBenchmark:TryBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TryBenchmark.html"><span class="name">TryBenchmark</span></a><span class="result"> extends <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.util.Updatable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Updatable[T]extendsAnyRef"></a>
       <a id="Updatable[T]:Updatable[T]"></a>
@@ -1659,7 +1731,8 @@ which turns this config into an object of type T.</p>
         <a href="Await$.html"><span class="name">Await</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Await the result of some action.</p>
+      <p class="comment cmt">Synchronously await the result of some action by blocking the current
+thread.</p>
     </li><li name="com.twitter.util.Awaitable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Awaitable"></a>
       <a id="Awaitable:Awaitable"></a>

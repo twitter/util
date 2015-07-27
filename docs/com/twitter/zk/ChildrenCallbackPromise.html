@@ -493,6 +493,9 @@ comprehensions. Use <a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]
       </span>
       </h4>
       <p class="shortcomment cmt">Forward interrupts to another future.</p><div class="fullcomment"><div class="comment cmt"><p>Forward interrupts to another future.
+If the other future is fulfilled, this is a no-op.
+Calling this multiple times is not recommended as
+the resulting state may not be as expected.
 </p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>the Future to which interrupts are forwarded.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@tailrec</span><span class="args">()</span>

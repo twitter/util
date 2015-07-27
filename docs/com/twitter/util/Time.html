@@ -259,6 +259,23 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.util.Time#ceil" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ceil(increment:com.twitter.util.Duration):com.twitter.util.Time"></a>
+      <a id="ceil(Duration):Time"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ceil</span><span class="params">(<span name="increment">increment: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Time">Time</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Rounds up to the nearest multiple of the given duration.</p><div class="fullcomment"><div class="comment cmt"><p>Rounds up to the nearest multiple of the given duration.  For example:
+127.seconds.ceiling(1.minute) =&gt; 3.minutes.  Taking the ceiling of a
+Time object with duration greater than 1.hour can have unexpected
+results because of timezones.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Time">Time</a> → <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -363,7 +380,7 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
               
         </dd></dl></div>
     </li><li name="com.twitter.util.Time#floor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="floor(x:com.twitter.util.Duration):com.twitter.util.Time"></a>
+      <a id="floor(increment:com.twitter.util.Duration):com.twitter.util.Time"></a>
       <a id="floor(Duration):Time"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -371,7 +388,7 @@ the <code>TimeLike</code>'s <code>Bottom</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">floor</span><span class="params">(<span name="x">x: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Time">Time</a></span>
+        <span class="name">floor</span><span class="params">(<span name="increment">increment: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Rounds down to the nearest multiple of the given duration.</p><div class="fullcomment"><div class="comment cmt"><p>Rounds down to the nearest multiple of the given duration.  For example:

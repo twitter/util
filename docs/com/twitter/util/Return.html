@@ -393,15 +393,15 @@ Alias for apply()
       <p class="shortcomment cmt">Returns the value from this Return or the given argument if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the value from this Return or the given argument if this is a Throw.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
     </li><li name="com.twitter.util.Return#handle" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="handle[R2&gt;:R](rescueException:PartialFunction[Throwable,R2]):com.twitter.util.Return[R]"></a>
-      <a id="handle[R2&gt;:R](PartialFunction[Throwable,R2]):Return[R]"></a>
+      <a id="handle[R2&gt;:R](rescueException:PartialFunction[Throwable,R2]):com.twitter.util.Try[R2]"></a>
+      <a id="handle[R2&gt;:R](PartialFunction[Throwable,R2]):Try[R2]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">handle</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Return.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Return.handle.R2">R2</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Return">Return</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>]</span>
+        <span class="name">handle</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Return.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Return.handle.R2">R2</span>]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.handle.R2">R2</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Calls the exceptionHandler with the exception if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Calls the exceptionHandler with the exception if this is a Throw. This is like map for the exception.
@@ -502,15 +502,15 @@ Alias for apply()
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Return#onFailure" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="onFailure(rescueException:Throwable=&gt;Unit):com.twitter.util.Return[R]"></a>
-      <a id="onFailure((Throwable)⇒Unit):Return[R]"></a>
+      <a id="onFailure(rescueException:Throwable=&gt;Unit):com.twitter.util.Try[R]"></a>
+      <a id="onFailure((Throwable)⇒Unit):Try[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onFailure</span><span class="params">(<span name="rescueException">rescueException: (<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Return">Return</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>]</span>
+        <span class="name">onFailure</span><span class="params">(<span name="rescueException">rescueException: (<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Invoke the function on the error, if the computation was
@@ -518,15 +518,15 @@ unsuccessful.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke the
 unsuccessful.  Returns a chained <code>this</code> as in <code>respond</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Return">Return</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
     </li><li name="com.twitter.util.Return#onSuccess" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="onSuccess(f:R=&gt;Unit):com.twitter.util.Return[R]"></a>
-      <a id="onSuccess((R)⇒Unit):Return[R]"></a>
+      <a id="onSuccess(f:R=&gt;Unit):com.twitter.util.Try[R]"></a>
+      <a id="onSuccess((R)⇒Unit):Try[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onSuccess</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Return.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Return">Return</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>]</span>
+        <span class="name">onSuccess</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Return.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Invoked only if the computation was successful.</p><div class="fullcomment"><div class="comment cmt"><p>Invoked only if the computation was successful.  Returns a
@@ -546,15 +546,15 @@ chained <code>this</code> as in <code>respond</code>.
       </h4>
       
     </li><li name="com.twitter.util.Return#rescue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="rescue[R2&gt;:R](rescueException:PartialFunction[Throwable,com.twitter.util.Try[R2]]):com.twitter.util.Return[R]"></a>
-      <a id="rescue[R2&gt;:R](PartialFunction[Throwable,Try[R2]]):Return[R]"></a>
+      <a id="rescue[R2&gt;:R](rescueException:PartialFunction[Throwable,com.twitter.util.Try[R2]]):com.twitter.util.Try[R2]"></a>
+      <a id="rescue[R2&gt;:R](PartialFunction[Throwable,Try[R2]]):Try[R2]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">rescue</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Return.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.rescue.R2">R2</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Return">Return</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>]</span>
+        <span class="name">rescue</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Return.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.rescue.R2">R2</span>]]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.rescue.R2">R2</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Calls the exceptionHandler with the exception if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.</p><p><i>Note</i> The gnarly type parameterization is there for Java compatibility, since Java

@@ -209,7 +209,7 @@
       </span>
       </h4>
       <p class="shortcomment cmt">The global default <code>Sink</code>.</p>
-    </li><li name="com.twitter.util.events.Sink#enabled" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.events.Sink#enabled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="enabled:Boolean"></a>
       <a id="enabled:Boolean"></a>
       <h4 class="signature">
@@ -221,7 +221,11 @@
         <span class="name">enabled</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns whether or not any event capture is enabled.</p>
+      <p class="shortcomment cmt">Returns whether or not any event capture is enabled.</p><div class="fullcomment"><div class="comment cmt"><p>Returns whether or not any event capture is enabled.
+Note that this does not necessarily mean that events
+are being <a href="Sink.html#recording:Boolean" class="extmbr" name="com.twitter.util.events.Sink#recording">recorded</a>, it only means
+there is a place to store recorded events.
+</p></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>

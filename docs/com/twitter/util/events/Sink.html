@@ -92,7 +92,7 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
 
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="com.twitter.util.events.Sink#event" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.util.events.Sink#event" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="event(etype:com.twitter.util.events.Event.Type,longVal:Long,objectVal:Object,doubleVal:Double,traceIdVal:Long,spanIdVal:Long):Unit"></a>
       <a id="event(Type,Long,AnyRef,Double,Long,Long):Unit"></a>
       <h4 class="signature">
@@ -105,7 +105,11 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
       </span>
       </h4>
       <p class="shortcomment cmt">Event input is captured as individual fields in service of
-avoiding an allocation to wrap the event.</p>
+avoiding an allocation to wrap the event.</p><div class="fullcomment"><div class="comment cmt"><p>Event input is captured as individual fields in service of
+avoiding an allocation to wrap the event.</p><p>Note that callers should check <a href="#recording:Boolean" class="extmbr" name="com.twitter.util.events.Sink#recording">recording</a> before calling
+into this method:</p><pre><span class="kw">if</span> (sink.recording) {
+sink.event(...)
+}</pre></div></div>
     </li><li name="com.twitter.util.events.Sink#events" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="events:Iterator[com.twitter.util.events.Event]"></a>
       <a id="events:Iterator[Event]"></a>
@@ -345,6 +349,50 @@ avoiding an allocation to wrap the event.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.events.Sink#recording" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="recording:Boolean"></a>
+      <a id="recording:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">recording</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Whether or not this <a href="" class="extype" name="com.twitter.util.events.Sink">sink</a> should be recording events.</p><div class="fullcomment"><div class="comment cmt"><p>Whether or not this <a href="" class="extype" name="com.twitter.util.events.Sink">sink</a> should be recording events.</p><p>This is external to the <span class="extype" name="event()">event()</span> and managed by caller because
+there is some expense in capturing the data sent to that call.</p><p>The expectation is for callers to do:</p><pre><span class="kw">if</span> (sink.recording) {
+sink.event(...)
+}</pre></div></div>
+    </li><li name="com.twitter.util.events.Sink#recording_=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="recording_=(enabled:Boolean):Unit"></a>
+      <a id="recording_=(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: recording_$eq" class="name">recording_=</span><span class="params">(<span name="enabled">enabled: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Update the current state of <a href="#recording:Boolean" class="extmbr" name="com.twitter.util.events.Sink#recording">recording</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Update the current state of <a href="#recording:Boolean" class="extmbr" name="com.twitter.util.events.Sink#recording">recording</a>.</p><p>For Java compatibility see <a href="#setRecording(enabled:Boolean):Unit" class="extmbr" name="com.twitter.util.events.Sink#setRecording">setRecording</a>.
+</p></div></div>
+    </li><li name="com.twitter.util.events.Sink#setRecording" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setRecording(enabled:Boolean):Unit"></a>
+      <a id="setRecording(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setRecording</span><span class="params">(<span name="enabled">enabled: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Update the current state of <a href="#recording:Boolean" class="extmbr" name="com.twitter.util.events.Sink#recording">recording</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Update the current state of <a href="#recording:Boolean" class="extmbr" name="com.twitter.util.events.Sink#recording">recording</a>.</p><p>Java compatibility for <a href="#recording_=(enabled:Boolean):Unit" class="extmbr" name="com.twitter.util.events.Sink#recording_=">recording_=</a>.
+</p></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>Await - com.twitter.util.Await</title>
-          <meta name="description" content="Await - com.twitter.util.Await" />
-          <meta name="keywords" content="Await com.twitter.util.Await" />
+          <title>TimeBenchmark - com.twitter.util.TimeBenchmark</title>
+          <meta name="description" content="TimeBenchmark - com.twitter.util.TimeBenchmark" />
+          <meta name="keywords" content="TimeBenchmark com.twitter.util.TimeBenchmark" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.util.Await$';
+            var hash = 'com.twitter.util.TimeBenchmark';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,32 +22,29 @@
    	  </script>
     
         </head>
-        <body class="value">
+        <body class="type">
       <div id="definition">
-        <img src="../../../lib/object_big.png" />
+        <img src="../../../lib/class_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1>Await</h1>
+        <h1>TimeBenchmark</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Await</span>
+        <span class="name">TimeBenchmark</span><span class="result"> extends <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Synchronously await the result of some action by blocking the current
-thread.</p><p>The two main uses of <code>Await</code> are (a) you have synchronous code that needs to
-wait on some action performed by asynchronous code, or (b) you have synchronous code
-that needs to wait on some action performed on a thread pool or otherwise a different
-thread.</p><p>A common type of <code>Awaitable</code> is the <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>.</p><p>In the context of an event loop (such as when you are on a Finagle thread),
-never synchronously wait for completion - favoring asynchronous methods such as
-combinators or callbacks registered on a Future.</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -65,7 +62,7 @@ combinators or callbacks registered on a Future.</p></div><div class="toggleCont
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.util.Await"><span>Await</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.util.TimeBenchmark"><span>TimeBenchmark</span></li><li class="in" name="com.twitter.util.StdBenchAnnotations"><span>StdBenchAnnotations</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -83,7 +80,23 @@ combinators or callbacks registered on a Future.</p></div><div class="toggleCont
 
       <div id="template">
         <div id="allMembers">
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.twitter.util.TimeBenchmark#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;():com.twitter.util.TimeBenchmark"></a>
+      <a id="&lt;init&gt;:TimeBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">TimeBenchmark</span><span class="params">()</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
 
         
 
@@ -156,90 +169,6 @@ combinators or callbacks registered on a Future.</p></div><div class="toggleCont
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.Await#all" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="all(awaitables:java.util.Collection[com.twitter.util.Awaitable[_]],timeout:com.twitter.util.Duration):Unit"></a>
-      <a id="all(Collection[Awaitable[_]],Duration):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">all</span><span class="params">(<span name="awaitables">awaitables: <span class="extype" name="java.util.Collection">Collection</span>[<a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]]</span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns after all actions have completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns after all actions have completed. The timeout given is
-passed to each awaitable in turn, meaning max await time will be
-awaitables.size * timeout.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[TimeoutException]</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[InterruptedException]</span>
-    </span>)</span>
-              
-        </dd><dt>See also</dt><dd><span class="cmt"><p>Await.all(Seq, Duration)
-</p></span></dd></dl></div>
-    </li><li name="com.twitter.util.Await#all" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="all(awaitables:Seq[com.twitter.util.Awaitable[_]],timeout:com.twitter.util.Duration):Unit"></a>
-      <a id="all(Seq[Awaitable[_]],Duration):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">all</span><span class="params">(<span name="awaitables">awaitables: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]]</span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns after all actions have completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns after all actions have completed. The timeout given is
-passed to each awaitable in turn, meaning max await time will be
-awaitables.size * timeout.</p><p>If any of the <code>Awaitable</code>s are not ready within <code>timeout</code>, a
-<a href="TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">com.twitter.util.TimeoutException</a> will be thrown.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[TimeoutException]</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[InterruptedException]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.Await#all" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="all(awaitables:com.twitter.util.Awaitable[_]*):Unit"></a>
-      <a id="all(Awaitable[_]*):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">all</span><span class="params">(<span name="awaitables">awaitables: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]*</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns after all actions have completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns after all actions have completed. The timeout given is
-passed to each awaitable in turn, meaning max await time will be
-awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[TimeoutException]</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[InterruptedException]</span>
-    </span>)</span>
-              
-                <span class="name">@varargs</span><span class="args">()</span>
-              
-        </dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -395,112 +324,6 @@ awaitables.size * timeout.</p></div><dl class="attributes block"> <dt>Annotation
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Await#ready" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ready[T&lt;:com.twitter.util.Awaitable[_]](awaitable:T,timeout:com.twitter.util.Duration):T"></a>
-      <a id="ready[T&lt;:Awaitable[_]](T,Duration):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ready</span><span class="tparams">[<span name="T">T &lt;: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]</span>]</span><span class="params">(<span name="awaitable">awaitable: <span class="extype" name="com.twitter.util.Await.ready.T">T</span></span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.ready.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns the awaitable object itself when the action has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the awaitable object itself when the action has completed.
-Completion of this method merely indicates action completion, regardless
-of whether it was successful or not. In order to determine whether the action was
-successful, the awaitable must be queried separately. Prefer using
-<code>result()</code> when you wish failures to be thrown as exceptions.</p><p>If the <code>Awaitable</code> is not ready within <code>timeout</code>, a
-<a href="TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">com.twitter.util.TimeoutException</a> will be thrown.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[TimeoutException]</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[InterruptedException]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.Await#ready" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ready[T&lt;:com.twitter.util.Awaitable[_]](awaitable:T):T"></a>
-      <a id="ready[T&lt;:Awaitable[_]](T):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ready</span><span class="tparams">[<span name="T">T &lt;: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[_]</span>]</span><span class="params">(<span name="awaitable">awaitable: <span class="extype" name="com.twitter.util.Await.ready.T">T</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.ready.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns the awaitable object itself when the action has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the awaitable object itself when the action has completed.
-Completion of this method merely indicates action completion, regardless
-of whether it was successful or not. In order to determine whether the action was
-successful, the awaitable must be queried separately. Prefer using
-<code>result()</code> when you wish failures to be thrown as exceptions.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[TimeoutException]</span>
-    </span>)</span>
-              
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[InterruptedException]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.Await#result" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="result[T](awaitable:com.twitter.util.Awaitable[T],timeout:com.twitter.util.Duration):T"></a>
-      <a id="result[T](Awaitable[T],Duration):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">result</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="awaitable">awaitable: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Await.result.T">T</span>]</span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.result.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Waits until the action has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Waits until the action has completed. If the action was successful,
-returns the result of the action. If the action failed, the corresponding
-exception representing the failure is thrown.</p><p>If you want the results as a <a href="Try.html" class="extype" name="com.twitter.util.Try">com.twitter.util.Try</a>,
-use <code>Await.result(future.liftToTry)</code>.</p><p>If the <code>Awaitable</code> is not ready within <code>timeout</code>, a
-<a href="TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">com.twitter.util.TimeoutException</a> will be thrown.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[Exception]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.Await#result" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="result[T](awaitable:com.twitter.util.Awaitable[T]):T"></a>
-      <a id="result[T](Awaitable[T]):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">result</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="awaitable">awaitable: <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Await.result.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Await.result.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Waits until the action has completed.</p><div class="fullcomment"><div class="comment cmt"><p>Waits until the action has completed. If the action was successful,
-returns the result of the action. If the action failed, the corresponding
-exception representing the failure is thrown.</p><p>If you want the results as a <a href="Try.html" class="extype" name="com.twitter.util.Try">com.twitter.util.Try</a>,
-use <code>Await.result(future.liftToTry)</code>.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[Exception]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -514,6 +337,40 @@ use <code>Await.result(future.liftToTry)</code>.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.TimeBenchmark#timeEquals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="timeEquals:Boolean"></a>
+      <a id="timeEquals:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">timeEquals</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@OperationsPerInvocation</span><span class="args">()</span>
+              
+                <span class="name">@Benchmark</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.util.TimeBenchmark#timeHashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="timeHashCode:Int"></a>
+      <a id="timeHashCode:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">timeHashCode</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Benchmark</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -593,7 +450,9 @@ use <code>Await.result(future.liftToTry)</code>.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="com.twitter.util.StdBenchAnnotations">
+              <h3>Inherited from <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

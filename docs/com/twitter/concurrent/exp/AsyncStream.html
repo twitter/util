@@ -585,6 +585,21 @@ failure along with the exception.</p><div class="fullcomment"><div class="commen
 failure along with the exception. As a result, this Future never fails,
 and if there are errors they can be accessed via the Option.</p><p>Note: forces the stream. For infinite streams, the future never resolves.
 </p></div></div>
+    </li><li name="com.twitter.concurrent.exp.AsyncStream#scanLeft" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scanLeft[B](z:B)(f:(B,A)=&gt;B):com.twitter.concurrent.exp.AsyncStream[B]"></a>
+      <a id="scanLeft[B](B)((B,A)⇒B):AsyncStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scanLeft</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="z">z: <span class="extype" name="com.twitter.concurrent.exp.AsyncStream.scanLeft.B">B</span></span>)</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.scanLeft.B">B</span>, <span class="extype" name="com.twitter.concurrent.exp.AsyncStream.A">A</span>) ⇒ <span class="extype" name="com.twitter.concurrent.exp.AsyncStream.scanLeft.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.exp.AsyncStream.scanLeft.B">B</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Similar to foldLeft, but produces a stream from the result of each
+successive fold:</p><div class="fullcomment"><div class="comment cmt"><p>Similar to foldLeft, but produces a stream from the result of each
+successive fold:</p><pre>AsyncStream(<span class="num">1</span>, <span class="num">2</span>, ...).scanLeft(z)(f) == z +:: f(z, <span class="num">1</span>) +:: f(f(z, <span class="num">1</span>), <span class="num">2</span>) +:: ...</pre><p>Note that for an <code>AsyncStream as</code>:</p><pre>as.scanLeft(z)(f).last == as.foldLeft(z)(f)</pre></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

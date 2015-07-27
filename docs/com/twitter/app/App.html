@@ -571,8 +571,9 @@ provides a default value to be passed as <code>close(grace)</code>.
         <span class="name">onExit</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Invoke <code>f</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> when shutdown is requested. Exit hooks run in parallel and all must complete before
-postmains are executed.
+      <p class="shortcomment cmt">Invoke <code>f</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> when shutdown is requested. Exit hooks run in parallel and are
+executed after all postmains complete. The thread resumes when all exit
+hooks complete or <code>closeDeadline</code> expires.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.app.App#postmain" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="postmain(f:=&gt;Unit):Unit"></a>
