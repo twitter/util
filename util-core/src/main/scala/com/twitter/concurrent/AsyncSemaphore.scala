@@ -66,6 +66,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
   }
 
   def numWaiters: Int = synchronized(waitq.size)
+  def numInitialPermits: Int = initialPermits
   def numPermitsAvailable: Int = synchronized(availablePermits)
 
   /**
