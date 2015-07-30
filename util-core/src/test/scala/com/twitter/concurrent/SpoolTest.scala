@@ -71,6 +71,16 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
       }
     }
 
+    "zip with empty" in {
+      val result = s.zip(Spool.empty[Int])
+      assert(Await.result(result.toSeq) === Nil)
+    }
+
+    "zip with non-empty" in {
+      val result = s.zip(Seq(1,2,3).toSpool)
+      assert(Await.result(result.toSeq) === Nil)
+    }
+
     "take" in {
       assert(s.take(10) === Spool.empty[Int])
     }
@@ -138,6 +148,21 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
     "reduce left" in {
       val fold = s.reduceLeft{(x, y) => x + y}
       assert(Await.result(fold) === 3)
+    }
+
+    "zip with empty" in {
+      val zip = s.zip(Spool.empty[Int])
+      assert(Await.result(zip.toSeq) === Nil)
+    }
+
+    "zip with same size spool" in {
+      val zip = s.zip(Seq("a","b").toSpool)
+      assert(Await.result(zip.toSeq) === Seq((1, "a"), (2, "b")))
+    }
+
+    "zip with larger spool" in {
+      val zip = s.zip(Seq("a","b", "c", "d").toSpool)
+      assert(Await.result(zip.toSeq) === Seq((1, "a"), (2, "b")))
     }
 
     "be roundtrippable through toSeq/toSpool" in {
@@ -408,6 +433,12 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
         Future.value {
           spool.take(2)
         }
+      }
+    }
+
+    "zip lazily" in {
+      applyLazily { spool =>
+        Future.value(spool.zip(spool).map { case (a,b) => a+b })
       }
     }
 

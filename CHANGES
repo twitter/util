@@ -12,6 +12,8 @@ API Changes:
   * util-core: `Activity`, `BoundedStack`, `RingBuffer` and `Var` migrated
     off of deprecated `ClassManifest` to `ClassTag`. ``RB_ID=720455``
 
+  * util-core: Added Spool#zip
+
 Changes in Runtime Behavior:
   * util-core: `Promise.forwardInterruptsTo(other)` is a no-op if the
                 other future is fulfilled. ``RB_ID=714420``
