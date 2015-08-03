@@ -22,6 +22,11 @@ Changes in Runtime Behavior:
                  at runtime via TwitterServer's `/admin/events` page or
                  `/admin/events/{recordOn,recordOff}`. ``RB_ID=715712``
 
+API Changes:
+
+  * util-core: Removed deprecated methods `Future.void` and `Future$.void()`.
+               Use `Future.voided` and `Future$.Void` instead. ``RB_ID=720427``
+
 6.25.0  2015-06-22
 
 Changes in Runtime Behavior:

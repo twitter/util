@@ -89,9 +89,6 @@ object Future {
     p
   }
 
-  @deprecated("Prefer static Future.Void.", "5.x")
-  def void(): Future[Void] = value[Void](null)
-
   /**
    * A factory function to "lift" computations into the Future monad.
    * It will catch nonfatal (see: [[com.twitter.util.NonFatal]])
@@ -1099,9 +1096,6 @@ abstract class Future[+A] extends Awaitable[A] {
    */
   def voided: Future[Void] = flatMap(Future.toVoid)
 
-  @deprecated("'void' is a reserved word in javac.", "5.x")
-  def void: Future[Void] = voided
-
   /**
    * Send updates from this Future to the other.
    * `other` must not yet be satisfied at the time of the call.
@@ -1112,7 +1106,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * to raise on f. In some cases, using
    * [[com.twitter.util.Promise.become]] may be more appropriate.
    *
-   * @see: [[com.twitter.util.Promise.become]]
+   * @see [[com.twitter.util.Promise.become]]
    */
   def proxyTo[B >: A](other: Promise[B]) {
     if (other.isDefined) {
