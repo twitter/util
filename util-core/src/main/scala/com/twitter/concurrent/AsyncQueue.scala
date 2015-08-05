@@ -14,8 +14,8 @@ object AsyncQueue {
 }
 
 /**
- * An asynchronous FIFO queue. In addition to providing {{offer()}}
- * and {{poll()}}, the queue can be "failed", flushing current
+ * An asynchronous FIFO queue. In addition to providing [[offer]]
+ * and [[poll]], the queue can be [[fail "failed"]], flushing current
  * pollers.
  */
 class AsyncQueue[T] {
@@ -23,9 +23,26 @@ class AsyncQueue[T] {
 
   private[this] val state = new AtomicReference[State[T]](Idle)
 
+  /**
+   * Returns the current number of pending elements.
+   */
   def size: Int = state.get match {
     case Offering(q) => q.size
     case _ => 0
+  }
+
+  private[this] def queueOf[E](e: E): Queue[E] =
+    Queue.empty.enqueue(e)
+
+  private[this] def pollExcepting(s: Excepting[T]): Future[T] = {
+    val q = s.q
+    if (q.isEmpty) {
+      Future.exception(s.exc)
+    } else {
+      val (elem, nextq) = q.dequeue
+      val nextState = Excepting(nextq, s.exc)
+      if (state.compareAndSet(s, nextState)) Future.value(elem) else poll()
+    }
   }
 
   /**
@@ -36,7 +53,7 @@ class AsyncQueue[T] {
   final def poll(): Future[T] = state.get match {
     case s@Idle =>
       val p = new Promise[T]
-      if (state.compareAndSet(s, Polling(Queue(p)))) p else poll()
+      if (state.compareAndSet(s, Polling(queueOf(p)))) p else poll()
 
     case s@Polling(q) =>
       val p = new Promise[T]
@@ -47,13 +64,8 @@ class AsyncQueue[T] {
       val nextState = if (nextq.nonEmpty) Offering(nextq) else Idle
       if (state.compareAndSet(s, nextState)) Future.value(elem) else poll()
 
-    case Excepting(q, exc) if q.isEmpty =>
-      Future.exception(exc)
-
-    case s@Excepting(q, exc) =>
-      val (elem, nextq) = q.dequeue
-      val nextState = Excepting(nextq, exc)
-      if (state.compareAndSet(s, nextState)) Future.value(elem) else poll()
+    case s: Excepting[T] =>
+      pollExcepting(s)
   }
 
   /**
@@ -62,7 +74,7 @@ class AsyncQueue[T] {
   @tailrec
   final def offer(elem: T): Unit = state.get match {
     case s@Idle =>
-      if (!state.compareAndSet(s, Offering(Queue(elem))))
+      if (!state.compareAndSet(s, Offering(queueOf(elem))))
         offer(elem)
 
     case s@Offering(q) =>
@@ -102,7 +114,7 @@ class AsyncQueue[T] {
 
     case s@Polling(q) =>
       if (!state.compareAndSet(s, Excepting(Queue.empty, exc))) fail(exc, discard) else
-        q foreach(_.setException(exc))
+        q.foreach(_.setException(exc))
 
     case s@Offering(q) =>
       val nextq = if (discard) Queue.empty else q
