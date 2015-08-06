@@ -50,7 +50,10 @@ object ScribeHandler {
   val log = Logger.get(getClass)
 
   /**
-   * Generates a HandlerFactory that returns a ScribeHandler
+   * Generates a HandlerFactory that returns a ScribeHandler.
+   * NOTE: ScribeHandler is usually used to write structured binary data.
+   * When used in this way, wrapping this in other handlers, such as ThrottledHandler,
+   * which emit plain-text messages into the log, will corrupt the resulting data.
    *
    * @param bufferTime
    * send a scribe message no more frequently than this:
@@ -106,6 +109,11 @@ object ScribeHandler {
 
 }
 
+/**
+ * NOTE: ScribeHandler is usually used to write structured binary data.
+ * When used in this way, wrapping this in other handlers, such as ThrottledHandler,
+ * which emit plain-text messages into the log, will corrupt the resulting data.
+ */
 class ScribeHandler(
     hostname: String,
     port: Int,
