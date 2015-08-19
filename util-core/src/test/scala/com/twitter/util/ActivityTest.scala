@@ -141,7 +141,7 @@ class ActivityTest extends FunSuite {
       Throw(exc2), Return(3), Throw(exc3)))
   }
 
-  test("Var.sample") {
+  test("Activity.sample") {
     val (a, w) = Activity[Int]()
 
     val exc = intercept[IllegalStateException] { a.sample() }

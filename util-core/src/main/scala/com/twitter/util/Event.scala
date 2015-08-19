@@ -306,6 +306,23 @@ trait Event[+T] { self =>
       }
     }
   }
+
+  /**
+   * Build a new Event by keeping only those Event values where the
+   * equality predicate `eq` applied to the current and new values
+   * does not match.
+   */
+  def dedupWith(eq: (T, T) => Boolean): Event[T] =
+    sliding(2).collect {
+      case Seq(init) => init
+      case Seq(current, next) if !eq(current, next) => next
+    }
+
+  /**
+   * Builds a new Event by keeping only the Events where the predicated
+   * `p`, applied to the previous and current update, returns true.
+   */
+  def dedup: Event[T] = dedupWith { (a, b) => a == b }
 }
 
 /**

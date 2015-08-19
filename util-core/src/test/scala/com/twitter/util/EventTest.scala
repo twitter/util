@@ -191,15 +191,15 @@ class EventTest extends FunSuite {
     val ref = new AtomicReference[(Int, String)]((0, ""))
     e.register(Witness(ref))
 
-    assert(ref.get === (0, ""))
+    assert(ref.get === ((0, "")))
     e1.notify(1)
-    assert(ref.get === (0, ""))
+    assert(ref.get === ((0, "")))
     e2.notify("ok")
-    assert(ref.get === (1, "ok"))
+    assert(ref.get === ((1, "ok")))
     e2.notify("ok1")
-    assert(ref.get === (1, "ok1"))
+    assert(ref.get === ((1, "ok1")))
     e1.notify(2)
-    assert(ref.get === (2, "ok1"))
+    assert(ref.get === ((2, "ok1")))
   }
 
   test("Event.take") {
@@ -320,5 +320,36 @@ class EventTest extends FunSuite {
 
     e.notify(())
     assert(counter.get === n)
+  }
+
+  test("Event.dedupWith") {
+    val e = Event[Int]()
+    val ref = new AtomicReference[IndexedSeq[Int]]
+
+    e.dedupWith { (a, b) => a >= b }.build.register(Witness(ref))
+    e.notify(0)
+    e.notify(0)
+    e.notify(1)
+    e.notify(-1)
+    e.notify(2)
+    e.notify(1)
+    e.notify(3)
+
+    assert(ref.get() === List(0, 1, 2, 3))
+  }
+
+  test("Event.dedup") {
+    val e = Event[Int]()
+    val ref = new AtomicReference[IndexedSeq[Int]]
+
+    e.dedup.build.register(Witness(ref))
+    e.notify(0)
+    e.notify(0)
+    e.notify(1)
+    e.notify(1)
+    e.notify(0)
+    e.notify(0)
+
+    assert(ref.get() === List(0, 1, 0))
   }
 }
