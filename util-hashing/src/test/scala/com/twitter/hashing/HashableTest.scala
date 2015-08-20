@@ -24,4 +24,12 @@ class HashableTest extends FunSuite with GeneratorDrivenPropertyChecks {
       testConsistency(algo)
     }
   }
+
+  test("MD5_LEInt properly hashes") {
+    val h = Hashable.MD5_LEInt
+    assert(h(Array[Byte]()) == -645128748)
+    assert(h(Array[Byte](0)) == -1383745389)
+    assert(h(Array[Byte](1, 2, 3, 4)) == 1522587144)
+    assert(h("lunch money".getBytes("UTF-8")) == -2099949960)
+  }
 }

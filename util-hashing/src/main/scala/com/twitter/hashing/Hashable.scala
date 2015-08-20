@@ -1,6 +1,5 @@
 package com.twitter.hashing
 
-import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
 
 /** Type-class for generic hashing
@@ -123,13 +122,16 @@ object Hashable extends LowPriorityHashable {
    * Ketama's default hash algorithm: the first 4 bytes of the MD5 as a little-endian int.
    * Wow, really? Who thought that was a good way to do it? :(
    */
-  val MD5_LEInt = new Hashable[Array[Byte],Int] {
+  val MD5_LEInt = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
       val hasher = MessageDigest.getInstance("MD5")
       hasher.update(key)
-      val buffer = ByteBuffer.wrap(hasher.digest)
-      buffer.order(ByteOrder.LITTLE_ENDIAN)
-      buffer.getInt
+
+      val d = hasher.digest()
+      (d(0) & 0xff) |
+        ((d(1) & 0xff) << 8) |
+        ((d(2) & 0xff) << 16) |
+        ((d(3) & 0xff) << 24)
     }
 
     override def toString() = "Ketama"
@@ -294,7 +296,7 @@ object Hashable extends LowPriorityHashable {
       if (remaining > 10) c += key(offset + 10) << 16
       if (remaining > 11) c += key(offset + 11) << 24
 
-      if (key.size > 0) fin()
+      if (key.length > 0) fin()
 
       (b.toLong << 32) + c.toLong
     }

@@ -138,7 +138,7 @@ object Util extends Build {
   .enablePlugins(JmhPlugin)
   .settings(
     name := "util-benchmark"
-  ).dependsOn(utilCore, utilJvm, utilEvents)
+  ).dependsOn(utilCore, utilEvents, utilHashing, utilJvm)
 
   lazy val utilCache = Project(
     id = "util-cache",

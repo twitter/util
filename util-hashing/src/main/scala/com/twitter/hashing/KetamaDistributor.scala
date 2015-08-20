@@ -4,8 +4,6 @@ import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
 import java.util.TreeMap
 
-import scala.collection.JavaConversions._
-
 case class KetamaNode[A](identifier: String, weight: Int, handle: A)
 
 class KetamaDistributor[A](
@@ -17,7 +15,7 @@ class KetamaDistributor[A](
   // If the oldLibMemcachedVersionComplianceMode is true the behavior will be reproduced.
   oldLibMemcachedVersionComplianceMode: Boolean = false
 ) extends Distributor[A] {
-  private val continuum = {
+  private[this] val continuum = {
     val continuum = new TreeMap[Long, KetamaNode[A]]()
 
     val nodeCount   = _nodes.size
@@ -35,7 +33,7 @@ class KetamaDistributor[A](
       for (i <- 0 until pointsOnRing) {
         val key = node.identifier + "-" + i
         for (k <- 0 until 4) {
-          continuum += computeHash(key, k) -> node
+          continuum.put(computeHash(key, k), node)
         }
       }
     }
@@ -48,28 +46,31 @@ class KetamaDistributor[A](
     continuum
   }
 
-  def nodes = _nodes map { _.handle }
-  def nodeCount = _nodes.size
+  def nodes: Seq[A] = _nodes.map(_.handle)
+  def nodeCount: Int = _nodes.size
 
   private def mapEntryForHash(hash: Long) = {
     // hashes are 32-bit because they are 32-bit on the libmemcached and
     // we need to maintain compatibility with libmemcached
     val truncatedHash = hash & 0xffffffffL
 
-    Option(continuum.ceilingEntry(truncatedHash))
-        .getOrElse(continuum.firstEntry)
+    val entry = continuum.ceilingEntry(truncatedHash)
+    if (entry == null)
+      continuum.firstEntry
+    else
+      entry
   }
 
-  def entryForHash(hash: Long) = {
+  def entryForHash(hash: Long): (Long, A) = {
     val entry = mapEntryForHash(hash)
     (entry.getKey, entry.getValue.handle)
   }
 
-  def nodeForHash(hash: Long) = {
+  def nodeForHash(hash: Long): A = {
     mapEntryForHash(hash).getValue.handle
   }
 
-  protected def computeHash(key: String, alignment: Int) = {
+  protected def computeHash(key: String, alignment: Int): Long = {
     val hasher = MessageDigest.getInstance("MD5")
     hasher.update(key.getBytes("utf-8"))
     val buffer = ByteBuffer.wrap(hasher.digest)
