@@ -179,8 +179,12 @@ object Promise {
   }
 
   /** A future that is chained from a parent promise with a certain depth. */
-  private class Chained[A](val parent: Promise[A], val depth: Short) extends Future[A] with Responder[A] {
-    assert(depth < Short.MaxValue, "Future chains cannot be longer than 32766!")
+  private class Chained[A](val parent: Promise[A], val depth: Short)
+    extends Future[A]
+    with Responder[A]
+  {
+    if (depth == Short.MaxValue)
+      throw new AssertionError("Future chains cannot be longer than 32766!")
 
     // Awaitable
     @throws(classOf[TimeoutException])

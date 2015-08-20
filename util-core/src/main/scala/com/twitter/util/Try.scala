@@ -262,7 +262,8 @@ final case class Return[+R](r: R) extends Try[R] {
 
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
 
-  def map[X](f: R => X): Try[X] = Try[X](f(r))
+  def map[X](f: R => X): Try[X] =
+    try Return(f(r)) catch { case NonFatal(e) => Throw(e) }
 
   def exists(p: R => Boolean): Boolean = p(r)
 

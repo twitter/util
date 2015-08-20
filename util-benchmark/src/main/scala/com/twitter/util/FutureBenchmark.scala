@@ -1,11 +1,8 @@
 package com.twitter.util
 
-import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@BenchmarkMode(Array(Mode.AverageTime))
-class FutureBenchmark {
+class FutureBenchmark extends StdBenchAnnotations {
   import FutureBenchmark._
 
   @Benchmark
@@ -37,6 +34,13 @@ class FutureBenchmark {
 
     promise.respond(RespondFn)
     promise.setDone()
+  }
+
+  @Benchmark
+  def timeMap(state: PromiseUnitState): String = {
+    val mapped = state.promise.map(state.MapFn)
+    state.promise.setDone()
+    Await.result(mapped)
   }
 
   @Benchmark
@@ -119,6 +123,7 @@ object FutureBenchmark {
   @State(Scope.Thread)
   private class PromiseUnitState {
     val FlatMapFn = { _: Unit => Future.Unit }
+    val MapFn = { _: Unit => "hi" }
 
     var promise: Promise[Unit] = _
 

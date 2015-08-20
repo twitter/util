@@ -886,10 +886,10 @@ abstract class Future[+A] extends Awaitable[A] {
    * @see [[map]]
    */
   def flatMap[B](f: A => Future[B]): Future[B] =
-    transform({
+    transform {
       case Return(v) => f(v)
-      case Throw(t) => Future.rawException(t)
-    })
+      case t: Throw[B] => Future.const[B](t)
+    }
 
   /**
    * Sequentially compose `this` with `f`. This is as [[flatMap]], but
@@ -897,10 +897,10 @@ abstract class Future[+A] extends Awaitable[A] {
    * `Unit`-valued  Futures — i.e. side-effects.
    */
   def before[B](f: => Future[B])(implicit ev: this.type <:< Future[Unit]): Future[B] =
-    transform({
+    transform {
       case Return(_) => f
-      case Throw(t) => Future.rawException(t)
-    })
+      case t: Throw[B] => Future.const[B](t)
+    }
 
   /**
    * If this, the original future, results in an exceptional computation,
@@ -941,7 +941,11 @@ abstract class Future[+A] extends Awaitable[A] {
    * @see [[flatMap]] for computations that return `Future`s.
    * @see [[onSuccess]] for side-effecting chained computations.
    */
-  def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
+  def map[B](f: A => B): Future[B] =
+    transform {
+      case Return(r) => Future { f(r) }
+      case t: Throw[B] => Future.const[B](t)
+    }
 
   def filter(p: A => Boolean): Future[A] = transform { x: Try[A] => Future.const(x.filter(p)) }
 
@@ -1077,10 +1081,10 @@ abstract class Future[+A] extends Awaitable[A] {
   def join[B](other: Future[B]): Future[(A, B)] = {
     val p = Promise.interrupts[(A, B)](this, other)
     this.respond {
-      case Throw(t) => p() = Throw(t)
-      case Return(a) => other respond {
-        case Throw(t) => p() = Throw(t)
-        case Return(b) => p() = Return((a, b))
+      case Throw(t) => p.update(Throw(t))
+      case Return(a) => other.respond {
+        case Throw(t) => p.update(Throw(t))
+        case Return(b) => p.update(Return((a, b)))
       }
     }
     p
@@ -1242,7 +1246,9 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
       def run() {
         val current = Local.save()
         Local.restore(saved)
-        try Monitor { k(result) } finally Local.restore(current)
+        try k(result)
+        catch Monitor.catcher
+        finally Local.restore(current)
       }
     })
     this

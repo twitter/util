@@ -26,7 +26,10 @@ private[finagle] trait CumulativeGauge {
   private[this] def removeGauge(underlyingGauge: UnderlyingGauge): Unit = synchronized {
     // This cleans up weakrefs
     underlying = underlying.filter { weakRef =>
-      weakRef.get.exists(_ ne underlyingGauge)
+      weakRef.get match {
+        case Some(g) => g ne underlyingGauge
+        case None => false
+      }
     }
     if (underlying.isEmpty)
       deregister()
