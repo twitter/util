@@ -9,19 +9,20 @@ object Util extends Build {
   val suffix = if (branch == "master") "" else "-SNAPSHOT"
 
   val libVersion = "6.26.0" + suffix
-  val zkVersion = "3.4.6"
+  val zkVersion = "3.5.0-alpha"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
     ExclusionRule("com.sun.jmx", "jmxri"),
     ExclusionRule("javax.jms", "jms")
   )
 
-  val parserCombinators = scalaVersion(sv => sv match {
-    case v: String if v startsWith "2.11" =>
-      Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2")
-    case _      =>
-      Nil
-  })
+  val parserCombinators = scalaVersion(sv =>
+    CrossVersion.partialVersion(sv) match {
+      case Some((2, 11)) =>
+        Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4")
+      case _  => Nil
+    }
+  )
 
   lazy val publishM2Configuration =
     TaskKey[PublishConfiguration]("publish-m2-configuration",
@@ -39,17 +40,17 @@ object Util extends Build {
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.10.5",
-    crossScalaVersions := Seq("2.10.5", "2.11.6"),
+    crossScalaVersions := Seq("2.10.5", "2.11.7"),
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
-      "org.mockito" % "mockito-all" % "1.8.5" % "test",
+      "org.mockito" % "mockito-all" % "1.9.5" % "test",
       "org.scalatest" %% "scalatest" % "2.2.4" % "test"
     ),
 
-    resolvers += "twitter repo" at "http://maven.twttr.com",
+    resolvers += "twitter repo" at "https://maven.twttr.com",
 
     ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := (
       CrossVersion.partialVersion(scalaVersion.value) match {
@@ -149,7 +150,7 @@ object Util extends Build {
     name := "util-cache",
     libraryDependencies ++= Seq(
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
+      "com.google.code.findbugs" % "jsr305"              % "2.0.1",
       "com.google.guava"         % "guava"               % "16.0.1"
     )
   ).dependsOn(utilCore)
@@ -171,7 +172,7 @@ object Util extends Build {
   ).settings(
     name := "util-codec",
     libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.6"
+      "commons-codec" % "commons-codec" % "1.9"
     )
   ).dependsOn(utilCore)
 
@@ -184,7 +185,7 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305"              % "1.3.9",
+      "com.google.code.findbugs" % "jsr305"              % "2.0.1",
       "javax.inject"             % "javax.inject"        % "1",
       "com.google.guava"         % "guava"               % "16.0.1",
       "commons-collections"      % "commons-collections" % "3.2.1",
@@ -258,7 +259,7 @@ object Util extends Build {
       "asm"   % "asm"         % "3.3.1",
       "asm"   % "asm-util"    % "3.3.1",
       "asm"   % "asm-commons" % "3.3.1",
-      "cglib" % "cglib"       % "2.2"
+      "cglib" % "cglib"       % "2.2.2"
     )
   ).dependsOn(utilCore)
 
@@ -321,7 +322,7 @@ object Util extends Build {
     name := "util-test",
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "2.2.4",
-      "org.mockito" % "mockito-all" % "1.8.5"
+      "org.mockito" % "mockito-all" % "1.9.5"
     )
   ).dependsOn(utilCore, utilLogging)
 
@@ -335,9 +336,9 @@ object Util extends Build {
     name := "util-thrift",
     libraryDependencies ++= Seq(
       "thrift"                     % "libthrift"        % "0.5.0",
-      "org.slf4j"                  % "slf4j-nop"        % "1.5.8" % "provided",
-      "com.fasterxml.jackson.core" % "jackson-core"     % "2.3.1",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.1"
+      "org.slf4j"                  % "slf4j-api"        % "1.7.7" % "provided",
+      "com.fasterxml.jackson.core" % "jackson-core"     % "2.4.4",
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.4"
     )
   ).dependsOn(utilCodec)
 
@@ -361,13 +362,13 @@ object Util extends Build {
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % "0.0.60",
-      "com.twitter.common.zookeeper" % "group"      % "0.0.78",
-      "com.twitter.common.zookeeper" % "server-set" % "1.0.83",
+      "com.twitter.common.zookeeper" % "client"     % "0.0.79",
+      "com.twitter.common.zookeeper" % "group"      % "0.0.90",
+      "com.twitter.common.zookeeper" % "server-set" % "1.0.103",
       zkDependency
     )
   ).dependsOn(utilCore, utilLogging, utilZk,
-    // These are dependended on to provide transitive dependencies
+    // These are depended on to provide transitive dependencies
     // that would otherwise cause incompatibilities. See above comment.
     utilCollection, utilHashing
   )
@@ -380,7 +381,7 @@ object Util extends Build {
   ).settings(
     name := "util-zk-test",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "io" % "0.0.58" % "test",
+      "com.twitter.common" % "io" % "0.0.67" % "test",
       zkDependency
     )
   )
