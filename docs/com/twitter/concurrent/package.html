@@ -111,6 +111,22 @@ execution.</p>
       </span>
       </h4>
       <p class="comment cmt">An asynchronous FIFO queue.</p>
+    </li><li name="com.twitter.concurrent.AsyncQueueBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AsyncQueueBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="AsyncQueueBenchmark:AsyncQueueBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncQueueBenchmark.html"><span class="name">AsyncQueueBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AsyncSemaphoreextendsAnyRef"></a>
       <a id="AsyncSemaphore:AsyncSemaphore"></a>
@@ -165,6 +181,21 @@ executor threads.</p>
       </span>
       </h4>
       
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConduitSpscBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="ConduitSpscBenchmark:ConduitSpscBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConduitSpscBenchmark.html"><span class="name">ConduitSpscBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">These benchmarks measure the overhead of various implementations of a
+conduit between a <code>source: () =&gt; Future[Buf]</code> and <code>sink: Buf =&gt;
+Future[Unit]</code>.</p>
     </li><li name="com.twitter.concurrent.ExecutorScheduler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ExecutorSchedulerextendsAnyRef"></a>
       <a id="ExecutorScheduler:ExecutorScheduler"></a>

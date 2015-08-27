@@ -708,6 +708,21 @@ satisfied when the entire result is ready.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.concurrent.Spool#zip" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="zip[B](that:com.twitter.concurrent.Spool[B]):com.twitter.concurrent.Spool[(A,B)]"></a>
+      <a id="zip[B](Spool[B]):Spool[(Nothing,B)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">zip</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.zip.B">B</span>]</span>)</span><span class="result">: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[(<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Nothing" class="extype" target="_top">Nothing</a>, <span class="extype" name="com.twitter.concurrent.Spool.zip.B">B</span>)]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Zips two <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spools</a> returning a Spool of Tuple2s.</p><div class="fullcomment"><div class="comment cmt"><p>Zips two <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spools</a> returning a Spool of Tuple2s.</p><p>If one Spool is shorter, excess elements of the longer
+Spool are discarded.</p><p>c.f. scala.collection.immutable.Stream#zip
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a></dd></dl></div>
     </li></ol>
             </div>
 

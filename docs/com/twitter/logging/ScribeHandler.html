@@ -39,7 +39,10 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>NOTE: ScribeHandler is usually used to write structured binary data.
+When used in this way, wrapping this in other handlers, such as ThrottledHandler,
+which emit plain-text messages into the log, will corrupt the resulting data.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a>, <span class="extype" name="java.util.logging.Handler">java.util.logging.Handler</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>

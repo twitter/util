@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>FutureBenchmark - com.twitter.util.FutureBenchmark</title>
-          <meta name="description" content="FutureBenchmark - com.twitter.util.FutureBenchmark" />
-          <meta name="keywords" content="FutureBenchmark com.twitter.util.FutureBenchmark" />
+          <title>ConduitSpscBenchmark - com.twitter.concurrent.ConduitSpscBenchmark</title>
+          <meta name="description" content="ConduitSpscBenchmark - com.twitter.concurrent.ConduitSpscBenchmark" />
+          <meta name="keywords" content="ConduitSpscBenchmark com.twitter.concurrent.ConduitSpscBenchmark" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.util.FutureBenchmark';
+            var hash = 'com.twitter.concurrent.ConduitSpscBenchmark';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -24,9 +24,9 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="FutureBenchmark$.html" title="Go to companion"><img src="../../../lib/class_to_object_big.png" /></a>
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="FutureBenchmark$.html" title="Go to companion">FutureBenchmark</a></h1>
+        <img src="../../../lib/class_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.concurrent">concurrent</a></p>
+        <h1>ConduitSpscBenchmark</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,13 +35,21 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">FutureBenchmark</span><span class="result"> extends <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+        <span class="name">ConduitSpscBenchmark</span><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>These benchmarks measure the overhead of various implementations of a
+conduit between a <code>source: () =&gt; Future[Buf]</code> and <code>sink: Buf =&gt;
+Future[Unit]</code>.</p><p>The steps are as follows:</p><p>1. connect the source to the conduit
+2. drain three items from the conduit into the sink</p><p>The control benchmark measures the baseline when there is no conduit, i.e.,
+the source feeds directly into the sink.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -59,7 +67,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.util.FutureBenchmark"><span>FutureBenchmark</span></li><li class="in" name="com.twitter.util.StdBenchAnnotations"><span>StdBenchAnnotations</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.concurrent.ConduitSpscBenchmark"><span>ConduitSpscBenchmark</span></li><li class="in" name="com.twitter.util.StdBenchAnnotations"><span>StdBenchAnnotations</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -79,16 +87,16 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.util.FutureBenchmark#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():com.twitter.util.FutureBenchmark"></a>
-      <a id="&lt;init&gt;:FutureBenchmark"></a>
+              <ol><li name="com.twitter.concurrent.ConduitSpscBenchmark#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;():com.twitter.concurrent.ConduitSpscBenchmark"></a>
+      <a id="&lt;init&gt;:ConduitSpscBenchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">FutureBenchmark</span><span class="params">()</span>
+        <span class="name">ConduitSpscBenchmark</span><span class="params">()</span>
       </span>
       </h4>
       
@@ -179,6 +187,54 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark#asyncQueue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asyncQueue:Boolean"></a>
+      <a id="asyncQueue:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asyncQueue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Benchmark</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark#asyncStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asyncStream:Boolean"></a>
+      <a id="asyncStream:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asyncStream</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Benchmark</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark#broker" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="broker:Boolean"></a>
+      <a id="broker:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">broker</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Benchmark</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -196,6 +252,23 @@
       
       <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
     </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark#control" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="control:Boolean"></a>
+      <a id="control:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">control</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The control benchmark.</p><div class="fullcomment"><div class="comment cmt"><p>The control benchmark.</p><p><code>source</code> is plugged directly into <code>sink</code> without a conduit.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Benchmark</span><span class="args">()</span>
               
         </dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -321,38 +394,35 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#runqBaseline" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="runqBaseline(state:com.twitter.util.FutureBenchmark.RunqState):com.twitter.util.Promise[Int]"></a>
-      <a id="runqBaseline(RunqState):Promise[Int]"></a>
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark#reader" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reader:Boolean"></a>
+      <a id="reader:Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">runqBaseline</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.RunqState">RunqState</span></span>)</span><span class="result">: <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+        <span class="name">reader</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@Benchmark</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#runqSize" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="runqSize(state:com.twitter.util.FutureBenchmark.RunqState):Int"></a>
-      <a id="runqSize(RunqState):Int"></a>
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark#size" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="size:Int"></a>
+      <a id="size:Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">runqSize</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.RunqState">RunqState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">size</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -366,120 +436,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeCallback" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeCallback(state:com.twitter.util.FutureBenchmark.CallbackState):Unit"></a>
-      <a id="timeCallback(CallbackState):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeCallback</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.CallbackState">CallbackState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-                <span class="name">@OperationsPerInvocation</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeCollect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeCollect(state:com.twitter.util.FutureBenchmark.CollectState):Unit"></a>
-      <a id="timeCollect(CollectState):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeCollect</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.CollectState">CollectState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeFlatMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeFlatMap(state:com.twitter.util.FutureBenchmark.PromiseUnitState):Unit"></a>
-      <a id="timeFlatMap(PromiseUnitState):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeFlatMap</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.PromiseUnitState">PromiseUnitState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeMap(state:com.twitter.util.FutureBenchmark.PromiseUnitState):String"></a>
-      <a id="timeMap(PromiseUnitState):String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeMap</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.PromiseUnitState">PromiseUnitState</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeRespond" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeRespond(state:com.twitter.util.FutureBenchmark.PromiseUnitState):Unit"></a>
-      <a id="timeRespond(PromiseUnitState):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeRespond</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.PromiseUnitState">PromiseUnitState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeSelect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeSelect(state:com.twitter.util.FutureBenchmark.SelectState):Unit"></a>
-      <a id="timeSelect(SelectState):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeSelect</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.SelectState">SelectState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li name="com.twitter.util.FutureBenchmark#timeSelectIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeSelectIndex(state:com.twitter.util.FutureBenchmark.SelectIndexState):Unit"></a>
-      <a id="timeSelectIndex(SelectIndexState):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeSelectIndex</span><span class="params">(<span name="state">state: <span class="extype" name="com.twitter.util.FutureBenchmark.SelectIndexState">SelectIndexState</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Benchmark</span><span class="args">()</span>
-              
-        </dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -560,7 +516,7 @@
 
         <div id="inheritedMembers">
         <div class="parent" name="com.twitter.util.StdBenchAnnotations">
-              <h3>Inherited from <a href="StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></h3>
+              <h3>Inherited from <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">

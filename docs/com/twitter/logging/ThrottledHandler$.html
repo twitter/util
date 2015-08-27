@@ -163,7 +163,11 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Generates a HandlerFactory that returns a ThrottledHandler
-</p><div class="fullcomment"><div class="comment cmt"><p>Generates a HandlerFactory that returns a ThrottledHandler
+NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a HandlerFactory that returns a ThrottledHandler
+NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.
+This means that using it to wrap any logger which you expect to produce easily parseable,
+well-structured logs (as opposed to just plain text logs) will break your format.
+Specifically, wrapping ScribeHandler with ThrottledHandler is usually a bug.
 </p></div><dl class="paramcmts block"><dt class="param">handler</dt><dd class="cmt"><p>
 Wrapped handler.
 </p></dd><dt class="param">duration</dt><dd class="cmt"><p>

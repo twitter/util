@@ -39,7 +39,10 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.
+This means that using it to wrap any logger which you expect to produce easily parseable,
+well-structured logs (as opposed to just plain text logs) will break your format.
+Specifically, DO NOT wrap Thrift Scribing loggers with ThrottledHandler.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a>, <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a>, <span class="extype" name="java.util.logging.Handler">java.util.logging.Handler</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>

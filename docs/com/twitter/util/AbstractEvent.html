@@ -253,6 +253,40 @@ observed.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Ev
 observed. Event values for which the partial function <code>f</code> does
 not apply are dropped; other values are transformed by <code>f</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a></dd></dl></div>
+    </li><li name="com.twitter.util.Event#dedup" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dedup:com.twitter.util.Event[T]"></a>
+      <a id="dedup:Event[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dedup</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.AbstractEvent.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Builds a new Event by keeping only the Events where the predicated
+<code>p</code>, applied to the previous and current update, returns true.</p><div class="fullcomment"><div class="comment cmt"><p>Builds a new Event by keeping only the Events where the predicated
+<code>p</code>, applied to the previous and current update, returns true.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a></dd></dl></div>
+    </li><li name="com.twitter.util.Event#dedupWith" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dedupWith(eq:(T,T)=&gt;Boolean):com.twitter.util.Event[T]"></a>
+      <a id="dedupWith((T,T)⇒Boolean):Event[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dedupWith</span><span class="params">(<span name="eq">eq: (<span class="extype" name="com.twitter.util.AbstractEvent.T">T</span>, <span class="extype" name="com.twitter.util.AbstractEvent.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.AbstractEvent.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Build a new Event by keeping only those Event values where the
+equality predicate <code>eq</code> applied to the current and new values
+does not match.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event by keeping only those Event values where the
+equality predicate <code>eq</code> applied to the current and new values
+does not match.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a></dd></dl></div>
     </li><li name="com.twitter.util.Event#diff" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]"></a>
       <a id="diff[CC[_],U](Diffable[CC],&lt;:&lt;[T,CC[U]]):Event[Diff[CC,U]]"></a>

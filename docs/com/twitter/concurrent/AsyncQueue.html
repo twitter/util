@@ -39,8 +39,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing {{offer()}}
-and {{poll()}}, the queue can be &quot;failed&quot;, flushing current
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing <a href="#offer(elem:T):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
+and <a href="#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be <a href="#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">&quot;failed&quot;</a>, flushing current
 pollers.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -405,7 +405,7 @@ returned future when the element is available.
         <span class="name">size</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Returns the current number of pending elements.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

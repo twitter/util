@@ -905,7 +905,8 @@ After this call, nobody else should satisfy <code>other</code>.</p><p>Note: usin
 the user's responsibility to set an interrupt handler on <code>other</code>
 to raise on f. In some cases, using
 <a href="../util/Promise.html#become(other:com.twitter.util.Future[A]):Unit" class="extmbr" name="com.twitter.util.Promise#become">com.twitter.util.Promise.become</a> may be more appropriate.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../util/Promise.html#become(other:com.twitter.util.Future[A]):Unit" class="extmbr" name="com.twitter.util.Promise#become">com.twitter.util.Promise.become</a>
+</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Promise#raise" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="raise(intr:Throwable):Unit"></a>
       <a id="raise(Throwable):Unit"></a>
@@ -1560,22 +1561,6 @@ whether the computation finished in time.
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> Use Await.result(future.liftToTry).isThrow</p></dd></dl></div>
-    </li><li name="com.twitter.util.Future#void" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="void:com.twitter.util.Future[Void]"></a>
-      <a id="void:Future[Void]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.x) 'void' is a reserved word in javac.">void</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="java.lang.Void">Void</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.x)</i> 'void' is a reserved word in javac.</p></dd></dl></div>
     </li></ol>
             </div>
         </div>
