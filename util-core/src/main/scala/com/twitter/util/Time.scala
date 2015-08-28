@@ -512,19 +512,29 @@ trait TimeControl {
 /**
  * A thread-safe wrapper around a SimpleDateFormat object.
  *
- * The timezone used will be UTC.
+ * The default timezone is UTC.
  */
-class TimeFormat(pattern: String, locale: Option[Locale]) {
-  private[this] val format = locale map {
-    TwitterDateFormat(pattern, _)
-  } getOrElse TwitterDateFormat(pattern)
-  format.setTimeZone(TimeZone.getTimeZone("UTC"))
+class TimeFormat(
+    pattern: String,
+    locale: Option[Locale],
+    timezone: TimeZone = TimeZone.getTimeZone("UTC")) {
 
-  // jdk6 and jdk7 pick up the default locale differently in SimpleDateFormat
+  // jdk6 and jdk7 pick up the default locale differently in SimpleDateFormat,
   // so we can't rely on Locale.getDefault here.
-  // instead we let SimpleDateFormat do the work for us above
-  /** Create a new TimeFormat with the default locale. **/
-  def this(pattern: String) = this(pattern, None)
+  // Instead, we let SimpleDateFormat do the work for us above.
+  /** Create a new TimeFormat with a given locale and the default timezone **/
+  def this(pattern: String, locale: Option[Locale]) = this(pattern, locale, TimeZone.getTimeZone("UTC"))
+
+  /** Create a new TimeFormat with a given timezone and the default locale **/
+  def this(pattern: String, timezone: TimeZone) = this(pattern, None, timezone)
+
+  /** Create a new TimeFormat with the default locale and timezone. **/
+  def this(pattern: String) = this(pattern, None, TimeZone.getTimeZone("UTC"))
+
+  private[this] val format = locale.map(TwitterDateFormat(pattern, _))
+    .getOrElse(TwitterDateFormat(pattern))
+
+  format.setTimeZone(timezone)
 
   def parse(str: String): Time = {
     // SimpleDateFormat is not thread-safe

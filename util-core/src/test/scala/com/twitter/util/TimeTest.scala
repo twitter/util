@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream}
-import java.util.Locale
+import java.util.{Locale, TimeZone}
 import java.util.concurrent.TimeUnit
 
 import org.junit.runner.RunWith
@@ -368,6 +368,18 @@ class TimeFormatTest extends WordSpec {
       val timeFormat = new TimeFormat(format, Some(locale))
       val day = "Donnerstag"
       assert(timeFormat.parse(day).format(format, locale) === day)
+    }
+
+    "set UTC timezone as default" in {
+      val format = "HH:mm"
+      val timeFormat = new TimeFormat(format)
+      assert(timeFormat.parse("16:04").format(format) == "16:04")
+    }
+
+    "set non-UTC timezone correctly" in {
+      val format = "HH:mm"
+      val timeFormat = new TimeFormat(format, TimeZone.getTimeZone("EST"))
+      assert(timeFormat.parse("16:04").format(format) == "21:04")
     }
   }
 }
