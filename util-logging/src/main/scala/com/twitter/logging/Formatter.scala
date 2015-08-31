@@ -157,10 +157,9 @@ class Formatter(
 
       if (record.getThrown ne null) {
         val traceLines = Formatter.formatStackTrace(record.getThrown, truncateStackTracesAt)
-        if (!traceLines.isEmpty) {
-          lines += record.getThrown.toString
+        lines += record.getThrown.toString
+        if (traceLines.nonEmpty)
           lines ++= traceLines
-        }
       }
       lines.toArray
     }

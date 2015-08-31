@@ -60,6 +60,14 @@ class FormatterTest extends WordSpec {
   record3.setLoggerName("net.lag.whiskey.Train")
   record3.setMillis(1206769996722L)
 
+  val noStackTraceException = new Exception("fast exception no stacktrace")
+  noStackTraceException.setStackTrace(Array.empty)
+
+  val record4 = new javalog.LogRecord(Level.ERROR, "with minimal exception")
+  record4.setLoggerName("com.example.jobs.BadJob")
+  record4.setMillis(1206769996722L)
+  record4.setThrown(noStackTraceException)
+
   "Formatter" should {
     "create a prefix" in {
       assert(basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") ===
@@ -179,6 +187,13 @@ class FormatterTest extends WordSpec {
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    (...more...)"))
 
+      }
+
+      "log even blank exceptions" in {
+        assert(utcFormatter.format(record4) ===
+          "ERR [20080329-05:53:16.722] jobs: with minimal exception\n" +
+          "ERR [20080329-05:53:16.722] jobs: java.lang.Exception: fast exception no stacktrace\n"
+        )
       }
     }
   }
