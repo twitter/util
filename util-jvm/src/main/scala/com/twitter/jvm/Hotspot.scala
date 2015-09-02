@@ -72,11 +72,11 @@ class Hotspot extends Jvm {
     def get(what: String) = cs.get("sun.gc.collector.%d.%s".format(which, what))
 
     for {
-      invocations <- get("invocations") map(long(_))
-      lastEntryTicks <- get("lastEntryTime") map(long(_))
-      name <- get("name") map(_.getValue().toString)
-      time <- get("time") map(long(_))
-      freq <- cs.get("sun.os.hrt.frequency") map(long(_))
+      invocations <- get("invocations").map(long)
+      lastEntryTicks <- get("lastEntryTime").map(long)
+      name <- get("name").map(_.getValue().toString)
+      time <- get("time").map(long)
+      freq <- cs.get("sun.os.hrt.frequency").map(long)
       duration = ticksToDuration(time, freq)
       lastEntryTime = ticksToDuration(lastEntryTicks, freq)
       kind = "%d.%s".format(which, name)
@@ -86,15 +86,15 @@ class Hotspot extends Jvm {
   def snap: Snapshot = {
     val cs = counters("")
     val heap = for {
-      invocations <- cs.get("sun.gc.collector.0.invocations") map(long(_))
-      capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
-      used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
+      invocations <- cs.get("sun.gc.collector.0.invocations").map(long)
+      capacity <- cs.get("sun.gc.generation.0.space.0.capacity").map(long)
+      used <- cs.get("sun.gc.generation.0.space.0.used").map(long)
     } yield {
       val allocated = invocations*capacity + used
       // This is a somewhat poor estimate, since for example the
       // capacity can change over time.
 
-      val tenuringThreshold = cs.get("sun.gc.policy.tenuringThreshold") map(long(_))
+      val tenuringThreshold = cs.get("sun.gc.policy.tenuringThreshold").map(long)
 
       val ageHisto = for {
         thresh <- tenuringThreshold.toSeq
@@ -106,28 +106,37 @@ class Hotspot extends Jvm {
     }
 
     val timestamp = for {
-      freq <- cs.get("sun.os.hrt.frequency") map(long(_))
-      ticks <- cs.get("sun.os.hrt.ticks") map(long(_))
+      freq <- cs.get("sun.os.hrt.frequency").map(long)
+      ticks <- cs.get("sun.os.hrt.ticks").map(long)
     } yield epoch+ticksToDuration(ticks, freq)
 
     // TODO: include causes for GCs?
     Snapshot(
-      timestamp getOrElse Time.epoch,
-      heap getOrElse Heap(0, 0, Seq()),
+      timestamp.getOrElse(Time.epoch),
+      heap.getOrElse(Heap(0, 0, Seq())),
       getGc(0, cs).toSeq ++ getGc(1, cs).toSeq)
   }
 
   val edenPool: Pool = new Pool {
-    def state() = {
+    def state(): PoolState = {
       val cs = counters("")
       val state = for {
-        invocations <- cs.get("sun.gc.collector.0.invocations") map(long(_))
-        capacity <- cs.get("sun.gc.generation.0.space.0.capacity") map(long(_))
-        used <- cs.get("sun.gc.generation.0.space.0.used") map(long(_))
+        invocations <- cs.get("sun.gc.collector.0.invocations").map(long)
+        capacity <- cs.get("sun.gc.generation.0.space.0.capacity").map(long)
+        used <- cs.get("sun.gc.generation.0.space.0.used").map(long)
       } yield PoolState(invocations, capacity.bytes, used.bytes)
 
       state getOrElse NilJvm.edenPool.state()
     }
+  }
+
+  def metaspaceUsage: Option[Jvm.MetaspaceUsage] = {
+    val cs = counters("")
+    for {
+      used <- cs.get("sun.gc.metaspace.used").map(long)
+      cap <- cs.get("sun.gc.metaspace.capacity").map(long)
+      maxCap <- cs.get("sun.gc.metaspace.maxCapacity").map(long)
+    } yield Jvm.MetaspaceUsage(used.bytes, cap.bytes, maxCap.bytes)
   }
 
   def snapCounters: Map[String, String] =

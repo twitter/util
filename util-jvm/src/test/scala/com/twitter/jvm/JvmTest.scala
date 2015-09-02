@@ -1,15 +1,12 @@
 package com.twitter.jvm
 
-import scala.collection.mutable
-
-import org.junit.runner.RunWith
-import org.mockito.{Mockito => Mock}
-import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
-
 import com.twitter.conversions.time._
 import com.twitter.logging.{Level, TestLogging}
 import com.twitter.util.Time
+import org.junit.runner.RunWith
+import org.scalatest.WordSpec
+import org.scalatest.junit.JUnitRunner
+import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
 class JvmTest extends WordSpec with TestLogging {
@@ -24,7 +21,7 @@ class JvmTest extends WordSpec with TestLogging {
         }
         def snapCounters = Map()
         def setSnap(snap: Snapshot) {
-          currentSnap= snap
+          currentSnap = snap
         }
 
         override val executor = new MockScheduledExecutorService
@@ -38,6 +35,7 @@ class JvmTest extends WordSpec with TestLogging {
 
         def forceGc() = ()
         def edenPool = NilJvm.edenPool
+        def metaspaceUsage = NilJvm.metaspaceUsage
       }
     }
 

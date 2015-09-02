@@ -101,6 +101,11 @@ trait Jvm {
 
   def edenPool: Pool
 
+  /**
+   * Gets the current usage of the metaspace, if available.
+   */
+  def metaspaceUsage: Option[Jvm.MetaspaceUsage]
+
   def executor: ScheduledExecutorService = Jvm.executor
 
   /**
@@ -118,7 +123,7 @@ trait Jvm {
     @volatile var lastLog = Time.epoch
 
     val lastByName = new ConcurrentHashMap[String, java.lang.Long](16, 0.75f, 1)
-    def sample() {
+    def sample(): Unit = {
       val Snapshot(_, _, gcs) = snap
 
       for (gc@Gc(count, name, _, _) <- gcs) {
@@ -160,10 +165,10 @@ trait Jvm {
     // We assume that timestamps from foreachGc are monotonic.
     foreachGc { case gc@Gc(_, _, timestamp, _) =>
       val floor = timestamp - bufferFor
-      buffer = (gc :: buffer) takeWhile(_.timestamp > floor)
+      buffer = (gc :: buffer).takeWhile(_.timestamp > floor)
     }
 
-    (since: Time) => buffer takeWhile(_.timestamp > since)
+    (since: Time) => buffer.takeWhile(_.timestamp > since)
   }
 
   def forceGc(): Unit
@@ -177,13 +182,13 @@ trait Jvm {
    */
   def mainClassName: String = {
     val mainClass = for {
-      (_, stack) <- Thread.getAllStackTraces().asScala find { case (t, s) => t.getName == "main" }
-      frame <- stack.reverse find {
-        elem => !(elem.getClassName startsWith "scala.tools.nsc.MainGenericRunner")
+      (_, stack) <- Thread.getAllStackTraces().asScala.find { case (t, s) => t.getName == "main" }
+      frame <- stack.reverse.find {
+        elem => !(elem.getClassName.startsWith("scala.tools.nsc.MainGenericRunner"))
       }
     } yield frame.getClassName
 
-    mainClass getOrElse "unknown"
+    mainClass.getOrElse("unknown")
   }
 }
 
@@ -199,4 +204,18 @@ object Jvm {
   private val log = Logger.getLogger(getClass.getName)
 
   def apply(): Jvm = _jvm
+
+  /**
+   * Usage of the JVM's metaspace.
+   *
+   * @param used how much is currently in use
+   * @param capacity the current capacity of the metaspace.
+   *        It can grow beyond this, up to `maxCapacity`, if needed.
+   * @param maxCapacity the maximum size that the metaspace can grow to.
+   */
+  case class MetaspaceUsage(
+      used: StorageUnit,
+      capacity: StorageUnit,
+      maxCapacity: StorageUnit)
+
 }
