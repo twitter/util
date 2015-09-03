@@ -192,6 +192,9 @@ trait Jvm {
   }
 }
 
+/**
+ * See [[Jvms]] for Java compatibility.
+ */
 object Jvm {
   private lazy val executor =
     Executors.newScheduledThreadPool(1, new NamedPoolThreadFactory("util-jvm-timer", true))
@@ -203,6 +206,11 @@ object Jvm {
 
   private val log = Logger.getLogger(getClass.getName)
 
+  /**
+   * Return an instance of the [[Jvm]] for this runtime.
+   *
+   * See [[Jvms.apply()]] for Java compatibility.
+   */
   def apply(): Jvm = _jvm
 
   /**
@@ -217,5 +225,17 @@ object Jvm {
       used: StorageUnit,
       capacity: StorageUnit,
       maxCapacity: StorageUnit)
+
+}
+
+/**
+ * Java compatibility for [[Jvm]].
+ */
+object Jvms {
+
+  /**
+   * Java compatibility for [[Jvm.apply()]].
+   */
+  def get(): Jvm = Jvm()
 
 }
