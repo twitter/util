@@ -192,6 +192,13 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
   }
 
+  test("scanLeft is eager") {
+    val never = AsyncStream.fromFuture(Future.never)
+    val hd = never.scanLeft("hi")((_,_) => ???).head
+    assert(hd.isDefined)
+    assert(Await.result(hd) == Some("hi"))
+  }
+
   test("foldLeft") {
     forAll { (a: List[Int]) =>
       def f(s: String, n: Int) = (s.toLong + n).toString
