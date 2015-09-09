@@ -43,7 +43,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     logger.clearHandlers()
     logger.setLevel(oldLevel)
   }
-  
+
 
   private var traceHandler = new StringHandler(BareFormatter, None)
 
@@ -244,7 +244,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     }
 
     "configure logging" should {
-      def before {
+      def before(): Unit = {
         Logger.clearHandlers()
       }
 

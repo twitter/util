@@ -1,18 +1,15 @@
 package com.twitter.util
 
+import com.twitter.io.TempFile
 import java.io.{File, FileWriter}
-
-import scala.io.Source
-
 import org.junit.runner.RunWith
-import org.scalatest.DiagrammedAssertions._
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.io.TempFile
-import scala.tools.nsc.reporters.{AbstractReporter, Reporter}
+import scala.io.Source
+import scala.language.reflectiveCalls
+import scala.reflect.internal.util.Position
 import scala.tools.nsc.Settings
-import scala.tools.nsc.util.Position
+import scala.tools.nsc.reporters.{AbstractReporter, Reporter}
 
 @RunWith(classOf[JUnitRunner])
 class EvalTest extends WordSpec {
@@ -42,7 +39,7 @@ class EvalTest extends WordSpec {
       val res: String = e(sourceFile)
       assert(res == "hello")
       val className = e.fileToClassName(sourceFile)
-      val processedSource = e.sourceForString(Source.fromFile(sourceFile).getLines.mkString("\n"))
+      val processedSource = e.sourceForString(Source.fromFile(sourceFile).getLines().mkString("\n"))
       val fullClassName = "Evaluator__%s_%s.class".format(
         className, e.uniqueId(processedSource, None))
       val targetFileName = f.getAbsolutePath() + File.separator + fullClassName
@@ -61,7 +58,7 @@ class EvalTest extends WordSpec {
 
       // make sure it created a class file with the expected name
       val className = e.fileToClassName(sourceFile)
-      val processedSource = e.sourceForString(Source.fromFile(sourceFile).getLines.mkString("\n"))
+      val processedSource = e.sourceForString(Source.fromFile(sourceFile).getLines().mkString("\n"))
       val fullClassName = "Evaluator__%s_%s.class".format(
         className, e.uniqueId(processedSource, None))
       val targetFileName = f.getAbsolutePath() + File.separator + fullClassName
@@ -90,7 +87,7 @@ class EvalTest extends WordSpec {
       // append a newline, altering checksum, verify recompile
       val writer = new FileWriter(sourceFile)
       writer.write("//a comment\n2\n")
-      writer.close
+      writer.close()
       val res4: Int = e(sourceFile)
       assert(res4 == 2)
       // and make sure it created a new file
@@ -180,7 +177,7 @@ class EvalTest extends WordSpec {
             override val settings: Settings = compilerSettings
             override def displayPrompt(): Unit = ()
             override def display(pos: Position, msg: String, severity: this.type#Severity): Unit = {
-              errors = errors :+ (msg, severity.toString)
+              errors = errors :+ ((msg, severity.toString))
             }
             override def reset() = {
               super.reset()

@@ -16,24 +16,23 @@
 
 package com.twitter.util
 
+import com.twitter.conversions.string._
+import com.twitter.io.StreamIO
 import java.io._
 import java.math.BigInteger
 import java.net.URLClassLoader
 import java.security.MessageDigest
 import java.util.Random
 import java.util.jar.JarFile
-
 import scala.collection.mutable
 import scala.io.Source
+import scala.reflect.internal.util.{BatchSourceFile, Position}
 import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.{Reporter, AbstractReporter}
-import scala.tools.nsc.util.{BatchSourceFile, Position}
 import scala.tools.nsc.{Global, Settings}
 import scala.util.matching.Regex
 
-import com.twitter.conversions.string._
-import com.twitter.io.StreamIO
 
 /**
  * Evaluate a file or string and return the result.
@@ -132,7 +131,7 @@ class Eval(target: Option[File]) {
   def writeChecksum(checksum: String, file: File) {
     val writer = new FileWriter(file)
     writer.write("%s".format(checksum))
-    writer.close
+    writer.close()
   }
 
   /**
@@ -154,7 +153,7 @@ class Eval(target: Option[File]) {
       val sourceChecksum = uniqueId(processed, None)
       val checksumFile = new File(targetDir, "checksum")
       val lastChecksum = if (checksumFile.exists) {
-        Source.fromFile(checksumFile).getLines.take(1).toList.head
+        Source.fromFile(checksumFile).getLines().take(1).toList.head
       } else {
         -1
       }
@@ -519,12 +518,12 @@ class Eval(target: Option[File]) {
     def reset() {
       targetDir match {
         case None => {
-          target.asInstanceOf[VirtualDirectory].clear
+          target.asInstanceOf[VirtualDirectory].clear()
         }
         case Some(t) => {
           target.foreach { abstractFile =>
             if (abstractFile.file == null || abstractFile.file.getName.endsWith(".class")) {
-              abstractFile.delete
+              abstractFile.delete()
             }
           }
         }

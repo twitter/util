@@ -33,7 +33,7 @@ trait Registry extends Iterable[Entry] {
    * iterate in multiple threads, but the iterator is guaranteed not to change as
    * it is called.
    */
-  def iterator(): Iterator[Entry]
+  def iterator: Iterator[Entry]
 
   /**
    * Registers a value in the registry, and returns the old value (if any).
@@ -52,7 +52,7 @@ trait Registry extends Iterable[Entry] {
 class SimpleRegistry extends Registry {
   private[this] var registry = Map.empty[Seq[String], String]
 
-  def iterator(): Iterator[Entry] = synchronized(registry).iterator.map(Entry.TupledMethod)
+  def iterator: Iterator[Entry] = synchronized(registry).iterator.map(Entry.TupledMethod)
 
   def put(key: Seq[String], value: String): Option[String] = {
     val sanitizedKey = key.map(sanitize)

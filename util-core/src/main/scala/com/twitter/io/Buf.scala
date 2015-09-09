@@ -323,7 +323,7 @@ object Buf {
 
       /** Extract the buffer's underlying offsets and array of bytes. */
       def unapply(buf: ByteArray): Option[(Array[Byte], Int, Int)] =
-        Some(buf.bytes, buf.begin, buf.end)
+        Some((buf.bytes, buf.begin, buf.end))
 
       /**
        * Get a reference to a Buf's data as an array of bytes.
@@ -644,7 +644,7 @@ object Buf {
           ((arr(1) & 0xff) << 16) |
           ((arr(2) & 0xff) <<  8) |
           ((arr(3) & 0xff)      )
-        Some(value, rem)
+        Some((value, rem))
       }
     }
 
@@ -684,7 +684,7 @@ object Buf {
           ((arr(5) & 0xff).toLong << 16) |
           ((arr(6) & 0xff).toLong <<  8) |
           ((arr(7) & 0xff).toLong      )
-        Some(value, rem)
+        Some((value, rem))
       }
     }
 
@@ -716,7 +716,7 @@ object Buf {
           ((arr(1) & 0xff) <<  8) |
           ((arr(2) & 0xff) << 16) |
           ((arr(3) & 0xff) << 24)
-        Some(value, rem)
+        Some((value, rem))
       }
     }
 
@@ -756,7 +756,7 @@ object Buf {
           ((arr(5) & 0xff).toLong << 40) |
           ((arr(6) & 0xff).toLong << 48) |
           ((arr(7) & 0xff).toLong << 56)
-        Some(value, rem)
+        Some((value, rem))
       }
   }
 }

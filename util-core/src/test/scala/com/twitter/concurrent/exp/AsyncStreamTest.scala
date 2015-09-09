@@ -74,10 +74,10 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val x = new Promise[Unit]
     val y = new Promise[Unit]
 
-    def f = { x.setDone(); () }
-    def g = { y.setDone(); () }
+    def f() = { x.setDone(); () }
+    def g() = { y.setDone(); () }
 
-    val s = () +:: f +:: g +:: AsyncStream.empty[Unit]
+    val s = () +:: f() +:: g() +:: AsyncStream.empty[Unit]
     assert(!x.isDefined)
     assert(!y.isDefined)
 
@@ -132,7 +132,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     intercept[Exception] { Await.result(s.tail).isEmpty }
     assert(p.isDefined)
   }
-  
+
   // Note: We could use ScalaCheck's Arbitrary[Function1] for some of the tests
   // below, however ScalaCheck generates only constant functions which return
   // the same value for any input. This makes it quite useless to us. We'll take

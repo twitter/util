@@ -1,10 +1,9 @@
 package com.twitter.util.reflect
 
+import com.twitter.util.{Future, Promise, Stopwatch}
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.util.{Future, Promise, Stopwatch}
 
 
 object ProxySpec {
@@ -12,7 +11,7 @@ object ProxySpec {
     def foo: String
     def bar(a: Int): Option[Long]
     def whoops: Int
-    def theVoid: Unit
+    def theVoid(): Unit
     def theJavaVoid: java.lang.Void
     def aFuture: Future[Int]
     def aPromise: Promise[Int]
@@ -22,7 +21,7 @@ object ProxySpec {
     def foo = "foo"
     def bar(a: Int) = Some(a.toLong)
     def whoops = if (false) 2 else sys.error("whoops")
-    def theVoid {}
+    def theVoid() = ()
     def theJavaVoid = null
     def aFuture = Future.value(2)
     def aPromise = new Promise[Int] {
@@ -91,7 +90,7 @@ class ProxyTest extends WordSpec {
       proxied.foo
       assert(unitsCalled === 0)
 
-      proxied.theVoid
+      proxied.theVoid()
       assert(unitsCalled === 1)
 
       proxied.theJavaVoid
@@ -213,7 +212,7 @@ class ProxyTest extends WordSpec {
   class ReferenceProxyFactory[I <: AnyRef : Manifest](f: (() => AnyRef) => AnyRef) {
     import java.lang.reflect
 
-    protected val interface = implicitly[Manifest[I]].erasure
+    protected val interface = implicitly[Manifest[I]].runtimeClass
 
     private val proxyConstructor = {
       reflect.Proxy

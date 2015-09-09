@@ -34,7 +34,7 @@ class ArgumentCaptureTest extends FunSuite with MockitoSugar with ArgumentCaptur
     assert(theMockSubject.method2("foo", "bar") === 456L)
 
     val captured = capturingOne(verify(theMockSubject).method2 _)
-    assert(captured === ("foo", "bar"))
+    assert(captured === (("foo", "bar")))
   }
 
   test("captureOne should handle 3-ary functions") {
@@ -44,7 +44,7 @@ class ArgumentCaptureTest extends FunSuite with MockitoSugar with ArgumentCaptur
     assert(theMockSubject.method3("foo", "bar", "baz") === 136L)
 
     val captured = capturingOne(verify(theMockSubject).method3 _)
-    assert(captured === ("foo", "bar", "baz"))
+    assert(captured === (("foo", "bar", "baz")))
   }
 
   test("captureOne should handle 4-ary functions") {
@@ -54,7 +54,7 @@ class ArgumentCaptureTest extends FunSuite with MockitoSugar with ArgumentCaptur
     assert(theMockSubject.method4("north", "east", "south", "west") === 149L)
 
     val captured = capturingOne(verify(theMockSubject).method4 _)
-    assert(captured === ("north", "east", "south", "west"))
+    assert(captured === (("north", "east", "south", "west")))
   }
 
   test("captureOne should handle 5-ary functions") {
@@ -64,7 +64,7 @@ class ArgumentCaptureTest extends FunSuite with MockitoSugar with ArgumentCaptur
     assert(theMockSubject.method5("doh", "ray", "mi", "fa", "so") === 789L)
 
     val captured = capturingOne(verify(theMockSubject).method5 _)
-    assert(captured === ("doh", "ray", "mi", "fa", "so"))
+    assert(captured === (("doh", "ray", "mi", "fa", "so")))
   }
 
   test("captureAll should handle 1-ary functions") {

@@ -75,13 +75,13 @@ class NetUtilTest extends WordSpec {
     }
 
     "cidrToIpBlock" in {
-      assert(NetUtil.cidrToIpBlock("127")          === (0x7F000000, 0xFF000000))
-      assert(NetUtil.cidrToIpBlock("127.0.0")      === (0x7F000000, 0xFFFFFF00))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1")    === (0x7F000001, 0xFFFFFFFF))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1/1")  === (0x7F000001, 0x80000000))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1/4")  === (0x7F000001, 0xF0000000))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1/32") === (0x7F000001, 0xFFFFFFFF))
-      assert(NetUtil.cidrToIpBlock("127/24")       === (0x7F000000, 0xFFFFFF00))
+      assert(NetUtil.cidrToIpBlock("127")          === ((0x7F000000, 0xFF000000)))
+      assert(NetUtil.cidrToIpBlock("127.0.0")      === ((0x7F000000, 0xFFFFFF00)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1")    === ((0x7F000001, 0xFFFFFFFF)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1/1")  === ((0x7F000001, 0x80000000)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1/4")  === ((0x7F000001, 0xF0000000)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1/32") === ((0x7F000001, 0xFFFFFFFF)))
+      assert(NetUtil.cidrToIpBlock("127/24")       === ((0x7F000000, 0xFFFFFF00)))
     }
 
     "isInetAddressInBlock" in {

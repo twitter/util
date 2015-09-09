@@ -16,7 +16,7 @@ abstract class RegistryTest extends FunSuite {
   test(s"$name's iterator is not affected by adding an element") {
     val registry = mkRegistry()
     registry.put(Seq("foo"), "bar")
-    val iter = registry.iterator()
+    val iter = registry.iterator
     registry.put(Seq("foo"), "baz")
     assert(iter.next() == Entry(Seq("foo"), "bar"))
     assert(!iter.hasNext)

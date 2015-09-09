@@ -692,7 +692,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
               p0() = Return(1)
               assert(f.isDefined === false)
               p1() = Return(2)
-              assert(Await.result(f) === (1, 2))
+              assert(Await.result(f) === ((1, 2)))
             }
           }
 
@@ -1305,7 +1305,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         promise1() = Return.Unit
 
         assert(both.isDefined === true)
-        assert(Await.result(both) === (Some(1010), Some(1010)))
+        assert(Await.result(both) === ((Some(1010), Some(1010))))
       }
 
       "propagate locals across threads" in {
@@ -1326,7 +1326,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         t.join()
 
         assert(done.isDefined === true)
-        assert(Await.result(done) === (Some(1010), Some(123)))
+        assert(Await.result(done) === ((Some(1010), Some(123))))
       }
 
       "poll" should {

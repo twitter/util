@@ -43,7 +43,7 @@ public final class Activities {
   /**
    * @see com.twitter.util.Activity$#pending()
    */
-  @SuppressWarnings("unchecked cast")
+  @SuppressWarnings("unchecked")
   public static <T> Activity<T> newPendingActivity() {
     return (Activity<T>) Activity$.MODULE$.pending();
   }
@@ -51,7 +51,7 @@ public final class Activities {
   /**
    * @see com.twitter.util.Activity$#exception(Throwable)
    */
-  @SuppressWarnings("unchecked cast")
+  @SuppressWarnings("unchecked")
   public static <T> Activity<T> newFailedActivity(Throwable throwable) {
     return (Activity<T>) Activity$.MODULE$.exception(throwable);
   }

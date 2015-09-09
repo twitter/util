@@ -41,13 +41,13 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val buf = Buf.ByteArray.Owned(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
-    assert(Await.result(f) === ())
+    assert(Await.result(f) === ((): Unit))
   }
 
   def assertWriteEmpty(w: Writer) {
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
-    assert(Await.result(f) === ())
+    assert(Await.result(f) === ((): Unit))
   }
 
   def assertDiscard(r: Reader) {
@@ -200,7 +200,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     assert(toSeq(Await.result(rf2)) === Seq.range(4, 6))
 
     assert(wf.isDefined)
-    assert(Await.result(wf) === ())
+    assert(Await.result(wf) === ((): Unit))
   }
 
   test("Reader.writeable - fail while reading") {

@@ -55,7 +55,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flaggable: parse tuples") {
-    assert(Flaggable.ofTuple[Int, String].parse("1,hello") === (1, "hello"))
+    assert(Flaggable.ofTuple[Int, String].parse("1,hello") === ((1, "hello")))
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
   }
 

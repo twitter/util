@@ -4,6 +4,7 @@ import com.twitter.common.zookeeper.ZooKeeperClient
 import com.twitter.conversions.common.quantity.COMMON_FOREVER
 import com.twitter.util.{Duration, FuturePool}
 import com.twitter.zk.{CommonConnector, ZkClient}
+import scala.language.implicitConversions
 
 /** Adapters for common's ZooKeeperClient (and, later, serversets, etc) */
 object zookeeper {
@@ -19,5 +20,6 @@ object zookeeper {
   }
 
   /** Implicit conversion of ZooKeeperClient to CommonZkClient */
-  implicit def commonZkClient(zkc: ZooKeeperClient) = new CommonZkClientAdapter(zkc)
+  implicit def commonZkClient(zkc: ZooKeeperClient): CommonZkClientAdapter =
+    new CommonZkClientAdapter(zkc)
 }

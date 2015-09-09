@@ -26,7 +26,7 @@ class PromiseTest extends FunSuite {
     val f = Promise.attached(p)
     p.setValue(())
     assert(f.isDefined)
-    assert(Await.result(f) === ())
+    assert(Await.result(f) === ((): Unit))
   }
 
   test("Promise.attached should validate failure") {

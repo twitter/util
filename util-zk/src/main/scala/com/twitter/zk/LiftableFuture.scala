@@ -1,11 +1,11 @@
 package com.twitter.zk
 
-import org.apache.zookeeper.KeeperException
-
 import com.twitter.util.{Future, Return, Throw}
+import org.apache.zookeeper.KeeperException
+import scala.language.implicitConversions
 
 protected[zk] object LiftableFuture {
-  implicit def liftableFuture[T](f: Future[T]) = new LiftableFuture(f)
+  implicit def liftableFuture[T](f: Future[T]): LiftableFuture[T] = new LiftableFuture(f)
 }
 
 /**
