@@ -192,7 +192,7 @@ try {
 } catch {
   // log an exception backtrace with the message:
   case e: IOException =>
-    llog.error(e, "I/O exception: %s", e.getMessage)
+    log.error(e, "I/O exception: %s", e.getMessage)
 }
 ```
 
