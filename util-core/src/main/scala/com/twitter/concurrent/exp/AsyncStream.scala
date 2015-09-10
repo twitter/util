@@ -266,12 +266,20 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * {{{
    * as.scanLeft(z)(f).last == as.foldLeft(z)(f)
    * }}}
+   *
+   * The resulting stream always begins with the initial value `z`,
+   * not subject to the fate of the underlying future, i.e.:
+   *
+   * {{{
+   * val never = AsyncStream.fromFuture(Future.never)
+   * never.scanLeft(z)(f) == z +:: never // logical equality
+   * }}}
    */
-  def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] = AsyncStream(
+  def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] = z +:: AsyncStream(
     underlying.flatMap {
-      case Empty => of(z).underlying
-      case One(a) => (z +:: of(f(z, a))).underlying
-      case cons: Cons[A] => (z +:: cons.tail.scanLeft(f(z, cons.head))(f)).underlying
+      case Empty => empty[B].underlying
+      case One(a) => of(f(z, a)).underlying
+      case cons: Cons[A] => cons.tail.scanLeft(f(z, cons.head))(f).underlying
     }
   )
 
