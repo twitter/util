@@ -10,6 +10,8 @@ trait KeyHasher {
 
 /**
  * Commonly used key hashing algorithms.
+ *
+ * @see [[KeyHashers]] for Java compatible forwarders.
  */
 object KeyHasher {
   def fromHashableInt(hashable: Hashable[Array[Byte],Int]): KeyHasher = new KeyHasher {
@@ -52,4 +54,24 @@ object KeyHasher {
       case _ => throw new NoSuchElementException(name)
     }
   }
+}
+
+/**
+ * Java compatible forwarders.
+ */
+object KeyHashers {
+  val FNV1_32 = KeyHasher.FNV1_32
+  val FNV1A_32 = KeyHasher.FNV1A_32
+  val FNV1_64 = KeyHasher.FNV1_64
+  val FNV1A_64 = KeyHasher.FNV1A_64
+  val KETAMA = KeyHasher.KETAMA
+  val CRC32_ITU = KeyHasher.CRC32_ITU
+  val HSIEH = KeyHasher.HSIEH
+  val JENKINS = KeyHasher.JENKINS
+
+  /**
+   * Return one of the key hashing algorithms by name. This is used to configure a memcache
+   * client from a config file.
+   */
+  def byName(name: String): KeyHasher = KeyHasher.byName(name)
 }
