@@ -23,5 +23,9 @@ class NullStatsReceiver extends StatsReceiver {
 
   override def provideGauge(name: String*)(f: => Float): Unit = ()
 
+  override def scope(namespace: String): StatsReceiver = this
+
+  override def scopeSuffix(suffix: String): StatsReceiver = this
+
   override def toString = "NullStatsReceiver"
 }

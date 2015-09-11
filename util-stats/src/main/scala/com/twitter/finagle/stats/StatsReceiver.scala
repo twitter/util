@@ -47,7 +47,7 @@ object StatsReceivers {
  *
  * @see [[StatsReceivers]] for a Java-friendly API.
  */
-trait StatsReceiver {
+trait StatsReceiver { self =>
   /**
    * Specifies the representative receiver.  This is in order to
    * expose an object we can use for comparison so that global stats
@@ -177,9 +177,9 @@ trait StatsReceiver {
   def scope(namespace: String): StatsReceiver = {
     if (namespace == "") this
     else {
-      val seqPrefix = Seq(namespace)
-      new NameTranslatingStatsReceiver(this) {
-        protected[this] def translate(name: Seq[String]) = seqPrefix ++ name
+      new NameTranslatingStatsReceiver(this, namespace) {
+        protected[this] def translate(name: Seq[String]): Seq[String] =
+          namespace +: name
       }
     }
   }
@@ -196,18 +196,26 @@ trait StatsReceiver {
   def scopeSuffix(suffix: String): StatsReceiver = {
     if (suffix == "") this
     else {
-      val self = this
       new StatsReceiver {
         val repr = self.repr
 
-        def counter(names: String*) = self.counter(names: _*)
-        def stat(names: String*)    = self.stat(names: _*)
-        def addGauge(names: String*)(f: => Float) = self.addGauge(names: _*)(f)
+        override def toString: String = s"$self/$suffix"
 
-        override def scope(namespace: String) = self.scope(namespace).scope(suffix)
+        def counter(names: String*): Counter = self.counter(names: _*)
+
+        def stat(names: String*): Stat = self.stat(names: _*)
+
+        def addGauge(names: String*)(f: => Float): Gauge =
+          self.addGauge(names: _*)(f)
+
+        override def scope(namespace: String): StatsReceiver =
+          self.scope(namespace).scope(suffix)
       }
     }
   }
 }
 
+/**
+ * For Java clients that want to implement a [[StatsReceiver]].
+ */
 abstract class AbstractStatsReceiver extends StatsReceiver

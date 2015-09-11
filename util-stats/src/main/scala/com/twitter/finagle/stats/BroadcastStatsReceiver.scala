@@ -5,7 +5,7 @@ package com.twitter.finagle.stats
  * StatsReceivers (n).
  */
 object BroadcastStatsReceiver {
-  def apply(receivers: Seq[StatsReceiver]) = receivers.filterNot(_.isNull) match {
+  def apply(receivers: Seq[StatsReceiver]): StatsReceiver = receivers.filterNot(_.isNull) match {
     case Seq() => NullStatsReceiver
     case Seq(fst) => fst
     case Seq(first, second) => new Two(first, second)
@@ -29,6 +29,9 @@ object BroadcastStatsReceiver {
         secondGauge.remove()
       }
     }
+
+    override def toString: String =
+      s"Broadcast($first, $second)"
   }
 
   private class N(statsReceivers: Seq[StatsReceiver]) extends StatsReceiver {
@@ -44,6 +47,9 @@ object BroadcastStatsReceiver {
       val gauges = statsReceivers map { _.addGauge(names:_*)(f) }
       def remove() = gauges foreach { _.remove() }
     }
+
+    override def toString: String =
+      s"Broadcast(${statsReceivers.mkString(", ")})"
   }
 }
 
@@ -53,7 +59,7 @@ object BroadcastStatsReceiver {
  * For performance reason, we have specialized cases if n == (0, 1, 2, 3 or 4)
  */
 object BroadcastCounter {
-  def apply(counters: Seq[Counter]) = counters match {
+  def apply(counters: Seq[Counter]): Counter = counters match {
     case Seq() => NullCounter
     case Seq(counter) => counter
     case Seq(a, b) => new Two(a, b)
@@ -63,18 +69,18 @@ object BroadcastCounter {
   }
 
   private object NullCounter extends Counter {
-    def incr(delta: Int) {}
+    def incr(delta: Int): Unit = ()
   }
 
   private[stats] class Two(a: Counter, b: Counter) extends Counter {
-    def incr(delta: Int) {
+    def incr(delta: Int): Unit = {
       a.incr(delta)
       b.incr(delta)
     }
   }
 
   private class Three(a: Counter, b: Counter, c: Counter) extends Counter {
-    def incr(delta: Int) {
+    def incr(delta: Int): Unit = {
       a.incr(delta)
       b.incr(delta)
       c.incr(delta)
@@ -82,7 +88,7 @@ object BroadcastCounter {
   }
 
   private class Four(a: Counter, b: Counter, c: Counter, d: Counter) extends Counter {
-    def incr(delta: Int) {
+    def incr(delta: Int): Unit = {
       a.incr(delta)
       b.incr(delta)
       c.incr(delta)
@@ -91,7 +97,7 @@ object BroadcastCounter {
   }
 
   private class N(counters: Seq[Counter]) extends Counter {
-    def incr(delta: Int) { counters.foreach(_.incr(delta)) }
+    def incr(delta: Int): Unit = { counters.foreach(_.incr(delta)) }
   }
 }
 
@@ -101,7 +107,7 @@ object BroadcastCounter {
  * For performance reason, we have specialized cases if n == (0, 1, 2, 3 or 4)
  */
 object BroadcastStat {
-  def apply(stats: Seq[Stat]) = stats match {
+  def apply(stats: Seq[Stat]): Stat = stats match {
     case Seq() => NullStat
     case Seq(counter) => counter
     case Seq(a, b) => new Two(a, b)
@@ -111,18 +117,18 @@ object BroadcastStat {
   }
 
   private object NullStat extends Stat {
-    def add(value: Float) {}
+    def add(value: Float): Unit = ()
   }
 
   private[stats] class Two(a: Stat, b: Stat) extends Stat {
-    def add(value: Float) {
+    def add(value: Float): Unit = {
       a.add(value)
       b.add(value)
     }
   }
 
   private class Three(a: Stat, b: Stat, c: Stat) extends Stat {
-    def add(value: Float) {
+    def add(value: Float): Unit = {
       a.add(value)
       b.add(value)
       c.add(value)
@@ -130,7 +136,7 @@ object BroadcastStat {
   }
 
   private class Four(a: Stat, b: Stat, c: Stat, d: Stat) extends Stat {
-    def add(value: Float) {
+    def add(value: Float): Unit = {
       a.add(value)
       b.add(value)
       c.add(value)
@@ -139,6 +145,6 @@ object BroadcastStat {
   }
 
   private class N(stats: Seq[Stat]) extends Stat {
-    def add(value: Float) { stats.foreach(_.add(value)) }
+    def add(value: Float): Unit = { stats.foreach(_.add(value)) }
   }
 }

@@ -43,7 +43,9 @@ class InMemoryStatsReceiver extends StatsReceiver {
     gauge
   }
 
-  def print(p: PrintStream) {
+  override def toString: String = "InMemoryStatsReceiver"
+
+  def print(p: PrintStream): Unit = {
     for ((k, v) <- counters)
       p.printf("%s %d\n", k mkString "/", v: java.lang.Integer)
     for ((k, g) <- gauges)
