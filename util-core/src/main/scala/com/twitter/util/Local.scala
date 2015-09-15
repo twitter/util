@@ -1,7 +1,15 @@
 package com.twitter.util
 
-final object Local {
+object Local {
+  /**
+   * Represents the current state of all [[Local locals]] for a given
+   * execution context.
+   *
+   * This should be treated as an opaque value and direct modifications
+   * and access are considered verboten.
+   */
   type Context = Array[Option[_]]
+
   private[this] val localCtx = new ThreadLocal[Context]
   @volatile private[this] var size: Int = 0
 
@@ -15,12 +23,12 @@ final object Local {
    */
   def restore(saved: Context): Unit = localCtx.set(saved)
 
-  private def add() = synchronized {
+  private def add(): Int = synchronized {
     size += 1
     size-1
   }
 
-  private def set(i: Int, v: Option[_]) {
+  private def set(i: Int, v: Option[_]): Unit = {
     assert(i < size)
     var ctx = localCtx.get
 
@@ -45,16 +53,14 @@ final object Local {
     if (v == null) None else v
   }
 
-  private def clear(i: Int) {
+  private def clear(i: Int): Unit =
     set(i, None)
-  }
 
   /**
    * Clear all locals in the current context.
    */
-  def clear() {
+  def clear(): Unit =
     localCtx.set(null)
-  }
 
   /**
    * Execute a block with the given Locals, restoring current values upon completion.
@@ -88,7 +94,7 @@ final object Local {
 }
 
 /**
- * A Local is a ThreadLocal whose scope is flexible. The state of all Locals may
+ * A Local is a [[ThreadLocal]] whose scope is flexible. The state of all Locals may
  * be saved or restored onto the current thread by the user. This is useful for
  * threading Locals through execution contexts.
  *
@@ -98,7 +104,7 @@ final object Local {
  * as semicolon (the synchronous sequence operator).
  *
  * Because it's not meaningful to inherit control from two places, Locals don't
- * have to worry about having to merge two [[com.twitter.util.Local$.Context]]s.
+ * have to worry about having to merge two [[com.twitter.util.Local.Context Contexts]].
  *
  * Note: the implementation is optimized for situations in which save and
  * restore optimizations are dominant.
@@ -108,13 +114,17 @@ final class Local[T] {
 
   /**
    * Update the Local with a given value.
+   *
+   * General usage should be via [[let]] to avoid leaks.
    */
-  def update(value: T) { set(Some(value)) }
+  def update(value: T): Unit = set(Some(value))
 
   /**
    * Update the Local with a given optional value.
+   *
+   * General usage should be via [[let]] to avoid leaks.
    */
-  def set(optValue: Option[T]) { Local.set(me, optValue) }
+  def set(optValue: Option[T]): Unit = Local.set(me, optValue)
 
   /**
    * Get the Local's optional value.
@@ -142,7 +152,9 @@ final class Local[T] {
   }
 
   /**
-   * Clear the Local's value. Other `Local`s are not modified.
+   * Clear the Local's value. Other [[Local Locals]] are not modified.
+   *
+   * General usage should be via [[letClear]] to avoid leaks.
    */
-  def clear() { Local.clear(me) }
+  def clear(): Unit = Local.clear(me)
 }
