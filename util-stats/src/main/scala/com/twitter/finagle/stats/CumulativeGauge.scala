@@ -23,6 +23,10 @@ private[finagle] trait CumulativeGauge {
     underlying.flatMap(_.get)
   }
 
+  /** The number of active gauges */
+  private[stats] def size: Int =
+    get().size
+
   private[this] def removeGauge(underlyingGauge: UnderlyingGauge): Unit = synchronized {
     // This cleans up weakrefs
     underlying = underlying.filter { weakRef =>
@@ -86,6 +90,20 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
       cumulativeGauge = if (prev == null) insert else prev
     }
     cumulativeGauge.addGauge(f)
+  }
+
+  /**
+   * The number of gauges that are cumulatively represented
+   * and still have a reference to them.
+   *
+   * Exposed for testing purposes.
+   *
+   * @return 0 if no active gauges are found.
+   */
+  protected def numUnderlying(name: String*): Int = {
+    val cumulativeGauge = gauges.get(name)
+    if (cumulativeGauge == null) 0
+    else cumulativeGauge.size
   }
 
 }
