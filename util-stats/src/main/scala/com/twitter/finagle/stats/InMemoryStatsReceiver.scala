@@ -53,6 +53,16 @@ class InMemoryStatsReceiver extends StatsReceiver {
     for ((k, s) <- stats if s.size > 0)
       p.printf("%s %f\n", k mkString "/", (s.sum / s.size): java.lang.Float)
   }
+
+  /**
+   * Clears all registered counters, gauges and stats.
+   * @note this is not atomic. If new metrics are added while this method is executing, those metrics may remain.
+   */
+  def clear(): Unit = {
+    counters.clear()
+    stats.clear()
+    gauges.clear()
+  }
 }
 
 trait ReadableCounter extends Counter {
