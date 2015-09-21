@@ -118,4 +118,26 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
     // Consume
     consumeReader(size)
   })
+
+  import Spool.*::
+  private[this] def mkSpool(n: Int): Future[Spool[Buf]] =
+    if (n <= 0) Future.value(Spool.empty)
+    else source().map(_ *:: mkSpool(n - 1))
+
+  private[this] def consumeSpool[A](spool: Spool[A], b: Boolean): Future[Boolean] =
+    if (spool.isEmpty) Future.value(b)
+    else sink(spool.head).flatMap { newB =>
+      spool.tail.flatMap { tail =>
+        consumeSpool(tail, newB)
+      }
+    }
+
+  @Benchmark
+  def spool: Boolean = Await.result({
+    // Produce
+    val f = mkSpool(size)
+
+    // Consume
+    f.flatMap { s => consumeSpool(s, false) }
+  })
 }
