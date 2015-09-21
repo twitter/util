@@ -2,12 +2,12 @@ package com.twitter.util
 
 import java.util.concurrent.atomic.{AtomicLong, AtomicReference, AtomicReferenceArray}
 import java.util.{List => JList}
-
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
 import scala.collection.mutable.Buffer
+import scala.language.higherKinds
 import scala.reflect.ClassTag
 
 /**
@@ -34,8 +34,7 @@ trait Var[+T] { self =>
    * Observe this Var. `f` is invoked each time the variable changes,
    * and synchronously with the first call to this method.
    */
-  @deprecated("Use changes (Event)", "6.8.2")
-  final def observe(f: T => Unit): Closable = observe(0, Observer(f))
+  private[util] final def observe(f: T => Unit): Closable = observe(0, Observer(f))
 
   /**
    * Concrete implementations of Var implement observe. This is
@@ -48,10 +47,6 @@ trait Var[+T] { self =>
    * before recomputing a derived variable.
    */
   protected def observe(depth: Int, obs: Observer[T]): Closable
-
-  /** Synonymous with observe */
-  @deprecated("Use changes (Event)", "6.8.2")
-  def foreach(f: T => Unit) = observe(f)
 
   /**
    * Create a derived variable by applying `f` to the contained
@@ -94,14 +89,6 @@ trait Var[+T] { self =>
     for { t <- self; u <- other } yield (t, u)
 
   /**
-   * Observe this Var into the given AtomicReference.
-   * Observation stops when the returned closable is closed.
-   */
-  @deprecated("Use changes (Event)", "6.8.2")
-  def observeTo[U >: T](ref: AtomicReference[U]): Closable =
-    this observe { newv => ref.set(newv) }
-
-  /**
    * An Event where changes in Var are emitted. The current value
    * of this Var is emitted synchronously upon subscription.
    *
@@ -110,41 +97,15 @@ trait Var[+T] { self =>
    */
   lazy val changes: Event[T] = new Event[T] {
     def register(s: Witness[T]) =
-      self observe { newv => s.notify(newv) }
+      self.observe { newv => s.notify(newv) }
   }
-  
+
   /**
    * Produce an [[Event]] reflecting the differences between
    * each update to this [[Var]].
-   */ 
-  def diff[CC[_]: Diffable, U](implicit toCC: T <:< CC[U]): Event[Diff[CC, U]] = 
-    changes.diff
-
-  /**
-   * A one-shot predicate observation. The returned future
-   * is satisfied with the first observed value of Var that obtains
-   * the predicate `pred`. Observation stops when the future is
-   * satisfied.
-   *
-   * Interrupting the future will also satisfy the future (with the
-   * interrupt exception) and close the observation.
    */
-  @deprecated("Use changes (Event)", "6.8.2")
-  def observeUntil(pred: T => Boolean): Future[T] = {
-    val p = Promise[T]()
-    p.setInterruptHandler {
-      case exc => p.updateIfEmpty(Throw(exc))
-    }
-
-    val o = observe {
-      case el if pred(el) => p.updateIfEmpty(Return(el))
-      case _ =>
-    }
-
-    p ensure {
-      o.close()
-    }
-  }
+  def diff[CC[_]: Diffable, U](implicit toCC: T <:< CC[U]): Event[Diff[CC, U]] =
+    changes.diff
 
   def sample(): T = Var.sample(this)
 }
@@ -236,13 +197,13 @@ object Var {
   /**
    * Patch reconstructs a [[Var]] based on observing the incremental
    * changes presented in the underlying [[Diff]]s.
-   * 
+   *
    * Note that this eagerly subscribes to the event stream;
    * it is unsubscribed whenever the returned Var is collected.
    */
   def patch[CC[_]: Diffable, T](diffs: Event[Diff[CC, T]]): Var[CC[T]] = {
-    val v = Var(Diffable.empty: CC[T])
-    Closable.closeOnCollect(diffs respond { diff =>
+    val v = Var(Diffable.empty[CC, T]: CC[T])
+    Closable.closeOnCollect(diffs.respond { diff =>
       synchronized {
         v() = diff.patch(v())
       }
@@ -268,7 +229,7 @@ object Var {
    */
   def collect[T: ClassTag, CC[X] <: Traversable[X]](vars: CC[Var[T]])
       (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]])
-      : Var[CC[T]] = async(newBuilder().result) { v =>
+      : Var[CC[T]] = async(newBuilder().result()) { v =>
     val N = vars.size
     val cur = new AtomicReferenceArray[T](N)
     @volatile var filling = true
@@ -291,7 +252,7 @@ object Var {
     var i = 0
     for (u <- vars) {
       val j = i
-      closes(j) = u observe (0, Observer(newj => publish(j, newj)))
+      closes(j) = u.observe (0, Observer(newj => publish(j, newj)))
       i += 1
     }
 
