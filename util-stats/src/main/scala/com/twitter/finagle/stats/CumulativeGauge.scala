@@ -1,26 +1,35 @@
 package com.twitter.finagle.stats
 
 import java.util.concurrent.ConcurrentHashMap
-import scala.ref.WeakReference
+import scala.collection.mutable
+import java.lang.ref.WeakReference
 
 /**
- * CumulativeGauge provides a gauge that is composed of the (addition)
+ * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)
  * of several underlying gauges. It follows the weak reference
- * semantics of Gauges as outlined in StatsReceiver.
+ * semantics of [[Gauge Gauges]] as outlined in [[StatsReceiver]].
  */
-private[finagle] trait CumulativeGauge {
+private[finagle] abstract class CumulativeGauge {
   private[this] case class UnderlyingGauge(f: () => Float) extends Gauge {
     def remove(): Unit = removeGauge(this)
   }
 
-  @volatile private[this] var underlying: List[WeakReference[UnderlyingGauge]] = Nil
+  @volatile private[this] var underlying =
+    IndexedSeq.empty[WeakReference[UnderlyingGauge]]
 
   /**
    * Returns a buffered version of the current gauges
    */
-  private[this] def get(): Seq[UnderlyingGauge] = {
+  private[this] def get(): IndexedSeq[UnderlyingGauge] = {
     removeGauge(null) // clean up weakrefs
-    underlying.flatMap(_.get)
+
+    val gs = new mutable.ArrayBuffer[UnderlyingGauge](underlying.size)
+    underlying.foreach { weakRef =>
+      val g = weakRef.get()
+      if (g != null)
+        gs += g
+    }
+    gs
   }
 
   /** The number of active gauges */
@@ -28,28 +37,36 @@ private[finagle] trait CumulativeGauge {
     get().size
 
   private[this] def removeGauge(underlyingGauge: UnderlyingGauge): Unit = synchronized {
-    // This cleans up weakrefs
-    underlying = underlying.filter { weakRef =>
-      weakRef.get match {
-        case Some(g) => g ne underlyingGauge
-        case None => false
-      }
+    // first, clean up weakrefs
+    val newUnderlying = mutable.IndexedSeq.newBuilder[WeakReference[UnderlyingGauge]]
+    underlying.foreach { weakRef =>
+      val g = weakRef.get()
+      if (g != null && (g ne underlyingGauge))
+        newUnderlying += weakRef
     }
+    underlying = newUnderlying.result()
     if (underlying.isEmpty)
       deregister()
   }
 
   def addGauge(f: => Float): Gauge = synchronized {
     val shouldRegister = underlying.isEmpty
+    if (!shouldRegister)
+      removeGauge(null) // there is at least 1 gauge that may need to be cleaned
     val underlyingGauge = UnderlyingGauge(() => f)
-    underlying ::= new WeakReference(underlyingGauge)
+    underlying :+= new WeakReference(underlyingGauge)
     if (shouldRegister)
       register()
     underlyingGauge
   }
 
-  def getValue: Float =
-    get().map(_.f()).sum
+  def getValue: Float = {
+    var sum = 0f
+    get().foreach { g =>
+      sum += g.f()
+    }
+    sum
+  }
 
   /**
    * These need to be implemented by the gauge provider. They indicate

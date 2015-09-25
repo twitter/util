@@ -5,7 +5,8 @@ scala_library(name='scala',
     'util/util-core/src/main/scala',
     'util/util-events/src/main/scala',
     'util/util-hashing/src/main/scala',
-    'util/util-jvm/src/main/scala'
+    'util/util-jvm/src/main/scala',
+    'util/util-stats/src/main/scala',
   ],
   sources=rglobs('*.scala')
 )
