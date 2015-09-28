@@ -6,6 +6,16 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+* util-core: Introduce an optional max capacity to `AsyncQueue`.
+  Modified `AsyncQueue.offer` to return a boolean indicating whether or not the
+  item was accepted. Added `AsyncQueue.drain(): Try[Queue]`. ``RB_ID=745567`
+
+Changes in Runtime Behavior:
+
+* util-logging: `QueueingHandler` does not create a separate thread per instance. ``RB_ID=745567`
+
 6.28.0  2015-09-25
 
 API Changes:

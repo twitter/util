@@ -1,9 +1,10 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Return, Throw}
+import com.twitter.util.{Await, Return, Throw}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import scala.collection.immutable.Queue
 
 @RunWith(classOf[JUnitRunner])
 class AsyncQueueTest extends FunSuite {
@@ -103,4 +104,61 @@ class AsyncQueueTest extends FunSuite {
     q.offer(1)
     assert(q.poll().poll === Some(Throw(exc)))
   }
+
+  test("failure is final") {
+    val exc = new Exception()
+    val q = new AsyncQueue[Int]()
+
+    // observable via poll
+    q.fail(exc)
+    assert(q.poll().poll == Some(Throw(exc)))
+
+    // observable via drain
+    assert(q.drain() == Throw(exc))
+    assert(q.poll().poll == Some(Throw(exc)))
+
+    // not overwritable
+    q.fail(new RuntimeException())
+    assert(q.poll().poll == Some(Throw(exc)))
+
+    // partially observable via offer
+    assert(!q.offer(1))
+    assert(q.poll().poll == Some(Throw(exc)))
+  }
+
+  test("drain") {
+    val q = new AsyncQueue[Int]()
+    q.offer(1)
+    q.offer(2)
+    q.offer(3)
+
+    assert(1 == Await.result(q.poll()))
+    assert(Return(Queue(2, 3)) == q.drain())
+    assert(!q.poll().isDefined)
+
+    q.offer(4) // this is taken by the poll
+    q.offer(5)
+    q.offer(6)
+    val ex = new RuntimeException()
+    q.fail(ex, discard = false)
+    assert(Return(Seq(5, 6)) == q.drain())
+    // draining an empty failed queue returns the exception
+    assert(Throw(ex) == q.drain())
+  }
+
+  test("offer at max capacity") {
+    val q = new AsyncQueue[Int](1)
+    assert(q.offer(1)) // ok
+    assert(!q.offer(2)) // over capacity
+    assert(1 == q.size)
+    assert(Return(Queue(1)) == q.drain())
+    assert(0 == q.size)
+
+    assert(q.offer(3)) // ok
+    assert(!q.offer(4)) // over capacity
+    assert(1 == q.size)
+    assert(Return(Queue(3)) == q.drain())
+    assert(0 == q.size)
+  }
+
 }

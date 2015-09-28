@@ -29,9 +29,9 @@ class QueueingHandlerTest extends WordSpec
 {
 
   class MockHandler extends Handler(BareFormatter, None) {
-    def publish(record: javalog.LogRecord) {}
-    def close() {}
-    def flush() {}
+    def publish(record: javalog.LogRecord) = ()
+    def close() = ()
+    def flush() = ()
   }
 
   def freshLogger(): Logger = {
@@ -63,7 +63,8 @@ class QueueingHandlerTest extends WordSpec
           Thread.sleep(100000)
         }
       }
-      var droppedCount = 0
+      @volatile var droppedCount = 0
+
       val queueHandler = new QueueingHandler(blockingHandler, 1) {
         override protected def onOverflow(record: javalog.LogRecord) {
           droppedCount += 1
@@ -115,8 +116,8 @@ class QueueingHandlerTest extends WordSpec
 
     "handle exceptions in the underlying handler" in {
       val logger = freshLogger()
-      var mustError = true
-      var didLog = false
+      @volatile var mustError = true
+      @volatile var didLog = false
       val handler = new MockHandler {
         override def publish(record: javalog.LogRecord) {
           if (mustError) {
@@ -141,7 +142,6 @@ class QueueingHandlerTest extends WordSpec
     }
 
     "forward formatter to the underlying handler" in {
-      val logger = freshLogger()
       val handler = new MockHandler {
       }
 

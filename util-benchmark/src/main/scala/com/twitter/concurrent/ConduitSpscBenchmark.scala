@@ -47,7 +47,7 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
 
   private[this] def feedQueue(n: Int): Future[Unit] =
     if (n <= 0) Future.Done
-    else source().map(q.offer) before feedQueue(n - 1)
+    else source().map(q.offer).flatMap(_ => feedQueue(n - 1))
 
   private[this] def consumeQueue(n: Int): Future[Boolean] =
     if (n <= 1) q.poll().flatMap(sink)
