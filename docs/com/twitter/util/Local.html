@@ -39,13 +39,13 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Local is a ThreadLocal whose scope is flexible. The state of all Locals may
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Local is a <span class="extype" name="ThreadLocal">ThreadLocal</span> whose scope is flexible. The state of all Locals may
 be saved or restored onto the current thread by the user. This is useful for
 threading Locals through execution contexts.</p><p>Promises pass locals through control dependencies, not through data
 dependencies.  This means that Locals have exactly the same semantics as
 ThreadLocals, if you think of <code>continue</code> (the asynchronous sequence operator)
 as semicolon (the synchronous sequence operator).</p><p>Because it's not meaningful to inherit control from two places, Locals don't
-have to worry about having to merge two <a href="Local$.html#Context=Array[Option[_]]" class="extmbr" name="com.twitter.util.Local.Context">com.twitter.util.Local$.Context</a>s.</p><p>Note: the implementation is optimized for situations in which save and
+have to worry about having to merge two <a href="Local$.html#Context=Array[Option[_]]" class="extmbr" name="com.twitter.util.Local.Context">Contexts</a>.</p><p>Note: the implementation is optimized for situations in which save and
 restore optimizations are dominant.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -212,7 +212,7 @@ restore optimizations are dominant.
         <span class="name">clear</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Clear the Local's value.</p><div class="fullcomment"><div class="comment cmt"><p>Clear the Local's value. Other <code>Local</code>s are not modified.
+      <p class="shortcomment cmt">Clear the Local's value.</p><div class="fullcomment"><div class="comment cmt"><p>Clear the Local's value. Other <a href="" class="extype" name="com.twitter.util.Local">Locals</a> are not modified.</p><p>General usage should be via <a href="#letClear[U](f:=&gt;U):U" class="extmbr" name="com.twitter.util.Local#letClear">letClear</a> to avoid leaks.
 </p></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -384,7 +384,7 @@ completion.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Local#set" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Local#set" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="set(optValue:Option[T]):Unit"></a>
       <a id="set(Option[T]):Unit"></a>
       <h4 class="signature">
@@ -396,7 +396,8 @@ completion.</p>
         <span class="name">set</span><span class="params">(<span name="optValue">optValue: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Local.T">T</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Update the Local with a given optional value.</p>
+      <p class="shortcomment cmt">Update the Local with a given optional value.</p><div class="fullcomment"><div class="comment cmt"><p>Update the Local with a given optional value.</p><p>General usage should be via <a href="#let[U](value:T)(f:=&gt;U):U" class="extmbr" name="com.twitter.util.Local#let">let</a> to avoid leaks.
+</p></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -423,7 +424,7 @@ completion.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.Local#update" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Local#update" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="update(value:T):Unit"></a>
       <a id="update(T):Unit"></a>
       <h4 class="signature">
@@ -435,7 +436,8 @@ completion.</p>
         <span class="name">update</span><span class="params">(<span name="value">value: <span class="extype" name="com.twitter.util.Local.T">T</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Update the Local with a given value.</p>
+      <p class="shortcomment cmt">Update the Local with a given value.</p><div class="fullcomment"><div class="comment cmt"><p>Update the Local with a given value.</p><p>General usage should be via <a href="#let[U](value:T)(f:=&gt;U):U" class="extmbr" name="com.twitter.util.Local#let">let</a> to avoid leaks.
+</p></div></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

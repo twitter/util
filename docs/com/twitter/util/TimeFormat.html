@@ -39,7 +39,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A thread-safe wrapper around a SimpleDateFormat object.</p><p>The timezone used will be UTC.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A thread-safe wrapper around a SimpleDateFormat object.</p><p>The default timezone is UTC.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
@@ -92,7 +92,20 @@
         <span class="name">TimeFormat</span><span class="params">(<span name="pattern">pattern: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Create a new TimeFormat with the default locale.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new TimeFormat with the default locale. *</p></div></div>
+      <p class="shortcomment cmt">Create a new TimeFormat with the default locale and timezone.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new TimeFormat with the default locale and timezone. *</p></div></div>
+    </li><li name="com.twitter.util.TimeFormat#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(pattern:String,timezone:java.util.TimeZone):com.twitter.util.TimeFormat"></a>
+      <a id="&lt;init&gt;:TimeFormat"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">TimeFormat</span><span class="params">(<span name="pattern">pattern: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="timezone">timezone: <span class="extype" name="java.util.TimeZone">TimeZone</span></span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create a new TimeFormat with a given timezone and the default locale *</p>
     </li><li name="com.twitter.util.TimeFormat#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="&lt;init&gt;(pattern:String,locale:Option[java.util.Locale]):com.twitter.util.TimeFormat"></a>
       <a id="&lt;init&gt;:TimeFormat"></a>
@@ -103,6 +116,19 @@
       </span>
       <span class="symbol">
         <span class="name">TimeFormat</span><span class="params">(<span name="pattern">pattern: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="locale">locale: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="java.util.Locale">Locale</span>]</span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create a new TimeFormat with a given locale and the default timezone *</p>
+    </li><li name="com.twitter.util.TimeFormat#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(pattern:String,locale:Option[java.util.Locale],timezone:java.util.TimeZone):com.twitter.util.TimeFormat"></a>
+      <a id="&lt;init&gt;:TimeFormat"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">TimeFormat</span><span class="params">(<span name="pattern">pattern: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="locale">locale: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="java.util.Locale">Locale</span>]</span>, <span name="timezone">timezone: <span class="extype" name="java.util.TimeZone">TimeZone</span> = <span class="defval" name="java.util.TimeZone.getTimeZone(&quot;UTC&quot;)">...</span></span>)</span>
       </span>
       </h4>
       

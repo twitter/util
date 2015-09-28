@@ -257,8 +257,8 @@ not apply are dropped; other values are transformed by <code>f</code>.
         <span class="name">dedup</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Builds a new Event by keeping only the Events where the predicated
-<code>p</code>, applied to the previous and current update, returns true.</p>
+      <p class="shortcomment cmt">Builds a new Event by keeping only the Events where
+the previous and current values are not <code>==</code> to each other.</p>
     </li><li name="com.twitter.util.Event#dedupWith" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="dedupWith(eq:(T,T)=&gt;Boolean):com.twitter.util.Event[T]"></a>
       <a id="dedupWith((T,T)⇒Boolean):Event[T]"></a>
@@ -531,8 +531,8 @@ Event[CC[T]]).diff.patch</code> is equivalent to <code>event</code>
         <span class="name">respond</span><span class="params">(<span name="s">s: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Observe this event with function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Observe this event with function <code>f</code>. Equivalent to
-<code>register(Witness(f))</code>.
+      <p class="shortcomment cmt">Observe this event with function <code>s</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Observe this event with function <code>s</code>. Equivalent to
+<code>register(Witness(s))</code>.
 </p></div></div>
     </li><li name="com.twitter.util.Event#select" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="select[U](other:com.twitter.util.Event[U]):com.twitter.util.Event[Either[T,U]]"></a>

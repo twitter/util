@@ -599,7 +599,9 @@ and if there are errors they can be accessed via the Option.</p><p>Note: forces 
       </h4>
       <p class="shortcomment cmt">Similar to foldLeft, but produces a stream from the result of each
 successive fold:</p><div class="fullcomment"><div class="comment cmt"><p>Similar to foldLeft, but produces a stream from the result of each
-successive fold:</p><pre>AsyncStream(<span class="num">1</span>, <span class="num">2</span>, ...).scanLeft(z)(f) == z +:: f(z, <span class="num">1</span>) +:: f(f(z, <span class="num">1</span>), <span class="num">2</span>) +:: ...</pre><p>Note that for an <code>AsyncStream as</code>:</p><pre>as.scanLeft(z)(f).last == as.foldLeft(z)(f)</pre></div></div>
+successive fold:</p><pre>AsyncStream(<span class="num">1</span>, <span class="num">2</span>, ...).scanLeft(z)(f) == z +:: f(z, <span class="num">1</span>) +:: f(f(z, <span class="num">1</span>), <span class="num">2</span>) +:: ...</pre><p>Note that for an <code>AsyncStream as</code>:</p><pre>as.scanLeft(z)(f).last == as.foldLeft(z)(f)</pre><p>The resulting stream always begins with the initial value <code>z</code>,
+not subject to the fate of the underlying future, i.e.:</p><pre><span class="kw">val</span> never = AsyncStream.fromFuture(Future.never)
+never.scanLeft(z)(f) == z +:: never <span class="cmt">// logical equality</span></pre></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

@@ -81,7 +81,7 @@ names according to a <code>translate</code> function.
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver):com.twitter.finagle.stats.NameTranslatingStatsReceiver"></a>
       <a id="&lt;init&gt;:NameTranslatingStatsReceiver"></a>
       <h4 class="signature">
@@ -93,7 +93,21 @@ names according to a <code>translate</code> function.
         <span class="name">NameTranslatingStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>)</span>
       </span>
       </h4>
+      
+    </li><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,namespacePrefix:String):com.twitter.finagle.stats.NameTranslatingStatsReceiver"></a>
+      <a id="&lt;init&gt;:NameTranslatingStatsReceiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">NameTranslatingStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="namespacePrefix">namespacePrefix: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
+      </span>
+      </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">self</dt><dd class="cmt"><p>The underlying StatsReceiver to which translated names are passed
+</p></dd><dt class="param">namespacePrefix</dt><dd class="cmt"><p>the namespace used for translations
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -528,7 +542,7 @@ usable from java.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -537,10 +551,10 @@ usable from java.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NameTranslatingStatsReceiver">NameTranslatingStatsReceiver</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

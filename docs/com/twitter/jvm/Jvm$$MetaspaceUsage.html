@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>Jvm - com.twitter.jvm.Jvm</title>
-          <meta name="description" content="Jvm - com.twitter.jvm.Jvm" />
-          <meta name="keywords" content="Jvm com.twitter.jvm.Jvm" />
+          <title>MetaspaceUsage - com.twitter.jvm.Jvm.MetaspaceUsage</title>
+          <meta name="description" content="MetaspaceUsage - com.twitter.jvm.Jvm.MetaspaceUsage" />
+          <meta name="keywords" content="MetaspaceUsage com.twitter.jvm.Jvm.MetaspaceUsage" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.jvm.Jvm';
+            var hash = 'com.twitter.jvm.Jvm$$MetaspaceUsage';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -24,29 +24,27 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Jvm$.html" title="Go to companion"><img src="../../../lib/trait_to_object_big.png" /></a>
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.jvm">jvm</a></p>
-        <h1><a href="Jvm$.html" title="Go to companion">Jvm</a></h1>
+        <img src="../../../lib/class_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.jvm">jvm</a>.<a href="Jvm$.html" class="extype" name="com.twitter.jvm.Jvm">Jvm</a></p>
+        <h1>MetaspaceUsage</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Jvm</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">MetaspaceUsage</span><span class="params">(<span name="used">used: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>, <span name="capacity">capacity: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>, <span name="maxCapacity">maxCapacity: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Access JVM internal performance counters. We maintain a strict
-interface so that we are decoupled from the actual underlying JVM.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Usage of the JVM's metaspace.
+</p></div><dl class="paramcmts block"><dt class="param">used</dt><dd class="cmt"><p>how much is currently in use</p></dd><dt class="param">capacity</dt><dd class="cmt"><p>the current capacity of the metaspace.
+       It can grow beyond this, up to <code>maxCapacity</code>, if needed.</p></dd><dt class="param">maxCapacity</dt><dd class="cmt"><p>the maximum size that the metaspace can grow to.
+</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="Hotspot.html" class="extype" name="com.twitter.jvm.Hotspot">Hotspot</a>, <a href="NilJvm$.html" class="extype" name="com.twitter.jvm.NilJvm">NilJvm</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -64,7 +62,7 @@ interface so that we are decoupled from the actual underlying JVM.
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.jvm.Jvm"><span>Jvm</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.jvm.Jvm.MetaspaceUsage"><span>MetaspaceUsage</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -82,111 +80,32 @@ interface so that we are decoupled from the actual underlying JVM.
 
       <div id="template">
         <div id="allMembers">
-        
-
-        <div id="types" class="types members">
-              <h3>Type Members</h3>
-              <ol><li name="com.twitter.jvm.Jvm.Opts" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="OptsextendsAnyRef"></a>
-      <a id="Opts:Opts"></a>
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.twitter.jvm.Jvm.MetaspaceUsage#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(used:com.twitter.util.StorageUnit,capacity:com.twitter.util.StorageUnit,maxCapacity:com.twitter.util.StorageUnit):com.twitter.jvm.Jvm.MetaspaceUsage"></a>
+      <a id="&lt;init&gt;:MetaspaceUsage"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <a href="Jvm$Opts.html"><span class="name">Opts</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">MetaspaceUsage</span><span class="params">(<span name="used">used: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>, <span name="capacity">capacity: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>, <span name="maxCapacity">maxCapacity: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">used</dt><dd class="cmt"><p>how much is currently in use</p></dd><dt class="param">capacity</dt><dd class="cmt"><p>the current capacity of the metaspace.
+       It can grow beyond this, up to <code>maxCapacity</code>, if needed.</p></dd><dt class="param">maxCapacity</dt><dd class="cmt"><p>the maximum size that the metaspace can grow to.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
-        <div id="values" class="values members">
-              <h3>Abstract Value Members</h3>
-              <ol><li name="com.twitter.jvm.Jvm#edenPool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="edenPool:com.twitter.jvm.Pool"></a>
-      <a id="edenPool:Pool"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">edenPool</span><span class="result">: <a href="Pool.html" class="extype" name="com.twitter.jvm.Pool">Pool</a></span>
-      </span>
-      </h4>
-      
-    </li><li name="com.twitter.jvm.Jvm#forceGc" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="forceGc():Unit"></a>
-      <a id="forceGc():Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">forceGc</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      
-    </li><li name="com.twitter.jvm.Jvm#metaspaceUsage" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="metaspaceUsage:Option[com.twitter.jvm.Jvm.MetaspaceUsage]"></a>
-      <a id="metaspaceUsage:Option[MetaspaceUsage]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">metaspaceUsage</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Jvm$$MetaspaceUsage.html" class="extype" name="com.twitter.jvm.Jvm.MetaspaceUsage">MetaspaceUsage</a>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Gets the current usage of the metaspace, if available.</p>
-    </li><li name="com.twitter.jvm.Jvm#opts" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="opts:Jvm.this.Opts"></a>
-      <a id="opts:Opts"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">opts</span><span class="result">: <a href="Jvm$Opts.html" class="extype" name="com.twitter.jvm.Jvm.Opts">Opts</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Current VM-specific options.</p>
-    </li><li name="com.twitter.jvm.Jvm#snap" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="snap:com.twitter.jvm.Snapshot"></a>
-      <a id="snap:Snapshot"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">snap</span><span class="result">: <a href="Snapshot.html" class="extype" name="com.twitter.jvm.Snapshot">Snapshot</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Snapshot of JVM state.</p>
-    </li><li name="com.twitter.jvm.Jvm#snapCounters" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="snapCounters:Map[String,String]"></a>
-      <a id="snapCounters:Map[String,String]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">snapCounters</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Get a snapshot of all performance counters.</p>
-    </li></ol>
-            </div>
+        
+
+        
 
         <div id="values" class="values members">
-              <h3>Concrete Value Members</h3>
+              <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -265,6 +184,20 @@ interface so that we are decoupled from the actual underlying JVM.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.jvm.Jvm.MetaspaceUsage#capacity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="capacity:com.twitter.util.StorageUnit"></a>
+      <a id="capacity:StorageUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">capacity</span><span class="result">: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">the current capacity of the metaspace.</p><div class="fullcomment"><div class="comment cmt"><p>the current capacity of the metaspace.
+       It can grow beyond this, up to <code>maxCapacity</code>, if needed.</p></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -297,32 +230,6 @@ interface so that we are decoupled from the actual underlying JVM.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.jvm.Jvm#executor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="executor:java.util.concurrent.ScheduledExecutorService"></a>
-      <a id="executor:ScheduledExecutorService"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">executor</span><span class="result">: <span class="extype" name="java.util.concurrent.ScheduledExecutorService">ScheduledExecutorService</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -342,25 +249,6 @@ interface so that we are decoupled from the actual underlying JVM.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.jvm.Jvm#foreachGc" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="foreachGc(f:com.twitter.jvm.Gc=&gt;Unit):Unit"></a>
-      <a id="foreachGc((Gc)⇒Unit):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">foreachGc</span><span class="params">(<span name="f">f: (<a href="Gc.html" class="extype" name="com.twitter.jvm.Gc">Gc</a>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Invoke <code>f</code> for every Gc event in the system.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> for every Gc event in the system. This samples <code>snap</code>
-in order to synthesize a unique stream of Gc events. It's
-important that <code>f</code> is not constructed so that it's likely to, by
-itself, trigger another Gc event, causing an infinite loop. The
-same is true of the internal datastructures used by foreachGc,
-but they are svelte.
-</p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -371,19 +259,6 @@ but they are svelte.
       </span>
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -400,40 +275,19 @@ but they are svelte.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.jvm.Jvm#mainClassName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="mainClassName:String"></a>
-      <a id="mainClassName:String"></a>
+    </li><li name="com.twitter.jvm.Jvm.MetaspaceUsage#maxCapacity" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="maxCapacity:com.twitter.util.StorageUnit"></a>
+      <a id="maxCapacity:StorageUnit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">mainClassName</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">maxCapacity</span><span class="result">: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Get the main class name for the currently running application.</p><div class="fullcomment"><div class="comment cmt"><p>Get the main class name for the currently running application.
-Note that this works only by heuristic, and may not be accurate.</p><p>TODO: take into account the standard callstack around scala
-invocations better.
-</p></div></div>
-    </li><li name="com.twitter.jvm.Jvm#monitorGcs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="monitorGcs(bufferFor:com.twitter.util.Duration):com.twitter.util.Time=&gt;Seq[com.twitter.jvm.Gc]"></a>
-      <a id="monitorGcs(Duration):(Time)⇒Seq[Gc]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">monitorGcs</span><span class="params">(<span name="bufferFor">bufferFor: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: (<a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a>) ⇒ <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Gc.html" class="extype" name="com.twitter.jvm.Gc">Gc</a>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Monitors Gcs using <code>foreachGc</code>, and returns a function to query
-its timeline (up to <code>buffer</code> in the past).</p><div class="fullcomment"><div class="comment cmt"><p>Monitors Gcs using <code>foreachGc</code>, and returns a function to query
-its timeline (up to <code>buffer</code> in the past). Querying is cheap, linear
-to the number of Gcs that happened since the queried time. The
-result is returned in reverse chronological order.
-</p></div></div>
+      <p class="shortcomment cmt">the maximum size that the metaspace can grow to.</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -486,19 +340,19 @@ result is returned in reverse chronological order.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
+    </li><li name="com.twitter.jvm.Jvm.MetaspaceUsage#used" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="used:com.twitter.util.StorageUnit"></a>
+      <a id="used:StorageUnit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">used</span><span class="result">: <a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <p class="shortcomment cmt">how much is currently in use</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -565,7 +419,15 @@ result is returned in reverse chronological order.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
