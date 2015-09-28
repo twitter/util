@@ -6,6 +6,8 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+6.28.0  2015-09-25
+
 API Changes:
 
   * util-core: Remove deprecated methods from `com.twitter.util.Var`.
