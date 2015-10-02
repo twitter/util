@@ -1,7 +1,7 @@
 package com.twitter.util.registry
 
-import java.util.NoSuchElementException
 import com.twitter.util.Local
+import scala.annotation.varargs
 
 /**
  * This is an expert-level API; it is not meant for end-users.
@@ -36,9 +36,23 @@ trait Registry extends Iterable[Entry] {
   def iterator: Iterator[Entry]
 
   /**
-   * Registers a value in the registry, and returns the old value (if any).
+   * Registers a  value in the registry, and returns the old value (if any).
+   *
+   * See `Registry.put(String*)` for the Java usage.
    */
   def put(key: Seq[String], value: String): Option[String]
+
+  /**
+   * Registers a value (a non-empty sequence of strings) in the registry, and returns the old
+   * value (if any).
+   *
+   * Note: This is a Java-friendly version of `Registry.put(Seq[String, String])`.
+   */
+  @varargs
+  def put(value: String*): Option[String] = {
+    require(value.nonEmpty)
+    put(value.init, value.last)
+  }
 
   /**
    * Removes a key from the registry, if it was registered, and returns the old value (if any).

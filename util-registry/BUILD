@@ -8,6 +8,7 @@ target(name='util-registry',
 
 target(name='tests',
   dependencies=[
-    'util/util-registry/src/test/scala'
+    'util/util-registry/src/test/scala',
+    'util/util-registry/src/test/java'
   ]
 )

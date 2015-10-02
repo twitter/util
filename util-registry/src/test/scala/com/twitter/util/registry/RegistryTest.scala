@@ -26,7 +26,7 @@ abstract class RegistryTest extends FunSuite {
     val registry = mkRegistry()
     registry.put(Seq("foo"), "bar")
     registry.put(Seq("foo"), "baz")
-    assert((registry.toSet) == Set(Entry(Seq("foo"), "baz")))
+    assert(registry.toSet == Set(Entry(Seq("foo"), "baz")))
   }
 
   test(s"$name can return the old element when replacing") {
@@ -40,7 +40,7 @@ abstract class RegistryTest extends FunSuite {
     val registry = mkRegistry()
     registry.put(Seq("foo"), "bar")
     assert(registry.remove(Seq("foo")) == Some("bar"))
-    assert((registry.toSet) == Set.empty)
+    assert(registry.toSet == Set.empty)
   }
 
   test(s"$name can remove nothing") {
@@ -93,5 +93,12 @@ abstract class RegistryTest extends FunSuite {
     registry.put(Seq("foo"), "bar")
     registry.put(Seq("foo", "baz"), "qux")
     assert(registry.toSet == Set(Entry(Seq("foo"), "bar"), Entry(Seq("foo", "baz"), "qux")))
+  }
+
+  test(s"$name can support varargs API") {
+    val registry = mkRegistry()
+    registry.put("foo", "bar", "baz")
+    registry.put("qux")
+    assert(registry.toSet == Set(Entry(Seq("foo", "bar"), "baz"), Entry(Seq(), "qux")))
   }
 }
