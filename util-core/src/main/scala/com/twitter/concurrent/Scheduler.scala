@@ -28,21 +28,30 @@ trait Scheduler {
   // On OSX, the Mach thread_info call is used.
   //
   // [1] http://linux.die.net/man/3/clock_gettime
+  //
+  // Note, these clock stats were decommissioned as they only make
+  // sense relative to `wallTime` and the tracking error we have
+  // experienced `wallTime` and `*Time` make it impossible to
+  // use these reliably. It is not worth the performance and
+  // code complexity to support them.
 
   /**
    * The amount of User time that's been scheduled as per ThreadMXBean.
    */
-  def usrTime: Long
+  @deprecated("schedulers no longer export this", "2015-01-10")
+  def usrTime: Long = -1L
 
   /**
    * The amount of CPU time that's been scheduled as per ThreadMXBean.
    */
-  def cpuTime: Long
+  @deprecated("schedulers no longer export this", "2015-01-10")
+  def cpuTime: Long = -1L
 
   /**
    * Total walltime spent in the scheduler.
    */
-  def wallTime: Long
+  @deprecated("schedulers no longer export this", "2015-01-10")
+  def wallTime: Long = -1L
 
   /**
    * The number of dispatches performed by this scheduler.
@@ -83,9 +92,7 @@ object Scheduler extends Scheduler {
 
   def submit(r: Runnable) = self.submit(r)
   def flush() = self.flush()
-  def usrTime = self.usrTime
-  def cpuTime = self.cpuTime
-  def wallTime = self.wallTime
+
   def numDispatches = self.numDispatches
 
   def blocking[T](f: => T)(implicit perm: CanAwait) = self.blocking(f)
@@ -96,10 +103,6 @@ object Scheduler extends Scheduler {
  */
 class LocalScheduler(lifo: Boolean) extends Scheduler {
   def this() = this(false)
-
-  private[this] val SampleScale = 1000
-  private[this] val bean = ManagementFactory.getThreadMXBean()
-  private[this] val cpuTimeSupported = bean.isCurrentThreadCpuTimeSupported()
 
   // use weak refs to prevent Activations from causing a memory leak
   // thread-safety provided by synchronizing on `activations`
@@ -119,9 +122,6 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     private[this] val rng = ThreadLocalRandom.current()
 
     // This is safe: there's only one updater.
-    @volatile var usrTime = 0L
-    @volatile var cpuTime = 0L
-    @volatile var wallTime = 0L
     @volatile var numDispatches = 0L
 
     def submit(r: Runnable): Unit = {
@@ -134,22 +134,9 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
       else rs.addLast(r)
 
       if (!running) {
-        if (cpuTimeSupported && rng.nextInt(SampleScale) == 0)
-          instrumentAndRun()
-        else
-          run()
+        numDispatches += 1
+        run()
       }
-    }
-
-    private[this] final def instrumentAndRun(): Unit = {
-      numDispatches += SampleScale
-      val cpu0 = bean.getCurrentThreadCpuTime
-      val usr0 = bean.getCurrentThreadUserTime
-      val wall0 = System.nanoTime()
-      run()
-      cpuTime += (bean.getCurrentThreadCpuTime - cpu0) * SampleScale
-      usrTime += (bean.getCurrentThreadUserTime - usr0) * SampleScale
-      wallTime += (System.nanoTime() - wall0) * SampleScale
     }
 
     private[this] final def reorderLifo(r: Runnable): Unit = {
@@ -223,14 +210,10 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
   def flush(): Unit = get().flush()
 
   private[this] def activationsSum(f: Activation => Long): Long =
-    activations.synchronized {
-      activations.keysIterator.map(f).sum
-    }
+    activations.synchronized { activations.keysIterator.map(f).sum }
 
-  def usrTime: Long = activationsSum(_.usrTime)
-  def cpuTime: Long = activationsSum(_.cpuTime)
-  def wallTime: Long = activationsSum(_.wallTime)
   def numDispatches: Long = activationsSum(_.numDispatches)
+
 
   def blocking[T](f: => T)(implicit perm: CanAwait): T = f
 }
@@ -244,7 +227,6 @@ trait ExecutorScheduler { self: Scheduler =>
   val name: String
   val executorFactory: ThreadFactory => ExecutorService
 
-  protected[this] val bean = ManagementFactory.getThreadMXBean()
   protected val threadGroup: ThreadGroup = new ThreadGroup(name)
   @volatile private[this] var threads = Set[Thread]()
 
@@ -272,27 +254,9 @@ trait ExecutorScheduler { self: Scheduler =>
   def shutdown() { executor.shutdown() }
   def submit(r: Runnable) { executor.execute(r) }
   def flush() = ()
-  def usrTime = {
-    var sum = 0L
-    for (t <- threads()) {
-      val time = bean.getThreadUserTime(t.getId())
-      if (time > 0) sum += time
-    }
-    sum
-  }
 
-  def cpuTime = {
-    var sum = 0L
-    for (t <- threads()) {
-      val time = bean.getThreadCpuTime(t.getId())
-      if (time > 0) sum += time
-    }
-    sum
-  }
-
-  def wallTime = -1L
-
-  def numDispatches = -1L  // Unsupported
+  // Unsupported
+  def numDispatches = -1L
 
   def getExecutor = executor
 

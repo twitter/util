@@ -16,6 +16,11 @@ Changes in Runtime Behavior:
 
 * util-logging: `QueueingHandler` does not create a separate thread per instance. ``RB_ID=745567`
 
+* util-core: The Scheduler clock stats were decommissioned as they only make sense
+  relative to `wallTime` and the tracking error we have experienced `wallTime` and
+  `*Time` make it impossible to use them reliably. It is not worth the performance
+  and code complexity to support them.
+
 6.28.0  2015-09-25
 
 API Changes:
