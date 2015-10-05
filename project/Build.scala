@@ -39,8 +39,8 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    scalaVersion := "2.10.5",
-    crossScalaVersions := Seq("2.10.5", "2.11.7"),
+    scalaVersion := "2.11.7",
+    scalaOrganization := "org.typelevel",
     // Workaround for a scaladoc bug which causes it to choke on
     // empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
@@ -226,7 +226,7 @@ object Util extends Build {
   ).settings(
     name := "util-eval",
     libraryDependencies <+= scalaVersion {
-      "org.scala-lang" % "scala-compiler" % _ % "compile"
+      "org.typelevel" % "scala-compiler" % _ % "compile"
     }
   ).dependsOn(utilCore)
 
