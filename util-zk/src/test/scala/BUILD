@@ -1,6 +1,5 @@
 junit_tests(name='scala',
   dependencies=[
-    '3rdparty/jvm/org/apache/zookeeper',
     '3rdparty/jvm/cglib',
     '3rdparty/jvm/org/jmock',
     '3rdparty/jvm/junit',
