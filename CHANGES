@@ -12,6 +12,10 @@ New Features:
   Modified `AsyncQueue.offer` to return a boolean indicating whether or not the
   item was accepted. Added `AsyncQueue.drain(): Try[Queue]`. ``RB_ID=745567`
 
+* util-core: Provide methods on `Stopwatch` so that users can take advantage of
+  `Time` manipulation tools in latency-sensitive code when measuring elapsed
+  time. ``RB_ID=75268``
+
 Changes in Runtime Behavior:
 
 * util-logging: `QueueingHandler` does not create a separate thread per instance. ``RB_ID=745567`
