@@ -153,10 +153,22 @@ class ReferenceCountingTimer(factory: () => Timer)
     underlying.schedule(when, period)(f)
 }
 
-class JavaTimer(isDaemon: Boolean) extends Timer {
+/**
+ * A [[Timer]] that is implemented via a [[java.util.Timer]].
+ *
+ * @param isDaemon whether or not the associated [[Thread]] should run
+ *   as a daemon.
+ *
+ * @param name used as the name of the associated [[Thread]] when specified.
+ */
+class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
+  def this(isDaemon: Boolean) = this(isDaemon, None)
   def this() = this(false)
 
-  private[this] val underlying = new java.util.Timer(isDaemon)
+  private[this] val underlying = name match {
+    case Some(n) => new java.util.Timer(n, isDaemon)
+    case None => new java.util.Timer(isDaemon)
+  }
 
   def schedule(when: Time)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(f)
@@ -210,10 +222,10 @@ class JavaTimer(isDaemon: Boolean) extends Timer {
 }
 
 class ScheduledThreadPoolTimer(
-  poolSize: Int,
-  threadFactory: ThreadFactory,
-  rejectedExecutionHandler: Option[RejectedExecutionHandler])
-extends Timer {
+    poolSize: Int,
+    threadFactory: ThreadFactory,
+    rejectedExecutionHandler: Option[RejectedExecutionHandler])
+  extends Timer {
   def this(poolSize: Int, threadFactory: ThreadFactory) =
     this(poolSize, threadFactory, None)
 
@@ -232,7 +244,7 @@ extends Timer {
   }
 
   def schedule(when: Time)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run = f }
+    val runnable = new Runnable { def run(): Unit = f }
     val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
     new TimerTask {
       def cancel(): Unit = {
@@ -246,7 +258,7 @@ extends Timer {
     schedule(when.sinceNow, period)(f)
 
   def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run = f }
+    val runnable = new Runnable { def run(): Unit = f }
     val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
     new TimerTask {
