@@ -226,7 +226,7 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def min(that: This): This =
     if ((this compare that) < 0) this else that
 
-  def compare(that: This) =
+  def compare(that: This): Int =
     if ((that eq Top) || (that eq Undefined)) -1
     else if (that eq Bottom) 1
     else if (inNanoseconds < that.inNanoseconds) -1
@@ -234,7 +234,7 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
     else 0
 
   /** Equality within `maxDelta` */
-  def moreOrLessEquals(other: This, maxDelta: Duration) =
+  def moreOrLessEquals(other: This, maxDelta: Duration): Boolean =
     (other ne Undefined) && ((this == other) || (this diff other).abs <= maxDelta)
 }
 
@@ -378,24 +378,8 @@ object Time extends TimeLikeOps[Time] {
    */
   val epoch = fromNanoseconds(0L)
 
-  /**
-   * A time larger than any other finite time. Synonymous to `Top`.
-   */
-  @deprecated("Use Time.Top", "5.4.0")
-  val never = Top
-
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
-
-  /**
-   * On some systems (os x), nanoTime is just epoch time with greater
-   * precision. On others (linux), it can be based on system uptime.
-   *
-   * TODO: This isn't always accurate, an NTP daemon may change at
-   * runtime, and so the offset effectively changes.
-   */
-  @deprecated("nanoTimeOffset may be dangerous to use", "5.4.0")
-  val nanoTimeOffset = (System.currentTimeMillis * 1000000) - System.nanoTime
 
   /**
    * Note, this should only ever be updated by methods used for testing.
@@ -403,11 +387,16 @@ object Time extends TimeLikeOps[Time] {
   private[util] val localGetTime = new Local[()=>Time]
   private[util] val localGetTimer = new Local[MockTimer]
 
-  @deprecated("use Time.fromMilliseconds(...) instead", "2011-09-12") // date is a guess
-  def apply(millis: Long) = fromMilliseconds(millis)
+  /**
+   * Creates a [[Time]] instance of the given [[Date]].
+   */
   def apply(date: Date): Time = fromMilliseconds(date.getTime)
 
-  def at(datetime: String) = defaultFormat.parse(datetime)
+  /**
+   * Creates a [[Time]] instance at the given `datetime` string in the
+   * "yyyy-MM-dd HH:mm:ss Z" format.
+   */
+  def at(datetime: String): Time = defaultFormat.parse(datetime)
 
   /**
    * Execute body with the time function replaced by `timeFunction`
@@ -471,7 +460,7 @@ object Time extends TimeLikeOps[Time] {
    *
    * $nowusage
    */
-  def sleep(duration: Duration) {
+  def sleep(duration: Duration): Unit = {
     localGetTimer() match {
       case None =>
         Thread.sleep(duration.inMilliseconds)
@@ -480,28 +469,10 @@ object Time extends TimeLikeOps[Time] {
     }
   }
 
-  @deprecated("Use Stopwatch", "5.4.0")
-  def measure(f: => Unit): Duration = {
-    val begin = Time.now
-    f
-    Time.now - begin
-  }
-
-  @deprecated("Use Stopwatch", "5.4.0")
-  def measureMany(n: Int)(f: => Unit): Duration = {
-    require(n > 0)
-    val d = measure {
-      var i = 0
-      while (i < n) {
-        f
-        i += 1
-      }
-    }
-    d/n
-  }
-
-  /** Returns the Time parsed from a string in RSS format. Eg: "Wed, 15 Jun 2005 19:00:00 GMT" */
-  def fromRss(rss: String) = rssFormat.parse(rss)
+  /**
+   * Returns the Time parsed from a string in RSS format. Eg: "Wed, 15 Jun 2005 19:00:00 GMT"
+   */
+  def fromRss(rss: String): Time = rssFormat.parse(rss)
 }
 
 trait TimeControl {
@@ -628,12 +599,6 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    * Gets the current time as Duration since now
    */
   def sinceNow: Duration = since(now)
-
-  /**
-   * Duration that has passed between the epoch and the current time.
-   */
-  @deprecated("use sinceEpoch", "2011-05-23") // date is a guess
-  def fromEpoch: Duration = this - epoch
 
   /**
    * Duration between current time and the givne time.

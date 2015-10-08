@@ -8,9 +8,14 @@ Next Version
 
 New Features:
 
-* util-core: Introduce an optional max capacity to `AsyncQueue`.
-  Modified `AsyncQueue.offer` to return a boolean indicating whether or not the
-  item was accepted. Added `AsyncQueue.drain(): Try[Queue]`. ``RB_ID=745567`
+  * util-core: Introduce an optional max capacity to `AsyncQueue`.
+    Modified `AsyncQueue.offer` to return a boolean indicating whether or not the
+    item was accepted. Added `AsyncQueue.drain(): Try[Queue]`. ``RB_ID=745567`
+
+API Changes:
+
+  * util-core: Remove deprecated methods from `com.twitter.util.Time` and
+    `com.twitter.util.Duration`. ``RB_ID=751771``
 
 * util-core: Provide methods on `Stopwatch` so that users can take advantage of
   `Time` manipulation tools in latency-sensitive code when measuring elapsed
@@ -18,12 +23,13 @@ New Features:
 
 Changes in Runtime Behavior:
 
-* util-logging: `QueueingHandler` does not create a separate thread per instance. ``RB_ID=745567`
+  * util-logging: `QueueingHandler` does not create a separate thread per instance.
+    ``RB_ID=745567`
 
-* util-core: The Scheduler clock stats were decommissioned as they only make sense
-  relative to `wallTime` and the tracking error we have experienced `wallTime` and
-  `*Time` make it impossible to use them reliably. It is not worth the performance
-  and code complexity to support them.
+  * util-core: The Scheduler clock stats were decommissioned as they only make sense
+    relative to `wallTime` and the tracking error we have experienced `wallTime` and
+    `*Time` make it impossible to use them reliably. It is not worth the performance
+    and code complexity to support them.
 
 6.28.0  2015-09-25
 

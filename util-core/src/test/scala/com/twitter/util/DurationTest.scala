@@ -164,25 +164,6 @@ class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
       assert(4680.nanoseconds.inUnit(TimeUnit.MICROSECONDS) === 4L)
     }
 
-    "time milliseconds" in {
-      val (rv, duration) = Duration.inMilliseconds {
-        Thread.sleep(10)
-        "Faunts"
-      }
-      assert(rv === "Faunts")
-      assert(duration >= 10.milliseconds)
-    }
-
-    "time nanoseconds" in {
-      val (rv, duration) = Duration.inNanoseconds {
-        // or 10 grace hoppers, as i prefer to call them. :)
-        Thread.sleep(0, 10)
-        "M4 (part II)"
-      }
-      assert(rv === "M4 (part II)")
-      assert(duration >= 10.nanoseconds)
-    }
-
     "be hashable" in {
       val map = new java.util.concurrent.ConcurrentHashMap[Duration, Int]
       map.put(23.millis, 23)

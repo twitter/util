@@ -24,7 +24,7 @@ object Duration extends TimeLikeOps[Duration] {
    * Create a duration from a [[java.util.concurrent.TimeUnit]].
    * Synonym for `apply`.
    */
-  def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
+  def fromTimeUnit(value: Long, unit: TimeUnit): Duration = apply(value, unit)
 
   /**
    * Create a duration from a [[java.util.concurrent.TimeUnit]].
@@ -34,8 +34,8 @@ object Duration extends TimeLikeOps[Duration] {
     fromNanoseconds(ns)
   }
 
-  @deprecated("use time.untilNow", "2011-05-03") // date is a guess
-  def since(time: Time) = Time.now.since(time)
+  // This is needed for Java compatibility.
+  override val Zero: Duration = fromNanoseconds(0)
 
   /**
    * Duration `Top` is greater than any other duration, except for
@@ -176,41 +176,6 @@ object Duration extends TimeLikeOps[Duration] {
     private def writeReplace(): Object = DurationBox.Undefined()
   }
 
-  @deprecated("use Duration.Zero", "5.4.0")
-  val zero: Duration = Zero
-  /** Synonym to `Top` */
-  @deprecated("use Duration.Top", "5.4.0")
-  val forever: Duration = Top
-  /** Synonym to `Top` */
-  @deprecated("use Duration.Top", "5.4.0")
-  val eternity: Duration = Top
-  @deprecated("Use Duration.Top", "5.4.0")
-  val MaxValue: Duration = Top
-  @deprecated("Use Duration.Zero", "5.4.0")
-  val MinValue: Duration = Zero
-
-  /**
-   * Returns how long it took, in millisecond granularity, to run the function f.
-   */
-  @deprecated("use Stopwatch instead", "5.4.0")
-  def inMilliseconds[T](f: => T): (T, Duration) = {
-    val start = Time.now
-    val rv = f
-    val duration = Time.now - start
-    (rv, duration)
-  }
-
-  /**
-   * Returns how long it took, in nanosecond granularity, to run the function f.
-   */
-  @deprecated("Use Stopwatch", "5.4.0")
-  def inNanoseconds[T](f: => T): (T, Duration) = {
-    val start = System.nanoTime
-    val rv = f
-    val duration = fromNanoseconds(System.nanoTime - start)
-    (rv, duration)
-  }
-
   private val timeUnits = Seq(
     TimeUnit.DAYS,
     TimeUnit.HOURS,
@@ -250,7 +215,7 @@ object Duration extends TimeLikeOps[Duration] {
    *
    * @throws RuntimeException if the string cannot be parsed.
    */
-  def parse(s: String) = {
+  def parse(s: String): Duration = {
     val ss = s.toLowerCase
     ss match {
       case FullDurationRegex(_*) =>

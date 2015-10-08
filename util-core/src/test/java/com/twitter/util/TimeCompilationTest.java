@@ -59,8 +59,8 @@ public class TimeCompilationTest {
     Time b = a.plus(Duration.fromMilliseconds(2222));
     Time c = b.minus(Duration.fromMilliseconds(3333));
 
-    Assert.assertEquals(a, a.plus(Duration.zero()));
-    Assert.assertEquals(a, a.minus(Duration.zero()));
+    Assert.assertEquals(a, a.plus(Duration.Zero()));
+    Assert.assertEquals(a, a.minus(Duration.Zero()));
     Assert.assertEquals(5555, b.inMilliseconds());
     Assert.assertEquals(2222, c.inMilliseconds());
   }

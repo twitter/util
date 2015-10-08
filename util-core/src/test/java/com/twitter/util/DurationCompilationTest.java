@@ -44,8 +44,8 @@ public class DurationCompilationTest {
     Duration b = a.plus(Duration.fromMilliseconds(1000));
     Duration c = b.minus(Duration.fromMilliseconds(500));
 
-    Assert.assertEquals(a, a.minus(Duration.zero()));
-    Assert.assertEquals(a, a.plus(Duration.zero()));
+    Assert.assertEquals(a, a.minus(Duration.Zero()));
+    Assert.assertEquals(a, a.plus(Duration.Zero()));
     Assert.assertEquals(2000, b.inMillis());
     Assert.assertEquals(1500, c.inMillis());
     Assert.assertEquals(Duration.Top(), c.plus(Duration.Top()));
@@ -57,7 +57,7 @@ public class DurationCompilationTest {
     Duration a = Duration.fromSeconds(4);
     Duration b = Duration.fromMicroseconds(4);
 
-    Assert.assertEquals(a, a.max(Duration.zero()));
+    Assert.assertEquals(a, a.max(Duration.Zero()));
     Assert.assertEquals(a, a.max(b));
     Assert.assertEquals(b, a.min(b));
     Assert.assertEquals(a, a.min(Duration.Top()));
