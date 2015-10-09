@@ -358,7 +358,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @return a `Future[Seq[A]]` containing the results of each future in fs
    */
   def sequence[A](fs: Seq[() => Future[A]]): Future[Seq[A]] = 
-    fs.foldLeft(Future(List.empty[A])) { (resultsFuture, nextFunction) =>
+    fs.foldLeft(Future(Vector.empty[A])) { (resultsFuture, nextFunction) =>
       for {
         results    <- resultsFuture
         nextResult <- nextFunction()
