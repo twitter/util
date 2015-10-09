@@ -339,6 +339,33 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   def join[A](fs: JList[Future[A]]): Future[Unit] = Futures.join(fs)
 
   /**
+   * Take a sequence of `() => Future[_]` and execute each
+   * future sequentially, then return all future results as a single Future[Seq[_]].
+   * 
+   * If during execution any of the futures throws an exception that exception will be returned and 
+   * the remaining futures will not be processed.
+   * 
+   * A use case for sequential processing is ordered operations: 
+   *   val orderedOperations =
+   *     Seq(
+   *       () => deleteItem(id),
+   *       () => undeleteItem(id),
+   *       () => deleteItem(id)
+   *     )
+   *   Future.sequence(orderedOperations)
+   * 
+   * @param fs a sequence of Function0's that returns Futures to be executed in sequence
+   * @return a `Future[Seq[A]]` containing the results of each future in fs
+   */
+  def sequence[A](fs: Seq[() => Future[A]]): Future[Seq[A]] = 
+    fs.foldLeft(Future(List.empty[A])) { (resultsFuture, nextFunction) =>
+      for {
+        results    <- resultsFuture
+        nextResult <- nextFunction()
+      } yield (results :+ nextResult)
+    }
+
+  /**
    * Collect the results from the given futures into a new future of
    * Seq[A]. If one or more of the given Futures is exceptional, the resulting
    * Future result will be the first exception encountered.
