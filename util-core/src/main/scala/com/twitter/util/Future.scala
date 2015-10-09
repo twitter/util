@@ -354,7 +354,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    *     )
    *   Future.sequence(orderedOperations)
    * 
-   * @param fs a sequence of Function0's that returns Futures to be executed in sequence
+   * @param fs a sequence of Function0s that returns Futures to be executed in sequence
    * @return a `Future[Seq[A]]` containing the results of each future in fs
    */
   def sequence[A](fs: Seq[() => Future[A]]): Future[Seq[A]] = 
