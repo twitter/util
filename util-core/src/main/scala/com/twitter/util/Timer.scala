@@ -269,10 +269,21 @@ class ScheduledThreadPoolTimer(
     }
   }
 
-  def stop(): Unit = underlying.shutdown()
+  def stop(): Unit =
+    underlying.shutdown()
+
+  /** exposed for testing, stops and cancels any pending tasks */
+  private[util] def stopWithPending(): Unit =
+    underlying.shutdownNow()
+
 }
 
-// Exceedingly useful for writing well-behaved tests.
+/**
+ * Exceedingly useful for writing well-behaved tests that need control
+ * over a [[Timer]]. This is due to it playing well with the [[Time]]
+ * manipulation methods such as [[Time.withTimeAt]], [[Time.withCurrentTimeFrozen]],
+ * and so on.
+ */
 class MockTimer extends Timer {
   // These are weird semantics admittedly, but there may
   // be a bunch of tests that rely on them already.

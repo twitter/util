@@ -114,7 +114,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
     val timer = new JavaTimer {
       override def logError(t: Throwable) {
         errors += 1
-        latch.countDown
+        latch.countDown()
       }
     }
 
@@ -130,7 +130,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
     latch = new CountDownLatch(1)
     timer.schedule(Time.now) {
       result = 1 + 1
-      latch.countDown
+      latch.countDown()
     }
 
     latch.await(30.seconds)
