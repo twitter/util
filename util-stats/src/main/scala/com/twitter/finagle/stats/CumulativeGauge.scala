@@ -1,8 +1,10 @@
 package com.twitter.finagle.stats
 
+import com.twitter.util.lint._
+import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.mutable
-import java.lang.ref.WeakReference
+import scala.collection.JavaConverters._
 
 /**
  * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)
@@ -35,6 +37,9 @@ private[finagle] abstract class CumulativeGauge {
   /** The number of active gauges */
   private[stats] def size: Int =
     get().size
+
+  /** Total number of gauges, including inactive */
+  private[stats] def totalSize: Int = underlying.size
 
   private[this] def removeGauge(underlyingGauge: UnderlyingGauge): Unit = synchronized {
     // first, clean up weakrefs
@@ -82,6 +87,28 @@ private[finagle] abstract class CumulativeGauge {
 trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
 
   private[this] val gauges = new ConcurrentHashMap[Seq[String], CumulativeGauge]()
+
+  def registerLargeGaugeLinter(rules: Rules): Unit = {
+    rules.add(Rule(
+      Category.Performance,
+      "Large CumulativeGauges",
+      "Identifies CumulativeGauges which are backed by very large numbers (100k+) " +
+        "of Gauges. Indicative of a leak or code registering the same gauge more " +
+        s"often than expected. (For $toString)"
+    ) {
+      val largeCgs = gauges.asScala.flatMap { case (ks, cg) =>
+        if (cg.totalSize >= 100000) Some(ks -> cg.totalSize)
+        else None
+      }
+      if (largeCgs.isEmpty) {
+        Nil
+      } else {
+        largeCgs.map { case (ks, size) =>
+          Issue(ks.mkString("/") + "=" + size)
+        }.toSeq
+      }
+    })
+  }
 
   /**
    * The StatsReceiver implements these. They provide the cumulated

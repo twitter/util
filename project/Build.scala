@@ -116,7 +116,7 @@ object Util extends Build {
       unidocSettings
   ) aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
-    utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
+    utilLint, utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
     utilEvents, utilStats, utilEval
   )
@@ -285,6 +285,15 @@ object Util extends Build {
     name := "util-jvm"
   ).dependsOn(utilApp, utilCore, utilTest % "test")
 
+  lazy val utilLint = Project(
+    id = "util-lint",
+    base = file("util-lint"),
+    settings = Project.defaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-lint"
+  )
+
   lazy val utilLogging = Project(
     id = "util-logging",
     base = file("util-logging"),
@@ -311,7 +320,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-stats"
-  ).dependsOn(utilCore)
+  ).dependsOn(utilCore, utilLint)
 
   lazy val utilTest = Project(
     id = "util-test",

@@ -1,6 +1,18 @@
 package com.twitter.finagle.stats
 
 /**
+ * Marker for a [[StatsReceiver]] that broadcasts metrics to more
+ * than one underlying [[StatsReceiver]].
+ */
+trait BroadcastStatsReceiver {
+  /**
+   * The underlying [[StatsReceiver StatsReceivers]] that are being
+   * broadcast to.
+   */
+  def statsReceivers: Seq[StatsReceiver]
+}
+
+/**
  * BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
  * StatsReceivers (n).
  */
@@ -12,7 +24,9 @@ object BroadcastStatsReceiver {
     case more => new N(more)
   }
 
-  private class Two(first: StatsReceiver, second: StatsReceiver) extends StatsReceiver {
+  private class Two(first: StatsReceiver, second: StatsReceiver) extends StatsReceiver
+    with BroadcastStatsReceiver
+  {
     val repr = this
 
     def counter(names: String*): Counter =
@@ -24,29 +38,35 @@ object BroadcastStatsReceiver {
     def addGauge(names: String*)(f: => Float): Gauge = new Gauge {
       val firstGauge = first.addGauge(names:_*)(f)
       val secondGauge = second.addGauge(names:_*)(f)
-      def remove() = {
+      def remove(): Unit = {
         firstGauge.remove()
         secondGauge.remove()
       }
     }
 
+    def statsReceivers: Seq[StatsReceiver] = Seq(first, second)
+
     override def toString: String =
       s"Broadcast($first, $second)"
   }
 
-  private class N(statsReceivers: Seq[StatsReceiver]) extends StatsReceiver {
+  private class N(srs: Seq[StatsReceiver]) extends StatsReceiver
+    with BroadcastStatsReceiver
+  {
     val repr = this
 
     def counter(names: String*): Counter =
-      BroadcastCounter(statsReceivers map { _.counter(names:_*) })
+      BroadcastCounter(srs.map { _.counter(names:_*) })
 
     def stat(names: String*): Stat =
-      BroadcastStat(statsReceivers map { _.stat(names:_*) })
+      BroadcastStat(srs.map { _.stat(names:_*) })
 
     def addGauge(names: String*)(f: => Float): Gauge = new Gauge {
-      val gauges = statsReceivers map { _.addGauge(names:_*)(f) }
-      def remove() = gauges foreach { _.remove() }
+      val gauges = srs.map { _.addGauge(names:_*)(f) }
+      def remove(): Unit = gauges.foreach { _.remove() }
     }
+
+    def statsReceivers: Seq[StatsReceiver] = srs
 
     override def toString: String =
       s"Broadcast(${statsReceivers.mkString(", ")})"
