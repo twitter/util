@@ -161,6 +161,8 @@ object NullMonitor extends Monitor {
   def handle(exc: Throwable) = false
   override def orElse(next: Monitor) = next
   override def andThen(next: Monitor) = next
+
+  def getInstance: Monitor = this
 }
 
 object RootMonitor extends Monitor {
@@ -182,4 +184,6 @@ object RootMonitor extends Monitor {
       log.log(Level.SEVERE, "Fatal exception propagated to the root monitor!", e)
       false
   }
+
+  def getInstance: Monitor = this
 }
