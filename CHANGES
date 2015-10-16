@@ -19,9 +19,9 @@ API Changes:
   * util-core: Remove deprecated methods from `com.twitter.util.Time` and
     `com.twitter.util.Duration`. ``RB_ID=751771``
 
-* util-core: Provide methods on `Stopwatch` so that users can take advantage of
-  `Time` manipulation tools in latency-sensitive code when measuring elapsed
-  time. ``RB_ID=75268``
+  * util-core: Provide methods on `Stopwatch` so that users can take advantage of
+    `Time` manipulation tools in latency-sensitive code when measuring elapsed
+    time. ``RB_ID=75268``
 
 Changes in Runtime Behavior:
 
