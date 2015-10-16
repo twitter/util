@@ -1519,19 +1519,39 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
 
       "liftToTry" should {
         "success" in {
-          val p = Future.value(3)
+          val p = const(Return(3))
           assert(Await.result(p.liftToTry) === Return(3))
         }
 
         "failure" in {
           val ex = new Exception()
-          val p = Future.exception(ex)
+          val p = const(Throw(ex))
           assert(Await.result(p.liftToTry) === Throw(ex))
         }
 
         "propagates interrupt" in {
           val p = new HandledPromise[Unit]
           p.liftToTry.raise(new Exception())
+          assert(p.handled.isDefined)
+        }
+      }
+      
+      "lowerFromTry" should {
+        "success" in {
+          val f = const(Return(Return(3)))
+          assert(Await.result(f.lowerFromTry) === 3)
+        }
+
+        "failure" in {
+          val ex = new Exception()
+          val p = const(Return(Throw(ex)))
+          val ex1 = intercept[Exception] { Await.result(p.lowerFromTry) }
+          assert(ex == ex1)
+        }
+
+        "propagates interrupt" in {
+          val p = new HandledPromise[Try[Unit]]
+          p.lowerFromTry.raise(new Exception())
           assert(p.handled.isDefined)
         }
       }

@@ -101,4 +101,12 @@ public class FutureCompilationTest {
     Assert.assertEquals("1", b.get("1"));
     Assert.assertEquals("2", b.get("2"));
   }
+
+  @Test
+  public void testLowerFromTry() throws Exception {
+    Try<String> t = new Return<String>("ok");
+    Future<Try<String>> f = Future.value(t);
+    String s = Await.result(Futures.lowerFromTry(f));
+    Assert.assertEquals("ok", s);
+  }
 }

@@ -1209,6 +1209,17 @@ abstract class Future[+A] extends Awaitable[A] {
    * Returns the result of the computation as a Future[Try[A]].
    */
   def liftToTry: Future[Try[A]] = transform(Future.value)
+  
+  /**
+   * Lowers a Future[Try[T]] into a Future[T].
+   */
+  def lowerFromTry[T](implicit ev: A <:< Try[T]): Future[T] =
+    this.flatMap { a =>
+      ev(a) match {
+        case Return(t) => Future.value(t)
+        case Throw(exc) => Future.exception(exc)
+      }
+    }
 
   /**
    * Makes a derivative Future which will be satisfied with the result
@@ -1513,6 +1524,11 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
    */
   def flatten[A](ffa: Future[Future[A]]): Future[A] = ffa.flatten
+
+  /**
+   * Lowers a Future[Try[T]] into a Future[T].
+   */
+  def lowerFromTry[T](f: Future[Try[T]]): Future[T] = f.lowerFromTry
 }
 
 /**
