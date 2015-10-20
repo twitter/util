@@ -34,7 +34,7 @@ trait Monitor { self =>
    * an exception - directly or not - it is handled by this
    * monitor.
    */
-  def apply(f: => Unit) = Monitor.using(this) {
+  def apply(f: => Unit): Unit = Monitor.using(this) {
     try f catch { case exc: Throwable => if (!handle(exc)) throw exc }
   }
 
@@ -42,7 +42,7 @@ trait Monitor { self =>
    * A new monitor which, if `this` fails to handle the exception,
    * attempts to let `next` handle it.
    */
-  def orElse(next: Monitor) = new Monitor {
+  def orElse(next: Monitor): Monitor = new Monitor {
     def handle(exc: Throwable): Boolean = {
       self.tryHandle(exc).rescue { case exc1 =>
         next.tryHandle(exc1)
@@ -55,7 +55,7 @@ trait Monitor { self =>
    * then passes it onto `next` unconditionally. The new monitor
    * handles the exception if either `this` or `next` does.
    */
-  def andThen(next: Monitor) = new Monitor {
+  def andThen(next: Monitor): Monitor = new Monitor {
     def handle(exc: Throwable): Boolean =
       self.tryHandle(exc) match {
         case Return(_) =>
@@ -88,22 +88,29 @@ trait Monitor { self =>
 object Monitor extends Monitor {
   private[this] val local = new Local[Monitor]
 
-  /** Get the current `Local` monitor */
-  def get = local() getOrElse NullMonitor
-  /** Set the `Local` monitor */
-  def set(m: Monitor) {
+  /**
+   * Get the current [[Local]] monitor or a [[NullMonitor]]
+   * if none has been [[set]].
+   */
+  def get: Monitor = local() match {
+    case Some(m) => m
+    case None => NullMonitor
+  }
+
+  /** Set the [[Local]] monitor */
+  def set(m: Monitor): Unit = {
     require(m ne this, "Cannot set the monitor to the global Monitor")
     local() = m
   }
 
-  /** Compute `f` with the `Local` monitor set to `m` */
+  /** Compute `f` with the [[Local]] monitor set to `m` */
   @inline
   def using[T](m: Monitor)(f: => T): T = restoring {
     set(m)
     f
   }
 
-  /** Restore the `Local` monitor after running computation `f` */
+  /** Restore the  [[Local]] monitor after running computation `f` */
   @inline
   def restoring[T](f: => T): T = {
     val saved = local()
@@ -121,16 +128,16 @@ object Monitor extends Monitor {
   }
 
   /**
-   * Run the computation `f` in the context of the current `Local`
+   * Run the computation `f` in the context of the current  [[Local]]
    * monitor.
    */
-  override def apply(f: => Unit) =
+  override def apply(f: => Unit): Unit =
     try f catch catcher
 
   /**
-   * Handle `exc` with the current `Local` monitor.  If the
-   * `Local` monitor fails to handle the exception, it is handled by
-   * the `RootMonitor`.
+   * Handle `exc` with the current  [[Local]] monitor. If the
+   *  [[Local]] monitor fails to handle the exception, it is handled by
+   * the [[RootMonitor]].
    */
   def handle(exc: Throwable): Boolean =
     (get orElse RootMonitor).handle(exc)
@@ -139,7 +146,7 @@ object Monitor extends Monitor {
   /**
    * Create a new monitor from a partial function.
    */
-  def mk(f: PartialFunction[Throwable, Boolean]) = new Monitor {
+  def mk(f: PartialFunction[Throwable, Boolean]): Monitor = new Monitor {
     def handle(exc: Throwable): Boolean = f.applyOrElse(exc, AlwaysFalse)
   }
 
@@ -147,7 +154,7 @@ object Monitor extends Monitor {
    * Checks whether or not monitoring is activated, meaning that the
    * currently-set Monitor is non-null.
    *
-   * @return true if currently-set Monitor is the NullMonitor. False otherwise.
+   * @return true if currently-set Monitor is the [[NullMonitor]]. False otherwise.
    */
   def isActive: Boolean = get != NullMonitor
 }

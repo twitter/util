@@ -35,6 +35,14 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
     }
   }
 
+  private object FailingTimer extends Timer {
+    def scheduleOnce(when: Time)(f: => Unit): TimerTask =
+      throw new Exception("schedule called")
+    def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask =
+      throw new Exception("schedule called")
+    def stop() = ()
+  }
+
   class HandledMonitor extends Monitor {
     var handled = null: Throwable
     def handle(exc: Throwable): Boolean = {
@@ -1376,13 +1384,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           // We manage to throw an exception inside
           // the scala compiler if we use MockTimer
           // here. Sigh.
-          implicit val timer = new Timer {
-            def schedule(when: Time)(f: => Unit): TimerTask =
-              throw new Exception("schedule called")
-            def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
-              throw new Exception("schedule called")
-            def stop() = ()
-          }
+          implicit val timer = FailingTimer
           val p = new Promise[Int]
           assert(p.within(Duration.Top) === p)
         }
@@ -1463,13 +1465,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           // We manage to throw an exception inside
           // the scala compiler if we use MockTimer
           // here. Sigh.
-          implicit val timer = new Timer {
-            def schedule(when: Time)(f: => Unit): TimerTask =
-              throw new Exception("schedule called")
-            def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
-              throw new Exception("schedule called")
-            def stop() = ()
-          }
+          implicit val timer = FailingTimer
           val p = new Promise[Int]
           assert(p.raiseWithin(Duration.Top) === p)
         }

@@ -6,6 +6,14 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-core: `Timer` now has final implementations for `schedule` which delegate
+    to new protected `scheduleOnce` and `schedulePeriodically` methods. This is
+    done to ensure that `Locals` are captured when the task is scheduled and
+    then used when the task is run. Existing `Timer` implementations should rename
+    their existing `schedule` methods to work with the new interface. ``RB_ID=755387``
+
 6.29.0  2015-10-15
 
 New Features:
@@ -25,13 +33,17 @@ API Changes:
 
 Changes in Runtime Behavior:
 
-  * util-logging: `QueueingHandler` does not create a separate thread per instance.
-    ``RB_ID=745567`
-
   * util-core: The Scheduler clock stats were decommissioned as they only make sense
     relative to `wallTime` and the tracking error we have experienced `wallTime` and
     `*Time` make it impossible to use them reliably. It is not worth the performance
-    and code complexity to support them.
+    and code complexity to support them. ``RB_ID=750239``
+
+  * util-core: `JavaTimer` and `ScheduledThreadPoolTimer` now capture the `Local`
+    state when scheduled and is used along with that `Monitor` when the `TimerTask`
+    is run. ``RB_ID=755387``
+
+  * util-logging: `QueueingHandler` does not create a separate thread per instance.
+    ``RB_ID=745567`
 
 6.28.0  2015-09-25
 

@@ -17,6 +17,9 @@ trait TimerTask extends Closable {
  * Timers are used to schedule tasks in the future.
  * They support both one-shot and recurring tasks.
  *
+ * Timers propagate [[Local]] state, including the [[Monitor]], from when the task
+ * is scheduled to when it is run.
+ *
  * @note Scheduling tasks with [[Timer]]s should rarely
  * be done directly; for example, when programming
  * with [[Future]]s, prefer using [[Future.sleep]].
@@ -25,19 +28,40 @@ trait Timer {
   /**
    * Run `f` at time `when`.
    */
-  def schedule(when: Time)(f: => Unit): TimerTask
+  final def schedule(when: Time)(f: => Unit): TimerTask = {
+    val locals = Local.save()
+    scheduleOnce(when) {
+      Local.let(locals)(monitor(f))
+    }
+  }
+
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask
 
   /**
    * Run `f` at time `when`; subsequently run `f` at every
    * elapsed `period`.
    */
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask
+  final def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
+    val locals = Local.save()
+    schedulePeriodically(when, period) {
+      Local.let(locals)(monitor(f))
+    }
+  }
+
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask
 
   /**
    * Run `f` every elapsed `period`, starting `period` from now.
    */
-  def schedule(period: Duration)(f: => Unit): TimerTask =
+  final def schedule(period: Duration)(f: => Unit): TimerTask =
     schedule(period.fromNow, period)(f)
+
+  /**
+   * Which [[Monitor]] to run the given tasks under.
+   *
+   * Defaults to [[Monitor.get]] which looks in the [[Local]] context.
+   */
+  protected def monitor: Monitor = Monitor.get
 
   /**
    * Performs an operation after the specified delay.  Interrupting the Future
@@ -82,6 +106,10 @@ trait Timer {
 }
 
 object Timer {
+  /**
+   * A singleton instance of a [[NullTimer]] that invokes all tasks
+   * immediately with the current thread.
+   */
   val Nil: Timer = new NullTimer
 }
 
@@ -90,11 +118,11 @@ object Timer {
  * and inline.
  */
 class NullTimer extends Timer {
-  def schedule(when: Time)(f: => Unit): TimerTask = {
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask = {
     f
     NullTimerTask
   }
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask = {
     f
     NullTimerTask
   }
@@ -107,9 +135,10 @@ object NullTimerTask extends TimerTask {
 }
 
 class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
-  def schedule(when: Time)(f: => Unit): TimerTask =
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask =
     underlying.schedule(when)(f)
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask =
     underlying.schedule(when, period)(f)
 
   def stop(): Unit = {
@@ -146,10 +175,10 @@ class ReferenceCountingTimer(factory: () => Timer)
   // Just dispatch to the underlying timer. It's the responsibility of
   // the API consumer to not call into the timer once it has been
   // stopped.
-  def schedule(when: Time)(f: => Unit): TimerTask =
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask =
     underlying.schedule(when)(f)
 
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask =
     underlying.schedule(when, period)(f)
 }
 
@@ -170,13 +199,22 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
     case None => new java.util.Timer(isDaemon)
   }
 
-  def schedule(when: Time)(f: => Unit): TimerTask = {
+  private[this] val _monitor = Monitor.mk {
+    case NonFatal(t) =>
+      logError(t)
+      true
+    case fatal: Throwable =>
+      logError(fatal)
+      throw fatal
+  }
+
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(f)
     underlying.schedule(task, safeTime(when).toDate)
     toTimerTask(task)
   }
 
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(f)
     underlying.schedule(task, safeTime(when).toDate, period.inMillis)
     toTimerTask(task)
@@ -203,21 +241,15 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
     time.max(Time.epoch)
   }
 
+  override protected def monitor: Monitor =
+    Monitor.get.orElse(_monitor)
+
   private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
-    def run(): Unit = {
-      try {
-        f
-      } catch {
-        case NonFatal(t) => logError(t)
-        case fatal: Throwable =>
-          logError(fatal)
-          throw fatal
-      }
-    }
+    def run(): Unit = f
   }
 
   private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
-    def cancel(): Unit = { task.cancel() }
+    def cancel(): Unit = task.cancel()
   }
 }
 
@@ -243,8 +275,12 @@ class ScheduledThreadPoolTimer(
       new ScheduledThreadPoolExecutor(poolSize, threadFactory, h)
   }
 
-  def schedule(when: Time)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run(): Unit = f }
+  private[this] def toRunnable(f: => Unit): Runnable = new Runnable {
+    def run(): Unit = f
+  }
+
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask = {
+    val runnable = toRunnable(f)
     val javaFuture = underlying.schedule(runnable, when.sinceNow.inMillis, TimeUnit.MILLISECONDS)
     new TimerTask {
       def cancel(): Unit = {
@@ -254,11 +290,11 @@ class ScheduledThreadPoolTimer(
     }
   }
 
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask =
     schedule(when.sinceNow, period)(f)
 
   def schedule(wait: Duration, period: Duration)(f: => Unit): TimerTask = {
-    val runnable = new Runnable { def run(): Unit = f }
+    val runnable = toRunnable(f)
     val javaFuture = underlying.scheduleAtFixedRate(runnable,
       wait.inMillis, period.inMillis, TimeUnit.MILLISECONDS)
     new TimerTask {
@@ -311,10 +347,10 @@ class MockTimer extends Timer {
     val now = Time.now
     val (toRun, toQueue) = tasks.partition { task => task.when <= now }
     tasks = toQueue
-    toRun filter { !_.isCancelled } foreach { _.runner() }
+    toRun.filterNot(_.isCancelled).foreach(_.runner())
   }
 
-  def schedule(when: Time)(f: => Unit): TimerTask = synchronized {
+  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask = synchronized {
     val task = Task(when, () => f)
     tasks += task
     task
@@ -324,7 +360,7 @@ class MockTimer extends Timer {
    * Pay attention that ticking frozen time forward more than 1x duration will
    * result in only one invocation of your task.
    */
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
+  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask = {
     var isCancelled = false
 
     val task = new TimerTask {

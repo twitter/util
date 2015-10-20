@@ -1,26 +1,38 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicInteger
+import com.twitter.conversions.time._
 import java.util.concurrent.{CancellationException, ExecutorService}
-
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
-import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.{IntegrationPatience, Eventually}
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.time.{Millis, Seconds, Span}
-
-import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
-class TimerTest extends FunSuite with MockitoSugar with Eventually  {
+class TimerTest extends FunSuite
+  with MockitoSugar
+  with Eventually
+  with IntegrationPatience
+{
 
-  implicit override val patienceConfig =
-    PatienceConfig(timeout = scaled(Span(4, Seconds)), interval = scaled(Span(5, Millis)))
-
+  private def testTimerRunsWithLocals(timer: Timer): Unit = {
+    val timerLocal = new AtomicInteger(0)
+    val local = new Local[Int]
+    val expectedVal = 99
+    local.let(expectedVal) {
+      timer.schedule(Time.now + 10.millis) {
+        timerLocal.set(local().getOrElse(-1))
+      }
+    }
+    eventually {
+      assert(expectedVal == timerLocal.get())
+    }
+    timer.stop()
+  }
 
   test("ThreadStoppingTimer should stop timers in a different thread") {
     val executor = mock[ExecutorService]
@@ -69,6 +81,12 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
     verify(underlying).stop()
   }
 
+  test("ReferenceCountingTimer should have Locals") {
+    val timer = new ReferenceCountingTimer(() => new JavaTimer())
+    timer.acquire()
+    testTimerRunsWithLocals(timer)
+  }
+
   test("ScheduledThreadPoolTimer should initialize and stop") {
     val timer = new ScheduledThreadPoolTimer(1)
     assert(timer != null)
@@ -105,6 +123,10 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
     Thread.sleep(1.seconds.inMillis)
     assert(counter.get() != 1)
     timer.stop()
+  }
+
+  test("ScheduledThreadPoolTimer should have Locals") {
+    testTimerRunsWithLocals(new ScheduledThreadPoolTimer())
   }
 
   test("JavaTimer should not stop working when an exception is thrown") {
@@ -170,6 +192,10 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
     Thread.sleep(1.seconds.inMillis)
     assert(counter.get() != 1)
     timer.stop()
+  }
+
+  test("JavaTimer should have Locals") {
+    testTimerRunsWithLocals(new JavaTimer())
   }
 
   test("Timer should doLater") {
@@ -281,4 +307,56 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually  {
       assert(counter.get() == 1)
     }
   }
+
+  private def mockTimerLocalPropagation(
+    timer: MockTimer,
+    localValue: Int
+  ): Int = {
+    Time.withCurrentTimeFrozen { tc =>
+      val timerLocal = new AtomicInteger(0)
+      val local = new Local[Int]
+      local.let(localValue) {
+        timer.schedule(Time.now + 10.millis) {
+          timerLocal.set(local().getOrElse(-1))
+        }
+      }
+      tc.advance(20.millis)
+      timer.tick()
+      timerLocal.get()
+    }
+  }
+
+  test("MockTimer propagateLocals") {
+    val timer = new MockTimer()
+    assert(mockTimerLocalPropagation(timer, 99) == 99)
+  }
+
+  private class SomeEx extends Exception
+
+  private def testTimerUsesLocalMonitor(timer: Timer): Unit = {
+    val seen = new AtomicInteger(0)
+    val monitor = Monitor.mk { case _: SomeEx =>
+      seen.incrementAndGet()
+      true
+    }
+    Monitor.using(monitor) {
+      timer.schedule(Time.now + 10.millis) { throw new SomeEx }
+    }
+
+    eventually {
+      assert(1 == seen.get)
+    }
+    timer.stop()
+  }
+
+  test("JavaTimer uses local Monitor") {
+    val timer = new JavaTimer(true, Some("TimerTest"))
+    testTimerUsesLocalMonitor(timer)
+  }
+
+  test("ScheduledThreadPoolTimer uses local Monitor") {
+    val timer = new ScheduledThreadPoolTimer()
+    testTimerUsesLocalMonitor(timer)
+  }
+
 }
