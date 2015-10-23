@@ -1,8 +1,7 @@
 package com.twitter.finagle.stats
 
-import com.twitter.util.Future
 import java.lang.{Float => JFloat}
-import java.util.concurrent.{Callable, TimeUnit}
+import java.util.concurrent.Callable
 import scala.annotation.varargs
 
 object StatsReceiver {
@@ -61,45 +60,6 @@ trait StatsReceiver { self =>
    * is helpful to check for a [[NullStatsReceiver]].
    */
   def isNull: Boolean = false
-
-  /**
-   * Time a given function using the given TimeUnit.
-   */
-  @deprecated("Use Stat.time instead", "2015-2-22")
-  def time[T](unit: TimeUnit, stat: Stat)(f: => T): T = Stat.time(stat, unit)(f)
-
-  /**
-   * Time a given function using the given TimeUnit.
-   */
-  @deprecated("Use Stat.time instead", "2015-2-22")
-  def time[T](unit: TimeUnit, name: String*)(f: => T): T = time(unit, stat(name: _*))(f)
-
-  /**
-   * Time a given function in milliseconds.
-   */
-  @deprecated("Use Stat.time instead", "2015-2-22")
-  def time[T](name: String*)(f: => T): T = time(TimeUnit.MILLISECONDS, name: _*)(f)
-
-  /**
-   * Time a given future using the given TimeUnit.
-   */
-  @deprecated("Use Stat.timeFuture instead", "2015-2-22")
-  def timeFuture[T](unit: TimeUnit, stat: Stat)(f: => Future[T]): Future[T] =
-    Stat.timeFuture(stat, unit)(f)
-
-  /**
-   * Time a given future using the given TimeUnit.
-   */
-  @deprecated("Use Stat.timeFuture instead", "2015-2-22")
-  def timeFuture[T](unit: TimeUnit, name: String*)(f: => Future[T]): Future[T] =
-    timeFuture(unit, stat(name: _*))(f)
-
-  /**
-   * Time a given future in milliseconds.
-   */
-  @deprecated("Use Stat.timeFuture instead", "2015-2-22")
-  def timeFuture[T](name: String*)(f: => Future[T]): Future[T] =
-    timeFuture(TimeUnit.MILLISECONDS, name: _*)(f)
 
   /**
    * Get a [[Counter counter]] with the given `name`.

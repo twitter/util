@@ -17,6 +17,9 @@ API Changes:
   * util-core: Remove deprecated `FuturePool.defaultPool`, callers should
     use `FuturePool.unboundedPool` instead. ``RB_ID=757499``
 
+  * util-stats: Remove deprecated methods on `com.twitter.finagle.stats.StatsReceiver`.
+    ``RB_ID=757414``
+
 6.29.0  2015-10-15
 
 New Features:

@@ -60,16 +60,16 @@ class StatsReceiverTest extends FunSuite {
   test("StatsReceiver time") {
     val receiver = spy(new InMemoryStatsReceiver)
 
-    receiver.time("er", "mah", "gerd") { () }
+    Stat.time(receiver.stat("er", "mah", "gerd")) { () }
     verify(receiver, times(1)).stat("er", "mah", "gerd")
 
-    receiver.time(TimeUnit.NANOSECONDS, "er", "mah", "gerd") { () }
+    Stat.time(receiver.stat("er", "mah", "gerd"), TimeUnit.NANOSECONDS) { () }
     verify(receiver, times(2)).stat("er", "mah", "gerd")
 
     val stat = receiver.stat("er", "mah", "gerd")
     verify(receiver, times(3)).stat("er", "mah", "gerd")
 
-    receiver.time(TimeUnit.DAYS, stat) { () }
+    Stat.time(stat, TimeUnit.DAYS) { () }
     verify(receiver, times(3)).stat("er", "mah", "gerd")
   }
 
