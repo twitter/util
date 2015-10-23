@@ -14,6 +14,9 @@ API Changes:
     then used when the task is run. Existing `Timer` implementations should rename
     their existing `schedule` methods to work with the new interface. ``RB_ID=755387``
 
+  * util-core: Remove deprecated `FuturePool.defaultPool`, callers should
+    use `FuturePool.unboundedPool` instead. ``RB_ID=757499``
+
 6.29.0  2015-10-15
 
 New Features:
