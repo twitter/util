@@ -67,9 +67,9 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    */
   @tailrec
   final def poll(): Future[T] = state.get match {
-    case s@Idle =>
+    case Idle =>
       val p = new Promise[T]
-      if (state.compareAndSet(s, Polling(queueOf(p)))) p else poll()
+      if (state.compareAndSet(Idle, Polling(queueOf(p)))) p else poll()
 
     case s@Polling(q) =>
       val p = new Promise[T]
@@ -91,8 +91,8 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    */
   @tailrec
   final def offer(elem: T): Boolean = state.get match {
-    case s@Idle =>
-      if (!state.compareAndSet(s, Offering(queueOf(elem))))
+    case Idle =>
+      if (!state.compareAndSet(Idle, Offering(queueOf(elem))))
         offer(elem)
       else true
 
@@ -154,8 +154,8 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    */
   @tailrec
   final def fail(exc: Throwable, discard: Boolean): Unit = state.get match {
-    case s@Idle =>
-      if (!state.compareAndSet(s, Excepting(Queue.empty, exc)))
+    case Idle =>
+      if (!state.compareAndSet(Idle, Excepting(Queue.empty, exc)))
         fail(exc, discard)
 
     case s@Polling(q) =>
