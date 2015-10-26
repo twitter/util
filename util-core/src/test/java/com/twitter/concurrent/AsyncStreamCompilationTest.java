@@ -1,9 +1,9 @@
-package com.twitter.concurrent.exp;
+package com.twitter.concurrent;
 
+import com.twitter.concurrent.AsyncStream;
 import com.twitter.util.Await;
 import com.twitter.util.Function;
 import com.twitter.util.Function0;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class AsyncStreamCompilationTest {

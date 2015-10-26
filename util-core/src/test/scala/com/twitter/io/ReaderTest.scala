@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.concurrent.exp.AsyncStream
+import com.twitter.concurrent.AsyncStream
 import com.twitter.io.Reader.ReaderDiscarded
 import com.twitter.util.{Await, Future, Promise}
 import java.io.{ByteArrayOutputStream, OutputStream}

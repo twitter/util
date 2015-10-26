@@ -20,6 +20,10 @@ API Changes:
   * util-stats: Remove deprecated methods on `com.twitter.finagle.stats.StatsReceiver`.
     ``RB_ID=757414``
 
+  * util-core: `AsyncStream` graduates out of `com.twitter.concurrent.exp` into
+    `com.twitter.concurrent`. Backwards compatibility aliases remain for Scala
+    users, but Java users will need to update their imports. ``RB_ID=758061``
+
 6.29.0  2015-10-15
 
 New Features:

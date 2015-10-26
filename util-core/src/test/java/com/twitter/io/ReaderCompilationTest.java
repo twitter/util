@@ -1,7 +1,7 @@
 /* Copyright 2015 Twitter, Inc. */
 package com.twitter.io;
 
-import com.twitter.concurrent.exp.AsyncStream;
+import com.twitter.concurrent.AsyncStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 

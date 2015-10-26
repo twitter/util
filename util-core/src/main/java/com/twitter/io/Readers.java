@@ -4,7 +4,7 @@ package com.twitter.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import com.twitter.concurrent.exp.AsyncStream;
+import com.twitter.concurrent.AsyncStream;
 import com.twitter.util.Future;
 import scala.runtime.BoxedUnit;
 

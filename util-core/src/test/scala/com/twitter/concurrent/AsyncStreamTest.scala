@@ -1,6 +1,6 @@
-package com.twitter.concurrent.exp
+package com.twitter.concurrent
 
-import com.twitter.util.{Await, Promise, Future}
+import com.twitter.util.{Await, Future, Promise}
 import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
@@ -9,7 +9,7 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 @RunWith(classOf[JUnitRunner])
 class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
-  import AsyncStream.{mk, fromSeq, of}
+  import AsyncStream.{fromSeq, mk, of}
   import AsyncStreamTest._
 
   test("strict head") {

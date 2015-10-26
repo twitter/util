@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.concurrent.exp.AsyncStream
+import com.twitter.concurrent.AsyncStream
 import com.twitter.io.{Buf, Reader}
 import com.twitter.util.{Await, Future, StdBenchAnnotations}
 import org.openjdk.jmh.annotations.{Benchmark, Param, Scope, State}

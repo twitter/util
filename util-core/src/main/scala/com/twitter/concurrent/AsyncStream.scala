@@ -1,6 +1,6 @@
-package com.twitter.concurrent.exp
+package com.twitter.concurrent
 
-import com.twitter.util.{Await, Future, Return, Throw}
+import com.twitter.util.{Future, Return, Throw}
 import scala.collection.mutable
 
 /**
@@ -53,7 +53,7 @@ private object LazySeq {
  */
 final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]]) {
   import AsyncStream._
-  import LazySeq.{Empty, One, Cons}
+  import LazySeq.{Cons, Empty, One}
 
   /**
    * Returns true if there are no elements in the stream.
@@ -323,7 +323,7 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    *
    * Note: For clarity, we imagine that surrounding a function with backticks
    * (`) allows infix usage.
-   * 
+   *
    * {{{
    *     (1 +:: 2 +:: 3 +:: empty).foldRight(z)(f)
    *   = 1 `f` flatMap (2 `f` flatMap (3 `f` z))
@@ -404,7 +404,7 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
 }
 
 object AsyncStream {
-  import LazySeq.{Empty, One, Cons}
+  import LazySeq.{Cons, Empty, One}
 
   implicit class Ops[A](tail: => AsyncStream[A]) {
     /**
@@ -463,7 +463,7 @@ object AsyncStream {
    */
   def fromFuture[A](f: Future[A]): AsyncStream[A] =
     AsyncStream(f.map(One(_)))
-  
+
   /**
    * Transformation (or lift) from `Option[A]` into `AsyncStream[A]`.
    */

@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.concurrent.exp.AsyncStream
+import com.twitter.concurrent.AsyncStream
 import com.twitter.util._
 import java.io.{
   File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
