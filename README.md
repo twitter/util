@@ -3,6 +3,7 @@
 [![Build status](https://travis-ci.org/twitter/util.svg?branch=develop)](https://travis-ci.org/twitter/util)
 [![Coverage status](https://img.shields.io/coveralls/twitter/util/develop.svg)](https://coveralls.io/r/twitter/util?branch=develop)
 [![Project status](https://img.shields.io/badge/status-active-brightgreen.svg)](#status)
+[![Gitter](https://img.shields.io/badge/gitter-join%20chat-green.svg)](https://gitter.im/twitter/finagle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Maven Central](https://img.shields.io/maven-central/v/com.twitter/util_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/com.twitter/util_2.11)
 
 A bunch of idiomatic, small, general purpose tools.
