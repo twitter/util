@@ -154,4 +154,28 @@ class ActivityTest extends FunSuite {
     w.notify(Return(123))
     assert(a.sample() === 123)
   }
+
+  test("Activity.join") {
+    val (a, aw) = Activity[Int]()
+    val (b, bw) = Activity[String]()
+
+    val ab = Activity.join(a, b)
+    
+    val ref = new AtomicReference[Seq[Activity.State[(Int, String)]]]
+    ab.states.build.register(Witness(ref))
+    
+    assert(ref.get === Seq(Activity.Pending))
+    
+    aw.notify(Return(1))
+    assert(ref.get === Seq(Activity.Pending, Activity.Pending))
+    bw.notify(Return("ok"))
+    assert(ref.get === Seq(Activity.Pending, Activity.Pending, Activity.Ok((1, "ok"))))
+    
+    val exc = new Exception
+    aw.notify(Throw(exc))
+    assert(ref.get === Seq(
+      Activity.Pending, Activity.Pending, 
+      Activity.Ok((1, "ok")), Activity.Failed(exc)))
+  }
+
 }

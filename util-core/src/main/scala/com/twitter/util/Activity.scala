@@ -158,6 +158,134 @@ object Activity {
   }
 
   /**
+   * Join 2 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B](a: Activity[A],b: Activity[B]): Activity[(A,B)] = collect(Seq(a,b)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B]) }
+  /**
+   * Join 3 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C](a: Activity[A],b: Activity[B],c: Activity[C]): Activity[(A,B,C)] = collect(Seq(a,b,c)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C]) }
+  /**
+   * Join 4 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D]): Activity[(A,B,C,D)] = collect(Seq(a,b,c,d)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D]) }
+  /**
+   * Join 5 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E]): Activity[(A,B,C,D,E)] = collect(Seq(a,b,c,d,e)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E]) }
+  /**
+   * Join 6 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F]): Activity[(A,B,C,D,E,F)] = collect(Seq(a,b,c,d,e,f)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F]) }
+  /**
+   * Join 7 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G]): Activity[(A,B,C,D,E,F,G)] = collect(Seq(a,b,c,d,e,f,g)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G]) }
+  /**
+   * Join 8 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H]): Activity[(A,B,C,D,E,F,G,H)] = collect(Seq(a,b,c,d,e,f,g,h)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H]) }
+  /**
+   * Join 9 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I]): Activity[(A,B,C,D,E,F,G,H,I)] = collect(Seq(a,b,c,d,e,f,g,h,i)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I]) }
+  /**
+   * Join 10 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J]): Activity[(A,B,C,D,E,F,G,H,I,J)] = collect(Seq(a,b,c,d,e,f,g,h,i,j)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J]) }
+  /**
+   * Join 11 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K]): Activity[(A,B,C,D,E,F,G,H,I,J,K)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K]) }
+  /**
+   * Join 12 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L]) }
+  /**
+   * Join 13 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M]) }
+  /**
+   * Join 14 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N]) }
+  /**
+   * Join 15 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O]) }
+  /**
+   * Join 16 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P]) }
+  /**
+   * Join 17 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P],q: Activity[Q]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P],ss(16).asInstanceOf[Q]) }
+  /**
+   * Join 18 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P],q: Activity[Q],r: Activity[R]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P],ss(16).asInstanceOf[Q],ss(17).asInstanceOf[R]) }
+  /**
+   * Join 19 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P],q: Activity[Q],r: Activity[R],s: Activity[S]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P],ss(16).asInstanceOf[Q],ss(17).asInstanceOf[R],ss(18).asInstanceOf[S]) }
+  /**
+   * Join 20 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P],q: Activity[Q],r: Activity[R],s: Activity[S],t: Activity[T]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P],ss(16).asInstanceOf[Q],ss(17).asInstanceOf[R],ss(18).asInstanceOf[S],ss(19).asInstanceOf[T]) }
+  /**
+   * Join 21 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P],q: Activity[Q],r: Activity[R],s: Activity[S],t: Activity[T],u: Activity[U]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P],ss(16).asInstanceOf[Q],ss(17).asInstanceOf[R],ss(18).asInstanceOf[S],ss(19).asInstanceOf[T],ss(20).asInstanceOf[U]) }
+  /**
+   * Join 22 Activities. The returned Activity is complete when all
+   * underlying Activities are nonpending. It fails immediately if any of them
+   * do.
+   */
+  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a: Activity[A],b: Activity[B],c: Activity[C],d: Activity[D],e: Activity[E],f: Activity[F],g: Activity[G],h: Activity[H],i: Activity[I],j: Activity[J],k: Activity[K],l: Activity[L],m: Activity[M],n: Activity[N],o: Activity[O],p: Activity[P],q: Activity[Q],r: Activity[R],s: Activity[S],t: Activity[T],u: Activity[U],v: Activity[V]): Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)] = collect(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v)) map { ss => (ss(0).asInstanceOf[A],ss(1).asInstanceOf[B],ss(2).asInstanceOf[C],ss(3).asInstanceOf[D],ss(4).asInstanceOf[E],ss(5).asInstanceOf[F],ss(6).asInstanceOf[G],ss(7).asInstanceOf[H],ss(8).asInstanceOf[I],ss(9).asInstanceOf[J],ss(10).asInstanceOf[K],ss(11).asInstanceOf[L],ss(12).asInstanceOf[M],ss(13).asInstanceOf[N],ss(14).asInstanceOf[O],ss(15).asInstanceOf[P],ss(16).asInstanceOf[Q],ss(17).asInstanceOf[R],ss(18).asInstanceOf[S],ss(19).asInstanceOf[T],ss(20).asInstanceOf[U],ss(21).asInstanceOf[V]) }
+
+
+  /**
    * A Java friendly method for `Activity.collect()`.
    */
   def collect[T <: Object](activities: JList[Activity[T]]): Activity[JList[T]] = {
