@@ -220,6 +220,10 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
       underlying.map {
         case Empty => Empty
         case o@One(_) => o
+        // If we don't handle this case specially, then the next case
+        // would return a stream whose full evaluation will evaulate
+        // cons.tail.take(0), forcing one more effect than necessary.
+        case cons: Cons[A] if n == 1 => One(cons.head)
         case cons: Cons[A] => Cons(cons.head, cons.tail.take(n - 1))
       }
     )
@@ -401,6 +405,63 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
   }
 
   override def toString(): String = s"AsyncStream($underlying)"
+
+  /**
+   * Buffer the specified number of items from the stream, or all
+   * remaining items if the end of the stream is reached before finding
+   * that many items. In all cases, this method should act like
+   * <http://www.scala-lang.org/api/current/index.html#scala.collection.GenTraversableLike@splitAt(n:Int):(Repr,Repr)>
+   * and not cause evaluation of the remainder of the stream.
+   */
+  private[concurrent] def buffer(n: Int): Future[(Seq[A], () => AsyncStream[A])] = {
+    // pre-allocate the buffer, unless it's very large
+    val buffer = new mutable.ArrayBuffer[A](n.min(1024))
+
+    def fillBuffer(sizeRemaining: Int)(s: => AsyncStream[A]): Future[(Seq[A], () => AsyncStream[A])] =
+      if (sizeRemaining < 1) {
+        Future.value((buffer, () => s))
+      } else {
+        s.underlying.flatMap {
+          case Empty =>
+            Future.value((buffer, () => s))
+          case One(item) =>
+            buffer += item
+            Future.value((buffer, () => empty))
+          case cons: Cons[A] =>
+            buffer += cons.head
+            fillBuffer(sizeRemaining - 1)(cons.tail)
+        }
+      }
+
+    fillBuffer(n)(this)
+  }
+
+  /**
+   * Convert the stream into a stream of groups of items. This
+   * facilitates batch processing of the items in the stream. In all
+   * cases, this method should act like
+   * <http://www.scala-lang.org/api/current/index.html#scala.collection.IterableLike@grouped(size:Int):Iterator[Repr]>
+   * The resulting stream will cause this original stream to be
+   * evaluated group-wise, so calling this method will cause the first
+   * `groupSize` cells to be evaluated (even without examining the
+   * result), and accessing each subsequent element will evaluate a
+   * further `groupSize` elements from the stream.
+   *
+   * @param groupSize must be a positive number, or an IllegalArgumentException will be thrown.
+   */
+  def grouped(groupSize: Int): AsyncStream[Seq[A]] =
+    if (groupSize > 1) {
+      AsyncStream {
+        buffer(groupSize).map {
+          case (items, _) if items.isEmpty => Empty
+          case (items, remaining) => Cons(items, remaining().grouped(groupSize))
+        }
+      }
+    } else if (groupSize == 1) {
+      map(Seq(_))
+    } else {
+      throw new IllegalArgumentException(s"groupSize must be positive, but was $groupSize")
+    }
 }
 
 object AsyncStream {
