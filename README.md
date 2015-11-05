@@ -124,7 +124,6 @@ val pool = new FactoryPool[Int](4) {
 
 It checks the health when you successfully reserve an object (i.e., when the Future yields).
 
-```
 # Hashing
 
 `util-hashing` is a collection of hash functions and hashing distributors (eg. ketama).
