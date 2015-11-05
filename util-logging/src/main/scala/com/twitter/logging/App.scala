@@ -25,6 +25,8 @@ trait Logging { self: App =>
   import Logging._
 
   lazy val log = Logger(name)
+
+  def defaultFormatter: Formatter = new Formatter()
   def defaultOutput: String = "/dev/stderr"
   def defaultLogLevel: Level = Level.INFO
   def defaultRollPolicy: Policy = Policy.Never
@@ -56,21 +58,25 @@ trait Logging { self: App =>
   def handlers: List[() => Handler] = {
     val output = outputFlag()
     val level = Some(levelFlag())
-    var handler =
+    val handler =
       if (output == "/dev/stderr")
-        ConsoleHandler(level = level)
+        ConsoleHandler(defaultFormatter, level)
       else
         FileHandler(
           output,
           rollPolicyFlag(),
           appendFlag(),
           rotateCountFlag(),
-          level = level
+          defaultFormatter,
+          level
         )
-    if (asyncFlag())
-      handler = QueueingHandler(handler, asyncMaxSizeFlag())
 
-    handler :: Nil
+    List(
+      if (asyncFlag())
+        QueueingHandler(handler, asyncMaxSizeFlag())
+      else
+        handler
+    )
   }
 
   def loggerFactories: List[LoggerFactory] = {
