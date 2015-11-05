@@ -55,6 +55,16 @@ object Level {
   def parse(name: String): Option[Level] = AllLevels.find(_.name == name)
 }
 
+/**
+ * Typically mixed into `Exceptions` to indicate what [[Level]]
+ * they should be logged at.
+ *
+ * @see Finagle's `com.twitter.finagle.Failure`.
+ */
+trait HasLogLevel {
+  def logLevel: Level
+}
+
 class LoggingException(reason: String) extends Exception(reason)
 
 /**
