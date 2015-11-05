@@ -4,22 +4,22 @@ import java.io.File
 
 object TempDirectory {
   /**
-   * Create a new temporary directory, which will be deleted upon the exit of the VM.
+   * Create a new temporary directory which is optionally registered to be deleted upon the exit
+   * of the VM.
    *
-   * @return File representing the directory
+   * @param deleteAtExit Whether to register a JVM shutdown hook to delete the directory.
+   * @return File representing the directory.
    */
   def create(deleteAtExit: Boolean = true): File = {
-    var file = File.createTempFile("temp", "dir")
-    file.delete()
-    file.mkdir()
+    val path = java.nio.file.Files.createTempDirectory("TempDirectory")
 
     if (deleteAtExit)
       Runtime.getRuntime().addShutdownHook(new Thread {
         override def run() {
-          Files.delete(file)
+          Files.delete(path.toFile)
         }
       })
 
-    file
+    path.toFile
   }
 }
