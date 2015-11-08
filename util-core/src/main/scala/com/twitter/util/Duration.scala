@@ -364,9 +364,20 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
   /**
    * Scales this `Duration` by multiplying by `x`.
    */
-  def *(x: Long): Duration = try fromNanoseconds(LongOverflowArith.mul(nanos, x)) catch {
-    case _: LongOverflowException if nanos < 0 == x < 0 => Top
-    case _: LongOverflowException => Bottom
+  def *(x: Long): Duration = {
+    def overflowedDuration(a: Long, b: Long): Duration =
+      if ((a < 0) == (b < 0)) Duration.Top else Duration.Bottom
+
+    // a < b
+    def multiplyNanos(a: Long, b: Long): Duration =
+      if (a < 0L)
+        if (b < 0L && a < Long.MaxValue / b) overflowedDuration(a, b)
+        else if (b > 0L && Long.MinValue / b > a) overflowedDuration(a, b)
+        else Duration.fromNanoseconds(a * b)
+      else if (a > 0L && a > Long.MaxValue / b) overflowedDuration(a, b)
+      else Duration.fromNanoseconds(a * b)
+
+    if (nanos > x) multiplyNanos(x, nanos) else multiplyNanos(nanos, x)
   }
 
   /**

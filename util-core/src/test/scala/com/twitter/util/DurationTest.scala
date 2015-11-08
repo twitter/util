@@ -28,16 +28,33 @@ class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
   "Duration" should {
     "*" in {
       assert(1.second * 2 === 2.seconds)
+      assert(1.second * Long.MaxValue === Duration.Top)
+      assert(1.second * Long.MinValue === Duration.Bottom)
+      assert(-10.seconds * Long.MinValue === Duration.Top)
+      assert(-10.seconds * Long.MaxValue === Duration.Bottom)
       assert(500.milliseconds * 4 === 2.seconds)
+      assert(1.nanosecond * Long.MaxValue === Long.MaxValue.nanoseconds)
+      assert(1.nanosecond * Long.MinValue === Long.MinValue.nanoseconds)
 
       assert(1.second * 2.0 === 2.seconds)
       assert(500.milliseconds * 4.0 === 2.seconds)
       assert(1.second * 0.5 === 500.milliseconds)
-      assert(1.second * Double.PositiveInfinity == Duration.Top)
-      assert(1.second * Double.NegativeInfinity == Duration.Bottom)
+      assert(1.second * Double.PositiveInfinity === Duration.Top)
+      assert(1.second * Double.NegativeInfinity === Duration.Bottom)
       assert(1.second * Double.NaN == Duration.Undefined)
-      assert(1.nanosecond * (Long.MaxValue.toDouble + 1) == Duration.Top)
-      assert(1.nanosecond * (Long.MinValue.toDouble - 1) == Duration.Bottom)
+      assert(1.nanosecond * (Long.MaxValue.toDouble + 1) === Duration.Top)
+      assert(1.nanosecond * (Long.MinValue.toDouble - 1) === Duration.Bottom)
+
+      forAll { (a: Long, b: Long) =>
+        val c = BigInt(a) * BigInt(b)
+        val d = a.nanoseconds * b
+
+        assert(
+          (c >= Long.MaxValue && d === Duration.Top) ||
+          (c <= Long.MinValue && d === Duration.Bottom) ||
+          (d === c.toLong.nanoseconds)
+        )
+      }
     }
 
     "/" in {

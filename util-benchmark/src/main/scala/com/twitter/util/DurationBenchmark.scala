@@ -21,4 +21,9 @@ class DurationBenchmark extends StdBenchAnnotations {
       Duration.Top == Duration.Undefined
   }
 
+  @Benchmark
+  def durationMultiplyLong: Duration = d2 * 123456L
+
+  @Benchmark
+  def durationMultiplyLongOverflow: Duration = d2 * Long.MaxValue
 }
