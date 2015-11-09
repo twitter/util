@@ -10,7 +10,7 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 @RunWith(classOf[JUnitRunner])
 class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
-  import AsyncStream.{fromSeq, mk, of}
+  import AsyncStream.{mk, of}
   import AsyncStreamTest._
 
   test("strict head") {
@@ -426,4 +426,12 @@ private object AsyncStreamTest {
   def undefined[A]: A = throw new Exception
 
   def toSeq[A](s: AsyncStream[A]): Seq[A] = await(s.toSeq())
+
+  def fromSeq[A](s: Seq[A]): AsyncStream[A] =
+    s match {
+      case Nil => AsyncStream.empty
+      case a +: Nil => AsyncStream.of(a)
+      case a +: b +: Nil => AsyncStream.m(Future.value(a +:: AsyncStream.of(b)))
+      case a +: as => a +:: fromSeq(as)
+    }
 }
