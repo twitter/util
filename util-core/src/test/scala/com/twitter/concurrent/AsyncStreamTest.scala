@@ -431,7 +431,7 @@ private object AsyncStreamTest {
     s match {
       case Nil => AsyncStream.empty
       case a +: Nil => AsyncStream.of(a)
-      case a +: b +: Nil => AsyncStream.m(Future.value(a +:: AsyncStream.of(b)))
+      case a +: b +: Nil => AsyncStream.embed(Future.value(a +:: AsyncStream.of(b)))
       case a +: as => a +:: fromSeq(as)
     }
 }

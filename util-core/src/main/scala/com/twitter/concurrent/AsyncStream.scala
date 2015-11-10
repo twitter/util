@@ -11,15 +11,15 @@ import scala.collection.mutable
  * It is composable with Future, Seq and Option.
  *
  * {{{
- *   val ids = Seq(123, 124, ...)
- *   val users = fromSeq(ids).flatMap(id => fromFuture(getUser(id)))
+ * val ids = Seq(123, 124, ...)
+ * val users = fromSeq(ids).flatMap(id => fromFuture(getUser(id)))
  *
- *   // Or as a for-comprehension...
+ * // Or as a for-comprehension...
  *
- *   val users = for {
- *     id <- fromSeq(ids)
- *     user <- fromFuture(getUser(id))
- *   } yield user
+ * val users = for {
+ *   id <- fromSeq(ids)
+ *   user <- fromFuture(getUser(id))
+ * } yield user
  * }}}
  *
  * All of its operations are lazy and don't force evaluation, unless otherwise
@@ -27,7 +27,7 @@ import scala.collection.mutable
  *
  * The stream is persistent and can be shared safely by multiple threads.
  */
-abstract class AsyncStream[+A] {
+sealed abstract class AsyncStream[+A] {
   import AsyncStream._
 
   /**
@@ -35,7 +35,7 @@ abstract class AsyncStream[+A] {
    */
   def isEmpty: Future[Boolean] = this match {
     case Empty => Future.True
-    case M(fas) => fas.flatMap(_.isEmpty)
+    case Embed(fas) => fas.flatMap(_.isEmpty)
     case _ => Future.False
   }
 
@@ -46,7 +46,7 @@ abstract class AsyncStream[+A] {
     case Empty => Future.None
     case FromFuture(fa) => fa.map(Some(_))
     case Cons(fa, _) => fa.map(Some(_))
-    case M(fas) => fas.flatMap(_.head)
+    case Embed(fas) => fas.flatMap(_.head)
   }
 
   /**
@@ -55,7 +55,7 @@ abstract class AsyncStream[+A] {
   def tail: Future[Option[AsyncStream[A]]] = this match {
     case Empty | FromFuture(_) => Future.None
     case Cons(_, more) => Future.value(Some(more()))
-    case M(fas) => fas.flatMap(_.tail)
+    case Embed(fas) => fas.flatMap(_.tail)
   }
 
   /**
@@ -71,7 +71,7 @@ abstract class AsyncStream[+A] {
     case Empty => Future.None
     case FromFuture(fa) => fa.map(a => Some((a, () => empty)))
     case Cons(fa, more) => fa.map(a => Some((a, more)))
-    case M(fas) => fas.flatMap(_.uncons)
+    case Embed(fas) => fas.flatMap(_.uncons)
   }
 
   /**
@@ -95,40 +95,40 @@ abstract class AsyncStream[+A] {
    * stream that satisfes `p`:
    *
    * {{{
-   *   AsyncStream(1, 2, 3, 4, 1).takeWhile(_ < 3) = AsyncStream(1, 2)
-   *   AsyncStream(1, 2, 3).takeWhile(_ < 5) = AsyncStream(1, 2, 3)
-   *   AsyncStream(1, 2, 3).takeWhile(_ < 0) = AsyncStream.empty
+   * AsyncStream(1, 2, 3, 4, 1).takeWhile(_ < 3) = AsyncStream(1, 2)
+   * AsyncStream(1, 2, 3).takeWhile(_ < 5) = AsyncStream(1, 2, 3)
+   * AsyncStream(1, 2, 3).takeWhile(_ < 0) = AsyncStream.empty
    * }}}
    */
   def takeWhile(p: A => Boolean): AsyncStream[A] =
     this match {
       case Empty => empty
-      case FromFuture(fa) => M(fa.map(a => if (p(a)) this else empty))
-      case Cons(fa, more) => M(fa.map { a =>
+      case FromFuture(fa) => Embed(fa.map { a => if (p(a)) this else empty })
+      case Cons(fa, more) => Embed(fa.map { a =>
         if (p(a)) Cons(fa, () => more().takeWhile(p))
         else more().takeWhile(p)
       })
-      case M(fas) => M(fas.map(_.takeWhile(p)))
+      case Embed(fas) => Embed(fas.map(_.takeWhile(p)))
     }
 
   /**
    * Given a predicate `p` returns the suffix remaining after `takeWhile(p)`:
    *
    * {{{
-   *   AsyncStream(1, 2, 3, 4, 1).dropWhile(_ < 3) = AsyncStream(3, 4, 1)
-   *   AsyncStream(1, 2, 3).dropWhile(_ < 5) = AsyncStream.empty
-   *   AsyncStream(1, 2, 3).dropWhile(_ < 0) = AsyncStream(1, 2, 3)
+   * AsyncStream(1, 2, 3, 4, 1).dropWhile(_ < 3) = AsyncStream(3, 4, 1)
+   * AsyncStream(1, 2, 3).dropWhile(_ < 5) = AsyncStream.empty
+   * AsyncStream(1, 2, 3).dropWhile(_ < 0) = AsyncStream(1, 2, 3)
    * }}}
    */
   def dropWhile(p: A => Boolean): AsyncStream[A] =
     this match {
       case Empty => empty
-      case FromFuture(fa) => M(fa.map(a => if (p(a)) empty else this))
-      case Cons(fa, more) => M(fa.map { a =>
+      case FromFuture(fa) => Embed(fa.map { a => if (p(a)) empty else this })
+      case Cons(fa, more) => Embed(fa.map { a =>
         if (p(a)) more().dropWhile(p)
         else Cons(fa, () => more().dropWhile(p))
       })
-      case M(fas) => M(fas.map(_.dropWhile(p)))
+      case Embed(fas) => Embed(fas.map(_.dropWhile(p)))
     }
 
   /**
@@ -148,8 +148,8 @@ abstract class AsyncStream[+A] {
       case Cons(fa, more) =>
         lazy val once = that
         Cons(fa, () => more() ++ once)
-      case M(fas) =>
-        M(fas.map(_ ++ that))
+      case Embed(fas) =>
+        Embed(fas.map(_ ++ that))
     }
 
   /**
@@ -164,9 +164,9 @@ abstract class AsyncStream[+A] {
   def flatMap[B](f: A => AsyncStream[B]): AsyncStream[B] =
     this match {
       case Empty => empty
-      case FromFuture(fa) => M(fa.map(f))
-      case Cons(fa, more) => M(fa.map(f)) ++ more().flatMap(f)
-      case M(fas) => M(fas.map(_.flatMap(f)))
+      case FromFuture(fa) => Embed(fa.map(f))
+      case Cons(fa, more) => Embed(fa.map(f)) ++ more().flatMap(f)
+      case Embed(fas) => Embed(fas.map(_.flatMap(f)))
     }
 
   /**
@@ -178,7 +178,7 @@ abstract class AsyncStream[+A] {
       case Empty => empty
       case FromFuture(fa) => FromFuture(fa.map(f))
       case Cons(fa, more) => Cons(fa.map(f), () => more().map(f))
-      case M(fas) => M(fas.map(_.map(f)))
+      case Embed(fas) => Embed(fas.map(_.map(f)))
     }
 
   /**
@@ -192,13 +192,13 @@ abstract class AsyncStream[+A] {
     this match {
       case Empty => empty
       case FromFuture(fa) =>
-        M(fa.map(a => if (p(a)) this else empty))
+        Embed(fa.map { a => if (p(a)) this else empty })
       case Cons(fa, more) =>
-        M(fa.map { a =>
+        Embed(fa.map { a =>
           if (p(a)) Cons(fa, () => more().filter(p))
           else more().filter(p)
         })
-      case M(fas) => M(fas.map(_.filter(p)))
+      case Embed(fas) => Embed(fas.map(_.filter(p)))
     }
 
   /**
@@ -219,7 +219,7 @@ abstract class AsyncStream[+A] {
       // cons.tail.take(0), forcing one more effect than necessary.
       case Cons(fa, _) if n == 1 => FromFuture(fa)
       case Cons(fa, more) => Cons(fa, () => more().take(n - 1))
-      case M(fas) => M(fas.map(_.take(n)))
+      case Embed(fas) => Embed(fas.map(_.take(n)))
     }
 
   /**
@@ -233,7 +233,7 @@ abstract class AsyncStream[+A] {
     if (n < 1) this else this match {
       case Empty | FromFuture(_) => empty
       case Cons(_, more) => more().drop(n - 1)
-      case M(fas) => M(fas.map(_.drop(n)))
+      case Embed(fas) => Embed(fas.map(_.drop(n)))
     }
 
   /**
@@ -245,7 +245,7 @@ abstract class AsyncStream[+A] {
       case Empty => empty
       case FromFuture(fa) => FromFuture(fa.flatMap(f))
       case Cons(fa, more) => Cons(fa.flatMap(f), () => more().mapF(f))
-      case M(fas) => M(fas.map(_.mapF(f)))
+      case Embed(fas) => Embed(fas.map(_.mapF(f)))
     }
 
   /**
@@ -272,12 +272,12 @@ abstract class AsyncStream[+A] {
    */
   def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] =
     this match {
-      case M(fas) => M(fas.map(_.scanLeft(z)(f)))
+      case Embed(fas) => Embed(fas.map(_.scanLeft(z)(f)))
       case Empty => FromFuture(Future.value(z))
       case FromFuture(fa) =>
         Cons(Future.value(z), () => FromFuture(fa.map(f(z, _))))
       case Cons(fa, more) =>
-        Cons(Future.value(z), () => M(fa.map(a => more().scanLeft(f(z, a))(f))))
+        Cons(Future.value(z), () => Embed(fa.map(a => more().scanLeft(f(z, a))(f))))
     }
 
   /**
@@ -294,7 +294,7 @@ abstract class AsyncStream[+A] {
     case Empty => Future.value(z)
     case FromFuture(fa) => fa.map(f(z, _))
     case Cons(fa, more) => fa.map(f(z, _)).flatMap(more().foldLeft(_)(f))
-    case M(fas) => fas.flatMap(_.foldLeft(z)(f))
+    case Embed(fas) => fas.flatMap(_.foldLeft(z)(f))
   }
 
   /**
@@ -312,7 +312,7 @@ abstract class AsyncStream[+A] {
       case Empty => Future.value(z)
       case FromFuture(fa) => fa.flatMap(a => f(z, a))
       case Cons(fa, more) => fa.flatMap(a => f(z, a)).flatMap(b => more().foldLeftF(b)(f))
-      case M(fas) => fas.flatMap(_.foldLeftF(z)(f))
+      case Embed(fas) => fas.flatMap(_.foldLeftF(z)(f))
     }
 
   /**
@@ -340,7 +340,7 @@ abstract class AsyncStream[+A] {
       case Empty => z
       case FromFuture(fa) => fa.flatMap(f(_, z))
       case Cons(fa, more) => fa.flatMap(f(_, more().foldRight(z)(f)))
-      case M(fas) => fas.flatMap(_.foldRight(z)(f))
+      case Embed(fas) => fas.flatMap(_.foldRight(z)(f))
     }
 
   /**
@@ -356,9 +356,9 @@ abstract class AsyncStream[+A] {
   def flatten[B](implicit ev: A <:< AsyncStream[B]): AsyncStream[B] =
     this match {
       case Empty => empty
-      case FromFuture(fa) => M(fa.map(ev))
-      case Cons(fa, more) => M(fa.map(ev)) ++ more().flatten
-      case M(fas) => M(fas.map(_.flatten))
+      case FromFuture(fa) => Embed(fa.map(ev))
+      case Cons(fa, more) => Embed(fa.map(ev)) ++ more().flatten
+      case Embed(fas) => Embed(fas.map(_.flatten))
     }
 
   /**
@@ -398,7 +398,7 @@ abstract class AsyncStream[+A] {
             buf += a
             go(more())
           }
-        case M(fas) =>
+        case Embed(fas) =>
           fas.flatMap(go)
       }
 
@@ -436,7 +436,7 @@ abstract class AsyncStream[+A] {
             fillBuffer(sizeRemaining - 1)(more())
           }
 
-        case M(fas) =>
+        case Embed(fas) =>
           fas.flatMap(as => fillBuffer(sizeRemaining)(as))
       }
 
@@ -457,7 +457,7 @@ abstract class AsyncStream[+A] {
    */
   def grouped(groupSize: Int): AsyncStream[Seq[A]] =
     if (groupSize > 1) {
-      M(buffer(groupSize).map {
+      Embed(buffer(groupSize).map {
         case (items, _) if items.isEmpty => empty
         case (items, remaining) => Cons(Future.value(items), () => remaining().grouped(groupSize))
       })
@@ -470,7 +470,7 @@ abstract class AsyncStream[+A] {
 
 object AsyncStream {
   private case object Empty extends AsyncStream[Nothing]
-  private case class M[A](fas: Future[AsyncStream[A]]) extends AsyncStream[A]
+  private case class Embed[A](fas: Future[AsyncStream[A]]) extends AsyncStream[A]
   private case class FromFuture[A](fa: Future[A]) extends AsyncStream[A]
   private case class Cons[A](fa: Future[A], more: () => AsyncStream[A])
     extends AsyncStream[A]
@@ -537,8 +537,11 @@ object AsyncStream {
       case Some(a) => of(a)
     }
 
-  private[concurrent] def m[A](fas: Future[AsyncStream[A]]): AsyncStream[A] =
-    M(fas)
+  /**
+   * Lift from Future into AsyncStream and then flatten.
+   */
+  private[concurrent] def embed[A](fas: Future[AsyncStream[A]]): AsyncStream[A] =
+    Embed(fas)
 
   /**
    * Java friendly [[AsyncStream.flatten]].
