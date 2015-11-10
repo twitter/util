@@ -428,6 +428,7 @@ private object AsyncStreamTest {
   def toSeq[A](s: AsyncStream[A]): Seq[A] = await(s.toSeq())
 
   def fromSeq[A](s: Seq[A]): AsyncStream[A] =
+    // Test all AsyncStream constructors: Empty, FromFuture, Cons, Embed.
     s match {
       case Nil => AsyncStream.empty
       case a +: Nil => AsyncStream.of(a)
