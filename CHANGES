@@ -6,6 +6,15 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: Introduce an `AsyncMeter` for asynchronously rate limiting to a fixed rate over time.
+    It can be used for smoothing out bursty traffic, or for slowing down access to a
+    resource. ``RB_ID=756333``
+
+  * util-core: Introduce a `TokenBucket` for helping to control the relative rates of two processes,
+    or for smoothing out the rate of a single process. ``RB_ID=756333``
+
 API Changes:
 
   * util-core: `Timer` now has final implementations for `schedule` which delegate
