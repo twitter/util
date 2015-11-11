@@ -2,7 +2,7 @@ package com.twitter.app
 
 import com.twitter.util._
 import com.twitter.util.registry.GlobalRegistry
-import java.net.InetSocketAddress
+import java.io.File
 import java.lang.{
   Boolean => JBoolean,
   Double  => JDouble,
@@ -10,6 +10,7 @@ import java.lang.{
   Integer => JInteger,
   Long    => JLong
 }
+import java.net.InetSocketAddress
 import java.util.{List => JList, Map => JMap, Set => JSet}
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.JavaConverters._
@@ -141,6 +142,11 @@ object Flaggable {
           },
           addr.getPort)
     }
+
+  implicit val ofFile: Flaggable[File] = new Flaggable[File] {
+    override def parse(v: String): File = new File(v)
+    override def show(file: File) = file.toString
+  }
 
   implicit def ofTuple[T: Flaggable, U: Flaggable]: Flaggable[(T, U)] = new Flaggable[(T, U)] {
     private val tflag = implicitly[Flaggable[T]]
