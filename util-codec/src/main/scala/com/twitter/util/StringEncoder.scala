@@ -12,31 +12,47 @@ trait StringEncoder {
   def decode(str: String): Array[Byte] = str.getBytes
 }
 
+/**
+  * A utility for encoding strings and byte arrays to a base64 string, and
+  * decoding from strings encoded in base64 to byte arrays.
+  *
+  * The encoding for strings is UTF-8.
+  */
 trait Base64StringEncoder extends StringEncoder {
   private[this] def codec = new Base64()
+  override def encode(bytes: Array[Byte]): String = codec.encodeToString(bytes)
+  override def decode(str: String): Array[Byte] = codec.decode(str)
+}
 
-  override def encode(bytes: Array[Byte]): String = {
-    codec.encodeToString(bytes)
-  }
+/**
+ * A utility for encoding strings and byte arrays to a URL-safe base64 string,
+ * and decoding from strings encoded in base64 to byte arrays.
+ *
+ * The encoding for strings is UTF-8.
+ */
+trait Base64UrlSafeStringEncoder extends StringEncoder {
+  // This uses a null line separator since maximum line length (0) is disabled.
+  private[this] def codec = new Base64(0, null, true)
 
-  override def decode(str: String): Array[Byte] =
-    codec.decode(str)
+  override def encode(bytes: Array[Byte]): String = codec.encodeToString(bytes)
+  override def decode(str: String): Array[Byte] = codec.decode(str)
 }
 
 object StringEncoder extends StringEncoder
 object Base64StringEncoder extends Base64StringEncoder
+object Base64UrlSafeStringEncoder extends Base64UrlSafeStringEncoder
 
 /**
- * A collection of utilities for encoding strings and byte arrays to and decoding from strings
- * compressed from with gzip.
+ * A collection of utilities for encoding strings and byte arrays to and
+ * decoding from strings compressed from with gzip.
  *
- * This trait is thread-safe because there are no streams shared outside of method scope, and
- * therefore no contention for shared byte arrays.
+ * This trait is thread-safe because there are no streams shared outside of
+ * method scope, and therefore no contention for shared byte arrays.
  *
  * The encoding for strings is UTF-8.
  *
- * gzipping inherently includes base64 encoding (the GZIP utilities from java will complain
- * otherwise!)
+ * gzipping inherently includes base64 encoding (the GZIP utilities from java
+ * will complain otherwise!)
  */
 trait GZIPStringEncoder extends StringEncoder {
   override def encode(bytes: Array[Byte]): String = {
