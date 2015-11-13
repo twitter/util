@@ -27,7 +27,7 @@ private[cache] class LazilyEvictingCache[K, V](
 ) extends FutureCacheProxy[K, V](underlying) {
   private[this] def invalidateLazily(k: K, f: Future[V]): Unit = {
     f.poll match {
-      case Some(Throw(e)) => underlying.invalidate(k)
+      case Some(Throw(e)) => underlying.evict(k, f)
       case _ =>
     }
   }

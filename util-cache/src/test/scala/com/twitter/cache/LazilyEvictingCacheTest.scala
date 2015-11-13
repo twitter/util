@@ -29,15 +29,14 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
     val exn = new Exception
     p.setException(exn)
 
-    // don't invalidate or evict the key until subsequent lookup
-    verify(cache, never).invalidate(any[String])
+    // don't evict the key until subsequent lookup
     verify(cache, never).evict(any[String], any[Future[String]])
 
     val Some(failed) = fCache.get("key")
     val thrown = intercept[Exception] { Await.result(failed) }
     assert(thrown === exn)
 
-    verify(cache).invalidate("key")
+    verify(cache).evict("key", p)
   }
 
   test("LazilyEvictingCache should keep satisfied futures for set") {
@@ -54,7 +53,6 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
     val Some(res) = fCache.get("key")
     assert(Await.result(res) === "value")
     verify(cache, never).evict("key", p)
-    verify(cache, never).invalidate("key")
   }
 
 

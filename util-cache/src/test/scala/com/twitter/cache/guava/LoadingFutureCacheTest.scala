@@ -9,11 +9,13 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class LoadingFutureCacheTest extends FunSuite {
 
+  def name: String = "LoadingFutureCache"
+
   // NB we can't reuse AbstractFutureCacheTest since
   // loading cache semantics are sufficiently unique
   // to merit distinct tests.
 
-  trait Ctx {
+  trait Ctx  {
     var cacheLoaderCount = 0
     val cache = new LoadingFutureCache(
       CacheBuilder
@@ -70,11 +72,26 @@ class LoadingFutureCacheTest extends FunSuite {
     cache.set("key", f)
     val Some(res1) = cache.get("key")
     assert(Await.result(res1) === 1234)
-    cache.evict("key", f)
+    assert(cache.evict("key", f))
 
     val Some(res2) = cache.get("key")
     assert(Await.result(res2) === "key".hashCode)
     assert(cacheLoaderCount === 1)
+  }
+
+  test("eviction should refuse to evict incorrectly") {
+    val ctx = new Ctx {}
+    import ctx._
+
+    val f = Future.value(1234)
+    cache.set("key", f)
+    val Some(res1) = cache.get("key")
+    assert(Await.result(res1) === 1234)
+    assert(!cache.evict("key", Future.value(4)))
+
+    val Some(res2) = cache.get("key")
+    assert(Await.result(res2) === 1234)
+    assert(cacheLoaderCount === 0)
   }
 
   test("don't update gettable keys") {

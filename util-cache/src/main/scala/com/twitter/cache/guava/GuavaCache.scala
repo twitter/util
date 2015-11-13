@@ -37,24 +37,9 @@ class GuavaCache[K, V](cache: GCache[K, Future[V]]) extends ConcurrentMapCache[K
  */
 class LoadingFutureCache[K, V](cache: LoadingCache[K, Future[V]]) extends GuavaCache[K, V](cache) {
   // the contract for LoadingCache is that it can't return null from get.
-  def apply(key: K): Future[V] = get(key).get
+  def apply(key: K): Future[V] = cache.get(key)
 
-  override def get(key: K): Option[Future[V]] = Some(cache.get(key))
-
-  /**
-   * Since LoadingCache will not load properly if removal is done via the
-   * underlying map, we expose a more precise API.
-   */
-  def invalidate(key: K): Unit = cache.invalidate(key)
-
-  /**
-   * We can't tell if it was actually that value or not, so it's possible to
-   * race here.  Use invalidate if possible.
-   */
-  override def evict(key: K, f: Future[V]): Boolean = {
-    invalidate(key)
-    true
-  }
+  override def get(key: K): Option[Future[V]] = Some(apply(key))
 }
 
 object GuavaCache {
