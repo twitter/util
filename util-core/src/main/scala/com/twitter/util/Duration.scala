@@ -61,7 +61,7 @@ object Duration extends TimeLikeOps[Duration] {
       else Top
 
     override def *(x: Double): Duration =
-      if (x == 0.0) Undefined
+      if (x == 0.0 || java.lang.Double.isNaN(x)) Undefined
       else if (x < 0.0) Bottom
       else Top
 
@@ -71,7 +71,7 @@ object Duration extends TimeLikeOps[Duration] {
       else Top
 
     override def /(x: Double): Duration =
-      if (x == 0.0) Undefined
+      if (x == 0.0 || java.lang.Double.isNaN(x)) Undefined
       else if (x < 0.0) Bottom
       else Top
 
@@ -114,7 +114,7 @@ object Duration extends TimeLikeOps[Duration] {
       else Bottom
 
     override def *(x: Double): Duration =
-      if (x == 0.0) Undefined
+      if (x == 0.0 || java.lang.Double.isNaN(x)) Undefined
       else if (x < 0.0) Top
       else Bottom
 
@@ -124,7 +124,7 @@ object Duration extends TimeLikeOps[Duration] {
       else Bottom
 
     override def /(x: Double): Duration =
-      if (x == 0.0) Undefined
+      if (x == 0.0 || java.lang.Double.isNaN(x)) Undefined
       else if (x < 0.0) Top
       else Bottom
 
