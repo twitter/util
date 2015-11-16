@@ -38,11 +38,11 @@ class KetamaDistributorTest extends WordSpec {
         line = reader.readLine
         if (line != null) {
           val segments = line.split(" ")
-          assert(segments.length === 4)
+          assert(segments.length == 4)
           expected += segments
         }
       } while (line != null)
-      assert(expected.size === 99)
+      assert(expected.size == 99)
 
       // Test that ketamaClient.clientOf(key) == expected IP
       val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
@@ -53,8 +53,8 @@ class KetamaDistributorTest extends WordSpec {
         val handle2 = ketamaDistributorInoldLibMemcachedVersionComplianceMode.nodeForHash(hash)
         val resultIp = handleToIp(handle)
         val resultIp2 = handleToIp(handle2)
-        assert(testcase(3) === resultIp)
-        assert(testcase(3) === resultIp2)
+        assert(testcase(3) == resultIp)
+        assert(testcase(3) == resultIp2)
       }
     }
 
@@ -69,7 +69,7 @@ class KetamaDistributorTest extends WordSpec {
 
       knownGoodValues foreach { case (key, node) =>
         val handle = ketamaDistributor.nodeForHash(key)
-        assert(handle === node)
+        assert(handle == node)
       }
     }
   }

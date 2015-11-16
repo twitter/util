@@ -31,7 +31,7 @@ class AppTest extends FunSuite {
 
   test("TestLoggingApp should have one factory with two log handlers") {
     TestLoggingApp.main(Array.empty)
-    assert(TestLoggingApp.loggerFactories.size === 1)
-    assert(TestLoggingApp.loggerFactories.head.handlers.size === 2)
+    assert(TestLoggingApp.loggerFactories.size == 1)
+    assert(TestLoggingApp.loggerFactories.head.handlers.size == 2)
   }
 }

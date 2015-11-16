@@ -35,17 +35,17 @@ class ThriftSerializerTest extends WordSpec {
     val bytes = serializer.toBytes(original)
     var obj = new TestThriftStructure()
     serializer.fromBytes(obj, bytes)
-    assert(obj.aString === original.aString)
-    assert(obj.aNumber === original.aNumber)
+    assert(obj.aString == original.aString)
+    assert(obj.aNumber == original.aNumber)
 
     stringVersion match {
       case None =>
       case Some(str) =>
-        assert(serializer.toString(original) === str)
+        assert(serializer.toString(original) == str)
         obj = new TestThriftStructure()
         serializer.fromString(obj, str)
-        assert(obj.aString === original.aString)
-        assert(obj.aNumber === original.aNumber)
+        assert(obj.aString == original.aString)
+        assert(obj.aNumber == original.aNumber)
       }
     true
   }

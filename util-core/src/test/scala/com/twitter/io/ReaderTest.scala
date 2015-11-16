@@ -34,20 +34,20 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
   private def assertRead(f: Future[Option[Buf]], i: Int, j: Int): Unit = {
     assert(f.isDefined)
     val b = Await.result(f)
-    assert(toSeq(b) === Seq.range(i, j))
+    assert(toSeq(b) == Seq.range(i, j))
   }
 
   def assertWrite(w: Writer, i: Int, j: Int) {
     val buf = Buf.ByteArray.Owned(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
-    assert(Await.result(f) === ((): Unit))
+    assert(Await.result(f) == ((): Unit))
   }
 
   def assertWriteEmpty(w: Writer) {
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
-    assert(Await.result(f) === ((): Unit))
+    assert(Await.result(f) == ((): Unit))
   }
 
   def assertDiscard(r: Reader) {
@@ -73,7 +73,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
   }
 
   private def assertReadNone(r: Reader): Unit =
-    assert(Await.result(r.read(1)) === None)
+    assert(Await.result(r.read(1)) == None)
 
   private def assertReadEofAndClosed(rw: Reader.Writable): Unit = {
     assertReadNone(rw)
@@ -86,7 +86,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val thrown = intercept[RuntimeException] {
       Await.result(f)
     }
-    assert(thrown === failedEx)
+    assert(thrown == failedEx)
   }
 
   test("Reader.copy - source and destination equality") {
@@ -174,7 +174,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     Await.result(rw.close())
     assert(all.isDefined)
     val buf = Await.result(all)
-    assert(toSeq(Some(buf)) === Seq.range(0, 6))
+    assert(toSeq(Some(buf)) == Seq.range(0, 6))
   }
 
   test("Reader.writable - write before read") {
@@ -183,7 +183,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     assert(!wf.isDefined)
     val rf = rw.read(6)
     assert(rf.isDefined)
-    assert(toSeq(Await.result(rf)) === Seq.range(0, 6))
+    assert(toSeq(Await.result(rf)) == Seq.range(0, 6))
   }
 
   test("Reader.writable - partial read, then short read") {
@@ -192,15 +192,15 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     assert(!wf.isDefined)
     val rf = rw.read(4)
     assert(rf.isDefined)
-    assert(toSeq(Await.result(rf)) === Seq.range(0, 4))
+    assert(toSeq(Await.result(rf)) == Seq.range(0, 4))
 
     assert(!wf.isDefined)
     val rf2 = rw.read(4)
     assert(rf2.isDefined)
-    assert(toSeq(Await.result(rf2)) === Seq.range(4, 6))
+    assert(toSeq(Await.result(rf2)) == Seq.range(4, 6))
 
     assert(wf.isDefined)
-    assert(Await.result(wf) === ((): Unit))
+    assert(Await.result(wf) == ((): Unit))
   }
 
   test("Reader.writeable - fail while reading") {
@@ -234,7 +234,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val rw = Reader.writable()
     val wf = rw.write(buf(0, 6)) before rw.close()
     assert(!wf.isDefined)
-    assert(Await.result(rw.read(6)) === Some(buf(0, 6)))
+    assert(Await.result(rw.read(6)) == Some(buf(0, 6)))
     assert(!wf.isDefined)
     assertReadEofAndClosed(rw)
   }

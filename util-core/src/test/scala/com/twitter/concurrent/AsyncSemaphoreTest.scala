@@ -43,18 +43,18 @@ class AsyncSemaphoreTest extends FunSpec {
     }
 
     it("should execute immediately while permits are available") { semHelper =>
-      assert(semHelper.sem.numPermitsAvailable === (2))
+      assert(semHelper.sem.numPermitsAvailable == (2))
       acquire(semHelper)
-      assert(semHelper.count === (1))
-      assert(semHelper.sem.numPermitsAvailable === (1))
+      assert(semHelper.count == (1))
+      assert(semHelper.sem.numPermitsAvailable == (1))
 
       acquire(semHelper)
-      assert(semHelper.count === (2))
-      assert(semHelper.sem.numPermitsAvailable === (0))
+      assert(semHelper.count == (2))
+      assert(semHelper.sem.numPermitsAvailable == (0))
 
       acquire(semHelper)
-      assert(semHelper.count === (2))
-      assert(semHelper.sem.numPermitsAvailable === (0))
+      assert(semHelper.count == (2))
+      assert(semHelper.sem.numPermitsAvailable == (0))
     }
 
     it("should execute deferred computations when permits are released") { semHelper =>
@@ -63,17 +63,17 @@ class AsyncSemaphoreTest extends FunSpec {
       acquire(semHelper)
       acquire(semHelper)
 
-      assert(semHelper.count === (2))
-      assert(semHelper.sem.numPermitsAvailable === (0))
+      assert(semHelper.count == (2))
+      assert(semHelper.sem.numPermitsAvailable == (0))
 
       semHelper.permits.poll().release()
-      assert(semHelper.count === (3))
+      assert(semHelper.count == (3))
 
       semHelper.permits.poll().release()
-      assert(semHelper.count === (4))
+      assert(semHelper.count == (4))
 
       semHelper.permits.poll().release()
-      assert(semHelper.count === (4))
+      assert(semHelper.count == (4))
     }
 
     it("should bound the number of waiters") { semHelper =>
@@ -83,19 +83,19 @@ class AsyncSemaphoreTest extends FunSpec {
       acquire(semHelper2)
       acquire(semHelper2)
 
-      assert(semHelper2.count === (2))
+      assert(semHelper2.count == (2))
 
       // The next three acquires wait.
       acquire(semHelper2)
       acquire(semHelper2)
       acquire(semHelper2)
 
-      assert(semHelper2.count === (2))
-      assert(semHelper2.sem.numWaiters === (3))
+      assert(semHelper2.count == (2))
+      assert(semHelper2.sem.numWaiters == (3))
 
       // The next acquire should be rejected.
       val permit = acquire(semHelper2)
-      assert(semHelper2.sem.numWaiters === (3))
+      assert(semHelper2.sem.numWaiters == (3))
       intercept[RejectedExecutionException] {
         Await.result(permit)
       }
@@ -104,7 +104,7 @@ class AsyncSemaphoreTest extends FunSpec {
       semHelper2.permits.poll().release()
       semHelper2.permits.poll().release()
       semHelper2.permits.poll().release()
-      assert(semHelper2.count === (5))
+      assert(semHelper2.count == (5))
     }
     it("should satisfy futures with exceptions if they are interrupted") { semHelper =>
       val p1 = acquire(semHelper)
@@ -115,7 +115,7 @@ class AsyncSemaphoreTest extends FunSpec {
       val e = intercept[Exception] {
         Await.result(p3)
       }
-      assert(e.getMessage === ("OK"))
+      assert(e.getMessage == ("OK"))
 
       Await.result(p2).release()
       Await.result(p1).release()

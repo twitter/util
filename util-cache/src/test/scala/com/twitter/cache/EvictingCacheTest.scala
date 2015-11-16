@@ -35,9 +35,9 @@ class EvictingCacheTest extends FunSuite with MockitoSugar {
     val cache = new ConcurrentMapCache(map)
     val fCache = new EvictingCache(cache)
     val p = Promise[String]
-    assert(fCache.getOrElseUpdate("key")(p).poll === p.poll)
+    assert(fCache.getOrElseUpdate("key")(p).poll == p.poll)
     p.setException(new Exception)
-    assert(fCache.get("key") === None)
+    assert(fCache.get("key") == None)
   }
 
   test("EvictingCache should keep satisfied futures for getOrElseUpdate") {
@@ -45,8 +45,8 @@ class EvictingCacheTest extends FunSuite with MockitoSugar {
     val cache = new ConcurrentMapCache(map)
     val fCache = new EvictingCache(cache)
     val p = Promise[String]
-    assert(fCache.getOrElseUpdate("key")(p).poll === p.poll)
+    assert(fCache.getOrElseUpdate("key")(p).poll == p.poll)
     p.setValue("value")
-    assert(fCache.get("key").map(_.poll) === Some(p.poll))
+    assert(fCache.get("key").map(_.poll) == Some(p.poll))
   }
 }

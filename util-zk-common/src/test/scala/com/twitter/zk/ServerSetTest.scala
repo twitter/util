@@ -19,7 +19,7 @@ import com.twitter.common.zookeeper.{ServerSet => CommonServerSet}
         one(commonEndpointStatus).update(equal(Status.DEAD))
       }
       val endpointStatus = serverSet.join(address).apply()
-      assert(endpointStatus === a[ServerSet.EndpointStatus])
+      assert(endpointStatus == a[ServerSet.EndpointStatus])
       endpointStatus.update(ServerSet.Status.Dead).apply()
     }
 
@@ -52,10 +52,10 @@ import com.twitter.common.zookeeper.{ServerSet => CommonServerSet}
 
       promises(0).setValue(instances(0))
       val offer = serverSet.monitor().apply(timeout)
-      assert(offer().apply(timeout) === instances(0))
+      assert(offer().apply(timeout) == instances(0))
 
       val fin = Future.collect {
-        assert(instances.tail map { i => offer() onSuccess { _ === i } })
+        assert(instances.tail map { i => offer() onSuccess { _ == i } })
       }
       instances.tail zip(promises.tail) foreach { case (i, p) => p.setValue(i) }
       fin apply(timeout)

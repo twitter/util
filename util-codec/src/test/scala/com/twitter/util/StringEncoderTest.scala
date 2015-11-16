@@ -28,11 +28,11 @@ class StringEncoderTest extends WordSpec {
   val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
 
   "strip new lines" in {
-    assert(Base64StringEncoder.encode(longString.getBytes) === result)
+    assert(Base64StringEncoder.encode(longString.getBytes) == result)
   }
 
   "decode value with stripped new lines" in {
-    assert(new String(Base64StringEncoder.decode(result)) === longString)
+    assert(new String(Base64StringEncoder.decode(result)) == longString)
   }
 }
 
@@ -43,7 +43,7 @@ class Base64StringEncoderTest extends WordSpec {
   val resultSafe   = "_-A"
 
   "encode / as _ and encode + as - to maintain url safe strings" in {
-    assert(Base64UrlSafeStringEncoder.encode(urlUnsafeBytes) === resultSafe)
+    assert(Base64UrlSafeStringEncoder.encode(urlUnsafeBytes) == resultSafe)
   }
 
   "decode url-safe strings" in {
@@ -61,7 +61,7 @@ class GZIPStringEncoderTest extends WordSpec {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {
       def testCodec(str: String) {
-        assert(str === gse.decodeString(gse.encodeString(str)))
+        assert(str == gse.decodeString(gse.encodeString(str)))
       }
 
       testCodec("a")

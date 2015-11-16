@@ -28,7 +28,7 @@ class RefreshTest
     import ctx._
 
     val result = memoizedFuture()
-    assert(Await.result(result) === 1)
+    assert(Await.result(result) == 1)
     verify(provider, times(1))()
   }
 
@@ -36,8 +36,8 @@ class RefreshTest
     val ctx = new Ctx
     import ctx._
 
-    assert(Await.result(memoizedFuture()) === 1)
-    assert(Await.result(memoizedFuture()) === 1)
+    assert(Await.result(memoizedFuture()) == 1)
+    assert(Await.result(memoizedFuture()) == 1)
     verify(provider, times(1))()
   }
 
@@ -46,12 +46,12 @@ class RefreshTest
     import ctx._
 
     Time.withTimeAt(Time.fromMilliseconds(0)) { timeControl =>
-      assert(Await.result(memoizedFuture()) === 1)
+      assert(Await.result(memoizedFuture()) == 1)
       timeControl.advance(ttl - 1.millis)
-      assert(Await.result(memoizedFuture()) === 1)
+      assert(Await.result(memoizedFuture()) == 1)
       timeControl.advance(2.millis)
-      assert(Await.result(memoizedFuture()) === 2)
-      assert(Await.result(memoizedFuture()) === 2)
+      assert(Await.result(memoizedFuture()) == 2)
+      assert(Await.result(memoizedFuture()) == 2)
       verify(provider, times(2))()
     }
   }
@@ -67,7 +67,7 @@ class RefreshTest
     intercept[RuntimeException] {
       Await.result(memoizedFuture())
     }
-    assert(Await.result(memoizedFuture()) === 2)
+    assert(Await.result(memoizedFuture()) == 2)
     verify(provider, times(2))()
   }
 
@@ -85,8 +85,8 @@ class RefreshTest
 
     promise.setValue(1)
 
-    assert(Await.result(result1) === 1)
-    assert(Await.result(result2) === 1)
+    assert(Await.result(result1) == 1)
+    assert(Await.result(result2) == 1)
 
     verify(provider, times(1))()
   }
@@ -116,7 +116,7 @@ class RefreshTest
     val result3 = memoizedFuture()
     promise2.setValue(2)
 
-    assert(Await.result(result3) === 2)
+    assert(Await.result(result3) == 2)
 
     verify(provider, times(1))()
   }

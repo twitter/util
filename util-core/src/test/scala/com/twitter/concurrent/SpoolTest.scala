@@ -19,16 +19,16 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
     "iterate over all elements" in {
       val xs = new ArrayBuffer[Int]
       s foreach { xs += _ }
-      assert(xs.size === 0)
+      assert(xs.size == 0)
     }
 
     "map" in {
-      assert((s map { _ * 2 } ) === Spool.empty[Int])
+      assert((s map { _ * 2 } ) == Spool.empty[Int])
     }
 
     "mapFuture" in {
       val mapFuture = s mapFuture { Future.value(_) }
-      assert(mapFuture.poll === Some(Return(s)))
+      assert(mapFuture.poll == Some(Return(s)))
     }
 
     "deconstruct" in {
@@ -39,29 +39,29 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
     }
 
     "append via ++"  in {
-      assert((s ++ Spool.empty[Int]) === Spool.empty[Int])
-      assert((Spool.empty[Int] ++ s) === Spool.empty[Int])
+      assert((s ++ Spool.empty[Int]) == Spool.empty[Int])
+      assert((Spool.empty[Int] ++ s) == Spool.empty[Int])
 
       val s2 = s ++ (3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
-      assert(Await.result(s2.toSeq) === Seq(3, 4))
+      assert(Await.result(s2.toSeq) == Seq(3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      assert(Await.result(s ++ Future(Spool.empty[Int])) === Spool.empty[Int])
-      assert(Await.result(Spool.empty[Int] ++ Future(s)) === Spool.empty[Int])
+      assert(Await.result(s ++ Future(Spool.empty[Int])) == Spool.empty[Int])
+      assert(Await.result(Spool.empty[Int] ++ Future(s)) == Spool.empty[Int])
 
       val s2 = s ++ Future(3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
-      assert(Await.result(s2 flatMap (_.toSeq)) === Seq(3, 4))
+      assert(Await.result(s2 flatMap (_.toSeq)) == Seq(3, 4))
     }
 
     "flatMap" in {
       val f = (x: Int) => Future(x.toString *:: Future.value((x * 2).toString *:: Future.value(Spool.empty[String])))
-      assert(Await.result(s flatMap f) === Spool.empty[Int])
+      assert(Await.result(s flatMap f) == Spool.empty[Int])
     }
 
     "fold left" in {
       val fold = s.foldLeft(0){(x, y) => x + y}
-      assert(Await.result(fold) === 0)
+      assert(Await.result(fold) == 0)
     }
 
     "reduce left" in {
@@ -73,16 +73,16 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
     "zip with empty" in {
       val result = s.zip(Spool.empty[Int])
-      assert(Await.result(result.toSeq) === Nil)
+      assert(Await.result(result.toSeq) == Nil)
     }
 
     "zip with non-empty" in {
       val result = s.zip(Seq(1,2,3).toSpool)
-      assert(Await.result(result.toSeq) === Nil)
+      assert(Await.result(result.toSeq) == Nil)
     }
 
     "take" in {
-      assert(s.take(10) === Spool.empty[Int])
+      assert(s.take(10) == Spool.empty[Int])
     }
   }
 
@@ -92,26 +92,26 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
     "iterate over all elements" in {
       val xs = new ArrayBuffer[Int]
       s foreach { xs += _ }
-      assert(xs.toSeq === Seq(1,2))
+      assert(xs.toSeq == Seq(1,2))
     }
 
     "buffer to a sequence" in {
-      assert(Await.result(s.toSeq) === Seq(1, 2))
+      assert(Await.result(s.toSeq) == Seq(1, 2))
     }
 
     "map" in {
-      assert(Await.result(s.map { _ * 2 }.toSeq) === Seq(2, 4))
+      assert(Await.result(s.map { _ * 2 }.toSeq) == Seq(2, 4))
     }
 
     "mapFuture" in {
       val f = s.mapFuture { Future.value(_) }.flatMap { _.toSeq }.poll
-      assert(f === Some(Return(Seq(1, 2))))
+      assert(f == Some(Return(Seq(1, 2))))
     }
 
     "deconstruct" in {
       assert(s match {
         case x *:: Future(Return(rest)) =>
-          assert(x === 1)
+          assert(x == 1)
           rest match {
             case y *:: Future(Return(rest)) if y == 2 && rest.isEmpty => true
           }
@@ -119,55 +119,55 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
     }
 
     "append via ++"  in {
-      assert(Await.result((s ++ Spool.empty[Int]).toSeq) === Seq(1, 2))
-      assert(Await.result((Spool.empty[Int] ++ s).toSeq) === Seq(1, 2))
+      assert(Await.result((s ++ Spool.empty[Int]).toSeq) == Seq(1, 2))
+      assert(Await.result((Spool.empty[Int] ++ s).toSeq) == Seq(1, 2))
 
       val s2 = s ++ (3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
-      assert(Await.result(s2.toSeq) === Seq(1, 2, 3, 4))
+      assert(Await.result(s2.toSeq) == Seq(1, 2, 3, 4))
     }
 
     "append via ++ with Future rhs"  in {
-      assert(Await.result(s ++ Future.value(Spool.empty[Int]) flatMap (_.toSeq)) === Seq(1, 2))
-      assert(Await.result(Spool.empty[Int] ++ Future.value(s) flatMap (_.toSeq)) === Seq(1, 2))
+      assert(Await.result(s ++ Future.value(Spool.empty[Int]) flatMap (_.toSeq)) == Seq(1, 2))
+      assert(Await.result(Spool.empty[Int] ++ Future.value(s) flatMap (_.toSeq)) == Seq(1, 2))
 
       val s2 = s ++ Future.value(3 *:: Future.value(4 *:: Future.value(Spool.empty[Int])))
-      assert(Await.result(s2 flatMap (_.toSeq)) === Seq(1, 2, 3, 4))
+      assert(Await.result(s2 flatMap (_.toSeq)) == Seq(1, 2, 3, 4))
     }
 
     "flatMap" in {
       val f = (x: Int) => Future(Seq(x.toString, (x * 2).toString).toSpool)
       val s2 = s flatMap f
-      assert(Await.result(s2 flatMap (_.toSeq)) === Seq("1", "2", "2", "4"))
+      assert(Await.result(s2 flatMap (_.toSeq)) == Seq("1", "2", "2", "4"))
     }
 
     "fold left" in {
       val fold = s.foldLeft(0){(x, y) => x + y}
-      assert(Await.result(fold) === 3)
+      assert(Await.result(fold) == 3)
     }
 
     "reduce left" in {
       val fold = s.reduceLeft{(x, y) => x + y}
-      assert(Await.result(fold) === 3)
+      assert(Await.result(fold) == 3)
     }
 
     "zip with empty" in {
       val zip = s.zip(Spool.empty[Int])
-      assert(Await.result(zip.toSeq) === Nil)
+      assert(Await.result(zip.toSeq) == Nil)
     }
 
     "zip with same size spool" in {
       val zip = s.zip(Seq("a","b").toSpool)
-      assert(Await.result(zip.toSeq) === Seq((1, "a"), (2, "b")))
+      assert(Await.result(zip.toSeq) == Seq((1, "a"), (2, "b")))
     }
 
     "zip with larger spool" in {
       val zip = s.zip(Seq("a","b", "c", "d").toSpool)
-      assert(Await.result(zip.toSeq) === Seq((1, "a"), (2, "b")))
+      assert(Await.result(zip.toSeq) == Seq((1, "a"), (2, "b")))
     }
 
     "be roundtrippable through toSeq/toSpool" in {
       val seq = (0 to 10).toSeq
-      assert(Await.result(seq.toSpool.toSeq) === seq)
+      assert(Await.result(seq.toSpool.toSeq) == seq)
     }
 
     "flatten via flatMap of toSpool" in {
@@ -179,15 +179,15 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
           Future.value(inner.toSpool)
         }
 
-      assert(Await.result(flatSpool.flatMap(_.toSeq)) === seq.flatten)
+      assert(Await.result(flatSpool.flatMap(_.toSeq)) == seq.flatten)
     }
 
     "take" in {
       val ls = (1 to 4).toSeq.toSpool
-      assert(Await.result(ls.take(2).toSeq) === Seq(1,2))
-      assert(Await.result(ls.take(1).toSeq) === Seq(1))
-      assert(Await.result(ls.take(0).toSeq) === Seq.empty)
-      assert(Await.result(ls.take(-2).toSeq) === Seq.empty)
+      assert(Await.result(ls.take(2).toSeq) == Seq(1,2))
+      assert(Await.result(ls.take(1).toSeq) == Seq(1))
+      assert(Await.result(ls.take(0).toSeq) == Seq.empty)
+      assert(Await.result(ls.take(-2).toSeq) == Seq.empty)
     }
   }
 
@@ -198,7 +198,7 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
     "EOF iteration on EOFException" in {
         val xs = new ArrayBuffer[Option[Int]]
         s foreachElem { xs += _ }
-        assert(xs.toSeq === Seq(Some(1), Some(2), None))
+        assert(xs.toSeq == Seq(Some(1), Some(2), None))
     }
   }
 
@@ -245,11 +245,11 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
       val xs = new ArrayBuffer[Int]
       s foreach { xs += _ }
-      assert(xs.toSeq === Seq(1))
+      assert(xs.toSeq == Seq(1))
       p() = Return(2 *:: p1)
-      assert(xs.toSeq === Seq(1, 2))
+      assert(xs.toSeq == Seq(1, 2))
       p1() = Return(Spool.empty)
-      assert(xs.toSeq === Seq(1, 2))
+      assert(xs.toSeq == Seq(1, 2))
     }
 
     "EOF iteration on EOFException" in {
@@ -258,9 +258,9 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
       val xs = new ArrayBuffer[Option[Int]]
       s foreachElem { xs += _ }
-      assert(xs.toSeq === Seq(Some(1)))
+      assert(xs.toSeq == Seq(Some(1)))
       p() = Throw(new EOFException("sad panda"))
-      assert(xs.toSeq === Seq(Some(1), None))
+      assert(xs.toSeq == Seq(Some(1), None))
     }
 
     "return with exception on error" in {
@@ -269,7 +269,7 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
       val xs = new ArrayBuffer[Option[Int]]
       s foreachElem { xs += _ }
-      assert(xs.toSeq === Seq(Some(1)))
+      assert(xs.toSeq == Seq(Some(1)))
       p() = Throw(new Exception("sad panda"))
       intercept[Exception] {
         Await.result(s.toSeq)
@@ -305,12 +305,12 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
       import h._
 
       val f = s.toSeq
-      assert(f.isDefined === false)
+      assert(f.isDefined == false)
       p() = Return(2 *:: p1)
-      assert(f.isDefined === false)
+      assert(f.isDefined == false)
       p1() = Return(Spool.empty)
-      assert(f.isDefined === true)
-      assert(Await.result(f) === Seq(1,2))
+      assert(f.isDefined == true)
+      assert(Await.result(f) == Seq(1,2))
     }
 
     "deconstruct" in {
@@ -331,9 +331,9 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
         case x if x % 2 == 0 => x * 2
       }
 
-      assert(f.isDefined === false)  // 1 != 2 mod 0
+      assert(f.isDefined == false)  // 1 != 2 mod 0
       p() = Return(2 *:: p1)
-      assert(f.isDefined === true)
+      assert(f.isDefined == true)
       val s1 = Await.result(f)
       assert(s1 match {
         case x *:: rest if x == 4 && !rest.isDefined => true
@@ -346,8 +346,8 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
       })
       p2() = Return(4 *:: Future.value(Spool.empty[Int]))
       val s1s = s1.toSeq
-      assert(s1s.isDefined === true)
-      assert(Await.result(s1s) === Seq(4, 8))
+      assert(s1s.isDefined == true)
+      assert(Await.result(s1s) == Seq(4, 8))
     }
 
     "fold left" in {
@@ -356,12 +356,12 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
 
       val f = s.foldLeft(0){(x, y) => x + y}
 
-      assert(f.isDefined === false)
+      assert(f.isDefined == false)
       p() = Return(2 *:: p1)
-      assert(f.isDefined === false)
+      assert(f.isDefined == false)
       p1() = Return(Spool.empty)
-      assert(f.isDefined === true)
-      assert(Await.result(f) === 3)
+      assert(f.isDefined == true)
+      assert(Await.result(f) == 3)
     }
 
     "take while" in {
@@ -369,16 +369,16 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
       import h._
 
       val taken = s.takeWhile(_ < 3)
-      assert(taken.isEmpty === false)
+      assert(taken.isEmpty == false)
       val f = taken.toSeq
 
-      assert(f.isDefined === false)
+      assert(f.isDefined == false)
       p() = Return(2 *:: p1)
-      assert(f.isDefined === false)
+      assert(f.isDefined == false)
       p1() = Return(3 *:: p2)
       // despite the Spool having an unfulfilled tail, the takeWhile is satisfied
-      assert(f.isDefined === true)
-      assert(Await.result(f) === Seq(1, 2))
+      assert(f.isDefined == true)
+      assert(Await.result(f) == Seq(1, 2))
     }
   }
 

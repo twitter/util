@@ -43,6 +43,6 @@ class GuavaCacheTest extends AbstractFutureCacheTest {
     val p = new Promise[Int]
     p.become(f2)
 
-    assert(p.isInterrupted === None)
+    assert(p.isInterrupted == None)
   }
 }

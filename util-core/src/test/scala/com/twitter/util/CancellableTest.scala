@@ -12,9 +12,9 @@ class CancellableTest extends WordSpec {
       var count = 0
       val s = new CancellableSink { count += 1 }
       s.cancel()
-      assert(count === 1)
+      assert(count == 1)
       s.cancel()
-      assert(count === 1)
+      assert(count == 1)
     }
   }
 }

@@ -20,11 +20,11 @@ class ImmutableLRUTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
       // first-time insertion should not evict
       val (key, lru2) = lru + (s -> i)
-      assert(key === None)
+      assert(key == None)
 
       // test get method
       val (key2, _) = lru2.get(s)
-      assert(key2 === Some(i))
+      assert(key2 == Some(i))
     }
   }
 
@@ -41,7 +41,7 @@ class ImmutableLRUTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("ImmutableLRU eviction") {
     forAll(LRUEntriesGenerator[Int]) { entries =>
       val lru = buildLRU(ImmutableLRU[String, Int](4), entries)
-      assert(lru.keySet === entries.map(_._1).slice(entries.size - 4, entries.size).toSet)
+      assert(lru.keySet == entries.map(_._1).slice(entries.size - 4, entries.size).toSet)
     }
   }
 
@@ -55,19 +55,19 @@ class ImmutableLRUTest extends FunSuite with GeneratorDrivenPropertyChecks {
       val lru = buildLRU(ImmutableLRU[String, Double](entries.size+1), entries)
 
       // make sure it's there
-      assert(lru.get(k)._1 === Some(v))
+      assert(lru.get(k)._1 == Some(v))
 
       // remove once
       val (key, newLru) = lru.remove(k)
-      assert(key === Some(v))
+      assert(key == Some(v))
 
       // remove it again
       val (key2, _) = newLru.remove(k)
-      assert(key2 === None)
+      assert(key2 == None)
 
       // still should be able to get it out of the original
       val (key3, _) = lru.remove(k)
-      assert(key3 === Some(v))
+      assert(key3 == Some(v))
     }
   }
 }

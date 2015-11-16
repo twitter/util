@@ -23,45 +23,45 @@ abstract class AbstractFutureCacheTest extends FunSuite {
     val ctx = mkCtx()
     import ctx._
 
-    assert(cache.get("key") === None)
-    assert(cache.size === 0)
+    assert(cache.get("key") == None)
+    assert(cache.size == 0)
   }
 
   test("%s should get something when something's set" format name) {
     val ctx = mkCtx()
     import ctx._
 
-    assert(cache.get("key") === None)
+    assert(cache.get("key") == None)
     cache.set("key", value)
-    assert(cache.get("key") === Some(value))
-    assert(cache.size === 1)
+    assert(cache.get("key") == Some(value))
+    assert(cache.size == 1)
   }
 
   test("%s should evict when something's set" format name) {
     val ctx = mkCtx()
     import ctx._
 
-    assert(cache.size === 0)
-    assert(cache.get("key") === None)
+    assert(cache.size == 0)
+    assert(cache.get("key") == None)
     cache.set("key", value)
-    assert(cache.size === 1)
-    assert(cache.get("key") === Some(value))
+    assert(cache.size == 1)
+    assert(cache.get("key") == Some(value))
     cache.evict("key", value)
-    assert(cache.size === 0)
-    assert(cache.get("key") === None)
+    assert(cache.size == 0)
+    assert(cache.get("key") == None)
   }
 
   test("%s should refuse to evict incorrectly" format name) {
     val ctx = mkCtx()
     import ctx._
 
-    assert(cache.get("key") === None)
+    assert(cache.get("key") == None)
     cache.set("key", value)
-    assert(cache.get("key") === Some(value))
+    assert(cache.get("key") == Some(value))
     cache.evict("key", Future.value("mu"))
-    assert(cache.get("key") === Some(value))
+    assert(cache.get("key") == Some(value))
     cache.evict("key", value)
-    assert(cache.get("key") === None)
+    assert(cache.get("key") == None)
   }
 
   test("%s should not update if gettable" format name) {
@@ -75,8 +75,8 @@ abstract class AbstractFutureCacheTest extends FunSuite {
       mod = true
       Future.value("mu")
     }
-    assert(result === value)
-    assert(mod === false)
+    assert(result == value)
+    assert(mod == false)
   }
 
   test("%s should update if ungettable" format name) {
@@ -84,8 +84,8 @@ abstract class AbstractFutureCacheTest extends FunSuite {
     import ctx._
 
     val result = cache.getOrElseUpdate("key") { value }
-    assert(result.poll === value.poll)
-    assert(cache.size === 1)
+    assert(result.poll == value.poll)
+    assert(cache.size == 1)
   }
 
   test("%s should report correct size" format name) {
@@ -95,6 +95,6 @@ abstract class AbstractFutureCacheTest extends FunSuite {
     cache.set("key", value)
     cache.set("key2", value)
     cache.set("key3", value)
-    assert(cache.size === 3)
+    assert(cache.size == 3)
   }
 }

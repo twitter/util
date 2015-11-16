@@ -34,7 +34,7 @@ class InMemoryStatsReceiverTest extends FunSuite
     val inMemoryStatsReceiver = new InMemoryStatsReceiver
     (1 to 50).par.foreach(_ => inMemoryStatsReceiver.counter("same").incr())
     eventually {
-      assert(inMemoryStatsReceiver.counter("same")() === 50)
+      assert(inMemoryStatsReceiver.counter("same")() == 50)
     }
   }
 
@@ -42,7 +42,7 @@ class InMemoryStatsReceiverTest extends FunSuite
     val inMemoryStatsReceiver = new InMemoryStatsReceiver
     (1 to 50).par.foreach(_ => inMemoryStatsReceiver.stat("same").add(1.0f))
     eventually {
-      assert(inMemoryStatsReceiver.stat("same")().size === 50)
+      assert(inMemoryStatsReceiver.stat("same")().size == 50)
     }
   }
 }

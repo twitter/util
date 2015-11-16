@@ -30,8 +30,8 @@ class CpuProfileTest extends FunSuite {
       CpuProfile.record(100.milliseconds, 100, Thread.State.TIMED_WAITING)
     }
 
-    assert(profile.count === 10)
-    assert(profile.missed === 0)
+    assert(profile.count == 10)
+    assert(profile.missed == 0)
 
     val baos = new ByteArrayOutputStream
     profile.writeGoogleProfile(baos)

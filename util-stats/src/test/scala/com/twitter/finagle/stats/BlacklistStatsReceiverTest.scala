@@ -29,9 +29,9 @@ class BlacklistStatsReceiverTest extends FunSuite {
     val stat = bsr.stat("qux")
     stat.add(3)
 
-    assert(inmemory.counters === Map(Seq("foo", "bar") -> 1))
-    assert(inmemory.gauges(Seq("foo", "baz"))() === 3.0)
-    assert(inmemory.stats === Map(Seq("qux") -> Seq(3.0)))
+    assert(inmemory.counters == Map(Seq("foo", "bar") -> 1))
+    assert(inmemory.gauges(Seq("foo", "baz"))() == 3.0)
+    assert(inmemory.stats == Map(Seq("qux") -> Seq(3.0)))
   }
 
   test("BlacklistStatsReceiver can go both ways properly") {
@@ -43,8 +43,8 @@ class BlacklistStatsReceiverTest extends FunSuite {
     val stat = bsr.stat("qux")
     stat.add(3)
 
-    assert(inmemory.counters === Map(Seq("foo", "bar") -> 1))
-    assert(inmemory.gauges(Seq("foo", "baz"))() === 3.0)
+    assert(inmemory.counters == Map(Seq("foo", "bar") -> 1))
+    assert(inmemory.gauges(Seq("foo", "baz"))() == 3.0)
     assert(inmemory.stats.isEmpty)
   }
 
@@ -57,8 +57,8 @@ class BlacklistStatsReceiverTest extends FunSuite {
     val stat = bsr.stat("bar")
     stat.add(3)
 
-    assert(inmemory.counters === Map(Seq("foo", "foo", "bar") -> 1))
-    assert(inmemory.gauges(Seq("foo", "foo", "baz"))() === 3.0)
+    assert(inmemory.counters == Map(Seq("foo", "foo", "bar") -> 1))
+    assert(inmemory.gauges(Seq("foo", "foo", "baz"))() == 3.0)
     assert(inmemory.stats.isEmpty)
   }
 

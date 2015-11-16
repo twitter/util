@@ -27,11 +27,11 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
   test("run subsequent submits serially") {
     var n = 0
     submit {
-      assert(n === 0)
+      assert(n == 0)
       submit {
-        assert(n === 1)
+        assert(n == 1)
         submit {
-          assert(n === 2)
+          assert(n == 2)
           n += 1
         }
         n += 1
@@ -39,7 +39,7 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
       n += 1
     }
 
-    assert(n === 3)
+    assert(n == 3)
   }
 
   test("handle many submits") {
@@ -51,9 +51,9 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
         }
     }
     if (lifo)
-      assert(ran === (0 until N))
+      assert(ran == (0 until N))
     else
-      assert(ran === (0 until N).reverse)
+      assert(ran == (0 until N).reverse)
   }
 }
 

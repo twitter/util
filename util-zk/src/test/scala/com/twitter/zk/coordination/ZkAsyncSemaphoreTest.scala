@@ -49,24 +49,24 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
           val sem2 = new ZkAsyncSemaphore(zk, path, 2)
 
           "have correct initial values" in {
-            assert(sem1.numPermitsAvailable === 2)
-            assert(sem1.numWaiters === 0)
-            assert(sem2.numPermitsAvailable === 2)
-            assert(sem2.numWaiters === 0)
+            assert(sem1.numPermitsAvailable == 2)
+            assert(sem1.numWaiters == 0)
+            assert(sem2.numPermitsAvailable == 2)
+            assert(sem2.numWaiters == 0)
           }
 
           "execute immediately while permits are available" in {
             Await.result(acquire(sem1) within(new JavaTimer(true), 2.second))
-            assert(sem1.numPermitsAvailable === 1)
-            assert(sem1.numWaiters === 0)
-            assert(sem2.numPermitsAvailable === 1)
-            assert(sem2.numWaiters === 0)
+            assert(sem1.numPermitsAvailable == 1)
+            assert(sem1.numWaiters == 0)
+            assert(sem2.numPermitsAvailable == 1)
+            assert(sem2.numWaiters == 0)
 
             Await.result(acquire(sem2) within(new JavaTimer(true), 2.second))
-            assert(sem1.numPermitsAvailable === 0)
-            assert(sem1.numWaiters === 0)
-            assert(sem2.numPermitsAvailable === 0)
-            assert(sem2.numWaiters === 0)
+            assert(sem1.numPermitsAvailable == 0)
+            assert(sem1.numWaiters == 0)
+            assert(sem2.numPermitsAvailable == 0)
+            assert(sem2.numWaiters == 0)
           }
 
           var awaiting1: Future[Permit] = null
@@ -77,23 +77,23 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
               PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
 
             awaiting1 = acquire(sem1)
-            assert(awaiting1.poll === (None))
-            assert(awaiting1.isDefined === (false))
+            assert(awaiting1.poll == (None))
+            assert(awaiting1.isDefined == (false))
             eventually {
-              assert(sem1.numPermitsAvailable === 0)
-              assert(sem1.numWaiters === 1)
-              assert(sem2.numPermitsAvailable === 0)
-              assert(sem2.numWaiters === 1)
+              assert(sem1.numPermitsAvailable == 0)
+              assert(sem1.numWaiters == 1)
+              assert(sem2.numPermitsAvailable == 0)
+              assert(sem2.numWaiters == 1)
             }
 
             awaiting2 = acquire(sem2)
-            assert(awaiting2.poll === (None))
-            assert(awaiting2.isDefined === (false))
+            assert(awaiting2.poll == (None))
+            assert(awaiting2.isDefined == (false))
             eventually {
-              assert(sem1.numPermitsAvailable === 0)
-              assert(sem1.numWaiters === 2)
-              assert(sem2.numPermitsAvailable === 0)
-              assert(sem2.numWaiters === 2)
+              assert(sem1.numPermitsAvailable == 0)
+              assert(sem1.numWaiters == 2)
+              assert(sem2.numPermitsAvailable == 0)
+              assert(sem2.numWaiters == 2)
             }
           }
 
@@ -101,44 +101,44 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
             implicit val config =
               PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
 
-            assert(permits.size === (2))
+            assert(permits.size == (2))
 
             permits.poll().release()
             Await.result(awaiting1 within(new JavaTimer(true), 2.second))
 
             eventually {
-              assert(sem1.numPermitsAvailable === 0)
-              assert(sem1.numWaiters === 1)
-              assert(sem2.numPermitsAvailable === 0)
-              assert(sem2.numWaiters === 1)
+              assert(sem1.numPermitsAvailable == 0)
+              assert(sem1.numWaiters == 1)
+              assert(sem2.numPermitsAvailable == 0)
+              assert(sem2.numWaiters == 1)
             }
 
             permits.poll().release()
             Await.result(awaiting2 within(new JavaTimer(true), 2.second))
 
             eventually {
-              assert(sem1.numPermitsAvailable === 0)
-              assert(sem1.numWaiters === 0)
-              assert(sem2.numPermitsAvailable === 0)
-              assert(sem2.numWaiters === 0)
+              assert(sem1.numPermitsAvailable == 0)
+              assert(sem1.numWaiters == 0)
+              assert(sem2.numPermitsAvailable == 0)
+              assert(sem2.numWaiters == 0)
             }
 
             permits.poll().release()
 
             eventually {
-              assert(sem1.numPermitsAvailable === 1)
-              assert(sem1.numWaiters === 0)
-              assert(sem2.numPermitsAvailable === 1)
-              assert(sem2.numWaiters === 0)
+              assert(sem1.numPermitsAvailable == 1)
+              assert(sem1.numWaiters == 0)
+              assert(sem2.numPermitsAvailable == 1)
+              assert(sem2.numWaiters == 0)
             }
 
             permits.poll().release()
 
             eventually {
-              assert(sem1.numPermitsAvailable === 2)
-              assert(sem1.numWaiters === 0)
-              assert(sem2.numPermitsAvailable === 2)
-              assert(sem2.numWaiters === 0)
+              assert(sem1.numPermitsAvailable == 2)
+              assert(sem1.numWaiters == 0)
+              assert(sem2.numPermitsAvailable == 2)
+              assert(sem2.numWaiters == 0)
             }
           }
         }

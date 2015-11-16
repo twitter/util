@@ -32,7 +32,7 @@ class CommonConnectorTest extends WordSpec with BeforeAndAfter {
         implicit val pool = FuturePool.immediatePool
         val zookeeper = new ZooKeeperClient(timeout.toIntAmount, addresses.asJava)
         val connector = CommonConnector(zookeeper, timeout)
-        assert(connector.underlying === zookeeper)
+        assert(connector.underlying == zookeeper)
       }
     }
   }

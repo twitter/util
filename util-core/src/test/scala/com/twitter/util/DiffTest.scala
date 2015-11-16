@@ -12,23 +12,23 @@ class DiffTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("Diffable.ofSet") {
     forAll(arbitrary[Set[Int]], arbitrary[Set[Int]]) { (a, b) =>
-      Diffable.diff(a, b).patch(a) === b
+      Diffable.diff(a, b).patch(a) == b
     }
 
     forAll(arbitrary[Set[Int]], arbitrary[Set[Int]]) { (a, b) =>
       val diff = Diffable.diff(a, b)
-      diff.map(f).patch(a.map(f)) === b.map(f)
+      diff.map(f).patch(a.map(f)) == b.map(f)
     }
   }
 
   test("Diffable.ofSeq") {
     forAll(arbitrary[Seq[Int]], arbitrary[Seq[Int]]) { (a, b) =>
-      Diffable.diff(a, b).patch(a) === b
+      Diffable.diff(a, b).patch(a) == b
     }
 
     forAll(arbitrary[Seq[Int]], arbitrary[Seq[Int]]) { (a, b) =>
       val diff = Diffable.diff(a, b)
-      diff.map(f).patch(a.map(f)) === b.map(f)
+      diff.map(f).patch(a.map(f)) == b.map(f)
     }
   }
 }

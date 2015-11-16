@@ -27,7 +27,7 @@ class KeyHasherTest extends WordSpec {
 
     sources zip hashes foreach { case (source, hashAsString) =>
       val hash = BigInt(hashAsString).toLong
-      assert(hasher.hashKey(source) === hash)
+      assert(hasher.hashKey(source) == hash)
     }
   }
 

@@ -13,13 +13,13 @@ class EstimatorTest extends FunSuite {
     assert(e.estimate.isNaN)
 
     e.measure(0)
-    assert(e.estimate === 0)
+    assert(e.estimate == 0)
     e.measure(1)
-    assert(e.estimate === 0.5)
+    assert(e.estimate == 0.5)
     e.measure(1)
-    assert(e.estimate === 0.75)
+    assert(e.estimate == 0.75)
     e.measure(-0.75)
-    assert(e.estimate === 0)
+    assert(e.estimate == 0)
   }
 }
 

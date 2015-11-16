@@ -21,7 +21,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flaggable: parse strings") {
-    assert(Flaggable.ofString.parse("blah") === "blah")
+    assert(Flaggable.ofString.parse("blah") == "blah")
   }
 
   test("Flaggable: parse/show inet addresses") {
@@ -29,38 +29,38 @@ class FlagTest extends FunSuite {
     val port = 1589
     val local = Flaggable.ofInetSocketAddress.parse(s":$port")
     assert(local.getAddress.isAnyLocalAddress)
-    assert(local.getPort === port)
+    assert(local.getPort == port)
 
     val ip = "141.211.133.111"
     val remote = Flaggable.ofInetSocketAddress.parse(s"$ip:$port")
 
-    assert(remote.getHostName === remote.getHostName)
-    assert(remote.getPort === port)
+    assert(remote.getHostName == remote.getHostName)
+    assert(remote.getPort == port)
 
-    assert(Flaggable.ofInetSocketAddress.show(local) === s":$port")
-    assert(Flaggable.ofInetSocketAddress.show(remote) === s"${remote.getHostName}:$port")
+    assert(Flaggable.ofInetSocketAddress.show(local) == s":$port")
+    assert(Flaggable.ofInetSocketAddress.show(remote) == s"${remote.getHostName}:$port")
   }
 
   test("Flaggable: parse seqs") {
-    assert(Flaggable.ofSeq[Int].parse("1,2,3,4") === Seq(1,2,3,4))
+    assert(Flaggable.ofSeq[Int].parse("1,2,3,4") == Seq(1,2,3,4))
   }
 
   test("Flaggable: parse maps") {
-    assert(Flaggable.ofMap[Int, Int].parse("1=2,3=4") === Map(1 -> 2, 3 -> 4))
+    assert(Flaggable.ofMap[Int, Int].parse("1=2,3=4") == Map(1 -> 2, 3 -> 4))
   }
 
   test("Flaggable: parse maps with comma-separated values") {
-    assert(Flaggable.ofMap[String, Seq[Int]].parse("a=1,2,3,3,b=4,5") ===
+    assert(Flaggable.ofMap[String, Seq[Int]].parse("a=1,2,3,3,b=4,5") ==
       Map("a" -> Seq(1,2,3,3), "b" -> Seq(4,5)))
   }
 
   test("Flaggable: parse maps of sets with comma-separated values") {
-    assert(Flaggable.ofMap[String, Set[Int]].parse("a=1,2,3,3,b=4,5") ===
+    assert(Flaggable.ofMap[String, Set[Int]].parse("a=1,2,3,3,b=4,5") ==
       Map("a" -> Set(1,2,3), "b" -> Set(4,5)))
   }
 
   test("Flaggable: parse tuples") {
-    assert(Flaggable.ofTuple[Int, String].parse("1,hello") === ((1, "hello")))
+    assert(Flaggable.ofTuple[Int, String].parse("1,hello") == ((1, "hello")))
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
   }
 
@@ -75,17 +75,17 @@ class FlagTest extends FunSuite {
     import ctx._
 
     flag.finishParsing()
-    assert(fooFlag() === 123)
-    assert(barFlag() === "okay")
+    assert(fooFlag() == 123)
+    assert(barFlag() == "okay")
   }
 
   test("Flag: add and parse flags") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parseArgs(Array("-foo", "973", "-bar", "hello there")) === Flags.Ok(Nil))
+    assert(flag.parseArgs(Array("-foo", "973", "-bar", "hello there")) == Flags.Ok(Nil))
     flag.finishParsing()
-    assert(fooFlag() === 973)
-    assert(barFlag() === "hello there")
+    assert(fooFlag() == 973)
+    assert(barFlag() == "hello there")
   }
 
   test("Flag: registers after getting flag") {
@@ -95,8 +95,8 @@ class FlagTest extends FunSuite {
     GlobalRegistry.withRegistry(naive) {
       assert(flag.parseArgs(Array("-foo", "973", "-bar", "hello there")) == Flags.Ok(Nil))
       flag.finishParsing()
-      assert(fooFlag() === 973)
-      assert(barFlag() === "hello there")
+      assert(fooFlag() == 973)
+      assert(barFlag() == "hello there")
       assert(naive.toSet == Set(
         Entry(Seq("flags", "foo"), "973"),
         Entry(Seq("flags", "bar"), "hello there"),
@@ -157,20 +157,20 @@ class FlagTest extends FunSuite {
     var buf = Buffer[Int]()
 
     // make sure they stack properly
-    assert(current === false)
+    assert(current == false)
     MyGlobalBooleanFlag.let(true) {
       buf += 1
-      assert(current === true)
+      assert(current == true)
       MyGlobalBooleanFlag.let(false) {
         buf += 2
-        assert(current === false)
+        assert(current == false)
       }
       buf += 3
-      assert(current === true)
+      assert(current == true)
     }
-    assert(current === false)
+    assert(current == false)
 
-    assert(buf === Seq(1, 2, 3))
+    assert(buf == Seq(1, 2, 3))
   }
 
   class Bctx extends Ctx {
@@ -188,21 +188,21 @@ class FlagTest extends FunSuite {
   test("Boolean: -yes") {
     val ctx = new Bctx
     import ctx._
-    assert(flag.parseArgs(Array("-yes")) === Flags.Ok(Nil))
+    assert(flag.parseArgs(Array("-yes")) == Flags.Ok(Nil))
     assert(yesFlag())
   }
 
   test("Boolean: -yes=true") {
     val ctx = new Bctx
     import ctx._
-    assert(flag.parseArgs(Array("-yes=true")) === Flags.Ok(Nil))
+    assert(flag.parseArgs(Array("-yes=true")) == Flags.Ok(Nil))
     assert(yesFlag())
   }
 
   test("Boolean: -yes=false") {
     val ctx = new Bctx
     import ctx._
-    assert(flag.parseArgs(Array("-yes=false")) === Flags.Ok(Nil))
+    assert(flag.parseArgs(Array("-yes=false")) == Flags.Ok(Nil))
     assert(!yesFlag())
   }
 
@@ -211,25 +211,25 @@ class FlagTest extends FunSuite {
     import ctx._
     val rem = flag.parseArgs(Array("-yes", "ARG"))
     assert(yesFlag())
-    assert(rem === Flags.Ok(Seq("ARG")))
+    assert(rem == Flags.Ok(Seq("ARG")))
   }
 
   test("Flag: handle remainders (sequential)") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parseArgs(Array("-foo", "333", "arg0", "arg1")) === Flags.Ok(Seq("arg0", "arg1")))
+    assert(flag.parseArgs(Array("-foo", "333", "arg0", "arg1")) == Flags.Ok(Seq("arg0", "arg1")))
   }
 
   test("Flag: handle remainders (interpspersed)") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parseArgs(Array("arg0", "-foo", "333", "arg1")) === Flags.Ok(Seq("arg0", "arg1")))
+    assert(flag.parseArgs(Array("arg0", "-foo", "333", "arg1")) == Flags.Ok(Seq("arg0", "arg1")))
   }
 
   test("Flag: stop parsing at '--'") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parseArgs(Array("arg0", "--", "-foo", "333")) === Flags.Ok(Seq("arg0", "-foo", "333")))
+    assert(flag.parseArgs(Array("arg0", "--", "-foo", "333")) == Flags.Ok(Seq("arg0", "-foo", "333")))
   }
 
   test("Flag: give nice parse errors") {
@@ -254,7 +254,7 @@ class FlagTest extends FunSuite {
     val ctx = new Ctx
     import ctx._
     assert(flag.parseArgs(Array("-undefined")).isInstanceOf[Flags.Error])
-    assert(flag.parseArgs(Array("-undefined"), true) === Flags.Ok(Seq("-undefined")))
+    assert(flag.parseArgs(Array("-undefined"), true) == Flags.Ok(Seq("-undefined")))
   }
 
   class Dctx extends Ctx {
@@ -264,7 +264,7 @@ class FlagTest extends FunSuite {
   test("Flag: no default usage") {
     val ctx = new Dctx
     import ctx._
-    assert(quuxFlag.usageString === "  -quux='Int': an int")
+    assert(quuxFlag.usageString == "  -quux='Int': an int")
   }
 
   private class GetCtx {
@@ -273,77 +273,77 @@ class FlagTest extends FunSuite {
     val noDefault = flags[Int]("f2", "an f2")
     val noDefaultAndSupplied = flags[Int]("f3", "an f3")
 
-    assert(flags.parseArgs(Array("-f3=3")) === Flags.Ok(Nil))
+    assert(flags.parseArgs(Array("-f3=3")) == Flags.Ok(Nil))
   }
 
   test("Flag.get") {
     val ctx = new GetCtx()
     import ctx._
 
-    assert(withDefault.get === None)
-    assert(noDefault.get === None)
-    assert(noDefaultAndSupplied.get === Some(3))
+    assert(withDefault.get == None)
+    assert(noDefault.get == None)
+    assert(noDefaultAndSupplied.get == Some(3))
   }
 
   test("Flag.getWithDefault") {
     val ctx = new GetCtx()
     import ctx._
 
-    assert(withDefault.getWithDefault === Some(1))
-    assert(noDefault.getWithDefault === None)
-    assert(noDefaultAndSupplied.getWithDefault === Some(3))
+    assert(withDefault.getWithDefault == Some(1))
+    assert(noDefault.getWithDefault == None)
+    assert(noDefaultAndSupplied.getWithDefault == Some(3))
   }
 
   test("GlobalFlag.get") {
-    assert(MyGlobalBooleanFlag.get === None)
-    assert(MyGlobalFlagNoDefault.get === None)
+    assert(MyGlobalBooleanFlag.get == None)
+    assert(MyGlobalFlagNoDefault.get == None)
 
-    assert(MyGlobalFlag.get === None)
+    assert(MyGlobalFlag.get == None)
     val flag = new Flags("my", includeGlobal = true)
     try {
       flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "supplied"))
-      assert(MyGlobalFlag.get === Some("supplied"))
+      assert(MyGlobalFlag.get == Some("supplied"))
     } finally {
       MyGlobalFlag.reset()
     }
   }
 
   test("GlobalFlag.getWithDefault") {
-    assert(MyGlobalBooleanFlag.getWithDefault === Some(false))
-    assert(MyGlobalFlagNoDefault.getWithDefault === None)
+    assert(MyGlobalBooleanFlag.getWithDefault == Some(false))
+    assert(MyGlobalFlagNoDefault.getWithDefault == None)
 
-    assert(MyGlobalFlag.getWithDefault === Some("a test flag"))
+    assert(MyGlobalFlag.getWithDefault == Some("a test flag"))
     val flag = new Flags("my", includeGlobal = true)
     try {
       flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "supplied"))
-      assert(MyGlobalFlag.getWithDefault === Some("supplied"))
+      assert(MyGlobalFlag.getWithDefault == Some("supplied"))
     } finally {
       MyGlobalFlag.reset()
     }
   }
 
   test("GlobalFlag: no default usage") {
-    assert(MyGlobalFlagNoDefault.usageString ===
+    assert(MyGlobalFlagNoDefault.usageString ==
       "  -com.twitter.app.MyGlobalFlagNoDefault='Int': a global test flag with no default")
   }
 
   test("GlobalFlag: implicit value of true for booleans") {
-    assert(MyGlobalBooleanFlag() === false)
+    assert(MyGlobalBooleanFlag() == false)
     val flag = new Flags("my", includeGlobal = true)
     flag.parseArgs(Array("-com.twitter.app.MyGlobalBooleanFlag"))
-    assert(MyGlobalBooleanFlag() === true)
+    assert(MyGlobalBooleanFlag() == true)
     MyGlobalBooleanFlag.reset()
   }
 
   test("GlobalFlag") {
-    assert(MyGlobalFlag() === "a test flag")
+    assert(MyGlobalFlag() == "a test flag")
     val flag = new Flags("my", includeGlobal = true)
     flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "okay"))
-    assert(MyGlobalFlag() === "okay")
+    assert(MyGlobalFlag() == "okay")
     MyGlobalFlag.reset()
-    assert(MyGlobalFlag() === "a test flag")
+    assert(MyGlobalFlag() == "a test flag")
     MyGlobalFlag.let("not okay") {
-      assert(MyGlobalFlag() === "not okay")
+      assert(MyGlobalFlag() == "not okay")
     }
   }
 
@@ -394,11 +394,11 @@ class FlagTest extends FunSuite {
     assert(matchesGlobal(flagWithGlobal.formattedFlagValuesString(WithGlobal)))
     assert(matchesGlobal(flagWithoutGlobal.formattedFlagValuesString(WithGlobal)))
 
-    assert(flagWithGlobal.formattedFlagValuesString(WithoutGlobal) === localOnly)
-    assert(flagWithoutGlobal.formattedFlagValuesString(WithoutGlobal) === localOnly)
+    assert(flagWithGlobal.formattedFlagValuesString(WithoutGlobal) == localOnly)
+    assert(flagWithoutGlobal.formattedFlagValuesString(WithoutGlobal) == localOnly)
 
     assert(matchesGlobal(flagWithGlobal.formattedFlagValuesString()))
-    assert(flagWithoutGlobal.formattedFlagValuesString() === localOnly)
+    assert(flagWithoutGlobal.formattedFlagValuesString() == localOnly)
   }
 
   // TODO: uncomment after we add script parsing mode
@@ -409,7 +409,7 @@ class FlagTest extends FunSuite {
       flag()
     }
     flag.finishParsing()
-    assert(flag() === 3)
+    assert(flag() == 3)
   }
 
   test("Flag that needs parsing ok after parsing") {
@@ -418,20 +418,20 @@ class FlagTest extends FunSuite {
       flag()
     }
     flag.parse("4")
-    assert(flag() === 4)
+    assert(flag() == 4)
   }
 
   test("Flag that needs parsing ok resets properly") {
     val flag = new Flag[Int]("foo", "bar", Left(() => 3))
     flag.parse("4")
-    assert(flag() === 4)
+    assert(flag() == 4)
 
     flag.reset()
     intercept[IllegalStateException] {
       flag()
     }
     flag.parse("4")
-    assert(flag() === 4)
+    assert(flag() == 4)
   }
 
   test("Flags fail before parsing, OK after") {
@@ -441,23 +441,23 @@ class FlagTest extends FunSuite {
     intercept[IllegalStateException] {
       fooFlag()
     }
-    assert(flag.parseArgs(Array()) === Flags.Ok(Nil))
-    assert(fooFlag() === 123)
+    assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
+    assert(fooFlag() == 123)
   }
 
   test("Flags reset properly with respect to failure") {
     val ctx = new Ctx()
     import ctx._
 
-    assert(flag.parseArgs(Array()) === Flags.Ok(Nil))
-    assert(fooFlag() === 123)
+    assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
+    assert(fooFlag() == 123)
 
     flag.reset()
     intercept[IllegalStateException] {
       fooFlag()
     }
-    assert(flag.parseArgs(Array()) === Flags.Ok(Nil))
-    assert(fooFlag() === 123)
+    assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
+    assert(fooFlag() == 123)
   }
    */
 }

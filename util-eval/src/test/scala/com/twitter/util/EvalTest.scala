@@ -113,8 +113,8 @@ class EvalTest extends WordSpec {
       // New class API fails
       // val eval = new Eval
       // eval.compile("object Doubler { def apply(n: Int) = n * 2 }")
-      // assert(eval.inPlace[Int]("Doubler(2)") === 4)
-      // assert(eval.inPlace[Int]("Doubler(14)") === 28)
+      // assert(eval.inPlace[Int]("Doubler(2)") == 4)
+      // assert(eval.inPlace[Int]("Doubler(14)") == 28)
     }
 
     "check" in {

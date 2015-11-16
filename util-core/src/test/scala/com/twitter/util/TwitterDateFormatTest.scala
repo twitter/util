@@ -28,13 +28,13 @@ class TwitterDateFormatTest extends WordSpec {
 
     "stripSingleQuoted" in {
       import TwitterDateFormat._
-      assert(stripSingleQuoted("") === "")
-      assert(stripSingleQuoted("YYYY") === "YYYY")
-      assert(stripSingleQuoted("''") === "")
-      assert(stripSingleQuoted("'abc'") === "")
-      assert(stripSingleQuoted("x'abc'") === "x")
-      assert(stripSingleQuoted("'abc'x") === "x")
-      assert(stripSingleQuoted("'abc'def'ghi'") === "def")
+      assert(stripSingleQuoted("") == "")
+      assert(stripSingleQuoted("YYYY") == "YYYY")
+      assert(stripSingleQuoted("''") == "")
+      assert(stripSingleQuoted("'abc'") == "")
+      assert(stripSingleQuoted("x'abc'") == "x")
+      assert(stripSingleQuoted("'abc'x") == "x")
+      assert(stripSingleQuoted("'abc'def'ghi'") == "def")
 
       intercept[IllegalArgumentException] {
         stripSingleQuoted("'abc")

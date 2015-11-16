@@ -13,7 +13,7 @@ class LogRecordTest extends FunSuite {
       new LogRecordTestHelper({ r: JRecord => r.getSourceMethodName() }) {
         def makingLogRecord() {
           logger.log(Level.INFO, "OK")
-          assert(handler.get === "makingLogRecord")
+          assert(handler.get == "makingLogRecord")
         }
         makingLogRecord()
       }
@@ -23,7 +23,7 @@ class LogRecordTest extends FunSuite {
   test("LogRecord should getClass properly") {
     Logger.withLoggers(Nil) {
       new Foo {
-        assert(handler.get === "com.twitter.logging.Foo")
+        assert(handler.get == "com.twitter.logging.Foo")
       }
     }
   }

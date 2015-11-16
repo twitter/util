@@ -13,11 +13,11 @@ class WindowedAdderTest extends FunSuite {
     Time.withCurrentTimeFrozen { tc =>
       val adder = newAdder()
       adder.add(1)
-      assert(adder.sum() === 1)
+      assert(adder.sum() == 1)
       adder.add(1)
-      assert(adder.sum() === 2)
+      assert(adder.sum() == 2)
       adder.add(3)
-      assert(adder.sum() === 5)
+      assert(adder.sum() == 5)
     }
   }
 
@@ -25,17 +25,17 @@ class WindowedAdderTest extends FunSuite {
     Time.withCurrentTimeFrozen { tc =>
       val adder = newAdder()
       adder.add(1)
-      assert(adder.sum() === 1)
+      assert(adder.sum() == 1)
       tc.advance(1.second)
-      assert(adder.sum() === 1)
+      assert(adder.sum() == 1)
       adder.add(2)
-      assert(adder.sum() === 3)
+      assert(adder.sum() == 3)
       tc.advance(1.second)
-      assert(adder.sum() === 3)
+      assert(adder.sum() == 3)
       tc.advance(1.second)
-      assert(adder.sum() === 2)
+      assert(adder.sum() == 2)
       tc.advance(1.second)
-      assert(adder.sum() === 0)
+      assert(adder.sum() == 0)
     }
   }
 
@@ -43,29 +43,29 @@ class WindowedAdderTest extends FunSuite {
     Time.withCurrentTimeFrozen { tc =>
       val adder = newAdder()
       adder.incr()
-      assert(adder.sum() === 1)
+      assert(adder.sum() == 1)
       tc.advance(1.seconds)
       adder.add(2)
-      assert(adder.sum() === 3)
+      assert(adder.sum() == 3)
       tc.advance(1.second)
       adder.incr()
-      assert(adder.sum() === 4)
+      assert(adder.sum() == 4)
 
       tc.advance(2.seconds)
-      assert(adder.sum() === 1)
+      assert(adder.sum() == 1)
 
       tc.advance(100.seconds)
-      assert(adder.sum() === 0)
+      assert(adder.sum() == 0)
 
       adder.add(100)
       tc.advance(1.second)
-      assert(adder.sum() === 100)
+      assert(adder.sum() == 100)
       adder.add(100)
       tc.advance(1.second)
       adder.add(100)
-      assert(adder.sum() === 300)
+      assert(adder.sum() == 300)
       tc.advance(100.seconds)
-      assert(adder.sum() === 0)
+      assert(adder.sum() == 0)
     }
   }
 

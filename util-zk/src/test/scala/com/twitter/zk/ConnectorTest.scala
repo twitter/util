@@ -35,7 +35,7 @@ class ConnectorTest extends WordSpec with MockitoSugar {
         import h._
 
         connectors foreach { x =>
-          assert(x.apply() === Future.never)
+          assert(x.apply() == Future.never)
         }
         (1 to 2 * nConnectors) foreach { _ =>
           connector()
@@ -50,7 +50,7 @@ class ConnectorTest extends WordSpec with MockitoSugar {
         import h._
 
         connectors foreach { x =>
-          assert(x.release() === Future.never)
+          assert(x.release() == Future.never)
         }
         (1 to 2) foreach { _ =>
           connector.release()

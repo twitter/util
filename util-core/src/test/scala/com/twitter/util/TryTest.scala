@@ -42,7 +42,7 @@ class TryTest extends FunSuite {
   }
 
   test("Try.throwable: should return e for Throw:s") {
-    assert(Throw(e).throwable === e)
+    assert(Throw(e).throwable == e)
   }
 
   test("Try.throwable: should throw IllegalStateException for Return:s") {

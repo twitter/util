@@ -40,7 +40,7 @@ class CumulativeGaugeTest extends FunSuite {
     System.gc()
 
     // We have to incite some action for the weakref GC to take place.
-    assert(gauge.getValue === 1.0f)
+    assert(gauge.getValue == 1.0f)
     assert(0 == gauge.numDeregisters.get)
   }
 
@@ -53,7 +53,7 @@ class CumulativeGaugeTest extends FunSuite {
     System.gc()
 
     // We have to incite some action for the weakref GC to take place.
-    assert(gauge.getValue === 0.0f)
+    assert(gauge.getValue == 0.0f)
     assert(1 == gauge.numDeregisters.get)
   }
 
@@ -61,18 +61,18 @@ class CumulativeGaugeTest extends FunSuite {
     val gauge = new TestGauge()
 
     0 until 100 foreach { _ => gauge.addGauge { 10.0f } }
-    assert(gauge.getValue === (10.0f * 100))
+    assert(gauge.getValue == (10.0f * 100))
   }
 
   test("a CumulativeGauge should discount gauges once removed") {
     val gauge = new TestGauge()
 
     val underlying = 0 until 100 map { _ => gauge.addGauge { 10.0f } }
-    assert(gauge.getValue === (10.0f * 100))
+    assert(gauge.getValue == (10.0f * 100))
     underlying(0).remove()
-    assert(gauge.getValue === (10.0f * 99))
+    assert(gauge.getValue == (10.0f * 99))
     underlying(1).remove()
-    assert(gauge.getValue === (10.0f * 98))
+    assert(gauge.getValue == (10.0f * 98))
   }
 
 }

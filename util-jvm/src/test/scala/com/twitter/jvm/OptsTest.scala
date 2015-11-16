@@ -36,16 +36,16 @@ class OptsTest extends FunSuite  {
           Array("MaxHeapFreeRatio", "99"),
           Array("java.lang.String", "java.lang.String"))
 
-        assert(Opt("MaxHeapFreeRatio") === Some("99"))
+        assert(Opt("MaxHeapFreeRatio") == Some("99"))
 
         ManagementFactory.getPlatformMBeanServer().invoke(
           DiagnosticName, "setVMOption",
           Array("MaxHeapFreeRatio", originalValue),
           Array("java.lang.String", "java.lang.String"))
 
-        assert(Opt("MaxHeapFreeRatio") === Some(originalValue))
+        assert(Opt("MaxHeapFreeRatio") == Some(originalValue))
 
-        assert(Opt("NonexistentOption") === None)
+        assert(Opt("NonexistentOption") == None)
       }
     }
   }

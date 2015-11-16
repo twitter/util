@@ -109,7 +109,7 @@ class TimerTest extends FunSuite
     timer.schedule(Time.now + 200.millis) {
       counter.incrementAndGet()
     }
-    eventually { assert(counter.get() === 1) }
+    eventually { assert(counter.get() == 1) }
     timer.stop()
   }
 

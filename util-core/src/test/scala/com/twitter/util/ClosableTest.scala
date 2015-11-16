@@ -18,7 +18,7 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
       }
       val dur = 1.minute
       c.close(dur)
-      assert(time === Some(Time.now + dur))
+      assert(time == Some(Time.now + dur))
     }
   }
 

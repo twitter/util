@@ -49,10 +49,10 @@ class ProxyTest extends WordSpec {
 
       val proxied = f1(obj)
 
-      assert(proxied.foo    === "foo")
-      assert(proxied.bar(2) === Some(2L))
+      assert(proxied.foo    == "foo")
+      assert(proxied.bar(2) == Some(2L))
 
-      assert(called === 2)
+      assert(called == 2)
     }
 
     "generate a factory for a class with a default constructor" in {
@@ -63,10 +63,10 @@ class ProxyTest extends WordSpec {
 
       val proxied = f2(obj)
 
-      assert(proxied.slota === "a")
-      assert(proxied.slotb === 2.0)
+      assert(proxied.slota == "a")
+      assert(proxied.slotb == 2.0)
 
-      assert(called === 2)
+      assert(called == 2)
     }
 
     "must not throw UndeclaredThrowableException" in {
@@ -88,13 +88,13 @@ class ProxyTest extends WordSpec {
 
       val proxied = pf(new TestImpl)
       proxied.foo
-      assert(unitsCalled === 0)
+      assert(unitsCalled == 0)
 
       proxied.theVoid()
-      assert(unitsCalled === 1)
+      assert(unitsCalled == 1)
 
       proxied.theJavaVoid
-      assert(unitsCalled === 2)
+      assert(unitsCalled == 2)
     }
 
     "MethodCall returnsFuture must be true for methods that return a future or subclass" in {
@@ -108,13 +108,13 @@ class ProxyTest extends WordSpec {
       val proxied = pf(new TestImpl)
 
       proxied.foo
-      assert(futuresCalled === 0)
+      assert(futuresCalled == 0)
 
       proxied.aFuture
-      assert(futuresCalled === 1)
+      assert(futuresCalled == 1)
 
       proxied.aPromise
-      assert(futuresCalled === 2)
+      assert(futuresCalled == 2)
     }
 
     "MethodCall throws an exception when invoked without a target" in {
@@ -131,14 +131,14 @@ class ProxyTest extends WordSpec {
       val pf  = new ProxyFactory[TestImpl](m => m(alt))
       val targetless = pf()
 
-      assert(targetless.foo === "alt foo")
+      assert(targetless.foo == "alt foo")
     }
 
     "MethodCall can be invoked with alternate arguments" in {
       val pf      = new ProxyFactory[TestInterface](m => m(Array(3.asInstanceOf[AnyRef])))
       val proxied = pf(new TestImpl)
 
-      assert(proxied.bar(2) === Some(3L))
+      assert(proxied.bar(2) == Some(3L))
     }
 
     "MethodCall can be invoked with alternate target and arguments" in {
@@ -146,7 +146,7 @@ class ProxyTest extends WordSpec {
       val pf  = new ProxyFactory[TestImpl](m => m(alt, Array(3.asInstanceOf[AnyRef])))
       val targetless = pf()
 
-      assert(targetless.bar(2) === Some(30L))
+      assert(targetless.bar(2) == Some(30L))
     }
 
     // Sigh. Benchmarking has no place in unit tests.

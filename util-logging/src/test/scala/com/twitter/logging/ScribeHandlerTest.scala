@@ -61,8 +61,8 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually {
         scribe.publish(record1)
         scribe.publish(record2)
 
-        assert(scribe.queue.size === 2)
-        assert(scribe.makeBuffer(2).array.hexlify === (
+        assert(scribe.queue.size == 2)
+        assert(scribe.makeBuffer(2).array.hexlify == (
           "000000b080010001000000034c6f67000000000f0001" +
           "0c000000020b000100000004746573740b0002000000" +
           "36494e46205b32303038303332392d30353a35333a31" +
@@ -91,7 +91,7 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually {
         scribe.updateLastTransmission()
         scribe.publish(bytes)
 
-        assert(scribe.queue.peek() === bytes)
+        assert(scribe.queue.peek() == bytes)
       }
     }
 
@@ -111,8 +111,8 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually {
       scribe.publish(record1)
       scribe.publish(record2)
 
-      assert(statsReceiver.counter("dropped_records")() === 1l)
-      assert(statsReceiver.counter("sent_records")() === 0l)
+      assert(statsReceiver.counter("dropped_records")() == 1l)
+      assert(statsReceiver.counter("sent_records")() == 0l)
     }
 
     "have backoff on connection errors" in {

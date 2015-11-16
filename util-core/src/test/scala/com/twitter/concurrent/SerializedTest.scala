@@ -42,7 +42,7 @@ class SerializedTest extends WordSpec with Serialized {
       t1.join()
       t2.join()
 
-      assert(orderOfExecution.toList === List(t1, t2))
+      assert(orderOfExecution.toList == List(t1, t2))
     }
   }
 }

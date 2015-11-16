@@ -14,7 +14,7 @@ class PromiseTest extends FunSuite {
         f.update(Throw(t))
     }
     f.raise(new Exception())
-    assert(p.handled === None)
+    assert(p.handled == None)
     assert(f.isDefined)
     intercept[Exception] {
       Await.result(f)
@@ -26,7 +26,7 @@ class PromiseTest extends FunSuite {
     val f = Promise.attached(p)
     p.setValue(())
     assert(f.isDefined)
-    assert(Await.result(f) === ((): Unit))
+    assert(Await.result(f) == ((): Unit))
   }
 
   test("Promise.attached should validate failure") {
@@ -38,14 +38,14 @@ class PromiseTest extends FunSuite {
     val actual = intercept[Exception] {
       Await.result(f)
     }
-    assert(actual === e)
+    assert(actual == e)
   }
 
   test("Promise.attached should detach properly for futures") {
     val f = Future.Unit
     val p = Promise.attached(f)
     assert(!p.detach())
-    assert(p.poll === Some(Return(())))
+    assert(p.poll == Some(Return(())))
   }
 
   test("Detached promises are no longer connected: Success") {
@@ -55,8 +55,8 @@ class PromiseTest extends FunSuite {
     val e = new Exception()
     p.setException(e)
     att.setValue(())
-    assert(p.poll === Some(Throw(e)))
-    assert(att.poll === Some(Return(())))
+    assert(p.poll == Some(Throw(e)))
+    assert(att.poll == Some(Return(())))
   }
 
   test("Detached promises are no longer connected: Failure") {
@@ -66,8 +66,8 @@ class PromiseTest extends FunSuite {
     val e = new Exception()
     p.setValue(())
     att.setException(e)
-    assert(att.poll === Some(Throw(e)))
-    assert(p.poll === Some(Return(())))
+    assert(att.poll == Some(Throw(e)))
+    assert(p.poll == Some(Return(())))
   }
 
   test("become not allowed when already satisfied") {
@@ -102,13 +102,13 @@ class PromiseTest extends FunSuite {
 
   test("Promise.attached undone by detach") {
     val p = new Promise[Unit]
-    assert(p.waitqLength === 0)
+    assert(p.waitqLength == 0)
     val q = Promise.attached(p)
-    assert(p.waitqLength === 1)
+    assert(p.waitqLength == 1)
     q.respond(_ => ())
-    assert(p.waitqLength === 1)
+    assert(p.waitqLength == 1)
     q.detach()
-    assert(p.waitqLength === 0)
+    assert(p.waitqLength == 0)
   }
 
   class HandledMonitor extends Monitor {
@@ -128,9 +128,9 @@ class PromiseTest extends FunSuite {
       p ensure { throw exc }
     }
 
-    assert(m.handled === null)
+    assert(m.handled == null)
     p.update(Return(1))
-    assert(m.handled === exc)
+    assert(m.handled == exc)
   }
 
   test("Promise.transform should monitor fatal exceptions") {
@@ -142,12 +142,12 @@ class PromiseTest extends FunSuite {
       p transform { case _ => throw exc }
     }
 
-    assert(m.handled === null)
+    assert(m.handled == null)
     val actual = intercept[NoSuchMethodException] {
       p.update(Return(1))
     }
-    assert(actual === exc)
-    assert(m.handled === exc)
+    assert(actual == exc)
+    assert(m.handled == exc)
   }
 
   test("Promise can only forwardInterruptsTo one other future") {
@@ -161,8 +161,8 @@ class PromiseTest extends FunSuite {
     val ex = new Exception("expected")
     a.raise(ex)
 
-    assert(b.handled === None)
-    assert(c.handled === Some(ex))
+    assert(b.handled == None)
+    assert(c.handled == Some(ex))
   }
 
   test("forwardInterruptsTo does not forward to a completed future") {
@@ -176,6 +176,6 @@ class PromiseTest extends FunSuite {
     a.forwardInterruptsTo(b)
     a.raise(ex)
 
-    assert(b.handled === None)
+    assert(b.handled == None)
   }
 }

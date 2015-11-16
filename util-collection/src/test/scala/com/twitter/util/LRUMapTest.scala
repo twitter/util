@@ -16,10 +16,10 @@ class LRUMapTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("LRUMap creation") {
     forAll (Gen.choose(1, 200)) { size =>
       val lru = new LruMap[String, String](size)
-      assert(lru.maxSize === size)
+      assert(lru.maxSize == size)
 
       val slru = new SynchronizedLruMap[String, String](size)
-      assert(slru.maxSize === size)
+      assert(slru.maxSize == size)
     }
   }
 
@@ -31,7 +31,7 @@ class LRUMapTest extends FunSuite with GeneratorDrivenPropertyChecks {
       }
 
       for ((key,value) <- entries) {
-        assert(lru.get(key) === Some(value))
+        assert(lru.get(key) == Some(value))
       }
     }
   }
@@ -44,7 +44,7 @@ class LRUMapTest extends FunSuite with GeneratorDrivenPropertyChecks {
       }
 
       val expectedKeys = entries.slice(entries.size-5, entries.size).map(_._1)
-      assert(slru.keySet === expectedKeys.toSet)
+      assert(slru.keySet == expectedKeys.toSet)
     }
   }
 }

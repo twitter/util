@@ -20,9 +20,9 @@ class MemoizeTest extends FunSuite {
     val adder = spy(new Adder)
     val memoizer = Memoize { adder(_: Int) }
 
-    assert(2 === memoizer(1))
-    assert(2 === memoizer(1))
-    assert(3 === memoizer(2))
+    assert(2 == memoizer(1))
+    assert(2 == memoizer(1))
+    assert(3 == memoizer(2))
 
     verify(adder, times(1))(1)
     verify(adder, times(1))(2)
@@ -57,12 +57,12 @@ class MemoizeTest extends FunSuite {
 
     // All of the items are equal, up to reference equality
     results foreach { item =>
-      assert(item === results(0))
+      assert(item == results(0))
       assert(item eq results(0))
     }
 
     // The effects happen exactly once
-    assert(callCount.get() === 1)
+    assert(callCount.get() == 1)
   }
 
   test("Memoize.apply: handles exceptions during computations") {
@@ -92,14 +92,14 @@ class MemoizeTest extends FunSuite {
       Await.result(computation, 200.milliseconds).toList partition { _.isReturn }
 
     // One of the times, the computation must have failed.
-    assert(failures === List(Throw(TheException)))
+    assert(failures == List(Throw(TheException)))
 
     // Another time, it must have succeeded, and then the stored
     // result will be reused for the other calls.
-    assert(successes === List.fill(ConcurrencyLevel - 1)(Return(6)))
+    assert(successes == List.fill(ConcurrencyLevel - 1)(Return(6)))
 
     // The exception plus another successful call:
-    assert(callCount.get() === 2)
+    assert(callCount.get() == 2)
   }
 
   test("Memoize.snappable: produce map of memoized computations") {
@@ -107,7 +107,7 @@ class MemoizeTest extends FunSuite {
     assert(memoizer.snap.isEmpty)
 
     assert(2 == memoizer(1))
-    assert(2 === memoizer(1))
+    assert(2 == memoizer(1))
     assert(3 == memoizer(2))
     assertResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
   }
@@ -130,7 +130,7 @@ class MemoizeTest extends FunSuite {
     }
 
     callTriggeredLatch.await(10, TimeUnit.SECONDS)
-    assert(2 === memoizer(1))
+    assert(2 == memoizer(1))
     assertResult(Map(1 -> 2))(memoizer.snap)
     callReadyLatch.countDown()
 

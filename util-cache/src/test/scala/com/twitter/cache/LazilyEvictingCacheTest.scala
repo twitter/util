@@ -34,7 +34,7 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
 
     val Some(failed) = fCache.get("key")
     val thrown = intercept[Exception] { Await.result(failed) }
-    assert(thrown === exn)
+    assert(thrown == exn)
 
     verify(cache).evict("key", p)
   }
@@ -51,7 +51,7 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
     p.setValue("value")
 
     val Some(res) = fCache.get("key")
-    assert(Await.result(res) === "value")
+    assert(Await.result(res) == "value")
     verify(cache, never).evict("key", p)
   }
 
@@ -68,7 +68,7 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
     val res = fCache.getOrElseUpdate("key") {
       throw new RuntimeException("unexpected set")
     }
-    assert(Await.result(res) === "value")
+    assert(Await.result(res) == "value")
   }
 
   test("LazilyEvictingCache getOrElseUpdate computes a future") {
@@ -83,9 +83,9 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
     val f = fCache.getOrElseUpdate("key")(p)
 
     p.setValue("new value")
-    assert(Await.result(f) === "new value")
+    assert(Await.result(f) == "new value")
     val Some(f2) = fCache.get("key")
-    assert(Await.result(f2) === "new value")
+    assert(Await.result(f2) == "new value")
   }
 
   test("LazilyEvictingCache should evict on failed futures for getOrElseUpdate") {
@@ -106,20 +106,20 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
       )
     val fCache = new LazilyEvictingCache(cache)
 
-    assert(fCache.getOrElseUpdate("key")(p).poll === p.poll)
+    assert(fCache.getOrElseUpdate("key")(p).poll == p.poll)
     val exn = new Exception
     p.setException(exn)
 
     // first lookup returns the failed Future
     val Some(x) = fCache.get("key")
     val thrown = intercept[Exception] { Await.result(x) }
-    assert(thrown === exn)
+    assert(thrown == exn)
 
     // second lookup returns the reloaded value after
     // the previous value is invalidated
     val Some(y) = fCache.get("key")
-    assert(Await.result(y) === 1)
-    assert(loadCount === 1)
+    assert(Await.result(y) == 1)
+    assert(loadCount == 1)
   }
 
   test("LazilyEvictingCache should keep satisfied futures for getOrElseUpdate") {
@@ -140,13 +140,13 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
     )
     val fCache = new LazilyEvictingCache(cache)
 
-    assert(fCache.getOrElseUpdate("key")(p).poll === p.poll)
+    assert(fCache.getOrElseUpdate("key")(p).poll == p.poll)
     val Some(x) = fCache.get("key")
     assert(!x.isDefined)
 
     p.setValue(12345)
     val Some(y) = fCache.get("key")
-    assert(Await.result(y) === 12345)
-    assert(loadCount === 0)
+    assert(Await.result(y) == 12345)
+    assert(loadCount == 0)
   }
 }

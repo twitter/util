@@ -22,9 +22,9 @@ class ConfigTest extends WordSpec with MockitoSugar with Matchers {
       }
 
       val foo = new Foo
-      assert(foo.didIt === false)
-      assert((foo.y: Int) === 25) // use type annotation to force implicit conversion
-      assert(foo.didIt === true)
+      assert(foo.didIt == false)
+      assert((foo.y: Int) == 25) // use type annotation to force implicit conversion
+      assert(foo.didIt == true)
     }
 
     "subclass can override indepedent var for use in dependent var" in {
@@ -35,7 +35,7 @@ class ConfigTest extends WordSpec with MockitoSugar with Matchers {
       val bar = new Foo {
         x = 20
       }
-      assert((bar.y: Int) === 45) // use type annotation to force implicit conversion
+      assert((bar.y: Int) == 45) // use type annotation to force implicit conversion
     }
 
     "missingValues" should {
@@ -59,19 +59,19 @@ class ConfigTest extends WordSpec with MockitoSugar with Matchers {
             z = 10
           }
         }
-        assert(foo.missingValues === List())
+        assert(foo.missingValues == List())
       }
 
       "must find top-level missing values" in {
         val foo = new Foo
-        assert(foo.missingValues.sorted === Seq("x", "bar").sorted)
+        assert(foo.missingValues.sorted == Seq("x", "bar").sorted)
       }
 
       "must find top-level and nested missing values" in {
         val foo = new Foo {
           bar = new Bar
         }
-        assert(foo.missingValues.sorted === Seq("x", "bar.z").sorted)
+        assert(foo.missingValues.sorted == Seq("x", "bar.z").sorted)
       }
 
       "must find nested missing values in optional sub-configs" in {
@@ -82,7 +82,7 @@ class ConfigTest extends WordSpec with MockitoSugar with Matchers {
           }
           baz = new Baz
         }
-        assert(foo.missingValues.sorted === Seq("baz.w").sorted)
+        assert(foo.missingValues.sorted == Seq("baz.w").sorted)
       }
     }
   }

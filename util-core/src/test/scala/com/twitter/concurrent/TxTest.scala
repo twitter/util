@@ -13,26 +13,26 @@ class TxTest extends WordSpec {
     "commit when everything goes dandy" in {
       val (stx, rtx) = Tx.twoParty(123)
       val sf = stx.ack()
-      assert(sf.poll === None)
+      assert(sf.poll == None)
       val rf = rtx.ack()
-      assert(sf.poll === Some(Return(Tx.Commit(()))))
-      assert(rf.poll === Some(Return(Tx.Commit(123))))
+      assert(sf.poll == Some(Return(Tx.Commit(()))))
+      assert(rf.poll == Some(Return(Tx.Commit(123))))
     }
 
     "abort when receiver nacks" in {
       val (stx, rtx) = Tx.twoParty(123)
       val sf = stx.ack()
-      assert(sf.poll === None)
+      assert(sf.poll == None)
       rtx.nack()
-      assert(sf.poll === Some(Return(Tx.Abort)))
+      assert(sf.poll == Some(Return(Tx.Abort)))
     }
 
     "abort when sender nacks" in {
       val (stx, rtx) = Tx.twoParty(123)
       val rf = rtx.ack()
-      assert(rf.poll === None)
+      assert(rf.poll == None)
       stx.nack()
-      assert(rf.poll === Some(Return(Tx.Abort)))
+      assert(rf.poll == Some(Return(Tx.Abort)))
     }
 
     "complain on ack ack" in {
@@ -41,7 +41,7 @@ class TxTest extends WordSpec {
 
       assert(intercept[Exception] {
         rtx.ack()
-      } === Tx.AlreadyAckd)
+      } == Tx.AlreadyAckd)
     }
 
     "complain on ack nack" in {
@@ -50,7 +50,7 @@ class TxTest extends WordSpec {
 
       assert(intercept[Exception] {
         rtx.nack()
-      } === Tx.AlreadyAckd)
+      } == Tx.AlreadyAckd)
     }
 
     "complain on nack ack" in {
@@ -59,7 +59,7 @@ class TxTest extends WordSpec {
 
       assert(intercept[Exception] {
         rtx.ack()
-      } === Tx.AlreadyNackd)
+      } == Tx.AlreadyNackd)
     }
 
     "complain on nack nack" in {
@@ -68,7 +68,7 @@ class TxTest extends WordSpec {
 
       assert(intercept[Exception] {
         rtx.nack()
-      } === Tx.AlreadyNackd)
+      } == Tx.AlreadyNackd)
     }
 
     "complain when already done" in {
@@ -78,7 +78,7 @@ class TxTest extends WordSpec {
 
       assert(intercept[Exception] {
         stx.ack()
-      } === Tx.AlreadyDone)
+      } == Tx.AlreadyDone)
     }
   }
 }

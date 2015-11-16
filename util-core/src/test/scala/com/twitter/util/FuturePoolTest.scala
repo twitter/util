@@ -23,7 +23,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     val result = pool { Await.result(source) } // simulate blocking call
 
     source.setValue(1)
-    assert(Await.result(result) === 1)
+    assert(Await.result(result) == 1)
   }
 
   test("Executor failing contains failures") {
@@ -42,7 +42,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     }
     Await.ready(result1)
 
-    assert(runCount.get() === 0)
+    assert(runCount.get() == 0)
   }
 
   test("does not execute interrupted tasks") {
@@ -64,10 +64,10 @@ class FuturePoolTest extends FunSuite with Eventually {
     // in FuturePool will throw away the work if the future
     // representing the outcome has already been interrupted,
     // and will set the result to a CancellationException
-    eventually { assert(executor.getCompletedTaskCount === 2) }
+    eventually { assert(executor.getCompletedTaskCount == 2) }
 
-    assert(runCount.get() === 1)
-    assert(Await.result(result1)  === 1)
+    assert(runCount.get() == 1)
+    assert(Await.result(result1)  == 1)
     intercept[CancellationException] { Await.result(result2) }
   }
 
@@ -96,9 +96,9 @@ class FuturePoolTest extends FunSuite with Eventually {
     result.raise(new Exception)
     cancelledLatch.countDown()
 
-    eventually { assert(executor.getCompletedTaskCount === 1) }
+    eventually { assert(executor.getCompletedTaskCount == 1) }
 
-    assert(runCount.get() === 2)
+    assert(runCount.get() == 2)
     intercept[RuntimeException] { Await.result(result) }
   }
 
@@ -112,7 +112,7 @@ class FuturePoolTest extends FunSuite with Eventually {
 
     val rv = pool { "yay!" }
 
-    assert(rv.isDefined === true)
+    assert(rv.isDefined == true)
     intercept[RejectedExecutionException] { Await.result(rv) }
 
     source.setValue(1)
@@ -138,7 +138,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     Await.result(started)
     f.raise(new RuntimeException("foo"))
     intercept[RuntimeException] { Await.result(f) }
-    assert(Await.result(interrupted) === ((): Unit))
+    assert(Await.result(interrupted) == ((): Unit))
   }
 
   test("not interrupt threads when not interruptible") {
@@ -156,7 +156,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     Await.result(a)
     f.raise(new RuntimeException("foo"))
     b.setDone()
-    assert(Await.result(f) === 1)
+    assert(Await.result(f) == 1)
   }
 
   test("satisfies result promise on fatal exceptions thrown by task") {
@@ -167,7 +167,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     val rv = pool { throw fatal }
 
     val ex = intercept[ExecutionException] { Await.result(rv) }
-    assert(ex.getCause === fatal)
+    assert(ex.getCause == fatal)
   }
 
   class PoolCtx {
@@ -187,11 +187,11 @@ class FuturePoolTest extends FunSuite with Eventually {
 
         val e = intercept[FutureNonLocalReturnControl] { Await.result(rv) }
         val f = intercept[NonLocalReturnControl[String]] { throw e.getCause }
-        assert(f.value === "OK")
+        assert(f.value == "OK")
       }
       "FINISHED"
     }
 
-    assert(fake() === "FINISHED")
+    assert(fake() == "FINISHED")
   }
 }

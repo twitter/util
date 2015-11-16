@@ -145,7 +145,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     }
 
     "provide level name and value maps" in {
-      assert(Logger.levels === Map(
+      assert(Logger.levels == Map(
         Level.ALL.value -> Level.ALL,
         Level.TRACE.value -> Level.TRACE,
         Level.DEBUG.value -> Level.DEBUG,
@@ -155,7 +155,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
         Level.CRITICAL.value -> Level.CRITICAL,
         Level.FATAL.value -> Level.FATAL,
         Level.OFF.value -> Level.OFF))
-      assert(Logger.levelNames === Map(
+      assert(Logger.levelNames == Map(
         "ALL" -> Level.ALL,
         "TRACE" -> Level.TRACE,
         "DEBUG" -> Level.DEBUG,
@@ -169,7 +169,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
 
     "figure out package names" in {
       val log1 = Logger(this.getClass)
-      assert(log1.name === "com.twitter.logging.LoggerTest")
+      assert(log1.name == "com.twitter.logging.LoggerTest")
     }
 
     "log & trace a message" in {
@@ -191,7 +191,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       myHandler = timeFrozenHandler
       log.addHandler(timeFrozenHandler)
       log.error("error!")
-      assert(parse() === List("ERR [20080329-05:53:16.722] (root): error!"))
+      assert(parse() == List("ERR [20080329-05:53:16.722] (root): error!"))
     }
 
     "get single-threaded return the same value" in {
@@ -199,7 +199,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       assert(loggerFirst != null)
 
       val loggerSecond = Logger.get("getTest")
-      assert(loggerSecond === loggerFirst)
+      assert(loggerSecond == loggerFirst)
     }
 
     "get multi-threaded return the same value" in {
@@ -221,13 +221,13 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       executorService.shutdown
       // let them rip, and then wait for em to finish
       latch.countDown
-      assert(executorService.awaitTermination(10, TimeUnit.SECONDS) === true)
+      assert(executorService.awaitTermination(10, TimeUnit.SECONDS) == true)
 
       // now make sure they are all the same reference
       val expected = futureResults(0).get
       for (i <- 1.until(numThreads)) {
         val result = futureResults(i).get
-        assert(result === expected)
+        assert(result == expected)
       }
     }
 
@@ -236,11 +236,11 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       val otherFactories = List(LoggerFactory(node = "", level = Some(Level.INFO)))
       Logger.configure(initialFactories)
 
-      assert(Logger.get("").getLevel === Level.DEBUG)
+      assert(Logger.get("").getLevel == Level.DEBUG)
       Logger.withLoggers(otherFactories) {
-        assert(Logger.get("").getLevel() === Level.INFO)
+        assert(Logger.get("").getLevel() == Level.INFO)
       }
-      assert(Logger.get("").getLevel === Level.DEBUG)
+      assert(Logger.get("").getLevel == Level.DEBUG)
     }
 
     "configure logging" should {
@@ -266,17 +266,17 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
             ) :: Nil
           ).apply()
 
-          assert(log.getLevel === Level.DEBUG)
-          assert(log.getHandlers().length === 1)
+          assert(log.getLevel == Level.DEBUG)
+          assert(log.getHandlers().length == 1)
           val handler = log.getHandlers()(0).asInstanceOf[FileHandler]
-          assert(handler.filename === folderName + "/test.log")
-          assert(handler.append === false)
-          assert(handler.getLevel === Level.INFO)
+          assert(handler.filename == folderName + "/test.log")
+          assert(handler.append == false)
+          assert(handler.getLevel == Level.INFO)
           val formatter = handler.formatter
-          assert(formatter.formatPrefix(javalog.Level.WARNING, "10:55", "hello") === "WARNING 10:55 hello")
-          assert(log.name === "com.twitter")
-          assert(formatter.truncateAt === 1024)
-          assert(formatter.useFullPackageNames === true)
+          assert(formatter.formatPrefix(javalog.Level.WARNING, "10:55", "hello") == "WARNING 10:55 hello")
+          assert(log.name == "com.twitter")
+          assert(formatter.truncateAt == 1024)
+          assert(formatter.useFullPackageNames == true)
         }
       }
 
@@ -296,13 +296,13 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
               ) :: Nil
             ).apply()
 
-            assert(log.getHandlers.length === 1)
+            assert(log.getHandlers.length == 1)
             val h = log.getHandlers()(0).asInstanceOf[SyslogHandler]
-            assert(h.dest.asInstanceOf[InetSocketAddress].getHostName === "example.com")
-            assert(h.dest.asInstanceOf[InetSocketAddress].getPort === 212)
+            assert(h.dest.asInstanceOf[InetSocketAddress].getHostName == "example.com")
+            assert(h.dest.asInstanceOf[InetSocketAddress].getPort == 212)
             val formatter = h.formatter.asInstanceOf[SyslogFormatter]
-            assert(formatter.serverName === Some("elmo"))
-            assert(formatter.priority === 128)
+            assert(formatter.serverName == Some("elmo"))
+            assert(formatter.priority == 128)
           }
         }
       }
@@ -346,10 +346,10 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
           ) :: Nil
 
           Logger.configure(factories)
-          assert(Logger.get("").getLevel === Level.INFO)
-          assert(Logger.get("w3c").getLevel === Level.OFF)
-          assert(Logger.get("stats").getLevel === Level.INFO)
-          assert(Logger.get("bad_jobs").getLevel === Level.INFO)
+          assert(Logger.get("").getLevel == Level.INFO)
+          assert(Logger.get("w3c").getLevel == Level.OFF)
+          assert(Logger.get("stats").getLevel == Level.INFO)
+          assert(Logger.get("bad_jobs").getLevel == Level.INFO)
           try {
           Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler]
           } catch {
@@ -360,7 +360,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
           } catch {
             case _: ClassCastException => fail("not a FileHandler")
           }
-          assert(Logger.get("w3c").getHandlers().size === 0)
+          assert(Logger.get("w3c").getHandlers().size == 0)
           try {
             Logger.get("stats").getHandlers()(0).asInstanceOf[ScribeHandler]
           } catch {

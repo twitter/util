@@ -52,7 +52,7 @@ class QueueingHandlerTest extends WordSpec
       logger.warning("oh noes!")
       eventually {
         // let thread log
-        assert(stringHandler.get === "oh noes!\n")
+        assert(stringHandler.get == "oh noes!\n")
       }
     }
 
@@ -94,7 +94,7 @@ class QueueingHandlerTest extends WordSpec
       // smoke test: thread might write it, flush might write it
       logger.warning("oh noes!")
       queueHandler.flush()
-      assert(wasFlushed === true)
+      assert(wasFlushed == true)
     }
 
     "close" in {
@@ -110,7 +110,7 @@ class QueueingHandlerTest extends WordSpec
       eventually {
         // let thread log
         queueHandler.close()
-        assert(wasClosed === true)
+        assert(wasClosed == true)
       }
     }
 
@@ -137,7 +137,7 @@ class QueueingHandlerTest extends WordSpec
 
       eventually {
         // let thread log
-        assert(didLog === true)
+        assert(didLog == true)
       }
     }
 

@@ -14,7 +14,7 @@ class FutureOfferTest extends WordSpec with MockitoSugar {
     "activate when future is satisfied (poll)" in {
       val p = new Promise[Int]
       val o = p.toOffer
-      assert(o.prepare().poll === None)
+      assert(o.prepare().poll == None)
       p() = Return(123)
       assert(o.prepare().poll match {
          case Some(Return(tx)) =>

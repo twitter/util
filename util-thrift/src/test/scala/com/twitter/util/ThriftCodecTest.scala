@@ -12,7 +12,7 @@ class ThriftCodecTest extends FunSuite {
     val encoded: Array[Byte] = codec.encode(struct)
     val decoded: TestThriftStructure = codec.decode(encoded)
 
-    assert(decoded === struct)
+    assert(decoded == struct)
   }
 
   test("BinaryThriftCodec") {

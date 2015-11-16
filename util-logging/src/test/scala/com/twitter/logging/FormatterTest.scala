@@ -70,29 +70,29 @@ class FormatterTest extends WordSpec {
 
   "Formatter" should {
     "create a prefix" in {
-      assert(basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") ===
+      assert(basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") ==
         "ERR [20080329-05:53:16.722] (root): ")
-      assert(basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") ===
+      assert(basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") ==
         "DEB [20080329-05:53:16.722] (root): ")
-      assert(basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") ===
+      assert(basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") ==
         "WAR [20080329-05:53:16.722] (root): ")
     }
 
     "format a log level name" in {
-      assert(basicFormatter.formatLevelName(Level.ERROR) === "ERROR")
-      assert(basicFormatter.formatLevelName(Level.DEBUG) === "DEBUG")
-      assert(basicFormatter.formatLevelName(Level.WARNING) === "WARNING")
+      assert(basicFormatter.formatLevelName(Level.ERROR) == "ERROR")
+      assert(basicFormatter.formatLevelName(Level.DEBUG) == "DEBUG")
+      assert(basicFormatter.formatLevelName(Level.WARNING) == "WARNING")
     }
 
     "format text" in {
       val record = new LogRecord(Level.ERROR, "error %s")
-      assert(basicFormatter.formatText(record) === "error %s")
+      assert(basicFormatter.formatText(record) == "error %s")
       record.setParameters(Array("123"))
-      assert(basicFormatter.formatText(record) === "error 123")
+      assert(basicFormatter.formatText(record) == "error 123")
     }
 
     "format a timestamp" in {
-      assert(utcFormatter.format(record1) === "ERR [20080329-05:53:16.722] jobs: boo.\n")
+      assert(utcFormatter.format(record1) == "ERR [20080329-05:53:16.722] jobs: boo.\n")
     }
 
     "do lazy message evaluation" in {
@@ -104,25 +104,25 @@ class FormatterTest extends WordSpec {
 
       val record = new LazyLogRecord(Level.DEBUG, "this is " + getSideEffect)
 
-      assert(callCount === 0)
-      assert(basicFormatter.formatText(record) === "this is ok")
-      assert(callCount === 1)
-      assert(basicFormatter.formatText(record) === "this is ok")
-      assert(callCount === 1)
+      assert(callCount == 0)
+      assert(basicFormatter.formatText(record) == "this is ok")
+      assert(callCount == 1)
+      assert(basicFormatter.formatText(record) == "this is ok")
+      assert(callCount == 1)
     }
 
     "format package names" in {
-      assert(utcFormatter.format(record1) === "ERR [20080329-05:53:16.722] jobs: boo.\n")
-      assert(fullPackageFormatter.format(record1) ===
+      assert(utcFormatter.format(record1) == "ERR [20080329-05:53:16.722] jobs: boo.\n")
+      assert(fullPackageFormatter.format(record1) ==
         "ERR [20080329-05:53:16.722] com.example.jobs: boo.\n")
     }
 
     "handle other prefixes" in {
-      assert(prefixFormatter.format(record2) === "jobs 05:53 DEBU useless info.\n")
+      assert(prefixFormatter.format(record2) == "jobs 05:53 DEBU useless info.\n")
     }
 
     "truncate line" in {
-      assert(truncateFormatter.format(record3) ===
+      assert(truncateFormatter.format(record3) ==
         "CRI [20080329-05:53:16.722] whiskey: Something terrible happened th...\n")
     }
 
@@ -162,7 +162,7 @@ class FormatterTest extends WordSpec {
         } catch {
           case t: Throwable => t
         }
-        assert(Formatter.formatStackTrace(exception, 5).map { scrub(_) } === List(
+        assert(Formatter.formatStackTrace(exception, 5).map { scrub(_) } == List(
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
@@ -178,7 +178,7 @@ class FormatterTest extends WordSpec {
         } catch {
           case t: Throwable => t
         }
-        assert(Formatter.formatStackTrace(exception, 2).map { scrub(_) } === List(
+        assert(Formatter.formatStackTrace(exception, 2).map { scrub(_) } == List(
           "    at com.twitter.logging.FormatterTest$$.cycle2(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.apply$mcV$sp(FormatterTest.scala:NNN)",
           "    (...more...)",
@@ -190,7 +190,7 @@ class FormatterTest extends WordSpec {
       }
 
       "log even blank exceptions" in {
-        assert(utcFormatter.format(record4) ===
+        assert(utcFormatter.format(record4) ==
           "ERR [20080329-05:53:16.722] jobs: with minimal exception\n" +
           "ERR [20080329-05:53:16.722] jobs: java.lang.Exception: fast exception no stacktrace\n"
         )

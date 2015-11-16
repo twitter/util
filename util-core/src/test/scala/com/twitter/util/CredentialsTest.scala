@@ -26,7 +26,7 @@ import org.scalatest.prop.Checkers
 class CredentialsTest extends FunSuite with Checkers {
   test("parse a simple auth file") {
       val content = "username: root\npassword: hellokitty\n"
-      assert(Credentials(content) === Map("username" -> "root", "password" -> "hellokitty"))
+      assert(Credentials(content) == Map("username" -> "root", "password" -> "hellokitty"))
   }
 
   test("parse a more complex auth file") {
@@ -38,7 +38,7 @@ password  : last_0f-the/international:playboys
    moar :ok
 
         """
-      assert(Credentials(content) === Map(
+      assert(Credentials(content) == Map(
         "username" -> "root",
         "password" -> "last_0f-the/international:playboys",
         "moar" -> "ok"
@@ -48,14 +48,14 @@ password  : last_0f-the/international:playboys
   test("work for java peeps too") {
     val content = "username: root\npassword: hellokitty\n"
     val jmap = new Credentials().read(content)
-    assert(jmap.size() === 2)
-    assert(jmap.get("username") === "root")
-    assert(jmap.get("password") === "hellokitty")
+    assert(jmap.size() == 2)
+    assert(jmap.get("username") == "root")
+    assert(jmap.get("password") == "hellokitty")
   }
 
   test("handle \r\n line breaks") {
     val content = "username: root\r\npassword: hellokitty\r\n"
-    assert(Credentials(content) === Map("username" -> "root", "password" -> "hellokitty"))
+    assert(Credentials(content) == Map("username" -> "root", "password" -> "hellokitty"))
   }
 
   test("handle special chars") {
@@ -64,6 +64,6 @@ password  : last_0f-the/international:playboys
       .filter(c => c != '\r' && c != '\n')
       .mkString
     val content = s"username: root\npassword: $pass\n"
-    assert(Credentials(content) === Map("username" -> "root", "password" -> pass))
+    assert(Credentials(content) == Map("username" -> "root", "password" -> pass))
   }
 }

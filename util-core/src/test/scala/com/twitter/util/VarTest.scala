@@ -31,15 +31,15 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("Var.map") {
     val v = Var(123)
     val s = v map (_.toString)
-    assert(Var.sample(s) === "123")
+    assert(Var.sample(s) == "123")
     v() = 8923
-    assert(Var.sample(s) === "8923")
+    assert(Var.sample(s) == "8923")
 
     var buf = mutable.Buffer[String]()
     s.changes.register(Witness({ v => buf += v }))
-    assert(buf.toSeq === Seq("8923"))
+    assert(buf.toSeq == Seq("8923"))
     v() = 111
-    assert(buf.toSeq === Seq("8923", "111"))
+    assert(buf.toSeq == Seq("8923", "111"))
   }
 
   test("depth ordering") {
@@ -52,13 +52,13 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     var result = 1
     v4.changes.register(Witness({ i => result = result+2 })) // result = 3
     v0.changes.register(Witness({ i => result = result*2 })) // result = 6
-    assert(result === 6)
+    assert(result == 6)
 
     result = 1 // reset the value, but this time the ordering will go v0, v4 because of depth
     v0() = 4 // trigger recomputation, supplied value is unused
     // v0 observation: result = result*2 = 2
     // v4 observation: result = result+2 = 4
-    assert(result === 4)
+    assert(result == 4)
   }
 
   test("version ordering") {
@@ -69,14 +69,14 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val o2 = v1.changes.register(Witness({ i => result = result * i * i })) // result = 2 * 2 * 2 = 8
     val o3 = v1.changes.register(Witness({ i => result = result + result + i })) // result = 8 + 8 + 2 = 18
 
-    assert(result === 18) // ensure those three things happened in sequence
+    assert(result == 18) // ensure those three things happened in sequence
 
     result=1 // just reset for sanity
     v1() = 3 // this should invoke o1-o3 in order:
     // result = 1 + 3 = 4
     // result = 4 * 3 * 3 = 36
     // result = 36 + 36 + 3 = 75
-    assert(result === 75)
+    assert(result == 75)
   }
 
   test("flatMap") {
@@ -92,7 +92,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
 
     val s = short(us)
-    assert(Var.sample(s) === -1)
+    assert(Var.sample(s) == -1)
     assert(us.forall(_.accessCount == 1), us.map(_.accessCount).mkString(","))
 
     Var.sample(s); Var.sample(s)
@@ -102,24 +102,24 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     // Now maintain a subscription.
     var cur = Var.sample(s)
     val sub = s.changes.register(Witness({ cur = _ }))
-    assert(cur === -1)
+    assert(cur == -1)
 
     assert(us forall (_.observerCount == 1))
 
     us(0).update(123)
-    assert(cur === 123)
-    assert(us(0).observerCount === 1)
+    assert(cur == 123)
+    assert(us(0).observerCount == 1)
     assert(us drop 1 forall (_.observerCount == 0))
 
     us(1).update(333)
-    assert(cur === 123)
-    assert(us(0).observerCount === 1)
+    assert(cur == 123)
+    assert(us(0).observerCount == 1)
     assert(us drop 1 forall (_.observerCount == 0))
 
     us(0).update(0)
-    assert(cur === 333)
-    assert(us(0).observerCount === 1)
-    assert(us(1).observerCount === 1)
+    assert(cur == 333)
+    assert(us(0).observerCount == 1)
+    assert(us(1).observerCount == 1)
     assert(us drop 2 forall (_.observerCount == 0))
 
     val f = sub.close()
@@ -133,14 +133,14 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     var cur = Var.sample(v)
     val sub = v.changes.register(Witness({ cur = _ }))
     v() = 333
-    assert(cur === 333)
+    assert(cur == 333)
     v() = 111
-    assert(cur === 111)
+    assert(cur == 111)
     val f = sub.close()
     assert(f.isDefined)
     Await.result(f)
     v() = 100
-    assert(cur === 111)
+    assert(cur == 111)
   }
 
   test("multiple observers at the same level") {
@@ -152,12 +152,12 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     a.changes.register(Witness({ x = _ }))
     b.changes.register(Witness({ y = _ }))
 
-    assert(x === 4)
-    assert(y === 6)
+    assert(x == 4)
+    assert(y == 6)
 
     v() = 1
-    assert(x === 2)
-    assert(y === 3)
+    assert(x == 2)
+    assert(y == 3)
   }
 
   test("Var.async") {
@@ -175,29 +175,29 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       c
     }
 
-    assert(called === 0)
+    assert(called == 0)
     var vv: Int = 0
     val o = v.changes.register(Witness({ vv = _ }))
-    assert(called === 1)
-    assert(vv === 333)
-    assert(closed === Time.Zero)
+    assert(called == 1)
+    assert(vv == 333)
+    assert(closed == Time.Zero)
 
     x() = 111
-    assert(vv === 111)
-    assert(closed === Time.Zero)
+    assert(vv == 111)
+    assert(closed == Time.Zero)
 
     val o1 = v.changes.register(Witness({ v => () }))
 
     val t = Time.now
     val f = o.close(t)
-    assert(called === 1)
-    assert(closed === Time.Zero)
+    assert(called == 1)
+    assert(closed == Time.Zero)
     assert(f.isDone)
 
     // Closing the Var.async process is asynchronous with closing
     // the Var itself.
     val f1 = o1.close(t)
-    assert(closed === t)
+    assert(closed == t)
     assert(f1.isDone)
   }
 
@@ -210,10 +210,10 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val coll = Var.collect(vars: Seq[Var[Int]])
     val ref = new AtomicReference[Seq[Int]]
     coll.changes.register(Witness(ref))
-    assert(ref.get === Seq(1,2,3))
+    assert(ref.get == Seq(1,2,3))
 
     vars(1).update(999)
-    assert(ref.get === Seq(1,999,3))
+    assert(ref.get == Seq(1,999,3))
   }
 
   // This is either very neat or very horrendous,
@@ -227,13 +227,13 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val coll = Var.collect(vars.map { v => v: Var[Int] }.toSet)
     val ref = new AtomicReference[Set[Int]]
     coll.changes.register(Witness(ref))
-    assert(ref.get === Set(1,2,3))
+    assert(ref.get == Set(1,2,3))
 
     vars(1).update(1)
-    assert(ref.get === Set(1,3))
+    assert(ref.get == Set(1,3))
 
     vars(1).update(999)
-    assert(ref.get === Set(1,999,3))
+    assert(ref.get == Set(1,999,3))
   }
 
   /**
@@ -257,8 +257,8 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       Var.value(i*2)
     }
 
-    val c1 = f.changes.register(Witness({ i => assert(i === 22) }))
-    val c2 = f.changes.register(Witness({ i => assert(i === 22) }))
+    val c1 = f.changes.register(Witness({ i => assert(i == 22) }))
+    val c2 = f.changes.register(Witness({ i => assert(i == 22) }))
 
     c1.close()
     c2.close()
@@ -269,9 +269,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     var observed = 3
     f.changes.register(Witness({ i => observed = i }))
 
-    assert(Var.sample(f) === 44)
-    assert(Var.sample(v) === 22)
-    assert(observed === 44)
+    assert(Var.sample(f) == 44)
+    assert(Var.sample(v) == 22)
+    assert(observed == 44)
   }
 
   /**
@@ -295,9 +295,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     x() = 0 // this should not throw an exception because there are no observers
     x() = 1
 
-    assert(Var.sample(result) === 1) // invertX is observed briefly
+    assert(Var.sample(result) == 1) // invertX is observed briefly
     x() = 0
-    assert(Var.sample(result) === 0) // but invertX is not being observed here so we're ok
+    assert(Var.sample(result) == 0) // but invertX is not being observed here so we're ok
   }
 
   test("Var.Sampled") {
@@ -322,9 +322,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       var buf = mutable.Buffer[Int]()
       x.changes.register(Witness({ v => buf += v }))
 
-      assert(buf === Seq(333))
+      assert(buf == Seq(333))
       v() = 333
-      assert(buf === Seq(333))
+      assert(buf == Seq(333))
     }
 
     test("Do propagate out-of-date "+typ+"-valued observations") {
@@ -339,15 +339,15 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       var buf = mutable.Buffer[Int]()
       x.changes.register(Witness({ v => buf += v }))
 
-      assert(buf === Seq(333))
+      assert(buf == Seq(333))
       v() = 333
-      assert(buf === Seq(333, 444))
+      assert(buf == Seq(333, 444))
       v() = 123
-      assert(buf === Seq(333, 444, 333))
+      assert(buf == Seq(333, 444, 333))
       v() = 333
-      assert(buf === Seq(333, 444, 333, 444))
+      assert(buf == Seq(333, 444, 333, 444))
       v() = 334
-      assert(buf === Seq(333, 444, 333, 444))
+      assert(buf == Seq(333, 444, 333, 444))
     }
   }
 
@@ -371,7 +371,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
     @volatile var j = -1
     c.changes.register(Witness({ i =>
-      assert(i === j+1)
+      assert(i == j+1)
       j = i
     }))
 
@@ -383,7 +383,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     ac.join()
     bc.join()
 
-    assert(j === N-1)
+    assert(j == N-1)
   }
 
   test("Don't allow stale updates") {
@@ -392,9 +392,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val ref = new AtomicReference[Seq[(Int, Int)]]
     (a join a).changes.build.register(Witness(ref))
 
-    assert(ref.get === Seq((0, 0)))
+    assert(ref.get == Seq((0, 0)))
     a() = 1
-    assert(ref.get === Seq((0, 0), (1, 1)))
+    assert(ref.get == Seq((0, 0), (1, 1)))
   }
 
 
@@ -406,7 +406,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
       for (set <- sets) {
         v() = set
-        assert(set === w.get)
+        assert(set == w.get)
       }
     }
   }

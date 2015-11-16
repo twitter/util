@@ -33,19 +33,19 @@ class MinimumThroughputTest
 
     // read from the beginning
     Await.result(reader.read(13)) match {
-      case Some(b) => assert(b === Buf.UsAscii("soylent green"))
+      case Some(b) => assert(b == Buf.UsAscii("soylent green"))
       case _ => fail()
     }
 
     // a no-op read
     Await.result(reader.read(0)) match {
-      case Some(b) => assert(b === Buf.Empty)
+      case Some(b) => assert(b == Buf.Empty)
       case _ => fail()
     }
 
     // read to the end
     Await.result(reader.read(20)) match {
-      case Some(b) => assert(b === Buf.UsAscii(" is made of..."))
+      case Some(b) => assert(b == Buf.UsAscii(" is made of..."))
       case _ => fail()
     }
 

@@ -47,8 +47,8 @@ class ActivitySourceTest extends FunSuite with BeforeAndAfter {
     val a = failed.orElse(ok)
     val b = ok.orElse(failed)
 
-    assert("42" === a.get("42").sample())
-    assert("42" === b.get("42").sample())
+    assert("42" == a.get("42").sample())
+    assert("42" == b.get("42").sample())
   }
 
   test("CachingActivitySource") {
@@ -57,7 +57,7 @@ class ActivitySourceTest extends FunSuite with BeforeAndAfter {
     })
 
     val a = cache.get("a")
-    assert(a === cache.get("a"))
+    assert(a == cache.get("a"))
   }
 
   test("FilePollingActivitySource") {
@@ -78,13 +78,13 @@ class ActivitySourceTest extends FunSuite with BeforeAndAfter {
 
       timeControl.advance(2.microsecond)
       timer.tick()
-      assert(content === Some("foo bar"))
+      assert(content == Some("foo bar"))
 
       writeToTempFile("foo baz")
 
       timeControl.advance(2.microsecond)
       timer.tick()
-      assert(content === Some("foo baz"))
+      assert(content == Some("foo baz"))
 
       listen.close()
     }
@@ -99,6 +99,6 @@ class ActivitySourceTest extends FunSuite with BeforeAndAfter {
     val loader = new ClassLoaderActivitySource(classLoader, FuturePool.immediatePool)
     val bufAct = loader.get("bar baz")
 
-    assert("bar baz" === bufToString(bufAct.sample()))
+    assert("bar baz" == bufToString(bufAct.sample()))
   }
 }

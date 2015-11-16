@@ -40,25 +40,25 @@ class ShardCoordinatorTest extends WordSpec with MockitoSugar {
           val coord = new ShardCoordinator(zk, path, 5)
 
           val shard0 = Await.result(acquire(coord))
-          assert(shard0.id === 0)
+          assert(shard0.id == 0)
 
           val shard1 = Await.result(acquire(coord))
-          assert(shard1.id === 1)
+          assert(shard1.id == 1)
 
           val shard2 = Await.result(acquire(coord))
-          assert(shard2.id === 2)
+          assert(shard2.id == 2)
 
           val shard3 = Await.result(acquire(coord))
-          assert(shard3.id === 3)
+          assert(shard3.id == 3)
 
           val shard4 = Await.result(acquire(coord))
-          assert(shard4.id === 4)
+          assert(shard4.id == 4)
 
           val fshard5 = acquire(coord)
-          assert(fshard5.isDefined === (false))
+          assert(fshard5.isDefined == (false))
           shard3.release
           val shard5 = Await.result(fshard5)
-          assert(shard5.id === 3)
+          assert(shard5.id == 3)
 
           shard0.release
           shard1.release

@@ -18,21 +18,21 @@ class BroadcastStatsReceiverTest extends FunSuite
 
     val broadcastA = BroadcastStatsReceiver(Seq(recv1, recvA))
     val counterA = broadcastA.counter("hi")
-    assert(None === recv1.counters.get(Seq("hi")))
-    assert(None === recv1.counters.get(Seq("scopeA", "hi")))
+    assert(None == recv1.counters.get(Seq("hi")))
+    assert(None == recv1.counters.get(Seq("scopeA", "hi")))
 
     counterA.incr(1)
-    assert(1 === recv1.counters(Seq("hi")))
-    assert(1 === recv1.counters(Seq("scopeA", "hi")))
+    assert(1 == recv1.counters(Seq("hi")))
+    assert(1 == recv1.counters(Seq("scopeA", "hi")))
 
     val broadcastB = BroadcastStatsReceiver(Seq(recv1, recvB))
     val counterB = broadcastB.counter("hi")
-    assert(None === recv1.counters.get(Seq("scopeB", "hi")))
+    assert(None == recv1.counters.get(Seq("scopeB", "hi")))
 
     counterB.incr(1)
-    assert(2 === recv1.counters(Seq("hi")))
-    assert(1 === recv1.counters(Seq("scopeA", "hi")))
-    assert(1 === recv1.counters(Seq("scopeB", "hi")))
+    assert(2 == recv1.counters(Seq("hi")))
+    assert(1 == recv1.counters(Seq("scopeA", "hi")))
+    assert(1 == recv1.counters(Seq("scopeB", "hi")))
   }
 
   test("stat") {
@@ -42,21 +42,21 @@ class BroadcastStatsReceiverTest extends FunSuite
 
     val broadcastA = BroadcastStatsReceiver(Seq(recv1, recvA))
     val statA = broadcastA.stat("hi")
-    assert(None === recv1.stats.get(Seq("hi")))
-    assert(None === recv1.stats.get(Seq("scopeA", "hi")))
+    assert(None == recv1.stats.get(Seq("hi")))
+    assert(None == recv1.stats.get(Seq("scopeA", "hi")))
 
     statA.add(5f)
-    assert(Seq(5f) === recv1.stats(Seq("hi")))
-    assert(Seq(5f) === recv1.stats(Seq("scopeA", "hi")))
+    assert(Seq(5f) == recv1.stats(Seq("hi")))
+    assert(Seq(5f) == recv1.stats(Seq("scopeA", "hi")))
 
     val broadcastB = BroadcastStatsReceiver(Seq(recv1, recvB))
     val statB = broadcastB.stat("hi")
-    assert(None === recv1.stats.get(Seq("scopeB", "hi")))
+    assert(None == recv1.stats.get(Seq("scopeB", "hi")))
 
     statB.add(10f)
-    assert(Seq(5f, 10f) === recv1.stats(Seq("hi")).sorted)
-    assert(Seq(5f) === recv1.stats(Seq("scopeA", "hi")))
-    assert(Seq(10f) === recv1.stats(Seq("scopeB", "hi")))
+    assert(Seq(5f, 10f) == recv1.stats(Seq("hi")).sorted)
+    assert(Seq(5f) == recv1.stats(Seq("scopeA", "hi")))
+    assert(Seq(10f) == recv1.stats(Seq("scopeB", "hi")))
   }
 
   test("gauge") {
@@ -64,16 +64,16 @@ class BroadcastStatsReceiverTest extends FunSuite
     val recvA = recv1.scope("scopeA")
 
     val broadcastA = BroadcastStatsReceiver(Seq(recv1, recvA))
-    assert(None === recv1.gauges.get(Seq("hi")))
-    assert(None === recv1.gauges.get(Seq("scopeA", "hi")))
+    assert(None == recv1.gauges.get(Seq("hi")))
+    assert(None == recv1.gauges.get(Seq("scopeA", "hi")))
 
     val gaugeA = broadcastA.addGauge("hi") { 5f }
-    assert(5f === recv1.gauges(Seq("hi"))())
-    assert(5f === recv1.gauges(Seq("scopeA", "hi"))())
+    assert(5f == recv1.gauges(Seq("hi"))())
+    assert(5f == recv1.gauges(Seq("scopeA", "hi"))())
 
     gaugeA.remove()
-    assert(None === recv1.gauges.get(Seq("hi")))
-    assert(None === recv1.gauges.get(Seq("scopeA", "hi")))
+    assert(None == recv1.gauges.get(Seq("hi")))
+    assert(None == recv1.gauges.get(Seq("scopeA", "hi")))
   }
 
   test("scope") {
@@ -84,8 +84,8 @@ class BroadcastStatsReceiverTest extends FunSuite
     val counter = subscoped.counter("yolo")
     counter.incr(9)
 
-    assert(9 === base.counters(Seq("subscoped", "yolo")))
-    assert(9 === base.counters(Seq("scoped", "subscoped", "yolo")))
+    assert(9 == base.counters(Seq("subscoped", "yolo")))
+    assert(9 == base.counters(Seq("scoped", "subscoped", "yolo")))
   }
 
   test("scopeSuffix") {
@@ -98,8 +98,8 @@ class BroadcastStatsReceiverTest extends FunSuite
     val counter = subscoped.counter("yolo")
     counter.incr(9)
 
-    assert(9 === base.counters(Seq("sub", "suffixed", "yolo")))
-    assert(9 === base.counters(Seq("scoped", "sub", "suffixed", "yolo")))
+    assert(9 == base.counters(Seq("sub", "suffixed", "yolo")))
+    assert(9 == base.counters(Seq("scoped", "sub", "suffixed", "yolo")))
   }
 
   test("time") {

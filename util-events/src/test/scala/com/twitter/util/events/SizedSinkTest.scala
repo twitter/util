@@ -30,17 +30,17 @@ class SizedSinkTest extends FunSuite {
         Event(etype, Time.now, NoLong, NoObject, 1.0f)
 
       val sink = new SizedSink(2, () => Time.now.inMillis)
-      assert(sink.events.size === 0)
+      assert(sink.events.size == 0)
 
       sink.event(type1, doubleVal = 1.0f)
-      assert(sink.events.toSeq === Seq(event(type1)))
+      assert(sink.events.toSeq == Seq(event(type1)))
 
       sink.event(type2, doubleVal = 1.0f)
-      assert(sink.events.toSeq === Seq(event(type1), event(type2)))
+      assert(sink.events.toSeq == Seq(event(type1), event(type2)))
 
       // wrap around
       sink.event(type3, doubleVal = 1.0f)
-      assert(sink.events.toSeq === Seq(event(type3), event(type2)))
+      assert(sink.events.toSeq == Seq(event(type3), event(type2)))
     }
   }
 }

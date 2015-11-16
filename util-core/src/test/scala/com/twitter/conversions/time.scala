@@ -17,7 +17,7 @@ class TimeTest extends FunSuite {
   }
 
   test("converts nonzero durations") {
-    assert(1.seconds === Duration.fromSeconds(1))
-    assert(123.milliseconds === Duration.fromMilliseconds(123))
+    assert(1.seconds == Duration.fromSeconds(1))
+    assert(123.milliseconds == Duration.fromMilliseconds(123))
   }
 }

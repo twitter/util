@@ -29,9 +29,9 @@ class ServerCnxnFactoryTest extends FunSuite with BeforeAndAfter  {
     val boundPort = factory.getLocalPort
 
     factory.startup(testServer)
-    assert(testServer.getClientPort === boundPort)
+    assert(testServer.getClientPort == boundPort)
 
     factory.shutdown()
-    assert(testServer.isRunning === false)
+    assert(testServer.isRunning == false)
   }
 }

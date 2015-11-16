@@ -19,7 +19,7 @@ trait Diff[CC[_], T] {
    * val diff: Diff[CC, T]
    * val left, right: CC[T]
    *
-   * Diffable.diff(left, right).map(f).patch(left.map(f)) === right.map(f)
+   * Diffable.diff(left, right).map(f).patch(left.map(f)) == right.map(f)
    * }}}
    */
   def map[U](f: T => U): Diff[CC, U]

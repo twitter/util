@@ -15,15 +15,15 @@ class EventTest extends FunSuite {
     val ref = new AtomicReference[Seq[Int]](Seq.empty)
     val sub = e.build.register(Witness(ref))
 
-    assert(ref.get === Seq.empty)
+    assert(ref.get == Seq.empty)
     e.notify(1)
-    assert(ref.get === Seq(1))
+    assert(ref.get == Seq(1))
     e.notify(2)
-    assert(ref.get === Seq(1, 2))
+    assert(ref.get == Seq(1, 2))
 
     Await.ready(sub.close())
     e.notify(3)
-    assert(ref.get === Seq(1, 2))
+    assert(ref.get == Seq(1, 2))
   }
 
   test("Event.filter") {
@@ -37,12 +37,12 @@ class EventTest extends FunSuite {
     evens.build.register(Witness(ref))
 
     e.notify(1)
-    assert(ref.get === Seq.empty)
-    assert(1 === calls.get())
+    assert(ref.get == Seq.empty)
+    assert(1 == calls.get())
 
     e.notify(2)
-    assert(ref.get === Seq(2))
-    assert(2 === calls.get())
+    assert(ref.get == Seq(2))
+    assert(2 == calls.get())
   }
 
   test("Event.map") {
@@ -57,8 +57,8 @@ class EventTest extends FunSuite {
     mapped.build.register(Witness(ref))
 
     e.notify(1)
-    assert(ref.get === Seq(2))
-    assert(1 === calls.get())
+    assert(ref.get == Seq(2))
+    assert(1 == calls.get())
   }
 
   test("Event.collect") {
@@ -68,11 +68,11 @@ class EventTest extends FunSuite {
     events.build.register(Witness(ref))
 
     e.notify(1)
-    assert(ref.get === Seq.empty)
+    assert(ref.get == Seq.empty)
     e.notify(2)
-    assert(ref.get === Seq(4))
+    assert(ref.get == Seq(4))
     e.notify(3); e.notify(4)
-    assert(ref.get === Seq(4,8))
+    assert(ref.get == Seq(4,8))
   }
 
   test("Event.foldLeft") {
@@ -81,11 +81,11 @@ class EventTest extends FunSuite {
     val ref = new AtomicReference[Int](0)
     sum.register(Witness(ref))
     e.notify(0)
-    assert(ref.get === 0)
+    assert(ref.get == 0)
     e.notify(1)
-    assert(ref.get === 1)
+    assert(ref.get == 1)
     e.notify(12)
-    assert(ref.get === 13)
+    assert(ref.get == 13)
   }
 
   test("Event.sliding") {
@@ -95,13 +95,13 @@ class EventTest extends FunSuite {
     w.register(Witness(ref))
 
     e.notify(1)
-    assert(ref.get === Seq(1))
+    assert(ref.get == Seq(1))
     e.notify(2)
-    assert(ref.get === Seq(1,2))
+    assert(ref.get == Seq(1,2))
     e.notify(3)
-    assert(ref.get === Seq(1,2,3))
+    assert(ref.get == Seq(1,2,3))
     e.notify(4)
-    assert(ref.get === Seq(2,3,4))
+    assert(ref.get == Seq(2,3,4))
   }
 
   test("Event.mergeMap") {
@@ -117,18 +117,18 @@ class EventTest extends FunSuite {
 
     assert(inners.isEmpty)
     e.notify(1)
-    assert(inners.size === 1)
-    assert(ref.get === "")
+    assert(inners.size == 1)
+    assert(ref.get == "")
     inners(0).notify("okay")
-    assert(ref.get === "okay")
+    assert(ref.get == "okay")
 
     e.notify(2)
-    assert(inners.size === 2)
-    assert(ref.get === "okay")
+    assert(inners.size == 2)
+    assert(ref.get == "okay")
     inners(0).notify("notokay")
-    assert(ref.get === "notokay")
+    assert(ref.get == "notokay")
     inners(1).notify("yay")
-    assert(ref.get === "yay")
+    assert(ref.get == "yay")
   }
 
   test("Event.mergeMap closes constituent witnesses") {
@@ -146,10 +146,10 @@ class EventTest extends FunSuite {
 
     val ref = new AtomicReference(Seq.empty[Int])
     val closable = e12.build.register(Witness(ref))
-    assert(ref.get === Seq(1))
-    assert(n === 2)
+    assert(ref.get == Seq(1))
+    assert(n == 2)
     Await.result(closable.close())
-    assert(n === 0)
+    assert(n == 0)
   }
 
   test("Event.select") {
@@ -166,7 +166,7 @@ class EventTest extends FunSuite {
     e1.notify(3)
     e2.notify("2")
 
-    assert(ref.get === Seq(Left(1), Left(2), Right("1"), Left(3), Right("2")))
+    assert(ref.get == Seq(Left(1), Left(2), Right("1"), Left(3), Right("2")))
   }
 
   test("Event.zip") {
@@ -181,7 +181,7 @@ class EventTest extends FunSuite {
     for (i <- 50 until 100) e2.notify(i.toString)
     for (i <- 50 until 100) e1.notify(i)
 
-    assert(ref.get === ((0 until 100) zip ((0 until 100) map(_.toString))))
+    assert(ref.get == ((0 until 100) zip ((0 until 100) map(_.toString))))
   }
 
   test("Event.joinLast") {
@@ -191,15 +191,15 @@ class EventTest extends FunSuite {
     val ref = new AtomicReference[(Int, String)]((0, ""))
     e.register(Witness(ref))
 
-    assert(ref.get === ((0, "")))
+    assert(ref.get == ((0, "")))
     e1.notify(1)
-    assert(ref.get === ((0, "")))
+    assert(ref.get == ((0, "")))
     e2.notify("ok")
-    assert(ref.get === ((1, "ok")))
+    assert(ref.get == ((1, "ok")))
     e2.notify("ok1")
-    assert(ref.get === ((1, "ok1")))
+    assert(ref.get == ((1, "ok1")))
     e1.notify(2)
-    assert(ref.get === ((2, "ok1")))
+    assert(ref.get == ((2, "ok1")))
   }
 
   test("Event.take") {
@@ -210,14 +210,14 @@ class EventTest extends FunSuite {
 
     e.notify(1)
     e.notify(2)
-    assert(ref.get === Seq(1, 2))
+    assert(ref.get == Seq(1, 2))
     e.notify(3)
     e.notify(4)
     e.notify(5)
-    assert(ref.get === Seq(1, 2, 3, 4, 5))
+    assert(ref.get == Seq(1, 2, 3, 4, 5))
     e.notify(6)
     e.notify(7)
-    assert(ref.get === Seq(1, 2, 3, 4, 5))
+    assert(ref.get == Seq(1, 2, 3, 4, 5))
   }
 
   test("Event.merge") {
@@ -233,7 +233,7 @@ class EventTest extends FunSuite {
       else e2.notify(i)
     }
 
-    assert(ref.get === Seq.range(0, 300))
+    assert(ref.get == Seq.range(0, 300))
   }
 
   test("Event.toVar") {
@@ -244,7 +244,7 @@ class EventTest extends FunSuite {
     v.changes.build.register(Witness(ref))
 
     for (i <- 1 until 100) e.notify(i)
-    assert(ref.get === Seq.range(0, 100))
+    assert(ref.get == Seq.range(0, 100))
   }
 
   test("Event.toFuture") {
@@ -254,7 +254,7 @@ class EventTest extends FunSuite {
     assert(!f.isDefined)
     e.notify(123)
     assert(f.isDefined)
-    assert(Await.result(f) === 123)
+    assert(Await.result(f) == 123)
   }
 
   test("Event.toFuture[Interrupted]") {
@@ -266,7 +266,7 @@ class EventTest extends FunSuite {
     f.raise(exc)
     assert(f.isDefined)
     val caught = intercept[Exception] { Await.result(f) }
-    assert(caught === exc)
+    assert(caught == exc)
   }
 
   test("Jake's composition test") {
@@ -287,17 +287,17 @@ class EventTest extends FunSuite {
     val ref = new AtomicReference[Int]
     z.changes.register(Witness(ref))
 
-    assert(ref.get === 7)
+    assert(ref.get == 7)
     x() = 10
-    assert(ref.get === 17)
+    assert(ref.get == 17)
     b() = false
-    assert(ref.get === 9)
+    assert(ref.get == 9)
     y() = 10
-    assert(ref.get === 19)
+    assert(ref.get == 19)
     b() = true
-    assert(ref.get === 17)
+    assert(ref.get == 17)
     x() = 3
-    assert(ref.get === 20)
+    assert(ref.get == 20)
   }
 
   test("Event.register: no races between registered witnesses") {
@@ -319,7 +319,7 @@ class EventTest extends FunSuite {
     ex.shutdown()
 
     e.notify(())
-    assert(counter.get === n)
+    assert(counter.get == n)
   }
 
   test("Event.dedupWith") {
@@ -335,7 +335,7 @@ class EventTest extends FunSuite {
     e.notify(1)
     e.notify(3)
 
-    assert(ref.get() === List(0, 1, 2, 3))
+    assert(ref.get() == List(0, 1, 2, 3))
   }
 
   test("Event.dedup") {
@@ -350,6 +350,6 @@ class EventTest extends FunSuite {
     e.notify(0)
     e.notify(0)
 
-    assert(ref.get() === List(0, 1, 0))
+    assert(ref.get() == List(0, 1, 0))
   }
 }

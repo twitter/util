@@ -22,8 +22,8 @@ class ZNodeTest extends WordSpec with MockitoSugar {
 
       val znode = ZNode(zk, path)
       path should {
-        "parentPath" in { assert(znode.parentPath === parent) }
-        "name"       in { assert(znode.name       === name  ) }
+        "parentPath" in { assert(znode.parentPath == parent) }
+        "name"       in { assert(znode.name       == name  ) }
       }
     }
 

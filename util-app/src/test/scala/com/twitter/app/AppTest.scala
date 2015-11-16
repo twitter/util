@@ -49,10 +49,10 @@ class AppTest extends FunSuite {
     assert(App.registered != Some(test2))
 
     test1.main(Array.empty)
-    assert(App.registered === Some(test1))
+    assert(App.registered == Some(test1))
 
     test2.main(Array.empty)
-    assert(App.registered === Some(test2))
+    assert(App.registered == Some(test2))
   }
 
   test("App: pass in bad args and expect usage") {

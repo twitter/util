@@ -30,7 +30,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       val h = new MonitorOrElseHelper
       import h._
 
-      assert(m.handle(exc) === true)
+      assert(m.handle(exc) == true)
 
       verify(m0).handle(exc)
       verify(m1, never()).handle(exc)
@@ -38,7 +38,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
 
       when(m0.handle(any[Throwable])).thenReturn(false)
 
-      assert(m.handle(exc) === true)
+      assert(m.handle(exc) == true)
       verify(m0, times(2)).handle(exc)
       verify(m1).handle(exc)
       verify(m2, never()).handle(exc)
@@ -49,7 +49,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       import h._
 
       Seq(m0, m1, m2) foreach { m => when(m.handle(any[Throwable]))thenReturn(false) }
-      assert(m.handle(exc) === false)
+      assert(m.handle(exc) == false)
       Seq(m0, m1, m2) foreach { m => verify(m).handle(exc) }
     }
 
@@ -60,7 +60,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       val rte = new RuntimeException("really bad news")
       when(m0.handle(any[Throwable])).thenThrow(rte)
 
-      assert(m.handle(exc) === true)
+      assert(m.handle(exc) == true)
       verify(m0).handle(exc)
       verify(m1).handle(MonitorException(exc, rte))
     }
@@ -82,7 +82,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       when(m0.handle(any[Throwable])).thenReturn(true)
       when(m1.handle(any[Throwable])).thenReturn(true)
 
-      assert(m.handle(exc) === true)
+      assert(m.handle(exc) == true)
       verify(m0).handle(exc)
       verify(m1).handle(exc)
     }
@@ -92,9 +92,9 @@ class MonitorTest extends WordSpec with MockitoSugar {
       import h._
 
       when(m0.handle(any[Throwable])).thenReturn(false)
-      assert(m.handle(exc) === true)
+      assert(m.handle(exc) == true)
       when(m1.handle(any[Throwable])).thenReturn(false)
-      assert(m.handle(exc) === false)
+      assert(m.handle(exc) == false)
     }
 
     "wrap Monitor exceptions and pass them on" in {
@@ -104,7 +104,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       val rte = new RuntimeException("really bad news")
       when(m0.handle(any[Throwable])).thenThrow(rte)
 
-      assert(m.handle(exc) === true)
+      assert(m.handle(exc) == true)
       verify(m0).handle(exc)
       verify(m1).handle(MonitorException(exc, rte))
     }
@@ -117,7 +117,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       when(m0.handle(any[Throwable])).thenThrow(rte)
       when(m1.handle(any[Throwable])).thenThrow(rte)
 
-      assert(m.handle(exc) === false)
+      assert(m.handle(exc) == false)
     }
   }
 
@@ -127,7 +127,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
     "maintain current monitor" in Monitor.restoring {
       when(m.handle(any[Throwable])).thenReturn(true)
       Monitor.set(m)
-      assert(Monitor.get === m)
+      assert(Monitor.get == m)
     }
   }
 
@@ -149,7 +149,7 @@ class MonitorTest extends WordSpec with MockitoSugar {
       Monitor.restoring {
         Monitor.set(mock[Monitor])
       }
-      assert(Monitor.get === orig)
+      assert(Monitor.get == orig)
     }
   }
 
@@ -171,24 +171,24 @@ class MonitorTest extends WordSpec with MockitoSugar {
       val h = new MonitorMkHelper
       import h._
 
-      assert(m.handle(new E1) === true)
-      assert(ran === true)
+      assert(m.handle(new E1) == true)
+      assert(ran == true)
     }
 
     "handle E2" in {
       val h = new MonitorMkHelper
       import h._
 
-      assert(m.handle(new E2) === true)
-      assert(ran === true)
+      assert(m.handle(new E2) == true)
+      assert(ran == true)
     }
 
     "not handle F1" in {
       val h = new MonitorMkHelper
       import h._
 
-      assert(m.handle(new F1) === false)
-      assert(ran === false)
+      assert(m.handle(new F1) == false)
+      assert(ran == false)
     }
   }
 }

@@ -16,15 +16,15 @@ class StatsReceiverTest extends FunSuite {
     val receiver = new RollupStatsReceiver(mem)
 
     receiver.counter("toto", "titi", "tata").incr()
-    assert(mem.counters(Seq("toto")) === 1)
-    assert(mem.counters(Seq("toto", "titi")) === 1)
-    assert(mem.counters(Seq("toto", "titi", "tata")) === 1)
+    assert(mem.counters(Seq("toto")) == 1)
+    assert(mem.counters(Seq("toto", "titi")) == 1)
+    assert(mem.counters(Seq("toto", "titi", "tata")) == 1)
 
     receiver.counter("toto", "titi", "tutu").incr()
-    assert(mem.counters(Seq("toto")) === 2)
-    assert(mem.counters(Seq("toto", "titi")) === 2)
-    assert(mem.counters(Seq("toto", "titi", "tata")) === 1)
-    assert(mem.counters(Seq("toto", "titi", "tutu")) === 1)
+    assert(mem.counters(Seq("toto")) == 2)
+    assert(mem.counters(Seq("toto", "titi")) == 2)
+    assert(mem.counters(Seq("toto", "titi", "tata")) == 1)
+    assert(mem.counters(Seq("toto", "titi", "tutu")) == 1)
   }
 
   test("Broadcast Counter/Stat") {
@@ -35,12 +35,12 @@ class StatsReceiverTest extends FunSuite {
     val c1 = new MemCounter
     val c2 = new MemCounter
     val broadcastCounter = BroadcastCounter(Seq(c1, c2))
-    assert(c1.c === 0)
-    assert(c2.c === 0)
+    assert(c1.c == 0)
+    assert(c2.c == 0)
 
     broadcastCounter.incr()
-    assert(c1.c === 1)
-    assert(c2.c === 1)
+    assert(c1.c == 1)
+    assert(c2.c == 1)
 
     class MemStat extends Stat {
       var values: Seq[Float] = ArrayBuffer.empty[Float]
@@ -49,12 +49,12 @@ class StatsReceiverTest extends FunSuite {
     val s1 = new MemStat
     val s2 = new MemStat
     val broadcastStat = BroadcastStat(Seq(s1, s2))
-    assert(s1.values === Seq.empty)
-    assert(s2.values === Seq.empty)
+    assert(s1.values == Seq.empty)
+    assert(s2.values == Seq.empty)
 
     broadcastStat.add(1F)
-    assert(s1.values === Seq(1F))
-    assert(s2.values === Seq(1F))
+    assert(s1.values == Seq(1F))
+    assert(s2.values == Seq(1F))
   }
 
   test("StatsReceiver time") {
@@ -95,8 +95,8 @@ class StatsReceiverTest extends FunSuite {
     receiver.counter("bar").incr()
     scoped.counter("baz").incr()
 
-    assert(receiver.counters(Seq("bar")) === 1)
-    assert(receiver.counters(Seq("foo", "baz")) === 1)
+    assert(receiver.counters(Seq("bar")) == 1)
+    assert(receiver.counters(Seq("foo", "baz")) == 1)
   }
 
   test("StatsReceiver.scope: don't prefix with the empty string") {
@@ -105,13 +105,13 @@ class StatsReceiverTest extends FunSuite {
     receiver.counter("bar").incr()
     scoped.counter("baz").incr()
 
-    assert(receiver.counters(Seq("bar")) === 1)
-    assert(receiver.counters(Seq("baz")) === 1)
+    assert(receiver.counters(Seq("bar")) == 1)
+    assert(receiver.counters(Seq("baz")) == 1)
   }
 
   test("Scoped equality") {
     val sr = new InMemoryStatsReceiver
-    assert(sr === sr)
+    assert(sr == sr)
     assert(sr.scope("foo") != sr.scope("bar"))
   }
 

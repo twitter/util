@@ -31,7 +31,7 @@ class BufTest extends FunSuite
     for (i <- 0 until arr.length; j <- i until arr.length) {
       val w = new Array[Byte](j-i)
       buf.slice(i, j).write(w, 0)
-      assert(w.toSeq === arr.slice(i, j).toSeq)
+      assert(w.toSeq == arr.slice(i, j).toSeq)
     }
   }
 
@@ -41,7 +41,7 @@ class BufTest extends FunSuite
     array(0) = 13
     val copy = new Array[Byte](10)
     buf.write(copy, 0)
-    assert(copy(0) === 0)
+    assert(copy(0) == 0)
   }
 
   test("Buf.ByteArray.Direct.apply is unsafe") {
@@ -50,21 +50,21 @@ class BufTest extends FunSuite
     array(0) = 13
     val copy = new Array[Byte](10)
     buf.write(copy, 0)
-    assert(copy(0) === 13)
+    assert(copy(0) == 13)
   }
 
   test("Buf.ByteArray.Shared.unapply is safe") {
     val array = Array.fill(10)(0.toByte)
     val Buf.ByteArray.Shared(copy) = Buf.ByteArray.Owned(array)
     array(0) = 13
-    assert(copy(0) === 0)
+    assert(copy(0) == 0)
   }
 
   test("Buf.ByteArray.Direct.unapply is unsafe") {
     val array = Array.fill(10)(0.toByte)
     val Buf.ByteArray.Owned(copy, _, _) = Buf.ByteArray.Owned(array)
     array(0) = 13
-    assert(copy(0) === 13)
+    assert(copy(0) == 13)
   }
 
   test("Buf.concat") {
@@ -73,10 +73,10 @@ class BufTest extends FunSuite
     val a3 = Array[Byte](7,8,9)
 
     val buf = Buf.ByteArray.Owned(a1) concat Buf.ByteArray.Owned(a2) concat Buf.ByteArray.Owned(a3)
-    assert(buf.length === 9)
+    assert(buf.length == 9)
     val x = Array.fill(9) { 0.toByte }
     buf.write(x, 0)
-    assert(x.toSeq === (a1++a2++a3).toSeq)
+    assert(x.toSeq == (a1++a2++a3).toSeq)
   }
 
   test("Buf.concat.slice") {
@@ -89,7 +89,7 @@ class BufTest extends FunSuite
     for (i <- 0 until arr.length; j <- i until arr.length) {
       val w = new Array[Byte](j-i)
       buf.slice(i, j).write(w, 0)
-      assert(w.toSeq === arr.slice(i, j).toSeq)
+      assert(w.toSeq == arr.slice(i, j).toSeq)
     }
   }
 
@@ -101,7 +101,7 @@ class BufTest extends FunSuite
       Buf.ByteArray.Owned(a2) concat
       Buf.ByteArray.Owned(a3)
 
-    assert(buf.slice(25, 30) === Buf.Empty)
+    assert(buf.slice(25, 30) == Buf.Empty)
   }
 
   test("Buf.concat.slice truncated") {
@@ -112,9 +112,9 @@ class BufTest extends FunSuite
       Buf.ByteArray.Owned(a2) concat
       Buf.ByteArray.Owned(a3)
 
-    assert(buf.slice(20, 30) === buf.slice(20, 24)) // just last
-    assert(buf.slice(12, 30) === buf.slice(12, 24)) // two bufs
-    assert(buf.slice(8, 30) === buf.slice(8, 24)) // two bufs
+    assert(buf.slice(20, 30) == buf.slice(20, 24)) // just last
+    assert(buf.slice(12, 30) == buf.slice(12, 24)) // two bufs
+    assert(buf.slice(8, 30) == buf.slice(8, 24)) // two bufs
   }
 
   test("Buf.concat.slice invalid args throws") {
@@ -135,17 +135,17 @@ class BufTest extends FunSuite
 
   test("Buf.Utf8: English") {
     val buf = Buf.Utf8("Hello, world!")
-    assert(buf.length === 13)
+    assert(buf.length == 13)
     val chars = Buf.ByteArray.Owned.extract(buf).toSeq.map(_.toChar)
-    assert("Hello, world!".toSeq === chars)
+    assert("Hello, world!".toSeq == chars)
 
     val Buf.Utf8(s) = buf
-    assert(s === "Hello, world!")
+    assert(s == "Hello, world!")
   }
 
   test("Buf.Utf8: Japanese") {
     val buf = Buf.Utf8("￼￼￼￼￼￼￼")
-    assert(buf.length === 21)
+    assert(buf.length == 21)
     val bytes = new Array[Byte](21)
     buf.write(bytes, 0)
 
@@ -154,17 +154,17 @@ class BufTest extends FunSuite
       -65, -68, -17, -65, -68, -17, -65, -68,
       -17, -65, -68, -17, -65, -68)
 
-    assert(bytes.toSeq === expected.toSeq)
+    assert(bytes.toSeq == expected.toSeq)
 
     val Buf.Utf8(s) = buf
-    assert(s === "￼￼￼￼￼￼￼")
+    assert(s == "￼￼￼￼￼￼￼")
   }
 
   test("Buf.Utf8.unapply with a Buf.ByteArray") {
     val str = "Hello, world!"
     val buf = Buf.Utf8(str)
     val Buf.Utf8(out) = buf
-    assert(out === str)
+    assert(out == str)
   }
 
   test("Buf.Utf8.unapply with a non-Buf.ByteArray") {
@@ -179,7 +179,7 @@ class BufTest extends FunSuite
     }
 
     val Buf.Utf8(str) = buf
-    assert(str === "aaaaaaaaaaaa")
+    assert(str == "aaaaaaaaaaaa")
   }
 
   AllCharsets foreach { charset =>
@@ -190,8 +190,8 @@ class BufTest extends FunSuite
       val wrappedBuf = Buf.ByteBuffer.Owned(bb)
       val coder(_) = wrappedBuf
       val Buf.ByteBuffer.Owned(wbb) = wrappedBuf
-      assert(wbb === bb)
-      assert(wbb.position() === bb.position())
+      assert(wbb == bb)
+      assert(wbb.position() == bb.position())
     }
   }
 
@@ -201,7 +201,7 @@ class BufTest extends FunSuite
       val phrase = "Hello, world!"
       val encoded = coder(phrase)
       val coder(out) = encoded
-      assert(out === phrase)
+      assert(out == phrase)
     }
   }
 
@@ -210,7 +210,7 @@ class BufTest extends FunSuite
     val bb = java.nio.ByteBuffer.wrap(bytes)
     val buf = Buf.ByteBuffer.Owned(bb)
 
-    assert(Buf.ByteArray.Owned(bytes) === buf)
+    assert(Buf.ByteArray.Owned(bytes) == buf)
 
     val written = new Array[Byte](buf.length)
     buf.write(written, 0)
@@ -220,19 +220,19 @@ class BufTest extends FunSuite
     buf.write(offsetWritten, 2)
     assert(Arrays.equals(Array[Byte](0, 0) ++ bytes, offsetWritten))
 
-    assert(Buf.ByteArray.Owned(bytes.drop(2).take(2)) === buf.slice(2, 4))
+    assert(Buf.ByteArray.Owned(bytes.drop(2).take(2)) == buf.slice(2, 4))
     // overflow slice
-    assert(Buf.ByteArray.Owned(bytes.drop(2)) === buf.slice(2, 10))
+    assert(Buf.ByteArray.Owned(bytes.drop(2)) == buf.slice(2, 10))
 
-    assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocate(0)) === Buf.Empty)
-    assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocateDirect(0)) === Buf.Empty)
+    assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocate(0)) == Buf.Empty)
+    assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocateDirect(0)) == Buf.Empty)
 
     val bytes2 = Array[Byte](1,2,3,4,5,6,7,8,9,0)
     val buf2 = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes2, 3, 4))
-    assert(buf2 === Buf.ByteArray(4,5,6,7))
+    assert(buf2 == Buf.ByteArray(4,5,6,7))
 
     val Buf.ByteBuffer.Owned(byteBuffer) = buf
-    assert(byteBuffer === bb)
+    assert(byteBuffer == bb)
   }
 
   test("Buf.ByteBuffer.Shared.apply is safe") {
@@ -246,7 +246,7 @@ class BufTest extends FunSuite
     val bytes = Array.fill(10)(0.toByte)
     val Buf.ByteBuffer.Owned(bb) = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes))
     bytes(0) = 10.toByte
-    assert(bb.get(0) === 10)
+    assert(bb.get(0) == 10)
   }
 
   test("Buf.ByteBuffer.Shared.unapply is safe") {
@@ -254,7 +254,7 @@ class BufTest extends FunSuite
     val bb0 = java.nio.ByteBuffer.wrap(bytes)
     val Buf.ByteBuffer.Shared(bb1) = Buf.ByteBuffer.Owned(bb0)
     bb1.position(3)
-    assert(bb0.position === 0)
+    assert(bb0.position == 0)
   }
 
   test("Buf.ByteBuffer.Direct.unapply is unsafe") {
@@ -262,7 +262,7 @@ class BufTest extends FunSuite
     val bb0 = java.nio.ByteBuffer.wrap(bytes)
     val Buf.ByteBuffer.Owned(bb1) = Buf.ByteBuffer.Owned(bb0)
     bytes(0) = 10.toByte
-    assert(bb1.get(0) === 10.toByte)
+    assert(bb1.get(0) == 10.toByte)
   }
 
   test("Buf.ByteBuffer.unapply is readonly") {
@@ -271,7 +271,7 @@ class BufTest extends FunSuite
     val Buf.ByteBuffer(bb1) = Buf.ByteBuffer.Owned(bb0)
     assert(bb1.isReadOnly)
     bb1.position(3)
-    assert(bb0.position === 0)
+    assert(bb0.position == 0)
   }
 
   test("ByteArray.coerce(ByteArray)") {
@@ -283,13 +283,13 @@ class BufTest extends FunSuite
   test("ByteArray.coerce(ByteBuffer)") {
     val orig = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(Array.fill(10)(0.toByte)))
     val coerced = Buf.ByteArray.coerce(orig)
-    assert(coerced === orig)
+    assert(coerced == orig)
   }
 
   test("ByteBuffer.coerce(ByteArray)") {
     val orig = Buf.ByteArray.Owned(Array.fill(10)(0.toByte))
     val coerced = Buf.ByteBuffer.coerce(orig)
-    assert(coerced === orig)
+    assert(coerced == orig)
   }
 
   test("ByteBuffer.coerce(ByteBuffer)") {
@@ -300,8 +300,8 @@ class BufTest extends FunSuite
 
   test("hash code, equals") {
     def ae(a: Buf, b: Buf) {
-      assert(a === b)
-      assert(a.hashCode === b.hashCode)
+      assert(a == b)
+      assert(a.hashCode == b.hashCode)
     }
 
     val string = "okthen"
@@ -382,11 +382,11 @@ class BufTest extends FunSuite
         rem
     )))) = buf
 
-    assert(be32 === Int.MaxValue)
-    assert(be64 === Long.MaxValue)
-    assert(le32 === Int.MinValue)
-    assert(le64 === Long.MinValue)
-    assert(rem === Buf.Empty)
+    assert(be32 == Int.MaxValue)
+    assert(be64 == Long.MaxValue)
+    assert(le32 == Int.MinValue)
+    assert(le64 == Long.MinValue)
+    assert(rem == Buf.Empty)
   }
 
   test("concat two ConcatBufs") {
@@ -405,7 +405,7 @@ class BufTest extends FunSuite
     for (i <- 0 until arr.length; j <- i until arr.length) {
       val w = new Array[Byte](j-i)
       cbuf.slice(i, j).write(w, 0)
-      assert(w.toSeq === arr.slice(i, j).toSeq)
+      assert(w.toSeq == arr.slice(i, j).toSeq)
     }
   }
 
@@ -418,15 +418,15 @@ class BufTest extends FunSuite
 
     val expected = Array.fill(size) { 'x'.toByte }
     val output = Buf.ByteArray.Owned.extract(bigBuf)
-    assert(bigBuf.length === size)
-    assert(expected.toSeq === output.toSeq)
+    assert(bigBuf.length == size)
+    assert(expected.toSeq == output.toSeq)
 
     val sliced = bigBuf.slice(1, size - 1)
     val size2 = size - 2
     val expected2 = Array.fill(size2) { 'x'.toByte }
     val output2 = Buf.ByteArray.Owned.extract(sliced)
-    assert(sliced.length === size2)
-    assert(expected2.toSeq === output2.toSeq)
+    assert(sliced.length == size2)
+    assert(expected2.toSeq == output2.toSeq)
   }
 
   implicit lazy val arbBuf: Arbitrary[Buf] = {
@@ -462,8 +462,8 @@ class BufTest extends FunSuite
         val b1 = buf.slice(i, k)
         val b2 = b1.slice(0, j - i)
 
-        assert(b1.length === k - i)
-        assert(b2.length === j - i)
+        assert(b1.length == k - i)
+        assert(b2.length == j - i)
       }
     }
   }

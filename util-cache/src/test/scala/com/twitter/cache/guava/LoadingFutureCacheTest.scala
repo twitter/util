@@ -35,8 +35,8 @@ class LoadingFutureCacheTest extends FunSuite {
     val ctx = new Ctx {}
     import ctx._
     val Some(res) = cache.get("key")
-    assert(Await.result(res) === "key".hashCode)
-    assert(cacheLoaderCount === 1)
+    assert(Await.result(res) == "key".hashCode)
+    assert(cacheLoaderCount == 1)
   }
 
   test("call CacheLoader one time for non-evicted keys") {
@@ -45,10 +45,10 @@ class LoadingFutureCacheTest extends FunSuite {
     val Some(res) = cache.get("key")
     val Some(res2) = cache.get("key")
     val Some(res3) = cache.get("key")
-    assert(Await.result(res) === "key".hashCode)
-    assert(Await.result(res2) === "key".hashCode)
-    assert(Await.result(res3) === "key".hashCode)
-    assert(cacheLoaderCount === 1)
+    assert(Await.result(res) == "key".hashCode)
+    assert(Await.result(res2) == "key".hashCode)
+    assert(Await.result(res3) == "key".hashCode)
+    assert(cacheLoaderCount == 1)
   }
 
   test("return set values") {
@@ -59,9 +59,9 @@ class LoadingFutureCacheTest extends FunSuite {
     val Some(res) = cache.get("key")
     val res2 = cache("key")
 
-    assert(Await.result(res) === 1234)
-    assert(Await.result(res2) === 1234)
-    assert(cacheLoaderCount === 0)
+    assert(Await.result(res) == 1234)
+    assert(Await.result(res2) == 1234)
+    assert(cacheLoaderCount == 0)
   }
 
   test("eviction") {
@@ -71,12 +71,12 @@ class LoadingFutureCacheTest extends FunSuite {
     val f = Future.value(1234)
     cache.set("key", f)
     val Some(res1) = cache.get("key")
-    assert(Await.result(res1) === 1234)
+    assert(Await.result(res1) == 1234)
     assert(cache.evict("key", f))
 
     val Some(res2) = cache.get("key")
-    assert(Await.result(res2) === "key".hashCode)
-    assert(cacheLoaderCount === 1)
+    assert(Await.result(res2) == "key".hashCode)
+    assert(cacheLoaderCount == 1)
   }
 
   test("eviction should refuse to evict incorrectly") {
@@ -106,9 +106,9 @@ class LoadingFutureCacheTest extends FunSuite {
       mod = true
       Future.value(321)
     }
-    assert(Await.result(result) === 1234)
-    assert(mod === false)
-    assert(cacheLoaderCount === 0)
+    assert(Await.result(result) == 1234)
+    assert(mod == false)
+    assert(cacheLoaderCount == 0)
   }
 
   test("update if ungettable") {
@@ -116,7 +116,7 @@ class LoadingFutureCacheTest extends FunSuite {
     import ctx._
 
     val result = cache.getOrElseUpdate("key") { Future.value(1234) }
-    assert(Await.result(result) === 1234)
-    assert(cacheLoaderCount === 0)
+    assert(Await.result(result) == 1234)
+    assert(cacheLoaderCount == 0)
   }
 }
