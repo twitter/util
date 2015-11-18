@@ -174,17 +174,21 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
    * in the `TimeLike`'s `Top`, adding `Duration.Bottom` results in
    * the `TimeLike`'s `Bottom`.
    */
-  def +(delta: Duration): This = delta match {
-    case Duration.Top => Top
-    case Duration.Bottom => Bottom
-    case Duration.Undefined => Undefined
-    case Duration.Nanoseconds(ns) =>
-      try
-        fromNanoseconds(LongOverflowArith.add(inNanoseconds, ns))
-      catch {
-        case _: LongOverflowException if ns < 0 => Bottom
-        case _: LongOverflowException => Top
-      }
+  def +(delta: Duration): This = {
+    // adds a to b while taking care of long overflow
+    def addNanos(a: Long, b: Long): This = {
+      val c = a + b
+      if (((a ^ c) & (b ^ c)) < 0)
+        if (b < 0) Bottom else Top
+      else fromNanoseconds(c)
+    }
+
+    delta match {
+      case Duration.Top => Top
+      case Duration.Bottom => Bottom
+      case Duration.Undefined => Undefined
+      case Duration.Nanoseconds(ns) => addNanos(inNanoseconds, ns)
+    }
   }
 
   def -(delta: Duration): This = this.+(-delta)
@@ -572,17 +576,21 @@ sealed class Time private[util] (protected val nanos: Long) extends {
 
   override def isFinite: Boolean = true
 
-  def diff(that: Time): Duration = that match {
-    case Undefined => Duration.Undefined
-    case Top => Duration.Bottom
-    case Bottom => Duration.Top
-    case other =>
-      try
-        new Duration(LongOverflowArith.sub(this.inNanoseconds, other.inNanoseconds))
-      catch {
-        case _: LongOverflowException if other.inNanoseconds < 0 => Duration.Top
-        case _: LongOverflowException => Duration.Bottom
-      }
+  def diff(that: Time): Duration = {
+    // subtracts b from a while taking care of long overflow
+    def subNanos(a: Long, b: Long): Duration = {
+      val c = a - b
+      if (((a ^ c) & (-b ^ c)) < 0)
+        if (b < 0) Duration.Top else Duration.Bottom
+      else Duration.fromNanoseconds(c)
+    }
+
+    that match {
+      case Undefined => Duration.Undefined
+      case Top => Duration.Bottom
+      case Bottom => Duration.Top
+      case _ => subNanos(this.inNanoseconds, that.inNanoseconds)
+    }
   }
 
   /**

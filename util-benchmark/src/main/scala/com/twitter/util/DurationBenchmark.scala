@@ -8,6 +8,9 @@ class DurationBenchmark extends StdBenchAnnotations {
 
   private[this] val d1 = Duration.fromNanoseconds(1)
   private[this] val d2 = Duration.fromNanoseconds(2)
+  private[this] val d3 = Duration.fromNanoseconds(1234567890L)
+  private[this] val d4 = Duration.fromNanoseconds(9876543210L)
+  private[this] val d5 = Duration.fromNanoseconds(Long.MaxValue - 10)
 
   @OperationsPerInvocation(7)
   @Benchmark
@@ -22,8 +25,14 @@ class DurationBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def durationMultiplyLong: Duration = d2 * 123456L
+  def durationMultiplyLong: Duration = d3 * 123456L
 
   @Benchmark
-  def durationMultiplyLongOverflow: Duration = d2 * Long.MaxValue
+  def durationMultiplyLongOverflow: Duration = d3 * Long.MaxValue
+
+  @Benchmark
+  def durationAddDelta: Duration = d3 + d4
+
+  @Benchmark
+  def durationAddDeltaOverflow: Duration = d3 + d5
 }

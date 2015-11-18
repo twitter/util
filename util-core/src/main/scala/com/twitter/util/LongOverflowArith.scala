@@ -1,8 +1,11 @@
 package com.twitter.util
 
+@deprecated("Use Java's java.lang.ArithmeticException instead", "2015-11-16")
 class LongOverflowException(msg: String) extends Exception(msg)
 
 object LongOverflowArith {
+
+  @deprecated("Use Java 8's Math.addExact instead", "2015-11-16")
   def add(a: Long, b: Long) = {
     val c = a + b
     if (((a ^ c) & (b ^ c)) < 0)
@@ -11,6 +14,7 @@ object LongOverflowArith {
       c
   }
 
+  @deprecated("Use Java 8's Math.subtractExact instead", "2015-11-16")
   def sub(a: Long, b: Long) = {
     val c = a - b
     if (((a ^ c) & (-b ^ c)) < 0)
@@ -19,6 +23,7 @@ object LongOverflowArith {
       c
   }
 
+  @deprecated("Use Java 8's Math.multiplyExact instead", "2015-11-16")
   def mul(a: Long, b: Long): Long = {
     if (a > b) {
       // normalize so that a <= b to keep conditionals to a minimum

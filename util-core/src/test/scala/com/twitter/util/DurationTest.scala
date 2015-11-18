@@ -150,7 +150,16 @@ class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
     }
 
     "+ delta" in {
-      assert(10.seconds + 5.seconds == 15.seconds)
+      forAll { (a: Long, b: Long) =>
+        val c = BigInt(a) + BigInt(b)
+        val d = a.nanoseconds + b.nanosecond
+
+        assert(
+          (c >= Long.MaxValue && d == Duration.Top) ||
+          (c <= Long.MinValue && d == Duration.Bottom) ||
+          (d == c.toLong.nanoseconds)
+        )
+      }
     }
 
     "- delta" in {

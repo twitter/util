@@ -201,6 +201,7 @@ object Util extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
+      "com.twitter" % "jsr166e" % "1.0.0",
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
       "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
     ),
