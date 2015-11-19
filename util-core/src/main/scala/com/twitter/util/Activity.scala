@@ -114,6 +114,12 @@ object Activity {
 
     (Activity(v), w)
   }
+  
+  /**
+   * Constructs an Activity from a state Event.
+   */
+  def apply[T](states: Event[State[T]]): Activity[T] =
+    Activity(Var(Pending, states))
 
   /**
    * Collect a collection of activities into an activity of a collection
