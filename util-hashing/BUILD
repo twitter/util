@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-hashing',
   dependencies=[
     'util/util-hashing/src/main/scala'

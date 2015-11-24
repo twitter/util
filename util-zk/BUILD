@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-zk',
   dependencies=[
     'util/util-zk/src/main/scala'

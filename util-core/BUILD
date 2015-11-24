@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-core',
   dependencies=[
     'util/util-core/src/main/java',

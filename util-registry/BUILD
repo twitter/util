@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-registry',
   dependencies=[
     'util/util-registry/src/main/scala'

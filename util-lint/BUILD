@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-lint',
   dependencies=[
     'util/util-lint/src/main/scala'

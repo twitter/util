@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-events',
   dependencies=[
     'util/util-events/src/main/scala',

@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-stats',
   dependencies=[
     'util/util-stats/src/main/scala'

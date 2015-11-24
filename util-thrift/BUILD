@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-thrift',
   dependencies=[
     'util/util-thrift/src/main/scala'

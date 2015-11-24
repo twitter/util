@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-cache',
   dependencies=[
     'util/util-cache/src/main/scala'

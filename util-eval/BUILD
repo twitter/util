@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-eval',
   dependencies=[
     'util/util-eval/src/main/scala'

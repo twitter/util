@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-logging',
   dependencies=[
     'util/util-logging/src/main/scala'

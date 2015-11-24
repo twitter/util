@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-codec',
   dependencies=[
     'util/util-codec/src/main/scala'

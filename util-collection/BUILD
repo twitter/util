@@ -1,5 +1,3 @@
-maven_layout()
-
 target(name='util-collection',
   dependencies=[
     'util/util-collection/src/main/scala'
