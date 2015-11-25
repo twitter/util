@@ -4,30 +4,6 @@ import com.twitter.util.{Future, Return, Throw}
 import scala.collection.mutable
 
 /**
- * A cons list (a linked list like node) with an AsyncStream tail.
- */
-private sealed trait LazySeq[+A]
-
-private object LazySeq {
-  case object Empty extends LazySeq[Nothing]
-
-  // It'd be nice to make this a value class, but we run into a type erasure
-  // bug: https://issues.scala-lang.org/browse/SI-6260, which seems to be fixed
-  // in 2.11, so let's revisit this in the future.
-  case class One[A](a: A) extends LazySeq[A]
-
-  final class Cons[A] private (val head: A, next: => AsyncStream[A]) extends LazySeq[A] {
-    lazy val tail: AsyncStream[A] = next
-    override def toString = s"Cons($head, ?)"
-  }
-
-  object Cons {
-    def apply[A](head: A, next: => AsyncStream[A]): Cons[A] =
-      new Cons(head, next)
-  }
-}
-
-/**
  * A representation of a lazy (and possibly infinite) sequence of asynchronous
  * values. We provide combinators for non-blocking computation over the sequence
  * of values.
@@ -35,15 +11,15 @@ private object LazySeq {
  * It is composable with Future, Seq and Option.
  *
  * {{{
- *   val ids = Seq(123, 124, ...)
- *   val users = fromSeq(ids).flatMap(id => fromFuture(getUser(id)))
+ * val ids = Seq(123, 124, ...)
+ * val users = fromSeq(ids).flatMap(id => fromFuture(getUser(id)))
  *
- *   // Or as a for-comprehension...
+ * // Or as a for-comprehension...
  *
- *   val users = for {
- *     id <- fromSeq(ids)
- *     user <- fromFuture(getUser(id))
- *   } yield user
+ * val users = for {
+ *   id <- fromSeq(ids)
+ *   user <- fromFuture(getUser(id))
+ * } yield user
  * }}}
  *
  * All of its operations are lazy and don't force evaluation, unless otherwise
@@ -51,33 +27,35 @@ private object LazySeq {
  *
  * The stream is persistent and can be shared safely by multiple threads.
  */
-final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]]) {
+sealed abstract class AsyncStream[+A] {
   import AsyncStream._
-  import LazySeq.{Cons, Empty, One}
 
   /**
    * Returns true if there are no elements in the stream.
    */
-  def isEmpty: Future[Boolean] = underlying.flatMap {
+  def isEmpty: Future[Boolean] = this match {
     case Empty => Future.True
+    case Embed(fas) => fas.flatMap(_.isEmpty)
     case _ => Future.False
   }
 
   /**
    * Returns the head of this stream if not empty.
    */
-  def head: Future[Option[A]] = underlying.map {
-    case Empty => None
-    case One(a) => Some(a)
-    case cons: Cons[A] => Some(cons.head)
+  def head: Future[Option[A]] = this match {
+    case Empty => Future.None
+    case FromFuture(fa) => fa.map(Some(_))
+    case Cons(fa, _) => fa.map(Some(_))
+    case Embed(fas) => fas.flatMap(_.head)
   }
 
   /**
    * Note: forces the first element of the tail.
    */
-  def tail: Future[Option[AsyncStream[A]]] = underlying.map {
-    case Empty | One(_) => None
-    case cons: Cons[A] => Some(cons.tail)
+  def tail: Future[Option[AsyncStream[A]]] = this match {
+    case Empty | FromFuture(_) => Future.None
+    case Cons(_, more) => Future.value(Some(more()))
+    case Embed(fas) => fas.flatMap(_.tail)
   }
 
   /**
@@ -89,10 +67,11 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * (a +:: m).uncons == Future.value(Some(a, () => m))
    * }}}
    */
-  def uncons: Future[Option[(A, () => AsyncStream[A])]] = underlying.flatMap {
+  def uncons: Future[Option[(A, () => AsyncStream[A])]] = this match {
     case Empty => Future.None
-    case One(a) => Future.value(Some(a -> (() => empty)))
-    case cons: Cons[A] => Future.value(Some(cons.head -> (() => cons.tail)))
+    case FromFuture(fa) => fa.map(a => Some((a, () => empty)))
+    case Cons(fa, more) => fa.map(a => Some((a, more)))
+    case Embed(fas) => fas.flatMap(_.uncons)
   }
 
   /**
@@ -116,32 +95,41 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * stream that satisfes `p`:
    *
    * {{{
-   *   AsyncStream(1, 2, 3, 4, 1).takeWhile(_ < 3) = AsyncStream(1, 2)
-   *   AsyncStream(1, 2, 3).takeWhile(_ < 5) = AsyncStream(1, 2, 3)
-   *   AsyncStream(1, 2, 3).takeWhile(_ < 0) = AsyncStream.empty
+   * AsyncStream(1, 2, 3, 4, 1).takeWhile(_ < 3) = AsyncStream(1, 2)
+   * AsyncStream(1, 2, 3).takeWhile(_ < 5) = AsyncStream(1, 2, 3)
+   * AsyncStream(1, 2, 3).takeWhile(_ < 0) = AsyncStream.empty
    * }}}
    */
-  def takeWhile(p: A => Boolean): AsyncStream[A] = AsyncStream(
-    foldRight(empty[A].underlying) { (a, as) =>
-      if (p(a)) Future.value(Cons(a, AsyncStream(as)))
-      else empty.underlying
+  def takeWhile(p: A => Boolean): AsyncStream[A] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) => Embed(fa.map { a => if (p(a)) this else empty })
+      case Cons(fa, more) => Embed(fa.map { a =>
+        if (p(a)) Cons(fa, () => more().takeWhile(p))
+        else more().takeWhile(p)
+      })
+      case Embed(fas) => Embed(fas.map(_.takeWhile(p)))
     }
-  )
 
   /**
    * Given a predicate `p` returns the suffix remaining after `takeWhile(p)`:
    *
    * {{{
-   *   AsyncStream(1, 2, 3, 4, 1).dropWhile(_ < 3) = AsyncStream(3, 4, 1)
-   *   AsyncStream(1, 2, 3).dropWhile(_ < 5) = AsyncStream.empty
-   *   AsyncStream(1, 2, 3).dropWhile(_ < 0) = AsyncStream(1, 2, 3)
+   * AsyncStream(1, 2, 3, 4, 1).dropWhile(_ < 3) = AsyncStream(3, 4, 1)
+   * AsyncStream(1, 2, 3).dropWhile(_ < 5) = AsyncStream.empty
+   * AsyncStream(1, 2, 3).dropWhile(_ < 0) = AsyncStream(1, 2, 3)
    * }}}
    */
-  def dropWhile(p: A => Boolean): AsyncStream[A] = AsyncStream(
-    foldRight(empty[A].underlying) { (a, as) =>
-      if (p(a)) as else Future.value(Cons(a, AsyncStream(as)))
+  def dropWhile(p: A => Boolean): AsyncStream[A] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) => Embed(fa.map { a => if (p(a)) empty else this })
+      case Cons(fa, more) => Embed(fa.map { a =>
+        if (p(a)) more().dropWhile(p)
+        else Cons(fa, () => more().dropWhile(p))
+      })
+      case Embed(fas) => Embed(fas.map(_.dropWhile(p)))
     }
-  )
 
   /**
    * Concatenates two streams.
@@ -151,13 +139,18 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    *
    * @see [[concat]] for Java users.
    */
-  def ++[B >: A](that: => AsyncStream[B]): AsyncStream[B] = AsyncStream(
-    underlying.flatMap {
-      case Empty => that.underlying
-      case One(a) => (a +:: that).underlying
-      case cons: Cons[A] => Future.value(Cons(cons.head, cons.tail ++ that))
+  def ++[B >: A](that: => AsyncStream[B]): AsyncStream[B] =
+    this match {
+      case Empty => that
+      case FromFuture(fa) =>
+        lazy val once = that
+        Cons(fa, () => once)
+      case Cons(fa, more) =>
+        lazy val once = that
+        Cons(fa, () => more() ++ once)
+      case Embed(fas) =>
+        Embed(fas.map(_ ++ that))
     }
-  )
 
   /**
    * @see ++
@@ -168,26 +161,25 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * Map a function `f` over the elements in this stream and concatenate the
    * results.
    */
-  def flatMap[B](f: A => AsyncStream[B]): AsyncStream[B] = AsyncStream(
-    underlying.flatMap {
-      case Empty => empty.underlying
-      case One(a) => f(a).underlying
-      case cons: Cons[A] => (f(cons.head) ++ cons.tail.flatMap(f)).underlying
+  def flatMap[B](f: A => AsyncStream[B]): AsyncStream[B] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) => Embed(fa.map(f))
+      case Cons(fa, more) => Embed(fa.map(f)) ++ more().flatMap(f)
+      case Embed(fas) => Embed(fas.map(_.flatMap(f)))
     }
-  )
 
   /**
    * `stream.map(f)` is the stream obtained by applying `f` to each element of
    * `stream`.
    */
-  def map[B](f: A => B): AsyncStream[B] = AsyncStream(
-    underlying.flatMap {
-      case Empty => empty.underlying
-      case One(a) => Future.value(One(f(a)))
-      case cons: Cons[A] => (f(cons.head) +:: cons.tail.map(f)).underlying
-
+  def map[B](f: A => B): AsyncStream[B] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) => FromFuture(fa.map(f))
+      case Cons(fa, more) => Cons(fa.map(f), () => more().map(f))
+      case Embed(fas) => Embed(fas.map(_.map(f)))
     }
-  )
 
   /**
    * Returns a stream of elements that satisfy the predicate `p`.
@@ -196,15 +188,18 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * predicate. This operation may block forever on infinite streams in which
    * no elements match.
    */
-  def filter(p: A => Boolean): AsyncStream[A] = AsyncStream(
-    underlying.flatMap {
-      case Empty => empty.underlying
-      case one@One(a) => if (p(a)) Future.value(one) else empty.underlying
-      case cons: Cons[A] =>
-        if (p(cons.head)) Future.value(Cons(cons.head, cons.tail.filter(p)))
-        else cons.tail.filter(p).underlying
+  def filter(p: A => Boolean): AsyncStream[A] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) =>
+        Embed(fa.map { a => if (p(a)) this else empty })
+      case Cons(fa, more) =>
+        Embed(fa.map { a =>
+          if (p(a)) Cons(fa, () => more().filter(p))
+          else more().filter(p)
+        })
+      case Embed(fas) => Embed(fas.map(_.filter(p)))
     }
-  )
 
   /**
    * @see filter
@@ -216,17 +211,16 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * `n` is larger than the number of elements in the stream.
    */
   def take(n: Int): AsyncStream[A] =
-    if (n < 1) AsyncStream.empty else AsyncStream(
-      underlying.map {
-        case Empty => Empty
-        case o@One(_) => o
-        // If we don't handle this case specially, then the next case
-        // would return a stream whose full evaluation will evaulate
-        // cons.tail.take(0), forcing one more effect than necessary.
-        case cons: Cons[A] if n == 1 => One(cons.head)
-        case cons: Cons[A] => Cons(cons.head, cons.tail.take(n - 1))
-      }
-    )
+    if (n < 1) empty else this match {
+      case Empty => empty
+      case FromFuture(_) => this
+      // If we don't handle this case specially, then the next case
+      // would return a stream whose full evaluation will evaulate
+      // cons.tail.take(0), forcing one more effect than necessary.
+      case Cons(fa, _) if n == 1 => FromFuture(fa)
+      case Cons(fa, more) => Cons(fa, () => more().take(n - 1))
+      case Embed(fas) => Embed(fas.map(_.take(n)))
+    }
 
   /**
    * Returns the suffix of this stream after the first `n` elements, or
@@ -236,26 +230,23 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * Note: this forces all of the intermediate dropped elements.
    */
   def drop(n: Int): AsyncStream[A] =
-    if (n < 1) this else AsyncStream(
-      underlying.flatMap {
-        case Empty | One(_) => empty.underlying
-        case cons: Cons[A] => cons.tail.drop(n - 1).underlying
-      }
-    )
+    if (n < 1) this else this match {
+      case Empty | FromFuture(_) => empty
+      case Cons(_, more) => more().drop(n - 1)
+      case Embed(fas) => Embed(fas.map(_.drop(n)))
+    }
 
   /**
    * Constructs a new stream by mapping each element of this stream to a
    * Future action, evaluated from head to tail.
    */
-  def mapF[B](f: A => Future[B]): AsyncStream[B] = AsyncStream(
-    underlying.flatMap {
-      case Empty => empty[B].underlying
-      case One(a) => f(a).map(One[B](_))
-      case cons: Cons[A] => f(cons.head).map { b =>
-        Cons(b, cons.tail.mapF(f))
-      }
+  def mapF[B](f: A => Future[B]): AsyncStream[B] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) => FromFuture(fa.flatMap(f))
+      case Cons(fa, more) => Cons(fa.flatMap(f), () => more().mapF(f))
+      case Embed(fas) => Embed(fas.map(_.mapF(f)))
     }
-  )
 
   /**
    * Similar to foldLeft, but produces a stream from the result of each
@@ -279,13 +270,15 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * never.scanLeft(z)(f) == z +:: never // logical equality
    * }}}
    */
-  def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] = z +:: AsyncStream(
-    underlying.flatMap {
-      case Empty => empty[B].underlying
-      case One(a) => of(f(z, a)).underlying
-      case cons: Cons[A] => cons.tail.scanLeft(f(z, cons.head))(f).underlying
+  def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] =
+    this match {
+      case Embed(fas) => Embed(fas.map(_.scanLeft(z)(f)))
+      case Empty => FromFuture(Future.value(z))
+      case FromFuture(fa) =>
+        Cons(Future.value(z), () => FromFuture(fa.map(f(z, _))))
+      case Cons(fa, more) =>
+        Cons(Future.value(z), () => Embed(fa.map(a => more().scanLeft(f(z, a))(f))))
     }
-  )
 
   /**
    * Applies a binary operator to a start value and all elements of the stream,
@@ -297,10 +290,11 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * @param z the starting value.
    * @param f a binary operator applied to elements of this stream.
    */
-  def foldLeft[B](z: B)(f: (B, A) => B): Future[B] = underlying.flatMap {
+  def foldLeft[B](z: B)(f: (B, A) => B): Future[B] = this match {
     case Empty => Future.value(z)
-    case One(a) => Future.value(f(z, a))
-    case cons: Cons[A] => cons.tail.foldLeft(f(z, cons.head))(f)
+    case FromFuture(fa) => fa.map(f(z, _))
+    case Cons(fa, more) => fa.map(f(z, _)).flatMap(more().foldLeft(_)(f))
+    case Embed(fas) => fas.flatMap(_.foldLeft(z)(f))
   }
 
   /**
@@ -314,10 +308,11 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * @param f a binary operator applied to elements of this stream.
    */
   def foldLeftF[B](z: B)(f: (B, A) => Future[B]): Future[B] =
-    underlying.flatMap {
+    this match {
       case Empty => Future.value(z)
-      case One(a) => f(z, a)
-      case cons: Cons[A] => f(z, cons.head).flatMap(cons.tail.foldLeftF(_)(f))
+      case FromFuture(fa) => fa.flatMap(a => f(z, a))
+      case Cons(fa, more) => fa.flatMap(a => f(z, a)).flatMap(b => more().foldLeftF(b)(f))
+      case Embed(fas) => fas.flatMap(_.foldLeftF(z)(f))
     }
 
   /**
@@ -341,10 +336,11 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * the second paramter is call-by-name.
    */
   def foldRight[B](z: => Future[B])(f: (A, => Future[B]) => Future[B]): Future[B] =
-    underlying.flatMap {
+    this match {
       case Empty => z
-      case One(a) => f(a, z)
-      case cons: Cons[A] => f(cons.head, cons.tail.foldRight(z)(f))
+      case FromFuture(fa) => fa.flatMap(f(_, z))
+      case Cons(fa, more) => fa.flatMap(f(_, more().foldRight(z)(f)))
+      case Embed(fas) => fas.flatMap(_.foldRight(z)(f))
     }
 
   /**
@@ -357,11 +353,13 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    *
    * Java users see [[AsyncStream.flattens]].
    */
-  def flatten[B](implicit ev: A <:< AsyncStream[B]): AsyncStream[B] = AsyncStream(
-    foldRight(empty[B].underlying) { (b, tail) =>
-      (b ++ AsyncStream(tail)).underlying
+  def flatten[B](implicit ev: A <:< AsyncStream[B]): AsyncStream[B] =
+    this match {
+      case Empty => empty
+      case FromFuture(fa) => Embed(fa.map(ev))
+      case Cons(fa, more) => Embed(fa.map(ev)) ++ more().flatten
+      case Embed(fas) => Embed(fas.map(_.flatten))
     }
-  )
 
   /**
    * A Future of the stream realized as a list. This future completes when all
@@ -388,14 +386,20 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
     val buf: mutable.ListBuffer[A] = mutable.ListBuffer.empty
 
     def go(as: AsyncStream[A]): Future[Unit] =
-      as.underlying.flatMap {
+      as match {
         case Empty => Future.Done
-        case One(a) =>
-          buf += a
-          Future.Done
-        case cons: Cons[A] =>
-          buf += cons.head
-          go(cons.tail)
+        case FromFuture(fa) =>
+          fa.flatMap { a =>
+            buf += a
+            Future.Done
+          }
+        case Cons(fa, more) =>
+          fa.flatMap { a =>
+            buf += a
+            go(more())
+          }
+        case Embed(fas) =>
+          fas.flatMap(go)
       }
 
     go(this).transform {
@@ -403,8 +407,6 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
       case Return(_) => Future.value(buf.toList -> None)
     }
   }
-
-  override def toString(): String = s"AsyncStream($underlying)"
 
   /**
    * Buffer the specified number of items from the stream, or all
@@ -418,19 +420,24 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
     val buffer = new mutable.ArrayBuffer[A](n.min(1024))
 
     def fillBuffer(sizeRemaining: Int)(s: => AsyncStream[A]): Future[(Seq[A], () => AsyncStream[A])] =
-      if (sizeRemaining < 1) {
-        Future.value((buffer, () => s))
-      } else {
-        s.underlying.flatMap {
-          case Empty =>
-            Future.value((buffer, () => s))
-          case One(item) =>
-            buffer += item
+      if (sizeRemaining < 1) Future.value((buffer, () => s))
+      else s match {
+        case Empty => Future.value((buffer, () => s))
+
+        case FromFuture(fa) =>
+          fa.flatMap { a =>
+            buffer += a
             Future.value((buffer, () => empty))
-          case cons: Cons[A] =>
-            buffer += cons.head
-            fillBuffer(sizeRemaining - 1)(cons.tail)
-        }
+          }
+
+        case Cons(fa, more) =>
+          fa.flatMap { a =>
+            buffer += a
+            fillBuffer(sizeRemaining - 1)(more())
+          }
+
+        case Embed(fas) =>
+          fas.flatMap(as => fillBuffer(sizeRemaining)(as))
       }
 
     fillBuffer(n)(this)
@@ -446,17 +453,14 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
    * `groupSize` cells to be evaluated (even without examining the
    * result), and accessing each subsequent element will evaluate a
    * further `groupSize` elements from the stream.
-   *
    * @param groupSize must be a positive number, or an IllegalArgumentException will be thrown.
    */
   def grouped(groupSize: Int): AsyncStream[Seq[A]] =
     if (groupSize > 1) {
-      AsyncStream {
-        buffer(groupSize).map {
-          case (items, _) if items.isEmpty => Empty
-          case (items, remaining) => Cons(items, remaining().grouped(groupSize))
-        }
-      }
+      Embed(buffer(groupSize).map {
+        case (items, _) if items.isEmpty => empty
+        case (items, remaining) => Cons(Future.value(items), () => remaining().grouped(groupSize))
+      })
     } else if (groupSize == 1) {
       map(Seq(_))
     } else {
@@ -465,7 +469,11 @@ final class AsyncStream[+A] private (private val underlying: Future[LazySeq[A]])
 }
 
 object AsyncStream {
-  import LazySeq.{Cons, Empty, One}
+  private case object Empty extends AsyncStream[Nothing]
+  private case class Embed[A](fas: Future[AsyncStream[A]]) extends AsyncStream[A]
+  private case class FromFuture[A](fa: Future[A]) extends AsyncStream[A]
+  private case class Cons[A](fa: Future[A], more: () => AsyncStream[A])
+    extends AsyncStream[A]
 
   implicit class Ops[A](tail: => AsyncStream[A]) {
     /**
@@ -477,20 +485,13 @@ object AsyncStream {
     def +::[B >: A](b: B): AsyncStream[B] = mk(b, tail)
   }
 
-  private val nothing: AsyncStream[Nothing] = AsyncStream(Future.value(Empty))
-  def empty[A]: AsyncStream[A] = nothing.asInstanceOf[AsyncStream[A]]
-
-  /**
-   * An AsyncStream from a `Future[LazySeq[A]]`.
-   */
-  private def apply[A](go: Future[LazySeq[A]]): AsyncStream[A] =
-    new AsyncStream(go)
+  def empty[A]: AsyncStream[A] = Empty.asInstanceOf[AsyncStream[A]]
 
   /**
    * Var-arg constructor for AsyncStreams.
    *
    * {{{
-   *   AsyncStream(1,2,3)
+   * AsyncStream(1,2,3)
    * }}}
    *
    * Note: we can't annotate this with varargs because of
@@ -502,13 +503,15 @@ object AsyncStream {
   /**
    * An AsyncStream with a single element.
    */
-  def of[A](a: A): AsyncStream[A] = AsyncStream(Future.value(One(a)))
+  def of[A](a: A): AsyncStream[A] = FromFuture(Future.value(a))
 
   /**
    * Like `Ops.+::`.
    */
-  def mk[A](a: A, tail: => AsyncStream[A]): AsyncStream[A] =
-    AsyncStream(Future.value(Cons(a, tail)))
+  def mk[A](a: A, tail: => AsyncStream[A]): AsyncStream[A] = {
+    lazy val once = tail
+    Cons(Future.value(a), () => once)
+  }
 
   /**
    * Transformation (or lift) from `Seq[A]` into `AsyncStream[A]`.
@@ -523,7 +526,7 @@ object AsyncStream {
    * Transformation (or lift) from `Future[A]` into `AsyncStream[A]`.
    */
   def fromFuture[A](f: Future[A]): AsyncStream[A] =
-    AsyncStream(f.map(One(_)))
+    FromFuture(f)
 
   /**
    * Transformation (or lift) from `Option[A]` into `AsyncStream[A]`.
@@ -533,6 +536,12 @@ object AsyncStream {
       case None => empty
       case Some(a) => of(a)
     }
+
+  /**
+   * Lift from Future into AsyncStream and then flatten.
+   */
+  private[concurrent] def embed[A](fas: Future[AsyncStream[A]]): AsyncStream[A] =
+    Embed(fas)
 
   /**
    * Java friendly [[AsyncStream.flatten]].
