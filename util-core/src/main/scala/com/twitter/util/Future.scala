@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import com.twitter.concurrent.{Offer, Scheduler, Tx}
-import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference, AtomicReferenceArray}
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReferenceArray}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList, Map => JMap}
 import scala.collection.JavaConverters.{
@@ -17,7 +17,7 @@ class FutureNonLocalReturnControl(cause: NonLocalReturnControl[_]) extends Excep
  * @see [[Futures]] for Java-friendly APIs.
  */
 object Future {
-  val DEFAULT_TIMEOUT = Duration.Top
+  val DEFAULT_TIMEOUT: Duration = Duration.Top
   val Unit: Future[Unit] = apply(())
   val Void: Future[Void] = apply[Void](null: Void)
   val Done: Future[Unit] = Unit
@@ -38,8 +38,6 @@ object Future {
   private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
   private val toVoid: Any => Future[Void] = scala.Function.const(Void)
   private val AlwaysMasked: PartialFunction[Throwable, Boolean] = { case _ => true }
-
-  private val ThrowableToUnit: Throwable => Unit = _ => ()
 
   // Exception used to raise on Futures.
   private[this] val RaiseException = new Exception with NoStacktrace
@@ -104,7 +102,7 @@ object Future {
   def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 
   /**
-   * Run the computation {{mkFuture}} while installing a monitor that
+   * Run the computation `mkFuture` while installing a [[Monitor]] that
    * translates any exception thrown into an encoded one.  If an
    * exception is thrown anywhere, the underlying computation is
    * interrupted with that exception.
@@ -117,34 +115,40 @@ object Future {
    * onSuccess g; f0 }` will cancel f0 so that f0 never hangs.
    */
   def monitored[A](mkFuture: => Future[A]): Future[A] = {
-    // We define this outside the scope of the following
-    // Promise to guarantee that it is not captured by any
-    // closures.
-    val promiseRef = new AtomicReference[Promise[A]]
-    val monitor = Monitor.mk { case exc =>
-      promiseRef.getAndSet(null) match {
-        case null => false
-        case p =>
-          p.raise(exc)
-          p.setException(exc)
-          true
-      }
-    }
-
-    val p = new Promise[A]
-    promiseRef.set(p)
-    monitor {
+    val p = new Promise[A]()
+    val monitored = new Monitored[A](p)
+    monitored {
       val f = mkFuture
       p.forwardInterruptsTo(f)
-      f respond { r =>
-        promiseRef.getAndSet(null) match {
-          case null => ()
-          case p => p.update(r)
-        }
-      }
+      f.respond(monitored.setTo(_))
+    }
+    p
+  }
+
+  private[this] class Monitored[A](private[this] var p: Promise[A]) extends Monitor {
+    private[this] def getAndSetNull(): Promise[A] = synchronized {
+      val prev = p
+      if (p != null)
+        p = null
+      prev
     }
 
-    p
+    def setTo(r: Try[A]): Unit = {
+      val prev = getAndSetNull()
+      if (prev != null)
+        prev.update(r)
+    }
+
+    def handle(exc: Throwable): Boolean = {
+      val prev = getAndSetNull()
+      if (prev == null) {
+        false
+      } else {
+        prev.raise(exc)
+        prev.setException(exc)
+        true
+      }
+    }
   }
 
   /**
@@ -657,7 +661,7 @@ abstract class FutureTransformer[-A, +B] {
  * be delivered when the promise has not yet completed.
  */
 abstract class Future[+A] extends Awaitable[A] {
-  import Future.{DEFAULT_TIMEOUT, ThrowableToUnit}
+  import Future.DEFAULT_TIMEOUT
 
   /**
    * When the computation completes, invoke the given callback
@@ -1209,7 +1213,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * Returns the result of the computation as a Future[Try[A]].
    */
   def liftToTry: Future[Try[A]] = transform(Future.value)
-  
+
   /**
    * Lowers a Future[Try[T]] into a Future[T].
    */

@@ -2,7 +2,6 @@ package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent._
-import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -76,25 +75,32 @@ trait Timer {
    * will cancel the scheduled timer task, if not too late.
    */
   def doAt[A](time: Time)(f: => A): Future[A] = {
-    val pending = new AtomicBoolean(true)
-    val p = new Promise[A]
+    var pending = true
+    val p = new Promise[A]()
+
+    def isFirst(): Boolean = p.synchronized {
+      if (pending) {
+        pending = false
+        true
+      } else {
+        false
+      }
+    }
 
     val task = schedule(time) {
-      if (pending.compareAndSet(true, false))
+      if (isFirst())
         p.update(Try(f))
     }
 
-    p.setInterruptHandler {
-      case cause =>
-        if (pending.compareAndSet(true, false)) {
-          task.cancel()
+    p.setInterruptHandler { case cause =>
+      if (isFirst()) {
+        task.cancel()
 
-          val exc = new CancellationException
-          exc.initCause(cause)
-          p.setException(exc)
-        }
+        val exc = new CancellationException
+        exc.initCause(cause)
+        p.setException(exc)
+      }
     }
-
     p
   }
 

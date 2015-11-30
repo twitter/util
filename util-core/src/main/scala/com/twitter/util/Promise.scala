@@ -2,7 +2,6 @@ package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.runtime.NonLocalReturnControl
@@ -45,8 +44,21 @@ object Promise {
     def detach(): Boolean = underlying.detach(this)
 
     // This is only called after the parent has been successfully satisfied
-    def apply(result: Try[A]) {
+    def apply(result: Try[A]): Unit = {
       update(result)
+    }
+  }
+
+  private class DetachableFuture[A] extends Promise[A] with Promise.Detachable {
+    private[this] var detached: Boolean = false
+
+    def detach(): Boolean = synchronized {
+      if (detached) {
+        false
+      } else {
+        detached = true
+        true
+      }
     }
   }
 
@@ -269,12 +281,8 @@ object Promise {
     case p: Promise[_] =>
       new DetachablePromise[A](p.asInstanceOf[Promise[A]])
     case _ =>
-      val p = new Promise[A] with Detachable {
-        private[this] val detached = new AtomicBoolean(false)
-
-        def detach(): Boolean = detached.compareAndSet(false, true)
-      }
-      parent respond { case t =>
+      val p = new DetachableFuture[A]()
+      parent.respond { t =>
         if (p.detach()) p.update(t)
       }
       p
@@ -432,7 +440,7 @@ class Promise[A]
    * @param f the new interrupt handler
    */
   @tailrec
-  final def setInterruptHandler(f: PartialFunction[Throwable, Unit]) {
+  final def setInterruptHandler(f: PartialFunction[Throwable, Unit]): Unit = {
     state match {
       case Linked(p) => p.setInterruptHandler(f)
 
@@ -475,7 +483,7 @@ class Promise[A]
    * @param other the Future to which interrupts are forwarded.
    */
   @tailrec final
-  def forwardInterruptsTo(other: Future[_]) {
+  def forwardInterruptsTo(other: Future[_]): Unit = {
     // This reduces allocations in the common case.
     if (other.isDefined) return
     state match {
@@ -502,7 +510,7 @@ class Promise[A]
   }
 
   @tailrec final
-  def raise(intr: Throwable) = state match {
+  def raise(intr: Throwable): Unit = state match {
     case Linked(p) => p.raise(intr)
     case s@Interruptible(waitq, handler) =>
       if (!cas(s, Interrupted(waitq, intr))) raise(intr) else {
@@ -640,7 +648,7 @@ class Promise[A]
    *
    * @see [[com.twitter.util.Future.proxyTo]]
    */
-  def become(other: Future[A]) {
+  def become(other: Future[A]): Unit = {
     if (isDefined) {
       val current = Await.result(liftToTry)
       throw new IllegalStateException(s"cannot become() on an already satisfied promise: $current")
@@ -659,14 +667,14 @@ class Promise[A]
    *
    * @throws ImmutableResult if the Promise is already populated
    */
-  def setValue(result: A) { update(Return(result)) }
+  def setValue(result: A): Unit = update(Return(result))
 
   /**
    * Populate the Promise with the given exception.
    *
    * @throws ImmutableResult if the Promise is already populated
    */
-  def setException(throwable: Throwable) { update(Throw(throwable)) }
+  def setException(throwable: Throwable): Unit = update(Throw(throwable))
 
   /**
    * Sets a Unit-typed future. By convention, futures of type
@@ -682,7 +690,7 @@ class Promise[A]
    *
    * @throws ImmutableResult if the Promise is already populated
    */
-  def update(result: Try[A]) {
+  def update(result: Try[A]): Unit = {
     updateIfEmpty(result) || {
       val current = Await.result(liftToTry)
       throw new ImmutableResult(s"Result set multiple times. Value='$current', New='$result'")
@@ -727,7 +735,7 @@ class Promise[A]
   }
 
   @tailrec
-  protected[util] final def continue(k: K[A]) {
+  protected[util] final def continue(k: K[A]): Unit = {
     state match {
       case Done(v) =>
         Scheduler.submit(new Runnable {
@@ -771,7 +779,7 @@ class Promise[A]
   }
 
   @tailrec
-  protected final def link(target: Promise[A]) {
+  protected final def link(target: Promise[A]): Unit = {
     if (this eq target) return
 
     state match {

@@ -93,6 +93,14 @@ class FutureBenchmark extends StdBenchAnnotations {
     Await.result(p)
   }
 
+  @Benchmark
+  def monitored(): String = {
+    val f = Future.monitored {
+      StringFuture
+    }
+    Await.result(f)
+  }
+
 }
 
 object FutureBenchmark {
@@ -107,6 +115,8 @@ object FutureBenchmark {
     @Param(Array("1", "2", "3", "10", "20"))
     var depth: Int = 0
   }
+
+  val StringFuture = Future.value("hi")
 
   @State(Scope.Thread)
   private class CollectState {

@@ -52,6 +52,13 @@ class TimerBenchmark extends StdBenchAnnotations {
   private[this] def schedulePeriodic(timer: Timer): TimerTask =
     timer.schedule(wayLater, period) { () }
 
+  /**
+   * Note: this really just benchmarks how expensive it is to "enqueue"
+   * the work, not expense of "dequeueing" and running.
+   */
+  private[this] def doAt(timer: Timer): Future[Unit] =
+    timer.doAt(wayLater) { () }
+
   @Benchmark
   def scheduleOnceBaseline: TimerTask =
     scheduleOnce(baseline)
@@ -75,5 +82,9 @@ class TimerBenchmark extends StdBenchAnnotations {
   @Benchmark
   def schedulePeriodicExecutor: TimerTask =
     schedulePeriodic(executor)
+
+  @Benchmark
+  def doAtBaseline(): Future[Unit] =
+    doAt(baseline)
 
 }
