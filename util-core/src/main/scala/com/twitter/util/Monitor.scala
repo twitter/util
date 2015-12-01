@@ -128,14 +128,14 @@ object Monitor extends Monitor {
   }
 
   /**
-   * Run the computation `f` in the context of the current  [[Local]]
+   * Run the computation `f` in the context of the current [[Local]]
    * monitor.
    */
   override def apply(f: => Unit): Unit =
     try f catch catcher
 
   /**
-   * Handle `exc` with the current  [[Local]] monitor. If the
+   * Handle `exc` with the current [[Local]] monitor. If the
    *  [[Local]] monitor fails to handle the exception, it is handled by
    * the [[RootMonitor]].
    */

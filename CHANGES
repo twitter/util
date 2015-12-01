@@ -41,6 +41,11 @@ API Changes:
     `com.twitter.cache.guava.LoadingFutureCache`, and change the `remove` semantic
     to match the `com.twitter.cache.FutureCache` contract. ``RB_ID=766988``
 
+  * util-core: Remove protected `Timer.monitor` (overrides a monitor to use by a
+    timer implementation) because any possible implementation rather than `Monitor.get`
+    promotes memory leaks when timer is used to schedule recursive tasks (tasks that
+    reschedules themselves). ``RB_ID=771736``
+
 6.29.0  2015-10-15
 
 New Features:

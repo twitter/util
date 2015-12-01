@@ -30,7 +30,7 @@ trait Timer {
   final def schedule(when: Time)(f: => Unit): TimerTask = {
     val locals = Local.save()
     scheduleOnce(when) {
-      Local.let(locals)(monitor(f))
+      Local.let(locals)(Monitor.get(f))
     }
   }
 
@@ -43,7 +43,7 @@ trait Timer {
   final def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
     val locals = Local.save()
     schedulePeriodically(when, period) {
-      Local.let(locals)(monitor(f))
+      Local.let(locals)(Monitor.get(f))
     }
   }
 
@@ -54,13 +54,6 @@ trait Timer {
    */
   final def schedule(period: Duration)(f: => Unit): TimerTask =
     schedule(period.fromNow, period)(f)
-
-  /**
-   * Which [[Monitor]] to run the given tasks under.
-   *
-   * Defaults to [[Monitor.get]] which looks in the [[Local]] context.
-   */
-  protected def monitor: Monitor = Monitor.get
 
   /**
    * Performs an operation after the specified delay.  Interrupting the Future
@@ -205,7 +198,7 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
     case None => new java.util.Timer(isDaemon)
   }
 
-  private[this] val _monitor = Monitor.mk {
+  private[this] val catcher: PartialFunction[Throwable, Unit] = {
     case NonFatal(t) =>
       logError(t)
       true
@@ -215,13 +208,13 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
   }
 
   protected def scheduleOnce(when: Time)(f: => Unit): TimerTask = {
-    val task = toJavaTimerTask(f)
+    val task = toJavaTimerTask(try f catch catcher)
     underlying.schedule(task, safeTime(when).toDate)
     toTimerTask(task)
   }
 
   protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask = {
-    val task = toJavaTimerTask(f)
+    val task = toJavaTimerTask(try f catch catcher)
     underlying.schedule(task, safeTime(when).toDate, period.inMillis)
     toTimerTask(task)
   }
@@ -246,9 +239,6 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
   private[this] def safeTime(time: Time): Time = {
     time.max(Time.epoch)
   }
-
-  override protected def monitor: Monitor =
-    Monitor.get.orElse(_monitor)
 
   private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
     def run(): Unit = f
