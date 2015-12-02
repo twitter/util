@@ -62,9 +62,17 @@ public final class StatsReceiverCompilationTest {
   public void testCounterMethods() {
     InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
     sr.isNull();
-    Counter counter = StatsReceivers.counter(sr.scopeSuffix("bah").scope("foo"), "hello", "world");
+    Counter counter = StatsReceivers.counter(sr, "hello", "world");
     counter.incr();
     counter.incr(100);
+  }
+
+  public void testScope() {
+    InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
+    StatsReceiver sr2 = sr.scope();
+    StatsReceiver sr3 = sr.scope("a");
+    StatsReceiver sr4 = sr.scope("a", "s", "d");
+    StatsReceiver sr5 = sr.scopeSuffix("bah").scope("foo");
   }
 
   @Test

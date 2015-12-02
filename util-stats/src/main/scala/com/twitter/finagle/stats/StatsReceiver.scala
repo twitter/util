@@ -145,6 +145,19 @@ trait StatsReceiver { self =>
   }
 
   /**
+   * Prepend `namespace` and `namespaces` to the names of the returned [[StatsReceiver]].
+   *
+   * For example:
+   * {{{
+   * statsReceiver.scope("client", "backend", "pool").counter("adds")
+   * }}}
+   * will generate a [[Counter counter]] named `/client/backend/pool/adds`.
+   */
+  @varargs
+  final def scope(namespaces: String*): StatsReceiver = 
+    namespaces.foldLeft(this)((statsReceiver, name) => statsReceiver.scope(name))
+
+  /**
    * Prepend a suffix value to the next scope.
    *
    * For example:

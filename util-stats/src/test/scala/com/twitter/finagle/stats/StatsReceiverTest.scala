@@ -109,6 +109,22 @@ class StatsReceiverTest extends FunSuite {
     assert(receiver.counters(Seq("baz")) == 1)
   }
 
+  test("StatsReceiver.scope: no namespace") {
+    val receiver = new InMemoryStatsReceiver
+    val scoped = receiver.scope()
+    receiver.counter("bar").incr()
+
+    assert(receiver.counters(Seq("bar")) == 1)
+  }
+
+  test("StatsReceiver.scope: multiple prefixes") {
+    val receiver = new InMemoryStatsReceiver
+    val scoped = receiver.scope("foo", "bar", "shoe")
+    scoped.counter("baz").incr()
+
+    assert(receiver.counters(Seq("foo", "bar", "shoe", "baz")) == 1)
+  }
+
   test("Scoped equality") {
     val sr = new InMemoryStatsReceiver
     assert(sr == sr)
