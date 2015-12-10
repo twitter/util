@@ -200,21 +200,25 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(closed == t)
     assert(f1.isDone)
   }
+  
+  test("Var.collect: empty") {
+    assert(Var.collect(Seq.empty[Var[Int]]).sample == Seq.empty)
+  }
 
   test("Var.collect[Seq]") {
-    val vars = Seq(
-      Var(1),
-      Var(2),
-      Var(3))
+    def ranged(n: Int) = Seq.tabulate(n) { i => Var(i) }
 
-    val coll = Var.collect(vars: Seq[Var[Int]])
-    val ref = new AtomicReference[Seq[Int]]
-    coll.changes.register(Witness(ref))
-    assert(ref.get == Seq(1,2,3))
-
-    vars(1).update(999)
-    assert(ref.get == Seq(1,999,3))
-  }
+    for (i <- 1 to 10) {
+      val vars = ranged(i)
+      val coll = Var.collect(vars: Seq[Var[Int]])
+      val ref = new AtomicReference[Seq[Int]]
+      coll.changes.register(Witness(ref))
+      assert(ref.get == Seq.range(0, i))
+      
+      vars(i/2).update(999)
+      assert(ref.get == Seq.range(0, i).patch(i/2, Seq(999), 1))
+    }
+   }
 
   // This is either very neat or very horrendous,
   // depending on your point of view.
@@ -234,6 +238,20 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
     vars(1).update(999)
     assert(ref.get == Set(1,999,3))
+  }
+  
+  test("Var.collect: ordering") {
+    val v1 = Var(1)
+    val v2 = v1.map(_*2)
+    val v = Var.collect(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+
+    val ref = new AtomicReference[Seq[(Int, Int)]]
+    v.changes.build.register(Witness(ref))
+    
+    assert(ref.get == Seq((1, 2)))
+    
+    v1() = 2
+    assert(ref.get == Seq((1, 2), (2, 4)))
   }
 
   /**

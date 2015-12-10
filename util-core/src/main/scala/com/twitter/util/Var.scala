@@ -223,43 +223,32 @@ object Var {
    * Create a new, constant, v-valued Var.
    */
   def value[T](v: T): Var[T] = Value(v)
-
+  
   /**
    * Collect a collection of Vars into a Var of collection.
    */
   def collect[T: ClassTag, CC[X] <: Traversable[X]](vars: CC[Var[T]])
       (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]])
-      : Var[CC[T]] = async(newBuilder().result()) { v =>
-    val N = vars.size
-    val cur = new AtomicReferenceArray[T](N)
-    @volatile var filling = true
-    def build() = {
-      val b = newBuilder()
-      var i = 0
-      while (i < N) {
-        b += cur.get(i)
-        i += 1
+      : Var[CC[T]] = {
+    val vs = vars.toArray
+
+    def tree(begin: Int, end: Int): Var[Seq[T]] =
+      if (begin == end) Var(Seq.empty)
+      else if (begin == end-1) vs(begin).map(t => Seq(t))
+      else {
+        val n = (end-begin)/2
+
+        for {
+          left <- tree(begin, begin+n)
+          right <- tree(begin+n, end)
+        } yield left++right
       }
+
+    tree(0, vs.length).map { ts =>
+      val b = newBuilder()
+      b ++= ts
       b.result()
     }
-
-    def publish(i: Int, newi: T) = {
-      cur.set(i, newi)
-      if (!filling) v() = build()
-    }
-
-    val closes = new Array[Closable](N)
-    var i = 0
-    for (u <- vars) {
-      val j = i
-      closes(j) = u.observe (0, Observer(newj => publish(j, newj)))
-      i += 1
-    }
-
-    filling = false
-    v() = build()
-
-    Closable.all(closes:_*)
   }
 
   /**
