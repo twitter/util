@@ -77,6 +77,17 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
     })
 
   /**
+   * Recover a failed activity.
+   */
+  def handle[U >: T](h: PartialFunction[Throwable, U]): Activity[U] = transform {
+    case Activity.Failed(e) if h.isDefinedAt(e) => Activity.value(h(e))
+    case Activity.Pending => Activity.pending
+    case Activity.Failed(e) => Activity.exception(e)
+    case Activity.Ok(t) => Activity.value(t)
+  }
+
+
+  /**
    * An [[com.twitter.util.Event Event]] of states.
    */
   def states: Event[State[T]] = run.changes

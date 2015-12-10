@@ -25,6 +25,24 @@ class ActivityTest extends FunSuite {
     assert(ref.get == Seq(Activity.Pending, Activity.Ok(1), Activity.Ok(-2)))
   }
 
+  test("Activity#handle") {
+    val e = new Exception
+    case class E(x: Int) extends Exception
+
+    val (a, w) = Activity[Int]()
+
+    val ref = new AtomicReference[Activity.State[Int]]
+    a.handle { case E(x) => x }.states.register(Witness(ref))
+
+    assert(ref.get == Activity.Pending)
+    w.notify(Return(1))
+    assert(ref.get == Activity.Ok(1))
+    w.notify(Throw(E(2)))
+    assert(ref.get == Activity.Ok(2))
+    w.notify(Throw(e))
+    assert(ref.get == Activity.Failed(e))
+  }
+
   test("Activity#collect") {
     val v = Var(Activity.Pending: Activity.State[Int])
     val ref = new AtomicReference(Seq.empty: Seq[Try[String]])
