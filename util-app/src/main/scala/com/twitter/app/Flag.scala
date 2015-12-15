@@ -245,7 +245,7 @@ object Flaggable {
  */
 case class FlagParseException(message: String, cause: Throwable = null)
   extends Exception(message, cause)
-case class FlagUsageError(usage: String) extends Exception
+case class FlagUsageError(usage: String) extends Exception(usage)
 class FlagValueRequiredException extends Exception(Flags.FlagValueRequiredMessage)
 class FlagUndefinedException extends Exception(Flags.FlagUndefinedMessage)
 
