@@ -201,7 +201,6 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
   private[this] val catcher: PartialFunction[Throwable, Unit] = {
     case NonFatal(t) =>
       logError(t)
-      true
     case fatal: Throwable =>
       logError(fatal)
       throw fatal

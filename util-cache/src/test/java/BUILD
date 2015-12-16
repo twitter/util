@@ -5,5 +5,6 @@ junit_tests(name='java',
     '3rdparty/jvm/org/scala-lang:scala-library',
     'util/util-cache',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.java')
 )

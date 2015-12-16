@@ -5,5 +5,6 @@ junit_tests(name='scala',
     'util/util-thrift/src/main/scala',
     'util/util-thrift/src/test/java',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala')
 )

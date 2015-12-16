@@ -2,7 +2,7 @@ package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
 import com.twitter.io.Reader.ReaderDiscarded
-import com.twitter.util.{Await, Future, Promise}
+import com.twitter.util.{Return, Await, Future, Promise}
 import java.io.{ByteArrayOutputStream, OutputStream}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -41,13 +41,13 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val buf = Buf.ByteArray.Owned(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
-    assert(Await.result(f) == ((): Unit))
+    assert(Await.result(f.liftToTry) == Return(()))
   }
 
   def assertWriteEmpty(w: Writer) {
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
-    assert(Await.result(f) == ((): Unit))
+    assert(Await.result(f.liftToTry) == Return(()))
   }
 
   def assertDiscard(r: Reader) {
@@ -200,7 +200,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     assert(toSeq(Await.result(rf2)) == Seq.range(4, 6))
 
     assert(wf.isDefined)
-    assert(Await.result(wf) == ((): Unit))
+    assert(Await.result(wf.liftToTry) == Return(()))
   }
 
   test("Reader.writeable - fail while reading") {

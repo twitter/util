@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import scala.language.higherKinds
+
 /**
  * A Diff stores the necessary instructions required to bring two
  * version of a data structure into agreement.

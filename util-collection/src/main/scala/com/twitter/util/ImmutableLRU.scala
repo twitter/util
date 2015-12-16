@@ -51,7 +51,7 @@ class ImmutableLRU[K,V] private (maxSize: Int, idx: Long, map: Map[K,(Long,V)], 
   def +(kv: (K,V)): (Option[K], ImmutableLRU[K,V]) = {
     val (key, value) = kv
     val newIdx = idx + 1
-    val newMap = map + (key -> (newIdx, value))
+    val newMap = map + (key -> ((newIdx, value)))
     // Now update the ordered cache:
     val baseOrd = map.get(key).map { case (id, _) => ord - id }.getOrElse(ord)
     val ordWithNewKey = baseOrd + (newIdx -> key)

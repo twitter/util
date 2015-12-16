@@ -4,5 +4,6 @@ java_library(name='java',
     name = 'util-app-java',
     repo = artifactory,
   ),
+  fatal_warnings=True,
   sources=rglobs('*.java')
 )

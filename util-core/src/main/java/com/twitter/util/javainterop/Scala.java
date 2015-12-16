@@ -43,6 +43,7 @@ public final class Scala {
    *
    * @return an empty Set if the input is null.
    */
+  @SuppressWarnings("unchecked")
   public static <E> scala.collection.immutable.Set<E> asImmutableSet(
       java.util.Set<E> jSet
   ) {

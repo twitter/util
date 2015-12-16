@@ -45,13 +45,24 @@ object StateEvent {
     val state = KeeperState.Expired
   }
 
+  object ConnectedReadOnly extends StateEvent {
+    val state = KeeperState.ConnectedReadOnly
+  }
+
+  object SaslAuthenticated extends StateEvent {
+    val state = KeeperState.SaslAuthenticated
+  }
+
   def apply(w: WatchedEvent): StateEvent = {
-    w.getState() match {
+    w.getState match {
       case KeeperState.AuthFailed => AuthFailed
       case KeeperState.SyncConnected => Connected
       case KeeperState.Disconnected => Disconnected
       case KeeperState.Expired => Expired
-      case KeeperState.NoSyncConnected => throw new IllegalArgumentException("Can't convert deprecated state to StateEvent")
+      case KeeperState.ConnectedReadOnly => ConnectedReadOnly
+      case KeeperState.SaslAuthenticated => SaslAuthenticated
+      case KeeperState.Unknown => throw new IllegalArgumentException("Can't convert deprecated state to StateEvent: Unknown")
+      case KeeperState.NoSyncConnected => throw new IllegalArgumentException("Can't convert deprecated state to StateEvent: NoSyncConnected")
     }
   }
 }

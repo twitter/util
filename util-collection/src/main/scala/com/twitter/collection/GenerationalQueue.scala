@@ -63,15 +63,15 @@ class ExactGenerationalQueue[A] extends GenerationalQueue[A] {
 class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 {
   object TimeBucket {
-    def empty[A] = new TimeBucket[A](Time.now, timeSlice)
+    def empty[B] = new TimeBucket[B](Time.now, timeSlice)
   }
-  class TimeBucket[A](var origin: Time, var span: Duration) extends mutable.HashSet[A] {
+  class TimeBucket[B](var origin: Time, var span: Duration) extends mutable.HashSet[B] {
 
     // return the age of the potential youngest element of the bucket (may be negative if the
     // bucket is not yet expired)
     def age(now: Time = Time.now): Duration = (origin + span).until(now)
 
-    def ++=(other: TimeBucket[A]) = {
+    def ++=(other: TimeBucket[B]) = {
       origin = List(origin, other.origin).min
       span = List(origin + span, other.origin + other.span).max - origin
 

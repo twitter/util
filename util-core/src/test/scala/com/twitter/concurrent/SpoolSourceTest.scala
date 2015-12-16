@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.util.Await
+import com.twitter.util.{Return, Await}
 import java.util.concurrent.atomic.AtomicInteger
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
@@ -38,7 +38,7 @@ class SpoolSourceTest extends WordSpec {
       source.offer(4)
       source.offer(5)
       assert(Await.result(futureSpool flatMap (_.toSeq)) == Seq(1, 2, 3))
-      assert(Await.result(source.closed) == ((): Unit))
+      assert(Await.result(source.closed.liftToTry) == Return(()))
     }
 
     "return multiple Future Spools that only see values added later" in {

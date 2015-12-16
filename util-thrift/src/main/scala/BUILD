@@ -10,5 +10,6 @@ scala_library(name='scala',
     '3rdparty/jvm/org/slf4j:slf4j-api',
     'util/util-codec'
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )

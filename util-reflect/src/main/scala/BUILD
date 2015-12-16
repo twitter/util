@@ -11,5 +11,6 @@ scala_library(name='scala',
     '3rdparty/jvm/cglib',
     'util/util-core/src/main/scala'
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )

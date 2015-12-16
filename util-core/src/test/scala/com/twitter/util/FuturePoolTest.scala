@@ -138,7 +138,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     Await.result(started)
     f.raise(new RuntimeException("foo"))
     intercept[RuntimeException] { Await.result(f) }
-    assert(Await.result(interrupted) == ((): Unit))
+    assert(Await.result(interrupted.liftToTry) == Return(()))
   }
 
   test("not interrupt threads when not interruptible") {

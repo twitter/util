@@ -1,4 +1,5 @@
 scala_library(name='scala',
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
   dependencies=[
     '3rdparty/jvm/com/google/guava',

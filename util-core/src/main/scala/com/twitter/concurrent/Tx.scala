@@ -86,11 +86,11 @@ object Tx {
     var state: State = Idle
     val lock = new {}
 
-    class Party[T](msg: T) extends Tx[T] {
-      def ack(): Future[Result[T]] = lock.synchronized {
+    class Party[U](msg: U) extends Tx[U] {
+      def ack(): Future[Result[U]] = lock.synchronized {
         state match {
           case Idle =>
-            val p = new Promise[Result[T]]
+            val p = new Promise[Result[U]]
             state = Ackd(this, {
               case true => p.setValue(Commit(msg))
               case false => p.setValue(Abort)

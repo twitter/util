@@ -7,5 +7,6 @@ scala_library(name='scala',
   dependencies=[
     '3rdparty/jvm/org/apache/zookeeper:zookeeper-server',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )

@@ -8,6 +8,7 @@ scala_library(name='scala',
     'util/util-jvm/src/main/scala',
     'util/util-stats/src/main/scala',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala')
 )
 

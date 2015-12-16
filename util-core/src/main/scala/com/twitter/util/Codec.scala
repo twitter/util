@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import scala.language.higherKinds
+
 trait EncoderCompanion {
 
   type Enc[T, S] <: Encoder[T, S]

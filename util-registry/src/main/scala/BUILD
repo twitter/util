@@ -7,5 +7,6 @@ scala_library(name='scala',
   dependencies=[
     'util/util-core/src/main/scala',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala')
 )

@@ -10,39 +10,41 @@ object Util extends Build {
 
   val libVersion = "6.30.0" + suffix
   val zkVersion = "3.5.0-alpha"
+  val zkClientVersion = "0.0.79"
+  val zkGroupVersion = "0.0.90"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
     ExclusionRule("com.sun.jmx", "jmxri"),
     ExclusionRule("javax.jms", "jms")
   )
 
-  val parserCombinators = scalaVersion(sv =>
+  val parserCombinators = scalaVersion { sv =>
     CrossVersion.partialVersion(sv) match {
       case Some((2, 11)) | Some((2, 12)) =>
         Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4")
-      case _  => Nil
+      case _ => Nil
     }
-  )
+  }
 
-  lazy val publishM2Configuration =
-    TaskKey[PublishConfiguration]("publish-m2-configuration",
-      "Configuration for publishing to the .m2 repository.")
-
-  lazy val publishM2 =
-    TaskKey[Unit]("publish-m2",
-      "Publishes artifacts to the .m2 repository.")
-
-  lazy val m2Repo =
-    Resolver.file("publish-m2-local",
-      Path.userHome / ".m2" / "repository")
+  def scalacOptionsVersion(sv: String): Seq[String] = {
+    Seq(
+      // Note: Add -deprecation when deprecated methods are removed
+      "-unchecked",
+      "-feature",
+      "-encoding", "utf8"
+    ) ++ (CrossVersion.partialVersion(sv) match {
+      // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
+      case Some((2, 11)) | Some((2, 12)) => Seq("-Xlint:-missing-interpolator")
+      case _ => Seq("-Xlint")
+    })
+  }
 
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.10.6", "2.11.7"),
-    // Workaround for a scaladoc bug which causes it to choke on
-    // empty classpaths.
+    // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
@@ -59,16 +61,11 @@ object Util extends Build {
       }
     ),
 
-    publishM2Configuration <<= (packagedArtifacts, checksums in publish, ivyLoggingLevel) map { (arts, cs, level) =>
-      Classpaths.publishConfig(arts, None, resolverName = m2Repo.name, checksums = cs, logging = level)
-    },
-    publishM2 <<= Classpaths.publishTask(publishM2Configuration, deliverLocal),
-    otherResolvers += m2Repo,
+    scalacOptions := scalacOptionsVersion(scalaVersion.value),
 
-    scalacOptions ++= Seq("-encoding", "utf8"),
-    scalacOptions += "-deprecation",
-
-    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
+    // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
+    // warnings are resolved
+    javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.7", "-target", "1.7"),
     javacOptions in doc := Seq("-source", "1.7"),
 
     // This is bad news for things like com.twitter.util.Time
@@ -80,7 +77,7 @@ object Util extends Build {
     publishMavenStyle := true,
     autoAPIMappings := true,
     apiURL := Some(url("https://twitter.github.io/util/docs/")),
-    pomExtra := (
+    pomExtra :=
       <url>https://github.com/twitter/util</url>
       <licenses>
         <license>
@@ -98,20 +95,28 @@ object Util extends Build {
           <name>Twitter Inc.</name>
           <url>https://www.twitter.com/</url>
         </developer>
-      </developers>),
+      </developers>,
     publishTo <<= version { (v: String) =>
       val nexus = "https://oss.sonatype.org/"
       if (v.trim.endsWith("SNAPSHOT"))
         Some("snapshots" at nexus + "content/repositories/snapshots")
       else
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+    },
+
+    // Prevent eviction warnings
+    dependencyOverrides <++= scalaVersion { vsn =>
+      Set(
+        "com.twitter.common.zookeeper" % "client" % zkClientVersion,
+        "com.twitter.common.zookeeper" % "group"  % zkGroupVersion
+      )
     }
   )
 
   lazy val util = Project(
     id = "util",
     base = file("."),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings ++
       unidocSettings
   ) aggregate(
@@ -124,7 +129,7 @@ object Util extends Build {
   lazy val utilApp = Project(
     id = "util-app",
     base = file("util-app"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-app"
@@ -133,7 +138,7 @@ object Util extends Build {
   lazy val utilBenchmark = Project(
     id = "util-benchmark",
     base = file("util-benchmark"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings ++ JmhPlugin.projectSettings
   )
   .enablePlugins(JmhPlugin)
@@ -144,7 +149,7 @@ object Util extends Build {
   lazy val utilCache = Project(
     id = "util-cache",
     base = file("util-cache"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-cache",
@@ -158,7 +163,7 @@ object Util extends Build {
   lazy val utilClassPreloader = Project(
     id = "util-class-preloader",
     base = file("util-class-preloader"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-class-preloader"
@@ -167,7 +172,7 @@ object Util extends Build {
   lazy val utilCodec = Project(
     id = "util-codec",
     base = file("util-codec"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-codec",
@@ -179,7 +184,7 @@ object Util extends Build {
   lazy val utilCollection = Project(
     id = "util-collection",
     base = file("util-collection"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-collection",
@@ -196,7 +201,7 @@ object Util extends Build {
   lazy val utilCore = Project(
     id = "util-core",
     base = file("util-core"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-core",
@@ -211,9 +216,7 @@ object Util extends Build {
         val file = dir / "com" / "twitter" / name / "build.properties"
         val buildRev = Process("git" :: "rev-parse" :: "HEAD" :: Nil).!!.trim
         val buildName = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss").format(new java.util.Date)
-        val contents = (
-          "name=%s\nversion=%s\nbuild_revision=%s\nbuild_name=%s"
-        ).format(name, ver, buildRev, buildName)
+        val contents = s"name=$name\nversion=$ver\nbuild_revision=$buildRev\nbuild_name=$buildName"
         IO.write(file, contents)
         Seq(file)
       }
@@ -222,7 +225,7 @@ object Util extends Build {
   lazy val utilEval = Project(
     id = "util-eval",
     base = file("util-eval"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-eval",
@@ -234,7 +237,7 @@ object Util extends Build {
   lazy val utilEvents = Project(
     id = "util-events",
     base = file("util-events"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-events"
@@ -243,7 +246,7 @@ object Util extends Build {
   lazy val utilFunction = Project(
     id = "util-function",
     base = file("util-function"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-function"
@@ -252,7 +255,7 @@ object Util extends Build {
   lazy val utilReflect = Project(
     id = "util-reflect",
     base = file("util-reflect"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-reflect",
@@ -267,7 +270,7 @@ object Util extends Build {
   lazy val utilHashing = Project(
     id = "util-hashing",
     base = file("util-hashing"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-hashing",
@@ -280,7 +283,7 @@ object Util extends Build {
   lazy val utilJvm = Project(
     id = "util-jvm",
     base = file("util-jvm"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-jvm"
@@ -289,7 +292,7 @@ object Util extends Build {
   lazy val utilLint = Project(
     id = "util-lint",
     base = file("util-lint"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-lint"
@@ -298,7 +301,7 @@ object Util extends Build {
   lazy val utilLogging = Project(
     id = "util-logging",
     base = file("util-logging"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-logging"
@@ -308,7 +311,7 @@ object Util extends Build {
   lazy val utilRegistry = Project(
     id = "util-registry",
     base = file("util-registry"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-registry"
@@ -317,7 +320,7 @@ object Util extends Build {
   lazy val utilStats = Project(
     id = "util-stats",
     base = file("util-stats"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-stats"
@@ -326,7 +329,7 @@ object Util extends Build {
   lazy val utilTest = Project(
     id = "util-test",
     base = file("util-test"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-test",
@@ -340,7 +343,7 @@ object Util extends Build {
   lazy val utilThrift = Project(
     id = "util-thrift",
     base = file("util-thrift"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-thrift",
@@ -355,7 +358,7 @@ object Util extends Build {
   lazy val utilZk = Project(
     id = "util-zk",
     base = file("util-zk"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-zk",
@@ -367,13 +370,13 @@ object Util extends Build {
   lazy val utilZkCommon = Project(
     id = "util-zk-common",
     base = file("util-zk-common"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % "0.0.79",
-      "com.twitter.common.zookeeper" % "group"      % "0.0.90",
+      "com.twitter.common.zookeeper" % "client"     % zkClientVersion,
+      "com.twitter.common.zookeeper" % "group"      % zkGroupVersion,
       "com.twitter.common.zookeeper" % "server-set" % "1.0.103",
       zkDependency
     )
@@ -386,7 +389,7 @@ object Util extends Build {
   lazy val utilZkTest = Project(
     id = "util-zk-test",
     base = file("util-zk-test"),
-    settings = Project.defaultSettings ++
+    settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
     name := "util-zk-test",

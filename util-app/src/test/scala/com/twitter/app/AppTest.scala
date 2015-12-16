@@ -68,14 +68,14 @@ class AppTest extends FunSuite {
 
   test("App: order of hooks") {
     val q = new ConcurrentLinkedQueue[Int]
-    object test1 extends App {
+    class Test1 extends App {
       onExit(q.add(4))
       postmain(q.add(3))
       def main() = q.add(2)
       premain(q.add(1))
       init(q.add(0))
     }
-    test1.main(Array.empty)
+    new Test1().main(Array.empty)
     assert(q.toArray.toSeq == Seq(0, 1, 2, 3, 4))
   }
 }

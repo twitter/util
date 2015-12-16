@@ -204,7 +204,7 @@ trait ZNode {
     val broker = new Broker[ZNode.TreeUpdate]
     /** Pipe events from a subtree's monitor to this broker. */
     def pipeSubTreeUpdates(next: Offer[ZNode.TreeUpdate]) {
-      next.sync() flatMap(broker!) onSuccess { _ => pipeSubTreeUpdates(next) }
+      next.sync().flatMap(broker ! _).onSuccess { _ => pipeSubTreeUpdates(next) }
     }
     /** Monitor a watch on this node. */
     def monitorWatch(watch: Future[ZNode.Watch[ZNode.Children]], knownChildren: Set[ZNode]) {

@@ -892,7 +892,7 @@ abstract class Future[+A] extends Awaitable[A] {
   def flatMap[B](f: A => Future[B]): Future[B] =
     transform {
       case Return(v) => f(v)
-      case t: Throw[B] => Future.const[B](t)
+      case t: Throw[_] => Future.const[B](t.cast[B])
     }
 
   /**
@@ -903,7 +903,7 @@ abstract class Future[+A] extends Awaitable[A] {
   def before[B](f: => Future[B])(implicit ev: this.type <:< Future[Unit]): Future[B] =
     transform {
       case Return(_) => f
-      case t: Throw[B] => Future.const[B](t)
+      case t: Throw[_] => Future.const[B](t.cast[B])
     }
 
   /**
@@ -948,7 +948,7 @@ abstract class Future[+A] extends Awaitable[A] {
   def map[B](f: A => B): Future[B] =
     transform {
       case Return(r) => Future { f(r) }
-      case t: Throw[B] => Future.const[B](t)
+      case t: Throw[_] => Future.const[B](t.cast[B])
     }
 
   def filter(p: A => Boolean): Future[A] = transform { x: Try[A] => Future.const(x.filter(p)) }

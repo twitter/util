@@ -111,7 +111,7 @@ object FutureBenchmark {
   private val NumToSelect = 5
 
   @State(Scope.Benchmark)
-  private class RunqState {
+  class RunqState {
     @Param(Array("1", "2", "3", "10", "20"))
     var depth: Int = 0
   }
@@ -119,7 +119,7 @@ object FutureBenchmark {
   val StringFuture = Future.value("hi")
 
   @State(Scope.Thread)
-  private class CollectState {
+  class CollectState {
     var stream: Stream[Future[Int]] = _
 
     @Setup
@@ -131,7 +131,7 @@ object FutureBenchmark {
   }
 
   @State(Scope.Thread)
-  private class PromiseUnitState {
+  class PromiseUnitState {
     val FlatMapFn = { _: Unit => Future.Unit }
     val MapFn = { _: Unit => "hi" }
 
@@ -142,20 +142,20 @@ object FutureBenchmark {
   }
 
   @State(Scope.Benchmark)
-  private class CallbackState {
+  class CallbackState {
     @Param(Array("0", "1", "2", "3"))
     var n: Int = _
   }
 
   @State(Scope.Benchmark)
-  private class SelectState {
+  class SelectState {
     val p = new Promise[Unit]
     val futures: Seq[Future[Unit]] =
       Seq.fill(NumToSelect - 1) { p } :+ Future.Done
   }
 
   @State(Scope.Benchmark)
-  private class SelectIndexState {
+  class SelectIndexState {
     val p = new Promise[Unit]
     val futures: IndexedSeq[Future[Unit]] =
       IndexedSeq.fill(NumToSelect - 1) { p } :+ Future.Done

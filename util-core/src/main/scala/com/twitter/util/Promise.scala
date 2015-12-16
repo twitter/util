@@ -10,7 +10,7 @@ object Promise {
   /**
    * A continuation stored from a promise.
    */
-  private trait K[-A] extends (Try[A] => Unit) {
+  private[util] trait K[-A] extends (Try[A] => Unit) {
     /** Depth tag used for scheduling */
     protected[util] def depth: Short
   }
