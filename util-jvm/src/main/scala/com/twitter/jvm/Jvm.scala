@@ -2,7 +2,8 @@ package com.twitter.jvm
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.time._
-import com.twitter.util.{Duration, Future, NonFatal, Stopwatch, StorageUnit, Time, Timer}
+import com.twitter.util._
+import java.lang.management.ManagementFactory
 import java.util.concurrent.{ConcurrentHashMap, Executors, ScheduledExecutorService, TimeUnit}
 import java.util.logging.{Level, Logger}
 import scala.collection.JavaConverters._
@@ -196,6 +197,21 @@ trait Jvm {
  * See [[Jvms]] for Java compatibility.
  */
 object Jvm {
+
+  /**
+   * Return the current process id.
+   *
+   * @note this is fragile as the RuntimeMXBean doesn't specify the name format.
+   */
+  lazy val ProcessId: Option[Int] =
+    try {
+      ManagementFactory.getRuntimeMXBean.getName.split("@").headOption.map(_.toInt)
+    } catch {
+      case NonFatal(t) =>
+        log.log(Level.WARNING, "failed to find process id", t)
+        None
+    }
+
   private lazy val executor =
     Executors.newScheduledThreadPool(1, new NamedPoolThreadFactory("util-jvm-timer", true))
 
@@ -232,6 +248,12 @@ object Jvm {
  * Java compatibility for [[Jvm]].
  */
 object Jvms {
+
+  /**
+   * Java compatibility for [[Jvm.ProcessId]].
+   */
+  def processId(): Option[Int] =
+    Jvm.ProcessId
 
   /**
    * Java compatibility for [[Jvm.apply()]].

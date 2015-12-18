@@ -9,4 +9,9 @@ public class JvmCompilationTest {
     Jvms.get();
   }
 
+
+  @Test
+  public void testPid() {
+    Jvms.processId();
+  }
 }

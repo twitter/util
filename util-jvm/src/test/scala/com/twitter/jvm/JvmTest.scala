@@ -39,6 +39,19 @@ class JvmTest extends WordSpec with TestLogging {
       }
     }
 
+    "ProcessId" should {
+      val supported = Seq("Mac OS X", "Linux")
+
+      val osIsSupported =
+        Option(System.getProperty("os.name")).exists(supported.contains)
+
+      if (osIsSupported) {
+        "define process id on supported platforms" in {
+          assert(Jvm.ProcessId.isDefined)
+        }
+      }
+    }
+
     "foreachGc" should {
       "Capture interleaving GCs with different names" in {
         val h = new JvmHelper
