@@ -7,7 +7,7 @@ import scala.util.control.ControlThrowable
  */
 object NonFatal {
   /**
-   * This is identitical in behavior to the upcoming
+   * This is identical in behavior to the upcoming
    * [[scala.util.control.NonFatal]] (which appears in scala 2.10).
    */
   def isNonFatal(t: Throwable): Boolean = t match {
