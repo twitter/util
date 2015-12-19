@@ -34,7 +34,7 @@ object Util extends Build {
       "-encoding", "utf8"
     ) ++ (CrossVersion.partialVersion(sv) match {
       // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
-      case Some((2, 11)) | Some((2, 12)) => Seq("-Xlint:-missing-interpolator")
+      case Some((2, x)) if x >= 11 => Seq("-Xlint:-missing-interpolator")
       case _ => Seq("-Xlint")
     })
   }
