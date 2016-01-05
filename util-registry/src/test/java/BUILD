@@ -4,6 +4,6 @@ junit_tests(name='java',
     '3rdparty/jvm/junit',
     'util/util-registry/src/main/scala',
   ],
-  fatal_warnings=True,
+  fatal_warnings=False,
   sources=rglobs('*.java')
 )

@@ -5,6 +5,6 @@ junit_tests(name='java',
     'util/util-app/src/main/java',
     'util/util-app/src/main/scala'
   ],
-  fatal_warnings=True,
+  fatal_warnings=False,
   sources=rglobs('*.java')
 )
