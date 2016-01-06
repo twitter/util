@@ -340,7 +340,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
   /**
    * Take a sequence and sequentally apply a function f to each item.
-   * future sequentially, then return all future results as a single Future[Seq[_]].
+   * Then return all future results as a single Future[Seq[_]].
    * 
    * If during execution any f() throws an exception that exception will be returned and 
    * the remaining futures will not be processed.
