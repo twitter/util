@@ -339,43 +339,25 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   def join[A](fs: JList[Future[A]]): Future[Unit] = Futures.join(fs)
 
   /**
-   * Take a sequence and sequentally apply a function f to each item.
+   * Take a sequence and sequentially apply a function f to each item.
    * Then return all future results as a single Future[Seq[_]].
    * 
    * If during execution any f() throws an exception that exception will be returned and 
    * the remaining futures will not be processed.
    * 
+   * usage:
+   *   Future.traverseSequentially(Seq(1,2,3))(deleteItem)
+   * 
    * @param as a sequence of A that will have f applied to each item sequentially
    * @return a `Future[Seq[B]]` containing the results of f being applied to every item in as
    */
-  def traverseSequentally[A,B](as: Seq[A])(f: A => Future[B]): Future[Seq[B]] =
+  def traverseSequentially[A,B](as: Seq[A])(f: A => Future[B]): Future[Seq[B]] =
     as.foldLeft(Future(Vector.empty[B])) { (resultsFuture, nextItem) =>
       for {
         results    <- resultsFuture
         nextResult <- f(nextItem)
       } yield (results :+ nextResult)
     }
-
-  /**
-   * Take a sequence of `() => Future[_]` and execute each
-   * future sequentially, then return all future results as a single Future[Seq[_]].
-   * 
-   * If during execution any of the futures throws an exception that exception will be returned and 
-   * the remaining futures will not be processed.
-   * 
-   * A use case for sequential processing is ordered operations: 
-   *   val orderedOperations =
-   *     Seq(
-   *       () => deleteItem(id),
-   *       () => undeleteItem(id),
-   *       () => deleteItem(id)
-   *     )
-   *   Future.sequenceEffects(orderedOperations)
-   * 
-   * @param fs a sequence of Function0s that returns Futures to be executed in sequence
-   * @return a `Future[Seq[A]]` containing the results of each future in fs
-   */
-  def sequenceEffects[A](fs: Seq[() => Future[A]]): Future[Seq[A]] = traverseSequentally(fs)(f => f())
 
   /**
    * Collect the results from the given futures into a new future of
