@@ -978,7 +978,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * @note this should be used for side-effects.
    *
    * @note if `fn` is a `PartialFunction` and the input is not defined for a given
-   *       Throwable, the resulting `MatchError` will propogate to the current
+   *       Throwable, the resulting `MatchError` will propagate to the current
    *       `Monitor`. This will happen if you use a construct such as
    *       `future.onFailure { case NonFatal(e) => ... }` when the Throwable
    *       is "fatal".
