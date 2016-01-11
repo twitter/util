@@ -339,20 +339,26 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   def join[A](fs: JList[Future[A]]): Future[Unit] = Futures.join(fs)
 
   /**
-   * Take a sequence and sequentially apply a function f to each item.
-   * Then return all future results as a single Future[Seq[_]].
-   * 
-   * If during execution any f() throws an exception that exception will be returned and 
-   * the remaining futures will not be processed.
-   * 
+   * Take a sequence and sequentially apply a function `f` to each item.
+   * Then return all future results `as` a single Future[Seq[_]].
+   *
+   * If during execution any `f` is satsified `as` a failure ([[Future.exception]])
+   * then that failed Future will be returned and the remaining elements of `as`
+   * will not be processed.
+   *
    * usage:
-   *   Future.traverseSequentially(Seq(1,2,3))(deleteItem)
-   * 
-   * @param as a sequence of A that will have f applied to each item sequentially
-   * @return a `Future[Seq[B]]` containing the results of f being applied to every item in as
+   *  {{{
+   *    // will return a Future of `Seq(2, 3, 4)`
+   *    Future.traverseSequentially(Seq(1, 2, 3)) { i =>
+   *      Future(i + 1)
+   *    }
+   *  }}}
+   *
+   * @param `as` a sequence of `A` that will have `f` applied to each item sequentially
+   * @return a `Future[Seq[B]]` containing the results of `f` being applied to every item in `as`
    */
   def traverseSequentially[A,B](as: Seq[A])(f: A => Future[B]): Future[Seq[B]] =
-    as.foldLeft(Future(Vector.empty[B])) { (resultsFuture, nextItem) =>
+    as.foldLeft(Future.value(Vector.empty[B])) { (resultsFuture, nextItem) =>
       for {
         results    <- resultsFuture
         nextResult <- f(nextItem)

@@ -477,10 +477,10 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
       }
 
-     "traverse" should {
-        class TraverseTestSpy() {     
+     "traverseSequentially" should {
+        class TraverseTestSpy() {
           var goWasCalled = false
-          var promise     = Promise[Int]()    
+          var promise     = Promise[Int]()
           val go          = () => {
             goWasCalled = true
             promise
@@ -494,13 +494,13 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
 
           val results = Future.traverseSequentially(events)(f => f())
 
-          // At this point, none of the promises 
+          // At this point, none of the promises
           // have been fufilled, so only the first function
           // should have been called
           assert(first.goWasCalled)
           assert(!second.goWasCalled)
 
-          // once the first promise completes, the next 
+          // once the first promise completes, the next
           // function in the sequence should be executed
           first.promise.setValue(1)
           assert(second.goWasCalled)
