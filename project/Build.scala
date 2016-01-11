@@ -20,7 +20,7 @@ object Util extends Build {
 
   val parserCombinators = scalaVersion { sv =>
     CrossVersion.partialVersion(sv) match {
-      case Some((2, 11)) | Some((2, 12)) =>
+      case Some((2, x)) if x >= 11 =>
         Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4")
       case _ => Nil
     }
