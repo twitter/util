@@ -333,41 +333,41 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("buffer() has the same properties as take() and drop()") {
     // We need items to be non-empty, because AsyncStream.empty ++
     // <something> forces the future to be created.
-    forAll(Gen.nonEmptyListOf(Arbitrary.arbitrary[Char])) { items =>
-      forAll { n: Int =>
-        var forced1 = false
-        val stream1 = fromSeq(items) ++ { forced1 = true; AsyncStream.empty }
-        var forced2 = false
-        val stream2 = fromSeq(items) ++ { forced2 = true; AsyncStream.empty }
+    val gen = Gen.zip(Gen.nonEmptyListOf(Arbitrary.arbitrary[Char]), Arbitrary.arbitrary[Int])
 
-        val takeResult = await(stream2.take(n).toSeq)
-        val (bufferResult, bufferRest) = await(stream1.buffer(n))
-        assert(takeResult == bufferResult)
+    forAll(gen) { case (items, n) =>
+      var forced1 = false
+      val stream1 = fromSeq(items) ++ { forced1 = true; AsyncStream.empty[Char] }
+      var forced2 = false
+      val stream2 = fromSeq(items) ++ { forced2 = true; AsyncStream.empty[Char] }
 
-        // Strictness property: we should only need to force the full
-        // stream if we asked for more items that were present in the
-        // stream.
-        assert(forced1 == (n > items.size))
-        assert(forced1 == forced2)
-        val wasForced = forced1
+      val takeResult = await(stream2.take(n).toSeq)
+      val (bufferResult, bufferRest) = await(stream1.buffer(n))
+      assert(takeResult == bufferResult)
 
-        // Strictness property: Since AsyncStream contains a Future
-        // rather than a thunk, we need to evaluate the next element in
-        // order to get the result of drop and the rest of the stream
-        // after buffering.
-        val bufferTail = bufferRest()
-        val dropTail = stream2.drop(n)
-        assert(forced1 == (n >= items.size))
-        assert(forced1 == forced2)
+      // Strictness property: we should only need to force the full
+      // stream if we asked for more items that were present in the
+      // stream.
+      assert(forced1 == (n > items.size))
+      assert(forced1 == forced2)
+      val wasForced = forced1
 
-        // This is the only case that should have caused the item to be forced.
-        assert((wasForced == forced1) || n == items.size)
+      // Strictness property: Since AsyncStream contains a Future
+      // rather than a thunk, we need to evaluate the next element in
+      // order to get the result of drop and the rest of the stream
+      // after buffering.
+      val bufferTail = bufferRest()
+      val dropTail = stream2.drop(n)
+      assert(forced1 == (n >= items.size))
+      assert(forced1 == forced2)
 
-        // Forcing the rest of the sequence should always cause evaluation.
-        assert(await(bufferTail.toSeq) == await(dropTail.toSeq))
-        assert(forced1)
-        assert(forced2)
-      }
+      // This is the only case that should have caused the item to be forced.
+      assert((wasForced == forced1) || n == items.size)
+
+      // Forcing the rest of the sequence should always cause evaluation.
+      assert(await(bufferTail.toSeq) == await(dropTail.toSeq))
+      assert(forced1)
+      assert(forced2)
     }
   }
 
@@ -390,27 +390,167 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
   test("grouped should be lazy") {
-    // We need items to be non-empty, because AsyncStream.empty ++
-    // <something> forces the future to be created.
-    forAll(Gen.nonEmptyListOf(Arbitrary.arbitrary[Char])) { items =>
-      // We need to make sure that the chunk size (1) is valid and (2)
-      // is short enough that forcing the first group does not force
-      // the exception.
-      forAll(Gen.chooseNum(1, items.size)) { groupSize =>
-        var forced = false
-        val stream: AsyncStream[Char] = fromSeq(items) ++ { forced = true; AsyncStream.empty }
+    val gen =
+      for {
+        // We need items to be non-empty, because AsyncStream.empty ++
+        // <something> forces the future to be created.
+        items <- Gen.nonEmptyListOf(Arbitrary.arbitrary[Char])
 
-        val expected = items.grouped(groupSize).toSeq.headOption
-        // This will take up to items.size items from the stream. This
-        // does not require forcing the tail.
-        val actual = await(stream.grouped(groupSize).head)
-        assert(actual == expected)
-        assert(!forced)
-        val expectedChunks = items.grouped(groupSize).toSeq
-        val allChunks = await(stream.grouped(groupSize).toSeq)
-        assert(allChunks == expectedChunks)
-        assert(forced)
+        // We need to make sure that the chunk size (1) is valid and (2)
+        // is short enough that forcing the first group does not force
+        // the exception.
+        groupSize <- Gen.chooseNum(1, items.size)
+      } yield (items, groupSize)
+
+    forAll(gen) { case (items, groupSize) =>
+      var forced = false
+      val stream: AsyncStream[Char] = fromSeq(items) ++ { forced = true; AsyncStream.empty }
+
+      val expected = items.grouped(groupSize).toSeq.headOption
+      // This will take up to items.size items from the stream. This
+      // does not require forcing the tail.
+      val actual = await(stream.grouped(groupSize).head)
+      assert(actual == expected)
+      assert(!forced)
+      val expectedChunks = items.grouped(groupSize).toSeq
+      val allChunks = await(stream.grouped(groupSize).toSeq)
+      assert(allChunks == expectedChunks)
+      assert(forced)
+    }
+  }
+
+  test("mapConcurrent preserves items") {
+    forAll(Arbitrary.arbitrary[List[Int]], Gen.choose(1, 10)) { (xs, conc) =>
+      assert(toSeq(AsyncStream.fromSeq(xs).mapConcurrent(conc)(Future.value)).sorted == xs.sorted)
+    }
+  }
+
+  test("mapConcurrent makes progress when an item is blocking") {
+    forAll(Arbitrary.arbitrary[List[Int]], Gen.choose(2, 10)) { (xs, conc) =>
+      // This promise is not satisfied, which would block the evaluation
+      // of .map, and should not block .mapConcurrent when conc > 1
+      val first = new Promise[Int]
+
+      // This function will return a blocking future the first time it
+      // is called and an immediately-available future thereafter.
+      var used = false
+      def f(x: Int) =
+        if (used) {
+          Future.value(x)
+        } else {
+          used = true
+          first
+        }
+
+      // Concurrently map over the stream. The whole stream should be
+      // available, except for one item which is still blocked.
+      val mapped = AsyncStream.fromSeq(xs).mapConcurrent(conc)(f)
+
+      // All but the first value, which is still blocking, has been returned
+      assert(toSeq(mapped.take(xs.length - 1)).sorted == xs.drop(1).sorted)
+
+      if (xs.nonEmpty) {
+        // The stream as a whole is still blocking on the unsatisfied promise
+        assert(!mapped.foreach(_ => ()).isDefined)
+
+      // Unblock the first value
+        first.setValue(xs.head)
       }
+
+      // Now the whole stream should be available and should contain all
+      // of the items, ignoring order (but preserving repetition)
+      assert(mapped.foreach(_ => ()).isDefined)
+      assert(toSeq(mapped).sorted == xs.sorted)
+    }
+  }
+
+  test("mapConcurrent is lazy once it reaches its concurrency limit") {
+    forAll(Gen.choose(2, 10), Arbitrary.arbitrary[Seq[Int]]) { (conc, xs) =>
+      val q = new scala.collection.mutable.Queue[Promise[Unit]]
+
+      val mapped =
+        AsyncStream.fromSeq(xs).mapConcurrent(conc) { _ =>
+          val p = new Promise[Unit]
+          q.enqueue(p)
+          p
+        }
+
+      // If there are at least `conc` items in the queue, then we should
+      // have started exactly `conc` of them. Otherwise, we should have
+      // started all of them.
+      assert(q.size == conc.min(xs.size))
+
+      if (xs.nonEmpty) {
+        assert(!mapped.head.isDefined)
+
+        val p = q.dequeue()
+        p.setDone()
+      }
+
+      // Satisfying that promise makes the head of the queue available.
+      assert(mapped.head.isDefined)
+
+      if (xs.size > 1) {
+        // We do not add another element to the queue until the next
+        // element is forced.
+        assert(q.size == (conc.min(xs.size) - 1))
+
+        val tl = mapped.drop(1)
+        assert(!tl.head.isDefined)
+
+        // Forcing the next element of the queue causes us to enqueue
+        // one more element (if there are more elements to enqueue)
+        assert(q.size == conc.min(xs.size - 1))
+
+        val p = q.dequeue()
+        p.setDone()
+
+        // Satisfying that promise causes the head to be available.
+        assert(tl.head.isDefined)
+      }
+    }
+  }
+
+  test("mapConcurrent makes progress, even with blocking streams and blocking work") {
+    val gen =
+      Gen.zip(
+        Gen.choose(0, 10).label("numActions"),
+        Gen.choose(0, 10).flatMap(Gen.listOfN(_, Arbitrary.arbitrary[Int])),
+        Gen.choose(1, 11).label("concurrency")
+      )
+
+    forAll(gen) { case (numActions, items, concurrency) =>
+      val input: AsyncStream[Int] =
+        AsyncStream.fromSeq(items) ++ AsyncStream.fromFuture(Future.never)
+
+      var workStarted = 0
+      var workFinished = 0
+      val result =
+        input.mapConcurrent(concurrency) { i =>
+          workStarted += 1
+          if (workFinished < numActions) {
+            workFinished += 1
+            Future.value(i)
+          } else {
+            // After numActions evaluations, return a Future that
+            // will never be satisfied.
+            Future.never
+          }
+        }
+
+      // How much work should have been started by mapConcurrent.
+      val expectedStarted = items.size.min(concurrency)
+      assert(workStarted == expectedStarted, "work started")
+
+      val expectedFinished = numActions.min(expectedStarted)
+      assert(workFinished == expectedFinished, "expected finished")
+
+      // Make sure that all of the finished items are now
+      // available. (As a side-effect, this will force more work to
+      // be done if concurrency was the limiting factor.)
+      val completed = await(result.take(workFinished).toSeq).sorted
+      val expectedCompleted = items.take(expectedFinished).sorted
+      assert(completed == expectedCompleted)
     }
   }
 }
