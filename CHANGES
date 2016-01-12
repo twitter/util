@@ -17,6 +17,9 @@ New Features:
   * util-core: Introduce a `TokenBucket` for helping to control the relative rates of two processes,
     or for smoothing out the rate of a single process. ``RB_ID=756333``
 
+  * util-core: Add `Future.traverseSequentially`. Take a sequence and sequentially apply a function
+    A => Future[B] to each item. ``RB_ID=785091``
+
 API Changes:
 
   * util-core: `Timer` now has final implementations for `schedule` which delegate
