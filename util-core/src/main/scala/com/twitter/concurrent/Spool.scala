@@ -7,6 +7,9 @@ import scala.language.implicitConversions
 import java.io.EOFException
 
 /**
+ * Note: [[Spool]] is no longer the recommended asynchronous stream abstraction.
+ * We encourage you to use [[AsyncStream]] instead.
+ *
  * A spool is an asynchronous stream. It more or less mimics the scala
  * {{Stream}} collection, but with cons cells that have either eager or
  * deferred tails.
@@ -273,6 +276,9 @@ sealed trait Spool[+A] {
 abstract class AbstractSpool[A] extends Spool[A]
 
 /**
+ * Note: [[Spool]] is no longer the recommended asynchronous stream abstraction.
+ * We encourage you to use [[AsyncStream]] instead.
+ *
  * Note: There is a Java-friendly API for this object: [[com.twitter.concurrent.Spools]].
  */
 object Spool {
