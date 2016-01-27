@@ -1,6 +1,6 @@
 junit_tests(name='scala',
   dependencies=[
-    '3rdparty/jvm/commons-codec',
+    '3rdparty/jvm/commons-codec:commons-codec',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalacheck',
