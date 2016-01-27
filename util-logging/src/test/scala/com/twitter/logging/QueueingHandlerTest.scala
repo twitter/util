@@ -152,5 +152,38 @@ class QueueingHandlerTest extends WordSpec
 
       assert(handler.getFormatter eq formatter)
     }
+
+    "obey flag to force or not force class and method name inference" in {
+      val formatter = new Formatter() {
+        override def format(record: javalog.LogRecord) = {
+          val prefix =
+            if (record.getSourceClassName != null) record.getSourceClassName + ": "
+            else ""
+
+          prefix + formatText(record) + lineTerminator
+        }
+      }
+      for (infer <- Seq(true, false)) {
+        val logger = freshLogger()
+        val stringHandler = new StringHandler(formatter, Some(Logger.INFO))
+        val queueHandler = new QueueingHandler(stringHandler, Int.MaxValue, infer)
+        logger.addHandler(queueHandler)
+        val helper = new QueueingHandlerTestHelper()
+        helper.logSomething(logger)
+
+        val expectedMessagePrefix = if (infer) helper.getClass.getName + ": " else ""
+        val expectedMessage = expectedMessagePrefix + helper.message + "\n"
+
+        eventually {
+          // let thread log
+          assert(stringHandler.get == expectedMessage)
+        }
+      }
+    }
   }
+}
+
+class QueueingHandlerTestHelper {
+  def message = "A message"
+  def logSomething(logger: Logger) = logger.info(message)
 }

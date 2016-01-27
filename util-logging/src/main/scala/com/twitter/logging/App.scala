@@ -32,6 +32,9 @@ trait Logging { self: App =>
   def defaultRollPolicy: Policy = Policy.Never
   def defaultAppend: Boolean = true
   def defaultRotateCount: Int = -1
+
+  protected[this] val inferClassNamesFlag = flag("log.async.inferClassNames", false,
+    "Infer class and method names synchronously. See com.twitter.logging.QueueingHandler")
   protected[this] val outputFlag = flag("log.output", defaultOutput, "Output file")
   protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
 
@@ -73,7 +76,7 @@ trait Logging { self: App =>
 
     List(
       if (asyncFlag())
-        QueueingHandler(handler, asyncMaxSizeFlag())
+        QueueingHandler(handler, asyncMaxSizeFlag(), inferClassNamesFlag())
       else
         handler
     )
