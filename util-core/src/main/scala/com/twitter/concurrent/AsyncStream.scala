@@ -1,5 +1,6 @@
 package com.twitter.concurrent
 
+import com.twitter.io.{Buf, Reader}
 import com.twitter.util.{Future, Promise, Return, Throw}
 import scala.collection.mutable
 
@@ -596,7 +597,7 @@ object AsyncStream {
   }
 
   /**
-   * Transformation (or lift) from `Seq[A]` into `AsyncStream[A]`.
+   * Transformation (or lift) from [[Seq]] into `AsyncStream`.
    */
   def fromSeq[A](seq: Seq[A]): AsyncStream[A] = seq match {
     case Nil => empty
@@ -605,13 +606,13 @@ object AsyncStream {
   }
 
   /**
-   * Transformation (or lift) from `Future[A]` into `AsyncStream[A]`.
+   * Transformation (or lift) from [[Future]] into `AsyncStream`.
    */
   def fromFuture[A](f: Future[A]): AsyncStream[A] =
     FromFuture(f)
 
   /**
-   * Transformation (or lift) from `Option[A]` into `AsyncStream[A]`.
+   * Transformation (or lift) from [[Option]] into `AsyncStream`.
    */
   def fromOption[A](o: Option[A]): AsyncStream[A] =
     o match {
@@ -620,7 +621,17 @@ object AsyncStream {
     }
 
   /**
-   * Lift from Future into AsyncStream and then flatten.
+   * Transformation (or lift) from [[Reader]] into `AsyncStream[Buf]`, where each [[Buf]]
+   * has size up to `chunkSize`.
+   */
+  def fromReader(r: Reader, chunkSize: Int = Int.MaxValue): AsyncStream[Buf] =
+    fromFuture(r.read(chunkSize)).flatMap {
+      case Some(buf) => buf +:: fromReader(r, chunkSize)
+      case None => AsyncStream.empty[Buf]
+    }
+
+  /**
+   * Lift from [[Future]] into `AsyncStream` and then flatten.
    */
   private[concurrent] def embed[A](fas: Future[AsyncStream[A]]): AsyncStream[A] =
     Embed(fas)

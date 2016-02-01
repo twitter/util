@@ -1,6 +1,7 @@
 package com.twitter.concurrent
 
 import com.twitter.conversions.time._
+import com.twitter.io.{Buf, Reader}
 import com.twitter.util.{Await, Future, Promise, Throw, Try}
 import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen}
@@ -36,7 +37,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
   test("call-by-name tail evaluated at most once") {
-    var p = new Promise[Unit]
+    val p = new Promise[Unit]
     val s = () +:: {
       if (p.setDone()) of(())
       else AsyncStream.empty[Unit]
@@ -120,7 +121,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     s.take(Int.MaxValue)
     assert(!p.isDefined)
 
-    assert(await(s.take(1).toSeq) == Seq(()))
+    assert(toSeq(s.take(1)) == Seq(()))
     assert(!p.isDefined)
 
     s.takeWhile(_ => true)
@@ -184,7 +185,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("++") {
     forAll { (a: List[Int], b: List[Int]) =>
-      assert(toSeq((fromSeq(a) ++ fromSeq(b))) == a ++ b)
+      assert(toSeq(fromSeq(a) ++ fromSeq(b)) == a ++ b)
     }
   }
 
@@ -326,7 +327,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       val (expectedBuffer, expectedRest) = items.splitAt(bufferSize)
       val (buffer, rest) = await(fromSeq(items).buffer(bufferSize))
       assert(expectedBuffer == buffer)
-      assert(expectedRest == await(rest().toSeq))
+      assert(expectedRest == toSeq(rest()))
     }
   }
 
@@ -341,7 +342,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       var forced2 = false
       val stream2 = fromSeq(items) ++ { forced2 = true; AsyncStream.empty[Char] }
 
-      val takeResult = await(stream2.take(n).toSeq)
+      val takeResult = toSeq(stream2.take(n))
       val (bufferResult, bufferRest) = await(stream1.buffer(n))
       assert(takeResult == bufferResult)
 
@@ -365,7 +366,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       assert((wasForced == forced1) || n == items.size)
 
       // Forcing the rest of the sequence should always cause evaluation.
-      assert(await(bufferTail.toSeq) == await(dropTail.toSeq))
+      assert(toSeq(bufferTail) == toSeq(dropTail))
       assert(forced1)
       assert(forced2)
     }
@@ -377,7 +378,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       // same. (Zero or negative group sizes throw the same
       // exception.)
       val expected = Try(items.grouped(groupSize).toSeq)
-      val actual = Try(await(fromSeq(items).grouped(groupSize).toSeq))
+      val actual = Try(toSeq(fromSeq(items).grouped(groupSize)))
 
       // If they are both exceptions, then pass if the exceptions are
       // the same type (don't require them to define equality or have
@@ -413,7 +414,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       assert(actual == expected)
       assert(!forced)
       val expectedChunks = items.grouped(groupSize).toSeq
-      val allChunks = await(stream.grouped(groupSize).toSeq)
+      val allChunks = toSeq(stream.grouped(groupSize))
       assert(allChunks == expectedChunks)
       assert(forced)
     }
@@ -548,9 +549,18 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       // Make sure that all of the finished items are now
       // available. (As a side-effect, this will force more work to
       // be done if concurrency was the limiting factor.)
-      val completed = await(result.take(workFinished).toSeq).sorted
+      val completed = toSeq(result.take(workFinished)).sorted
       val expectedCompleted = items.take(expectedFinished).sorted
       assert(completed == expectedCompleted)
+    }
+  }
+
+  test("fromReader") {
+    forAll { l: List[Byte] =>
+      val buf = Buf.ByteArray.Owned(l.toArray)
+      val as = AsyncStream.fromReader(Reader.fromBuf(buf), chunkSize = 1)
+
+      assert(toSeq(as).map(b => Buf.ByteArray.Owned.extract(b).head) == l)
     }
   }
 }
