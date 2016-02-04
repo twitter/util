@@ -6,12 +6,16 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
-6.31.0  2016-02-02
+6.32.0  2016-02-03
 
 New Features:
 
   * util-core: Add `Future.traverseSequentially`. Take a sequence and sequentially apply a function
     A => Future[B] to each item. ``RB_ID=785091``
+
+6.31.0  2016-02-02
+
+NOT RELEASED
 
 6.30.0  2015-12-03
 
