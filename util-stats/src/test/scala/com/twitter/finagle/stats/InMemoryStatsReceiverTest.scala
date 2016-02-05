@@ -45,4 +45,41 @@ class InMemoryStatsReceiverTest extends FunSuite
       assert(inMemoryStatsReceiver.stat("same")().size == 50)
     }
   }
+
+  test("ReadableCounter.toString") {
+    val stats = new InMemoryStatsReceiver()
+    val c = stats.counter("a", "b")
+    assert("Counter(a/b=0)" == c.toString)
+    c.incr()
+    assert("Counter(a/b=1)" == c.toString)
+  }
+
+  test("ReadableGauge.toString") {
+    var n = 0
+    val stats = new InMemoryStatsReceiver()
+    val g = stats.addGauge("a", "b") { n }
+    assert("Gauge(a/b=0.0)" == g.toString)
+
+    n = 11
+    assert("Gauge(a/b=11.0)" == g.toString)
+  }
+
+  test("ReadableStat.toString") {
+    val stats = new InMemoryStatsReceiver()
+    val s = stats.stat("a", "b")
+    assert("Stat(a/b=[])" == s.toString)
+
+    s.add(1)
+    assert("Stat(a/b=[1.0])" == s.toString)
+
+    s.add(2)
+    s.add(3)
+    assert("Stat(a/b=[1.0,2.0,3.0])" == s.toString)
+
+    s.add(4)
+    assert("Stat(a/b=[1.0,2.0,3.0... (omitted 1 value(s))])" == s.toString)
+  }
+
+
+
 }

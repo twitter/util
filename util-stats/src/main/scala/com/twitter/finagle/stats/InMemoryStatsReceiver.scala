@@ -46,6 +46,9 @@ class InMemoryStatsReceiver extends StatsReceiver {
         counters(name) = oldValue + delta
       }
       def apply(): Int = counters.getOrElse(name, 0)
+
+      override def toString: String =
+        s"Counter(${name.mkString("/")}=${apply()})"
     }
 
   /**
@@ -58,6 +61,17 @@ class InMemoryStatsReceiver extends StatsReceiver {
         stats(name) = oldValue :+ value
       }
       def apply(): Seq[Float] = stats.getOrElse(name, Seq.empty)
+
+      override def toString: String = {
+        val vals = apply()
+        val valStr = if (vals.length <= 3) {
+          vals.mkString("[", ",", "]")
+        } else {
+          val numOmitted = vals.length - 3
+          vals.take(3).mkString("[", ",", s"... (omitted $numOmitted value(s))]")
+        }
+        s"Stat(${name.mkString("/")}=$valStr)"
+      }
     }
 
   /**
@@ -65,8 +79,17 @@ class InMemoryStatsReceiver extends StatsReceiver {
    */
   def addGauge(name: String*)(f: => Float): Gauge = {
     val gauge = new Gauge {
-      def remove() {
+      def remove(): Unit = {
         gauges -= name
+      }
+
+      override def toString: String = {
+        // avoid holding a reference to `f`
+        val current = gauges.get(name) match {
+          case Some(fn) => fn()
+          case None => -0.0f
+        }
+        s"Gauge(${name.mkString("/")}=$current)"
       }
     }
     gauges += name -> (() => f)
