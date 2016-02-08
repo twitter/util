@@ -4,6 +4,7 @@ import com.twitter.conversions.storage._
 import com.twitter.conversions.time._
 import com.twitter.util.Time
 import java.lang.management.ManagementFactory
+import java.util.logging.{Level, Logger}
 import javax.management.openmbean.CompositeDataSupport
 import javax.management.{ObjectName, RuntimeMBeanException}
 import scala.collection.JavaConverters._
@@ -115,6 +116,51 @@ class Hotspot extends Jvm {
       timestamp.getOrElse(Time.epoch),
       heap.getOrElse(Heap(0, 0, Seq())),
       getGc(0, cs).toSeq ++ getGc(1, cs).toSeq)
+  }
+
+  private[this] object NilSafepointBean {
+    def getSafepointSyncTime = 0L
+    def getTotalSafepointTime = 0L
+    def getSafepointCount = 0L
+  }
+
+  private val log = Logger.getLogger(getClass.getName)
+
+  private[this] val safepointBean = {
+    val runtimeBean = 
+      try { 
+        Class.forName("sun.management.ManagementFactory")
+          .getMethod("getHotspotRuntimeMBean")
+          .invoke(null)
+          // jdk 6 has HotspotRuntimeMBean in the ManagementFactory class
+      } catch {
+        case _: Throwable => 
+          Class.forName("sun.management.ManagementFactoryHelper")
+            .getMethod("getHotspotRuntimeMBean")
+            .invoke(null)
+            // jdks 7 and 8 have HotspotRuntimeMBean in the ManagementFactoryHelper class
+      }
+    
+    def asSafepointBean(x: AnyRef) = { x.asInstanceOf[{
+      def getSafepointSyncTime: Long; 
+      def getTotalSafepointTime: Long;
+      def getSafepointCount: Long}]
+    }
+    try {
+      asSafepointBean(runtimeBean)
+    } catch {
+      // Handles possible name changes in new jdk versions
+      case t: Throwable =>
+        log.log(Level.WARNING, "failed to get runtimeBean", t)
+        asSafepointBean(NilSafepointBean)
+    } 
+  }
+
+  def safepoint: Safepoint = {
+    val syncTime = safepointBean.getSafepointSyncTime
+    val totalTime = safepointBean.getTotalSafepointTime
+    val safepointsReached = safepointBean.getSafepointCount
+    Safepoint(syncTimeMillis=syncTime, totalTimeMillis=totalTime, count=safepointsReached)
   }
 
   val edenPool: Pool = new Pool {

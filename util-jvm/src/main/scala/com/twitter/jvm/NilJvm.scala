@@ -19,4 +19,6 @@ object NilJvm extends Jvm {
 
   val metaspaceUsage: Option[Jvm.MetaspaceUsage] = None
 
+  val safepoint: Safepoint = Safepoint(0, 0, 0)
+
 }

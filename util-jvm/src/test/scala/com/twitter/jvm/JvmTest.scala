@@ -36,6 +36,7 @@ class JvmTest extends WordSpec with TestLogging {
         def forceGc() = ()
         def edenPool = NilJvm.edenPool
         def metaspaceUsage = NilJvm.metaspaceUsage
+        def safepoint = NilJvm.safepoint
       }
     }
 
@@ -142,6 +143,18 @@ class JvmTest extends WordSpec with TestLogging {
         jvm.pushGc(gc3)
         r.run()
         assert(query(10.seconds.ago) == Seq(gc3, gc2))
+      }
+    }
+
+    "safepoint" should { 
+      "show an increase in total time spent after a gc" in {
+        val j = Jvm()
+        val preGc = j.safepoint
+        val totalTimePreGc = preGc.totalTimeMillis
+        System.gc()
+        val postGc = j.safepoint
+        val totalTimePostGc = postGc.totalTimeMillis
+        assert(totalTimePostGc > totalTimePreGc)
       }
     }
   }

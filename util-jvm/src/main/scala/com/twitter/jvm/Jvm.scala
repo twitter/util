@@ -8,17 +8,40 @@ import java.util.concurrent.{ConcurrentHashMap, Executors, ScheduledExecutorServ
 import java.util.logging.{Level, Logger}
 import scala.collection.JavaConverters._
 
+/**
+ * Information about the Heap
+ *
+ * @param allocated Estimated number of bytes 
+ * that have been allocated so far (into eden)
+ *
+ * @param tenuringThreshold How many times an Object
+ * needs to be copied before being tenured.
+ *
+ * @param ageHisto Histogram of the number of bytes that
+ * have been copied as many times. Note: 0-indexed.
+ */
 case class Heap(
-  // Estimated number of bytes allocated so far (into eden)
   allocated: Long,
-  // Tenuring threshold: How many times an
-  // object needs to be copied before being
-  // tenured.
   tenuringThreshold: Long,
-  // Histogram of the number of bytes that have
-  // been copied as many times. Note: 0-indexed.
   ageHisto: Seq[Long]
 )
+
+/**
+ * Information about the JVM's safepoint
+ * 
+ * @param syncTimeMillis Cumulative time, in milliseconds, spent 
+ * getting all threads to safepoint states
+ * 
+ * @param totalTimeMillis Cumulative time, in milliseconds, that the 
+ * application has been stopped for safepoint operations
+ * 
+ * @param count The number of safepoints taken place since 
+ * the JVM started
+ */
+case class Safepoint(
+    syncTimeMillis: Long,
+    totalTimeMillis: Long,
+    count: Long)
 
 case class PoolState(
   numCollections: Long,
@@ -106,6 +129,12 @@ trait Jvm {
    * Gets the current usage of the metaspace, if available.
    */
   def metaspaceUsage: Option[Jvm.MetaspaceUsage]
+
+  /**
+   * Gets the time spent at safepoints (totalTimeMillis), the time getting 
+   * to safepoints (syncTimeMillis), and safepoints reached (count).
+   */
+  def safepoint: Safepoint
 
   def executor: ScheduledExecutorService = Jvm.executor
 
