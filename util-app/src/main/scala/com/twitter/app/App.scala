@@ -48,6 +48,14 @@ trait App extends Closable with CloseAwaitably {
   /** Whether or not to accept undefined flags */
   protected def allowUndefinedFlags: Boolean = false
 
+  /**
+   * Users of this code should override this to `true` so that
+   * you fail-fast instead of being surprised at runtime by code that
+   * is reading from flags before they have been parsed.
+   *
+   * Ideally this would default to `true`, however, in order to avoid
+   * breaking existing users, it was introduced using `false`.
+   */
   protected def failfastOnFlagsNotParsed: Boolean = false
 
   protected def exitOnError(reason: String): Unit = {
