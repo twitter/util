@@ -15,20 +15,38 @@ class FutureNonLocalReturnControl(cause: NonLocalReturnControl[_]) extends Excep
 
 /**
  * @see [[Futures]] for Java-friendly APIs.
+ * @see The [[http://twitter.github.io/finagle/guide/Futures.html user guide]]
+ *      on concurrent programming with Futures.
  */
 object Future {
   val DEFAULT_TIMEOUT: Duration = Duration.Top
-  val Unit: Future[Unit] = apply(())
-  val Void: Future[Void] = apply[Void](null: Void)
+
+  /** A successfully satisfied constant `Unit`-typed `Future` of `()` */
+  val Unit: Future[Unit] = const(Return.Unit)
+
+  /** A successfully satisfied constant `Unit`-typed `Future` of `()` */
   val Done: Future[Unit] = Unit
 
+  /**
+   * A successfully satisfied constant `Future` of `Void`-type.
+   * Can be useful for Java programmers.
+   */
+  val Void: Future[Void] = value[Void](null: Void)
+
+  /** A successfully satisfied constant `Future` of `None` */
   val None: Future[Option[Nothing]] = new ConstFuture(Return.None)
+
+  /** A successfully satisfied constant `Future` of `Nil` */
   val Nil: Future[Seq[Nothing]] = new ConstFuture(Return.Nil)
+
+  /** A successfully satisfied constant `Future` of `true` */
   val True: Future[Boolean] = new ConstFuture(Return.True)
+
+  /** A successfully satisfied constant `Future` of `false` */
   val False: Future[Boolean] = new ConstFuture(Return.False)
 
   /**
-   * Analogous to [[Predef.???]]
+   * A failed `Future` analogous to `Predef.???`.
    */
   val ??? : Future[Nothing] = Future.exception(new NotImplementedError("an implementation is missing"))
 
@@ -44,34 +62,47 @@ object Future {
   @inline private final def raiseException = RaiseException
 
   /**
-   * Makes a Future with a constant result.
+   * Creates a satisfied `Future` from a [[Try]].
+   *
+   * @see [[value]] for creation from a constant value.
+   * @see [[apply]] for creation from a `Function`.
+   * @see [[exception]] for creation from a `Throwable`.
    */
   def const[A](result: Try[A]): Future[A] = new ConstFuture[A](result)
 
   /**
-   * Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
+   * Creates a successful satisfied `Future` from the value `a`.
+   *
+   * @see [[const]] for creation from a [[Try]]
+   * @see [[apply]] for creation from a `Function`.
+   * @see [[exception]] for creation from a `Throwable`.
    */
   def value[A](a: A): Future[A] = const[A](Return(a))
 
   /**
-   * Make a Future with an error. E.g., Future.exception(new
-   * Exception("boo")).
+   * Creates a failed satisfied `Future`.
+   *
+   * For example, {{{Future.exception(new Exception("boo"))}}}.
+   *
+   * @see [[apply]] for creation from a `Function`.
    */
   def exception[A](e: Throwable): Future[A] = const[A](Throw(e))
 
   /**
-   * Make a Future with an error. E.g., Future.exception(new
-   * Exception("boo")). The exception is not wrapped in any way.
+   * Creates a failed satisfied `Future`.
+   *
+   * An alias for [[exception]] which should be used instead of this.
    */
+  @deprecated("Use `exception` instead", "2016-02-10")
   def rawException[A](e: Throwable): Future[A] = const[A](Throw(e))
 
   /**
-   * A new future that can never complete.
+   * A `Future` that can never be satisfied.
    */
   val never: Future[Nothing] = new NoFuture
 
   /**
-   * A unit future that completes after `howlong`.
+   * A `Unit`-typed `Future` that is satisfied after `howlong`.
    */
   def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] = {
     if (howlong <= Duration.Zero)
@@ -88,10 +119,14 @@ object Future {
   }
 
   /**
-   * A factory function to "lift" computations into the Future monad.
-   * It will catch nonfatal (see: [[com.twitter.util.NonFatal]])
-   * exceptions and wrap them in the Throw[_] type. Non-exceptional
-   * values are wrapped in the Return[_] type.
+   * Creates a satisfied `Future` from the result of running `a`.
+   *
+   * If the result of `a` is a [[NonFatal non-fatal exception]],
+   * this will result in a failed `Future`. Otherwise, the result
+   * is a successfully satisfied `Future`.
+   *
+   * @note that `a` is executed in the calling thread and as such
+   *       some care must be taken with blocking code.
    */
   def apply[A](a: => A): Future[A] = try {
     const(Try(a))
@@ -158,12 +193,16 @@ object Future {
   def flatten[A](ffa: Future[Future[A]]): Future[A] = ffa.flatten
 
   /**
-   * Take a sequence of Futures, wait till they all complete
-   * successfully.  The future fails immediately if any of the joined
-   * Futures do, mimicking the semantics of exceptions.
+   * Creates a `Future` that is satisfied when all futures in `fs`
+   * are successfully satisfied. If any of the futures in `fs` fail,
+   * the returned `Future` is immediately satisfied by that failure.
    *
    * @param fs a sequence of Futures
-   * @return a Future[Unit] whose value is populated when all of the fs return.
+   *
+   * @see [[Futures.join]] for a Java friendly API.
+   * @see [[collect]] if you want to be able to see the results of each `Future`.
+   * @see [[collectToTry]] if you want to be able to see the results of each
+   *     `Future` regardless of if they succeed or fail.
    */
   def join[A](fs: Seq[Future[A]]): Future[Unit] = {
     if (fs.isEmpty) Unit else {
@@ -331,22 +370,26 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T],u: Future[U],v: Future[V]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t),Await.result(u),Await.result(v)) }
 
   /**
-   * Take a sequence of Futures, wait till they all complete
-   * successfully.  The future fails immediately if any of the joined
-   * Futures do, mimicking the semantics of exceptions.
+   * Creates a `Future` that is satisfied when all futures in `fs`
+   * are successfully satisfied. If any of the futures in `fs` fail,
+   * the returned `Future` is immediately satisfied by that failure.
    *
    * TODO: This method should be deprecated in favour of `Futures.join()`.
    *
    * @param fs a java.util.List of Futures
-   * @return a Future[Unit] whose value is populated when all of the fs return.
+   *
+   * @see [[Futures.join]] for a Java friendly API.
+   * @see [[collect]] if you want to be able to see the results of each `Future`.
+   * @see [[collectToTry]] if you want to be able to see the results of each
+   *     `Future` regardless of if they succeed or fail.
    */
   def join[A](fs: JList[Future[A]]): Future[Unit] = Futures.join(fs)
 
   /**
    * Take a sequence and sequentially apply a function `f` to each item.
-   * Then return all future results `as` a single Future[Seq[_]].
+   * Then return all future results `as` as a single `Future[Seq[_]]`.
    *
-   * If during execution any `f` is satsified `as` a failure ([[Future.exception]])
+   * If during execution any `f` is satsified `as` as a failure ([[Future.exception]])
    * then that failed Future will be returned and the remaining elements of `as`
    * will not be processed.
    *
@@ -366,16 +409,21 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
       for {
         results    <- resultsFuture
         nextResult <- f(nextItem)
-      } yield (results :+ nextResult)
+      } yield results :+ nextResult
     }
 
   /**
    * Collect the results from the given futures into a new future of
-   * Seq[A]. If one or more of the given Futures is exceptional, the resulting
+   * `Seq[A]`. If one or more of the given Futures is exceptional, the resulting
    * Future result will be the first exception encountered.
    *
    * @param fs a sequence of Futures
    * @return a `Future[Seq[A]]` containing the collected values from fs.
+   *
+   * @see [[collectToTry]] if you want to be able to see the results of each
+   *     `Future` regardless of if they succeed or fail.
+   * @see [[join]] if you are not interested in the results of the individual
+   *     `Futures`, only when they are complete.
    */
   def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
     if (fs.isEmpty) {
@@ -436,7 +484,10 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   def collect[A](fs: JList[Future[A]]): Future[JList[A]] = Futures.collect(fs)
 
   /**
-   * Collect the results from the given futures into a new future of Seq[Try[A]].
+   * Collect the results from the given futures into a new future of `Seq[Try[A]]`.
+   *
+   * The returned `Future` is satisfied when all of the given `Futures`
+   * have been satisfied.
    *
    * @param fs a sequence of Futures
    * @return a `Future[Seq[Try[A]]]` containing the collected values from fs.
@@ -458,7 +509,9 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * "Select" off the first future to be satisfied.  Return this as a
    * result, with the remainder of the Futures as a sequence.
    *
-   * @param fs a scala.collection.Seq
+   * @param fs the futures to select from. Must not be empty.
+   *
+   * @see [[selectIndex]] which can be more performant in some situations.
    */
   def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] =
     if (fs.isEmpty) {
@@ -479,6 +532,8 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * Select the index into `fs` of the first future to be satisfied.
    *
    * @param fs cannot be empty
+   *
+   * @see [[select]] which can be an easier API to use.
    */
   def selectIndex[A](fs: IndexedSeq[Future[A]]): Future[Int] =
     if (fs.isEmpty) {
@@ -618,18 +673,24 @@ class FutureCancelledException
   extends Exception("The future was cancelled with Future.cancel")
 
 /**
- * An alternative interface for handling Future Events. This
- * interface is designed to be friendly to Java users since it does
- * not require creating many small Function objects.
+ * A Java friendly API for handling side-effects for a `Future`.
+ *
+ * If you want a Java API to
+ * [[http://twitter.github.io/finagle/guide/Futures.html#sequential-composition sequence]]
+ * the work you can use a [[FutureTransformer]].
+ *
+ * @see [[Future.respond]] which is the equivalent Scala API for further details.
+ * @see [[Future.addEventListener]] for using it with a `Future`.
+ * @see [[FutureTransformer]] for a Java API for transforming the results of Futures.
  */
 trait FutureEventListener[T] {
   /**
-   * Invoked if the computation completes successfully
+   * A side-effect which is invoked if the computation completes successfully.
    */
   def onSuccess(value: T): Unit
 
   /**
-   * Invoked if the computation completes unsuccessfully
+   * A side-effect which is invoked if the computation completes unsuccessfully.
    */
   def onFailure(cause: Throwable): Unit
 }
@@ -649,6 +710,10 @@ trait FutureEventListener[T] {
  * '''Note:''' an exception e thrown in any of
  * map/flatMap/handle/rescue will make the result of transformedBy be
  * equivalent to Future.exception(e).
+ *
+ * @see [[Future.transform]] which is the equivalent Scala API for further details.
+ * @see [[Future.transformedBy]] for using it with a `Future`.
+ * @see [[FutureEventListener]] for a Java API for side-effects.
  */
 abstract class FutureTransformer[-A, +B] {
   /**
@@ -679,13 +744,23 @@ abstract class FutureTransformer[-A, +B] {
 }
 
 /**
- * A computation evaluated asynchronously. This implementation of
- * Future does not assume any concrete implementation; in particular,
- * it does not couple the user to a specific executor or event loop.
+ * Represents an asynchronous value.
  *
- * Futures are also [[com.twitter.util.Cancellable]], but with
- * special semantics: the cancellation signal is only guaranteed to
- * be delivered when the promise has not yet completed.
+ * See the [[http://twitter.github.io/finagle/guide/Futures.html user guide]]
+ * on concurrent programming with `Futures` to better understand how they
+ * work and can be used.
+ *
+ * A `Future[T]` can be in one of three states:
+ *  - Pending, the computation has not yet completed
+ *  - Satisfied successfully, with a result of type `T` (a [[Return]])
+ *  - Satisfied by a failure, with a `Throwable` result (a [[Throw]])
+ *
+ * This definition of `Future` does not assume any concrete implementation;
+ * in particular, it does not couple the user to a specific executor or event loop.
+ *
+ * @see The [[http://twitter.github.io/finagle/guide/Futures.html user guide]]
+ *      on concurrent programming with Futures.
+ * @see [[Futures]] for Java-friendly APIs.
  */
 abstract class Future[+A] extends Awaitable[A] {
   import Future.DEFAULT_TIMEOUT
@@ -711,6 +786,7 @@ abstract class Future[+A] extends Awaitable[A] {
    *     the computation.
    * @see [[ensure]] if you are not interested in the result of
    *     the computation.
+   * @see [[addEventListener]] for a Java friendly API.
    */
   def respond(k: Try[A] => Unit): Future[A]
 
@@ -744,7 +820,7 @@ abstract class Future[+A] extends Awaitable[A] {
   def apply(timeout: Duration): A = get(timeout)()
 
   /**
-   * Alias for [[apply()]].
+   * Alias for [[Future!.apply() apply()]].
    */
   @deprecated("Use Await.result", "6.2.x")
   def get(): A = Await.result(this, DEFAULT_TIMEOUT)
@@ -801,7 +877,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * of the future's value that the result is no longer desired (for
    * whatever reason given in the passed Throwable).
    */
-  def raise(interrupt: Throwable)
+  def raise(interrupt: Throwable): Unit
 
   @deprecated("Provided for API compatibility; use raise() instead.", "6.0.0")
   def cancel() { raise(new FutureCancelledException) }
@@ -903,6 +979,7 @@ abstract class Future[+A] extends Awaitable[A] {
    *     computations.
    * @see [[handle]] and [[rescue]] for dealing strictly with exceptional
    *     computations.
+   * @see [[transformedBy]] for a Java friendly API.
    */
   def transform[B](f: Try[A] => Future[B]): Future[B]
 
@@ -1021,48 +1098,34 @@ abstract class Future[+A] extends Awaitable[A] {
     }
 
   /**
-   * Register a FutureEventListener to be invoked when the
+   * Register a [[FutureEventListener]] to be invoked when the
    * computation completes. This method is typically used by Java
    * programs because it avoids the use of small Function objects.
    *
-   * Compare this method to `transformedBy`. The difference is that
-   * `addEventListener` is used to perform a simple action when a
-   * computation completes, such as recording data in a log-file. It
-   * analogous to a `void` method in Java: it has side-effects and no
-   * return value. `transformedBy`, on the other hand, is used to
-   * transform values from one type to another, or to chain a series
-   * of asynchronous calls and return the result. It is analogous to
-   * methods in Java that have a return-type. Note that
-   * `transformedBy` and `addEventListener` are not mutually
-   * exclusive and may be profitably combined.
+   * @note this should be used for side-effects
+   *
+   * @see [[respond]] for a Scala API.
+   * @see [[transformedBy]] for a Java friendly way to produce
+   *     a new `Future` from the result of a computation.
    */
-  def addEventListener(listener: FutureEventListener[_ >: A]): Future[A] = respond({
+  def addEventListener(listener: FutureEventListener[_ >: A]): Future[A] = respond {
     case Throw(cause)  => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
-  })
+  }
 
   /**
-   * Transform the Future[A] into a Future[B] using the
-   * FutureTransformer. The FutureTransformer handles both success
-   * (Return) and failure (Throw) values by implementing map/flatMap
-   * and handle/rescue. This method is typically used by Java
+   * Transform the `Future[A]` into a `Future[B]` using the
+   * [[FutureTransformer]]. The [[FutureTransformer]] handles both success
+   * ([[Return]]) and failure ([[Throw]]) values by implementing `map`/`flatMap`
+   * and `handle`/`rescue`. This method is typically used by Java
    * programs because it avoids the use of small Function objects.
    *
-   * Compare this method to `addEventListener`. The difference is
-   * that `addEventListener` is used to perform a simple action when
-   * a computation completes, such as recording data in a log-file.
-   * It analogous to a `void` method in Java: it has side-effects and
-   * no return value. `transformedBy`, on the other hand, is used to
-   * transform values from one type to another, or to chain a series
-   * of asynchronous calls and return the result. It is analogous to
-   * methods in Java that have a return-type. Note that
-   * `transformedBy` and `addEventListener` are not mutually
-   * exclusive and may be profitably combined.
-   *
-   * ''Note'': The FutureTransformer must implement either `flatMap`
+   * @note The [[FutureTransformer]] must implement either `flatMap`
    * or `map` and may optionally implement `handle`. Failing to
-   * implement a method will result in a run-time (AbstractMethod)
-   * error.
+   * implement a method will result in a run-time error (`AbstractMethodError`).
+   *
+   * @see [[transform]] for a Scala API.
+   * @see [[addEventListener]] for a Java friendly way to perform side-effects.
    */
   def transformedBy[B](transformer: FutureTransformer[A, B]): Future[B] =
     transform {
@@ -1102,12 +1165,12 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * A synonym for [[select]]: Choose the first Future to be satisfied.
+   * A synonym for [[select]]: Choose the first `Future` to be satisfied.
    */
   def or[U >: A](other: Future[U]): Future[U] = select(other)
 
   /**
-   * Combines two Futures into one Future of the Tuple of the two results.
+   * Combines two `Futures` into one `Future` of the `Tuple2` of the two results.
    */
   def join[B](other: Future[B]): Future[(A, B)] = {
     val p = Promise.interrupts[(A, B)](this, other)
@@ -1122,12 +1185,16 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * Convert this Future[A] to a Future[Unit] by discarding the result.
+   * Convert this `Future[A]` to a `Future[Unit]` by discarding the result.
+   *
+   * @note failed futures will remain as is.
    */
   def unit: Future[Unit] = flatMap(Future.toUnit)
 
   /**
-   * Convert this Future[A] to a Future[Void] by discarding the result.
+   * Convert this `Future[A]` to a `Future[Void]` by discarding the result.
+   *
+   * @note failed futures will remain as is.
    */
   def voided: Future[Void] = flatMap(Future.toVoid)
 
@@ -1136,7 +1203,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * `other` must not yet be satisfied at the time of the call.
    * After this call, nobody else should satisfy `other`.
    *
-   * Note: using proxyTo will mask interrupts to this future, and it's
+   * @note using `proxyTo` will mask interrupts to this future, and it's
    * the user's responsibility to set an interrupt handler on `other`
    * to raise on f. In some cases, using
    * [[com.twitter.util.Promise.become]] may be more appropriate.
@@ -1152,14 +1219,15 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * An offer for this future.  The offer is activated when the future
-   * is satisfied.
+   * An [[com.twitter.concurrent.Offer Offer]] for this future.
+   *
+   * The offer is activated when the future is satisfied.
    */
   def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
     def prepare() = transform { res: Try[A] =>
       val tx = new Tx[Try[A]] {
-        def ack() = Future.value(Tx.Commit(res))
-        def nack() {}
+        def ack(): Future[Tx.Result[Try[A]]] = Future.value(Tx.Commit(res))
+        def nack(): Unit = ()
       }
 
       Future.value(tx)
@@ -1202,7 +1270,7 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * Converts a Future[Future[B]] into a Future[B]
+   * Converts a `Future[Future[B]]` into a `Future[B]`.
    */
   def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
     flatMap[B] { x => x }
@@ -1225,8 +1293,9 @@ abstract class Future[+A] extends Awaitable[A] {
   def masked: Future[A] = mask(Future.AlwaysMasked)
 
   /**
-   * Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
-   * Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
+   * Returns a `Future[Boolean]` indicating whether two Futures are equivalent.
+   *
+   * Note that {{{Future.exception(e).willEqual(Future.exception(e)) == Future.value(true)}}}.
    */
   def willEqual[B](that: Future[B]): Future[Boolean] = {
     this.transform { thisResult =>
@@ -1237,12 +1306,12 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * Returns the result of the computation as a Future[Try[A]].
+   * Returns the result of the computation as a `Future[Try[A]]`.
    */
   def liftToTry: Future[Try[A]] = transform(Future.value)
 
   /**
-   * Lowers a Future[Try[T]] into a Future[T].
+   * Lowers a `Future[Try[T]]` into a `Future[T]`.
    */
   def lowerFromTry[T](implicit ev: A <:< Try[T]): Future[T] =
     this.flatMap { a =>
@@ -1253,19 +1322,19 @@ abstract class Future[+A] extends Awaitable[A] {
     }
 
   /**
-   * Makes a derivative Future which will be satisfied with the result
+   * Makes a derivative `Future` which will be satisfied with the result
    * of the parent.  However, if it's interrupted, it will detach from
-   * the parent Future, satisfy itself with the exception raised to
+   * the parent `Future`, satisfy itself with the exception raised to
    * it, and won't propagate the interruption back to the parent
-   * Future.
+   * `Future`.
    *
-   * This is useful for when a Future is shared between many contexts,
+   * This is useful for when a `Future` is shared between many contexts,
    * where it may not be useful to discard the underlying computation
    * if just one context is no longer interested in the result.  In
-   * particular, this is different from Future#masked in that it will
+   * particular, this is different from [[masked Future.masked]] in that it will
    * prevent memory leaks if the parent Future will never be
    * satisfied, because closures that are attached to this derivative
-   * Future will not be held onto by the killer Future.
+   * `Future` will not be held onto by the killer `Future`.
    */
   def interruptible(): Future[A] = {
     val p = Promise.attached(this)
@@ -1278,8 +1347,9 @@ abstract class Future[+A] extends Awaitable[A] {
 }
 
 /**
- * A Future that is already completed. These are cheap in
- * construction compared to Promises.
+ * A `Future` that is already completed.
+ *
+ * These are cheap in construction compared to `Promises`.
  */
 class ConstFuture[A](result: Try[A]) extends Future[A] {
   def respond(k: Try[A] => Unit): Future[A] = {
@@ -1296,7 +1366,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
     this
   }
 
-  def raise(interrupt: Throwable) {}
+  def raise(interrupt: Throwable): Unit = ()
 
   def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]

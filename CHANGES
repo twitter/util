@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Deprecations:
+
+  * util-core: `Future.rawException` is deprecated in favor of `Future.exception`.
+    ``RB_ID=798223``
+
 6.32.0  2016-02-03
 
 New Features:
