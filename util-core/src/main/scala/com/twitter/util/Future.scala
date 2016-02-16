@@ -1337,6 +1337,8 @@ abstract class Future[+A] extends Awaitable[A] {
    * `Future` will not be held onto by the killer `Future`.
    */
   def interruptible(): Future[A] = {
+    if (isDefined) return this
+
     val p = Promise.attached(this)
     p setInterruptHandler { case t: Throwable =>
       if (p.detach())
