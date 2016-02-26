@@ -1,6 +1,6 @@
 package com.twitter.finagle.stats
 
-import com.twitter.util.{Future, Time}
+import com.twitter.util.{Future, Stopwatch, NonFatal}
 import java.util.concurrent.{Callable, TimeUnit}
 
 /**
@@ -20,10 +20,12 @@ object Stat {
    * Time a given `f` using the given `unit`.
    */
   def time[A](stat: Stat, unit: TimeUnit)(f: => A): A = {
-    val start = Time.now
-    val result = f
-    stat.add((Time.now - start).inUnit(unit))
-    result
+    val elapsed = Stopwatch.start()
+    try {
+      f
+    } finally {
+      stat.add(elapsed().inUnit(unit))
+    }
   }
 
   /**
@@ -35,9 +37,13 @@ object Stat {
    * Time a given asynchronous `f` using the given `unit`.
    */
   def timeFuture[A](stat: Stat, unit: TimeUnit)(f: => Future[A]): Future[A] = {
-    val start = Time.now
-    f ensure {
-      stat.add((Time.now - start).inUnit(unit))
+    val elapsed = Stopwatch.start()
+    try {
+      f.ensure { stat.add(elapsed().inUnit(unit)) }
+    } catch {
+      case NonFatal(e) =>
+        stat.add(elapsed().inUnit(unit))
+        Future.exception(e)
     }
   }
 
