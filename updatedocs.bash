@@ -5,7 +5,7 @@ set -e
 dir=/tmp/util.$$
 trap "rm -fr $dir" 0 1 2
 
-unidoc=target/scala-2.10/unidoc/
+unidoc=target/scala-2.11/unidoc/
 rm -fr "$unidoc"
 
 echo 'making unidoc...' 1>&2
