@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Activity - com.twitter.util.Activity</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="Activity.html" title="Go to companion"><img src="../../../lib/object_to_class_big.png" /></a>
+        <a href="Activity.html" title="See companion class"><img alt="Object/Class" src="../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Activity.html" title="Go to companion">Activity</a></h1>
+        <h1><a href="Activity.html" title="See companion class">Activity</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Activity.html" title="See companion class">class Activity</a>
+            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,14 +47,14 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Activity</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <span class="name">Activity</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Activities.html" class="extype" name="com.twitter.util.Activities">com.twitter.util.Activities</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -68,7 +80,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -91,10 +102,14 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Activity$$Failed.html"><span class="name">Failed</span></a><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result"> extends <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Nothing" class="extype" target="_top">Nothing</a>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Activity$$Failed.html"><span class="name">Failed</span></a><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result"> extends <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="scala.Nothing">Nothing</span>] with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">The activity has failed, with exception <code>exc</code>.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@FailedextendsActivity.State[Nothing]withProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The activity has failed, with exception <code>exc</code>.</p>
     </li><li name="com.twitter.util.Activity.Ok" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Ok[T]extendsActivity.State[T]withProductwithSerializable"></a>
       <a id="Ok[T]:Ok[T]"></a>
@@ -104,10 +119,14 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Activity$$Ok.html"><span class="name">Ok</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="t">t: <span class="extype" name="com.twitter.util.Activity.Ok.T">T</span></span>)</span><span class="result"> extends <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.Ok.T">T</span>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Activity$$Ok.html"><span class="name">Ok</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="t">t: <span class="extype" name="com.twitter.util.Activity.Ok.T">T</span></span>)</span><span class="result"> extends <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.Ok.T">T</span>] with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">The activity is running with a current value of <code>t</code>.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@Ok[T]extendsActivity.State[T]withProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The activity is running with a current value of <code>t</code>.</p>
     </li><li name="com.twitter.util.Activity.State" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="State[+T]extendsAnyRef"></a>
       <a id="State[+T]:State[T]"></a>
@@ -119,8 +138,12 @@
       <span class="symbol">
         <a href="Activity$$State.html"><span class="name">State</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An ADT describing the state of an Activity.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@State[+T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An ADT describing the state of an Activity.</p>
     </li></ol>
             </div>
 
@@ -129,19 +152,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -150,10 +160,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -163,24 +177,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -189,10 +194,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Activity.Pending" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Pending"></a>
       <a id="Pending:Pending"></a>
@@ -202,10 +211,31 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Activity$$Pending$.html"><span class="name">Pending</span></a><span class="result"> extends <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Nothing" class="extype" target="_top">Nothing</a>]</span>
+        <a href="Activity$$Pending$.html"><span class="name">Pending</span></a><span class="result"> extends <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">The activity is pending output.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@Pending" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The activity is pending output.</p>
+    </li><li name="com.twitter.util.Activity#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="apply[T](states:com.twitter.util.Event[com.twitter.util.Activity.State[T]]):com.twitter.util.Activity[T]"></a>
+      <a id="apply[T](Event[State[T]]):Activity[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="states">states: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.apply.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.apply.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@apply[T](states:com.twitter.util.Event[com.twitter.util.Activity.State[T]]):com.twitter.util.Activity[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Constructs an Activity from a state Event.</p>
     </li><li name="com.twitter.util.Activity#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply[T]():(com.twitter.util.Activity[T],com.twitter.util.Witness[com.twitter.util.Try[T]])"></a>
       <a id="apply[T]():(Activity[T],Witness[Try[T]])"></a>
@@ -217,7 +247,11 @@
       <span class="symbol">
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">()</span><span class="result">: (<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.apply.T">T</span>], <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Activity.apply.T">T</span>]])</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@apply[T]():(com.twitter.util.Activity[T],com.twitter.util.Witness[com.twitter.util.Try[T]])" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a new pending activity.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new pending activity. The activity's state is updated by
 the given witness.
 </p></div></div>
@@ -232,7 +266,11 @@ the given witness.
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -245,7 +283,11 @@ the given witness.
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -264,7 +306,11 @@ the given witness.
       <span class="symbol">
         <span class="name">collect</span><span class="tparams">[<span name="T">T &lt;: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>]</span><span class="params">(<span name="activities">activities: <span class="extype" name="java.util.List">List</span>[<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@collect[T&lt;:Object](activities:java.util.List[com.twitter.util.Activity[T]]):com.twitter.util.Activity[java.util.List[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">A Java friendly method for <code>Activity.collect()</code>.</p>
     </li><li name="com.twitter.util.Activity#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collect[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]"></a>
@@ -277,7 +323,11 @@ the given witness.
       <span class="symbol">
         <span class="name">collect</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="activities">activities: &lt;error&gt;</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[&lt;error&gt;]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@collect[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">[use case] Collect a collection of activities into an activity of a collection
 of values.</p><div class="fullcomment">[use case] <div class="comment cmt"><p>Collect a collection of activities into an activity of a collection
 of values.</p></div><dl class="attributes block"> <div class="full-signature-block toggleContainer">
@@ -288,7 +338,7 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">collect</span><span class="tparams">[<span name="T">T</span>, <span name="CC">CC<span class="tparams">[<span name="X">X</span>]</span> &lt;: <a href="../../../scala/package.html#Traversable[+A]=Traversable[A]" class="extmbr" name="scala.Traversable">Traversable</a>[<span class="extype" name="com.twitter.util.Activity.collect.CC.X">X</span>]</span>]</span><span class="params">(<span name="acts">acts: <span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]</span>, <span name="newBuilder">newBuilder: <span class="extype" name="scala.collection.generic.CanBuild">CanBuild</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>, <span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>
+        <span class="name">collect</span><span class="tparams">[<span name="T">T</span>, <span name="CC">CC<span class="tparams">[<span name="X">X</span>]</span> &lt;: <a href="../../../scala/package.html#Traversable[+A]=Traversable[A]" class="extmbr" name="scala.Traversable">Traversable</a>[<span class="extype" name="com.twitter.util.Activity.collect.CC.X">X</span>]</span>]</span><span class="params">(<span name="acts">acts: <span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]</span>, <span name="newBuilder">newBuilder: <span class="extype" name="scala.collection.generic.CanBuild">CanBuild</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>, <span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>
       </span>
       </h4></div>
           </div></dl></div>
@@ -301,9 +351,13 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -314,9 +368,13 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Activity#exception" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="exception(exc:Throwable):com.twitter.util.Activity[Nothing]"></a>
@@ -327,9 +385,13 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">exception</span><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Nothing" class="extype" target="_top">Nothing</a>]</span>
+        <span class="name">exception</span><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@exception(exc:Throwable):com.twitter.util.Activity[Nothing]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a new static activity with exception <code>exc</code>.</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -340,9 +402,13 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -361,7 +427,11 @@ of values.</p></div><dl class="attributes block"> <div class="full-signature-blo
       <span class="symbol">
         <span class="name">future</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Activity.future.T">T</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.future.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@future[T](f:com.twitter.util.Future[T]):com.twitter.util.Activity[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create an activity backed by a <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Create an activity backed by a <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>.</p><p>The resultant <code>Activity</code> is pending until the original <code>Future</code> is
 satisfied. <code>Future</code> success or failure corresponds to the expected
 <code>Activity.Ok</code> or <code>Activity.Failed</code> result.</p><p>Closure of observations of the <code>run</code> <code>Var</code> of the resultant <code>Activity</code> is
@@ -380,7 +450,11 @@ cancellation of the original <code>Future</code>.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -391,9 +465,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -404,10 +482,434 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S],t:com.twitter.util.Activity[T],u:com.twitter.util.Activity[U],v:com.twitter.util.Activity[V]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P],Activity[Q],Activity[R],Activity[S],Activity[T],Activity[U],Activity[V]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>, <span name="T">T</span>, <span name="U">U</span>, <span name="V">V</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>, <span name="q">q: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>]</span>, <span name="r">r: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.R">R</span>]</span>, <span name="s">s: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.S">S</span>]</span>, <span name="t">t: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.T">T</span>]</span>, <span name="u">u: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.U">U</span>]</span>, <span name="v">v: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.V">V</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>, <span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Activity.join.R">R</span>, <span class="extype" name="com.twitter.util.Activity.join.S">S</span>, <span class="extype" name="com.twitter.util.Activity.join.T">T</span>, <span class="extype" name="com.twitter.util.Activity.join.U">U</span>, <span class="extype" name="com.twitter.util.Activity.join.V">V</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S],t:com.twitter.util.Activity[T],u:com.twitter.util.Activity[U],v:com.twitter.util.Activity[V]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 22 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 22 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S],t:com.twitter.util.Activity[T],u:com.twitter.util.Activity[U]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P],Activity[Q],Activity[R],Activity[S],Activity[T],Activity[U]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>, <span name="T">T</span>, <span name="U">U</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>, <span name="q">q: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>]</span>, <span name="r">r: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.R">R</span>]</span>, <span name="s">s: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.S">S</span>]</span>, <span name="t">t: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.T">T</span>]</span>, <span name="u">u: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.U">U</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>, <span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Activity.join.R">R</span>, <span class="extype" name="com.twitter.util.Activity.join.S">S</span>, <span class="extype" name="com.twitter.util.Activity.join.T">T</span>, <span class="extype" name="com.twitter.util.Activity.join.U">U</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S],t:com.twitter.util.Activity[T],u:com.twitter.util.Activity[U]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 21 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 21 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S],t:com.twitter.util.Activity[T]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P],Activity[Q],Activity[R],Activity[S],Activity[T]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>, <span name="T">T</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>, <span name="q">q: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>]</span>, <span name="r">r: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.R">R</span>]</span>, <span name="s">s: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.S">S</span>]</span>, <span name="t">t: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.T">T</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>, <span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Activity.join.R">R</span>, <span class="extype" name="com.twitter.util.Activity.join.S">S</span>, <span class="extype" name="com.twitter.util.Activity.join.T">T</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S],t:com.twitter.util.Activity[T]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 20 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 20 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P],Activity[Q],Activity[R],Activity[S]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>, <span name="q">q: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>]</span>, <span name="r">r: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.R">R</span>]</span>, <span name="s">s: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.S">S</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>, <span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Activity.join.R">R</span>, <span class="extype" name="com.twitter.util.Activity.join.S">S</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R],s:com.twitter.util.Activity[S]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 19 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 19 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P],Activity[Q],Activity[R]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>, <span name="q">q: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>]</span>, <span name="r">r: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.R">R</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>, <span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Activity.join.R">R</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q],r:com.twitter.util.Activity[R]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 18 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 18 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P],Activity[Q]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>, <span name="q">q: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>, <span class="extype" name="com.twitter.util.Activity.join.Q">Q</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P],q:com.twitter.util.Activity[Q]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 17 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 17 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O],Activity[P]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>, <span name="p">p: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.P">P</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>, <span class="extype" name="com.twitter.util.Activity.join.P">P</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O],p:com.twitter.util.Activity[P]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 16 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 16 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N],Activity[O]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>, <span name="o">o: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.O">O</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>, <span class="extype" name="com.twitter.util.Activity.join.O">O</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N],o:com.twitter.util.Activity[O]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 15 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 15 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M],Activity[N]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>, <span name="n">n: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.N">N</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>, <span class="extype" name="com.twitter.util.Activity.join.N">N</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M],n:com.twitter.util.Activity[N]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 14 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 14 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L],Activity[M]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>, <span name="m">m: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.M">M</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>, <span class="extype" name="com.twitter.util.Activity.join.M">M</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L,M](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L],m:com.twitter.util.Activity[M]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L,M)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 13 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 13 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K,L](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K],Activity[L]):Activity[(A,B,C,D,E,F,G,H,I,J,K,L)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>, <span name="l">l: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.L">L</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>, <span class="extype" name="com.twitter.util.Activity.join.L">L</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K,L](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K],l:com.twitter.util.Activity[L]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K,L)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 12 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 12 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J,K](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J],Activity[K]):Activity[(A,B,C,D,E,F,G,H,I,J,K)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>, <span name="k">k: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.K">K</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>, <span class="extype" name="com.twitter.util.Activity.join.K">K</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J,K](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J],k:com.twitter.util.Activity[K]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J,K)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 11 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 11 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I,J](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I,J](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I],Activity[J]):Activity[(A,B,C,D,E,F,G,H,I,J)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>, <span name="j">j: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.J">J</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>, <span class="extype" name="com.twitter.util.Activity.join.J">J</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I,J](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I],j:com.twitter.util.Activity[J]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I,J)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 10 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 10 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H,I](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H,I](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H],Activity[I]):Activity[(A,B,C,D,E,F,G,H,I)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>, <span name="i">i: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.I">I</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>, <span class="extype" name="com.twitter.util.Activity.join.I">I</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H,I](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H],i:com.twitter.util.Activity[I]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H,I)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 9 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 9 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G,H](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H)]"></a>
+      <a id="join[A,B,C,D,E,F,G,H](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G],Activity[H]):Activity[(A,B,C,D,E,F,G,H)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>, <span name="h">h: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.H">H</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>, <span class="extype" name="com.twitter.util.Activity.join.H">H</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G,H](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G],h:com.twitter.util.Activity[H]):com.twitter.util.Activity[(A,B,C,D,E,F,G,H)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 8 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 8 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F,G](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G]):com.twitter.util.Activity[(A,B,C,D,E,F,G)]"></a>
+      <a id="join[A,B,C,D,E,F,G](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F],Activity[G]):Activity[(A,B,C,D,E,F,G)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>, <span name="g">g: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.G">G</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>, <span class="extype" name="com.twitter.util.Activity.join.G">G</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F,G](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F],g:com.twitter.util.Activity[G]):com.twitter.util.Activity[(A,B,C,D,E,F,G)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 7 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 7 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E,F](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F]):com.twitter.util.Activity[(A,B,C,D,E,F)]"></a>
+      <a id="join[A,B,C,D,E,F](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E],Activity[F]):Activity[(A,B,C,D,E,F)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>, <span name="f">f: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.F">F</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>, <span class="extype" name="com.twitter.util.Activity.join.F">F</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E,F](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E],f:com.twitter.util.Activity[F]):com.twitter.util.Activity[(A,B,C,D,E,F)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 6 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 6 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D,E](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E]):com.twitter.util.Activity[(A,B,C,D,E)]"></a>
+      <a id="join[A,B,C,D,E](Activity[A],Activity[B],Activity[C],Activity[D],Activity[E]):Activity[(A,B,C,D,E)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>, <span name="e">e: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.E">E</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>, <span class="extype" name="com.twitter.util.Activity.join.E">E</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D,E](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D],e:com.twitter.util.Activity[E]):com.twitter.util.Activity[(A,B,C,D,E)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 5 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 5 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C,D](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D]):com.twitter.util.Activity[(A,B,C,D)]"></a>
+      <a id="join[A,B,C,D](Activity[A],Activity[B],Activity[C],Activity[D]):Activity[(A,B,C,D)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>, <span name="d">d: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.D">D</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>, <span class="extype" name="com.twitter.util.Activity.join.D">D</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C,D](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C],d:com.twitter.util.Activity[D]):com.twitter.util.Activity[(A,B,C,D)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 4 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 4 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B,C](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C]):com.twitter.util.Activity[(A,B,C)]"></a>
+      <a id="join[A,B,C](Activity[A],Activity[B],Activity[C]):Activity[(A,B,C)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>, <span name="c">c: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.C">C</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>, <span class="extype" name="com.twitter.util.Activity.join.C">C</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B,C](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B],c:com.twitter.util.Activity[C]):com.twitter.util.Activity[(A,B,C)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 3 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 3 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
+    </li><li name="com.twitter.util.Activity#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="join[A,B](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B]):com.twitter.util.Activity[(A,B)]"></a>
+      <a id="join[A,B](Activity[A],Activity[B]):Activity[(A,B)]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span name="a">a: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.A">A</span>]</span>, <span name="b">b: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.join.B">B</span>]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[(<span class="extype" name="com.twitter.util.Activity.join.A">A</span>, <span class="extype" name="com.twitter.util.Activity.join.B">B</span>)]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@join[A,B](a:com.twitter.util.Activity[A],b:com.twitter.util.Activity[B]):com.twitter.util.Activity[(A,B)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Join 2 Activities.</p><div class="fullcomment"><div class="comment cmt"><p>Join 2 Activities. The returned Activity is complete when all
+underlying Activities are nonpending. It fails immediately if any of them
+do.
+</p></div></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -417,9 +919,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -430,9 +936,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -443,9 +953,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Activity#pending" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="pending:com.twitter.util.Activity[Nothing]"></a>
@@ -456,9 +970,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">pending</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Nothing" class="extype" target="_top">Nothing</a>]</span>
+        <span class="name">pending</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@pending:com.twitter.util.Activity[Nothing]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">A static Activity that is pending.</p>
     </li><li name="com.twitter.util.Activity#sample" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="sample[T](act:com.twitter.util.Activity[T]):T"></a>
@@ -471,7 +989,11 @@ cancellation of the original <code>Future</code>.
       <span class="symbol">
         <span class="name">sample</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="act">act: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.sample.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Activity.sample.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@sample[T](act:com.twitter.util.Activity[T]):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Sample given <code>Activity</code>.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -484,7 +1006,11 @@ cancellation of the original <code>Future</code>.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -497,7 +1023,11 @@ cancellation of the original <code>Future</code>.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Activity#value" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="value[T](v:T):com.twitter.util.Activity[T]"></a>
@@ -510,7 +1040,11 @@ cancellation of the original <code>Future</code>.
       <span class="symbol">
         <span class="name">value</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="v">v: <span class="extype" name="com.twitter.util.Activity.value.T">T</span></span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.value.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@value[T](v:T):com.twitter.util.Activity[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a new static activity with value <code>v</code>.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -521,9 +1055,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -540,9 +1078,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -559,9 +1101,13 @@ cancellation of the original <code>Future</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -579,13 +1125,13 @@ cancellation of the original <code>Future</code>.
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -602,6 +1148,7 @@ cancellation of the original <code>Future</code>.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

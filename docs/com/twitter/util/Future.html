@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Future - com.twitter.util.Future</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Future$.html" title="Go to companion"><img src="../../../lib/class_to_object_big.png" /></a>
+        <a href="Future$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Future$.html" title="Go to companion">Future</a></h1>
+        <h1><a href="Future$.html" title="See companion object">Future</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Future$.html" title="See companion object">object Future</a>
+            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -46,11 +58,11 @@ special semantics: the cancellation signal is only guaranteed to
 be delivered when the promise has not yet completed.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="../zk/AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>, <a href="../zk/ChildrenCallbackPromise.html" class="extype" name="com.twitter.zk.ChildrenCallbackPromise">ChildrenCallbackPromise</a>, <a href="ConstFuture.html" class="extype" name="com.twitter.util.ConstFuture">ConstFuture</a>, <a href="../zk/DataCallbackPromise.html" class="extype" name="com.twitter.zk.DataCallbackPromise">DataCallbackPromise</a>, <a href="../zk/EventPromise.html" class="extype" name="com.twitter.zk.EventPromise">EventPromise</a>, <a href="../zk/ExistsCallbackPromise.html" class="extype" name="com.twitter.zk.ExistsCallbackPromise">ExistsCallbackPromise</a>, <a href="FutureTask.html" class="extype" name="com.twitter.util.FutureTask">FutureTask</a>, <a href="NoFuture.html" class="extype" name="com.twitter.util.NoFuture">NoFuture</a>, <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>, <a href="../zk/StringCallbackPromise.html" class="extype" name="com.twitter.zk.StringCallbackPromise">StringCallbackPromise</a>, <a href="../zk/UnitCallbackPromise.html" class="extype" name="com.twitter.zk.UnitCallbackPromise">UnitCallbackPromise</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="../zk/AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>, <a href="../zk/ChildrenCallbackPromise.html" class="extype" name="com.twitter.zk.ChildrenCallbackPromise">ChildrenCallbackPromise</a>, <a href="ConstFuture.html" class="extype" name="com.twitter.util.ConstFuture">ConstFuture</a>, <a href="../zk/DataCallbackPromise.html" class="extype" name="com.twitter.zk.DataCallbackPromise">DataCallbackPromise</a>, <a href="../zk/EventPromise.html" class="extype" name="com.twitter.zk.EventPromise">EventPromise</a>, <a href="../zk/ExistsCallbackPromise.html" class="extype" name="com.twitter.zk.ExistsCallbackPromise">ExistsCallbackPromise</a>, <a href="FutureTask.html" class="extype" name="com.twitter.util.FutureTask">FutureTask</a>, <a href="NoFuture.html" class="extype" name="com.twitter.util.NoFuture">NoFuture</a>, <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>, <a href="../zk/StringCallbackPromise.html" class="extype" name="com.twitter.zk.StringCallbackPromise">StringCallbackPromise</a>, <a href="../zk/UnitCallbackPromise.html" class="extype" name="com.twitter.zk.UnitCallbackPromise">UnitCallbackPromise</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -75,7 +87,6 @@ be delivered when the promise has not yet completed.
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -98,7 +109,11 @@ be delivered when the promise has not yet completed.
       <span class="symbol">
         <span class="name">Future</span><span class="params">()</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@&lt;init&gt;():com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -116,9 +131,13 @@ be delivered when the promise has not yet completed.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@isReady(implicitpermit:com.twitter.util.Awaitable.CanAwait):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Is this Awaitable ready? In other words: would calling
 <a href="Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
 </p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
@@ -133,9 +152,13 @@ be delivered when the promise has not yet completed.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">poll</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]]</span>
+        <span class="name">poll</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@poll:Option[com.twitter.util.Try[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Polls for an available result.</p><div class="fullcomment"><div class="comment cmt"><p>Polls for an available result.  If the Future has been
 satisfied, returns Some(result), otherwise None.
 </p></div></div>
@@ -148,9 +171,13 @@ satisfied, returns Some(result), otherwise None.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">raise</span><span class="params">(<span name="interrupt">interrupt: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">raise</span><span class="params">(<span name="interrupt">interrupt: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@raise(interrupt:Throwable):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Raise the given throwable as an interrupt.</p><div class="fullcomment"><div class="comment cmt"><p>Raise the given throwable as an interrupt. Interrupts are
 one-shot and latest-interrupt wins. That is, the last interrupt
 to have been raised is delivered exactly once to the Promise
@@ -171,7 +198,11 @@ whatever reason given in the passed Throwable).
       <span class="symbol">
         <span class="name">ready</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>.this.type</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Support for <code>Await.ready</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.ready</code>. The use of the implicit permit is an
 access control mechanism: only <code>Await.ready</code> may call this
 method.
@@ -196,9 +227,13 @@ method.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">respond</span><span class="params">(<span name="k">k: (<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">respond</span><span class="params">(<span name="k">k: (<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">When the computation completes, invoke the given callback
 function.</p><div class="fullcomment"><div class="comment cmt"><p>When the computation completes, invoke the given callback
 function.</p><p>The returned <code>Future</code> will be satisfied when this,
@@ -207,10 +242,8 @@ libraries). Otherwise, it is a best practice to use one of the
 alternatives (<a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onSuccess">onSuccess</a>, <a href="#onFailure(fn:Throwable=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onFailure">onFailure</a>, etc.).
 </p></div><dl class="paramcmts block"><dt class="param">k</dt><dd class="cmt"><p>the side-effect to apply when the computation completes.
          The value of the input to <code>k</code> will be the result of the
-         computation to this future.</p></dd><dt>returns</dt><dd class="cmt"><p>a chained Future[A]</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this should be used for side-effects.
-</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#ensure(f:=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#ensure">ensure</a> if you are not interested in the result of
-    the computation.
-</p></span><span class="cmt"><p><a href="#transform[B](f:com.twitter.util.Try[A]=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#transform">transform</a> to produce a new <code>Future</code> from the result of
+         computation to this future.</p></dd><dt>returns</dt><dd class="cmt"><p>a chained Future[A]</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this should be used for side-effects.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#ensure(f:=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#ensure">ensure</a> if you are not interested in the result of
+    the computation.</p></span><span class="cmt"><p><a href="#transform[B](f:com.twitter.util.Try[A]=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#transform">transform</a> to produce a new <code>Future</code> from the result of
     the computation.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Awaitable#result" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):T"></a>
@@ -223,7 +256,11 @@ alternatives (<a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" clas
       <span class="symbol">
         <span class="name">result</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Future.A">A</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Support for <code>Await.result</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.result</code>. The use of the implicit permit is an
 access control mechanism: only <code>Await.result</code> may call this
 method.
@@ -245,14 +282,17 @@ method.
       <span class="symbol">
         <span class="name">transform</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]) ⇒ <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.transform.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.transform.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@transform[B](f:com.twitter.util.Try[A]=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">When this future completes, run <code>f</code> on that completed result
 whether or not this computation was successful.</p><div class="fullcomment"><div class="comment cmt"><p>When this future completes, run <code>f</code> on that completed result
 whether or not this computation was successful.</p><p>The returned <code>Future</code> will be satisfied when this,
 the original future, and <code>f</code> are done.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#handle">handle</a> and <a href="#rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#rescue">rescue</a> for dealing strictly with exceptional
-    computations.
-</p></span><span class="cmt"><p><a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> and <a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for dealing strictly with successful
+    computations.</p></span><span class="cmt"><p><a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> and <a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for dealing strictly with successful
     computations.</p></span><span class="cmt"><p><a href="#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">respond</a> for purely side-effecting callbacks.</p></span></dd></dl></div>
     </li></ol>
             </div>
@@ -260,19 +300,6 @@ the original future, and <code>f</code> are done.
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -281,10 +308,14 @@ the original future, and <code>f</code> are done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -294,24 +325,15 @@ the original future, and <code>f</code> are done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -320,10 +342,14 @@ the original future, and <code>f</code> are done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#addEventListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addEventListener(listener:com.twitter.util.FutureEventListener[_&gt;:A]):com.twitter.util.Future[A]"></a>
       <a id="addEventListener(FutureEventListener[_&gt;:A]):Future[A]"></a>
@@ -335,7 +361,11 @@ the original future, and <code>f</code> are done.
       <span class="symbol">
         <span class="name">addEventListener</span><span class="params">(<span name="listener">listener: <a href="FutureEventListener.html" class="extype" name="com.twitter.util.FutureEventListener">FutureEventListener</a>[_ &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@addEventListener(listener:com.twitter.util.FutureEventListener[_&gt;:A]):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Register a FutureEventListener to be invoked when the
 computation completes.</p><div class="fullcomment"><div class="comment cmt"><p>Register a FutureEventListener to be invoked when the
 computation completes. This method is typically used by Java
@@ -361,7 +391,11 @@ exclusive and may be profitably combined.
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#before" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="before[B](f:=&gt;com.twitter.util.Future[B])(implicitev:&lt;:&lt;[Future.this.type,com.twitter.util.Future[Unit]]):com.twitter.util.Future[B]"></a>
@@ -372,9 +406,13 @@ exclusive and may be profitably combined.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">before</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: ⇒ <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.before.B">B</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="" class="extype" name="com.twitter.util.Future">Future</a>.this.type, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.before.B">B</span>]</span>
+        <span class="name">before</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: ⇒ <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.before.B">B</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="" class="extype" name="com.twitter.util.Future">Future</a>.this.type, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.before.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@before[B](f:=&gt;com.twitter.util.Future[B])(implicitev:&lt;:&lt;[Future.this.type,com.twitter.util.Future[Unit]]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Sequentially compose <code>this</code> with <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Sequentially compose <code>this</code> with <code>f</code>. This is as <a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a>, but
 discards the result of <code>this</code>. Note that this applies only
 <code>Unit</code>-valued  Futures — i.e. side-effects.
@@ -390,7 +428,11 @@ discards the result of <code>this</code>. Note that this applies only
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -409,7 +451,11 @@ discards the result of <code>this</code>. Note that this applies only
       <span class="symbol">
         <span class="name">delayed</span><span class="params">(<span name="howlong">howlong: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@delayed(howlong:com.twitter.util.Duration)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Delay the completion of this Future for at least
 <code>howlong</code> from now.</p>
     </li><li name="com.twitter.util.Future#ensure" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -421,17 +467,19 @@ discards the result of <code>this</code>. Note that this applies only
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ensure</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">ensure</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@ensure(f:=&gt;Unit):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Invoked regardless of whether the computation completed successfully or unsuccessfully.</p><div class="fullcomment"><div class="comment cmt"><p>Invoked regardless of whether the computation completed successfully or unsuccessfully.
 Implemented in terms of <a href="#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">respond</a> so that subclasses control evaluation order. Returns a
 chained Future.</p><p>The returned <code>Future</code> will be satisfied when this,
 the original future, is done.
-</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the side-effect to apply when the computation completes.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this should be used for side-effects.
-</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">respond</a> if you need the result of the computation for
-    usage in the side-effect.
-</p></span></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the side-effect to apply when the computation completes.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this should be used for side-effects.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">respond</a> if you need the result of the computation for
+    usage in the side-effect.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -441,9 +489,13 @@ the original future, is done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -454,9 +506,13 @@ the original future, is done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#filter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="filter(p:A=&gt;Boolean):com.twitter.util.Future[A]"></a>
@@ -467,9 +523,13 @@ the original future, is done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@filter(p:A=&gt;Boolean):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -480,9 +540,13 @@ the original future, is done.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -501,13 +565,16 @@ the original future, is done.
       <span class="symbol">
         <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatMap.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">If this, the original future, succeeds, run <code>f</code> on the result.</p><div class="fullcomment"><div class="comment cmt"><p>If this, the original future, succeeds, run <code>f</code> on the result.</p><p>The returned result is a Future that is satisfied when the original future
 and the callback, <code>f</code>, are done.
 If the original future fails, this one will also fail, without executing <code>f</code>
 and preserving the failed computation of <code>this</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a>
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#flatten" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="flatten[B](implicitev:&lt;:&lt;[A,com.twitter.util.Future[B]]):com.twitter.util.Future[B]"></a>
       <a id="flatten[B](&lt;:&lt;[A,Future[B]]):Future[B]"></a>
@@ -519,7 +586,11 @@ and preserving the failed computation of <code>this</code>.
       <span class="symbol">
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Future.A">A</span>, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.flatten.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@flatten[B](implicitev:&lt;:&lt;[A,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Converts a Future[Future[B]] into a Future[B]
 </p>
     </li><li name="com.twitter.util.Future#foreach" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -531,13 +602,16 @@ and preserving the failed computation of <code>this</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">foreach</span><span class="params">(<span name="k">k: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">foreach</span><span class="params">(<span name="k">k: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@foreach(k:A=&gt;Unit):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Invoke the callback only if the Future returns successfully.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke the callback only if the Future returns successfully. Useful for Scala <code>for</code>
 comprehensions. Use <a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onSuccess">onSuccess</a> instead of this method for more readable code.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onSuccess">onSuccess</a>
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onSuccess">onSuccess</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -549,7 +623,11 @@ comprehensions. Use <a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#handle" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]"></a>
@@ -560,15 +638,18 @@ comprehensions. Use <a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">handle</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>
+        <span class="name">handle</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">If this, the original future, results in an exceptional computation,
 <code>rescueException</code> may convert the failure into a new result.</p><div class="fullcomment"><div class="comment cmt"><p>If this, the original future, results in an exceptional computation,
 <code>rescueException</code> may convert the failure into a new result.</p><p>The returned result is a <code>Future</code> that is satisfied when the original
 future and the callback, <code>rescueException</code>, are done.</p><p>This is the equivalent of <a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> for failed computations.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#rescue">rescue</a>
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#rescue">rescue</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -578,9 +659,13 @@ future and the callback, <code>rescueException</code>, are done.</p><p>This is t
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#interruptible" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="interruptible():com.twitter.util.Future[A]"></a>
@@ -593,7 +678,11 @@ future and the callback, <code>rescueException</code>, are done.</p><p>This is t
       <span class="symbol">
         <span class="name">interruptible</span><span class="params">()</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@interruptible():com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Makes a derivative Future which will be satisfied with the result
 of the parent.</p><div class="fullcomment"><div class="comment cmt"><p>Makes a derivative Future which will be satisfied with the result
 of the parent.  However, if it's interrupted, it will detach from
@@ -616,9 +705,13 @@ Future will not be held onto by the killer Future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isDefined</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isDefined</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@isDefined:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Is the result of the Future available yet?
 </p>
     </li><li name="com.twitter.util.Future#isDone" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -630,9 +723,13 @@ Future will not be held onto by the killer Future.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isDone</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="" class="extype" name="com.twitter.util.Future">Future</a>.this.type, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isDone</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="" class="extype" name="com.twitter.util.Future">Future</a>.this.type, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@isDone(implicitev:&lt;:&lt;[Future.this.type,com.twitter.util.Future[Unit]]):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Checks whether a Unit-typed Future is done.</p><div class="fullcomment"><div class="comment cmt"><p>Checks whether a Unit-typed Future is done. By
 convention, futures of type Future[Unit] are used
 for signalling.
@@ -646,9 +743,13 @@ for signalling.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#join" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="join[B](other:com.twitter.util.Future[B]):com.twitter.util.Future[(A,B)]"></a>
@@ -661,7 +762,11 @@ for signalling.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.join.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Future.A">A</span>, <span class="extype" name="com.twitter.util.Future.join.B">B</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@join[B](other:com.twitter.util.Future[B]):com.twitter.util.Future[(A,B)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Combines two Futures into one Future of the Tuple of the two results.</p>
     </li><li name="com.twitter.util.Future#liftToTry" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="liftToTry:com.twitter.util.Future[com.twitter.util.Try[A]]"></a>
@@ -674,8 +779,29 @@ for signalling.
       <span class="symbol">
         <span class="name">liftToTry</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@liftToTry:com.twitter.util.Future[com.twitter.util.Try[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns the result of the computation as a Future[Try[A]].</p>
+    </li><li name="com.twitter.util.Future#lowerFromTry" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="lowerFromTry[T](implicitev:&lt;:&lt;[A,com.twitter.util.Try[T]]):com.twitter.util.Future[T]"></a>
+      <a id="lowerFromTry[T](&lt;:&lt;[A,Try[T]]):Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lowerFromTry</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Future.A">A</span>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.lowerFromTry.T">T</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.lowerFromTry.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@lowerFromTry[T](implicitev:&lt;:&lt;[A,com.twitter.util.Try[T]]):com.twitter.util.Future[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Lowers a Future[Try[T]] into a Future[T].</p>
     </li><li name="com.twitter.util.Future#map" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="map[B](f:A=&gt;B):com.twitter.util.Future[B]"></a>
       <a id="map[B]((A)⇒B):Future[B]"></a>
@@ -687,13 +813,16 @@ for signalling.
       <span class="symbol">
         <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <span class="extype" name="com.twitter.util.Future.map.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.map.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@map[B](f:A=&gt;B):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">If this, the original future, succeeds, run <code>f</code> on the result.</p><div class="fullcomment"><div class="comment cmt"><p>If this, the original future, succeeds, run <code>f</code> on the result.</p><p>The returned result is a Future that is satisfied when the original future
 and the callback, <code>f</code>, are done.
 If the original future fails, this one will also fail, without executing <code>f</code>
 and preserving the failed computation of <code>this</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onSuccess">onSuccess</a> for side-effecting chained computations.
-</p></span><span class="cmt"><p><a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for computations that return <code>Future</code>s.</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#onSuccess">onSuccess</a> for side-effecting chained computations.</p></span><span class="cmt"><p><a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for computations that return <code>Future</code>s.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#mask" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="mask(pred:PartialFunction[Throwable,Boolean]):com.twitter.util.Future[A]"></a>
       <a id="mask(PartialFunction[Throwable,Boolean]):Future[A]"></a>
@@ -703,9 +832,13 @@ and preserving the failed computation of <code>this</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mask</span><span class="params">(<span name="pred">pred: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">mask</span><span class="params">(<span name="pred">pred: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@mask(pred:PartialFunction[Throwable,Boolean]):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns an identical future except that it ignores interrupts which match a predicate
 </p>
     </li><li name="com.twitter.util.Future#masked" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -719,7 +852,11 @@ and preserving the failed computation of <code>this</code>.
       <span class="symbol">
         <span class="name">masked</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@masked:com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns an identical future that ignores all interrupts
 </p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -731,9 +868,13 @@ and preserving the failed computation of <code>this</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -744,9 +885,13 @@ and preserving the failed computation of <code>this</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -757,9 +902,13 @@ and preserving the failed computation of <code>this</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Future#onFailure" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onFailure(fn:Throwable=&gt;Unit):com.twitter.util.Future[A]"></a>
@@ -770,21 +919,22 @@ and preserving the failed computation of <code>this</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onFailure</span><span class="params">(<span name="fn">fn: (<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">onFailure</span><span class="params">(<span name="fn">fn: (<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@onFailure(fn:Throwable=&gt;Unit):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Invoke the function on the error, if the computation was
 unsuccessful.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke the function on the error, if the computation was
 unsuccessful.  Returns a chained Future as in <code>respond</code>.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>chained Future</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>if <code>fn</code> is a <code>PartialFunction</code> and the input is not defined for a given
-      Throwable, the resulting <code>MatchError</code> will propogate to the current
+      Throwable, the resulting <code>MatchError</code> will propagate to the current
       <code>Monitor</code>. This will happen if you use a construct such as
       <code>future.onFailure { case NonFatal(e) =&gt; ... }</code> when the Throwable
-      is &quot;fatal&quot;.
-</p></span>, <span class="cmt"><p>this should be used for side-effects.
-</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#handle">handle</a> and <a href="#rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#rescue">rescue</a> to produce a new <code>Future</code> from the result of
-    the computation.
-</p></span></dd></dl></div>
+      is &quot;fatal&quot;.</p></span>, <span class="cmt"><p>this should be used for side-effects.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#handle">handle</a> and <a href="#rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#rescue">rescue</a> to produce a new <code>Future</code> from the result of
+    the computation.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#onSuccess" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]"></a>
       <a id="onSuccess((A)⇒Unit):Future[A]"></a>
@@ -794,16 +944,18 @@ unsuccessful.  Returns a chained Future as in <code>respond</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onSuccess</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">onSuccess</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@onSuccess(f:A=&gt;Unit):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Invoke the function on the result, if the computation was
 successful.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke the function on the result, if the computation was
 successful.  Returns a chained Future as in <code>respond</code>.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>chained Future</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this should be used for side-effects.
-</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> and <a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> to produce a new <code>Future</code> from the result of
-    the computation.
-</p></span></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>chained Future</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this should be used for side-effects.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> and <a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> to produce a new <code>Future</code> from the result of
+    the computation.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#or" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="or[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]"></a>
       <a id="or[U&gt;:A](Future[U]):Future[U]"></a>
@@ -815,7 +967,11 @@ successful.  Returns a chained Future as in <code>respond</code>.
       <span class="symbol">
         <span class="name">or</span><span class="tparams">[<span name="U">U &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.or.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.or.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@or[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">A synonym for <a href="#select[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]" class="extmbr" name="com.twitter.util.Future#select">select</a>: Choose the first Future to be satisfied.</p>
     </li><li name="com.twitter.util.Future#proxyTo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="proxyTo[B&gt;:A](other:com.twitter.util.Promise[B]):Unit"></a>
@@ -826,17 +982,20 @@ successful.  Returns a chained Future as in <code>respond</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">proxyTo</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="other">other: <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="com.twitter.util.Future.proxyTo.B">B</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">proxyTo</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="other">other: <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="com.twitter.util.Future.proxyTo.B">B</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@proxyTo[B&gt;:A](other:com.twitter.util.Promise[B]):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Send updates from this Future to the other.</p><div class="fullcomment"><div class="comment cmt"><p>Send updates from this Future to the other.
 <code>other</code> must not yet be satisfied at the time of the call.
 After this call, nobody else should satisfy <code>other</code>.</p><p>Note: using proxyTo will mask interrupts to this future, and it's
 the user's responsibility to set an interrupt handler on <code>other</code>
 to raise on f. In some cases, using
 <a href="Promise.html#become(other:com.twitter.util.Future[A]):Unit" class="extmbr" name="com.twitter.util.Promise#become">com.twitter.util.Promise.become</a> may be more appropriate.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Promise.html#become(other:com.twitter.util.Future[A]):Unit" class="extmbr" name="com.twitter.util.Promise#become">com.twitter.util.Promise.become</a>
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Promise.html#become(other:com.twitter.util.Future[A]):Unit" class="extmbr" name="com.twitter.util.Promise#become">com.twitter.util.Promise.become</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#raiseWithin" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="raiseWithin(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration,exc:Throwable):com.twitter.util.Future[A]"></a>
       <a id="raiseWithin(Timer,Duration,Throwable):Future[A]"></a>
@@ -848,7 +1007,11 @@ to raise on f. In some cases, using
       <span class="symbol">
         <span class="name">raiseWithin</span><span class="params">(<span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@raiseWithin(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration,exc:Throwable):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns a new Future that will error if this Future does not return in time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will error if this Future does not return in time.</p><p><i>Note</i>: On timeout, the underlying future is interrupted.
 </p></div></div>
     </li><li name="com.twitter.util.Future#raiseWithin" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -862,7 +1025,11 @@ to raise on f. In some cases, using
       <span class="symbol">
         <span class="name">raiseWithin</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@raiseWithin(timeout:com.twitter.util.Duration,exc:Throwable)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Same as the other raiseWithin, but with an implicit timer.</p><div class="fullcomment"><div class="comment cmt"><p>Same as the other raiseWithin, but with an implicit timer. Sometimes this is more convenient.</p><p><i>Note</i>: On timeout, the underlying future is interrupted.
 </p></div></div>
     </li><li name="com.twitter.util.Future#raiseWithin" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -876,7 +1043,11 @@ to raise on f. In some cases, using
       <span class="symbol">
         <span class="name">raiseWithin</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@raiseWithin(timeout:com.twitter.util.Duration)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Same as the other raiseWithin, but with an implicit timer.</p><div class="fullcomment"><div class="comment cmt"><p>Same as the other raiseWithin, but with an implicit timer. Sometimes this is more convenient.</p><p><i>Note</i>: On timeout, the underlying future is interrupted.
 </p></div></div>
     </li><li name="com.twitter.util.Future#rescue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -888,15 +1059,18 @@ to raise on f. In some cases, using
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">rescue</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]</span>
+        <span class="name">rescue</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">If this, the original future, results in an exceptional computation,
 <code>rescueException</code> may convert the failure into a new result.</p><div class="fullcomment"><div class="comment cmt"><p>If this, the original future, results in an exceptional computation,
 <code>rescueException</code> may convert the failure into a new result.</p><p>The returned result is a <code>Future</code> that is satisfied when the original
 future and the callback, <code>rescueException</code>, are done.</p><p>This is the equivalent of <a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for failed computations.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#handle">handle</a>
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#handle">handle</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#select" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="select[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]"></a>
       <a id="select[U&gt;:A](Future[U]):Future[U]"></a>
@@ -908,10 +1082,13 @@ future and the callback, <code>rescueException</code>, are done.</p><p>This is t
       <span class="symbol">
         <span class="name">select</span><span class="tparams">[<span name="U">U &gt;: <span class="extype" name="com.twitter.util.Future.A">A</span></span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.select.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.select.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@select[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Choose the first Future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Choose the first Future to be satisfied.
-</p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>another Future</p></dd><dt>returns</dt><dd class="cmt"><p>a new Future whose result is that of the first of this and other to return
-</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>another Future</p></dd><dt>returns</dt><dd class="cmt"><p>a new Future whose result is that of the first of this and other to return</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -923,7 +1100,11 @@ future and the callback, <code>rescueException</code>, are done.</p><p>This is t
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Future#toJavaFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toJavaFuture:java.util.concurrent.Future[_&lt;:A]"></a>
@@ -936,7 +1117,11 @@ future and the callback, <code>rescueException</code>, are done.</p><p>This is t
       <span class="symbol">
         <span class="name">toJavaFuture</span><span class="result">: <span class="extype" name="java.util.concurrent.Future">java.util.concurrent.Future</span>[_ &lt;: <span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@toJavaFuture:java.util.concurrent.Future[_&lt;:A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Convert a Twitter Future to a Java native Future.</p><div class="fullcomment"><div class="comment cmt"><p>Convert a Twitter Future to a Java native Future. This should
 match the semantics of a Java Future as closely as possible to
 avoid issues with the way another API might use them. See:</p><p>http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
@@ -952,7 +1137,11 @@ avoid issues with the way another API might use them. See:</p><p>http://download
       <span class="symbol">
         <span class="name">toOffer</span><span class="result">: <a href="../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@toOffer:com.twitter.concurrent.Offer[com.twitter.util.Try[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">An offer for this future.</p><div class="fullcomment"><div class="comment cmt"><p>An offer for this future.  The offer is activated when the future
 is satisfied.
 </p></div></div>
@@ -967,7 +1156,11 @@ is satisfied.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Future#transformedBy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="transformedBy[B](transformer:com.twitter.util.FutureTransformer[A,B]):com.twitter.util.Future[B]"></a>
@@ -980,7 +1173,11 @@ is satisfied.
       <span class="symbol">
         <span class="name">transformedBy</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="transformer">transformer: <a href="FutureTransformer.html" class="extype" name="com.twitter.util.FutureTransformer">FutureTransformer</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>, <span class="extype" name="com.twitter.util.Future.transformedBy.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.transformedBy.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@transformedBy[B](transformer:com.twitter.util.FutureTransformer[A,B]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Transform the Future[A] into a Future[B] using the
 FutureTransformer.</p><div class="fullcomment"><div class="comment cmt"><p>Transform the Future[A] into a Future[B] using the
 FutureTransformer. The FutureTransformer handles both success
@@ -1009,9 +1206,13 @@ error.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">unit</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">unit</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@unit:com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Convert this Future[A] to a Future[Unit] by discarding the result.</p>
     </li><li name="com.twitter.util.Future#voided" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="voided:com.twitter.util.Future[Void]"></a>
@@ -1024,7 +1225,11 @@ error.
       <span class="symbol">
         <span class="name">voided</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="java.lang.Void">Void</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@voided:com.twitter.util.Future[Void]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Convert this Future[A] to a Future[Void] by discarding the result.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -1035,9 +1240,13 @@ error.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -1054,9 +1263,13 @@ error.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -1073,9 +1286,13 @@ error.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -1092,9 +1309,13 @@ error.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">willEqual</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.willEqual.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+        <span class="name">willEqual</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="that">that: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.willEqual.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@willEqual[B](that:com.twitter.util.Future[B]):com.twitter.util.Future[Boolean]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns a Future[Boolean] indicating whether two Futures are equivalent.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a Future[Boolean] indicating whether two Futures are equivalent. Note that
 Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
 </p></div></div>
@@ -1107,9 +1328,13 @@ Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
+        <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Future.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@withFilter(p:A=&gt;Boolean):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Future#within" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="within(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration,exc:=&gt;Throwable):com.twitter.util.Future[A]"></a>
@@ -1122,10 +1347,13 @@ Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
       <span class="symbol">
         <span class="name">within</span><span class="params">(<span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@within(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration,exc:=&gt;Throwable):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns a new Future that will error if this Future does not return in time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will error if this Future does not return in time.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.
-</p></div><dl class="paramcmts block"><dt class="param">timer</dt><dd class="cmt"><p>to run timeout on.</p></dd><dt class="param">timeout</dt><dd class="cmt"><p>indicates how long you are willing to wait for the result to be available.</p></dd><dt class="param">exc</dt><dd class="cmt"><p>exception to throw.
-</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">timer</dt><dd class="cmt"><p>to run timeout on.</p></dd><dt class="param">timeout</dt><dd class="cmt"><p>indicates how long you are willing to wait for the result to be available.</p></dd><dt class="param">exc</dt><dd class="cmt"><p>exception to throw.</p></dd></dl></div>
     </li><li name="com.twitter.util.Future#within" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="within(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration):com.twitter.util.Future[A]"></a>
       <a id="within(Timer,Duration):Future[A]"></a>
@@ -1137,7 +1365,11 @@ Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
       <span class="symbol">
         <span class="name">within</span><span class="params">(<span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@within(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Returns a new Future that will error if this Future does not return in time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that will error if this Future does not return in time.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.
 </p></div></div>
     </li><li name="com.twitter.util.Future#within" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -1151,7 +1383,11 @@ Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
       <span class="symbol">
         <span class="name">within</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@within(timeout:com.twitter.util.Duration)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Same as the other within, but with an implicit timer.</p><div class="fullcomment"><div class="comment cmt"><p>Same as the other within, but with an implicit timer. Sometimes this is more convenient.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.
 </p></div></div>
     </li></ol>
@@ -1172,7 +1408,11 @@ Future.exception(e).willEqual(Future.exception(e)) == Future.value(true).
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result">apply</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Future.A">A</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@apply(timeout:com.twitter.util.Duration):A" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Block, but only as long as the given <code>timeout</code>, for the result
 of the Future to be available.</p><div class="fullcomment"><div class="comment cmt"><p>Block, but only as long as the given <code>timeout</code>, for the result
 of the Future to be available.
@@ -1191,7 +1431,11 @@ of the Future to be available.
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result">apply</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.util.Future.A">A</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@apply():A" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Block indefinitely, wait for the result of the Future to be available.</p><div class="fullcomment"><div class="comment cmt"><p>Block indefinitely, wait for the result of the Future to be available.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
@@ -1206,9 +1450,13 @@ of the Future to be available.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.0.0) Provided for API compatibility; use raise() instead.">cancel</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.0.0) Provided for API compatibility; use raise() instead.">cancel</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@cancel():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
@@ -1224,7 +1472,11 @@ of the Future to be available.
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry)">get</span><span class="params">(<span name="timeout">timeout: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@get(timeout:com.twitter.util.Duration):com.twitter.util.Try[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Demands that the result of the future be available within
 <code>timeout</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Demands that the result of the future be available within
 <code>timeout</code>. The result is a Return[_] or Throw[_] depending upon
@@ -1244,7 +1496,11 @@ whether the computation finished in time.
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result">get</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.util.Future.A">A</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@get():A" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Alias for <span class="extype" name="apply()">apply()</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Alias for <span class="extype" name="apply()">apply()</span>.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
@@ -1259,9 +1515,13 @@ whether the computation finished in time.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry).isReturn">isReturn</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry).isReturn">isReturn</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@isReturn:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
@@ -1275,9 +1535,13 @@ whether the computation finished in time.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry).isThrow">isThrow</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) Use Await.result(future.liftToTry).isThrow">isThrow</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future@isThrow:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
@@ -1292,7 +1556,7 @@ whether the computation finished in time.
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -1309,6 +1573,7 @@ whether the computation finished in time.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

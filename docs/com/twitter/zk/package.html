@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>zk - com.twitter.zk</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/package_big.png" />
+        <img alt="Package" src="../../../lib/package_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
-        <h1>zk</h1>
+        <h1>zk</h1><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -69,8 +77,12 @@
       <span class="symbol">
         <a href="AsyncCallbackPromise.html"><span class="name">AsyncCallbackPromise</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="com.twitter.zk.AsyncCallbackPromise.T">T</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">Mix-in to make an AsyncCallback a Promise</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@AsyncCallbackPromise[T]extendsPromise[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Mix-in to make an AsyncCallback a Promise</p>
     </li><li name="com.twitter.zk.AuthInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AuthInfoextendsProductwithSerializable"></a>
       <a id="AuthInfo:AuthInfo"></a>
@@ -80,9 +92,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="AuthInfo.html"><span class="name">AuthInfo</span></a><span class="params">(<span name="mode">mode: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="data">data: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="AuthInfo.html"><span class="name">AuthInfo</span></a><span class="params">(<span name="mode">mode: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="data">data: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@AuthInfoextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ChildrenCallbackPromise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ChildrenCallbackPromiseextendsPromise[com.twitter.zk.ZNode.Children]withAsyncCallbackPromise[com.twitter.zk.ZNode.Children]withAsyncCallback.Children2Callback"></a>
@@ -95,9 +111,13 @@
       <span class="symbol">
         <a href="ChildrenCallbackPromise.html"><span class="name">ChildrenCallbackPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>] with <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>] with <span class="extype" name="org.apache.zookeeper.AsyncCallback.Children2Callback">Children2Callback</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ChildrenCallbackPromiseextendsPromise[com.twitter.zk.ZNode.Children]withAsyncCallbackPromise[com.twitter.zk.ZNode.Children]withAsyncCallback.Children2Callback" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.zk.CommonConnector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.zk.CommonConnector" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="CommonConnectorextendsConnector"></a>
       <a id="CommonConnector:CommonConnector"></a>
       <h4 class="signature">
@@ -108,8 +128,14 @@
       <span class="symbol">
         <a href="CommonConnector.html"><span class="name">CommonConnector</span></a><span class="result"> extends <a href="Connector.html" class="extype" name="com.twitter.zk.Connector">Connector</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Adapts a common ZooKeeperClient for use as a Connector.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@CommonConnectorextendsConnector" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Adapts a common ZooKeeperClient for use as a Connector.</p><div class="fullcomment"><div class="comment cmt"><p>Adapts a common ZooKeeperClient for use as a Connector.
+This connector blocks, but it doesn't seem worth a FuturePool only for this connector.
+</p></div></div>
     </li><li name="com.twitter.zk.Connector" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ConnectorextendsAnyRef"></a>
       <a id="Connector:Connector"></a>
@@ -121,7 +147,11 @@
       <span class="symbol">
         <a href="Connector.html"><span class="name">Connector</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ConnectorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.DataCallbackPromise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DataCallbackPromiseextendsPromise[com.twitter.zk.ZNode.Data]withAsyncCallbackPromise[com.twitter.zk.ZNode.Data]withAsyncCallback.DataCallback"></a>
@@ -134,7 +164,11 @@
       <span class="symbol">
         <a href="DataCallbackPromise.html"><span class="name">DataCallbackPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="ZNode$$Data.html" class="extype" name="com.twitter.zk.ZNode.Data">Data</a>] with <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="ZNode$$Data.html" class="extype" name="com.twitter.zk.ZNode.Data">Data</a>] with <span class="extype" name="org.apache.zookeeper.AsyncCallback.DataCallback">DataCallback</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@DataCallbackPromiseextendsPromise[com.twitter.zk.ZNode.Data]withAsyncCallbackPromise[com.twitter.zk.ZNode.Data]withAsyncCallback.DataCallback" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.EventBroker" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EventBrokerextendsBroker[org.apache.zookeeper.WatchedEvent]withWatcher"></a>
@@ -147,7 +181,11 @@
       <span class="symbol">
         <a href="EventBroker.html"><span class="name">EventBroker</span></a><span class="result"> extends <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<span class="extype" name="org.apache.zookeeper.WatchedEvent">WatchedEvent</span>] with <span class="extype" name="org.apache.zookeeper.Watcher">Watcher</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@EventBrokerextendsBroker[org.apache.zookeeper.WatchedEvent]withWatcher" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.EventPromise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EventPromiseextendsPromise[org.apache.zookeeper.WatchedEvent]withWatcher"></a>
@@ -160,7 +198,11 @@
       <span class="symbol">
         <a href="EventPromise.html"><span class="name">EventPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="org.apache.zookeeper.WatchedEvent">WatchedEvent</span>] with <span class="extype" name="org.apache.zookeeper.Watcher">Watcher</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@EventPromiseextendsPromise[org.apache.zookeeper.WatchedEvent]withWatcher" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ExistsCallbackPromise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ExistsCallbackPromiseextendsPromise[com.twitter.zk.ZNode.Exists]withAsyncCallbackPromise[com.twitter.zk.ZNode.Exists]withAsyncCallback.StatCallback"></a>
@@ -173,9 +215,13 @@
       <span class="symbol">
         <a href="ExistsCallbackPromise.html"><span class="name">ExistsCallbackPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="ZNode$$Exists.html" class="extype" name="com.twitter.zk.ZNode.Exists">Exists</a>] with <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="ZNode$$Exists.html" class="extype" name="com.twitter.zk.ZNode.Exists">Exists</a>] with <span class="extype" name="org.apache.zookeeper.AsyncCallback.StatCallback">StatCallback</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ExistsCallbackPromiseextendsPromise[com.twitter.zk.ZNode.Exists]withAsyncCallbackPromise[com.twitter.zk.ZNode.Exists]withAsyncCallback.StatCallback" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.zk.LiftableFuture" visbl="prt" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.zk.LiftableFuture" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="LiftableFuture[T]extendsAnyRef"></a>
       <a id="LiftableFuture[T]:LiftableFuture[T]"></a>
       <h4 class="signature">
@@ -186,8 +232,14 @@
       <span class="symbol">
         <a href="LiftableFuture.html"><span class="name">LiftableFuture</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Allows Future[T] to be mapped to Future[Try[T]].</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@LiftableFuture[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Allows Future[T] to be mapped to Future[Try[T]].</p><div class="fullcomment"><div class="comment cmt"><p>Allows Future[T] to be mapped to Future[Try[T]].  This is particularly useful in lifting
+KeepereException.NoNodeExceptions for ZOp.watch().
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.zk.NativeConnector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NativeConnectorextendsConnectorwithSerializedwithProductwithSerializable"></a>
       <a id="NativeConnector:NativeConnector"></a>
@@ -197,10 +249,14 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="NativeConnector.html"><span class="name">NativeConnector</span></a><span class="params">(<span name="connectString">connectString: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="connectTimeout">connectTimeout: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>]</span>, <span name="sessionTimeout">sessionTimeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="authenticate">authenticate: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="AuthInfo.html" class="extype" name="com.twitter.zk.AuthInfo">AuthInfo</a>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="Connector.html" class="extype" name="com.twitter.zk.Connector">Connector</a> with <a href="../concurrent/Serialized.html" class="extype" name="com.twitter.concurrent.Serialized">Serialized</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="NativeConnector.html"><span class="name">NativeConnector</span></a><span class="params">(<span name="connectString">connectString: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="connectTimeout">connectTimeout: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>]</span>, <span name="sessionTimeout">sessionTimeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="authenticate">authenticate: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="AuthInfo.html" class="extype" name="com.twitter.zk.AuthInfo">AuthInfo</a>] = <span class="symbol"><span class="name"><a href="../../../scala/package.html">None</a></span></span></span>)</span><span class="result"> extends <a href="Connector.html" class="extype" name="com.twitter.zk.Connector">Connector</a> with <a href="../concurrent/Serialized.html" class="extype" name="com.twitter.concurrent.Serialized">Serialized</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An Asynchronous ZooKeeper Client.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@NativeConnectorextendsConnectorwithSerializedwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An Asynchronous ZooKeeper Client.</p>
     </li><li name="com.twitter.zk.NodeEvent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="NodeEventextendsAnyRef"></a>
       <a id="NodeEvent:NodeEvent"></a>
@@ -212,7 +268,11 @@
       <span class="symbol">
         <a href="NodeEvent.html"><span class="name">NodeEvent</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@NodeEventextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.RetryPolicy" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="RetryPolicyextendsAnyRef"></a>
@@ -225,8 +285,12 @@
       <span class="symbol">
         <a href="RetryPolicy.html"><span class="name">RetryPolicy</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Pluggable retry strategy.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@RetryPolicyextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Pluggable retry strategy.</p>
     </li><li name="com.twitter.zk.ServerCnxnFactory" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ServerCnxnFactoryextendsAnyRef"></a>
       <a id="ServerCnxnFactory:ServerCnxnFactory"></a>
@@ -238,7 +302,11 @@
       <span class="symbol">
         <a href="ServerCnxnFactory.html"><span class="name">ServerCnxnFactory</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ServerCnxnFactoryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ServerSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ServerSetextendsAnyRef"></a>
@@ -251,8 +319,12 @@
       <span class="symbol">
         <a href="ServerSet.html"><span class="name">ServerSet</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Wraps a common.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ServerSetextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Wraps a common.zookeeper.ServerSetImpl to be asynchronous using a FuturePool.</p>
     </li><li name="com.twitter.zk.StateEvent" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StateEventextendsAnyRef"></a>
       <a id="StateEvent:StateEvent"></a>
@@ -264,7 +336,11 @@
       <span class="symbol">
         <a href="StateEvent.html"><span class="name">StateEvent</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@StateEventextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.StringCallbackPromise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StringCallbackPromiseextendsPromise[String]withAsyncCallbackPromise[String]withAsyncCallback.StringCallback"></a>
@@ -277,7 +353,11 @@
       <span class="symbol">
         <a href="StringCallbackPromise.html"><span class="name">StringCallbackPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="scala.Predef.String">String</span>] with <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<span class="extype" name="scala.Predef.String">String</span>] with <span class="extype" name="org.apache.zookeeper.AsyncCallback.StringCallback">StringCallback</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@StringCallbackPromiseextendsPromise[String]withAsyncCallbackPromise[String]withAsyncCallback.StringCallback" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.UnitCallbackPromise" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="UnitCallbackPromiseextendsPromise[Unit]withAsyncCallbackPromise[Unit]withAsyncCallback.VoidCallback"></a>
@@ -288,9 +368,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="UnitCallbackPromise.html"><span class="name">UnitCallbackPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>] with <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>] with <span class="extype" name="org.apache.zookeeper.AsyncCallback.VoidCallback">VoidCallback</span></span>
+        <a href="UnitCallbackPromise.html"><span class="name">UnitCallbackPromise</span></a><span class="result"> extends <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>] with <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>] with <span class="extype" name="org.apache.zookeeper.AsyncCallback.VoidCallback">VoidCallback</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@UnitCallbackPromiseextendsPromise[Unit]withAsyncCallbackPromise[Unit]withAsyncCallback.VoidCallback" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ZNode" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ZNodeextendsAnyRef"></a>
@@ -303,8 +387,12 @@
       <span class="symbol">
         <a href="ZNode.html"><span class="name">ZNode</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A handle to a ZNode attached to a ZkClient
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ZNodeextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A handle to a ZNode attached to a ZkClient
 </p>
     </li><li name="com.twitter.zk.ZOp" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ZOp[T&lt;:com.twitter.zk.ZNode.Exists]extendsAnyRef"></a>
@@ -317,9 +405,13 @@
       <span class="symbol">
         <a href="ZOp.html"><span class="name">ZOp</span></a><span class="tparams">[<span name="T">T &lt;: <a href="ZNode$$Exists.html" class="extype" name="com.twitter.zk.ZNode.Exists">Exists</a></span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A ZNode-read operation.</p>
-    </li><li name="com.twitter.zk.ZkClient" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ZOp[T&lt;:com.twitter.zk.ZNode.Exists]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A ZNode-read operation.</p>
+    </li><li name="com.twitter.zk.ZkClient" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="ZkClientextendsAnyRef"></a>
       <a id="ZkClient:ZkClient"></a>
       <h4 class="signature">
@@ -330,8 +422,15 @@
       <span class="symbol">
         <a href="ZkClient.html"><span class="name">ZkClient</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An Asynchronous ZooKeeper Client API.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ZkClientextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An Asynchronous ZooKeeper Client API.</p><div class="fullcomment"><div class="comment cmt"><p>An Asynchronous ZooKeeper Client API.</p><p>A ZkClient instance is configured with settings and defaults (like a retry policy) and is
+attached to underlying Connector.  This allows new, immutable ZkClient instances to be created
+with alternative settings on the same underlying Connector.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -348,9 +447,13 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="AuthInfo$.html"><span class="name">AuthInfo</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="AuthInfo$.html"><span class="name">AuthInfo</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@AuthInfo" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.CommonConnector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CommonConnector"></a>
@@ -363,7 +466,11 @@
       <span class="symbol">
         <a href="CommonConnector$.html"><span class="name">CommonConnector</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@CommonConnector" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.Connector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Connector"></a>
@@ -376,7 +483,11 @@
       <span class="symbol">
         <a href="Connector$.html"><span class="name">Connector</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@Connector" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.Event" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Event"></a>
@@ -389,7 +500,11 @@
       <span class="symbol">
         <a href="Event$.html"><span class="name">Event</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@Event" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.KeeperConnectionException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="KeeperConnectionException"></a>
@@ -402,8 +517,12 @@
       <span class="symbol">
         <a href="KeeperConnectionException$.html"><span class="name">KeeperConnectionException</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Matcher for connection-related KeeperExceptions.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@KeeperConnectionException" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Matcher for connection-related KeeperExceptions.</p>
     </li><li name="com.twitter.zk.LiftableFuture" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="LiftableFuture"></a>
       <a id="LiftableFuture:LiftableFuture"></a>
@@ -415,7 +534,11 @@
       <span class="symbol">
         <a href="LiftableFuture$.html"><span class="name">LiftableFuture</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@LiftableFuture" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.zk.NativeConnector" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NativeConnector"></a>
@@ -426,9 +549,13 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="NativeConnector$.html"><span class="name">NativeConnector</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="NativeConnector$.html"><span class="name">NativeConnector</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@NativeConnector" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.NodeEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NodeEvent"></a>
@@ -441,7 +568,11 @@
       <span class="symbol">
         <a href="NodeEvent$.html"><span class="name">NodeEvent</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@NodeEvent" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.RetryPolicy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RetryPolicy"></a>
@@ -454,7 +585,11 @@
       <span class="symbol">
         <a href="RetryPolicy$.html"><span class="name">RetryPolicy</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@RetryPolicy" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ServerCnxnFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ServerCnxnFactory"></a>
@@ -467,7 +602,11 @@
       <span class="symbol">
         <a href="ServerCnxnFactory$.html"><span class="name">ServerCnxnFactory</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ServerCnxnFactory" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ServerSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ServerSet"></a>
@@ -480,7 +619,11 @@
       <span class="symbol">
         <a href="ServerSet$.html"><span class="name">ServerSet</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ServerSet" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.StateEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StateEvent"></a>
@@ -493,7 +636,11 @@
       <span class="symbol">
         <a href="StateEvent$.html"><span class="name">StateEvent</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@StateEvent" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.ZNode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ZNode"></a>
@@ -506,8 +653,12 @@
       <span class="symbol">
         <a href="ZNode$.html"><span class="name">ZNode</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">ZNode utilities and return types.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ZNode" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">ZNode utilities and return types.</p>
     </li><li name="com.twitter.zk.ZkClient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ZkClient"></a>
       <a id="ZkClient:ZkClient"></a>
@@ -519,7 +670,11 @@
       <span class="symbol">
         <a href="ZkClient$.html"><span class="name">ZkClient</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@ZkClient" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.coordination" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="coordination"></a>
@@ -532,7 +687,11 @@
       <span class="symbol">
         <a href="coordination/package.html"><span class="name">coordination</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.package@coordination" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -559,6 +718,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

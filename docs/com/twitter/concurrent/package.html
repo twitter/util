@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>concurrent - com.twitter.concurrent</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/package_big.png" />
+        <img alt="Package" src="../../../lib/package_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
-        <h1>concurrent</h1>
+        <h1>concurrent</h1><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -69,8 +77,12 @@
       <span class="symbol">
         <a href="AbstractOffer.html"><span class="name">AbstractOffer</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<span class="extype" name="com.twitter.concurrent.AbstractOffer.T">T</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">Abstract <code>Offer</code> class for Java compatibility.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AbstractOffer[T]extendsOffer[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Abstract <code>Offer</code> class for Java compatibility.</p>
     </li><li name="com.twitter.concurrent.AbstractSpool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="AbstractSpool[A]extendsSpool[A]"></a>
       <a id="AbstractSpool[A]:AbstractSpool[A]"></a>
@@ -82,9 +94,49 @@
       <span class="symbol">
         <a href="AbstractSpool.html"><span class="name">AbstractSpool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.AbstractSpool.A">A</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">Abstract <code>Spool</code> class for Java compatibility.</p>
-    </li><li name="com.twitter.concurrent.AsyncMutex" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AbstractSpool[A]extendsSpool[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Abstract <code>Spool</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.concurrent.AsyncMeter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AsyncMeterextendsAnyRef"></a>
+      <a id="AsyncMeter:AsyncMeter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncMeter.html"><span class="name">AsyncMeter</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncMeterextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An asynchronous meter.</p><div class="fullcomment"><div class="comment cmt"><p>An asynchronous meter.</p><p>Processes can create an asynchronously awaiting future, a &quot;waiter&quot; to wait
+until the meter allows it to continue, which is when the meter can give it as
+many permits as it asked for.  Up to <code>burstSize</code> permits are issued every
+<code>burstDuration</code>.  If <code>maxWaiters</code> waiters are enqueued simultaneously, it
+will reject further attempts to wait, until some of the tasks have been
+executed.</p><p>It may be appropriate to use this to smooth out bursty traffic, or if using a
+resource that's rate-limited based on time.  However, to avoid overwhelming a
+constrained resource that doesn't exert coordination controls like
+backpressure, it's safer to limit based on <a href="AsyncSemaphore.html" class="extype" name="com.twitter.concurrent.AsyncSemaphore">AsyncSemaphore</a>, since it can
+speed up if that resource speeds up, and slow down if that resource slows
+down.</p><pre><span class="cmt">// create a meter that allows 1 operation per second, and a max of 1000 waiting</span>
+<span class="kw">val</span> meter = <span class="kw">new</span> AsyncMeter(<span class="num">1</span>, <span class="num">1.</span>second, <span class="num">1000</span>)
+
+<span class="kw">def</span> notMoreThanOncePerSecond[A](f: <span class="kw">=&gt;</span> Future[A]): Future[A] = {
+  meter.await(<span class="num">1</span>).handle { <span class="kw">case</span> t: RejectedExecutionException <span class="kw">=&gt;</span>
+    <span class="cmt">// do something else when too many waiters</span>
+  }.before {
+    f
+  }
+}</pre></div></div>
+    </li><li name="com.twitter.concurrent.AsyncMutex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AsyncMutexextendsAsyncSemaphore"></a>
       <a id="AsyncMutex:AsyncMutex"></a>
       <h4 class="signature">
@@ -95,10 +147,19 @@
       <span class="symbol">
         <a href="AsyncMutex.html"><span class="name">AsyncMutex</span></a><span class="result"> extends <a href="AsyncSemaphore.html" class="extype" name="com.twitter.concurrent.AsyncSemaphore">AsyncSemaphore</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An <a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> is a traditional mutex but with asynchronous
-execution.</p>
-    </li><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncMutexextendsAsyncSemaphore" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An <a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> is a traditional mutex but with asynchronous
+execution.</p><div class="fullcomment"><div class="comment cmt"><p>An <a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> is a traditional mutex but with asynchronous
+execution.</p><p>Basic usage:</p><pre><span class="kw">val</span> mutex = <span class="kw">new</span> AsyncMutex()
+...
+mutex.acquireAndRun() {
+  somethingThatReturnsFutureT()
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AsyncSemaphore.html" class="extype" name="com.twitter.concurrent.AsyncSemaphore">AsyncSemaphore</a> for a semaphore version.</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AsyncQueue[T]extendsAnyRef"></a>
       <a id="AsyncQueue[T]:AsyncQueue[T]"></a>
       <h4 class="signature">
@@ -109,8 +170,15 @@ execution.</p>
       <span class="symbol">
         <a href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An asynchronous FIFO queue.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncQueue[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An asynchronous FIFO queue.</p><div class="fullcomment"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing <a href="AsyncQueue.html#offer(elem:T):Boolean" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
+and <a href="AsyncQueue.html#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be <a href="AsyncQueue.html#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">&quot;failed&quot;</a>, flushing current
+pollers.
+</p></div></div>
     </li><li name="com.twitter.concurrent.AsyncQueueBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AsyncQueueBenchmarkextendsStdBenchAnnotations"></a>
       <a id="AsyncQueueBenchmark:AsyncQueueBenchmark"></a>
@@ -122,12 +190,16 @@ execution.</p>
       <span class="symbol">
         <a href="AsyncQueueBenchmark.html"><span class="name">AsyncQueueBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncQueueBenchmarkextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@State</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AsyncSemaphoreextendsAnyRef"></a>
       <a id="AsyncSemaphore:AsyncSemaphore"></a>
       <h4 class="signature">
@@ -138,10 +210,71 @@ execution.</p>
       <span class="symbol">
         <a href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An AsyncSemaphore is a traditional semaphore but with asynchronous
-execution.</p>
-    </li><li name="com.twitter.concurrent.BridgedThreadPoolScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncSemaphoreextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An AsyncSemaphore is a traditional semaphore but with asynchronous
+execution.</p><div class="fullcomment"><div class="comment cmt"><p>An AsyncSemaphore is a traditional semaphore but with asynchronous
+execution.</p><p>Grabbing a permit returns a <code>Future[Permit]</code>.</p><p>Basic usage:</p><pre><span class="kw">val</span> semaphore = <span class="kw">new</span> AsyncSemaphore(n)
+...
+semaphore.acquireAndRun() {
+  somethingThatReturnsFutureT()
+}</pre><p>Calls to acquire() and acquireAndRun are serialized, and tickets are
+given out fairly (in order of arrival).
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> for a mutex version.</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncStream" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="AsyncStream[+A]extendsAnyRef"></a>
+      <a id="AsyncStream[+A]:AsyncStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncStream.html"><span class="name">AsyncStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncStream[+A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A representation of a lazy (and possibly infinite) sequence of asynchronous
+values.</p><div class="fullcomment"><div class="comment cmt"><p>A representation of a lazy (and possibly infinite) sequence of asynchronous
+values. We provide combinators for non-blocking computation over the sequence
+of values.</p><p>It is composable with Future, Seq and Option.</p><pre><span class="kw">val</span> ids = <span class="std">Seq</span>(<span class="num">123</span>, <span class="num">124</span>, ...)
+<span class="kw">val</span> users = fromSeq(ids).flatMap(id <span class="kw">=&gt;</span> fromFuture(getUser(id)))
+
+<span class="cmt">// Or as a for-comprehension...</span>
+
+<span class="kw">val</span> users = <span class="kw">for</span> {
+  id <span class="kw">&lt;-</span> fromSeq(ids)
+  user <span class="kw">&lt;-</span> fromFuture(getUser(id))
+} <span class="kw">yield</span> user</pre><p>All of its operations are lazy and don't force evaluation, unless otherwise
+noted.</p><p>The stream is persistent and can be shared safely by multiple threads.
+</p></div></div>
+    </li><li name="com.twitter.concurrent.AsyncStreamBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AsyncStreamBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="AsyncStreamBenchmark:AsyncStreamBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncStreamBenchmark.html"><span class="name">AsyncStreamBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncStreamBenchmarkextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.concurrent.BridgedThreadPoolScheduler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="BridgedThreadPoolSchedulerextendsSchedulerwithExecutorScheduler"></a>
       <a id="BridgedThreadPoolScheduler:BridgedThreadPoolScheduler"></a>
       <h4 class="signature">
@@ -152,10 +285,19 @@ execution.</p>
       <span class="symbol">
         <a href="BridgedThreadPoolScheduler.html"><span class="name">BridgedThreadPoolScheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a> with <a href="ExecutorScheduler.html" class="extype" name="com.twitter.concurrent.ExecutorScheduler">ExecutorScheduler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A scheduler that bridges tasks submitted by external threads into local
-executor threads.</p>
-    </li><li name="com.twitter.concurrent.Broker" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@BridgedThreadPoolSchedulerextendsSchedulerwithExecutorScheduler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A scheduler that bridges tasks submitted by external threads into local
+executor threads.</p><div class="fullcomment"><div class="comment cmt"><p>A scheduler that bridges tasks submitted by external threads into local
+executor threads. All tasks submitted locally are executed on local threads.</p><p>Note: This scheduler expects to create executors with unbounded capacity.
+Thus it does not expect and has undefined behavior for any
+<code>RejectedExecutionException</code>s other than those encountered after executor
+shutdown.
+</p></div></div>
+    </li><li name="com.twitter.concurrent.Broker" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Broker[T]extendsAnyRef"></a>
       <a id="Broker[T]:Broker[T]"></a>
       <h4 class="signature">
@@ -166,8 +308,22 @@ executor threads.</p>
       <span class="symbol">
         <a href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An unbuffered FIFO queue, brokered by <code>Offer</code>s.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Broker[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An unbuffered FIFO queue, brokered by <code>Offer</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>An unbuffered FIFO queue, brokered by <code>Offer</code>s. Note that the queue is
+ordered by successful operations, not initiations, so <code>one</code> and <code>two</code>
+may not be received in that order with this code:</p><pre><span class="kw">val</span> b: Broker[<span class="std">Int</span>]
+b ! <span class="num">1</span>
+b ! <span class="num">2</span></pre><p>But rather we need to explicitly sequence them:</p><pre><span class="kw">val</span> b: Broker[<span class="std">Int</span>]
+<span class="kw">for</span> {
+  () <span class="kw">&lt;-</span> b ! <span class="num">1</span>
+  () <span class="kw">&lt;-</span> b ! <span class="num">2</span>
+} ()</pre><p>BUGS: the implementation would be much simpler in the absence of
+cancellation.
+</p></div></div>
     </li><li name="com.twitter.concurrent.ConcurrentBijection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ConcurrentBijection[A,B]extendsMap[A,B]"></a>
       <a id="ConcurrentBijection[A,B]:ConcurrentBijection[A,B]"></a>
@@ -177,11 +333,15 @@ executor threads.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentBijection.A">A</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentBijection.B">B</span>]</span>
+        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentBijection.A">A</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentBijection.B">B</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@ConcurrentBijection[A,B]extendsMap[A,B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.ConduitSpscBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConduitSpscBenchmarkextendsStdBenchAnnotations"></a>
       <a id="ConduitSpscBenchmark:ConduitSpscBenchmark"></a>
       <h4 class="signature">
@@ -192,10 +352,22 @@ executor threads.</p>
       <span class="symbol">
         <a href="ConduitSpscBenchmark.html"><span class="name">ConduitSpscBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">These benchmarks measure the overhead of various implementations of a
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@ConduitSpscBenchmarkextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">These benchmarks measure the overhead of various implementations of a
 conduit between a <code>source: () =&gt; Future[Buf]</code> and <code>sink: Buf =&gt;
-Future[Unit]</code>.</p>
+Future[Unit]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>These benchmarks measure the overhead of various implementations of a
+conduit between a <code>source: () =&gt; Future[Buf]</code> and <code>sink: Buf =&gt;
+Future[Unit]</code>.</p><p>The steps are as follows:</p><p>1. connect the source to the conduit
+2. drain three items from the conduit into the sink</p><p>The control benchmark measures the baseline when there is no conduit, i.e.,
+the source feeds directly into the sink.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.concurrent.ExecutorScheduler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ExecutorSchedulerextendsAnyRef"></a>
       <a id="ExecutorScheduler:ExecutorScheduler"></a>
@@ -207,8 +379,12 @@ Future[Unit]</code>.</p>
       <span class="symbol">
         <a href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A named Scheduler mix-in that causes submitted tasks to be dispatched according to
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@ExecutorSchedulerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A named Scheduler mix-in that causes submitted tasks to be dispatched according to
 an <span class="extype" name="java.util.concurrent.ExecutorService">java.util.concurrent.ExecutorService</span> created by an abstract factory
 function.</p>
     </li><li name="com.twitter.concurrent.LocalScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -222,9 +398,13 @@ function.</p>
       <span class="symbol">
         <a href="LocalScheduler.html"><span class="name">LocalScheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An efficient thread-local, direct-dispatch scheduler.</p>
-    </li><li name="com.twitter.concurrent.NamedPoolThreadFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@LocalSchedulerextendsScheduler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An efficient thread-local, direct-dispatch scheduler.</p>
+    </li><li name="com.twitter.concurrent.NamedPoolThreadFactory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="NamedPoolThreadFactoryextendsThreadFactory"></a>
       <a id="NamedPoolThreadFactory:NamedPoolThreadFactory"></a>
       <h4 class="signature">
@@ -235,10 +415,23 @@ function.</p>
       <span class="symbol">
         <a href="NamedPoolThreadFactory.html"><span class="name">NamedPoolThreadFactory</span></a><span class="result"> extends <span class="extype" name="java.util.concurrent.ThreadFactory">ThreadFactory</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A <span class="extype" name="java.util.concurrent.ThreadFactory">java.util.concurrent.ThreadFactory</span> which creates threads with a name
-indicating the pool from which they originated.</p>
-    </li><li name="com.twitter.concurrent.Offer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@NamedPoolThreadFactoryextendsThreadFactory" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A <span class="extype" name="java.util.concurrent.ThreadFactory">java.util.concurrent.ThreadFactory</span> which creates threads with a name
+indicating the pool from which they originated.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="java.util.concurrent.ThreadFactory">java.util.concurrent.ThreadFactory</span> which creates threads with a name
+indicating the pool from which they originated.</p><p>A new <span class="extype" name="java.lang.ThreadGroup">java.lang.ThreadGroup</span> (named <code>name</code>) is created as a sub-group of
+whichever group to which the thread that created the factory belongs. Each
+thread created by this factory will be a member of this group and have a
+unique name including the group name and an monotonically increasing number.
+The intention of this naming is to ease thread identification in debugging
+output.</p><p>For example, a <code>NamedPoolThreadFactory</code> with <code>name=&quot;writer&quot;</code> will create a
+<code>ThreadGroup</code> named &quot;writer&quot; and new threads will be named &quot;writer-1&quot;,
+&quot;writer-2&quot;, etc.
+</p></div></div>
+    </li><li name="com.twitter.concurrent.Offer" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Offer[+T]extendsAnyRef"></a>
       <a id="Offer[+T]:Offer[T]"></a>
       <h4 class="signature">
@@ -249,8 +442,27 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An offer to communicate with another process.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Offer[+T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An offer to communicate with another process.</p><div class="fullcomment"><div class="comment cmt"><p>An offer to communicate with another process. The offer is
+parameterized on the type of the value communicated. An offer that
+sends a value typically has type {{Unit}}. An offer is activated by
+synchronizing it, which is done with <code>sync()</code>.</p><p>Note that Offers are persistent values -- they may be synchronized
+multiple times. They represent a standing offer of communication, not
+a one-shot event.</p><h3>The synchronization protocol</h3><p>Synchronization is performed via a two-phase commit process.
+<code>prepare()</code> commences the transaction, and when the other party is
+ready, it returns with a transaction object, <code>Tx[T]</code>. This must then
+be ackd or nackd. If both parties acknowledge, <code>Tx.ack()</code> returns
+with a commit object, containing the value. This finalizes the
+transaction. Please see the <code>Tx</code> documentation for more details on
+that phase of the protocol.</p><p>Note that a user should never perform this protocol themselves --
+synchronization should always be done with <code>sync()</code>.</p><p>Future interrupts are propagated, and failure is passed through. It
+is up to the implementer of the Offer to decide on failure semantics,
+but they are always passed through in all of the combinators.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractOffer.html" class="extype" name="com.twitter.concurrent.AbstractOffer">com.twitter.concurrent.AbstractOffer</a>.
+</p></div></div>
     </li><li name="com.twitter.concurrent.OfferBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="OfferBenchmarkextendsAnyRef"></a>
       <a id="OfferBenchmark:OfferBenchmark"></a>
@@ -262,7 +474,11 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="OfferBenchmark.html"><span class="name">OfferBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@OfferBenchmarkextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@OutputTimeUnit</span><span class="args">()</span>
               
@@ -280,7 +496,11 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Offers.html"><span class="name">Offers</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@OffersextendsObject" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.OnceBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="OnceBenchmarkextendsAnyRef"></a>
@@ -293,7 +513,11 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="OnceBenchmark.html"><span class="name">OnceBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@OnceBenchmarkextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@OutputTimeUnit</span><span class="args">()</span>
               
@@ -311,7 +535,11 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@PermitextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Scheduler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="SchedulerextendsAnyRef"></a>
@@ -324,9 +552,13 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An interface for scheduling <span class="extype" name="java.lang.Runnable">java.lang.Runnable</span> tasks.</p>
-    </li><li name="com.twitter.concurrent.SchedulerBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SchedulerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An interface for scheduling <span class="extype" name="java.lang.Runnable">java.lang.Runnable</span> tasks.</p>
+    </li><li name="com.twitter.concurrent.SchedulerBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SchedulerBenchmarkextendsAnyRef"></a>
       <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
       <h4 class="signature">
@@ -337,9 +569,21 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="SchedulerBenchmark.html"><span class="name">SchedulerBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Measure Scheduler.</p>
-    </li><li name="com.twitter.concurrent.Serialized" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SchedulerBenchmarkextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Measure Scheduler.submit/run time when there are multiple threads.</p><div class="fullcomment"><div class="comment cmt"><p>Measure Scheduler.submit/run time when there are multiple threads.  Previous
+to changing SampleScale from 50 to 1000, there was sometimes contention for
+the global threads lock in getCurrentThreadCpuTime().
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
+              
+                <span class="name">@BenchmarkMode</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.twitter.concurrent.Serialized" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="SerializedextendsAnyRef"></a>
       <a id="Serialized:Serialized"></a>
       <h4 class="signature">
@@ -350,9 +594,16 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Efficient ordered <i>serialization</i> of operations.</p>
-    </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SerializedextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Efficient ordered <i>serialization</i> of operations.</p><div class="fullcomment"><div class="comment cmt"><p>Efficient ordered <i>serialization</i> of operations.</p><p><b>Note:</b> This should not be used in place of Scala's
+<code>synchronized</code>, but rather only when serialization semantics are
+required.
+</p></div></div>
+    </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Spool[+A]extendsAnyRef"></a>
       <a id="Spool[+A]:Spool[A]"></a>
       <h4 class="signature">
@@ -363,9 +614,50 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A spool is an asynchronous stream.</p>
-    </li><li name="com.twitter.concurrent.SpoolSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Spool[+A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.</p><div class="fullcomment"><div class="comment cmt"><p>Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.
+We encourage you to use <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a> instead.</p><p>A spool is an asynchronous stream. It more or less mimics the scala
+{{Stream}} collection, but with cons cells that have either eager or
+deferred tails.</p><p>Construction of eager Spools is done with either Spool.cons or
+the {{**::}} operator. To construct a lazy/deferred Spool which
+materializes its tail on demand, use the {{*::}} operator. In order
+to use these operators for deconstruction, they must be imported
+explicitly (ie: {{import Spool.{*::, **::
+}}}
+)</p><pre><span class="kw">def</span> fill(rest: Promise[Spool[<span class="std">Int</span>]]) {
+  asyncProcess foreach { result <span class="kw">=&gt;</span>
+    <span class="kw">if</span> (result.last) {
+      rest() = Return(result **:: Spool.empty)
+    } <span class="kw">else</span> {
+      <span class="kw">val</span> next = <span class="kw">new</span> Promise[Spool[<span class="std">Int</span>]]
+      rest() = Return(result *:: next)
+      fill(next)
+    }
+  }
+}
+<span class="kw">val</span> rest = <span class="kw">new</span> Promise[Spool[<span class="std">Int</span>]]
+fill(rest)
+firstElem *:: rest</pre><p>Note: There is a Java-friendly API for this trait: <a href="AbstractSpool.html" class="extype" name="com.twitter.concurrent.AbstractSpool">com.twitter.concurrent.AbstractSpool</a>.</p><p>explicitly (ie: {{import Spool.{*::, **::
+}}}</p><pre><span class="kw">def</span> fill(rest: Promise[Spool[<span class="std">Int</span>]]) {
+  asyncProcess foreach { result <span class="kw">=&gt;</span>
+    <span class="kw">if</span> (result.last) {
+      rest() = Return(result **:: Spool.empty)
+    } <span class="kw">else</span> {
+      <span class="kw">val</span> next = <span class="kw">new</span> Promise[Spool[<span class="std">Int</span>]]
+      rest() = Return(result *:: next)
+      fill(next)
+    }
+  }
+}
+<span class="kw">val</span> rest = <span class="kw">new</span> Promise[Spool[<span class="std">Int</span>]]
+fill(rest)
+firstElem *:: rest</pre><p>Note: There is a Java-friendly API for this trait: <a href="AbstractSpool.html" class="extype" name="com.twitter.concurrent.AbstractSpool">com.twitter.concurrent.AbstractSpool</a>.
+</p></div></div>
+    </li><li name="com.twitter.concurrent.SpoolSource" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SpoolSource[A]extendsAnyRef"></a>
       <a id="SpoolSource[A]:SpoolSource[A]"></a>
       <h4 class="signature">
@@ -376,8 +668,13 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SpoolSource[A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p><div class="fullcomment"><div class="comment cmt"><p>A SpoolSource is a simple object for creating and populating a Spool-chain.  apply()
+returns a Future[Spool] that is populated by calls to offer().  This class is thread-safe.</p></div></div>
     </li><li name="com.twitter.concurrent.Spools" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SpoolsextendsObject"></a>
       <a id="Spools:Spools"></a>
@@ -389,7 +686,11 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="Spools.html"><span class="name">Spools</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SpoolsextendsObject" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.ThreadPoolScheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ThreadPoolSchedulerextendsSchedulerwithExecutorScheduler"></a>
@@ -402,10 +703,14 @@ indicating the pool from which they originated.</p>
       <span class="symbol">
         <a href="ThreadPoolScheduler.html"><span class="name">ThreadPoolScheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a> with <a href="ExecutorScheduler.html" class="extype" name="com.twitter.concurrent.ExecutorScheduler">ExecutorScheduler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A scheduler that dispatches directly to an underlying Java
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@ThreadPoolSchedulerextendsSchedulerwithExecutorScheduler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A scheduler that dispatches directly to an underlying Java
 cached threadpool executor.</p>
-    </li><li name="com.twitter.concurrent.Tx" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.Tx" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Tx[+T]extendsAnyRef"></a>
       <a id="Tx[+T]:Tx[T]"></a>
       <h4 class="signature">
@@ -416,9 +721,20 @@ cached threadpool executor.</p>
       <span class="symbol">
         <a href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
-protocol:</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Tx[+T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
+protocol:</p><div class="fullcomment"><div class="comment cmt"><p>A <code>Tx</code> is used to mediate multi-party transactions with the following
+protocol:</p><ol class="decimal"><li>A transaction is complete when all parties have completed
+  acknowledgment.
+  2. If any party aborts (nack), the entire transaction is considered
+  aborted.
+  3. Once a transaction has been acknowledged by a party, that
+  acknowledgment must be honored: The party cannot subsequently nack.
+</li></ol></div></div>
     </li><li name="com.twitter.concurrent.Txs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="TxsextendsObject"></a>
       <a id="Txs:Txs"></a>
@@ -430,7 +746,11 @@ protocol:</p>
       <span class="symbol">
         <a href="Txs.html"><span class="name">Txs</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@TxsextendsObject" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.ConcurrentMultiMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConcurrentMultiMap[K,V]extendsAnyRef"></a>
@@ -443,12 +763,16 @@ protocol:</p>
       <span class="symbol">
         <a href="ConcurrentMultiMap.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@ConcurrentMultiMap[K,V]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> use guava's Multimaps.synchronizedMultimap</p></dd></dl></div>
-    </li><li name="com.twitter.concurrent.ConcurrentPool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.ConcurrentPool" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConcurrentPool[K,V]extendsAnyRef"></a>
       <a id="ConcurrentPool[K,V]:ConcurrentPool[K,V]"></a>
       <h4 class="signature">
@@ -459,9 +783,19 @@ protocol:</p>
       <span class="symbol">
         <a href="ConcurrentPool.html"><span class="name deprecated" title="Deprecated: (Since version 6.2.x) use finagle's BufferingPool">ConcurrentPool</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">The ConcurrentPool provides a concurrent object pool on top of the
-java.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@ConcurrentPool[K,V]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The ConcurrentPool provides a concurrent object pool on top of the
+java.util.concurrent primitives.</p><div class="fullcomment"><div class="comment cmt"><p>The ConcurrentPool provides a concurrent object pool on top of the
+java.util.concurrent primitives.</p><p>The pool currently supports only FIFO ordering of items, and does
+not yet clean up per-key object lists.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> use finagle's BufferingPool</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -469,7 +803,24 @@ java.</p>
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.concurrent.AsyncMeter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncMeter"></a>
+      <a id="AsyncMeter:AsyncMeter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncMeter$.html"><span class="name">AsyncMeter</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncMeter" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.concurrent.AsyncQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AsyncQueue"></a>
       <a id="AsyncQueue:AsyncQueue"></a>
       <h4 class="signature">
@@ -480,7 +831,11 @@ java.</p>
       <span class="symbol">
         <a href="AsyncQueue$.html"><span class="name">AsyncQueue</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncQueue" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AsyncSemaphore"></a>
@@ -493,7 +848,28 @@ java.</p>
       <span class="symbol">
         <a href="AsyncSemaphore$.html"><span class="name">AsyncSemaphore</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncSemaphore" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.concurrent.AsyncStream" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AsyncStream"></a>
+      <a id="AsyncStream:AsyncStream"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncStream$.html"><span class="name">AsyncStream</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncStream" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Offer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Offer"></a>
@@ -506,8 +882,12 @@ java.</p>
       <span class="symbol">
         <a href="Offer$.html"><span class="name">Offer</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Offers.html" class="extype" name="com.twitter.concurrent.Offers">com.twitter.concurrent.Offers</a>.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Offer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Offers.html" class="extype" name="com.twitter.concurrent.Offers">com.twitter.concurrent.Offers</a>.</p>
     </li><li name="com.twitter.concurrent.OfferBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="OfferBenchmark"></a>
       <a id="OfferBenchmark:OfferBenchmark"></a>
@@ -519,7 +899,11 @@ java.</p>
       <span class="symbol">
         <a href="OfferBenchmark$.html"><span class="name">OfferBenchmark</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@OfferBenchmark" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Once" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Once"></a>
@@ -532,7 +916,11 @@ java.</p>
       <span class="symbol">
         <a href="Once$.html"><span class="name">Once</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Once" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.OnceBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="OnceBenchmark"></a>
@@ -545,7 +933,11 @@ java.</p>
       <span class="symbol">
         <a href="OnceBenchmark$.html"><span class="name">OnceBenchmark</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@OnceBenchmark" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Scheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Scheduler"></a>
@@ -558,8 +950,12 @@ java.</p>
       <span class="symbol">
         <a href="Scheduler$.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A global scheduler.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Scheduler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A global scheduler.</p>
     </li><li name="com.twitter.concurrent.SchedulerBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SchedulerBenchmark"></a>
       <a id="SchedulerBenchmark:SchedulerBenchmark"></a>
@@ -571,9 +967,13 @@ java.</p>
       <span class="symbol">
         <a href="SchedulerBenchmark$.html"><span class="name">SchedulerBenchmark</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SchedulerBenchmark" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.Spool" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Spool"></a>
       <a id="Spool:Spool"></a>
       <h4 class="signature">
@@ -584,8 +984,14 @@ java.</p>
       <span class="symbol">
         <a href="Spool$.html"><span class="name">Spool</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Spools.html" class="extype" name="com.twitter.concurrent.Spools">com.twitter.concurrent.Spools</a>.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Spool" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.</p><div class="fullcomment"><div class="comment cmt"><p>Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.
+We encourage you to use <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a> instead.</p><p>Note: There is a Java-friendly API for this object: <a href="Spools.html" class="extype" name="com.twitter.concurrent.Spools">com.twitter.concurrent.Spools</a>.
+</p></div></div>
     </li><li name="com.twitter.concurrent.SpoolSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SpoolSource"></a>
       <a id="SpoolSource:SpoolSource"></a>
@@ -597,7 +1003,11 @@ java.</p>
       <span class="symbol">
         <a href="SpoolSource$.html"><span class="name">SpoolSource</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@SpoolSource" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Tx" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Tx"></a>
@@ -610,21 +1020,12 @@ java.</p>
       <span class="symbol">
         <a href="Tx$.html"><span class="name">Tx</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Txs.html" class="extype" name="com.twitter.concurrent.Txs">com.twitter.concurrent.Txs</a>.</p>
-    </li><li name="com.twitter.concurrent.exp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="exp"></a>
-      <a id="exp:exp"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">package</span>
-      </span>
-      <span class="symbol">
-        <a href="exp/package.html"><span class="name">exp</span></a>
-      </span>
-      </h4>
-      
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@Tx" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Txs.html" class="extype" name="com.twitter.concurrent.Txs">com.twitter.concurrent.Txs</a>.</p>
     </li></ol>
             </div>
 
@@ -650,6 +1051,7 @@ java.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

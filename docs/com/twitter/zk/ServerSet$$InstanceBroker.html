@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>InstanceBroker - com.twitter.zk.ServerSet.InstanceBroker</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,15 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../lib/class_big.png" />
+        <img alt="Class" src="../../../lib/class_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.zk">zk</a>.<a href="ServerSet$.html" class="extype" name="com.twitter.zk.ServerSet">ServerSet</a></p>
-        <h1>InstanceBroker</h1>
+        <h1>InstanceBroker</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="ServerSet$.html" class="extype" name="com.twitter.zk.ServerSet">package ServerSet</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,13 +45,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">InstanceBroker</span><span class="result"> extends <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]] with <span class="extype" name="com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor">HostChangeMonitor</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
+        <span class="name">InstanceBroker</span><span class="result"> extends <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]] with <span class="extype" name="com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor">HostChangeMonitor</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>ServerSet monitor that publishes updates on a Broker.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor">HostChangeMonitor</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>], <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor">HostChangeMonitor</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>], <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +77,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -90,7 +99,11 @@
       <span class="symbol">
         <span class="name">InstanceBroker</span><span class="params">()</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@&lt;init&gt;():com.twitter.zk.ServerSet.InstanceBroker" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -110,9 +123,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang" class="name">!</span><span class="params">(<span name="msg">msg: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span title="gt4s: $bang" class="name">!</span><span class="params">(<span name="msg">msg: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@!(msg:T):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Send an item on the broker, returning a {{Future}} indicating
 completion.</p><div class="fullcomment"><div class="comment cmt"><p>Send an item on the broker, returning a {{Future}} indicating
 completion.
@@ -126,25 +143,16 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$bang" class="name">!!</span><span class="params">(<span name="msg">msg: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span title="gt4s: $bang$bang" class="name">!!</span><span class="params">(<span name="msg">msg: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@!!(msg:T):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Like {!}, but block until the item has been sent.</p><div class="fullcomment"><div class="comment cmt"><p>Like {!}, but block until the item has been sent.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
     </li><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -153,10 +161,14 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -166,24 +178,15 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -192,10 +195,14 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#?" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="?:com.twitter.util.Future[T]"></a>
       <a id="?:Future[Set[ServiceInstance]]"></a>
@@ -205,9 +212,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $qmark" class="name">?</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
+        <span title="gt4s: $qmark" class="name">?</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@?:com.twitter.util.Future[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Retrieve an item from the broker, asynchronously.</p><div class="fullcomment"><div class="comment cmt"><p>Retrieve an item from the broker, asynchronously.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#??" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -219,9 +230,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $qmark$qmark" class="name">??</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
+        <span title="gt4s: $qmark$qmark" class="name">??</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@??:T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Retrieve an item from the broker, blocking.</p><div class="fullcomment"><div class="comment cmt"><p>Retrieve an item from the broker, blocking.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -235,7 +250,11 @@ completion.
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -248,7 +267,11 @@ completion.
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -265,9 +288,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -278,9 +305,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -291,9 +322,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -312,7 +347,11 @@ completion.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -323,9 +362,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -336,9 +379,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -349,9 +396,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -362,9 +413,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -375,9 +430,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.zk.ServerSet.InstanceBroker#onChange" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onChange(instances:com.google.common.collect.ImmutableSet[com.twitter.thrift.ServiceInstance]):Unit"></a>
@@ -388,9 +447,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onChange</span><span class="params">(<span name="instances">instances: <span class="extype" name="com.google.common.collect.ImmutableSet">ImmutableSet</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">onChange</span><span class="params">(<span name="instances">instances: <span class="extype" name="com.google.common.collect.ImmutableSet">ImmutableSet</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@onChange(instances:com.google.common.collect.ImmutableSet[com.twitter.thrift.ServiceInstance]):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.zk.ServerSet.InstanceBroker">InstanceBroker</a> → HostChangeMonitor</dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#recv" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="recv:com.twitter.concurrent.Offer[T]"></a>
@@ -401,9 +464,13 @@ completion.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">recv</span><span class="result">: <a href="../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
+        <span class="name">recv</span><span class="result">: <a href="../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@recv:com.twitter.concurrent.Offer[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#recvAndAwait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="recvAndAwait():T"></a>
@@ -414,11 +481,14 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">recvAndAwait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
+        <span class="name">recvAndAwait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>
       </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>??</code>
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@recvAndAwait():T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>??</code></p></span></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#recvAndSync" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="recvAndSync():com.twitter.util.Future[T]"></a>
       <a id="recvAndSync():Future[Set[ServiceInstance]]"></a>
@@ -428,11 +498,14 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">recvAndSync</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
+        <span class="name">recvAndSync</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</span>
       </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>?</code>
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@recvAndSync():com.twitter.util.Future[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>?</code></p></span></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#send" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="send(msg:T):com.twitter.concurrent.Offer[Unit]"></a>
       <a id="send(Set[ServiceInstance]):Offer[Unit]"></a>
@@ -442,9 +515,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">send</span><span class="params">(<span name="msg">msg: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">send</span><span class="params">(<span name="msg">msg: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../concurrent/Offer.html" class="extype" name="com.twitter.concurrent.Offer">Offer</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@send(msg:T):com.twitter.concurrent.Offer[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#sendAndAwait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sendAndAwait(message:T):Unit"></a>
@@ -455,11 +532,14 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sendAndAwait</span><span class="params">(<span name="message">message: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">sendAndAwait</span><span class="params">(<span name="message">message: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>!!</code>
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@sendAndAwait(message:T):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>!!</code></p></span></dd></dl></div>
     </li><li name="com.twitter.concurrent.Broker#sendAndSync" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sendAndSync(message:T):com.twitter.util.Future[Unit]"></a>
       <a id="sendAndSync(Set[ServiceInstance]):Future[Unit]"></a>
@@ -469,11 +549,14 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sendAndSync</span><span class="params">(<span name="message">message: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">sendAndSync</span><span class="params">(<span name="message">message: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>!</code>
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@sendAndSync(message:T):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a></dd><dt>See also</dt><dd><span class="cmt"><p>operator <code>!</code></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -485,7 +568,11 @@ completion.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -498,7 +585,11 @@ completion.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -509,9 +600,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -528,9 +623,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -547,9 +646,13 @@ completion.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.zk.ServerSet$$InstanceBroker@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -569,11 +672,11 @@ completion.
         <div class="parent" name="com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor">
               <h3>Inherited from <span class="extype" name="com.twitter.common.net.pool.DynamicHostSet.HostChangeMonitor">HostChangeMonitor</span>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]</h3>
             </div><div class="parent" name="com.twitter.concurrent.Broker">
-              <h3>Inherited from <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</h3>
+              <h3>Inherited from <a href="../concurrent/Broker.html" class="extype" name="com.twitter.concurrent.Broker">Broker</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Set" class="extype" target="_top">Set</a>[<span class="extype" name="com.twitter.thrift.ServiceInstance">ServiceInstance</span>]]</h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -590,6 +693,7 @@ completion.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

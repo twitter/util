@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>InMemoryStatsReceiver - com.twitter.finagle.stats.InMemoryStatsReceiver</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -24,9 +28,15 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../../lib/class_big.png" />
+        <img alt="Class" src="../../../../lib/class_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="package.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
-        <h1>InMemoryStatsReceiver</h1>
+        <h1>InMemoryStatsReceiver</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.twitter.finagle.stats">package stats</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -39,9 +49,17 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>In-memory stats receiver for testing.</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An in-memory implementation of <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, which is mostly used for testing.</p><p>Note that an <a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> does not conflate <code>Seq(&quot;a&quot;, &quot;b&quot;)</code> and <code>Seq(&quot;a/b&quot;)</code>
+names no matter how they look when printed.</p><pre><span class="kw">val</span> isr = <span class="kw">new</span> InMemoryStatsReceiver
+isr.counter(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>)
+irs.counter(<span class="lit">"a/b"</span>, <span class="lit">"bar"</span>)
+
+irs.print(<span class="std">Console</span>.out) <span class="cmt">// will print two lines "a/b/foo 0" and "a/b/bar 0"</span>
+
+assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>) == <span class="num">0</span>)) <span class="cmt">// ok</span>
+assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"bar"</span>) == <span class="num">0</span>)) <span class="cmt">// fail</span></pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +85,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -90,7 +107,11 @@
       <span class="symbol">
         <span class="name">InMemoryStatsReceiver</span><span class="params">()</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@&lt;init&gt;():com.twitter.finagle.stats.InMemoryStatsReceiver" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -102,19 +123,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -123,10 +131,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -136,24 +148,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -162,10 +165,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#addGauge" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a>
       <a id="addGauge(String*)(⇒Float):Gauge"></a>
@@ -175,19 +182,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addGauge</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a></span>
+        <span class="name">addGauge</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Add the function <code>f</code> as a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Add the function <code>f</code> as a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> with the given name.</p><p>The returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> value is only weakly referenced by the
-<a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, and if garbage collected will eventually cease to
-be a part of this measurement: thus, it needs to be retained by the
-caller. Or put another way, the measurement is only guaranteed to exist
-as long as there exists a strong reference to the returned
-<a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> and typically should be stored in a member variable.</p><p>Measurements under the same name are added together.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html" target="_blank">java.lang.ref.WeakReference</a>
-</p></span><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
-    to store the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> that can give the desired lifecycle.
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a> of the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a> of the given <code>name</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -199,7 +202,11 @@ as long as there exists a strong reference to the returned
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#clear" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clear():Unit"></a>
@@ -210,11 +217,14 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clear</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">clear</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Clears all registered counters, gauges and stats.</p><div class="fullcomment"><div class="comment cmt"><p>Clears all registered counters, gauges and stats.</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this is not atomic. If new metrics are added while this method is executing, those metrics may remain.
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@clear():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Clears all registered counters, gauges and stats.</p><div class="fullcomment"><div class="comment cmt"><p>Clears all registered counters, gauges and stats.</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this is not atomic. If new metrics are added while this method is executing, those metrics may remain.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -226,7 +236,11 @@ as long as there exists a strong reference to the returned
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -245,8 +259,12 @@ as long as there exists a strong reference to the returned
       <span class="symbol">
         <span class="name">counter</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="ReadableCounter.html" class="extype" name="com.twitter.finagle.stats.ReadableCounter">ReadableCounter</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@counter(name:String*):com.twitter.finagle.stats.ReadableCounter" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a <a href="ReadableCounter.html" class="extype" name="com.twitter.finagle.stats.ReadableCounter">ReadableCounter</a> of the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="ReadableCounter.html" class="extype" name="com.twitter.finagle.stats.ReadableCounter">ReadableCounter</a> of the given <code>name</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#counter0" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter0(name:String):com.twitter.finagle.stats.Counter"></a>
@@ -259,22 +277,30 @@ as long as there exists a strong reference to the returned
       <span class="symbol">
         <span class="name">counter0</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counter</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@counter0(name:String):com.twitter.finagle.stats.Counter" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.</p><p>This method is a convenience for Java programs, but is no longer needed because
 <a href="StatsReceivers$.html#counter(statsReceiver:com.twitter.finagle.stats.StatsReceiver,name:String*):com.twitter.finagle.stats.Counter" class="extmbr" name="com.twitter.finagle.stats.StatsReceivers#counter">StatsReceivers.counter</a> is usable from java.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#counters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="counters:scala.collection.mutable.HashMap[Seq[String],Int]withscala.collection.mutable.SynchronizedMap[Seq[String],Int]"></a>
-      <a id="counters:HashMap[Seq[String],Int]withSynchronizedMap[Seq[String],Int]"></a>
+      <a id="counters:scala.collection.mutable.Map[Seq[String],Int]"></a>
+      <a id="counters:Map[Seq[String],Int]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">counters</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.HashMap" class="extype" target="_top">HashMap</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.SynchronizedMap" class="extype" target="_top">SynchronizedMap</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+        <span class="name">counters</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@counters:scala.collection.mutable.Map[Seq[String],Int]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -285,9 +311,13 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -298,9 +328,13 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -311,9 +345,13 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -322,17 +360,21 @@ as long as there exists a strong reference to the returned
               
         </dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#gauges" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="gauges:scala.collection.mutable.WeakHashMap[Seq[String],()=&gt;Float]withscala.collection.mutable.SynchronizedMap[Seq[String],()=&gt;Float]"></a>
-      <a id="gauges:WeakHashMap[Seq[String],()⇒Float]withSynchronizedMap[Seq[String],()⇒Float]"></a>
+      <a id="gauges:scala.collection.mutable.Map[Seq[String],()=&gt;Float]"></a>
+      <a id="gauges:Map[Seq[String],()⇒Float]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">gauges</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.WeakHashMap" class="extype" target="_top">WeakHashMap</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], () ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.SynchronizedMap" class="extype" target="_top">SynchronizedMap</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], () ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a>]</span>
+        <span class="name">gauges</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], () ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Float" class="extype" target="_top">Float</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@gauges:scala.collection.mutable.Map[Seq[String],()=&gt;Float]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
@@ -345,7 +387,11 @@ as long as there exists a strong reference to the returned
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -356,9 +402,13 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -369,9 +419,13 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#isNull" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isNull:Boolean"></a>
@@ -382,9 +436,13 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isNull</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isNull</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@isNull:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Accurately indicates if this is a <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Accurately indicates if this is a <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.
 Because equality is not forwarded via scala.Proxy, this
 is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.
@@ -398,9 +456,13 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -411,9 +473,13 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -424,9 +490,13 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#print" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="print(p:java.io.PrintStream):Unit"></a>
@@ -437,10 +507,14 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">print</span><span class="params">(<span name="p">p: <span class="extype" name="java.io.PrintStream">PrintStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">print</span><span class="params">(<span name="p">p: <span class="extype" name="java.io.PrintStream">PrintStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@print(p:java.io.PrintStream):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Dumps this in-memory stats receiver to the given <span class="extype" name="PrintStream">PrintStream</span>.</p>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#provideGauge" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="provideGauge(name:String*)(f:=&gt;Float):Unit"></a>
       <a id="provideGauge(String*)(⇒Float):Unit"></a>
@@ -450,15 +524,18 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">provideGauge</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">provideGauge</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@provideGauge(name:String*)(f:=&gt;Float):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Register a function <code>f</code> as a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> with the given name that has
 a lifecycle with no end.</p><div class="fullcomment"><div class="comment cmt"><p>Register a function <code>f</code> as a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> with the given name that has
 a lifecycle with no end.</p><p>This measurement exists in perpetuity.</p><p>Measurements under the same name are added together.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceiver.html#addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#addGauge">StatsReceiver.addGauge</a> if you can properly control the lifecycle
-    of the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a>.
-</p></span></dd></dl></div>
+    of the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a>.</p></span></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#repr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="repr:com.twitter.finagle.stats.InMemoryStatsReceiver"></a>
       <a id="repr:InMemoryStatsReceiver"></a>
@@ -470,11 +547,36 @@ a lifecycle with no end.</p><p>This measurement exists in perpetuity.</p><p>Meas
       <span class="symbol">
         <span class="name">repr</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@repr:com.twitter.finagle.stats.InMemoryStatsReceiver" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Specifies the representative receiver.</p><div class="fullcomment"><div class="comment cmt"><p>Specifies the representative receiver.  This is in order to
 expose an object we can use for comparison so that global stats
 are only reported once per receiver.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver"></a>
+      <a id="scope(String*):StatsReceiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scope</span><span class="params">(<span name="namespaces">namespaces: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Prepend <code>namespace</code> and <code>namespaces</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> and <code>namespaces</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>, <span class="lit">"backend"</span>, <span class="lit">"pool"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> named <code>/client/backend/pool/adds</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@varargs</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scope(namespace:String):com.twitter.finagle.stats.StatsReceiver"></a>
       <a id="scope(String):StatsReceiver"></a>
@@ -486,7 +588,11 @@ are only reported once per receiver.
       <span class="symbol">
         <span class="name">scope</span><span class="params">(<span name="namespace">namespace: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@scope(namespace:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)
 statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"backend"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counters</a> named <code>/client/adds</code>
 and <code>/client/backend/adds</code>.
@@ -502,7 +608,11 @@ and <code>/client/backend/adds</code>.
       <span class="symbol">
         <span class="name">scopeSuffix</span><span class="params">(<span name="suffix">suffix: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Prepend a suffix value to the next scope.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend a suffix value to the next scope.</p><p>For example:</p><pre>statsReceiver.scopeSuffix(<span class="lit">"toto"</span>).scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> named <code>/client/toto/adds</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#stat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -516,8 +626,12 @@ and <code>/client/backend/adds</code>.
       <span class="symbol">
         <span class="name">stat</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="ReadableStat.html" class="extype" name="com.twitter.finagle.stats.ReadableStat">ReadableStat</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name.
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@stat(name:String*):com.twitter.finagle.stats.ReadableStat" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a <a href="ReadableStat.html" class="extype" name="com.twitter.finagle.stats.ReadableStat">ReadableStat</a> of the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="ReadableStat.html" class="extype" name="com.twitter.finagle.stats.ReadableStat">ReadableStat</a> of the given <code>name</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#stat0" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stat0(name:String):com.twitter.finagle.stats.Stat"></a>
@@ -530,23 +644,31 @@ and <code>/client/backend/adds</code>.
       <span class="symbol">
         <span class="name">stat0</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@stat0(name:String):com.twitter.finagle.stats.Stat" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name. This method is a convenience for Java
 programs, but is no longer needed because <a href="StatsReceivers$.html#counter(statsReceiver:com.twitter.finagle.stats.StatsReceiver,name:String*):com.twitter.finagle.stats.Counter" class="extmbr" name="com.twitter.finagle.stats.StatsReceivers#counter">StatsReceivers.counter</a> is
 usable from java.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#stats" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="stats:scala.collection.mutable.HashMap[Seq[String],Seq[Float]]withscala.collection.mutable.SynchronizedMap[Seq[String],Seq[Float]]"></a>
-      <a id="stats:HashMap[Seq[String],Seq[Float]]withSynchronizedMap[Seq[String],Seq[Float]]"></a>
+      <a id="stats:scala.collection.mutable.Map[Seq[String],Seq[Float]]"></a>
+      <a id="stats:Map[Seq[String],Seq[Float]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">stats</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.HashMap" class="extype" target="_top">HashMap</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a>]] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.collection.mutable.SynchronizedMap" class="extype" target="_top">SynchronizedMap</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a>]]</span>
+        <span class="name">stats</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Float" class="extype" target="_top">Float</a>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@stats:scala.collection.mutable.Map[Seq[String],Seq[Float]]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -559,7 +681,11 @@ usable from java.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -572,7 +698,11 @@ usable from java.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@toString():String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -583,9 +713,13 @@ usable from java.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -602,9 +736,13 @@ usable from java.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -621,9 +759,13 @@ usable from java.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -636,112 +778,7 @@ usable from java.
 
         
 
-        <div id="values" class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="com.twitter.finagle.stats.StatsReceiver#time" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="time[T](name:String*)(f:=&gt;T):T"></a>
-      <a id="time[T](String*)(⇒T):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2015-2-22) Use Stat.time instead">time</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.finagle.stats.StatsReceiver.time.T">T</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.finagle.stats.StatsReceiver.time.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Time a given function in milliseconds.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function in milliseconds.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2015-2-22)</i> Use Stat.time instead</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.StatsReceiver#time" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="time[T](unit:java.util.concurrent.TimeUnit,name:String*)(f:=&gt;T):T"></a>
-      <a id="time[T](TimeUnit,String*)(⇒T):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2015-2-22) Use Stat.time instead">time</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.finagle.stats.StatsReceiver.time.T">T</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.finagle.stats.StatsReceiver.time.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Time a given function using the given TimeUnit.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function using the given TimeUnit.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2015-2-22)</i> Use Stat.time instead</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.StatsReceiver#time" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="time[T](unit:java.util.concurrent.TimeUnit,stat:com.twitter.finagle.stats.Stat)(f:=&gt;T):T"></a>
-      <a id="time[T](TimeUnit,Stat)(⇒T):T"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2015-2-22) Use Stat.time instead">time</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>, <span name="stat">stat: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.finagle.stats.StatsReceiver.time.T">T</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.finagle.stats.StatsReceiver.time.T">T</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Time a given function using the given TimeUnit.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given function using the given TimeUnit.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2015-2-22)</i> Use Stat.time instead</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.StatsReceiver#timeFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeFuture[T](name:String*)(f:=&gt;com.twitter.util.Future[T]):com.twitter.util.Future[T]"></a>
-      <a id="timeFuture[T](String*)(⇒Future[T]):Future[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2015-2-22) Use Stat.timeFuture instead">timeFuture</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>)</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Time a given future in milliseconds.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future in milliseconds.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2015-2-22)</i> Use Stat.timeFuture instead</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.StatsReceiver#timeFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeFuture[T](unit:java.util.concurrent.TimeUnit,name:String*)(f:=&gt;com.twitter.util.Future[T]):com.twitter.util.Future[T]"></a>
-      <a id="timeFuture[T](TimeUnit,String*)(⇒Future[T]):Future[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2015-2-22) Use Stat.timeFuture instead">timeFuture</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="params">(<span name="f">f: ⇒ <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>)</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Time a given future using the given TimeUnit.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future using the given TimeUnit.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2015-2-22)</i> Use Stat.timeFuture instead</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.StatsReceiver#timeFuture" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="timeFuture[T](unit:java.util.concurrent.TimeUnit,stat:com.twitter.finagle.stats.Stat)(f:=&gt;com.twitter.util.Future[T]):com.twitter.util.Future[T]"></a>
-      <a id="timeFuture[T](TimeUnit,Stat)(⇒Future[T]):Future[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2015-2-22) Use Stat.timeFuture instead">timeFuture</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>, <span name="stat">stat: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>)</span><span class="result">: <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.finagle.stats.StatsReceiver.timeFuture.T">T</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Time a given future using the given TimeUnit.</p><div class="fullcomment"><div class="comment cmt"><p>Time a given future using the given TimeUnit.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2015-2-22)</i> Use Stat.timeFuture instead</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">
@@ -750,7 +787,7 @@ usable from java.
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -767,6 +804,7 @@ usable from java.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

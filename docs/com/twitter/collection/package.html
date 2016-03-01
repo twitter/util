@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>collection - com.twitter.collection</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/package_big.png" />
+        <img alt="Package" src="../../../lib/package_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
-        <h1>collection</h1>
+        <h1>collection</h1><span class="permalink">
+      <a href="../../../index.html#com.twitter.collection.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -58,7 +66,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.collection.BucketGenerationalQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.collection.BucketGenerationalQueue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="BucketGenerationalQueue[A]extendsGenerationalQueue[A]"></a>
       <a id="BucketGenerationalQueue[A]:BucketGenerationalQueue[A]"></a>
       <h4 class="signature">
@@ -69,10 +77,24 @@
       <span class="symbol">
         <a href="BucketGenerationalQueue.html"><span class="name">BucketGenerationalQueue</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="GenerationalQueue.html" class="extype" name="com.twitter.collection.GenerationalQueue">GenerationalQueue</a>[<span class="extype" name="com.twitter.collection.BucketGenerationalQueue.A">A</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">Improved GenerationalQueue: using a list of buckets responsible for containing elements belonging
-to a slice of time.</p>
-    </li><li name="com.twitter.collection.ExactGenerationalQueue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.collection.package@BucketGenerationalQueue[A]extendsGenerationalQueue[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Improved GenerationalQueue: using a list of buckets responsible for containing elements belonging
+to a slice of time.</p><div class="fullcomment"><div class="comment cmt"><p>Improved GenerationalQueue: using a list of buckets responsible for containing elements belonging
+to a slice of time.
+For instance: 3 Buckets, First contains elements from 0 to 10, second elements from 11 to 20
+and third elements from 21 to 30
+We expand the list when we need a new bucket, and compact the list to stash all old buckets
+into one.
+There is a slightly difference with the other implementation, when we collect elements we only
+choose randomly an element in the oldest bucket, as we don't have activity date in this bucket
+we consider the worst case and then we can miss some expired elements by never find elements
+that aren't expired.
+</p></div></div>
+    </li><li name="com.twitter.collection.ExactGenerationalQueue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ExactGenerationalQueue[A]extendsGenerationalQueue[A]"></a>
       <a id="ExactGenerationalQueue[A]:ExactGenerationalQueue[A]"></a>
       <h4 class="signature">
@@ -83,8 +105,17 @@ to a slice of time.</p>
       <span class="symbol">
         <a href="ExactGenerationalQueue.html"><span class="name">ExactGenerationalQueue</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="GenerationalQueue.html" class="extype" name="com.twitter.collection.GenerationalQueue">GenerationalQueue</a>[<span class="extype" name="com.twitter.collection.ExactGenerationalQueue.A">A</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">Generational Queue keep track of elements based on their last activity.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.collection.package@ExactGenerationalQueue[A]extendsGenerationalQueue[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Generational Queue keep track of elements based on their last activity.</p><div class="fullcomment"><div class="comment cmt"><p>Generational Queue keep track of elements based on their last activity.
+You can refresh activity of an element by calling touch(a: A) on it.
+There is 2 ways of retrieving old elements:
+- collect(age: Duration) collect the oldest element (age of elem must be &gt; age)
+- collectAll(age: Duration) collect all the elements which age &gt; age in parameter
+</p></div></div>
     </li><li name="com.twitter.collection.GenerationalQueue" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="GenerationalQueue[A]extendsAnyRef"></a>
       <a id="GenerationalQueue[A]:GenerationalQueue[A]"></a>
@@ -96,9 +127,13 @@ to a slice of time.</p>
       <span class="symbol">
         <a href="GenerationalQueue.html"><span class="name">GenerationalQueue</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.collection.package@GenerationalQueue[A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.collection.RecordSchema" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.collection.RecordSchema" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="RecordSchemaextendsAnyRef"></a>
       <a id="RecordSchema:RecordSchema"></a>
       <h4 class="signature">
@@ -109,10 +144,25 @@ to a slice of time.</p>
       <span class="symbol">
         <a href="RecordSchema.html"><span class="name">RecordSchema</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">RecordSchema represents the declaration of a heterogeneous
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.collection.package@RecordSchemaextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">RecordSchema represents the declaration of a heterogeneous
 <a href="RecordSchema$Record.html" class="extype" name="com.twitter.collection.RecordSchema.Record">Record</a> type, with
-<a href="RecordSchema$Field.html" class="extype" name="com.twitter.collection.RecordSchema.Field">Fields</a> that are determined at runtime.</p>
+<a href="RecordSchema$Field.html" class="extype" name="com.twitter.collection.RecordSchema.Field">Fields</a> that are determined at runtime.</p><div class="fullcomment"><div class="comment cmt"><p>RecordSchema represents the declaration of a heterogeneous
+<a href="RecordSchema$Record.html" class="extype" name="com.twitter.collection.RecordSchema.Record">Record</a> type, with
+<a href="RecordSchema$Field.html" class="extype" name="com.twitter.collection.RecordSchema.Field">Fields</a> that are determined at runtime. A Field
+declares the static type of its associated values, so although the record itself is dynamic,
+field access is type-safe.</p><p>Given a RecordSchema declaration <code>schema</code>, any number of
+<a href="RecordSchema$Record.html" class="extype" name="com.twitter.collection.RecordSchema.Record">Records</a> of that schema can be obtained with
+<code>schema.newRecord</code>. The type that Scala assigns to this value is what Scala calls a
+&quot;<a href="http://lampwww.epfl.ch/~amin/dot/fpdt.pdf" target="_blank">path-dependent type</a>,&quot; meaning that
+<code>schema1.Record</code> and <code>schema2.Record</code> name distinct types. The same is true of fields:
+<code>schema1.Field[A]</code> and <code>schema2.Field[A]</code> are distinct, and can only be used with the
+corresponding Record.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -142,6 +192,7 @@ to a slice of time.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

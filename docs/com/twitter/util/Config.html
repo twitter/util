@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Config - com.twitter.util.Config</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Config$.html" title="Go to companion"><img src="../../../lib/trait_to_object_big.png" /></a>
+        <a href="Config$.html" title="See companion object"><img alt="Trait/Object" src="../../../lib/trait_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Config$.html" title="Go to companion">Config</a></h1>
+        <h1><a href="Config$.html" title="See companion object">Config</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Config$.html" title="See companion object">object Config</a>
+            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -54,11 +66,11 @@ from an expression should be marked as computed:</p><p>   var level = required[I
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> use a Plain Old Scala Object</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent">() ⇒ <span class="extype" name="com.twitter.util.Config.T">T</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent">() ⇒ <span class="extype" name="com.twitter.util.Config.T">T</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="../logging/config/BareFormatterConfig$.html" class="extype" name="com.twitter.logging.config.BareFormatterConfig">BareFormatterConfig</a>, <a href="../logging/config/ConsoleHandlerConfig.html" class="extype" name="com.twitter.logging.config.ConsoleHandlerConfig">ConsoleHandlerConfig</a>, <a href="../logging/config/FileHandlerConfig.html" class="extype" name="com.twitter.logging.config.FileHandlerConfig">FileHandlerConfig</a>, <a href="../logging/config/FormatterConfig.html" class="extype" name="com.twitter.logging.config.FormatterConfig">FormatterConfig</a>, <a href="../logging/config/HandlerConfig.html" class="extype" name="com.twitter.logging.config.HandlerConfig">HandlerConfig</a>, <a href="../logging/config/LoggerConfig.html" class="extype" name="com.twitter.logging.config.LoggerConfig">LoggerConfig</a>, <a href="Config$$Nothing.html" class="extype" name="com.twitter.util.Config.Nothing">Nothing</a>, <a href="../logging/config/QueuingHandlerConfig.html" class="extype" name="com.twitter.logging.config.QueuingHandlerConfig">QueuingHandlerConfig</a>, <a href="../logging/config/ScribeHandlerConfig.html" class="extype" name="com.twitter.logging.config.ScribeHandlerConfig">ScribeHandlerConfig</a>, <a href="../logging/config/SyslogFormatterConfig.html" class="extype" name="com.twitter.logging.config.SyslogFormatterConfig">SyslogFormatterConfig</a>, <a href="../logging/config/SyslogHandlerConfig.html" class="extype" name="com.twitter.logging.config.SyslogHandlerConfig">SyslogHandlerConfig</a>, <a href="../logging/config/ThrottledHandlerConfig.html" class="extype" name="com.twitter.logging.config.ThrottledHandlerConfig">ThrottledHandlerConfig</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="../logging/config/BareFormatterConfig$.html" class="extype" name="com.twitter.logging.config.BareFormatterConfig">BareFormatterConfig</a>, <a href="../logging/config/ConsoleHandlerConfig.html" class="extype" name="com.twitter.logging.config.ConsoleHandlerConfig">ConsoleHandlerConfig</a>, <a href="../logging/config/FileHandlerConfig.html" class="extype" name="com.twitter.logging.config.FileHandlerConfig">FileHandlerConfig</a>, <a href="../logging/config/FormatterConfig.html" class="extype" name="com.twitter.logging.config.FormatterConfig">FormatterConfig</a>, <a href="../logging/config/HandlerConfig.html" class="extype" name="com.twitter.logging.config.HandlerConfig">HandlerConfig</a>, <a href="../logging/config/LoggerConfig.html" class="extype" name="com.twitter.logging.config.LoggerConfig">LoggerConfig</a>, <a href="Config$$Nothing.html" class="extype" name="com.twitter.util.Config.Nothing">Nothing</a>, <a href="../logging/config/QueuingHandlerConfig.html" class="extype" name="com.twitter.logging.config.QueuingHandlerConfig">QueuingHandlerConfig</a>, <a href="../logging/config/ScribeHandlerConfig.html" class="extype" name="com.twitter.logging.config.ScribeHandlerConfig">ScribeHandlerConfig</a>, <a href="../logging/config/SyslogFormatterConfig.html" class="extype" name="com.twitter.logging.config.SyslogFormatterConfig">SyslogFormatterConfig</a>, <a href="../logging/config/SyslogHandlerConfig.html" class="extype" name="com.twitter.logging.config.SyslogHandlerConfig">SyslogHandlerConfig</a>, <a href="../logging/config/ThrottledHandlerConfig.html" class="extype" name="com.twitter.logging.config.ThrottledHandlerConfig">ThrottledHandlerConfig</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -83,7 +95,6 @@ from an expression should be marked as computed:</p><p>   var level = required[I
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -110,7 +121,11 @@ from an expression should be marked as computed:</p><p>   var level = required[I
       <span class="symbol">
         <span class="name">apply</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.util.Config.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@apply():R" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function0</dd></dl></div>
     </li></ol>
             </div>
@@ -118,19 +133,6 @@ from an expression should be marked as computed:</p><p>   var level = required[I
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -139,10 +141,14 @@ from an expression should be marked as computed:</p><p>   var level = required[I
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -152,24 +158,15 @@ from an expression should be marked as computed:</p><p>   var level = required[I
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -178,10 +175,14 @@ from an expression should be marked as computed:</p><p>   var level = required[I
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -193,7 +194,11 @@ from an expression should be marked as computed:</p><p>   var level = required[I
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -206,7 +211,11 @@ from an expression should be marked as computed:</p><p>   var level = required[I
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -225,7 +234,11 @@ from an expression should be marked as computed:</p><p>   var level = required[I
       <span class="symbol">
         <span class="name">computed</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Config.computed.A">A</span></span>)</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<span class="extype" name="com.twitter.util.Config.computed.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@computed[A](f:=&gt;A):com.twitter.util.Config.Required[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">The same as specifying required[A] with a default value, but the intent to the
 use is slightly different.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -237,9 +250,13 @@ use is slightly different.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -250,9 +267,13 @@ use is slightly different.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -263,9 +284,13 @@ use is slightly different.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -284,7 +309,11 @@ use is slightly different.</p>
       <span class="symbol">
         <span class="name">fromRequired</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="req">req: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<span class="extype" name="com.twitter.util.Config.fromRequired.A">A</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Config.fromRequired.A">A</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@fromRequired[A](req:com.twitter.util.Config.Required[A]):A" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
@@ -297,7 +326,11 @@ use is slightly different.</p>
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -308,9 +341,13 @@ use is slightly different.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Config#intoList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="intoList[A](item:A):List[A]"></a>
@@ -323,7 +360,11 @@ use is slightly different.</p>
       <span class="symbol">
         <span class="name">intoList</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="item">item: <span class="extype" name="com.twitter.util.Config.intoList.A">A</span></span>)</span><span class="result">: <a href="../../../scala/package.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[<span class="extype" name="com.twitter.util.Config.intoList.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@intoList[A](item:A):List[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Config#intoOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="intoOption[A](item:A):Option[A]"></a>
@@ -334,9 +375,13 @@ use is slightly different.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">intoOption</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="item">item: <span class="extype" name="com.twitter.util.Config.intoOption.A">A</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Config.intoOption.A">A</span>]</span>
+        <span class="name">intoOption</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="item">item: <span class="extype" name="com.twitter.util.Config.intoOption.A">A</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Config.intoOption.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@intoOption[A](item:A):Option[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -347,9 +392,13 @@ use is slightly different.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Config#memoized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="memoized:T"></a>
@@ -362,7 +411,11 @@ use is slightly different.</p>
       <span class="symbol">
         <span class="name">memoized</span><span class="result">: <span class="extype" name="com.twitter.util.Config.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@memoized:T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">a lazy singleton of the configured class.</p><div class="fullcomment"><div class="comment cmt"><p>a lazy singleton of the configured class. Allows one to pass
 the Config around to multiple classes without producing multiple
 configured instances
@@ -378,7 +431,11 @@ configured instances
       <span class="symbol">
         <span class="name">missingValues</span><span class="result">: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@missingValues:Seq[String]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Looks for any fields that are Required but currently Unspecified, in
 this object and in any child Config objects, and returns the names
 of those missing values.</p><div class="fullcomment"><div class="comment cmt"><p>Looks for any fields that are Required but currently Unspecified, in
@@ -395,9 +452,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -408,9 +469,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -421,9 +486,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Config#optional" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="optional[A](default:=&gt;A):com.twitter.util.Config.Required[Option[A]]"></a>
@@ -434,9 +503,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">optional</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="default">default: ⇒ <span class="extype" name="com.twitter.util.Config.optional.A">A</span></span>)</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Config.optional.A">A</span>]]</span>
+        <span class="name">optional</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="default">default: ⇒ <span class="extype" name="com.twitter.util.Config.optional.A">A</span></span>)</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Config.optional.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@optional[A](default:=&gt;A):com.twitter.util.Config.Required[Option[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Config#optional" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="optional[A]:com.twitter.util.Config.Required[Option[A]]"></a>
@@ -447,9 +520,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">optional</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Config.optional.A">A</span>]]</span>
+        <span class="name">optional</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Config.optional.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@optional[A]:com.twitter.util.Config.Required[Option[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Config#required" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="required[A](default:=&gt;A):com.twitter.util.Config.Required[A]"></a>
@@ -462,7 +539,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">required</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="default">default: ⇒ <span class="extype" name="com.twitter.util.Config.required.A">A</span></span>)</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<span class="extype" name="com.twitter.util.Config.required.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@required[A](default:=&gt;A):com.twitter.util.Config.Required[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Config#required" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="required[A]:com.twitter.util.Config.Required[A]"></a>
@@ -475,7 +556,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">required</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Config$$Required.html" class="extype" name="com.twitter.util.Config.Required">Required</a>[<span class="extype" name="com.twitter.util.Config.required.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@required[A]:com.twitter.util.Config.Required[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Config#specified" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="specified[A](value:A):com.twitter.util.Config.Specified[A]"></a>
@@ -488,7 +573,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">specified</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="com.twitter.util.Config.specified.A">A</span></span>)</span><span class="result">: <a href="Config$$Specified.html" class="extype" name="com.twitter.util.Config.Specified">Specified</a>[<span class="extype" name="com.twitter.util.Config.specified.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@specified[A](value:A):com.twitter.util.Config.Specified[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">a non-lazy way to create a Specified that can be called from java</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -501,7 +590,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Config#toSpecified" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="toSpecified[A](value:=&gt;A):com.twitter.util.Config.Specified[A]"></a>
@@ -514,7 +607,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">toSpecified</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: ⇒ <span class="extype" name="com.twitter.util.Config.toSpecified.A">A</span></span>)</span><span class="result">: <a href="Config$$Specified.html" class="extype" name="com.twitter.util.Config.Specified">Specified</a>[<span class="extype" name="com.twitter.util.Config.toSpecified.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@toSpecified[A](value:=&gt;A):com.twitter.util.Config.Specified[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Config#toSpecifiedOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="toSpecifiedOption[A](value:=&gt;A):com.twitter.util.Config.Specified[Some[A]]"></a>
@@ -527,7 +624,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">toSpecifiedOption</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: ⇒ <span class="extype" name="com.twitter.util.Config.toSpecifiedOption.A">A</span></span>)</span><span class="result">: <a href="Config$$Specified.html" class="extype" name="com.twitter.util.Config.Specified">Specified</a>[<span class="extype" name="scala.Some">Some</span>[<span class="extype" name="com.twitter.util.Config.toSpecifiedOption.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@toSpecifiedOption[A](value:=&gt;A):com.twitter.util.Config.Specified[Some[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.Function0#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -540,7 +641,11 @@ the name is the dot-separated path down to that value.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function0 → AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Config#validate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="validate():Unit"></a>
@@ -551,11 +656,14 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">validate</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">validate</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">RequiredValuesMissing<p>if there are any missing values.
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@validate():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="RequiredValuesMissing"><code>RequiredValuesMissing</code></span> if there are any missing values.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -565,9 +673,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -584,9 +696,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -603,9 +719,13 @@ the name is the dot-separated path down to that value.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Config@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -627,7 +747,7 @@ the name is the dot-separated path down to that value.
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -644,6 +764,7 @@ the name is the dot-separated path down to that value.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

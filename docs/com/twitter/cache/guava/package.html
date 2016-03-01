@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>guava - com.twitter.cache.guava</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../../lib/package_big.png" />
+        <img alt="Package" src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.cache">cache</a></p>
-        <h1>guava</h1>
+        <h1>guava</h1><span class="permalink">
+      <a href="../../../../index.html#com.twitter.cache.guava.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -58,7 +66,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.cache.guava.GuavaCache" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.cache.guava.GuavaCache" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="GuavaCache[K,V]extendsConcurrentMapCache[K,V]"></a>
       <a id="GuavaCache[K,V]:GuavaCache[K,V]"></a>
       <h4 class="signature">
@@ -69,10 +77,21 @@
       <span class="symbol">
         <a href="GuavaCache.html"><span class="name">GuavaCache</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../ConcurrentMapCache.html" class="extype" name="com.twitter.cache.ConcurrentMapCache">ConcurrentMapCache</a>[<span class="extype" name="com.twitter.cache.guava.GuavaCache.K">K</span>, <span class="extype" name="com.twitter.cache.guava.GuavaCache.V">V</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
-<span class="extype" name="com.google.common.cache.Cache">com.google.common.cache.Cache</span>.</p>
-    </li><li name="com.twitter.cache.guava.LoadingFutureCache" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.cache.guava.package@GuavaCache[K,V]extendsConcurrentMapCache[K,V]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
+<span class="extype" name="com.google.common.cache.Cache">com.google.common.cache.Cache</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
+<span class="extype" name="com.google.common.cache.Cache">com.google.common.cache.Cache</span>.</p><p>Any correct implementation should make sure that you evict failed results,
+and don't interrupt the underlying request that has been fired off.
+<span class="extype" name="EvictingCache">EvictingCache</span> and <span class="extype" name="Future#interrupting">Future#interrupting</span> are useful tools for building
+correct FutureCaches.  A reference implementation for caching the results of
+an asynchronous function with a guava Cache can be found at
+<a href="GuavaCache$.html#fromCache[K,V](fn:K=&gt;com.twitter.util.Future[V],cache:com.google.common.cache.Cache[K,com.twitter.util.Future[V]]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.guava.GuavaCache#fromCache">GuavaCache$.fromCache</a>.
+</p></div></div>
+    </li><li name="com.twitter.cache.guava.LoadingFutureCache" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="LoadingFutureCache[K,V]extendsGuavaCache[K,V]"></a>
       <a id="LoadingFutureCache[K,V]:LoadingFutureCache[K,V]"></a>
       <h4 class="signature">
@@ -83,9 +102,20 @@
       <span class="symbol">
         <a href="LoadingFutureCache.html"><span class="name">LoadingFutureCache</span></a><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="GuavaCache.html" class="extype" name="com.twitter.cache.guava.GuavaCache">GuavaCache</a>[<span class="extype" name="com.twitter.cache.guava.LoadingFutureCache.K">K</span>, <span class="extype" name="com.twitter.cache.guava.LoadingFutureCache.V">V</span>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
-<span class="extype" name="com.google.common.cache.LoadingCache">com.google.common.cache.LoadingCache</span>.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.cache.guava.package@LoadingFutureCache[K,V]extendsGuavaCache[K,V]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
+<span class="extype" name="com.google.common.cache.LoadingCache">com.google.common.cache.LoadingCache</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
+<span class="extype" name="com.google.common.cache.LoadingCache">com.google.common.cache.LoadingCache</span>.</p><p>Any correct implementation should make sure that you evict failed results,
+and don't interrupt the underlying request that has been fired off.
+<span class="extype" name="EvictingCache">EvictingCache</span> and <span class="extype" name="Future#interrupting">Future#interrupting</span> are useful tools for building
+correct FutureCaches.  A reference implementation for caching the results of
+an asynchronous function with a guava LoadingCache can be found at
+<a href="GuavaCache$.html#fromLoadingCache[K,V](cache:com.google.common.cache.LoadingCache[K,com.twitter.util.Future[V]]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.guava.GuavaCache#fromLoadingCache">GuavaCache$.fromLoadingCache</a>.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -104,7 +134,11 @@
       <span class="symbol">
         <a href="GuavaCache$.html"><span class="name">GuavaCache</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.cache.guava.package@GuavaCache" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -131,6 +165,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

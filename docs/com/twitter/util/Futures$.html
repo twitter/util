@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Futures - com.twitter.util.Futures</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,15 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/object_big.png" />
+        <img alt="Object" src="../../../lib/object_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1>Futures</h1>
+        <h1>Futures</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -42,7 +52,7 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Twitter Future utility methods for ease of use from java
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -68,7 +78,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -87,19 +96,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -108,10 +104,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -121,24 +121,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -147,10 +138,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -162,7 +157,11 @@
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -175,7 +174,11 @@
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -194,7 +197,11 @@
       <span class="symbol">
         <span class="name">collect</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="com.twitter.util.Futures.collect.A">A</span>, <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.collect.B">B</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="com.twitter.util.Futures.collect.A">A</span>, <span class="extype" name="com.twitter.util.Futures.collect.B">B</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@collect[A,B](fs:java.util.Map[A,com.twitter.util.Future[B]]):com.twitter.util.Future[java.util.Map[A,B]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Collect the results from the given map <code>fs</code> of futures into a new future
 of map.</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given map <code>fs</code> of futures into a new future
 of map. If one or more of the given Futures is exceptional, the resulting Future
@@ -211,13 +218,16 @@ result will the first exception encountered.
       <span class="symbol">
         <span class="name">collect</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.collect.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.twitter.util.Futures.collect.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@collect[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of
 Seq[A].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
 Seq[A]. If one or more of the given futures is exceptional, the resulting
 future result will be the first exception encountered.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[A]]</code> containing the collected values from fs.
-</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[A]]</code> containing the collected values from fs.</p></dd></dl></div>
     </li><li name="com.twitter.util.Futures#collectToTry" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]"></a>
       <a id="collectToTry[A](List[Future[A]]):Future[List[Try[A]]]"></a>
@@ -229,11 +239,14 @@ future result will be the first exception encountered.
       <span class="symbol">
         <span class="name">collectToTry</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.collectToTry.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="java.util.List">List</span>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Futures.collectToTry.A">A</span>]]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of List[Try[A]]
 </p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of List[Try[A]]
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[Try[A]]]</code> containing the collected values from fs.
-</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[java.util.List[Try[A]]]</code> containing the collected values from fs.</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -243,9 +256,13 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -256,9 +273,13 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -269,9 +290,13 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -290,7 +315,11 @@ future result will be the first exception encountered.
       <span class="symbol">
         <span class="name">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="ffa">ffa: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.flatten.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@flatten[A](ffa:com.twitter.util.Future[com.twitter.util.Future[A]]):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Flattens a nested future.</p><div class="fullcomment"><div class="comment cmt"><p>Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
 </p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -304,7 +333,11 @@ future result will be the first exception encountered.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -315,9 +348,13 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -328,9 +365,13 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Futures#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]"></a>
@@ -341,15 +382,18 @@ future result will be the first exception encountered.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">join</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">join</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Take a sequence of Futures, wait till they all complete
 successfully.</p><div class="fullcomment"><div class="comment cmt"><p>Take a sequence of Futures, wait till they all complete
 successfully.  The future fails immediately if any of the joined
 Futures do, mimicking the semantics of exceptions.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Unit] whose value is populated when all of the fs return.
-</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Unit] whose value is populated when all of the fs return.</p></dd></dl></div>
     </li><li name="com.twitter.util.Futures#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S],t:com.twitter.util.Future[T],u:com.twitter.util.Future[U],v:com.twitter.util.Future[V]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
       <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](Future[A],Future[B],Future[C],Future[D],Future[E],Future[F],Future[G],Future[H],Future[I],Future[J],Future[K],Future[L],Future[M],Future[N],Future[O],Future[P],Future[Q],Future[R],Future[S],Future[T],Future[U],Future[V]):Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
@@ -361,7 +405,11 @@ Futures do, mimicking the semantics of exceptions.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>, <span name="T">T</span>, <span name="U">U</span>, <span name="V">V</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>, <span name="q">q: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>]</span>, <span name="r">r: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.R">R</span>]</span>, <span name="s">s: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.S">S</span>]</span>, <span name="t">t: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.T">T</span>]</span>, <span name="u">u: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.U">U</span>]</span>, <span name="v">v: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.V">V</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>, <span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Futures.join.R">R</span>, <span class="extype" name="com.twitter.util.Futures.join.S">S</span>, <span class="extype" name="com.twitter.util.Futures.join.T">T</span>, <span class="extype" name="com.twitter.util.Futures.join.U">U</span>, <span class="extype" name="com.twitter.util.Futures.join.V">V</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S],t:com.twitter.util.Future[T],u:com.twitter.util.Future[U],v:com.twitter.util.Future[V]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 22 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 22 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -377,7 +425,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>, <span name="T">T</span>, <span name="U">U</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>, <span name="q">q: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>]</span>, <span name="r">r: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.R">R</span>]</span>, <span name="s">s: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.S">S</span>]</span>, <span name="t">t: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.T">T</span>]</span>, <span name="u">u: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.U">U</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>, <span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Futures.join.R">R</span>, <span class="extype" name="com.twitter.util.Futures.join.S">S</span>, <span class="extype" name="com.twitter.util.Futures.join.T">T</span>, <span class="extype" name="com.twitter.util.Futures.join.U">U</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S],t:com.twitter.util.Future[T],u:com.twitter.util.Future[U]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 21 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 21 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -393,7 +445,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>, <span name="T">T</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>, <span name="q">q: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>]</span>, <span name="r">r: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.R">R</span>]</span>, <span name="s">s: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.S">S</span>]</span>, <span name="t">t: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.T">T</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>, <span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Futures.join.R">R</span>, <span class="extype" name="com.twitter.util.Futures.join.S">S</span>, <span class="extype" name="com.twitter.util.Futures.join.T">T</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S],t:com.twitter.util.Future[T]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 20 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 20 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -409,7 +465,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>, <span name="S">S</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>, <span name="q">q: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>]</span>, <span name="r">r: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.R">R</span>]</span>, <span name="s">s: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.S">S</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>, <span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Futures.join.R">R</span>, <span class="extype" name="com.twitter.util.Futures.join.S">S</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 19 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 19 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -425,7 +485,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>, <span name="R">R</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>, <span name="q">q: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>]</span>, <span name="r">r: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.R">R</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>, <span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>, <span class="extype" name="com.twitter.util.Futures.join.R">R</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 18 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 18 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -441,7 +505,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>, <span name="Q">Q</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>, <span name="q">q: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>, <span class="extype" name="com.twitter.util.Futures.join.Q">Q</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 17 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 17 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -457,7 +525,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>, <span name="P">P</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>, <span name="p">p: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.P">P</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>, <span class="extype" name="com.twitter.util.Futures.join.P">P</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 16 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 16 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -473,7 +545,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>, <span name="O">O</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>, <span name="o">o: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.O">O</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>, <span class="extype" name="com.twitter.util.Futures.join.O">O</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 15 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 15 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -489,7 +565,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>, <span name="N">N</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>, <span name="n">n: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.N">N</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>, <span class="extype" name="com.twitter.util.Futures.join.N">N</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 14 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 14 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -505,7 +585,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>, <span name="M">M</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>, <span name="m">m: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.M">M</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>, <span class="extype" name="com.twitter.util.Futures.join.M">M</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L,M](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 13 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 13 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -521,7 +605,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>, <span name="L">L</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>, <span name="l">l: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.L">L</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>, <span class="extype" name="com.twitter.util.Futures.join.L">L</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K,L](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 12 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 12 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -537,7 +625,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>, <span name="K">K</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>, <span name="k">k: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.K">K</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>, <span class="extype" name="com.twitter.util.Futures.join.K">K</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J,K](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 11 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 11 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -553,7 +645,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>, <span name="J">J</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>, <span name="j">j: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.J">J</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>, <span class="extype" name="com.twitter.util.Futures.join.J">J</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I,J](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 10 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 10 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -569,7 +665,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>, <span name="I">I</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>, <span name="i">i: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.I">I</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>, <span class="extype" name="com.twitter.util.Futures.join.I">I</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H,I](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 9 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 9 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -585,7 +685,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>, <span name="H">H</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>, <span name="h">h: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.H">H</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>, <span class="extype" name="com.twitter.util.Futures.join.H">H</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G,H](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H]):com.twitter.util.Future[(A,B,C,D,E,F,G,H)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 8 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 8 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -601,7 +705,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>, <span name="G">G</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>, <span name="g">g: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.G">G</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>, <span class="extype" name="com.twitter.util.Futures.join.G">G</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F,G](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G]):com.twitter.util.Future[(A,B,C,D,E,F,G)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 7 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 7 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -617,7 +725,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>, <span name="F">F</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>, <span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.F">F</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>, <span class="extype" name="com.twitter.util.Futures.join.F">F</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E,F](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F]):com.twitter.util.Future[(A,B,C,D,E,F)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 6 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 6 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -633,7 +745,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>, <span name="E">E</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>, <span name="e">e: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.E">E</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>, <span class="extype" name="com.twitter.util.Futures.join.E">E</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D,E](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E]):com.twitter.util.Future[(A,B,C,D,E)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 5 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 5 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -649,7 +765,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>, <span name="D">D</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>, <span name="d">d: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.D">D</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>, <span class="extype" name="com.twitter.util.Futures.join.D">D</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C,D](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D]):com.twitter.util.Future[(A,B,C,D)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 4 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 4 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -665,7 +785,11 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>, <span name="C">C</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>, <span name="c">c: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.C">C</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>, <span class="extype" name="com.twitter.util.Futures.join.C">C</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B,C](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C]):com.twitter.util.Future[(A,B,C)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 3 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 3 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
@@ -681,11 +805,32 @@ do.
       <span class="symbol">
         <span class="name">join</span><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="params">(<span name="a">a: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.A">A</span>]</span>, <span name="b">b: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.join.B">B</span>]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<span class="extype" name="com.twitter.util.Futures.join.A">A</span>, <span class="extype" name="com.twitter.util.Futures.join.B">B</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@join[A,B](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B]):com.twitter.util.Future[(A,B)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join 2 futures.</p><div class="fullcomment"><div class="comment cmt"><p>Join 2 futures. The returned future is complete when all
 underlying futures complete. It fails immediately if any of them
 do.
 </p></div></div>
+    </li><li name="com.twitter.util.Futures#lowerFromTry" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="lowerFromTry[T](f:com.twitter.util.Future[com.twitter.util.Try[T]]):com.twitter.util.Future[T]"></a>
+      <a id="lowerFromTry[T](Future[Try[T]]):Future[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lowerFromTry</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Futures.lowerFromTry.T">T</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.lowerFromTry.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@lowerFromTry[T](f:com.twitter.util.Future[com.twitter.util.Try[T]]):com.twitter.util.Future[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Lowers a Future[Try[T]] into a Future[T].</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -695,9 +840,13 @@ do.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -708,9 +857,13 @@ do.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -721,9 +874,13 @@ do.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Futures#select" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="select[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],java.util.List[com.twitter.util.Future[A]])]"></a>
@@ -736,12 +893,15 @@ do.
       <span class="symbol">
         <span class="name">select</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.select.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Futures.select.A">A</span>], <span class="extype" name="java.util.List">List</span>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.select.A">A</span>]])]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@select[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],java.util.List[com.twitter.util.Future[A]])]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">&quot;Select&quot; off the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>&quot;Select&quot; off the first future to be satisfied.  Return this as a
 result, with the remainder of the Futures as a sequence.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Tuple2[Try[A], java.util.List[Future[A]]]]</code> representing the first future
-to be satisfied and the rest of the futures.
-</p></dd></dl></div>
+to be satisfied and the rest of the futures.</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -753,7 +913,11 @@ to be satisfied and the rest of the futures.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -766,7 +930,11 @@ to be satisfied and the rest of the futures.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -777,9 +945,13 @@ to be satisfied and the rest of the futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -796,9 +968,13 @@ to be satisfied and the rest of the futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -815,9 +991,13 @@ to be satisfied and the rest of the futures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -843,11 +1023,14 @@ to be satisfied and the rest of the futures.
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 2014-12-03) Use Futures.select(java.util.List) and JavaConversions instead.">select</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fs">fs: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.select.A">A</span>]]</span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[(<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Futures.select.A">A</span>], <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Futures.select.A">A</span>]])]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Futures$@select[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],Seq[com.twitter.util.Future[A]])]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">&quot;Select&quot; off the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>&quot;Select&quot; off the first future to be satisfied.  Return this as a
 result, with the remainder of the Futures as a sequence.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a scala.collection.Seq
-</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a scala.collection.Seq</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2014-12-03)</i> Use Futures.select(java.util.List) and JavaConversions instead.</p></dd></dl></div>
@@ -859,7 +1042,7 @@ result, with the remainder of the Futures as a sequence.
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -876,6 +1059,7 @@ result, with the remainder of the Futures as a sequence.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

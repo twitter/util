@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>logging - com.twitter.logging</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/package_big.png" />
+        <img alt="Package" src="../../../lib/package_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
-        <h1>logging</h1>
+        <h1>logging</h1><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -41,7 +49,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +75,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -92,8 +99,12 @@
       <span class="symbol">
         <a href="ConsoleHandler.html"><span class="name">ConsoleHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Log things to the console.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ConsoleHandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Log things to the console.</p>
     </li><li name="com.twitter.logging.FileHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FileHandlerextendsHandler"></a>
       <a id="FileHandler:FileHandler"></a>
@@ -105,10 +116,14 @@
       <span class="symbol">
         <a href="FileHandler.html"><span class="name">FileHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A log handler that writes log entries into a file, and rolls this file
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@FileHandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A log handler that writes log entries into a file, and rolls this file
 at a requested interval (hourly, daily, or weekly).</p>
-    </li><li name="com.twitter.logging.Formatter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.logging.Formatter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="FormatterextendsFormatter"></a>
       <a id="Formatter:Formatter"></a>
       <h4 class="signature">
@@ -119,9 +134,16 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="Formatter.html"><span class="name">Formatter</span></a><span class="result"> extends <span class="extype" name="java.util.logging.Formatter">java.util.logging.Formatter</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A standard log formatter for scala.</p>
-    </li><li name="com.twitter.logging.Handler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@FormatterextendsFormatter" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A standard log formatter for scala.</p><div class="fullcomment"><div class="comment cmt"><p>A standard log formatter for scala. This extends the java built-in log formatter.</p><p>Truncation, exception formatting, multi-line logging, and time zones
+are handled in this class. Subclasses are called for formatting the
+line prefix, formatting the date, and determining the line terminator.
+</p></div></div>
+    </li><li name="com.twitter.logging.Handler" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="HandlerextendsHandler"></a>
       <a id="Handler:Handler"></a>
       <h4 class="signature">
@@ -132,11 +154,17 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="Handler.html"><span class="name">Handler</span></a><span class="result"> extends <span class="extype" name="java.util.logging.Handler">java.util.logging.Handler</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A base log handler for scala.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@HandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A base log handler for scala.</p><div class="fullcomment"><div class="comment cmt"><p>A base log handler for scala. This extends the java built-in handler and connects it with a
+formatter automatically.
+</p></div></div>
     </li><li name="com.twitter.logging.HandlerFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="HandlerFactory=()=&gt;com.twitter.logging.Handler"></a>
-      <a id="HandlerFactory:()⇒Handler"></a>
+      <a id="HandlerFactory:HandlerFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
@@ -145,8 +173,32 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <span class="name">HandlerFactory</span><span class="result"> = () ⇒ <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@HandlerFactory=()=&gt;com.twitter.logging.Handler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
+    </li><li name="com.twitter.logging.HasLogLevel" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="HasLogLevelextendsAnyRef"></a>
+      <a id="HasLogLevel:HasLogLevel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HasLogLevel.html"><span class="name">HasLogLevel</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@HasLogLevelextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Typically mixed into <code>Exceptions</code> to indicate what <a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a>
+they should be logged at.</p><div class="fullcomment"><div class="comment cmt"><p>Typically mixed into <code>Exceptions</code> to indicate what <a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a>
+they should be logged at.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Finagle's <code>com.twitter.finagle.Failure</code>.</p></span></dd></dl></div>
     </li><li name="com.twitter.logging.LazyLogRecord" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LazyLogRecordextendsLogRecord"></a>
       <a id="LazyLogRecord:LazyLogRecord"></a>
@@ -158,7 +210,11 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="LazyLogRecord.html"><span class="name">LazyLogRecord</span></a><span class="result"> extends <a href="LogRecord.html" class="extype" name="com.twitter.logging.LogRecord">LogRecord</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LazyLogRecordextendsLogRecord" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.LazyLogRecordUnformatted" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LazyLogRecordUnformattedextendsLazyLogRecord"></a>
@@ -171,8 +227,12 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="LazyLogRecordUnformatted.html"><span class="name">LazyLogRecordUnformatted</span></a><span class="result"> extends <a href="LazyLogRecord.html" class="extype" name="com.twitter.logging.LazyLogRecord">LazyLogRecord</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A lazy LogRecord that needs formatting
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LazyLogRecordUnformattedextendsLazyLogRecord" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A lazy LogRecord that needs formatting
 </p>
     </li><li name="com.twitter.logging.Level" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="LevelextendsLevel"></a>
@@ -185,9 +245,13 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="Level.html"><span class="name">Level</span></a><span class="result"> extends <span class="extype" name="java.util.logging.Level">java.util.logging.Level</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LevelextendsLevel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.logging.LogRecord" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.logging.LogRecord" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="LogRecordextendsLogRecord"></a>
       <a id="LogRecord:LogRecord"></a>
       <h4 class="signature">
@@ -198,8 +262,15 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="LogRecord.html"><span class="name">LogRecord</span></a><span class="result"> extends <span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">Wrapper around <code> java.util.logging.LogRecord</code>.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LogRecordextendsLogRecord" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Wrapper around <code><span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></code>.</p><div class="fullcomment"><div class="comment cmt"><p>Wrapper around <code><span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span></code>. Should only be accessed from a single thread.</p><p>Messages are formatted by Java's LogRecord using <code><span class="extype" name="java.text.MessageFormat">java.text.MessageFormat</span></code> whereas
+this class uses a regular <code><span class="extype" name="java.text.StringFormat">java.text.StringFormat</span></code></p><p>This class takes <code><a href="Logger.html" class="extype" name="com.twitter.logging.Logger">com.twitter.logging.Logger</a></code> into account when inferring the
+<code>sourceMethod</code> and <code>sourceClass</code> names.
+</p></div></div>
     </li><li name="com.twitter.logging.Logger" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LoggerextendsAnyRef"></a>
       <a id="Logger:Logger"></a>
@@ -211,9 +282,13 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="Logger.html"><span class="name">Logger</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Scala wrapper for logging.</p>
-    </li><li name="com.twitter.logging.LoggerFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LoggerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Scala wrapper for logging.</p>
+    </li><li name="com.twitter.logging.LoggerFactory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="LoggerFactoryextends()=&gt;com.twitter.logging.LoggerwithProductwithSerializable"></a>
       <a id="LoggerFactory:LoggerFactory"></a>
       <h4 class="signature">
@@ -222,11 +297,23 @@ at a requested interval (hourly, daily, or weekly).</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="LoggerFactory.html"><span class="name">LoggerFactory</span></a><span class="params">(<span name="node">node: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="level">level: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a>] = <span class="symbol">scala.None</span></span>, <span name="handlers">handlers: <a href="../../../scala/package.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[() ⇒ <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a>] = <span class="symbol">immutable.this.Nil</span></span>, <span name="useParents">useParents: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">true</span></span>)</span><span class="result"> extends () ⇒ <a href="Logger.html" class="extype" name="com.twitter.logging.Logger">Logger</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="LoggerFactory.html"><span class="name">LoggerFactory</span></a><span class="params">(<span name="node">node: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="level">level: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a>] = <span class="symbol"><span class="name"><a href="../../../scala/package.html">None</a></span></span></span>, <span name="handlers">handlers: <a href="../../../scala/package.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[<a href="#HandlerFactory=()=&gt;com.twitter.logging.Handler" class="extmbr" name="com.twitter.logging.HandlerFactory">HandlerFactory</a>] = <span class="symbol">Nil</span></span>, <span name="useParents">useParents: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">true</span></span>)</span><span class="result"> extends () ⇒ <a href="Logger.html" class="extype" name="com.twitter.logging.Logger">Logger</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A factory to configure a Logger.</p>
-    </li><li name="com.twitter.logging.LoggerFactoryBuilder" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LoggerFactoryextends()=&gt;com.twitter.logging.LoggerwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A factory to configure a Logger.</p><div class="fullcomment"><div class="comment cmt"><p>A factory to configure a Logger.  Note that because Loggers are global, executing this
+factory has side-effects.
+</p></div><dl class="paramcmts block"><dt class="param">node</dt><dd class="cmt"><p>
+Name of the logging node. The default (&quot;&quot;) is the top-level logger.</p></dd><dt class="param">level</dt><dd class="cmt"><p>
+Log level for this node. Leaving it None is java's secret signal to use the parent logger's
+level.</p></dd><dt class="param">handlers</dt><dd class="cmt"><p>
+Where to send log messages.</p></dd><dt class="param">useParents</dt><dd class="cmt"><p>
+Override to have log messages stop at this node. Otherwise they are passed up to parent
+nodes.</p></dd></dl></div>
+    </li><li name="com.twitter.logging.LoggerFactoryBuilder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="LoggerFactoryBuilderextendsAnyRef"></a>
       <a id="LoggerFactoryBuilder:LoggerFactoryBuilder"></a>
       <h4 class="signature">
@@ -237,9 +324,14 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="LoggerFactoryBuilder.html"><span class="name">LoggerFactoryBuilder</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Shim for java compatibility.</p>
-    </li><li name="com.twitter.logging.Logging" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LoggerFactoryBuilderextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Shim for java compatibility.</p><div class="fullcomment"><div class="comment cmt"><p>Shim for java compatibility.  Make a new LoggerFactoryBuilder with <code>LoggerFactory#newBuilder()</code>.
+</p></div></div>
+    </li><li name="com.twitter.logging.Logging" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="LoggingextendsAnyRef"></a>
       <a id="Logging:Logging"></a>
       <h4 class="signature">
@@ -250,8 +342,15 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="Logging.html"><span class="name">Logging</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A <a href="../app/App.html" class="extype" name="com.twitter.app.App">com.twitter.app.App</a> mixin to use for logging.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LoggingextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A <a href="../app/App.html" class="extype" name="com.twitter.app.App">com.twitter.app.App</a> mixin to use for logging.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../app/App.html" class="extype" name="com.twitter.app.App">com.twitter.app.App</a> mixin to use for logging. Defines flags
+to configure the (default) logger setup.  When adding logging to a
+twitter-server, mix in a trait that extends Logging but overrides factories.
+</p></div></div>
     </li><li name="com.twitter.logging.LoggingException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LoggingExceptionextendsException"></a>
       <a id="LoggingException:LoggingException"></a>
@@ -263,7 +362,11 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="LoggingException.html"><span class="name">LoggingException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LoggingExceptionextendsException" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.Policy" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PolicyextendsAnyRef"></a>
@@ -276,9 +379,13 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="Policy.html"><span class="name">Policy</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@PolicyextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.logging.ProxyHandler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.logging.ProxyHandler" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="ProxyHandlerextendsHandler"></a>
       <a id="ProxyHandler:ProxyHandler"></a>
       <h4 class="signature">
@@ -289,9 +396,15 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="ProxyHandler.html"><span class="name">ProxyHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A log handler class which delegates to another handler.</p>
-    </li><li name="com.twitter.logging.QueueingHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ProxyHandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A log handler class which delegates to another handler.</p><div class="fullcomment"><div class="comment cmt"><p>A log handler class which delegates to another handler. This allows to implement filtering
+log handlers.
+</p></div></div>
+    </li><li name="com.twitter.logging.QueueingHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="QueueingHandlerextendsProxyHandler"></a>
       <a id="QueueingHandler:QueueingHandler"></a>
       <h4 class="signature">
@@ -302,10 +415,16 @@ at a requested interval (hourly, daily, or weekly).</p>
       <span class="symbol">
         <a href="QueueingHandler.html"><span class="name">QueueingHandler</span></a><span class="result"> extends <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Proxy handler that queues log records and publishes them in another thread to
-a nested handler.</p>
-    </li><li name="com.twitter.logging.ScribeHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@QueueingHandlerextendsProxyHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Proxy handler that queues log records and publishes them in another thread to
+a nested handler.</p><div class="fullcomment"><div class="comment cmt"><p>Proxy handler that queues log records and publishes them in another thread to
+a nested handler. Useful for when a handler may block.
+</p></div></div>
+    </li><li name="com.twitter.logging.ScribeHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ScribeHandlerextendsHandler"></a>
       <a id="ScribeHandler:ScribeHandler"></a>
       <h4 class="signature">
@@ -316,8 +435,15 @@ a nested handler.</p>
       <span class="symbol">
         <a href="ScribeHandler.html"><span class="name">ScribeHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">NOTE: ScribeHandler is usually used to write structured binary data.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ScribeHandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">NOTE: ScribeHandler is usually used to write structured binary data.</p><div class="fullcomment"><div class="comment cmt"><p>NOTE: ScribeHandler is usually used to write structured binary data.
+When used in this way, wrapping this in other handlers, such as ThrottledHandler,
+which emit plain-text messages into the log, will corrupt the resulting data.
+</p></div></div>
     </li><li name="com.twitter.logging.StringHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StringHandlerextendsHandler"></a>
       <a id="StringHandler:StringHandler"></a>
@@ -329,8 +455,12 @@ a nested handler.</p>
       <span class="symbol">
         <a href="StringHandler.html"><span class="name">StringHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Mostly useful for unit tests: logging goes directly into a string buffer.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@StringHandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Mostly useful for unit tests: logging goes directly into a string buffer.</p>
     </li><li name="com.twitter.logging.SyslogFormatter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SyslogFormatterextendsFormatter"></a>
       <a id="SyslogFormatter:SyslogFormatter"></a>
@@ -342,8 +472,12 @@ a nested handler.</p>
       <span class="symbol">
         <a href="SyslogFormatter.html"><span class="name">SyslogFormatter</span></a><span class="result"> extends <a href="Formatter.html" class="extype" name="com.twitter.logging.Formatter">Formatter</a></span>
       </span>
-      </h4>
-      <p class="comment cmt"></p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@SyslogFormatterextendsFormatter" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p>
     </li><li name="com.twitter.logging.SyslogHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SyslogHandlerextendsHandler"></a>
       <a id="SyslogHandler:SyslogHandler"></a>
@@ -355,7 +489,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="SyslogHandler.html"><span class="name">SyslogHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@SyslogHandlerextendsHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.TestLogging" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="TestLoggingextendsBeforeAndAfter"></a>
@@ -368,9 +506,13 @@ a nested handler.</p>
       <span class="symbol">
         <a href="TestLogging.html"><span class="name">TestLogging</span></a><span class="result"> extends <span class="extype" name="org.scalatest.BeforeAndAfter">BeforeAndAfter</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">Specify logging during unit tests via system property, defaulting to FATAL only.</p>
-    </li><li name="com.twitter.logging.ThrottledHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@TestLoggingextendsBeforeAndAfter" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Specify logging during unit tests via system property, defaulting to FATAL only.</p>
+    </li><li name="com.twitter.logging.ThrottledHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ThrottledHandlerextendsProxyHandler"></a>
       <a id="ThrottledHandler:ThrottledHandler"></a>
       <h4 class="signature">
@@ -381,8 +523,15 @@ a nested handler.</p>
       <span class="symbol">
         <a href="ThrottledHandler.html"><span class="name">ThrottledHandler</span></a><span class="result"> extends <a href="ProxyHandler.html" class="extype" name="com.twitter.logging.ProxyHandler">ProxyHandler</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ThrottledHandlerextendsProxyHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.</p><div class="fullcomment"><div class="comment cmt"><p>NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.
+This means that using it to wrap any logger which you expect to produce easily parseable,
+well-structured logs (as opposed to just plain text logs) will break your format.
+Specifically, DO NOT wrap Thrift Scribing loggers with ThrottledHandler.</p></div></div>
     </li></ol>
             </div>
 
@@ -401,8 +550,12 @@ a nested handler.</p>
       <span class="symbol">
         <a href="BareFormatter$.html"><span class="name">BareFormatter</span></a><span class="result"> extends <a href="Formatter.html" class="extype" name="com.twitter.logging.Formatter">Formatter</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Formatter that logs only the text of a log message, with no prefix (no date, etc).</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@BareFormatter" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Formatter that logs only the text of a log message, with no prefix (no date, etc).</p>
     </li><li name="com.twitter.logging.ConsoleHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ConsoleHandler"></a>
       <a id="ConsoleHandler:ConsoleHandler"></a>
@@ -414,7 +567,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="ConsoleHandler$.html"><span class="name">ConsoleHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ConsoleHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.FileHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FileHandler"></a>
@@ -427,7 +584,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="FileHandler$.html"><span class="name">FileHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@FileHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.Level" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Level"></a>
@@ -438,9 +599,13 @@ a nested handler.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Level$.html"><span class="name">Level</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Level$.html"><span class="name">Level</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@Level" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.LogRecord" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LogRecord"></a>
@@ -451,9 +616,13 @@ a nested handler.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="LogRecord$.html"><span class="name">LogRecord</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="LogRecord$.html"><span class="name">LogRecord</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LogRecord" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.Logger" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Logger"></a>
@@ -466,7 +635,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="Logger$.html"><span class="name">Logger</span></a><span class="result"> extends <a href="../../../scala/package.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<a href="Logger.html" class="extype" name="com.twitter.logging.Logger">Logger</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@Logger" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.LoggerFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LoggerFactory"></a>
@@ -477,9 +650,13 @@ a nested handler.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="LoggerFactory$.html"><span class="name">LoggerFactory</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="LoggerFactory$.html"><span class="name">LoggerFactory</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@LoggerFactory" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.Logging" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Logging"></a>
@@ -492,7 +669,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="Logging$.html"><span class="name">Logging</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@Logging" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.NullHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NullHandler"></a>
@@ -505,7 +686,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="NullHandler$.html"><span class="name">NullHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@NullHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.NullLogger" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NullLogger"></a>
@@ -518,7 +703,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="NullLogger$.html"><span class="name">NullLogger</span></a><span class="result"> extends <a href="Logger.html" class="extype" name="com.twitter.logging.Logger">Logger</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@NullLogger" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.Policy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Policy"></a>
@@ -531,7 +720,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="Policy$.html"><span class="name">Policy</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@Policy" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.QueueingHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="QueueingHandler"></a>
@@ -544,7 +737,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="QueueingHandler$.html"><span class="name">QueueingHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@QueueingHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.ScribeHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ScribeHandler"></a>
@@ -557,7 +754,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="ScribeHandler$.html"><span class="name">ScribeHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ScribeHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.StringHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StringHandler"></a>
@@ -570,7 +771,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="StringHandler$.html"><span class="name">StringHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@StringHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.SyslogFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SyslogFuture"></a>
@@ -583,7 +788,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="SyslogFuture$.html"><span class="name">SyslogFuture</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@SyslogFuture" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.SyslogHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SyslogHandler"></a>
@@ -596,7 +805,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="SyslogHandler$.html"><span class="name">SyslogHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@SyslogHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.ThrottledHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ThrottledHandler"></a>
@@ -609,7 +822,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="ThrottledHandler$.html"><span class="name">ThrottledHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@ThrottledHandler" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.logging.config" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="config"></a>
@@ -622,7 +839,11 @@ a nested handler.</p>
       <span class="symbol">
         <a href="config/package.html"><span class="name">config</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.logging.package@config" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -636,7 +857,7 @@ a nested handler.</p>
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -653,6 +874,7 @@ a nested handler.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

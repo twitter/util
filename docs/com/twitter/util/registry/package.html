@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>registry - com.twitter.util.registry</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../../lib/package_big.png" />
+        <img alt="Package" src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1>registry</h1>
+        <h1>registry</h1><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -67,11 +75,15 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Entry.html"><span class="name">Entry</span></a><span class="params">(<span name="key">key: <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Entry.html"><span class="name">Entry</span></a><span class="params">(<span name="key">key: <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">This is an expert-level API; it is not meant for end-users.</p>
-    </li><li name="com.twitter.util.registry.Registry" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@EntryextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This is an expert-level API; it is not meant for end-users.</p>
+    </li><li name="com.twitter.util.registry.Registry" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="RegistryextendsIterable[com.twitter.util.registry.Entry]"></a>
       <a id="Registry:Registry"></a>
       <h4 class="signature">
@@ -82,8 +94,16 @@
       <span class="symbol">
         <a href="Registry.html"><span class="name">Registry</span></a><span class="result"> extends <a href="../../../../scala/package.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<a href="Entry.html" class="extype" name="com.twitter.util.registry.Entry">Entry</a>]</span>
       </span>
-      </h4>
-      <p class="comment cmt">This is an expert-level API; it is not meant for end-users.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@RegistryextendsIterable[com.twitter.util.registry.Entry]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This is an expert-level API; it is not meant for end-users.</p><div class="fullcomment"><div class="comment cmt"><p>This is an expert-level API; it is not meant for end-users.</p><p>The registry is a hierarchical key/value store, where all keys are sequences
+of Strings, and values are Strings.</p><p>Keys and values must be non-control ascii.  If you pass in a key or value
+with an invalid character, the character will silently be removed.  If this
+makes your key clash with another key, it will overwrite.
+</p></div></div>
     </li><li name="com.twitter.util.registry.Roster" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RosterextendsAnyRef"></a>
       <a id="Roster:Roster"></a>
@@ -95,8 +115,12 @@
       <span class="symbol">
         <a href="Roster.html"><span class="name">Roster</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Can change the value of params that were already set in the registry, but cannot
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@RosterextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Can change the value of params that were already set in the registry, but cannot
 add new ones.</p>
     </li><li name="com.twitter.util.registry.SimpleRegistry" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SimpleRegistryextendsRegistry"></a>
@@ -109,8 +133,12 @@ add new ones.</p>
       <span class="symbol">
         <a href="SimpleRegistry.html"><span class="name">SimpleRegistry</span></a><span class="result"> extends <a href="Registry.html" class="extype" name="com.twitter.util.registry.Registry">Registry</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">This is an expert-level API; it is not meant for end-users.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@SimpleRegistryextendsRegistry" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This is an expert-level API; it is not meant for end-users.</p>
     </li></ol>
             </div>
 
@@ -127,10 +155,14 @@ add new ones.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Entry$.html"><span class="name">Entry</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Entry$.html"><span class="name">Entry</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">This is an expert-level API; it is not meant for end-users.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@Entry" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This is an expert-level API; it is not meant for end-users.</p>
     </li><li name="com.twitter.util.registry.Formatter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Formatter"></a>
       <a id="Formatter:Formatter"></a>
@@ -142,7 +174,11 @@ add new ones.</p>
       <span class="symbol">
         <a href="Formatter$.html"><span class="name">Formatter</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@Formatter" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.registry.GlobalRegistry" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="GlobalRegistry"></a>
@@ -155,8 +191,12 @@ add new ones.</p>
       <span class="symbol">
         <a href="GlobalRegistry$.html"><span class="name">GlobalRegistry</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">This is an expert-level API; it is not meant for end-users.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@GlobalRegistry" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This is an expert-level API; it is not meant for end-users.</p>
     </li><li name="com.twitter.util.registry.Library" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Library"></a>
       <a id="Library:Library"></a>
@@ -168,8 +208,12 @@ add new ones.</p>
       <span class="symbol">
         <a href="Library$.html"><span class="name">Library</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Utility for library owners to register information about their libraries in
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.registry.package@Library" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utility for library owners to register information about their libraries in
 the registry.</p>
     </li></ol>
             </div>
@@ -196,6 +240,7 @@ the registry.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

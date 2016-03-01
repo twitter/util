@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Eval - com.twitter.util.Eval</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Eval$.html" title="Go to companion"><img src="../../../lib/class_to_object_big.png" /></a>
+        <a href="Eval$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Eval$.html" title="Go to companion">Eval</a></h1>
+        <h1><a href="Eval$.html" title="See companion object">Eval</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Eval$.html" title="See companion object">object Eval</a>
+            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -51,11 +63,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
 - return the result of <code>apply()</code>
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="Eval$.html" class="extype" name="com.twitter.util.Eval">Eval</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="Eval$.html" class="extype" name="com.twitter.util.Eval">Eval</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -80,7 +92,6 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -103,7 +114,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <span class="name">Eval</span><span class="params">()</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@&lt;init&gt;():com.twitter.util.Eval" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">empty constructor for backwards compatibility
 </p>
     </li><li name="com.twitter.util.Eval#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -115,9 +130,13 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Eval</span><span class="params">(<span name="target">target: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="java.io.File">File</span>]</span>)</span>
+        <span class="name">Eval</span><span class="params">(<span name="target">target: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="java.io.File">File</span>]</span>)</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@&lt;init&gt;(target:Option[java.io.File]):com.twitter.util.Eval" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -135,7 +154,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$ClassScopedResolver.html"><span class="name">ClassScopedResolver</span></a><span class="result"> extends <a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@ClassScopedResolverextendsEval.this.Resolver" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.CompilerException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CompilerExceptionextendsException"></a>
@@ -148,7 +171,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$CompilerException.html"><span class="name">CompilerException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@CompilerExceptionextendsException" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.EvalSettings" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EvalSettingsextendsSettings"></a>
@@ -161,7 +188,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$EvalSettings.html"><span class="name">EvalSettings</span></a><span class="result"> extends <span class="extype" name="scala.tools.nsc.Settings">Settings</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@EvalSettingsextendsSettings" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.FilesystemResolver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FilesystemResolverextendsEval.this.Resolver"></a>
@@ -174,7 +205,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$FilesystemResolver.html"><span class="name">FilesystemResolver</span></a><span class="result"> extends <a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@FilesystemResolverextendsEval.this.Resolver" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.IncludePreprocessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="IncludePreprocessorextendsEval.this.Preprocessor"></a>
@@ -187,7 +222,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$IncludePreprocessor.html"><span class="name">IncludePreprocessor</span></a><span class="result"> extends <a href="Eval$Preprocessor.html" class="extype" name="com.twitter.util.Eval.Preprocessor">Preprocessor</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@IncludePreprocessorextendsEval.this.Preprocessor" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.Preprocessor" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PreprocessorextendsAnyRef"></a>
@@ -200,7 +239,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$Preprocessor.html"><span class="name">Preprocessor</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@PreprocessorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.ResolutionFailedException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ResolutionFailedExceptionextendsException"></a>
@@ -213,7 +256,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$ResolutionFailedException.html"><span class="name">ResolutionFailedException</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@ResolutionFailedExceptionextendsException" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval.Resolver" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ResolverextendsAnyRef"></a>
@@ -226,7 +273,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <a href="Eval$Resolver.html"><span class="name">Resolver</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@ResolverextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -236,19 +287,6 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -257,10 +295,14 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -270,24 +312,15 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -296,11 +329,15 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.Eval#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Eval#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](stream:java.io.InputStream):T"></a>
       <a id="apply[T](InputStream):T"></a>
       <h4 class="signature">
@@ -311,10 +348,14 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="stream">stream: <span class="extype" name="java.io.InputStream">InputStream</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.apply.T">T</span></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">val i: Int = new Eval()(getClass.</p><div class="fullcomment"><div class="comment cmt"><p>val i: Int = new Eval()(getClass.getResourceAsStream(&quot;...&quot;))
-</p></div></div>
-    </li><li name="com.twitter.util.Eval#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@apply[T](stream:java.io.InputStream):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">val i: Int = new Eval()(getClass.getResourceAsStream(&quot;...&quot;))
+</p>
+    </li><li name="com.twitter.util.Eval#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](files:java.io.File*):T"></a>
       <a id="apply[T](File*):T"></a>
       <h4 class="signature">
@@ -325,9 +366,13 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <span class="symbol">
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="files">files: <span class="extype" name="java.io.File">File</span>*</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.apply.T">T</span></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">val i: Int = new Eval()(new File(&quot;.</p><div class="fullcomment"><div class="comment cmt"><p>val i: Int = new Eval()(new File(&quot;...&quot;))
-</p></div></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@apply[T](files:java.io.File*):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">val i: Int = new Eval()(new File(&quot;...&quot;))
+</p>
     </li><li name="com.twitter.util.Eval#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](code:String,resetState:Boolean):T"></a>
       <a id="apply[T](String,Boolean):T"></a>
@@ -337,9 +382,13 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resetState">resetState: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">true</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.apply.T">T</span></span>
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resetState">resetState: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a> = <span class="symbol">true</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.apply.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@apply[T](code:String,resetState:Boolean):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">val i: Int = new Eval()(&quot;1 + 1&quot;) // =&gt; 2
 </p>
     </li><li name="com.twitter.util.Eval#applyProcessed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -351,9 +400,13 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">applyProcessed</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="className">className: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resetState">resetState: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.applyProcessed.T">T</span></span>
+        <span class="name">applyProcessed</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="className">className: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resetState">resetState: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.applyProcessed.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@applyProcessed[T](className:String,code:String,resetState:Boolean):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">same as apply[T], but does not run preprocessors.</p>
     </li><li name="com.twitter.util.Eval#applyProcessed" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="applyProcessed[T](code:String,resetState:Boolean):T"></a>
@@ -364,9 +417,13 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">applyProcessed</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resetState">resetState: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.applyProcessed.T">T</span></span>
+        <span class="name">applyProcessed</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resetState">resetState: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.applyProcessed.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@applyProcessed[T](code:String,resetState:Boolean):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">same as apply[T], but does not run preprocessors.</p><div class="fullcomment"><div class="comment cmt"><p>same as apply[T], but does not run preprocessors.
 Will generate a classname of the form Evaluater<u>&lt;unique&gt;,
 where unique is computed from the jvmID (a random number)
@@ -383,7 +440,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Eval#check" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="check(stream:java.io.InputStream):Unit"></a>
@@ -394,11 +455,14 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">check</span><span class="params">(<span name="stream">stream: <span class="extype" name="java.io.InputStream">InputStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">check</span><span class="params">(<span name="stream">stream: <span class="extype" name="java.io.InputStream">InputStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Check if stream is Eval-able.</p><div class="fullcomment"><div class="comment cmt"><p>Check if stream is Eval-able.</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">CompilerException<p>if not Eval-able.
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@check(stream:java.io.InputStream):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Check if stream is Eval-able.</p><div class="fullcomment"><div class="comment cmt"><p>Check if stream is Eval-able.</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><a href="Eval$CompilerException.html" class="extype" name="com.twitter.util.Eval.CompilerException"><code>CompilerException</code></a> if not Eval-able.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Eval#check" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="check(files:java.io.File*):Unit"></a>
       <a id="check(File*):Unit"></a>
@@ -408,11 +472,14 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">check</span><span class="params">(<span name="files">files: <span class="extype" name="java.io.File">File</span>*</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">check</span><span class="params">(<span name="files">files: <span class="extype" name="java.io.File">File</span>*</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Check if files are Eval-able.</p><div class="fullcomment"><div class="comment cmt"><p>Check if files are Eval-able.</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">CompilerException<p>if not Eval-able.
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@check(files:java.io.File*):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Check if files are Eval-able.</p><div class="fullcomment"><div class="comment cmt"><p>Check if files are Eval-able.</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><a href="Eval$CompilerException.html" class="extype" name="com.twitter.util.Eval.CompilerException"><code>CompilerException</code></a> if not Eval-able.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Eval#check" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="check(code:String):Unit"></a>
       <a id="check(String):Unit"></a>
@@ -422,11 +489,14 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">check</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">check</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">Check if code is Eval-able.</p><div class="fullcomment"><div class="comment cmt"><p>Check if code is Eval-able.</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">CompilerException<p>if not Eval-able.
-</p></span></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@check(code:String):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Check if code is Eval-able.</p><div class="fullcomment"><div class="comment cmt"><p>Check if code is Eval-able.</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><a href="Eval$CompilerException.html" class="extype" name="com.twitter.util.Eval.CompilerException"><code>CompilerException</code></a> if not Eval-able.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -438,7 +508,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -455,9 +529,13 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">compile</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">compile</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@compile(code:String):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Compile an entire source file into the virtual classloader.</p>
     </li><li name="com.twitter.util.Eval#compilerMessageHandler" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="compilerMessageHandler:Option[scala.tools.nsc.reporters.Reporter]"></a>
@@ -468,9 +546,13 @@ and a digest of code
         <span class="kind">lazy val</span>
       </span>
       <span class="symbol">
-        <span class="name">compilerMessageHandler</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.tools.nsc.reporters.Reporter">Reporter</span>]</span>
+        <span class="name">compilerMessageHandler</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.tools.nsc.reporters.Reporter">Reporter</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@compilerMessageHandler:Option[scala.tools.nsc.reporters.Reporter]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.util.Eval#compilerOutputDir" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="compilerOutputDir:scala.reflect.io.AbstractFile"></a>
@@ -483,7 +565,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">compilerOutputDir</span><span class="result">: <span class="extype" name="scala.reflect.io.AbstractFile">AbstractFile</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@compilerOutputDir:scala.reflect.io.AbstractFile" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval#compilerSettings" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="compilerSettings:scala.tools.nsc.Settings"></a>
@@ -496,7 +582,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">compilerSettings</span><span class="result">: <span class="extype" name="scala.tools.nsc.Settings">Settings</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@compilerSettings:scala.tools.nsc.Settings" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -507,9 +597,13 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -520,9 +614,13 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -533,9 +631,13 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -554,7 +656,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">findClass</span><span class="params">(<span name="className">className: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@findClass(className:String):Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
@@ -567,7 +673,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -578,9 +688,13 @@ and a digest of code
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Eval#impliedClassPath" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="impliedClassPath:List[String]"></a>
@@ -593,7 +707,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">impliedClassPath</span><span class="result">: <a href="../../../scala/package.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@impliedClassPath:List[String]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Eval#inPlace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="inPlace[T](code:String):T"></a>
@@ -606,7 +724,11 @@ and a digest of code
       <span class="symbol">
         <span class="name">inPlace</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Eval.inPlace.T">T</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@inPlace[T](code:String):T" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Like <code>Eval()</code>, but doesn't reset the virtual classloader before evaluating.</p><div class="fullcomment"><div class="comment cmt"><p>Like <code>Eval()</code>, but doesn't reset the virtual classloader before evaluating. So if you've
 loaded classes with <code>compile</code>, they can be referenced/imported in code run by <code>inPlace</code>.
 </p></div></div>
@@ -619,9 +741,13 @@ loaded classes with <code>compile</code>, they can be referenced/imported in cod
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -632,9 +758,13 @@ loaded classes with <code>compile</code>, they can be referenced/imported in cod
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -645,9 +775,13 @@ loaded classes with <code>compile</code>, they can be referenced/imported in cod
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -658,9 +792,13 @@ loaded classes with <code>compile</code>, they can be referenced/imported in cod
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Eval#preprocessors" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="preprocessors:Seq[Eval.this.Preprocessor]"></a>
@@ -673,7 +811,11 @@ loaded classes with <code>compile</code>, they can be referenced/imported in cod
       <span class="symbol">
         <span class="name">preprocessors</span><span class="result">: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Eval$Preprocessor.html" class="extype" name="com.twitter.util.Eval.Preprocessor">Preprocessor</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@preprocessors:Seq[Eval.this.Preprocessor]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Preprocessors to run the code through before it is passed to the Scala compiler.</p><div class="fullcomment"><div class="comment cmt"><p>Preprocessors to run the code through before it is passed to the Scala compiler.
 if you want to add new resolvers, you can do so with
 new Eval(...) {
@@ -691,7 +833,11 @@ new Eval(...) {
       <span class="symbol">
         <span class="name">sourceForString</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@sourceForString(code:String):String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">run preprocessors on our string, returning a String that is the processed source
 </p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -705,7 +851,11 @@ new Eval(...) {
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Eval#toSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="toSource(code:String):String"></a>
@@ -718,7 +868,11 @@ new Eval(...) {
       <span class="symbol">
         <span class="name">toSource</span><span class="params">(<span name="code">code: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@toSource(code:String):String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">converts the given file to evaluable source.</p>
     </li><li name="com.twitter.util.Eval#toSource" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toSource(file:java.io.File):String"></a>
@@ -731,7 +885,11 @@ new Eval(...) {
       <span class="symbol">
         <span class="name">toSource</span><span class="params">(<span name="file">file: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@toSource(file:java.io.File):String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">converts the given file to evaluable source.</p><div class="fullcomment"><div class="comment cmt"><p>converts the given file to evaluable source.
 delegates to toSource(code: String)
 </p></div></div>
@@ -746,7 +904,11 @@ delegates to toSource(code: String)
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -757,9 +919,13 @@ delegates to toSource(code: String)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -776,9 +942,13 @@ delegates to toSource(code: String)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -795,9 +965,13 @@ delegates to toSource(code: String)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -814,9 +988,13 @@ delegates to toSource(code: String)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">writeChecksum</span><span class="params">(<span name="checksum">checksum: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="file">file: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">writeChecksum</span><span class="params">(<span name="checksum">checksum: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="file">file: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Eval@writeChecksum(checksum:String,file:java.io.File):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">write the current checksum to a file
 </p>
     </li></ol>
@@ -831,7 +1009,7 @@ delegates to toSource(code: String)
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -848,6 +1026,7 @@ delegates to toSource(code: String)
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Flaggable - com.twitter.app.Flaggable</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="Flaggable.html" title="Go to companion"><img src="../../../lib/object_to_class_big.png" /></a>
+        <a href="Flaggable.html" title="See companion class"><img alt="Object/Class" src="../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.app">app</a></p>
-        <h1><a href="Flaggable.html" title="Go to companion">Flaggable</a></h1>
+        <h1><a href="Flaggable.html" title="See companion class">Flaggable</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Flaggable.html" title="See companion class">class Flaggable</a>
+            | <a href="package.html" class="extype" name="com.twitter.app">package app</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -42,7 +54,7 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Default <code>Flaggable</code> implementations.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -68,7 +80,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -87,19 +98,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -108,10 +106,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -121,24 +123,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -147,10 +140,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -162,7 +159,11 @@
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -175,7 +176,11 @@
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -192,9 +197,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -205,9 +214,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -218,9 +231,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -239,7 +256,11 @@
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -250,9 +271,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -263,9 +288,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.app.Flaggable#mandatory" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mandatory[T](f:String=&gt;T):com.twitter.app.Flaggable[T]"></a>
@@ -278,10 +307,13 @@
       <span class="symbol">
         <span class="name">mandatory</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="com.twitter.app.Flaggable.mandatory.T">T</span></span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.mandatory.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@mandatory[T](f:String=&gt;T):com.twitter.app.Flaggable[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a <code>Flaggable[T]</code> according to a <code>String =&gt; T</code> conversion function.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <code>Flaggable[T]</code> according to a <code>String =&gt; T</code> conversion function.
-</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>Function that parses a string into an object of type <code>T</code>
-</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>Function that parses a string into an object of type <code>T</code></p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -291,9 +323,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -304,9 +340,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -317,9 +357,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.app.Flaggable#ofBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofBoolean:com.twitter.app.Flaggable[Boolean]"></a>
@@ -330,9 +374,13 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ofBoolean</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
+        <span class="name">ofBoolean</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofBoolean:com.twitter.app.Flaggable[Boolean]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofDouble:com.twitter.app.Flaggable[Double]"></a>
@@ -343,9 +391,13 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ofDouble</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
+        <span class="name">ofDouble</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofDouble:com.twitter.app.Flaggable[Double]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofDuration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofDuration:com.twitter.app.Flaggable[com.twitter.util.Duration]"></a>
@@ -358,7 +410,28 @@
       <span class="symbol">
         <span class="name">ofDuration</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofDuration:com.twitter.app.Flaggable[com.twitter.util.Duration]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.app.Flaggable#ofFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ofFile:com.twitter.app.Flaggable[java.io.File]"></a>
+      <a id="ofFile:Flaggable[File]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ofFile</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.io.File">File</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofFile:com.twitter.app.Flaggable[java.io.File]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofFloat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofFloat:com.twitter.app.Flaggable[Float]"></a>
@@ -369,9 +442,13 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ofFloat</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Float" class="extype" target="_top">Float</a>]</span>
+        <span class="name">ofFloat</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Float" class="extype" target="_top">Float</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofFloat:com.twitter.app.Flaggable[Float]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofInetSocketAddress" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofInetSocketAddress:com.twitter.app.Flaggable[java.net.InetSocketAddress]"></a>
@@ -384,7 +461,11 @@
       <span class="symbol">
         <span class="name">ofInetSocketAddress</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofInetSocketAddress:com.twitter.app.Flaggable[java.net.InetSocketAddress]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofInt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofInt:com.twitter.app.Flaggable[Int]"></a>
@@ -395,9 +476,13 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ofInt</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+        <span class="name">ofInt</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofInt:com.twitter.app.Flaggable[Int]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaBoolean:com.twitter.app.Flaggable[Boolean]"></a>
@@ -410,7 +495,11 @@
       <span class="symbol">
         <span class="name">ofJavaBoolean</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Boolean">Boolean</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaBoolean:com.twitter.app.Flaggable[Boolean]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaDouble:com.twitter.app.Flaggable[Double]"></a>
@@ -423,7 +512,11 @@
       <span class="symbol">
         <span class="name">ofJavaDouble</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Double">Double</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaDouble:com.twitter.app.Flaggable[Double]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaFloat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaFloat:com.twitter.app.Flaggable[Float]"></a>
@@ -436,7 +529,11 @@
       <span class="symbol">
         <span class="name">ofJavaFloat</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Float">Float</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaFloat:com.twitter.app.Flaggable[Float]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaInteger" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaInteger:com.twitter.app.Flaggable[Integer]"></a>
@@ -449,7 +546,11 @@
       <span class="symbol">
         <span class="name">ofJavaInteger</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Integer">Integer</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaInteger:com.twitter.app.Flaggable[Integer]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaList" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaList[T](implicitevidence$12:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[java.util.List[T]]"></a>
@@ -462,7 +563,11 @@
       <span class="symbol">
         <span class="name">ofJavaList</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaList.T">T</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.util.List">List</span>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaList.T">T</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaList[T](implicitevidence$12:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[java.util.List[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaLong" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaLong:com.twitter.app.Flaggable[Long]"></a>
@@ -475,7 +580,11 @@
       <span class="symbol">
         <span class="name">ofJavaLong</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.lang.Long">Long</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaLong:com.twitter.app.Flaggable[Long]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaMap[K,V](implicitevidence$13:com.twitter.app.Flaggable[K],implicitevidence$14:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[java.util.Map[K,V]]"></a>
@@ -488,7 +597,11 @@
       <span class="symbol">
         <span class="name">ofJavaMap</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.K">K</span>]</span>, <span name="arg1">arg1: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.V">V</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.K">K</span>, <span class="extype" name="com.twitter.app.Flaggable.ofJavaMap.V">V</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaMap[K,V](implicitevidence$13:com.twitter.app.Flaggable[K],implicitevidence$14:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[java.util.Map[K,V]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofJavaSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofJavaSet[T](implicitevidence$11:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[java.util.Set[T]]"></a>
@@ -501,7 +614,11 @@
       <span class="symbol">
         <span class="name">ofJavaSet</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaSet.T">T</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="java.util.Set">Set</span>[<span class="extype" name="com.twitter.app.Flaggable.ofJavaSet.T">T</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofJavaSet[T](implicitevidence$11:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[java.util.Set[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofLong" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofLong:com.twitter.app.Flaggable[Long]"></a>
@@ -512,9 +629,13 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ofLong</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
+        <span class="name">ofLong</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofLong:com.twitter.app.Flaggable[Long]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofMap[K,V](implicitevidence$9:com.twitter.app.Flaggable[K],implicitevidence$10:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[Map[K,V]]"></a>
@@ -527,7 +648,11 @@
       <span class="symbol">
         <span class="name">ofMap</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofMap.K">K</span>]</span>, <span name="arg1">arg1: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofMap.V">V</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="com.twitter.app.Flaggable.ofMap.K">K</span>, <span class="extype" name="com.twitter.app.Flaggable.ofMap.V">V</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofMap[K,V](implicitevidence$9:com.twitter.app.Flaggable[K],implicitevidence$10:com.twitter.app.Flaggable[V]):com.twitter.app.Flaggable[Map[K,V]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofSeq" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofSeq[T](implicitevidence$8:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Seq[T]]"></a>
@@ -540,7 +665,11 @@
       <span class="symbol">
         <span class="name">ofSeq</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofSeq.T">T</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.app.Flaggable.ofSeq.T">T</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofSeq[T](implicitevidence$8:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofSet[T](implicitevidence$7:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Set[T]]"></a>
@@ -553,7 +682,11 @@
       <span class="symbol">
         <span class="name">ofSet</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofSet.T">T</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="com.twitter.app.Flaggable.ofSet.T">T</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofSet[T](implicitevidence$7:com.twitter.app.Flaggable[T]):com.twitter.app.Flaggable[Set[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofStorageUnit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofStorageUnit:com.twitter.app.Flaggable[com.twitter.util.StorageUnit]"></a>
@@ -566,7 +699,11 @@
       <span class="symbol">
         <span class="name">ofStorageUnit</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="../util/StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofStorageUnit:com.twitter.app.Flaggable[com.twitter.util.StorageUnit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofString:com.twitter.app.Flaggable[String]"></a>
@@ -579,7 +716,11 @@
       <span class="symbol">
         <span class="name">ofString</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofString:com.twitter.app.Flaggable[String]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofTime" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofTime:com.twitter.app.Flaggable[com.twitter.util.Time]"></a>
@@ -592,7 +733,11 @@
       <span class="symbol">
         <span class="name">ofTime</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofTime:com.twitter.app.Flaggable[com.twitter.util.Time]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.app.Flaggable#ofTuple" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ofTuple[T,U](implicitevidence$1:com.twitter.app.Flaggable[T],implicitevidence$2:com.twitter.app.Flaggable[U]):com.twitter.app.Flaggable[(T,U)]"></a>
@@ -605,7 +750,11 @@
       <span class="symbol">
         <span class="name">ofTuple</span><span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofTuple.T">T</span>]</span>, <span name="arg1">arg1: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flaggable.ofTuple.U">U</span>]</span>)</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[(<span class="extype" name="com.twitter.app.Flaggable.ofTuple.T">T</span>, <span class="extype" name="com.twitter.app.Flaggable.ofTuple.U">U</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@ofTuple[T,U](implicitevidence$1:com.twitter.app.Flaggable[T],implicitevidence$2:com.twitter.app.Flaggable[U]):com.twitter.app.Flaggable[(T,U)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -618,7 +767,11 @@
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -631,7 +784,11 @@
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -642,9 +799,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -661,9 +822,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -680,9 +845,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.Flaggable$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -702,7 +871,7 @@
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -719,6 +888,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

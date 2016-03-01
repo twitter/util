@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Event - com.twitter.util.Event</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Event$.html" title="Go to companion"><img src="../../../lib/trait_to_object_big.png" /></a>
+        <a href="Event$.html" title="See companion object"><img alt="Trait/Object" src="../../../lib/trait_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Event$.html" title="Go to companion">Event</a></h1>
+        <h1><a href="Event$.html" title="See companion object">Event</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Event$.html" title="See companion object">object Event</a>
+            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -47,11 +59,11 @@ nature.</p><p>Events are observed by registering <a href="Witness.html" class="e
 to which the Event's values are notified.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractEvent.html" class="extype" name="com.twitter.util.AbstractEvent">com.twitter.util.AbstractEvent</a>.
 </p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="AbstractEvent.html" class="extype" name="com.twitter.util.AbstractEvent">AbstractEvent</a>, <a href="WitnessedEvent.html" class="extype" name="com.twitter.util.WitnessedEvent">WitnessedEvent</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="AbstractEvent.html" class="extype" name="com.twitter.util.AbstractEvent">AbstractEvent</a>, <a href="WitnessedEvent.html" class="extype" name="com.twitter.util.WitnessedEvent">WitnessedEvent</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -76,7 +88,6 @@ to which the Event's values are notified.</p><p>Note: There is a Java-friendly A
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -103,7 +114,11 @@ to which the Event's values are notified.</p><p>Note: There is a Java-friendly A
       <span class="symbol">
         <span class="name">register</span><span class="params">(<span name="s">s: <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>)</span><span class="result">: <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@register(s:com.twitter.util.Witness[T]):com.twitter.util.Closable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Register the given <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> to
 this Event.</p><div class="fullcomment"><div class="comment cmt"><p>Register the given <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> to
 this Event. Witnesses are notified of new values until it is
@@ -115,19 +130,6 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -136,10 +138,14 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -149,24 +155,15 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -175,10 +172,14 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -190,7 +191,11 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Event#build" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="build[U&gt;:T,That](implicitcbf:collection.generic.CanBuild[U,That]):com.twitter.util.Event[That]"></a>
@@ -203,7 +208,11 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
       <span class="symbol">
         <span class="name">build</span><span class="tparams">[<span name="U">U &gt;: <span class="extype" name="com.twitter.util.Event.T">T</span></span>, <span name="That">That</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="cbf">cbf: <span class="extype" name="scala.collection.generic.CanBuild">CanBuild</span>[<span class="extype" name="com.twitter.util.Event.build.U">U</span>, <span class="extype" name="com.twitter.util.Event.build.That">That</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.build.That">That</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@build[U&gt;:T,That](implicitcbf:collection.generic.CanBuild[U,That]):com.twitter.util.Event[That]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Progressively build a collection of events using the passed-in
 builder.</p><div class="fullcomment"><div class="comment cmt"><p>Progressively build a collection of events using the passed-in
 builder. A value containing the current version of the collection
@@ -220,7 +229,11 @@ is notified for each incoming event.
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -237,9 +250,13 @@ is notified for each incoming event.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">collect</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.collect.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.collect.U">U</span>]</span>
+        <span class="name">collect</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.collect.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.collect.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@collect[U](f:PartialFunction[T,U]):com.twitter.util.Event[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Build a new Event by applying the given function to each value
 observed.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event by applying the given function to each value
 observed. Event values for which the partial function <code>f</code> does
@@ -256,7 +273,11 @@ not apply are dropped; other values are transformed by <code>f</code>.
       <span class="symbol">
         <span class="name">dedup</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@dedup:com.twitter.util.Event[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Builds a new Event by keeping only the Events where
 the previous and current values are not <code>==</code> to each other.</p>
     </li><li name="com.twitter.util.Event#dedupWith" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -268,9 +289,13 @@ the previous and current values are not <code>==</code> to each other.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dedupWith</span><span class="params">(<span name="eq">eq: (<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
+        <span class="name">dedupWith</span><span class="params">(<span name="eq">eq: (<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@dedupWith(eq:(T,T)=&gt;Boolean):com.twitter.util.Event[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Build a new Event by keeping only those Event values where the
 equality predicate <code>eq</code> applied to the current and new values
 does not match.</p>
@@ -285,7 +310,11 @@ does not match.</p>
       <span class="symbol">
         <span class="name">diff</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="U">U</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Event.diff.CC">CC</span>]</span>, <span name="toCC">toCC: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.diff.CC">CC</span>[<span class="extype" name="com.twitter.util.Event.diff.U">U</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Event.diff.CC">CC</span>, <span class="extype" name="com.twitter.util.Event.diff.U">U</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">The <a href="" class="extype" name="com.twitter.util.Event">Event</a> that stores the difference between successive
 updates to the parent event.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="" class="extype" name="com.twitter.util.Event">Event</a> that stores the difference between successive
 updates to the parent event. This can be used to perform
@@ -300,9 +329,13 @@ incremental computation on large data structures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -313,9 +346,13 @@ incremental computation on large data structures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Event#filter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="filter(p:T=&gt;Boolean):com.twitter.util.Event[T]"></a>
@@ -326,9 +363,13 @@ incremental computation on large data structures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
+        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@filter(p:T=&gt;Boolean):com.twitter.util.Event[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Build a new Event by keeping only those Event values that match
 the predicate <code>p</code>.</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -340,9 +381,13 @@ the predicate <code>p</code>.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -361,7 +406,11 @@ the predicate <code>p</code>.</p>
       <span class="symbol">
         <span class="name">foldLeft</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="z">z: <span class="extype" name="com.twitter.util.Event.foldLeft.U">U</span></span>)</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Event.foldLeft.U">U</span>, <span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <span class="extype" name="com.twitter.util.Event.foldLeft.U">U</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.foldLeft.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@foldLeft[U](z:U)(f:(U,T)=&gt;U):com.twitter.util.Event[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Build a new Event by incrementally accumulating over events,
 starting with value <code>z</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event by incrementally accumulating over events,
 starting with value <code>z</code>. Each intermediate aggregate is notified
@@ -378,7 +427,11 @@ to the derived event.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -389,9 +442,13 @@ to the derived event.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -402,9 +459,13 @@ to the derived event.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Event#joinLast" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="joinLast[U](other:com.twitter.util.Event[U]):com.twitter.util.Event[(T,U)]"></a>
@@ -417,7 +478,11 @@ to the derived event.
       <span class="symbol">
         <span class="name">joinLast</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.joinLast.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[(<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.joinLast.U">U</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@joinLast[U](other:com.twitter.util.Event[U]):com.twitter.util.Event[(T,U)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Join two events into a new Event which notifies a tuple of the
 last value in each underlying event.</p>
     </li><li name="com.twitter.util.Event#map" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -431,7 +496,11 @@ last value in each underlying event.</p>
       <span class="symbol">
         <span class="name">map</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <span class="extype" name="com.twitter.util.Event.map.U">U</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.map.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@map[U](f:T=&gt;U):com.twitter.util.Event[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Build a new Event by transforming each new event value with <code>f</code>.</p>
     </li><li name="com.twitter.util.Event#merge" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="merge[U&gt;:T](other:com.twitter.util.Event[U]):com.twitter.util.Event[U]"></a>
@@ -444,7 +513,11 @@ last value in each underlying event.</p>
       <span class="symbol">
         <span class="name">merge</span><span class="tparams">[<span name="U">U &gt;: <span class="extype" name="com.twitter.util.Event.T">T</span></span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.merge.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.merge.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@merge[U&gt;:T](other:com.twitter.util.Event[U]):com.twitter.util.Event[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Merge two events; the resulting event interleaves events
 from this and <code>other</code>.</p>
     </li><li name="com.twitter.util.Event#mergeMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -458,7 +531,11 @@ from this and <code>other</code>.</p>
       <span class="symbol">
         <span class="name">mergeMap</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.mergeMap.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.mergeMap.U">U</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@mergeMap[U](f:T=&gt;com.twitter.util.Event[U]):com.twitter.util.Event[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">The Event which merges the events resulting from <code>f</code> applied
 to each element in this Event.</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -470,9 +547,13 @@ to each element in this Event.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -483,9 +564,13 @@ to each element in this Event.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -496,9 +581,13 @@ to each element in this Event.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Event#patch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="patch[CC[_],U](implicitevidence$2:com.twitter.util.Diffable[CC],implicitev:&lt;:&lt;[T,com.twitter.util.Diff[CC,U]]):com.twitter.util.Event[CC[U]]"></a>
@@ -511,7 +600,11 @@ to each element in this Event.</p>
       <span class="symbol">
         <span class="name">patch</span><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="U">U</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="Diffable.html" class="extype" name="com.twitter.util.Diffable">Diffable</a>[<span class="extype" name="com.twitter.util.Event.patch.CC">CC</span>]</span>, <span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>[<span class="extype" name="com.twitter.util.Event.patch.CC">CC</span>, <span class="extype" name="com.twitter.util.Event.patch.U">U</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.patch.CC">CC</span>[<span class="extype" name="com.twitter.util.Event.patch.U">U</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@patch[CC[_],U](implicitevidence$2:com.twitter.util.Diffable[CC],implicitev:&lt;:&lt;[T,com.twitter.util.Diff[CC,U]]):com.twitter.util.Event[CC[U]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Patch up an <a href="" class="extype" name="com.twitter.util.Event">Event</a> of differences (like those produced by
 <a href="#diff[CC[_],U](implicitevidence$1:com.twitter.util.Diffable[CC],implicittoCC:&lt;:&lt;[T,CC[U]]):com.twitter.util.Event[com.twitter.util.Diff[CC,U]]" class="extmbr" name="com.twitter.util.Event#diff">Event.diff</a>) into an <a href="" class="extype" name="com.twitter.util.Event">Event</a> that reflects the current
 version of a data structure.</p><div class="fullcomment"><div class="comment cmt"><p>Patch up an <a href="" class="extype" name="com.twitter.util.Event">Event</a> of differences (like those produced by
@@ -528,9 +621,13 @@ Event[CC[T]]).diff.patch</code> is equivalent to <code>event</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">respond</span><span class="params">(<span name="s">s: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+        <span class="name">respond</span><span class="params">(<span name="s">s: (<span class="extype" name="com.twitter.util.Event.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@respond(s:T=&gt;Unit):com.twitter.util.Closable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Observe this event with function <code>s</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Observe this event with function <code>s</code>. Equivalent to
 <code>register(Witness(s))</code>.
 </p></div></div>
@@ -545,7 +642,11 @@ Event[CC[T]]).diff.patch</code> is equivalent to <code>event</code>
       <span class="symbol">
         <span class="name">select</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.select.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<a href="../../../scala/package.html#Either[+A,+B]=scala.util.Either[A,B]" class="extmbr" name="scala.Either">Either</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.select.U">U</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@select[U](other:com.twitter.util.Event[U]):com.twitter.util.Event[Either[T,U]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Merge two Events of different types.</p>
     </li><li name="com.twitter.util.Event#sliding" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sliding(n:Int):com.twitter.util.Event[Seq[T]]"></a>
@@ -556,9 +657,13 @@ Event[CC[T]]).diff.patch</code> is equivalent to <code>event</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sliding</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]]</span>
+        <span class="name">sliding</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@sliding(n:Int):com.twitter.util.Event[Seq[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Build a new Event representing a sliding window of at-most <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event representing a sliding window of at-most <code>n</code>.
 Each event notified by the parent are added to a queue of size
 at-most <code>n</code>. This queue is in turn notified to register of
@@ -575,7 +680,11 @@ the returned event.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Event#take" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="take(howmany:Int):com.twitter.util.Event[T]"></a>
@@ -586,9 +695,13 @@ the returned event.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">take</span><span class="params">(<span name="howmany">howmany: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
+        <span class="name">take</span><span class="params">(<span name="howmany">howmany: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@take(howmany:Int):com.twitter.util.Event[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">An event which consists of the first <code>howmany</code> values
 in the parent Event.</p>
     </li><li name="com.twitter.util.Event#toFuture" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -602,7 +715,11 @@ in the parent Event.</p>
       <span class="symbol">
         <span class="name">toFuture</span><span class="params">()</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Event.T">T</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@toFuture():com.twitter.util.Future[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">A Future which is satisfied by the first value observed.</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -615,7 +732,11 @@ in the parent Event.</p>
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -626,9 +747,13 @@ in the parent Event.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -645,9 +770,13 @@ in the parent Event.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -664,9 +793,13 @@ in the parent Event.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -685,15 +818,18 @@ in the parent Event.</p>
       <span class="symbol">
         <span class="name">zip</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="other">other: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.zip.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Event">Event</a>[(<span class="extype" name="com.twitter.util.Event.T">T</span>, <span class="extype" name="com.twitter.util.Event.zip.U">U</span>)]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Event@zip[U](other:com.twitter.util.Event[U]):com.twitter.util.Event[(T,U)]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Merge two event streams in lock-step, combining corresponding
 event values.</p><div class="fullcomment"><div class="comment cmt"><p>Merge two event streams in lock-step, combining corresponding
 event values.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This can be dangerous! Since the implementation needs to
 queue outstanding Event-values from the slower producer, if one
 Event outpaces another, this queue can grow in an unbounded
-fashion.
-</p></span></dd></dl></div>
+fashion.</p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -706,7 +842,7 @@ fashion.
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -723,6 +859,7 @@ fashion.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

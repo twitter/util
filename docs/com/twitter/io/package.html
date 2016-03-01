@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>io - com.twitter.io</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/package_big.png" />
+        <img alt="Package" src="../../../lib/package_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a></p>
-        <h1>io</h1>
+        <h1>io</h1><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -69,9 +77,13 @@
       <span class="symbol">
         <a href="AbstractBuf.html"><span class="name">AbstractBuf</span></a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Abstract <code>Buf</code> class for Java compatibility.</p>
-    </li><li name="com.twitter.io.Buf" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@AbstractBufextendsBuf" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Abstract <code>Buf</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.io.Buf" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="BufextendsAnyRef"></a>
       <a id="Buf:Buf"></a>
       <h4 class="signature">
@@ -82,10 +94,16 @@
       <span class="symbol">
         <a href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Buf represents a fixed, immutable byte buffer.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@BufextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Buf represents a fixed, immutable byte buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Buf represents a fixed, immutable byte buffer. Buffers may be
+sliced and concatenated, and thus be used to implement
+bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractBuf.html" class="extype" name="com.twitter.io.AbstractBuf">com.twitter.io.AbstractBuf</a>.</p></div></div>
     </li><li name="com.twitter.io.BufBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BufBenchmarkextendsAnyRef"></a>
+      <a id="BufBenchmarkextendsStdBenchAnnotations"></a>
       <a id="BufBenchmark:BufBenchmark"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -93,13 +111,15 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BufBenchmark.html"><span class="name">BufBenchmark</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a href="BufBenchmark.html"><span class="name">BufBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@BufBenchmarkextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
-              
-                <span class="name">@BenchmarkMode</span><span class="args">()</span>
+                <span class="name">@State</span><span class="args">()</span>
               
         </dd></dl></div>
     </li><li name="com.twitter.io.BufInputStream" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
@@ -113,7 +133,11 @@
       <span class="symbol">
         <a href="BufInputStream.html"><span class="name">BufInputStream</span></a><span class="result"> extends <span class="extype" name="java.io.InputStream">InputStream</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@BufInputStreamextendsInputStream" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.Bufs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BufsextendsObject"></a>
@@ -126,7 +150,11 @@
       <span class="symbol">
         <a href="Bufs.html"><span class="name">Bufs</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@BufsextendsObject" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a>
@@ -139,10 +167,14 @@
       <span class="symbol">
         <a href="InputStreamReader.html"><span class="name">InputStreamReader</span></a><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Provides the Reader API for an InputStream
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@InputStreamReaderextendsReaderwithClosablewithCloseAwaitably" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Provides the Reader API for an InputStream
 </p>
-    </li><li name="com.twitter.io.Reader" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Reader" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="ReaderextendsAnyRef"></a>
       <a id="Reader:Reader"></a>
       <h4 class="signature">
@@ -153,8 +185,14 @@
       <span class="symbol">
         <a href="Reader.html"><span class="name">Reader</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A Reader represents a stream of bytes, read in discrete chunks.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@ReaderextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Reader represents a stream of bytes, read in discrete chunks.</p><div class="fullcomment"><div class="comment cmt"><p>A Reader represents a stream of bytes, read in discrete chunks.
+Readers permit at most one outstanding read.
+</p></div></div>
     </li><li name="com.twitter.io.Readers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ReadersextendsObject"></a>
       <a id="Readers:Readers"></a>
@@ -166,7 +204,11 @@
       <span class="symbol">
         <a href="Readers.html"><span class="name">Readers</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@ReadersextendsObject" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.Writer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="WriterextendsAnyRef"></a>
@@ -179,8 +221,12 @@
       <span class="symbol">
         <a href="Writer.html"><span class="name">Writer</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A Writer represents a sink for a stream of bytes, providing
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@WriterextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Writer represents a sink for a stream of bytes, providing
 a convenient interface for the producer of such streams.</p>
     </li><li name="com.twitter.io.Writers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="WritersextendsObject"></a>
@@ -193,7 +239,11 @@ a convenient interface for the producer of such streams.</p>
       <span class="symbol">
         <a href="Writers.html"><span class="name">Writers</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@WritersextendsObject" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -202,7 +252,7 @@ a convenient interface for the producer of such streams.</p>
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="com.twitter.io.Buf" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.io.Buf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Buf"></a>
       <a id="Buf:Buf"></a>
       <h4 class="signature">
@@ -213,21 +263,19 @@ a convenient interface for the producer of such streams.</p>
       <span class="symbol">
         <a href="Buf$.html"><span class="name">Buf</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Buf wrapper-types (like Buf.</p>
-    </li><li name="com.twitter.io.BufBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="BufBenchmark"></a>
-      <a id="BufBenchmark:BufBenchmark"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="BufBenchmark$.html"><span class="name">BufBenchmark</span></a>
-      </span>
-      </h4>
-      
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@Buf" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+Owned APIs, each of which with construction &amp; extraction utilities.</p><div class="fullcomment"><div class="comment cmt"><p>Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+Owned APIs, each of which with construction &amp; extraction utilities.</p><p>The Owned APIs may provide direct access to a Buf's underlying
+implementation; and so mutating the data structure invalidates a Buf's
+immutability constraint. Users must take care to handle this data
+immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
+with the caller (at the cost of additional allocation).</p><p>Note: There is a Java-friendly API for this object: <a href="Bufs.html" class="extype" name="com.twitter.io.Bufs">com.twitter.io.Bufs</a>.
+</p></div></div>
     </li><li name="com.twitter.io.BufReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BufReader"></a>
       <a id="BufReader:BufReader"></a>
@@ -239,7 +287,11 @@ a convenient interface for the producer of such streams.</p>
       <span class="symbol">
         <a href="BufReader$.html"><span class="name">BufReader</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@BufReader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.Charsets" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Charsets"></a>
@@ -252,8 +304,12 @@ a convenient interface for the producer of such streams.</p>
       <span class="symbol">
         <a href="Charsets$.html"><span class="name">Charsets</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Provides a set of frequently used <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> instances and
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@Charsets" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Provides a set of frequently used <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> instances and
 the utilities related to them.</p>
     </li><li name="com.twitter.io.Files" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Files"></a>
@@ -266,8 +322,12 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="Files$.html"><span class="name">Files</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Utilities for working with <code>java.io.File</code>s
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@Files" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Utilities for working with <code>java.io.File</code>s
 </p>
     </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="InputStreamReader"></a>
@@ -280,7 +340,11 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="InputStreamReader$.html"><span class="name">InputStreamReader</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@InputStreamReader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.Reader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Reader"></a>
@@ -293,7 +357,11 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="Reader$.html"><span class="name">Reader</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@Reader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.StreamIO" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StreamIO"></a>
@@ -306,7 +374,11 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="StreamIO$.html"><span class="name">StreamIO</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@StreamIO" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.TempDirectory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="TempDirectory"></a>
@@ -319,7 +391,11 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="TempDirectory$.html"><span class="name">TempDirectory</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@TempDirectory" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.io.TempFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="TempFile"></a>
@@ -332,9 +408,13 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="TempFile$.html"><span class="name">TempFile</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@TempFile" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.io.Writer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Writer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Writer"></a>
       <a id="Writer:Writer"></a>
       <h4 class="signature">
@@ -345,8 +425,12 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="Writer$.html"><span class="name">Writer</span></a>
       </span>
-      </h4>
-      <p class="comment cmt"></p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@Writer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Writers for Java friendly APIs.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.exp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="exp"></a>
       <a id="exp:exp"></a>
@@ -358,7 +442,11 @@ the utilities related to them.</p>
       <span class="symbol">
         <a href="exp/package.html"><span class="name">exp</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@exp" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -385,6 +473,7 @@ the utilities related to them.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

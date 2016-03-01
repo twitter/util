@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Spool - com.twitter.concurrent.Spool</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="Spool.html" title="Go to companion"><img src="../../../lib/object_to_trait_big.png" /></a>
+        <a href="Spool.html" title="See companion trait"><img alt="Object/Trait" src="../../../lib/object_to_trait_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.concurrent">concurrent</a></p>
-        <h1><a href="Spool.html" title="Go to companion">Spool</a></h1>
+        <h1><a href="Spool.html" title="See companion trait">Spool</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Spool.html" title="See companion trait">trait Spool</a>
+            | <a href="package.html" class="extype" name="com.twitter.concurrent">package concurrent</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -39,10 +51,11 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Spools.html" class="extype" name="com.twitter.concurrent.Spools">com.twitter.concurrent.Spools</a>.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.
+We encourage you to use <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a> instead.</p><p>Note: There is a Java-friendly API for this object: <a href="Spools.html" class="extype" name="com.twitter.concurrent.Spools">com.twitter.concurrent.Spools</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -68,7 +81,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -91,11 +103,15 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Spool$$Cons.html"><span class="name">Cons</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="head">head: <span class="extype" name="com.twitter.concurrent.Spool.Cons.A">A</span></span>, <span name="tail">tail: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.Cons.A">A</span>]]</span>)</span><span class="result"> extends <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.Cons.A">A</span>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Spool$$Cons.html"><span class="name">Cons</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="head">head: <span class="extype" name="com.twitter.concurrent.Spool.Cons.A">A</span></span>, <span name="tail">tail: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.Cons.A">A</span>]]</span>)</span><span class="result"> extends <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.Cons.A">A</span>] with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@Cons[A]extendsSpool[A]withProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.concurrent.Spool.Syntax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.concurrent.Spool.Syntax" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Syntax[A]extendsAnyRef"></a>
       <a id="Syntax[A]:Syntax[A]"></a>
       <h4 class="signature">
@@ -106,8 +122,15 @@
       <span class="symbol">
         <a href="Spool$$Syntax.html"><span class="name">Syntax</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Syntax support.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@Syntax[A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Syntax support.</p><div class="fullcomment"><div class="comment cmt"><p>Syntax support.  We retain different constructors for future
+resolving vs. not.</p><p>*:: constructs and deconstructs deferred tails
+**:: constructs and deconstructs eager tails
+</p></div></div>
     </li><li name="com.twitter.concurrent.Spool.Syntax1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Syntax1[A]extendsAnyRef"></a>
       <a id="Syntax1[A]:Syntax1[A]"></a>
@@ -119,7 +142,11 @@
       <span class="symbol">
         <a href="Spool$$Syntax1.html"><span class="name">Syntax1</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@Syntax1[A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Spool.ToSpool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ToSpool[A]extendsAnyRef"></a>
@@ -132,8 +159,12 @@
       <span class="symbol">
         <a href="Spool$$ToSpool.html"><span class="name">ToSpool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Adds an implicit method to efficiently convert a Seq[A] to a Spool[A]
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@ToSpool[A]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Adds an implicit method to efficiently convert a Seq[A] to a Spool[A]
 </p>
     </li></ol>
             </div>
@@ -143,19 +174,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -164,10 +182,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -177,9 +199,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.concurrent.Spool.**::" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="**::"></a>
@@ -192,7 +218,11 @@
       <span class="symbol">
         <a href="Spool$$$times$times$colon$colon$.html"><span title="gt4s: $times$times$colon$colon" class="name">**::</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@**::" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Spool.*::" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="*::"></a>
@@ -205,22 +235,13 @@
       <span class="symbol">
         <a href="Spool$$$times$colon$colon$.html"><span title="gt4s: $times$colon$colon" class="name">*::</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@*::" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -229,10 +250,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.concurrent.Spool.Empty" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Empty"></a>
       <a id="Empty:Empty"></a>
@@ -242,9 +267,13 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Spool$$Empty$.html"><span class="name">Empty</span></a><span class="result"> extends <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Nothing" class="extype" target="_top">Nothing</a>]</span>
+        <a href="Spool$$Empty$.html"><span class="name">Empty</span></a><span class="result"> extends <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@Empty" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
@@ -257,7 +286,11 @@
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -270,7 +303,11 @@
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -289,7 +326,11 @@
       <span class="symbol">
         <span class="name">empty</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.empty.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@empty[A]:com.twitter.concurrent.Spool[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">The empty spool.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -300,9 +341,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -313,9 +358,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -326,9 +375,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -347,7 +400,11 @@
       <span class="symbol">
         <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.concurrent.Spool.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.fromSeq.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@fromSeq[A](seq:Seq[A]):com.twitter.concurrent.Spool[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Lazily builds a Spool from a Seq.</p><div class="fullcomment"><div class="comment cmt"><p>Lazily builds a Spool from a Seq.</p><p>The main difference between this and <code>seqToSpool</code> is that this method also
 consumes the Seq lazily, which means if used with Streams, it will
 preserve laziness.
@@ -363,7 +420,11 @@ preserve laziness.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -374,9 +435,13 @@ preserve laziness.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -387,9 +452,13 @@ preserve laziness.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.concurrent.Spool#merge" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="merge[A](spools:Seq[com.twitter.util.Future[com.twitter.concurrent.Spool[A]]]):com.twitter.util.Future[com.twitter.concurrent.Spool[A]]"></a>
@@ -402,7 +471,11 @@ preserve laziness.
       <span class="symbol">
         <span class="name">merge</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="spools">spools: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.merge.A">A</span>]]]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.merge.A">A</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@merge[A](spools:Seq[com.twitter.util.Future[com.twitter.concurrent.Spool[A]]]):com.twitter.util.Future[com.twitter.concurrent.Spool[A]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Merges spools as they're ready, or evenly between the ready spools if
 there's more than one ready, until every spool is empty.</p><div class="fullcomment"><div class="comment cmt"><p>Merges spools as they're ready, or evenly between the ready spools if
 there's more than one ready, until every spool is empty. Fails the tail of
@@ -417,9 +490,13 @@ the returned Spool when any of the Spools you're merging over fails.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -430,9 +507,13 @@ the returned Spool when any of the Spools you're merging over fails.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -443,9 +524,13 @@ the returned Spool when any of the Spools you're merging over fails.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.concurrent.Spool#seqToSpool" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="seqToSpool[A](s:Seq[A]):com.twitter.concurrent.Spool.ToSpool[A]"></a>
@@ -458,7 +543,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name">seqToSpool</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="s">s: <a href="../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.concurrent.Spool.seqToSpool.A">A</span>]</span>)</span><span class="result">: <a href="Spool$$ToSpool.html" class="extype" name="com.twitter.concurrent.Spool.ToSpool">ToSpool</a>[<span class="extype" name="com.twitter.concurrent.Spool.seqToSpool.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@seqToSpool[A](s:Seq[A]):com.twitter.concurrent.Spool.ToSpool[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -471,7 +560,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.concurrent.Spool#syntax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="syntax[A](s:=&gt;com.twitter.util.Future[com.twitter.concurrent.Spool[A]]):com.twitter.concurrent.Spool.Syntax[A]"></a>
@@ -484,7 +577,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name">syntax</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="s">s: ⇒ <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.syntax.A">A</span>]]</span>)</span><span class="result">: <a href="Spool$$Syntax.html" class="extype" name="com.twitter.concurrent.Spool.Syntax">Syntax</a>[<span class="extype" name="com.twitter.concurrent.Spool.syntax.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@syntax[A](s:=&gt;com.twitter.util.Future[com.twitter.concurrent.Spool[A]]):com.twitter.concurrent.Spool.Syntax[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.concurrent.Spool#syntax1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="syntax1[A](s:com.twitter.concurrent.Spool[A]):com.twitter.concurrent.Spool.Syntax1[A]"></a>
@@ -497,7 +594,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name">syntax1</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="s">s: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.syntax1.A">A</span>]</span>)</span><span class="result">: <a href="Spool$$Syntax1.html" class="extype" name="com.twitter.concurrent.Spool.Syntax1">Syntax1</a>[<span class="extype" name="com.twitter.concurrent.Spool.syntax1.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@syntax1[A](s:com.twitter.concurrent.Spool[A]):com.twitter.concurrent.Spool.Syntax1[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -510,7 +611,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -521,9 +626,13 @@ the returned Spool when any of the Spools you're merging over fails.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -540,9 +649,13 @@ the returned Spool when any of the Spools you're merging over fails.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -559,9 +672,13 @@ the returned Spool when any of the Spools you're merging over fails.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -587,7 +704,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 6.14.1) Use *:: instead: the ABI for this method will be changing.">cons</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="com.twitter.concurrent.Spool.cons.A">A</span></span>, <span name="nextSpool">nextSpool: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.cons.A">A</span>]</span>)</span><span class="result">: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.cons.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@cons[A](value:A,nextSpool:com.twitter.concurrent.Spool[A]):com.twitter.concurrent.Spool[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
@@ -603,7 +724,11 @@ the returned Spool when any of the Spools you're merging over fails.
       <span class="symbol">
         <span class="name deprecated" title="Deprecated: (Since version 6.14.1) Use *:: instead: the ABI for this method will be changing.">cons</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="com.twitter.concurrent.Spool.cons.A">A</span></span>, <span name="next">next: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.cons.A">A</span>]]</span>)</span><span class="result">: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a>[<span class="extype" name="com.twitter.concurrent.Spool.cons.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.Spool$@cons[A](value:A,next:com.twitter.util.Future[com.twitter.concurrent.Spool[A]]):com.twitter.concurrent.Spool[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Cons a value &amp; tail to a new {{Spool}}.</p><div class="fullcomment"><div class="comment cmt"><p>Cons a value &amp; tail to a new {{Spool}}. To defer the tail of the Spool, use
 the {{*::}} operator instead.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -618,7 +743,7 @@ the {{*::}} operator instead.
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -635,6 +760,7 @@ the {{*::}} operator instead.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

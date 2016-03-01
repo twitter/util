@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Duration - com.twitter.util.Duration</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="Duration.html" title="Go to companion"><img src="../../../lib/object_to_class_big.png" /></a>
+        <a href="Duration.html" title="See companion class"><img alt="Object/Class" src="../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Duration.html" title="Go to companion">Duration</a></h1>
+        <h1><a href="Duration.html" title="See companion class">Duration</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Duration.html" title="See companion class">class Duration</a>
+            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,13 +47,13 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Duration</span><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>] with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <span class="name">Duration</span><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>] with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +79,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -86,19 +97,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -107,10 +105,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -120,24 +122,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -146,10 +139,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.util.Duration#Bottom" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Bottom:com.twitter.util.Duration"></a>
       <a id="Bottom:Duration"></a>
@@ -161,12 +158,16 @@
       <span class="symbol">
         <span class="name">Bottom</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@Bottom:com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Duration <code>Bottom</code> is smaller than any other duration, except for
 itself.</p><div class="fullcomment"><div class="comment cmt"><p>Duration <code>Bottom</code> is smaller than any other duration, except for
 itself. <code>Bottom</code>'s complement is <code>Top</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
-    </li><li name="com.twitter.util.TimeLikeOps.Finite" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.TimeLikeOps.Finite" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Finite"></a>
       <a id="Finite:Finite"></a>
       <h4 class="signature">
@@ -177,8 +178,14 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
       <span class="symbol">
         <a href="TimeLikeOps$Finite$.html"><span class="name">Finite</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">An extractor for finite TimeLikes; eg.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.TimeLikeOps@Finite" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An extractor for finite TimeLikes; eg.:</p><div class="fullcomment"><div class="comment cmt"><p>An extractor for finite TimeLikes; eg.:</p><pre>duration <span class="kw">match</span> {
+  <span class="kw">case</span> Duration.Finite(d) <span class="kw">=&gt;</span> ...
+  <span class="kw">case</span> Duration.Top <span class="kw">=&gt;</span> ..</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#NanosPerDay" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NanosPerDay:Long"></a>
       <a id="NanosPerDay:Long"></a>
@@ -188,9 +195,13 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">NanosPerDay</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+        <span class="name">NanosPerDay</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@NanosPerDay:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Duration#NanosPerHour" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NanosPerHour:Long"></a>
@@ -201,9 +212,13 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">NanosPerHour</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+        <span class="name">NanosPerHour</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@NanosPerHour:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Duration#NanosPerMicrosecond" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NanosPerMicrosecond:Long"></a>
@@ -214,9 +229,13 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">NanosPerMicrosecond</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+        <span class="name">NanosPerMicrosecond</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@NanosPerMicrosecond:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Duration#NanosPerMillisecond" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NanosPerMillisecond:Long"></a>
@@ -227,9 +246,13 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">NanosPerMillisecond</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+        <span class="name">NanosPerMillisecond</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@NanosPerMillisecond:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Duration#NanosPerMinute" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NanosPerMinute:Long"></a>
@@ -240,9 +263,13 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">NanosPerMinute</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+        <span class="name">NanosPerMinute</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@NanosPerMinute:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.util.Duration#NanosPerSecond" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NanosPerSecond:Long"></a>
@@ -253,11 +280,15 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">NanosPerSecond</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+        <span class="name">NanosPerSecond</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@NanosPerSecond:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.util.TimeLikeOps.Nanoseconds" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.TimeLikeOps.Nanoseconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Nanoseconds"></a>
       <a id="Nanoseconds:Nanoseconds"></a>
       <h4 class="signature">
@@ -268,8 +299,15 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
       <span class="symbol">
         <a href="TimeLikeOps$Nanoseconds$.html"><span class="name">Nanoseconds</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">An extractor for finite <code>This</code>, yielding its value in nanoseconds.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.TimeLikeOps@Nanoseconds" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An extractor for finite <code>This</code>, yielding its value in nanoseconds.</p><div class="fullcomment"><div class="comment cmt"><p>An extractor for finite <code>This</code>, yielding its value in nanoseconds.</p><pre>duration <span class="kw">match</span> {
+  <span class="kw">case</span> Duration.Nanoseconds(ns) <span class="kw">=&gt;</span> ...
+  <span class="kw">case</span> Duration.Top <span class="kw">=&gt;</span> ...
+}</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#Top" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Top:com.twitter.util.Duration"></a>
       <a id="Top:Duration"></a>
@@ -281,7 +319,11 @@ itself. <code>Bottom</code>'s complement is <code>Top</code>.
       <span class="symbol">
         <span class="name">Top</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@Top:com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Duration <code>Top</code> is greater than any other duration, except for
 itself.</p><div class="fullcomment"><div class="comment cmt"><p>Duration <code>Top</code> is greater than any other duration, except for
 itself. <code>Top</code>'s complement is <code>Bottom</code>.
@@ -297,10 +339,14 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
       <span class="symbol">
         <span class="name">Undefined</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@Undefined:com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">An undefined value: behaves like <code>Double.NaN</code></p><div class="fullcomment"><div class="comment cmt"><p>An undefined value: behaves like <code>Double.NaN</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
-    </li><li name="com.twitter.util.TimeLikeOps#Zero" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Zero:This"></a>
+    </li><li name="com.twitter.util.Duration#Zero" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Zero:com.twitter.util.Duration"></a>
       <a id="Zero:Duration"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -310,8 +356,12 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
       <span class="symbol">
         <span class="name">Zero</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">The zero value</p><div class="fullcomment"><div class="comment cmt"><p>The zero value</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@Zero:com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The zero value</p><div class="fullcomment"><div class="comment cmt"><p>The zero value</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply(value:Long,unit:java.util.concurrent.TimeUnit):com.twitter.util.Duration"></a>
       <a id="apply(Long,TimeUnit):Duration"></a>
@@ -321,9 +371,13 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">apply</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@apply(value:Long,unit:java.util.concurrent.TimeUnit):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a duration from a <span class="extype" name="java.util.concurrent.TimeUnit">java.util.concurrent.TimeUnit</span>.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
@@ -336,7 +390,11 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -349,7 +407,11 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -366,9 +428,13 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -379,9 +445,13 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -392,9 +462,13 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -411,9 +485,13 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromFractionalSeconds</span><span class="params">(<span name="seconds">seconds: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">fromFractionalSeconds</span><span class="params">(<span name="seconds">seconds: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@fromFractionalSeconds(seconds:Double):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Make a new <code>This</code> from the given number of seconds.</p><div class="fullcomment"><div class="comment cmt"><p>Make a new <code>This</code> from the given number of seconds.
 Because this method takes a Double, it can represent values less than a second.
 Note however that there is some slop in floating-point conversion that
@@ -428,9 +506,13 @@ limits precision.  Currently we can assume at least microsecond precision.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromMicroseconds</span><span class="params">(<span name="micros">micros: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">fromMicroseconds</span><span class="params">(<span name="micros">micros: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@fromMicroseconds(micros:Long):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#fromMilliseconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromMilliseconds(millis:Long):com.twitter.util.Duration"></a>
@@ -441,9 +523,13 @@ limits precision.  Currently we can assume at least microsecond precision.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromMilliseconds</span><span class="params">(<span name="millis">millis: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">fromMilliseconds</span><span class="params">(<span name="millis">millis: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@fromMilliseconds(millis:Long):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#fromNanoseconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromNanoseconds(nanoseconds:Long):com.twitter.util.Duration"></a>
@@ -454,9 +540,13 @@ limits precision.  Currently we can assume at least microsecond precision.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromNanoseconds</span><span class="params">(<span name="nanoseconds">nanoseconds: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">fromNanoseconds</span><span class="params">(<span name="nanoseconds">nanoseconds: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@fromNanoseconds(nanoseconds:Long):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Make a new <code>This</code> from the given number of nanoseconds</p><div class="fullcomment"><div class="comment cmt"><p>Make a new <code>This</code> from the given number of nanoseconds</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#fromSeconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromSeconds(seconds:Int):com.twitter.util.Duration"></a>
@@ -467,9 +557,13 @@ limits precision.  Currently we can assume at least microsecond precision.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromSeconds</span><span class="params">(<span name="seconds">seconds: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">fromSeconds</span><span class="params">(<span name="seconds">seconds: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@fromSeconds(seconds:Int):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Duration">Duration</a> → <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a></dd></dl></div>
     </li><li name="com.twitter.util.Duration#fromTimeUnit" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromTimeUnit(value:Long,unit:java.util.concurrent.TimeUnit):com.twitter.util.Duration"></a>
@@ -480,9 +574,13 @@ limits precision.  Currently we can assume at least microsecond precision.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromTimeUnit</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
+        <span class="name">fromTimeUnit</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@fromTimeUnit(value:Long,unit:java.util.concurrent.TimeUnit):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a duration from a <span class="extype" name="java.util.concurrent.TimeUnit">java.util.concurrent.TimeUnit</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a duration from a <span class="extype" name="java.util.concurrent.TimeUnit">java.util.concurrent.TimeUnit</span>.
 Synonym for <code>apply</code>.
 </p></div></div>
@@ -497,7 +595,11 @@ Synonym for <code>apply</code>.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -508,9 +610,13 @@ Synonym for <code>apply</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -521,9 +627,13 @@ Synonym for <code>apply</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -534,9 +644,13 @@ Synonym for <code>apply</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -547,9 +661,13 @@ Synonym for <code>apply</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -560,9 +678,13 @@ Synonym for <code>apply</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.util.Duration#parse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parse(s:String):com.twitter.util.Duration"></a>
@@ -575,7 +697,11 @@ Synonym for <code>apply</code>.
       <span class="symbol">
         <span class="name">parse</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@parse(s:String):com.twitter.util.Duration" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Parse a String representation of a duration.</p><div class="fullcomment"><div class="comment cmt"><p>Parse a String representation of a duration. This method will
 parse any duration generated by Duration.toString.</p><p>The format is either one of the special values, or non-empty
 sequence of durations. Each duration is a sign, an integer, a
@@ -584,8 +710,7 @@ will ignore whitespace around signs and at the beginning and end.
 (That is, it accepts &quot;1.second + 1.minute&quot; and &quot; 1.second &quot;.)
 It's permissible to omit the sign before the first duration.</p><p>The special values are &quot;Duration.Top&quot;, &quot;Duration.Bottom&quot; and
 &quot;Duration.Undefined&quot;.</p><p>The parser is case-insensitive.
-</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">RuntimeException<p>if the string cannot be parsed.
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="RuntimeException"><code>RuntimeException</code></span> if the string cannot be parsed.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -597,7 +722,11 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -610,7 +739,11 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -621,9 +754,13 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -640,9 +777,13 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -659,9 +800,13 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Duration$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -674,145 +819,12 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
 
         
 
-        <div id="values" class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="com.twitter.util.Duration#MaxValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="MaxValue:com.twitter.util.Duration"></a>
-      <a id="MaxValue:Duration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Duration.Top">MaxValue</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> Use Duration.Top</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#MinValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="MinValue:com.twitter.util.Duration"></a>
-      <a id="MinValue:Duration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Duration.Zero">MinValue</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> Use Duration.Zero</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#eternity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="eternity:com.twitter.util.Duration"></a>
-      <a id="eternity:Duration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) use Duration.Top">eternity</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Synonym to <code>Top</code></p><div class="fullcomment"><div class="comment cmt"><p>Synonym to <code>Top</code></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> use Duration.Top</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#forever" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="forever:com.twitter.util.Duration"></a>
-      <a id="forever:Duration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) use Duration.Top">forever</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Synonym to <code>Top</code></p><div class="fullcomment"><div class="comment cmt"><p>Synonym to <code>Top</code></p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> use Duration.Top</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#inMilliseconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="inMilliseconds[T](f:=&gt;T):(T,com.twitter.util.Duration)"></a>
-      <a id="inMilliseconds[T](⇒T):(T,Duration)"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) use Stopwatch instead">inMilliseconds</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Duration.inMilliseconds.T">T</span></span>)</span><span class="result">: (<span class="extype" name="com.twitter.util.Duration.inMilliseconds.T">T</span>, <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>)</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns how long it took, in millisecond granularity, to run the function f.</p><div class="fullcomment"><div class="comment cmt"><p>Returns how long it took, in millisecond granularity, to run the function f.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> use Stopwatch instead</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#inNanoseconds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="inNanoseconds[T](f:=&gt;T):(T,com.twitter.util.Duration)"></a>
-      <a id="inNanoseconds[T](⇒T):(T,Duration)"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) Use Stopwatch">inNanoseconds</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Duration.inNanoseconds.T">T</span></span>)</span><span class="result">: (<span class="extype" name="com.twitter.util.Duration.inNanoseconds.T">T</span>, <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>)</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Returns how long it took, in nanosecond granularity, to run the function f.</p><div class="fullcomment"><div class="comment cmt"><p>Returns how long it took, in nanosecond granularity, to run the function f.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> Use Stopwatch</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#since" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="since(time:com.twitter.util.Time):com.twitter.util.Duration"></a>
-      <a id="since(Time):Duration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2011-05-03) use time.untilNow">since</span><span class="params">(<span name="time">time: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2011-05-03)</i> use time.untilNow</p></dd></dl></div>
-    </li><li name="com.twitter.util.Duration#zero" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="zero:com.twitter.util.Duration"></a>
-      <a id="zero:Duration"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 5.4.0) use Duration.Zero">zero</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 5.4.0)</i> use Duration.Zero</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="com.twitter.util.TimeLikeOps">
@@ -820,7 +832,7 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -837,6 +849,7 @@ It's permissible to omit the sign before the first duration.</p><p>The special v
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

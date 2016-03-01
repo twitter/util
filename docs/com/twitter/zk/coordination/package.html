@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>coordination - com.twitter.zk.coordination</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../../lib/package_big.png" />
+        <img alt="Package" src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.zk">zk</a></p>
-        <h1>coordination</h1>
+        <h1>coordination</h1><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -67,11 +75,15 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Shard.html"><span class="name">Shard</span></a><span class="params">(<span name="id">id: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="node">node: <a href="../ZNode.html" class="extype" name="com.twitter.zk.ZNode">ZNode</a></span>, <span name="permit">permit: <a href="../../concurrent/Permit.html" class="extype" name="com.twitter.concurrent.Permit">Permit</a></span>)</span><span class="result"> extends <a href="ShardPermit.html" class="extype" name="com.twitter.zk.coordination.ShardPermit">ShardPermit</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Shard.html"><span class="name">Shard</span></a><span class="params">(<span name="id">id: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="node">node: <a href="../ZNode.html" class="extype" name="com.twitter.zk.ZNode">ZNode</a></span>, <span name="permit">permit: <a href="../../concurrent/Permit.html" class="extype" name="com.twitter.concurrent.Permit">Permit</a></span>)</span><span class="result"> extends <a href="ShardPermit.html" class="extype" name="com.twitter.zk.coordination.ShardPermit">ShardPermit</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package@ShardextendsShardPermitwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.zk.coordination.ShardCoordinator" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.zk.coordination.ShardCoordinator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ShardCoordinatorextendsAnyRef"></a>
       <a id="ShardCoordinator:ShardCoordinator"></a>
       <h4 class="signature">
@@ -82,8 +94,20 @@
       <span class="symbol">
         <a href="ShardCoordinator.html"><span class="name">ShardCoordinator</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A rudimentary shard/partition coordinator.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package@ShardCoordinatorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A rudimentary shard/partition coordinator.</p><div class="fullcomment"><div class="comment cmt"><p>A rudimentary shard/partition coordinator. Provides ShardPermits by lowest available
+ID first (linear scan).</p><pre><span class="kw">val</span> shardCoordinator = <span class="kw">new</span> ShardCoordinator(zkClient, <span class="lit">"/testing/twitter/service/something/shards"</span>, numShards)
+log.trace(<span class="lit">"Waiting for shard permit..."</span>)
+shardCoordinator.acquire flatMap { shard <span class="kw">=&gt;</span>
+  log.trace(<span class="lit">"Working as shard %d"</span>, shard.id)
+  { <span class="cmt">// inside some Future</span>
+    <span class="kw">if</span> (Hashing.consistentHash(item, numShards) == shard.id) action
+  } ensure { shard.release }
+}</pre></div></div>
     </li><li name="com.twitter.zk.coordination.ShardPermit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ShardPermitextendsAnyRef"></a>
       <a id="ShardPermit:ShardPermit"></a>
@@ -95,9 +119,13 @@
       <span class="symbol">
         <a href="ShardPermit.html"><span class="name">ShardPermit</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package@ShardPermitextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.zk.coordination.ZkAsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.zk.coordination.ZkAsyncSemaphore" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ZkAsyncSemaphoreextendsAnyRef"></a>
       <a id="ZkAsyncSemaphore:ZkAsyncSemaphore"></a>
       <h4 class="signature">
@@ -108,8 +136,27 @@
       <span class="symbol">
         <a href="ZkAsyncSemaphore.html"><span class="name">ZkAsyncSemaphore</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">ZkAsyncSemaphore is a distributed semaphore with asynchronous execution.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package@ZkAsyncSemaphoreextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">ZkAsyncSemaphore is a distributed semaphore with asynchronous execution.</p><div class="fullcomment"><div class="comment cmt"><p>ZkAsyncSemaphore is a distributed semaphore with asynchronous execution.
+Grabbing a permit constitutes a vote on the number of permits the semaphore
+can permit and returns a Future[Permit]. If consensus on the number of permits
+is lost, an exception is raised when acquiring a permit (so expect it).</p><p>Care must be taken to handle zookeeper client session expiry. A ZkAsyncSemaphore cannot
+be used after the zookeeper session has expired. Likewise, any permits acquired
+via the session must be considered invalid. Additionally, it is the client's responsibility
+to determine if a permit is still valid in the case that the zookeeper client becomes
+disconnected.</p><p>Attempts to clone AsyncSemaphore</p><p>Ex.</p><pre><span class="kw">implicit</span> <span class="kw">val</span> timer = <span class="kw">new</span> JavaTimer(<span class="kw">true</span>)
+<span class="kw">val</span> connector = NativeConnector(<span class="lit">"localhost:2181"</span>, <span class="num">5.</span>seconds, <span class="num">10.</span>minutes)
+<span class="kw">val</span> zk = ZkClient(connector).withRetryPolicy(RetryPolicy.Basic(<span class="num">3</span>))
+<span class="kw">val</span> path = <span class="lit">"/testing/twitter/service/charm/shards"</span>
+<span class="kw">val</span> sem = <span class="kw">new</span> ZkAsyncSemaphore(zk, path, <span class="num">4</span>)
+
+sem.acquire flatMap { permit <span class="kw">=&gt;</span>
+  Future { ... } ensure { permit.release }
+} <span class="cmt">// handle { ... }</span></pre></div></div>
     </li></ol>
             </div>
 
@@ -128,7 +175,11 @@
       <span class="symbol">
         <a href="ShardCoordinator$.html"><span class="name">ShardCoordinator</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package@ShardCoordinator" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="com.twitter.zk.coordination.ZkAsyncSemaphore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ZkAsyncSemaphore"></a>
@@ -141,7 +192,11 @@
       <span class="symbol">
         <a href="ZkAsyncSemaphore$.html"><span class="name">ZkAsyncSemaphore</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.zk.coordination.package@ZkAsyncSemaphore" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -168,6 +223,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

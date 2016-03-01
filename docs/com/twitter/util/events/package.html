@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>events - com.twitter.util.events</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -24,9 +28,13 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../../lib/package_big.png" />
+        <img alt="Package" src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.twitter">twitter</a>.<a href="../package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1>events</h1>
+        <h1>events</h1><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -58,7 +66,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.util.events.Event" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.util.events.Event" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="EventextendsProductwithSerializable"></a>
       <a id="Event:Event"></a>
       <h4 class="signature">
@@ -67,10 +75,15 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Event.html"><span class="name">Event</span></a><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="when">when: <a href="../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="longVal">longVal: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol">Event.NoLong</span></span>, <span name="objectVal">objectVal: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a> = <span class="symbol">Event.NoObject</span></span>, <span name="doubleVal">doubleVal: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Double" class="extype" target="_top">Double</a> = <span class="symbol">Event.NoDouble</span></span>, <span name="traceIdVal">traceIdVal: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol">Event.NoTraceId</span></span>, <span name="spanIdVal">spanIdVal: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol">Event.NoSpanId</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Event.html"><span class="name">Event</span></a><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="when">when: <a href="../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="longVal">longVal: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoLong</a></span></span></span>, <span name="objectVal">objectVal: <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoObject</a></span></span></span>, <span name="doubleVal">doubleVal: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Double" class="extype" target="_top">Double</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoDouble</a></span></span></span>, <span name="traceIdVal">traceIdVal: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoTraceId</a></span></span></span>, <span name="spanIdVal">spanIdVal: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoSpanId</a></span></span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A somewhat flexible schema representing various event types.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@EventextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A somewhat flexible schema representing various event types.</p><div class="fullcomment"><div class="comment cmt"><p>A somewhat flexible schema representing various event types.
+</p></div><dl class="paramcmts block"><dt class="param">when</dt><dd class="cmt"><p>when the event happened.</p></dd><dt class="param">longVal</dt><dd class="cmt"><p>should be <code>Event.NoLong</code> if there is no supplied value.</p></dd><dt class="param">objectVal</dt><dd class="cmt"><p>should be <code>Event.NoObject</code> if there is no supplied value.</p></dd><dt class="param">doubleVal</dt><dd class="cmt"><p>should be <code>Event.NoDouble</code> if there is no supplied value.</p></dd><dt class="param">traceIdVal</dt><dd class="cmt"><p>should be <code>Event.NoTraceId</code> if there is no supplied value.</p></dd><dt class="param">spanIdVal</dt><dd class="cmt"><p>should be <code>Event.NoSpanId</code> if there is no supplied value.</p></dd></dl></div>
     </li><li name="com.twitter.util.events.Events" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EventsextendsObject"></a>
       <a id="Events:Events"></a>
@@ -82,9 +95,13 @@
       <span class="symbol">
         <a href="Events.html"><span class="name">Events</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@EventsextendsObject" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.util.events.Sink" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.events.Sink" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="SinkextendsAnyRef"></a>
       <a id="Sink:Sink"></a>
       <h4 class="signature">
@@ -95,27 +112,19 @@
       <span class="symbol">
         <a href="Sink.html"><span class="name">Sink</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Where runtime events such as logging, stats and tracing can be
-sent to allow for analysis.</p>
-    </li><li name="com.twitter.util.events.SinkBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="SinkBenchmarkextendsAnyRef"></a>
-      <a id="SinkBenchmark:SinkBenchmark"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="SinkBenchmark.html"><span class="name">SinkBenchmark</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
-              
-                <span class="name">@BenchmarkMode</span><span class="args">()</span>
-              
-        </dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@SinkextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis.</p><div class="fullcomment"><div class="comment cmt"><p>Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis.</p><p><b>Note:</b> while the API is public it should be considered as experimental
+and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be thread-safe.</li><li>Implementations should have very low runtime overhead such that as
+   many events as possible can be sent here. In particular, object
+   allocations should be kept to a minimum.</li><li><code>event</code> is expected to be called many orders of magnitude
+   more frequently than <code>events</code>.
+</li></ul></div></div>
     </li><li name="com.twitter.util.events.Sinks" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SinksextendsObject"></a>
       <a id="Sinks:Sinks"></a>
@@ -127,9 +136,13 @@ sent to allow for analysis.</p>
       <span class="symbol">
         <a href="Sinks.html"><span class="name">Sinks</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@SinksextendsObject" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.util.events.SizedSink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.events.SizedSink" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SizedSinkextendsSink"></a>
       <a id="SizedSink:SizedSink"></a>
       <h4 class="signature">
@@ -140,8 +153,16 @@ sent to allow for analysis.</p>
       <span class="symbol">
         <a href="SizedSink.html"><span class="name">SizedSink</span></a><span class="result"> extends <a href="Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">An in-memory circular buffer of events.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@SizedSinkextendsSink" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">An in-memory circular buffer of events.</p><div class="fullcomment"><div class="comment cmt"><p>An in-memory circular buffer of events. When <code>capacity</code> is reached,
+new writes via <code>event</code> do not block, rather they overwrite the
+oldest event.</p><p>This class is thread-safe and effort is taken to
+keep object allocations from calls to <code>event</code> to a minimum.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -158,10 +179,14 @@ sent to allow for analysis.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Event$.html"><span class="name">Event</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="Event$.html"><span class="name">Event</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Events.html" class="extype" name="com.twitter.util.events.Events">com.twitter.util.events.Events</a>.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@Event" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Events.html" class="extype" name="com.twitter.util.events.Events">com.twitter.util.events.Events</a>.</p>
     </li><li name="com.twitter.util.events.Sink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Sink"></a>
       <a id="Sink:Sink"></a>
@@ -173,21 +198,12 @@ sent to allow for analysis.</p>
       <span class="symbol">
         <a href="Sink$.html"><span class="name">Sink</span></a>
       </span>
-      </h4>
-      <p class="comment cmt">Note: There is a Java-friendly API for this object: <a href="Sinks.html" class="extype" name="com.twitter.util.events.Sinks">com.twitter.util.events.Sinks</a>.</p>
-    </li><li name="com.twitter.util.events.SinkBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SinkBenchmark"></a>
-      <a id="SinkBenchmark:SinkBenchmark"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="SinkBenchmark$.html"><span class="name">SinkBenchmark</span></a>
-      </span>
-      </h4>
-      
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@Sink" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Sinks.html" class="extype" name="com.twitter.util.events.Sinks">com.twitter.util.events.Sinks</a>.</p>
     </li><li name="com.twitter.util.events.SizedSink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SizedSink"></a>
       <a id="SizedSink:SizedSink"></a>
@@ -199,7 +215,11 @@ sent to allow for analysis.</p>
       <span class="symbol">
         <a href="SizedSink$.html"><span class="name">SizedSink</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.util.events.package@SizedSink" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -226,6 +246,7 @@ sent to allow for analysis.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

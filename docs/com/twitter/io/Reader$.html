@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Reader - com.twitter.io.Reader</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="Reader.html" title="Go to companion"><img src="../../../lib/object_to_trait_big.png" /></a>
+        <a href="Reader.html" title="See companion trait"><img alt="Object/Trait" src="../../../lib/object_to_trait_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.io">io</a></p>
-        <h1><a href="Reader.html" title="Go to companion">Reader</a></h1>
+        <h1><a href="Reader.html" title="See companion trait">Reader</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Reader.html" title="See companion trait">trait Reader</a>
+            | <a href="package.html" class="extype" name="com.twitter.io">package io</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -41,7 +53,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +79,6 @@
               <li class="hideall out"><span>Hide All</span></li>
               <li class="showall in"><span>Show all</span></li>
             </ol>
-            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -92,9 +103,13 @@
       <span class="symbol">
         <a href="Reader$$ReaderDiscarded.html"><span class="name">ReaderDiscarded</span></a><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@ReaderDiscardedextendsException" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
-    </li><li name="com.twitter.io.Reader.Writable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Reader.Writable" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="WritableextendsReaderwithWriterwithClosable"></a>
       <a id="Writable:Writable"></a>
       <h4 class="signature">
@@ -105,9 +120,24 @@
       <span class="symbol">
         <a href="Reader$$Writable.html"><span class="name">Writable</span></a><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> with <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> that is linked with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> and <code>close</code>-ing
-is synchronous.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@WritableextendsReaderwithWriterwithClosable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> that is linked with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> and <code>close</code>-ing
+is synchronous.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> that is linked with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> and <code>close</code>-ing
+is synchronous.</p><p>Just as with <a href="Reader.html" class="extype" name="com.twitter.io.Reader">readers</a> and <a href="Writer.html" class="extype" name="com.twitter.io.Writer">writers</a>,
+only one outstanding <code>read</code> or <code>write</code> is permitted.</p><p>For a proper <code>close</code>, it should only be done when
+no writes are outstanding:</p><pre><span class="kw">val</span> rw = Reader.writable()
+...
+rw.write(buf).before(rw.close())</pre><p>If a producer is interested in knowing when all writes
+have been read and the reader has seen the EOF, it can
+wait until the future returned by <code>close()</code> is satisfied:</p><pre><span class="kw">val</span> rw = Reader.writable()
+...
+rw.close().ensure {
+  println(<span class="lit">"party on! ♪┏(・o･)┛♪ the Reader has seen the EOF"</span>)
+}</pre></div></div>
     </li></ol>
             </div>
 
@@ -116,19 +146,6 @@ is synchronous.</p>
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -137,10 +154,14 @@ is synchronous.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -150,24 +171,15 @@ is synchronous.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -176,10 +188,14 @@ is synchronous.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.io.Reader#Null" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Null:com.twitter.io.Reader{defread(n:Int):com.twitter.util.Future[Option[Nothing]]}"></a>
       <a id="Null:Reader{defread(n:Int):com.twitter.util.Future[Option[Nothing]]}"></a>
@@ -191,7 +207,11 @@ is synchronous.</p>
       <span class="symbol">
         <span class="name">Null</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> { def read(n: Int): com.twitter.util.Future[Option[Nothing]] }</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@Null:com.twitter.io.Reader{defread(n:Int):com.twitter.util.Future[Option[Nothing]]}" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
@@ -204,7 +224,11 @@ is synchronous.</p>
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -217,7 +241,11 @@ is synchronous.</p>
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -226,7 +254,7 @@ is synchronous.</p>
               
         </dd></dl></div>
     </li><li name="com.twitter.io.Reader#concat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="concat(readers:com.twitter.concurrent.exp.AsyncStream[com.twitter.io.Reader]):com.twitter.io.Reader"></a>
+      <a id="concat(readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader]):com.twitter.io.Reader"></a>
       <a id="concat(AsyncStream[Reader]):Reader"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -234,9 +262,13 @@ is synchronous.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">concat</span><span class="params">(<span name="readers">readers: <a href="../concurrent/exp/AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
+        <span class="name">concat</span><span class="params">(<span name="readers">readers: <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@concat(readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader]):com.twitter.io.Reader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Convenient abstraction to read from a stream of Readers as if it were a
 single Reader.</p>
     </li><li name="com.twitter.io.Reader#copy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -248,9 +280,13 @@ single Reader.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">copy</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">copy</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@copy(r:com.twitter.io.Reader,w:com.twitter.io.Writer):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of size
 <code>Writer.BufferSize</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of size
 <code>Writer.BufferSize</code>. The Writer is unmanaged, the caller is responsible
@@ -264,15 +300,18 @@ for finalization and error handling, e.g.:</p><pre>Reader.copy(r, w) ensure w.cl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">copy</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="n">n: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">copy</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="n">n: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@copy(r:com.twitter.io.Reader,w:com.twitter.io.Writer,n:Int):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of size <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of size <code>n</code>. The Writer
 is unmanaged, the caller is responsible for finalization and error
-handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div><dl class="paramcmts block"><dt class="param">n</dt><dd class="cmt"><p>The number of bytes to read on each refill of the Writer.
-</p></dd></dl></div>
+handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div><dl class="paramcmts block"><dt class="param">n</dt><dd class="cmt"><p>The number of bytes to read on each refill of the Writer.</p></dd></dl></div>
     </li><li name="com.twitter.io.Reader#copyMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="copyMany(readers:com.twitter.concurrent.exp.AsyncStream[com.twitter.io.Reader],target:com.twitter.io.Writer):com.twitter.util.Future[Unit]"></a>
+      <a id="copyMany(readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader],target:com.twitter.io.Writer):com.twitter.util.Future[Unit]"></a>
       <a id="copyMany(AsyncStream[Reader],Writer):Future[Unit]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -280,13 +319,17 @@ handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div><dl cla
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">copyMany</span><span class="params">(<span name="readers">readers: <a href="../concurrent/exp/AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">copyMany</span><span class="params">(<span name="readers">readers: <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@copyMany(readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader],target:com.twitter.io.Writer):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Copy bytes from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
 caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div></div>
     </li><li name="com.twitter.io.Reader#copyMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="copyMany(readers:com.twitter.concurrent.exp.AsyncStream[com.twitter.io.Reader],target:com.twitter.io.Writer,bufsize:Int):com.twitter.util.Future[Unit]"></a>
+      <a id="copyMany(readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader],target:com.twitter.io.Writer,bufsize:Int):com.twitter.util.Future[Unit]"></a>
       <a id="copyMany(AsyncStream[Reader],Writer,Int):Future[Unit]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -294,12 +337,15 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">copyMany</span><span class="params">(<span name="readers">readers: <a href="../concurrent/exp/AsyncStream.html" class="extype" name="com.twitter.concurrent.exp.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="bufsize">bufsize: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+        <span class="name">copyMany</span><span class="params">(<span name="readers">readers: <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="bufsize">bufsize: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@copyMany(readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader],target:com.twitter.io.Writer,bufsize:Int):com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Copy bytes from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
-caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div><dl class="paramcmts block"><dt class="param">bufsize</dt><dd class="cmt"><p>The number of bytes to read each time.
-</p></dd></dl></div>
+caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div><dl class="paramcmts block"><dt class="param">bufsize</dt><dd class="cmt"><p>The number of bytes to read each time.</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -309,9 +355,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -322,9 +372,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -335,9 +389,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -356,7 +414,11 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">fromBuf</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@fromBuf(buf:com.twitter.io.Buf):com.twitter.io.Reader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Reader from a Buf.</p>
     </li><li name="com.twitter.io.Reader#fromFile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromFile(f:java.io.File):com.twitter.io.Reader"></a>
@@ -369,7 +431,11 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">fromFile</span><span class="params">(<span name="f">f: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@fromFile(f:java.io.File):com.twitter.io.Reader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a new Reader for a File
 </p><div class="fullcomment"><div class="comment cmt"><p>Create a new Reader for a File
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -383,8 +449,7 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">classOf[SecurityException]</span>
     </span>)</span>
               
-        </dd><dt>See also</dt><dd><span class="cmt"><p>Readers.fromFile for a Java API
-</p></span></dd></dl></div>
+        </dd><dt>See also</dt><dd><span class="cmt"><p>Readers.fromFile for a Java API</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromStream(s:java.io.InputStream):com.twitter.io.Reader"></a>
       <a id="fromStream(InputStream):Reader"></a>
@@ -396,11 +461,14 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">fromStream</span><span class="params">(<span name="s">s: <span class="extype" name="java.io.InputStream">InputStream</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@fromStream(s:java.io.InputStream):com.twitter.io.Reader" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Wrap InputStream s in with a Reader
 </p><div class="fullcomment"><div class="comment cmt"><p>Wrap InputStream s in with a Reader
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Readers.fromStream for a Java API
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Readers.fromStream for a Java API</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -412,7 +480,11 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -423,9 +495,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -436,9 +512,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -449,9 +529,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -462,9 +546,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -475,9 +563,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.io.Reader#readAll" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="readAll(r:com.twitter.io.Reader):com.twitter.util.Future[com.twitter.io.Buf]"></a>
@@ -490,7 +582,11 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">readAll</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@readAll(r:com.twitter.io.Reader):com.twitter.util.Future[com.twitter.io.Buf]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Read the entire bytestream presented by <code>r</code>.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -503,7 +599,11 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -516,7 +616,11 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -527,9 +631,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -546,9 +654,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -565,9 +677,13 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -586,12 +702,15 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">
         <span class="name">writable</span><span class="params">()</span><span class="result">: <a href="Reader$$Writable.html" class="extype" name="com.twitter.io.Reader.Writable">Writable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Reader$@writable():com.twitter.io.Reader.Writable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Create a new <a href="Reader$$Writable.html" class="extype" name="com.twitter.io.Reader.Writable">Writable</a> which is a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> that is linked
 with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader$$Writable.html" class="extype" name="com.twitter.io.Reader.Writable">Writable</a> which is a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> that is linked
 with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Readers.writable() for a Java API.
-</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Readers.writable() for a Java API.</p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -604,7 +723,7 @@ with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer<
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.10.5/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
         
         </div>
@@ -621,6 +740,7 @@ with a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer<
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>
