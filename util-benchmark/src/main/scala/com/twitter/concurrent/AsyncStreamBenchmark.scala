@@ -15,9 +15,19 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
 
   private[this] var as: AsyncStream[Int] = _
 
+  private[this] def genLongStream(len: Int): AsyncStream[Int] =
+    if (len == 0) {
+      AsyncStream.of(1)
+    } else {
+      1 +:: genLongStream(len - 1)
+    }
+  private[this] var longs: AsyncStream[Int] = _
+
   @Setup(Level.Iteration)
-  def setup(): Unit =
+  def setup(): Unit = {
     as = AsyncStream.fromSeq(0.until(size))
+    longs = genLongStream(1000)
+  }
 
   @Benchmark
   def baseline(): Seq[Int] =
@@ -51,4 +61,7 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
   def takeWhile(): Seq[Int] =
     Await.result(as.takeWhile(TakeWhileFn).toSeq())
 
+  @Benchmark
+  def ++(): Int =
+    Await.result((longs ++ as).foldLeft(0)(_+_))
 }

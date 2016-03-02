@@ -223,16 +223,17 @@ sealed abstract class AsyncStream[+A] {
    * @see [[concat]] for Java users.
    */
   def ++[B >: A](that: => AsyncStream[B]): AsyncStream[B] =
+    concatImpl(() => that)
+
+  protected def concatImpl[B >: A](that: () => AsyncStream[B]): AsyncStream[B] =
     this match {
-      case Empty => that
+      case Empty => that()
       case FromFuture(fa) =>
-        lazy val once = that
-        Cons(fa, () => once)
+        Cons(fa, that)
       case Cons(fa, more) =>
-        lazy val once = that
-        Cons(fa, () => more() ++ once)
+        Cons(fa, () => more().concatImpl(that))
       case Embed(fas) =>
-        Embed(fas.map(_ ++ that))
+        Embed(fas.map(_.concatImpl(that)))
     }
 
   /**
@@ -555,8 +556,20 @@ object AsyncStream {
   private case object Empty extends AsyncStream[Nothing]
   private case class Embed[A](fas: Future[AsyncStream[A]]) extends AsyncStream[A]
   private case class FromFuture[A](fa: Future[A]) extends AsyncStream[A]
-  private case class Cons[A](fa: Future[A], more: () => AsyncStream[A])
-    extends AsyncStream[A]
+  private class Cons[A](val fa: Future[A], next: () => AsyncStream[A])
+    extends AsyncStream[A] {
+    private[this] lazy val _more: AsyncStream[A] = next()
+    def more(): AsyncStream[A] = _more
+  }
+
+  object Cons {
+    def apply[A](fa: Future[A], next: () => AsyncStream[A]): AsyncStream[A] =
+      new Cons(fa, next)
+
+    def unapply[A](as: Cons[A]): Option[(Future[A], () => AsyncStream[A])] =
+      // note: pattern match returns the memoized value
+      Some((as.fa, () => as.more()))
+  }
 
   implicit class Ops[A](tail: => AsyncStream[A]) {
     /**
@@ -591,10 +604,8 @@ object AsyncStream {
   /**
    * Like `Ops.+::`.
    */
-  def mk[A](a: A, tail: => AsyncStream[A]): AsyncStream[A] = {
-    lazy val once = tail
-    Cons(Future.value(a), () => once)
-  }
+  def mk[A](a: A, tail: => AsyncStream[A]): AsyncStream[A] =
+    Cons(Future.value(a), () => tail)
 
   /**
    * Transformation (or lift) from [[Seq]] into `AsyncStream`.

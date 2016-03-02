@@ -6,6 +6,10 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Bug Fixes:
+
+  * util-core: Fix nested functions `AsyncStream.++` to avoid stack overflow. ``RB_ID=804408`` 
+
 Deprecations:
 
   * util-core: `Future.rawException` is deprecated in favor of `Future.exception`.
