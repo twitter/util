@@ -193,7 +193,7 @@ object Util extends Build {
       "com.google.code.findbugs" % "jsr305"              % "2.0.1",
       "javax.inject"             % "javax.inject"        % "1",
       "com.google.guava"         % "guava"               % "16.0.1",
-      "commons-collections"      % "commons-collections" % "3.2.1",
+      "commons-collections"      % "commons-collections" % "3.2.2",
       "org.scalacheck"          %% "scalacheck"          % "1.12.2" % "test"
     )
   ).dependsOn(utilCore % "compile->compile;test->test")
