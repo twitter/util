@@ -20,6 +20,8 @@ trait Stopwatch {
  *
  * Note that it works well with unit tests by respecting
  * time manipulation on [[Time]].
+ *
+ * @see [[Stopwatches]] for Java APIs.
  */
 object Stopwatch extends Stopwatch {
 
@@ -103,10 +105,60 @@ object Stopwatch extends Stopwatch {
 }
 
 /**
+ * Java APIs for [[Stopwatch]].
+ */
+object Stopwatches {
+  import Stopwatch.Elapsed
+
+  /** @see [[Stopwatch.start()]] */
+  def start(): Elapsed =
+    Stopwatch.start()
+
+  /** @see [[Stopwatch.const]] */
+  def constant(duration: Duration): Stopwatch =
+    Stopwatch.const(duration)
+
+  /** @see [[Stopwatch.systemNanos]] */
+  def systemNanos: () => Long =
+    Stopwatch.systemNanos
+
+  /** @see [[Stopwatch.timeNanos]] */
+  def timeNanos: () => Long =
+    Stopwatch.timeNanos
+
+  /** @see [[Stopwatch.systemMicros]] */
+  def systemMicros: () => Long =
+    Stopwatch.systemMicros
+
+  /** @see [[Stopwatch.timeMicros]] */
+  def timeMicros: () => Long =
+    Stopwatch.timeMicros
+
+  /** @see [[Stopwatch.systemMillis]] */
+  def systemMillis: () => Long =
+    Stopwatch.systemMillis
+
+  /** @see [[Stopwatch.timeMillis]] */
+  def timeMillis: () => Long =
+    Stopwatch.timeMillis
+}
+
+
+
+/**
  * A trivial implementation of [[Stopwatch]] for use as a null
  * object.
+ *
+ * All calls to [[Stopwatch.start()]] return an [[Stopwatch.Elapsed]]
+ * instance that always returns [[Duration.Bottom]] for its elapsed time.
+ *
+ * @see `NilStopwatch.get` for accessing this instance from Java.
  */
 object NilStopwatch extends Stopwatch {
   private[this] val fn = () => Duration.Bottom
+
   def start(): Elapsed = fn
+
+  /** Java API for getting an instance of this [[Stopwatch]]. */
+  def get: Stopwatch = this
 }
