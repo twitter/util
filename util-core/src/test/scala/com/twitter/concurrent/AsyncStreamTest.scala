@@ -607,6 +607,56 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       assert(toSeq(as).map(b => Buf.ByteArray.Owned.extract(b).head) == l)
     }
   }
+
+  test("sum") {
+    forAll { xs: List[Int] =>
+      assert(xs.sum == await(AsyncStream.fromSeq(xs).sum))
+    }
+  }
+
+  test("size") {
+    forAll { xs: List[Int] =>
+      assert(xs.size == await(AsyncStream.fromSeq(xs).size))
+    }
+  }
+
+  test("force") {
+    forAll { xs: List[Int] =>
+      val p = new Promise[Unit]
+      // The promise will be defined iff the tail is forced.
+      val s = AsyncStream.fromSeq(xs) ++ { p.setDone() ; AsyncStream.empty }
+
+      // If the input is empty, then the tail will be forced right away.
+      assert(p.isDefined == xs.isEmpty)
+
+      // Unconditionally force the whole stream
+      await(s.force)
+      assert(p.isDefined)
+    }
+  }
+
+  test("withEffect") {
+    forAll(genListAndN) { case (xs, n) =>
+      var i = 0
+      val s = AsyncStream.fromSeq(xs).withEffect(_ => i += 1)
+
+      // Is lazy on initial application (with the exception of the first element)
+      assert(i == (if (xs.isEmpty) 0 else 1))
+
+      // Is lazy when consuming the stream
+      await(s.take(n).force)
+
+      // If the list is empty, no effects should occur.  If the list is
+      // non-empty, the effect will occur for the first item right away,
+      // since the head is not lazy. Otherwise, we expect the same
+      // number of effects as items demanded.
+      val expected = if (xs.isEmpty) 0 else 1.max(xs.length.min(n))
+      assert(i == expected)
+
+      // Preserves the elements in the stream
+      assert(toSeq(s) == xs)
+    }
+  }
 }
 
 private object AsyncStreamTest {

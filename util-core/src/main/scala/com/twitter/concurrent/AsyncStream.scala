@@ -82,6 +82,22 @@ sealed abstract class AsyncStream[+A] {
     foldLeft(()) { (_, a) => f(a) }
 
   /**
+   * Execute the specified effect as each element of the resulting
+   * stream is demanded. This method does '''not''' force the
+   * stream. Since the head of the stream is not lazy, the effect will
+   * happen to the first item in the stream (if any) right away.
+   *
+   * The effects will occur as the '''resulting''' stream is demanded
+   * and will not occur if the original stream is demanded.
+   *
+   * This is useful for e.g. counting the number of items that were
+   * consumed from a stream by a consuming process, regardless of
+   * whether the entire stream is consumed.
+   */
+  def withEffect(f: A => Unit): AsyncStream[A] =
+    map { a => f(a); a }
+
+  /**
    * Maps each element of the stream to a Future action, resolving them from
    * head to tail. The resulting Future completes when the action completes
    * for the last element.
@@ -550,6 +566,39 @@ sealed abstract class AsyncStream[+A] {
     } else {
       throw new IllegalArgumentException(s"groupSize must be positive, but was $groupSize")
     }
+
+  /**
+   * Add up the values of all of the elements in this stream. If you
+   * hold a reference to the head of the stream, this will cause the
+   * entire stream to be held in memory.
+   *
+   * Note: forces the stream. If the stream is infinite, the resulting future
+   * is equivalent to Future.never.
+   */
+  def sum[B >: A](implicit numeric: Numeric[B]): Future[B] =
+    foldLeft(numeric.zero)(numeric.plus)
+
+  /**
+   * Eagerly consume the entire stream and return the number of elements
+   * that are in it. If you hold a reference to the head of the stream,
+   * this will cause the entire stream to be held in memory.
+   *
+   * Note: forces the stream. If the stream is infinite, the resulting future
+   * is equivalent to Future.never.
+   */
+  def size: Future[Int] = foldLeft(0)((n, _) => n + 1)
+
+  /**
+   * Force the entire stream. If you hold a reference to the head of the
+   * stream, this will cause the entire stream to be held in memory. The
+   * resulting Future will be satisfied once the entire stream has been
+   * consumed.
+   *
+   * This is useful when you want the side-effects of consuming the
+   * stream to occur, but do not need to do anything with the resulting
+   * values.
+   */
+  def force: Future[Unit] = foreach { _ => }
 }
 
 object AsyncStream {

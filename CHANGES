@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: Add convenience methods `force`, `size`, `sum`, and
+    `withEffect` to `AsyncStream`. ``RB_ID=808411``
+
 Bug Fixes:
 
   * util-core: Fix nested functions `AsyncStream.++` to avoid stack overflow. ``RB_ID=804408`` 
