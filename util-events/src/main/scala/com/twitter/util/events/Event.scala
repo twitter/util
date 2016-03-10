@@ -1,6 +1,6 @@
 package com.twitter.util.events
 
-import com.twitter.util.{Time, Return, Throw, Try}
+import com.twitter.util.{Time, Return, Try}
 import com.twitter.io.Buf
 
 /**

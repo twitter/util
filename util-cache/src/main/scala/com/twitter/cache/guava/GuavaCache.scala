@@ -4,7 +4,6 @@ import com.twitter.cache._
 import com.google.common.cache.{Cache => GCache, LoadingCache}
 import com.twitter.util.Future
 import java.util.concurrent.Callable
-import scala.annotation.tailrec
 
 /**
  * A [[com.twitter.cache.FutureCache]] backed by a

@@ -1,6 +1,6 @@
 package com.twitter.cache
 
-import com.twitter.util.{Future, Memoize}
+import com.twitter.util.Future
 import java.util.concurrent.ConcurrentMap
 
 /**
