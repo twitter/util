@@ -50,8 +50,9 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A trivial implementation of <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for use as a null
-object.
-</p></div><div class="toggleContainer block">
+object.</p><p>All calls to <span class="extype" name="Stopwatch.start()">Stopwatch.start()</span> return an <a href="Stopwatch$.html#Elapsed=()=&gt;com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Stopwatch.Elapsed">Stopwatch.Elapsed</a>
+instance that always returns <a href="Duration$.html#Bottom:com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#Bottom">Duration.Bottom</a> for its elapsed time.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>NilStopwatch.get</code> for accessing this instance from Java.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -264,6 +265,23 @@ object.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.NilStopwatch#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="get:com.twitter.util.Stopwatch"></a>
+      <a id="get:Stopwatch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="result">: <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.NilStopwatch$@get:com.twitter.util.Stopwatch" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Java API for getting an instance of this <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a>.</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

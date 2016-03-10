@@ -235,6 +235,23 @@ stream; effectively: m ++ k == m.
       </a>
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>++</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncStream#concatImpl" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="concatImpl[B&gt;:A](that:()=&gt;com.twitter.concurrent.AsyncStream[B]):com.twitter.concurrent.AsyncStream[B]"></a>
+      <a id="concatImpl[B&gt;:A](()⇒AsyncStream[B]):AsyncStream[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">concatImpl</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.concurrent.AsyncStream.A">A</span></span>]</span><span class="params">(<span name="that">that: () ⇒ <a href="" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.concatImpl.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.concatImpl.B">B</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.AsyncStream@concatImpl[B&gt;:A](that:()=&gt;com.twitter.concurrent.AsyncStream[B]):com.twitter.concurrent.AsyncStream[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.concurrent.AsyncStream#drop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="drop(n:Int):com.twitter.concurrent.AsyncStream[A]"></a>
       <a id="drop(Int):AsyncStream[A]"></a>
@@ -455,6 +472,29 @@ every cons with the folded function <code>f</code>, and the empty element with <
 future never resolves.
 </p></div><dl class="paramcmts block"><dt class="param">z</dt><dd class="cmt"><p>the parameter that replaces the end of the list.</p></dd><dt class="param">f</dt><dd class="cmt"><p>a binary operator applied to elements of this stream. Note that
 the second paramter is call-by-name.</p></dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncStream#force" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="force:com.twitter.util.Future[Unit]"></a>
+      <a id="force:Future[Unit]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">force</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.AsyncStream@force:com.twitter.util.Future[Unit]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Force the entire stream.</p><div class="fullcomment"><div class="comment cmt"><p>Force the entire stream. If you hold a reference to the head of the
+stream, this will cause the entire stream to be held in memory. The
+resulting Future will be satisfied once the entire stream has been
+consumed.</p><p>This is useful when you want the side-effects of consuming the
+stream to occur, but do not need to do anything with the resulting
+values.
+</p></div></div>
     </li><li name="com.twitter.concurrent.AsyncStream#foreach" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="foreach(f:A=&gt;Unit):com.twitter.util.Future[Unit]"></a>
       <a id="foreach((A)⇒Unit):Future[Unit]"></a>
@@ -762,6 +802,49 @@ successive fold:</p><div class="fullcomment"><div class="comment cmt"><p>Similar
 successive fold:</p><pre>AsyncStream(<span class="num">1</span>, <span class="num">2</span>, ...).scanLeft(z)(f) == z +:: f(z, <span class="num">1</span>) +:: f(f(z, <span class="num">1</span>), <span class="num">2</span>) +:: ...</pre><p>Note that for an <code>AsyncStream as</code>:</p><pre>as.scanLeft(z)(f).last == as.foldLeft(z)(f)</pre><p>The resulting stream always begins with the initial value <code>z</code>,
 not subject to the fate of the underlying future, i.e.:</p><pre><span class="kw">val</span> never = AsyncStream.fromFuture(Future.never)
 never.scanLeft(z)(f) == z +:: never <span class="cmt">// logical equality</span></pre></div></div>
+    </li><li name="com.twitter.concurrent.AsyncStream#size" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="size:com.twitter.util.Future[Int]"></a>
+      <a id="size:Future[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">size</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.AsyncStream@size:com.twitter.util.Future[Int]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Eagerly consume the entire stream and return the number of elements
+that are in it.</p><div class="fullcomment"><div class="comment cmt"><p>Eagerly consume the entire stream and return the number of elements
+that are in it. If you hold a reference to the head of the stream,
+this will cause the entire stream to be held in memory.</p><p>Note: forces the stream. If the stream is infinite, the resulting future
+is equivalent to Future.never.
+</p></div></div>
+    </li><li name="com.twitter.concurrent.AsyncStream#sum" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sum[B&gt;:A](implicitnumeric:Numeric[B]):com.twitter.util.Future[B]"></a>
+      <a id="sum[B&gt;:A](Numeric[B]):Future[B]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sum</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.concurrent.AsyncStream.A">A</span></span>]</span><span class="params">(<span class="implicit">implicit </span><span name="numeric">numeric: <a href="../../../scala/package.html#Numeric[T]=scala.math.Numeric[T]" class="extmbr" name="scala.Numeric">Numeric</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.sum.B">B</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.sum.B">B</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.AsyncStream@sum[B&gt;:A](implicitnumeric:Numeric[B]):com.twitter.util.Future[B]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Add up the values of all of the elements in this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Add up the values of all of the elements in this stream. If you
+hold a reference to the head of the stream, this will cause the
+entire stream to be held in memory.</p><p>Note: forces the stream. If the stream is infinite, the resulting future
+is equivalent to Future.never.
+</p></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -960,6 +1043,31 @@ preserves the tail's laziness.</p><pre>empty.uncons     == Future.<span class="s
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncStream#withEffect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withEffect(f:A=&gt;Unit):com.twitter.concurrent.AsyncStream[A]"></a>
+      <a id="withEffect((A)⇒Unit):AsyncStream[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withEffect</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.concurrent.AsyncStream.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.A">A</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.AsyncStream@withEffect(f:A=&gt;Unit):com.twitter.concurrent.AsyncStream[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Execute the specified effect as each element of the resulting
+stream is demanded.</p><div class="fullcomment"><div class="comment cmt"><p>Execute the specified effect as each element of the resulting
+stream is demanded. This method does <b>not</b> force the
+stream. Since the head of the stream is not lazy, the effect will
+happen to the first item in the stream (if any) right away.</p><p>The effects will occur as the <b>resulting</b> stream is demanded
+and will not occur if the original stream is demanded.</p><p>This is useful for e.g. counting the number of items that were
+consumed from a stream by a consuming process, regardless of
+whether the entire stream is consumed.
+</p></div></div>
     </li><li name="com.twitter.concurrent.AsyncStream#withFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withFilter(f:A=&gt;Boolean):com.twitter.concurrent.AsyncStream[A]"></a>
       <a id="withFilter((A)⇒Boolean):AsyncStream[A]"></a>

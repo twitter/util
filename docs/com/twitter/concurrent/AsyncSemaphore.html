@@ -58,7 +58,7 @@ semaphore.acquireAndRun() {
   somethingThatReturnsFutureT()
 }</pre><p>Calls to acquire() and acquireAndRun are serialized, and tickets are
 given out fairly (in order of arrival).
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> for a mutex version.</p></span></dd></dl><div class="toggleContainer block">
+</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.concurrent.AsyncSemaphore">AsyncSemaphore</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> for a mutex version.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
@@ -355,6 +355,26 @@ For all exceptions, the permit would be released before returning.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncSemaphore#fail" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fail(exc:Throwable):Unit"></a>
+      <a id="fail(Throwable):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fail</span><span class="params">(<span name="exc">exc: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.AsyncSemaphore@fail(exc:Throwable):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Fail the semaphore and stop it from distributing further permits.</p><div class="fullcomment"><div class="comment cmt"><p>Fail the semaphore and stop it from distributing further permits. Subsequent
+attempts to acquire a permit fail with <code>exc</code>. This semaphore's queued waiters
+are also failed with <code>exc</code>.
+</p></div></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>

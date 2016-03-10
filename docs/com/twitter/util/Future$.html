@@ -51,7 +51,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Futures$.html" class="extype" name="com.twitter.util.Futures">Futures</a> for Java-friendly APIs.</p></span></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>The <a href="http://twitter.github.io/finagle/guide/Futures.html" target="_blank">user guide</a>
+     on concurrent programming with Futures.</p></span><span class="cmt"><p><a href="Futures$.html" class="extype" name="com.twitter.util.Futures">Futures</a> for Java-friendly APIs.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -183,8 +184,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Analogous to <span class="extype" name="Predef.???">Predef.???</span>
-</p>
+      <p class="shortcomment cmt">A failed <code>Future</code> analogous to <code>Predef.???</code>.</p>
     </li><li name="com.twitter.util.Future#DEFAULT_TIMEOUT" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DEFAULT_TIMEOUT:com.twitter.util.Duration"></a>
       <a id="DEFAULT_TIMEOUT:Duration"></a>
@@ -218,7 +218,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Unit</code>-typed <code>Future</code> of <code>()</code></p>
     </li><li name="com.twitter.util.Future#False" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="False:com.twitter.util.Future[Boolean]"></a>
       <a id="False:Future[Boolean]"></a>
@@ -235,7 +235,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Future</code> of <code>false</code></p>
     </li><li name="com.twitter.util.Future#Nil" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Nil:com.twitter.util.Future[Seq[Nothing]]"></a>
       <a id="Nil:Future[Seq[Nothing]]"></a>
@@ -252,7 +252,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Future</code> of <code>Nil</code></p>
     </li><li name="com.twitter.util.Future#None" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="None:com.twitter.util.Future[Option[Nothing]]"></a>
       <a id="None:Future[Option[Nothing]]"></a>
@@ -269,7 +269,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Future</code> of <code>None</code></p>
     </li><li name="com.twitter.util.Future#True" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="True:com.twitter.util.Future[Boolean]"></a>
       <a id="True:Future[Boolean]"></a>
@@ -286,7 +286,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Future</code> of <code>true</code></p>
     </li><li name="com.twitter.util.Future#Unit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Unit:com.twitter.util.Future[Unit]"></a>
       <a id="Unit:Future[Unit]"></a>
@@ -303,8 +303,8 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
-    </li><li name="com.twitter.util.Future#Void" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Unit</code>-typed <code>Future</code> of <code>()</code></p>
+    </li><li name="com.twitter.util.Future#Void" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Void:com.twitter.util.Future[Void]"></a>
       <a id="Void:Future[Void]"></a>
       <h4 class="signature">
@@ -320,7 +320,9 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A successfully satisfied constant <code>Future</code> of <code>Void</code>-type.</p><div class="fullcomment"><div class="comment cmt"><p>A successfully satisfied constant <code>Future</code> of <code>Void</code>-type.
+Can be useful for Java programmers.
+</p></div></div>
     </li><li name="com.twitter.util.Future#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply[A](a:=&gt;A):com.twitter.util.Future[A]"></a>
       <a id="apply[A](⇒A):Future[A]"></a>
@@ -337,11 +339,11 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">A factory function to &quot;lift&quot; computations into the Future monad.</p><div class="fullcomment"><div class="comment cmt"><p>A factory function to &quot;lift&quot; computations into the Future monad.
-It will catch nonfatal (see: <a href="NonFatal$.html" class="extype" name="com.twitter.util.NonFatal">com.twitter.util.NonFatal</a>)
-exceptions and wrap them in the Throw[_] type. Non-exceptional
-values are wrapped in the Return[_] type.
-</p></div></div>
+      <p class="shortcomment cmt">Creates a satisfied <code>Future</code> from the result of running <code>a</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a satisfied <code>Future</code> from the result of running <code>a</code>.</p><p>If the result of <code>a</code> is a <a href="NonFatal$.html" class="extype" name="com.twitter.util.NonFatal">non-fatal exception</a>,
+this will result in a failed <code>Future</code>. Otherwise, the result
+is a successfully satisfied <code>Future</code>.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>that <code>a</code> is executed in the calling thread and as such
+      some care must be taken with blocking code.</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -476,10 +478,12 @@ result will the first exception encountered.
       </a>
     </span>
       <p class="shortcomment cmt">Collect the results from the given futures into a new future of
-Seq[A].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
-Seq[A]. If one or more of the given Futures is exceptional, the resulting
+<code>Seq[A]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
+<code>Seq[A]</code>. If one or more of the given Futures is exceptional, the resulting
 Future result will be the first exception encountered.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[A]]</code> containing the collected values from fs.</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[A]]</code> containing the collected values from fs.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Future#join">join</a> if you are not interested in the results of the individual
+    <code>Futures</code>, only when they are complete.</p></span><span class="cmt"><p><a href="#collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry</a> if you want to be able to see the results of each
+    <code>Future</code> regardless of if they succeed or fail.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#collectToTry" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]"></a>
       <a id="collectToTry[A](List[Future[A]]):Future[List[Try[A]]]"></a>
@@ -514,9 +518,10 @@ Future result will be the first exception encountered.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Collect the results from the given futures into a new future of Seq[Try[A]].</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of Seq[Try[A]].
+      <p class="shortcomment cmt">Collect the results from the given futures into a new future of <code>Seq[Try[A]]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of <code>Seq[Try[A]]</code>.</p><p>The returned <code>Future</code> is satisfied when all of the given <code>Futures</code>
+have been satisfied.
 </p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[Try[A]]]</code> containing the collected values from fs.</p></dd></dl></div>
-    </li><li name="com.twitter.util.Future#const" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Future#const" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="const[A](result:com.twitter.util.Try[A]):com.twitter.util.Future[A]"></a>
       <a id="const[A](Try[A]):Future[A]"></a>
       <h4 class="signature">
@@ -532,7 +537,8 @@ Future result will be the first exception encountered.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Makes a Future with a constant result.</p>
+      <p class="shortcomment cmt">Creates a satisfied <code>Future</code> from a <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a satisfied <code>Future</code> from a <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">exception</a> for creation from a <code>Throwable</code>.</p></span><span class="cmt"><p><a href="#apply[A](a:=&gt;A):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#apply">apply</a> for creation from a <code>Function</code>.</p></span><span class="cmt"><p><a href="#value[A](a:A):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#value">value</a> for creation from a constant value.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#each" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="each[A](next:=&gt;com.twitter.util.Future[A])(body:A=&gt;Unit):com.twitter.util.Future[Nothing]"></a>
       <a id="each[A](⇒Future[A])((A)⇒Unit):Future[Nothing]"></a>
@@ -604,9 +610,9 @@ indicates completion (via an exception).
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Make a Future with an error.</p><div class="fullcomment"><div class="comment cmt"><p>Make a Future with an error. E.g., Future.exception(new
-Exception(&quot;boo&quot;)).
-</p></div></div>
+      <p class="shortcomment cmt">Creates a failed satisfied <code>Future</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a failed satisfied <code>Future</code>.</p><p>For example, </p><pre>Future.exception(<span class="kw">new</span> Exception(<span class="lit">"boo"</span>))</pre><p>.</p><p>Future.exception(new Exception(&quot;boo&quot;))
+}}}
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#apply[A](a:=&gt;A):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#apply">apply</a> for creation from a <code>Function</code>.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -697,11 +703,12 @@ Exception(&quot;boo&quot;)).
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Take a sequence of Futures, wait till they all complete
-successfully.</p><div class="fullcomment"><div class="comment cmt"><p>Take a sequence of Futures, wait till they all complete
-successfully.  The future fails immediately if any of the joined
-Futures do, mimicking the semantics of exceptions.</p><p>TODO: This method should be deprecated in favour of <code>Futures.join()</code>.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Unit] whose value is populated when all of the fs return.</p></dd></dl></div>
+      <p class="shortcomment cmt">Creates a <code>Future</code> that is satisfied when all futures in <code>fs</code>
+are successfully satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>Future</code> that is satisfied when all futures in <code>fs</code>
+are successfully satisfied. If any of the futures in <code>fs</code> fail,
+the returned <code>Future</code> is immediately satisfied by that failure.</p><p>TODO: This method should be deprecated in favour of <code>Futures.join()</code>.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry</a> if you want to be able to see the results of each
+    <code>Future</code> regardless of if they succeed or fail.</p></span><span class="cmt"><p><a href="#collect[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[A]]" class="extmbr" name="com.twitter.util.Future#collect">collect</a> if you want to be able to see the results of each <code>Future</code>.</p></span><span class="cmt"><p><a href="Futures$.html#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Futures#join">Futures.join</a> for a Java friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#join" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S],t:com.twitter.util.Future[T],u:com.twitter.util.Future[U],v:com.twitter.util.Future[V]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
       <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](Future[A],Future[B],Future[C],Future[D],Future[E],Future[F],Future[G],Future[H],Future[I],Future[J],Future[K],Future[L],Future[M],Future[N],Future[O],Future[P],Future[Q],Future[R],Future[S],Future[T],Future[U],Future[V]):Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
@@ -1138,11 +1145,12 @@ do.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Take a sequence of Futures, wait till they all complete
-successfully.</p><div class="fullcomment"><div class="comment cmt"><p>Take a sequence of Futures, wait till they all complete
-successfully.  The future fails immediately if any of the joined
-Futures do, mimicking the semantics of exceptions.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a Future[Unit] whose value is populated when all of the fs return.</p></dd></dl></div>
+      <p class="shortcomment cmt">Creates a <code>Future</code> that is satisfied when all futures in <code>fs</code>
+are successfully satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>Future</code> that is satisfied when all futures in <code>fs</code>
+are successfully satisfied. If any of the futures in <code>fs</code> fail,
+the returned <code>Future</code> is immediately satisfied by that failure.
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry</a> if you want to be able to see the results of each
+    <code>Future</code> regardless of if they succeed or fail.</p></span><span class="cmt"><p><a href="#collect[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[A]]" class="extmbr" name="com.twitter.util.Future#collect">collect</a> if you want to be able to see the results of each <code>Future</code>.</p></span><span class="cmt"><p><a href="Futures$.html#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Futures#join">Futures.join</a> for a Java friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#monitored" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="monitored[A](mkFuture:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]"></a>
       <a id="monitored[A](⇒Future[A]):Future[A]"></a>
@@ -1203,7 +1211,7 @@ onSuccess g; f0 }</code> will cancel f0 so that f0 never hangs.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">A new future that can never complete.</p>
+      <p class="shortcomment cmt">A <code>Future</code> that can never be satisfied.</p>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
@@ -1255,25 +1263,6 @@ onSuccess g; f0 }</code> will cancel f0 so that f0 never hangs.
       </a>
     </span>
       
-    </li><li name="com.twitter.util.Future#rawException" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="rawException[A](e:Throwable):com.twitter.util.Future[A]"></a>
-      <a id="rawException[A](Throwable):Future[A]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">rawException</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rawException.A">A</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Future$@rawException[A](e:Throwable):com.twitter.util.Future[A]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Make a Future with an error.</p><div class="fullcomment"><div class="comment cmt"><p>Make a Future with an error. E.g., Future.exception(new
-Exception(&quot;boo&quot;)). The exception is not wrapped in any way.
-</p></div></div>
     </li><li name="com.twitter.util.Future#select" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="select[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],java.util.List[com.twitter.util.Future[A]])]"></a>
       <a id="select[A](List[Future[A]]):Future[(Try[A],List[Future[A]])]"></a>
@@ -1312,7 +1301,7 @@ to be satisfied and the rest of the futures.</p></dd></dl></div>
     </span>
       <p class="shortcomment cmt">&quot;Select&quot; off the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>&quot;Select&quot; off the first future to be satisfied.  Return this as a
 result, with the remainder of the Futures as a sequence.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a scala.collection.Seq</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>the futures to select from. Must not be empty.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#selectIndex[A](fs:IndexedSeq[com.twitter.util.Future[A]]):com.twitter.util.Future[Int]" class="extmbr" name="com.twitter.util.Future#selectIndex">selectIndex</a> which can be more performant in some situations.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#selectIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="selectIndex[A](fs:IndexedSeq[com.twitter.util.Future[A]]):com.twitter.util.Future[Int]"></a>
       <a id="selectIndex[A](IndexedSeq[Future[A]]):Future[Int]"></a>
@@ -1330,7 +1319,7 @@ result, with the remainder of the Futures as a sequence.
       </a>
     </span>
       <p class="shortcomment cmt">Select the index into <code>fs</code> of the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Select the index into <code>fs</code> of the first future to be satisfied.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>cannot be empty</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>cannot be empty</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#select[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],java.util.List[com.twitter.util.Future[A]])]" class="extmbr" name="com.twitter.util.Future#select">select</a> which can be an easier API to use.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#sleep" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="sleep(howlong:com.twitter.util.Duration)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[Unit]"></a>
       <a id="sleep(Duration)(Timer):Future[Unit]"></a>
@@ -1347,7 +1336,7 @@ result, with the remainder of the Futures as a sequence.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">A unit future that completes after <code>howlong</code>.</p>
+      <p class="shortcomment cmt">A <code>Unit</code>-typed <code>Future</code> that is satisfied after <code>howlong</code>.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -1417,7 +1406,7 @@ computation completes.</p>
       </a>
     </span>
       <p class="shortcomment cmt">Take a sequence and sequentially apply a function <code>f</code> to each item.</p><div class="fullcomment"><div class="comment cmt"><p>Take a sequence and sequentially apply a function <code>f</code> to each item.
-Then return all future results <code>as</code> a single Future[Seq[_]].</p><p>If during execution any <code>f</code> is satsified <code>as</code> a failure (<a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">Future.exception</a>)
+Then return all future results <code>as</code> as a single <code>Future[Seq[_]]</code>.</p><p>If during execution any <code>f</code> is satsified <code>as</code> as a failure (<a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">Future.exception</a>)
 then that failed Future will be returned and the remaining elements of <code>as</code>
 will not be processed.</p><p>usage:</p><pre><span class="cmt">// will return a Future of `Seq(2, 3, 4)`</span>
 Future.traverseSequentially(<span class="std">Seq</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)) { i <span class="kw">=&gt;</span>
@@ -1456,8 +1445,8 @@ Future.traverseSequentially(<span class="std">Seq</span>(<span class="num">1</sp
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Make a Future with a constant value.</p><div class="fullcomment"><div class="comment cmt"><p>Make a Future with a constant value. E.g., Future.value(1) is a Future[Int].
-</p></div></div>
+      <p class="shortcomment cmt">Creates a successful satisfied <code>Future</code> from the value <code>a</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a successful satisfied <code>Future</code> from the value <code>a</code>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">exception</a> for creation from a <code>Throwable</code>.</p></span><span class="cmt"><p><a href="#apply[A](a:=&gt;A):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#apply">apply</a> for creation from a <code>Function</code>.</p></span><span class="cmt"><p><a href="#const[A](result:com.twitter.util.Try[A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#const">const</a> for creation from a <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -1591,6 +1580,27 @@ after each computation completes.</p>
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.20.1)</i> Use Futures.flatten instead</p></dd></dl></div>
+    </li><li name="com.twitter.util.Future#rawException" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="rawException[A](e:Throwable):com.twitter.util.Future[A]"></a>
+      <a id="rawException[A](Throwable):Future[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2016-02-10) Use exception instead">rawException</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rawException.A">A</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Future$@rawException[A](e:Throwable):com.twitter.util.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a failed satisfied <code>Future</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a failed satisfied <code>Future</code>.</p><p>An alias for <a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">exception</a> which should be used instead of this.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2016-02-10)</i> Use <code>exception</code> instead</p></dd></dl></div>
     </li></ol>
             </div>
         </div>

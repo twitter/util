@@ -49,10 +49,10 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An alternative interface for handling Future Events. This
-interface is designed to be friendly to Java users since it does
-not require creating many small Function objects.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Java friendly API for handling side-effects for a <code>Future</code>.</p><p>If you want a Java API to
+<a href="http://twitter.github.io/finagle/guide/Futures.html#sequential-composition" target="_blank">sequence</a>
+the work you can use a <a href="FutureTransformer.html" class="extype" name="com.twitter.util.FutureTransformer">FutureTransformer</a>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="FutureTransformer.html" class="extype" name="com.twitter.util.FutureTransformer">FutureTransformer</a> for a Java API for transforming the results of Futures.</p></span><span class="cmt"><p><a href="Future.html#addEventListener(listener:com.twitter.util.FutureEventListener[_&gt;:A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#addEventListener">Future.addEventListener</a> for using it with a <code>Future</code>.</p></span><span class="cmt"><p><a href="Future.html#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">Future.respond</a> which is the equivalent Scala API for further details.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -111,8 +111,7 @@ not require creating many small Function objects.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Invoked if the computation completes unsuccessfully
-</p>
+      <p class="shortcomment cmt">A side-effect which is invoked if the computation completes unsuccessfully.</p>
     </li><li name="com.twitter.util.FutureEventListener#onSuccess" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="onSuccess(value:T):Unit"></a>
       <a id="onSuccess(T):Unit"></a>
@@ -129,8 +128,7 @@ not require creating many small Function objects.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Invoked if the computation completes successfully
-</p>
+      <p class="shortcomment cmt">A side-effect which is invoked if the computation completes successfully.</p>
     </li></ol>
             </div>
 

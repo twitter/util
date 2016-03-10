@@ -181,7 +181,7 @@ which are reported to the given estimator. Rates are measured
 every <code>period</code>. The estimated GC time is based on interpolating
 the rate estimated by <code>estimator</code>.
 </p></div></div>
-    </li><li name="com.twitter.jvm.Heap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.jvm.Heap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="HeapextendsProductwithSerializable"></a>
       <a id="Heap:Heap"></a>
       <h4 class="signature">
@@ -197,7 +197,12 @@ the rate estimated by <code>estimator</code>.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Information about the Heap
+</p><div class="fullcomment"><div class="comment cmt"><p>Information about the Heap
+</p></div><dl class="paramcmts block"><dt class="param">allocated</dt><dd class="cmt"><p>Estimated number of bytes
+that have been allocated so far (into eden)</p></dd><dt class="param">tenuringThreshold</dt><dd class="cmt"><p>How many times an Object
+needs to be copied before being tenured.</p></dd><dt class="param">ageHisto</dt><dd class="cmt"><p>Histogram of the number of bytes that
+have been copied as many times. Note: 0-indexed.</p></dd></dl></div>
     </li><li name="com.twitter.jvm.Heapster" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="HeapsterextendsAnyRef"></a>
       <a id="Heapster:Heapster"></a>
@@ -345,6 +350,28 @@ See: http://web.mit.edu/saltzer/www/publications/instrumentation.html
       </a>
     </span>
       
+    </li><li name="com.twitter.jvm.Safepoint" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SafepointextendsProductwithSerializable"></a>
+      <a id="Safepoint:Safepoint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Safepoint.html"><span class="name">Safepoint</span></a><span class="params">(<span name="syncTimeMillis">syncTimeMillis: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="totalTimeMillis">totalTimeMillis: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="count">count: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.jvm.package@SafepointextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Information about the JVM's safepoint
+</p><div class="fullcomment"><div class="comment cmt"><p>Information about the JVM's safepoint
+</p></div><dl class="paramcmts block"><dt class="param">syncTimeMillis</dt><dd class="cmt"><p>Cumulative time, in milliseconds, spent
+getting all threads to safepoint states</p></dd><dt class="param">totalTimeMillis</dt><dd class="cmt"><p>Cumulative time, in milliseconds, that the
+application has been stopped for safepoint operations</p></dd><dt class="param">count</dt><dd class="cmt"><p>The number of safepoints taken place since
+the JVM started</p></dd></dl></div>
     </li><li name="com.twitter.jvm.Snapshot" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SnapshotextendsProductwithSerializable"></a>
       <a id="Snapshot:Snapshot"></a>

@@ -49,7 +49,11 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Information about the Heap
+</p></div><dl class="paramcmts block"><dt class="param">allocated</dt><dd class="cmt"><p>Estimated number of bytes
+that have been allocated so far (into eden)</p></dd><dt class="param">tenuringThreshold</dt><dd class="cmt"><p>How many times an Object
+needs to be copied before being tenured.</p></dd><dt class="param">ageHisto</dt><dd class="cmt"><p>Histogram of the number of bytes that
+have been copied as many times. Note: 0-indexed.</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -88,7 +92,7 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.jvm.Heap#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.jvm.Heap#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(allocated:Long,tenuringThreshold:Long,ageHisto:Seq[Long]):com.twitter.jvm.Heap"></a>
       <a id="&lt;init&gt;:Heap"></a>
       <h4 class="signature">
@@ -104,7 +108,10 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">allocated</dt><dd class="cmt"><p>Estimated number of bytes
+that have been allocated so far (into eden)</p></dd><dt class="param">tenuringThreshold</dt><dd class="cmt"><p>How many times an Object
+needs to be copied before being tenured.</p></dd><dt class="param">ageHisto</dt><dd class="cmt"><p>Histogram of the number of bytes that
+have been copied as many times. Note: 0-indexed.</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -165,7 +172,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.jvm.Heap#ageHisto" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.jvm.Heap#ageHisto" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ageHisto:Seq[Long]"></a>
       <a id="ageHisto:Seq[Long]"></a>
       <h4 class="signature">
@@ -181,7 +188,9 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Histogram of the number of bytes that
+have been copied as many times.</p><div class="fullcomment"><div class="comment cmt"><p>Histogram of the number of bytes that
+have been copied as many times. Note: 0-indexed.</p></div></div>
     </li><li name="com.twitter.jvm.Heap#allocated" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="allocated:Long"></a>
       <a id="allocated:Long"></a>
@@ -198,7 +207,8 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Estimated number of bytes
+that have been allocated so far (into eden)</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -397,7 +407,8 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">How many times an Object
+needs to be copied before being tenured.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

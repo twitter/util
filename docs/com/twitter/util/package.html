@@ -528,8 +528,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">A Future that is already completed.</p><div class="fullcomment"><div class="comment cmt"><p>A Future that is already completed. These are cheap in
-construction compared to Promises.
+      <p class="shortcomment cmt">A <code>Future</code> that is already completed.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>Future</code> that is already completed.</p><p>These are cheap in construction compared to <code>Promises</code>.
 </p></div></div>
     </li><li name="com.twitter.util.CountDownLatch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CountDownLatchextendsAnyRef"></a>
@@ -1019,12 +1018,12 @@ to instantiate directly in Java.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">A computation evaluated asynchronously.</p><div class="fullcomment"><div class="comment cmt"><p>A computation evaluated asynchronously. This implementation of
-Future does not assume any concrete implementation; in particular,
-it does not couple the user to a specific executor or event loop.</p><p>Futures are also <a href="Cancellable.html" class="extype" name="com.twitter.util.Cancellable">com.twitter.util.Cancellable</a>, but with
-special semantics: the cancellation signal is only guaranteed to
-be delivered when the promise has not yet completed.
-</p></div></div>
+      <p class="shortcomment cmt">Represents an asynchronous value.</p><div class="fullcomment"><div class="comment cmt"><p>Represents an asynchronous value.</p><p>See the <a href="http://twitter.github.io/finagle/guide/Futures.html" target="_blank">user guide</a>
+on concurrent programming with <code>Futures</code> to better understand how they
+work and can be used.</p><p>A <code>Future[T]</code> can be in one of three states:</p><ul><li>Pending, the computation has not yet completed</li><li>Satisfied successfully, with a result of type <code>T</code> (a <a href="Return.html" class="extype" name="com.twitter.util.Return">Return</a>)</li><li>Satisfied by a failure, with a <code>Throwable</code> result (a <a href="Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a>)</li></ul><p>This definition of <code>Future</code> does not assume any concrete implementation;
+in particular, it does not couple the user to a specific executor or event loop.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Futures$.html" class="extype" name="com.twitter.util.Futures">Futures</a> for Java-friendly APIs.</p></span><span class="cmt"><p>The <a href="http://twitter.github.io/finagle/guide/Futures.html" target="_blank">user guide</a>
+     on concurrent programming with Futures.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.FutureBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FutureBenchmarkextendsStdBenchAnnotations"></a>
       <a id="FutureBenchmark:FutureBenchmark"></a>
@@ -1075,10 +1074,10 @@ be delivered when the promise has not yet completed.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">An alternative interface for handling Future Events.</p><div class="fullcomment"><div class="comment cmt"><p>An alternative interface for handling Future Events. This
-interface is designed to be friendly to Java users since it does
-not require creating many small Function objects.
-</p></div></div>
+      <p class="shortcomment cmt">A Java friendly API for handling side-effects for a <code>Future</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A Java friendly API for handling side-effects for a <code>Future</code>.</p><p>If you want a Java API to
+<a href="http://twitter.github.io/finagle/guide/Futures.html#sequential-composition" target="_blank">sequence</a>
+the work you can use a <a href="FutureTransformer.html" class="extype" name="com.twitter.util.FutureTransformer">FutureTransformer</a>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="FutureTransformer.html" class="extype" name="com.twitter.util.FutureTransformer">FutureTransformer</a> for a Java API for transforming the results of Futures.</p></span><span class="cmt"><p><a href="Future.html#addEventListener(listener:com.twitter.util.FutureEventListener[_&gt;:A]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#addEventListener">Future.addEventListener</a> for using it with a <code>Future</code>.</p></span><span class="cmt"><p><a href="Future.html#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">Future.respond</a> which is the equivalent Scala API for further details.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.FutureNonLocalReturnControl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FutureNonLocalReturnControlextendsException"></a>
       <a id="FutureNonLocalReturnControl:FutureNonLocalReturnControl"></a>
@@ -1175,7 +1174,7 @@ override one of <code>{map, flatMap}</code>, an <code>AbstractMethodError</code>
 thrown at Runtime.</p><p><b>Note:</b> an exception e thrown in any of
 map/flatMap/handle/rescue will make the result of transformedBy be
 equivalent to Future.exception(e).
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="FutureEventListener.html" class="extype" name="com.twitter.util.FutureEventListener">FutureEventListener</a> for a Java API for side-effects.</p></span><span class="cmt"><p><a href="Future.html#transformedBy[B](transformer:com.twitter.util.FutureTransformer[A,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#transformedBy">Future.transformedBy</a> for using it with a <code>Future</code>.</p></span><span class="cmt"><p><a href="Future.html#transform[B](f:com.twitter.util.Try[A]=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#transform">Future.transform</a> which is the equivalent Scala API for further details.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.GZIPStringEncoder" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="GZIPStringEncoderextendsStringEncoder"></a>
       <a id="GZIPStringEncoder:GZIPStringEncoder"></a>
@@ -2866,7 +2865,8 @@ Keys can be any word character or '-' and values can be any character except new
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Futures$.html" class="extype" name="com.twitter.util.Futures">Futures</a> for Java-friendly APIs.</p></span></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>The <a href="http://twitter.github.io/finagle/guide/Futures.html" target="_blank">user guide</a>
+     on concurrent programming with Futures.</p></span><span class="cmt"><p><a href="Futures$.html" class="extype" name="com.twitter.util.Futures">Futures</a> for Java-friendly APIs.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.FutureBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FutureBenchmark"></a>
       <a id="FutureBenchmark:FutureBenchmark"></a>
@@ -3107,7 +3107,7 @@ utilities.</p>
       </a>
     </span>
       
-    </li><li name="com.twitter.util.NilStopwatch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.NilStopwatch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="NilStopwatch"></a>
       <a id="NilStopwatch:NilStopwatch"></a>
       <h4 class="signature">
@@ -3124,7 +3124,10 @@ utilities.</p>
       </a>
     </span>
       <p class="shortcomment cmt">A trivial implementation of <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for use as a null
-object.</p>
+object.</p><div class="fullcomment"><div class="comment cmt"><p>A trivial implementation of <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for use as a null
+object.</p><p>All calls to <span class="extype" name="Stopwatch.start()">Stopwatch.start()</span> return an <a href="Stopwatch$.html#Elapsed=()=&gt;com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Stopwatch.Elapsed">Stopwatch.Elapsed</a>
+instance that always returns <a href="Duration$.html#Bottom:com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#Bottom">Duration.Bottom</a> for its elapsed time.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>NilStopwatch.get</code> for accessing this instance from Java.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.NoStacktrace" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NoStacktrace"></a>
       <a id="NoStacktrace:NoStacktrace"></a>
@@ -3336,7 +3339,7 @@ ephemeral ports.</p>
     </span>
       <p class="shortcomment cmt">The system <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> measures elapsed time using <code>System.nanoTime</code>.</p><div class="fullcomment"><div class="comment cmt"><p>The system <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> measures elapsed time using <code>System.nanoTime</code>.</p><p>Note that it works well with unit tests by respecting
 time manipulation on <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>.
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Stopwatches$.html" class="extype" name="com.twitter.util.Stopwatches">Stopwatches</a> for Java APIs.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.StopwatchBenchmark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StopwatchBenchmark"></a>
       <a id="StopwatchBenchmark:StopwatchBenchmark"></a>
@@ -3354,6 +3357,23 @@ time manipulation on <a href="Time.html" class="extype" name="com.twitter.util.T
       </a>
     </span>
       
+    </li><li name="com.twitter.util.Stopwatches" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Stopwatches"></a>
+      <a id="Stopwatches:Stopwatches"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Stopwatches$.html"><span class="name">Stopwatches</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.package@Stopwatches" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Java APIs for <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a>.</p>
     </li><li name="com.twitter.util.StorageUnit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StorageUnit"></a>
       <a id="StorageUnit:StorageUnit"></a>

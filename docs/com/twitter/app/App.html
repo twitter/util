@@ -435,7 +435,13 @@ provides a default value to be passed as <code>close(grace)</code>.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <p class="shortcomment cmt">Users of this code should override this to <code>true</code> so that
+you fail-fast instead of being surprised at runtime by code that
+is reading from flags before they have been parsed.</p><div class="fullcomment"><div class="comment cmt"><p>Users of this code should override this to <code>true</code> so that
+you fail-fast instead of being surprised at runtime by code that
+is reading from flags before they have been parsed.</p><p>Ideally this would default to <code>true</code>, however, in order to avoid
+breaking existing users, it was introduced using <code>false</code>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
