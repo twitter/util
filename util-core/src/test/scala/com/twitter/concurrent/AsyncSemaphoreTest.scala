@@ -1,6 +1,7 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Await, Future, Promise, Try}
+import com.twitter.conversions.time._
+import com.twitter.util._
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 import org.junit.runner.RunWith
 import org.scalatest.fixture.FunSpec
@@ -241,6 +242,29 @@ class AsyncSemaphoreTest extends FunSpec {
       assert(counter == 2)
       assert(Try(Await.result(future)).isThrow)
       assert(semHelper.sem.numPermitsAvailable == 1)
+    }
+
+    it("drains waiters when failed") { semHelper =>
+      val as = new AsyncSemaphore(1)
+      val (r1, r2, r3) = (as.acquire(), as.acquire(), as.acquire())
+
+      assert(r1.isDefined)
+      assert(!r2.isDefined)
+      assert(!r3.isDefined)
+      assert(as.numWaiters == 2)
+
+      as.fail(new Exception("woop"))
+
+      assert(as.numWaiters == 0)
+
+      // new acquisitions fail
+      Await.result(r1, 2.seconds).release()
+      val (r4, r5) = (as.acquire(), as.acquire())
+      assert(as.numWaiters == 0)
+
+      val results = Seq(r2.poll, r3.poll, r4.poll, r5.poll)
+      val msgs = results.collect { case Some(Throw(e)) => e.getMessage }
+      assert(msgs.forall(_ == "woop"))
     }
   }
 }

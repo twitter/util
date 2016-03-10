@@ -8,8 +8,10 @@ Next Version
 
 New Features:
 
-  * util-core: Add convenience methods `force`, `size`, `sum`, and
-    `withEffect` to `AsyncStream`. ``RB_ID=808411``
+  * util-core: AsyncSemaphore supports closing and draining of waiters via `fail`. ``RB_ID=807590``
+
+  * util-core: Add convenience methods `force`, `size`, `sum`, and `withEffect` to `AsyncStream`. 
+    ``RB_ID=808411``
 
 Bug Fixes:
 
