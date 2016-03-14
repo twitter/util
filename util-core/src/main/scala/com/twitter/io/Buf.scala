@@ -277,23 +277,6 @@ object Buf {
     def apply(bytes: Byte*): Buf = Owned(bytes.toArray)
 
     /**
-     * Construct a buffer representing the provided array of bytes without copying.
-     */
-    @deprecated("Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.", "6.23.0")
-    def apply(bytes: Array[Byte]): Buf = Owned(bytes)
-
-    /**
-     * Construct a buffer representing the provided array of bytes
-     * at the given offsets without copying.
-     */
-    @deprecated("Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.", "6.23.0")
-    def apply(bytes: Array[Byte], begin: Int, end: Int): Buf = Owned(bytes, begin, end)
-
-    /** Extract a ByteArray's underlying data and offsets. */
-    @deprecated("Use Buf.ByteArray.Shared or Buf.ByteArray.Owned.", "6.23.0")
-    def unapply(ba: ByteArray): Option[(Array[Byte], Int, Int)] = ByteArray.Owned.unapply(ba)
-
-    /**
      * Safely coerce a buffer to a Buf.ByteArray, potentially without copying its underlying
      * data.
      */
@@ -412,14 +395,6 @@ object Buf {
 
   object ByteBuffer {
 
-    /**
-     * Construct a buffer representing the provided [[java.nio.ByteBuffer]].
-     *
-     * The ByteBuffer is duplicated but the underlying data is not copied.
-     */
-    @deprecated("Use Buf.ByteBuffer.Shared or Buf.ByteBuffer.Owned.", "6.23.0")
-    def apply(bb: java.nio.ByteBuffer): Buf = Owned(bb.duplicate)
-
     /** Extract a read-only view of the underlying [[java.nio.ByteBuffer]]. */
     def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] =
       Some(buf.underlying.asReadOnlyBuffer)
@@ -475,10 +450,6 @@ object Buf {
       def extract(buf: Buf): java.nio.ByteBuffer = copy(Owned.extract(buf))
     }
   }
-
-  /** Convert the Buf to a [[java.nio.ByteBuffer]]. */
-  @deprecated("Use Buf.ByteBuffer.Owned.extract.", "6.23.0")
-  def toByteBuffer(buf: Buf): java.nio.ByteBuffer = Buf.ByteBuffer.Owned.extract(buf)
 
   /**
    * Byte equality between two buffers. May copy.

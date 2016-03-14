@@ -6,18 +6,26 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-core: Removed deprecated methods from Buf.scala ``RB_ID=809948``
+    - Removed `c.t.io.Buf.ByteArray.apply`, replace usage with `Buf.ByteArray.Owned.apply`.
+    - Removed `c.t.io.Buf.ByteArray.unapply`, replace usage with `Buf.ByteArray.Owned.unapply`.
+    - Removed `c.t.io.Buf.ByteBuffer.apply`, replace usage with `Buf.ByteBuffer.Owned.apply`.
+    - Removed `c.t.io.Buf.toByteBuffer`, replace usage with `Buf.ByteBuffer.Owned.extract`.
+
 6.33.0  2016-03-10
 
 New Features:
 
   * util-core: AsyncSemaphore supports closing and draining of waiters via `fail`. ``RB_ID=807590``
 
-  * util-core: Add convenience methods `force`, `size`, `sum`, and `withEffect` to `AsyncStream`. 
+  * util-core: Add convenience methods `force`, `size`, `sum`, and `withEffect` to `AsyncStream`.
     ``RB_ID=808411``
 
 Bug Fixes:
 
-  * util-core: Fix nested functions `AsyncStream.++` to avoid stack overflow. ``RB_ID=804408`` 
+  * util-core: Fix nested functions `AsyncStream.++` to avoid stack overflow. ``RB_ID=804408``
 
 Deprecations:
 

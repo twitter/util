@@ -229,7 +229,7 @@ class BufTest extends FunSuite
 
     val bytes2 = Array[Byte](1,2,3,4,5,6,7,8,9,0)
     val buf2 = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes2, 3, 4))
-    assert(buf2 == Buf.ByteArray(4,5,6,7))
+    assert(buf2 == Buf.ByteArray.Owned(Array[Byte](4,5,6,7)))
 
     val Buf.ByteBuffer.Owned(byteBuffer) = buf
     assert(byteBuffer == bb)
@@ -413,7 +413,7 @@ class BufTest extends FunSuite
     val size = 50 * 1000
     val b = 'x'.toByte
     val bigBuf = (1 to size).foldLeft(Buf.Empty) {
-      case (buf, _) => buf concat Buf.ByteArray(b)
+      case (buf, _) => buf concat Buf.ByteArray.Owned(Array[Byte](b))
     }
 
     val expected = Array.fill(size) { 'x'.toByte }
