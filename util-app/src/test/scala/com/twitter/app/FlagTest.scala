@@ -64,8 +64,8 @@ class FlagTest extends FunSuite {
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
   }
 
-  class Ctx {
-    val flag = new Flags("test")
+  class Ctx(failFastUntilParsed: Boolean = false) {
+    val flag = new Flags("test", includeGlobal = false, failFastUntilParsed)
     val fooFlag = flag("foo", 123, "The foo value")
     val barFlag = flag("bar", "okay", "The bar value")
   }
@@ -401,10 +401,8 @@ class FlagTest extends FunSuite {
     assert(flagWithoutGlobal.formattedFlagValuesString() == localOnly)
   }
 
-  // TODO: uncomment after we add script parsing mode
-  /*
   test("Flag that needs parsing will complain without parsing") {
-    val flag = new Flag[Int]("foo", "bar", Left(() => 3))
+    val flag = new Flag[Int]("foo", "bar", Left(() => 3), failFastUntilParsed = true)
     intercept[IllegalStateException] {
       flag()
     }
@@ -413,7 +411,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flag that needs parsing ok after parsing") {
-    val flag = new Flag[Int]("foo", "bar", Left(() => 3))
+    val flag = new Flag[Int]("foo", "bar", Left(() => 3), failFastUntilParsed = true)
     intercept[IllegalStateException] {
       flag()
     }
@@ -422,7 +420,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flag that needs parsing ok resets properly") {
-    val flag = new Flag[Int]("foo", "bar", Left(() => 3))
+    val flag = new Flag[Int]("foo", "bar", Left(() => 3), failFastUntilParsed = true)
     flag.parse("4")
     assert(flag() == 4)
 
@@ -435,7 +433,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flags fail before parsing, OK after") {
-    val ctx = new Ctx()
+    val ctx = new Ctx(failFastUntilParsed = true)
     import ctx._
 
     intercept[IllegalStateException] {
@@ -446,7 +444,7 @@ class FlagTest extends FunSuite {
   }
 
   test("Flags reset properly with respect to failure") {
-    val ctx = new Ctx()
+    val ctx = new Ctx(failFastUntilParsed = true)
     import ctx._
 
     assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
@@ -459,5 +457,4 @@ class FlagTest extends FunSuite {
     assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
     assert(fooFlag() == 123)
   }
-   */
 }
