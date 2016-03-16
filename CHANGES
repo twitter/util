@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: Add `Throwables.unchecked` to help Java users deal with checked
+    exceptions. ``RB_ID=811441``
+
 API Changes:
 
   * util-core: Removed deprecated methods from Buf.scala ``RB_ID=809948``

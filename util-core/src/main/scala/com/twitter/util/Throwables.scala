@@ -4,6 +4,24 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 
 object Throwables {
+
+  /**
+   * Useful for Java developers calling an API that has thrown
+   * `Exceptions` declared and there is a need to treat these
+   * as an unchecked `Exception`.
+   *
+   * For example:
+   * {{{
+   * try {
+   *   return Await.result(aFuture);
+   * } catch (Exception e) {
+   *   return Throwables.unchecked(e);
+   * }
+   * }}}
+   */
+  def unchecked[Z](t: Throwable): Z =
+    throw t
+
   /**
    * Traverse a nested `Throwable`, flattening all causes into a Seq of
    * classname strings.
