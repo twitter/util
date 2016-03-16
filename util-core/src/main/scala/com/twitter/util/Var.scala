@@ -223,9 +223,28 @@ object Var {
    * Create a new, constant, v-valued Var.
    */
   def value[T](v: T): Var[T] = Value(v)
-  
+
   /**
    * Collect a collection of Vars into a Var of collection.
+   * Var.collect can result in a stack overflow if called with a large sequence.
+   * Var.collectIndependent breaks composition with respect to update propagation.
+   * That is, collectIndependent can fail to correctly update interdependent vars,
+   * but is safe for independent vars.
+   *
+   * {{{
+   *  // Example of difference between collect and collectIndependent:
+   *  val v1 = Var(1)
+   *  val v2 = v1.map(_*2)
+   *  val vCollect = Var.collect(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+   *  val vCollectIndependent = Var.collectIndependent(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+   *  val refCollect = new AtomicReference[Seq[(Int, Int)]]
+   *  vCollect.changes.build.register(Witness(refCollect))
+   *  val refCollectIndependent = new AtomicReference[Seq[(Int, Int)]]
+   *  vCollectIndependent.changes.build.register(Witness(refCollectIndependent))
+   *  v1() = 2
+   *  // refCollect == Vector((1,2), (2,4))
+   *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
+   * }}}
    */
   def collect[T: ClassTag, CC[X] <: Traversable[X]](vars: CC[Var[T]])
       (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]])
@@ -249,6 +268,66 @@ object Var {
       b ++= ts
       b.result()
     }
+  }
+
+  /**
+   * Collect a collection of Vars into a Var of collection.
+   * Var.collect can result in a stack overflow if called with a large sequence.
+   * Var.collectIndependent breaks composition with respect to update propagation.
+   * That is, collectIndependent can fail to correctly update interdependent vars,
+   * but is safe for independent vars.
+   *
+   * {{{
+   *  // Example of difference between collect and collectIndependent:
+   *  val v1 = Var(1)
+   *  val v2 = v1.map(_*2)
+   *  val vCollect = Var.collect(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+   *  val vCollectIndependent = Var.collectIndependent(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+   *  val refCollect = new AtomicReference[Seq[(Int, Int)]]
+   *  vCollect.changes.build.register(Witness(refCollect))
+   *  val refCollectIndependent = new AtomicReference[Seq[(Int, Int)]]
+   *  vCollectIndependent.changes.build.register(Witness(refCollectIndependent))
+   *  v1() = 2
+   *  // refCollect == Vector((1,2), (2,4))
+   *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
+   * }}}
+   */
+  def collectIndependent[T: ClassTag, CC[X] <: Traversable[X]](
+    vars: CC[Var[T]]
+  )(
+    implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]
+  ) : Var[CC[T]] =
+    async(newBuilder().result()) { v =>
+      val N = vars.size
+      val cur = new AtomicReferenceArray[T](N)
+      @volatile var filling = true
+      def build() = {
+        val b = newBuilder()
+        var i = 0
+        while (i < N) {
+          b += cur.get(i)
+          i += 1
+        }
+        b.result()
+      }
+
+      def publish(i: Int, newValue: T) = {
+        cur.set(i, newValue)
+        if (!filling) v() = build()
+      }
+
+      val closes = new Array[Closable](N)
+      var i = 0
+      for (v <- vars) {
+        val j = i
+        closes(j) = v.observe(0, Observer(newValue => publish(j, newValue)))
+        i += 1
+      }
+
+      filling = false
+      v() = build()
+
+      Closable.all(closes:_*)
   }
 
   /**

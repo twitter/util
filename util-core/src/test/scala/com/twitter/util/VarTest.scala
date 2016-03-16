@@ -239,7 +239,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     vars(1).update(999)
     assert(ref.get == Set(1,999,3))
   }
-  
+
   test("Var.collect: ordering") {
     val v1 = Var(1)
     val v2 = v1.map(_*2)
@@ -252,6 +252,20 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     
     v1() = 2
     assert(ref.get == Seq((1, 2), (2, 4)))
+  }
+
+  test("Var.collectIndependent: not overflowing the stack") {
+    val vars: Seq[Var[Int]] = for (i <- 1 to 10000) yield {
+      Var(i) // vars(i-1).map(_+2)
+    }
+
+    intercept[java.lang.StackOverflowError] {
+      val v = Var.collect(vars)
+      v.observe { x => }
+    }
+
+    val v = Var.collectIndependent(vars)
+    v.observe { x => }
   }
 
   /**
