@@ -32,6 +32,11 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
   def map[U](f: T => U): Activity[U] = collect { case x => f(x) }
 
   /**
+   * Map the states of a T-typed activity to a U-typed one.
+   */
+  def mapState[U](f: Activity.State[T] => Activity.State[U]): Activity[U] = Activity(states.map(f))
+
+  /**
    * Build a new activity by applying `f` to each value. When
    * `f` is not defined for this activity's current value, the derived
    * activity becomes pending.
@@ -107,6 +112,18 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
    * exception if the activity is in pending state or has failed.
    */
   def sample(): T = Activity.sample(this)
+
+  /**
+   * Stabilize the value of this activity such that
+   * once an [[com.twitter.util.Activity.Ok Ok]] value has been returned
+   * it stops error propagation and instead returns the last Ok value.
+   */
+  def stabilize: Activity[T] =
+    Activity(states.foldLeft[Activity.State[T]](Activity.Pending) {
+      case (_, next@Activity.Ok(_)) => next
+      case (prev@Activity.Ok(_), _) => prev
+      case (_, next)                => next
+    })
 }
 
 /**
@@ -126,7 +143,7 @@ object Activity {
 
     (Activity(v), w)
   }
-  
+
   /**
    * Constructs an Activity from a state Event.
    */

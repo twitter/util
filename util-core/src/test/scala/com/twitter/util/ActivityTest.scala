@@ -178,22 +178,48 @@ class ActivityTest extends FunSuite {
     val (b, bw) = Activity[String]()
 
     val ab = Activity.join(a, b)
-    
+
     val ref = new AtomicReference[Seq[Activity.State[(Int, String)]]]
     ab.states.build.register(Witness(ref))
-    
+
     assert(ref.get == Seq(Activity.Pending))
-    
+
     aw.notify(Return(1))
     assert(ref.get == Seq(Activity.Pending, Activity.Pending))
     bw.notify(Return("ok"))
     assert(ref.get == Seq(Activity.Pending, Activity.Pending, Activity.Ok((1, "ok"))))
-    
+
     val exc = new Exception
     aw.notify(Throw(exc))
     assert(ref.get == Seq(
-      Activity.Pending, Activity.Pending, 
+      Activity.Pending, Activity.Pending,
       Activity.Ok((1, "ok")), Activity.Failed(exc)))
   }
 
+  test("Activity.stabilize") {
+    val ex = new Exception
+    val v = Var[Activity.State[Int]](Activity.Pending)
+    val a = Activity(v)
+    val w = Witness(v)
+
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    a.stabilize.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Pending))
+
+    w.notify(Activity.Failed(ex))
+    assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex)))
+
+    w.notify(Activity.Ok(1))
+    assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex), Activity.Ok(1)))
+
+    w.notify(Activity.Failed(ex))
+    assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex), Activity.Ok(1), Activity.Ok(1)))
+
+    w.notify(Activity.Pending)
+    assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex), Activity.Ok(1), Activity.Ok(1), Activity.Ok(1)))
+
+    w.notify(Activity.Ok(2))
+    assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex), Activity.Ok(1), Activity.Ok(1), Activity.Ok(1), Activity.Ok(2)))
+  }
 }
