@@ -20,7 +20,6 @@ import scala.reflect.ClassTag
  *
  * @note Vars do not always perform the minimum amount of
  * re-computation.
- *
  * @note There are no well-defined error semantics for Var. Vars are
  * computed lazily, and the updating thread will receive any
  * exceptions thrown while computing derived Vars.
@@ -184,30 +183,41 @@ object Var {
     new UpdatableVar(init)
 
   /**
-   * Constructs a Var from an initial value plus an event stream of
+   * Constructs a [[Var]] from an initial value plus an event stream of
    * changes. Note that this eagerly subscribes to the event stream;
-   * it is unsubscribed whenever the returned Var is collected.
+   * it is unsubscribed whenever the returned [[Var]] is collected.
    */
   def apply[T](init: T, e: Event[T]): Var[T] = {
     val v = Var(init)
-    Closable.closeOnCollect(e.register(Witness(v)), v)
+
+    // In order to support unsubscribing from e when v is no longer referenced
+    // we must avoid e keeping a strong reference to v.
+    val witness = Witness.weakReference(v)
+    Closable.closeOnCollect(e.register(witness), v)
+
     v
   }
 
   /**
    * Patch reconstructs a [[Var]] based on observing the incremental
-   * changes presented in the underlying [[Diff]]s.
+   * changes presented in the underlying [[Diff Diffs]].
    *
    * Note that this eagerly subscribes to the event stream;
-   * it is unsubscribed whenever the returned Var is collected.
+   * it is unsubscribed whenever the returned [[Var]] is collected.
    */
   def patch[CC[_]: Diffable, T](diffs: Event[Diff[CC, T]]): Var[CC[T]] = {
     val v = Var(Diffable.empty[CC, T]: CC[T])
-    Closable.closeOnCollect(diffs.respond { diff =>
+
+    // In order to support unsubscribing from diffs when v is no longer referenced
+    // we must avoid diffs keeping a strong reference to v.
+    val witness = Witness.weakReference { diff: Diff[CC, T] =>
       synchronized {
-        v() = diff.patch(v())
+        v.update(diff.patch(v()))
       }
-    }, v)
+    }
+    val closable = diffs.register(witness)
+    Closable.closeOnCollect(closable, v)
+
     v
   }
 

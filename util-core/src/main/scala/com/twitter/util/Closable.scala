@@ -71,11 +71,11 @@ object Closable {
       val fs = closables.map(_.close(deadline))
       for (f <- fs) {
         f.poll match {
-          case Some(Return(_)) => 
+          case Some(Return(_)) =>
           case _ => return Future.join(fs)
         }
       }
-      
+
       Future.Done
     }
   }
@@ -89,7 +89,7 @@ object Closable {
     private final def closeSeq(deadline: Time, closables: Seq[Closable]): Future[Unit] =
       closables match {
         case Seq() => Future.Done
-        case Seq(hd, tl@_*) => 
+        case Seq(hd, tl@_*) =>
           val f = hd.close(deadline)
           f.poll match {
             case Some(Return.Unit) => closeSeq(deadline, tl)
@@ -152,6 +152,9 @@ object Closable {
 
   /**
    * Close the given closable when `obj` is collected.
+   *
+   * Care should be taken to ensure that `closable` has no references
+   * back to `obj` or it will prevent the close from taking place.
    */
   def closeOnCollect(closable: Closable, obj: Object): Unit = refs.synchronized {
     refs.put(new PhantomReference(obj, refq), closable)

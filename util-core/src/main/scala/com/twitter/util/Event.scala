@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import scala.annotation.tailrec
 import scala.collection.generic.CanBuild
@@ -413,32 +414,67 @@ abstract class AbstractWitness[T] extends Witness[T]
  */
 object Witness {
   /**
-   * Create a Witness from an atomic reference.
+   * Create a [[Witness]] from an [[AtomicReference atomic reference]].
    */
   def apply[T](ref: AtomicReference[T]): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = ref.set(t)
   }
 
   /**
-   * Create a Witness from a [[com.twitter.util.Promise Promise]].
+   * Create a [[Witness]] from a [[com.twitter.util.Promise Promise]].
    */
   def apply[T](p: Promise[T]): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = p.updateIfEmpty(Return(t))
   }
 
   /**
-   * Create a Witness from a function.
+   * Create a [[Witness]] from a [[Function1]].
    */
   def apply[T](f: T => Unit): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = f(t)
   }
 
+  /**
+   * Create a [[Witness]] from an [[Updatable]].
+   */
   def apply[T](u: Updatable[T]): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = u() = t
   }
 
   /**
-   * A Witness which prints to the console.
+   * Create a [[Witness]] which keeps only a `java.lang.ref.WeakReference`
+   * to the [[Function1]].
+   *
+   * @see [[Var.patch]] for example.
+   */
+  def weakReference[T](f: T => Unit): Witness[T] = new Witness[T] {
+    private[this] val weakRef = new WeakReference(f)
+
+    def notify(note: T): Unit = {
+      val fn = weakRef.get()
+      if (fn != null)
+        fn(note)
+    }
+  }
+
+  /**
+   * Create a [[Witness]] which keeps only a `java.lang.ref.WeakReference`
+   * to `u`.
+   *
+   * @see [[Var.apply]] for example.
+   */
+  def weakReference[T](u: Updatable[T]): Witness[T] = new Witness[T] {
+    private[this] val weakRef = new WeakReference(u)
+
+    def notify(note: T): Unit = {
+      val updatable = weakRef.get()
+      if (updatable != null)
+        updatable.update(note)
+    }
+  }
+
+  /**
+   * A [[Witness]] which prints to the console.
    */
   val printer: Witness[Any] = Witness(println(_))
 }
