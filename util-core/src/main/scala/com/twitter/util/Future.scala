@@ -807,19 +807,6 @@ abstract class Future[+A] extends Awaitable[A] {
   def ensure(f: => Unit): Future[A] = respond { _ => f }
 
   /**
-   * Block indefinitely, wait for the result of the Future to be available.
-   */
-  @deprecated("Use Await.result", "6.2.x")
-  def apply(): A = Await.result(this, DEFAULT_TIMEOUT)
-
-  /**
-   * Block, but only as long as the given `timeout`, for the result
-   * of the Future to be available.
-   */
-  @deprecated("Use Await.result", "6.2.x")
-  def apply(timeout: Duration): A = get(timeout)()
-
-  /**
    * Alias for [[Future!.apply() apply()]].
    */
   @deprecated("Use Await.result", "6.2.x")

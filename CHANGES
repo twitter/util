@@ -19,6 +19,8 @@ API Changes:
     - Removed `c.t.io.Buf.ByteBuffer.apply`, replace usage with `Buf.ByteBuffer.Owned.apply`.
     - Removed `c.t.io.Buf.toByteBuffer`, replace usage with `Buf.ByteBuffer.Owned.extract`.
 
+  * util-core: Removed deprecated `Future.apply` methods ``RB_ID=811617``
+
 Bug Fixes:
 
   * util-core: Fix memory leak in `Var.apply(T, Event[T])` and `Var.patch`.
