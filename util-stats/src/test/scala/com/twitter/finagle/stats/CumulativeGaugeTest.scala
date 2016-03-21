@@ -44,6 +44,7 @@ class CumulativeGaugeTest extends FunSuite {
     assert(0 == gauge.numDeregisters.get)
   }
 
+  if (!sys.props.contains("SKIP_FLAKY"))
   test("a CumulativeGauge with size = 1 should deregister after a System.gc when no references are held onto") {
     val gauge = new TestGauge()
     var added = gauge.addGauge { 1.0f }
