@@ -322,14 +322,14 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
   test("takeWhile") {
-    forAll { (as: List[Int], p: Int => Boolean) =>
-      assert(toSeq(fromSeq(as).takeWhile(p)) == as.takeWhile(p))
+    forAll(genListAndSentinel) { case (as, x) =>
+      assert(toSeq(fromSeq(as).takeWhile(_ != x)) == as.takeWhile(_ != x))
     }
   }
 
   test("dropWhile") {
-    forAll { (as: List[Int], p: Int => Boolean) =>
-      assert(toSeq(fromSeq(as).dropWhile(p)) == as.dropWhile(p))
+    forAll(genListAndSentinel) { case (as, x) =>
+      assert(toSeq(fromSeq(as).dropWhile(_ != x)) == as.dropWhile(_ != x))
     }
   }
 
@@ -664,6 +664,11 @@ private object AsyncStreamTest {
     as <- Arbitrary.arbitrary[List[Int]]
     n <- Gen.choose(0, as.length)
   } yield (as, n)
+
+  val genListAndSentinel = for {
+    as <- Arbitrary.arbitrary[List[Int]]
+    n <- Gen.choose(0, as.length - 1)
+  } yield (as, as(n))
 
   def await[T](fut: Future[T]) = Await.result(fut, 100.milliseconds)
 
