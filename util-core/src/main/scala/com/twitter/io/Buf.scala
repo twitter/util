@@ -68,7 +68,10 @@ trait Buf { outer =>
   }
 }
 
-private[io] case class ConcatBuf(chain: Vector[Buf]) extends Buf {
+/**
+ * A Buf that concat multiple Bufs together
+ */
+case class ConcatBuf(chain: Vector[Buf]) extends Buf {
   require(chain.length > 0)
 
   override def concat(right: Buf): Buf = right match {
@@ -195,7 +198,7 @@ abstract class AbstractBuf extends Buf
  * The Shared variants, on the other hand, ensure that the Buf shares no state
  * with the caller (at the cost of additional allocation).
  *
- * Note: There is a Java-friendly API for this object: [[com.twitter.io.Bufs]].
+ * Note: There is a Java-friendly API for this object: [[com.twitter.io.Buf]].
  */
 object Buf {
   private class NoopBuf extends Buf {
@@ -561,7 +564,7 @@ object Buf {
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  private[io] abstract class StringCoder(charset: Charset) {
+  abstract class StringCoder(charset: Charset) {
 
     /**
      * Encode the String to its Buf representation per the charset
