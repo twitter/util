@@ -1,11 +1,7 @@
 package com.twitter.cache
 
 import com.twitter.util.Future
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import scala.collection.mutable
-import scala.collection.JavaConverters.mapAsScalaConcurrentMapConverter
 
 // TODO: should also check for races
 abstract class AbstractFutureCacheTest extends FunSuite {

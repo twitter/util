@@ -1,7 +1,6 @@
 package com.twitter.util
 
 import org.openjdk.jmh.annotations._
-import org.openjdk.jmh.infra.Blackhole
 
 // ./sbt 'project util-benchmark' 'run .*TimeBenchmark.*'
 @State(Scope.Benchmark)

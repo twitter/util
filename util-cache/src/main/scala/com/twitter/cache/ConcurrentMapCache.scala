@@ -1,7 +1,6 @@
 package com.twitter.cache
 
 import com.twitter.util.{Promise, Future}
-import scala.annotation.tailrec
 import java.util.concurrent.ConcurrentMap
 
 /**

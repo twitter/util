@@ -1,8 +1,7 @@
 package com.twitter.jvm
 
 import com.twitter.conversions.storage._
-import com.twitter.jvm.Jvm.MetaspaceUsage
-import com.twitter.util.{StorageUnit, Time}
+import com.twitter.util.Time
 
 object NilJvm extends Jvm {
   val opts: Opts = new Opts {

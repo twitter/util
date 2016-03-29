@@ -118,7 +118,6 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
     consumeReader(size)
   })
 
-  import Spool.*::
   private[this] def mkSpool(n: Int): Future[Spool[Buf]] =
     if (n <= 0) Future.value(Spool.empty)
     else source().map(_ *:: mkSpool(n - 1))

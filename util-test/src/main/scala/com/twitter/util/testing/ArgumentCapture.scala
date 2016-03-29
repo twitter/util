@@ -1,6 +1,5 @@
 package com.twitter.util.testing
 
-import java.util.{List => JList}
 import org.mockito.ArgumentCaptor
 import org.mockito.exceptions.Reporter
 import scala.collection.JavaConverters._
@@ -1131,4 +1130,3 @@ trait ArgumentCapture {
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V](func).lastOption.getOrElse(noArgWasCaptured())
 
 }
-

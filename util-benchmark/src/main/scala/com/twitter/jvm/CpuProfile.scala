@@ -3,8 +3,6 @@ package com.twitter.jvm
 import java.lang.management.ManagementFactory
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.{Options, OptionsBuilder}
 import scala.util.Random
 
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
