@@ -23,7 +23,9 @@ import scala.collection.JavaConverters._
  * assert(isr.counters(Seq("a", "b", "bar") == 0)) // fail
  * }}}
  **/
-class InMemoryStatsReceiver extends StatsReceiver {
+class InMemoryStatsReceiver
+  extends WithHistogramDetails
+  with StatsReceiver {
   val repr = this
 
   val counters: mutable.Map[Seq[String], Int] =
@@ -119,8 +121,30 @@ class InMemoryStatsReceiver extends StatsReceiver {
     stats.clear()
     gauges.clear()
   }
-}
 
+  private[this] def toHistogramDetail(addedValues: Seq[Float]): HistogramDetail = {
+    def nearestPosInt(f: Float): Int = {
+      if (f < 0) 0
+      else if (f >= Int.MaxValue) Int.MaxValue - 1
+      else f.toInt
+    }
+    
+    new HistogramDetail {
+      def counts = { 
+        addedValues
+          .map { x => nearestPosInt(x) }
+          .groupBy(identity)
+          .mapValues(_.size)
+          .toSeq.sortWith( _._1 < _._1)
+          .map { case (k, v) => BucketAndCount(k, k + 1, v) }
+      }
+    }
+  }
+
+  def histogramDetails: Map[String, HistogramDetail] = stats.toMap.map { 
+    case (k, v) => (k.mkString("/"), toHistogramDetail(v))
+  }
+}
 
 /**
  * A variation of [[Counter]] that also supports reading of the current value via the `apply` method.
