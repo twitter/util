@@ -80,6 +80,28 @@ class InMemoryStatsReceiverTest extends FunSuite
     assert("Stat(a/b=[1.0,2.0,3.0... (omitted 1 value(s))])" == s.toString)
   }
 
+  test("histogramDetails when empty") {
+    val stats = new InMemoryStatsReceiver()
+    assert(stats.histogramDetails == Map.empty)
+  }
 
+  test("histogramDetails edges") {
+    val stats = new InMemoryStatsReceiver()
+    val s1 = stats.stat("a", "b")
+    val s2 = stats.stat("a", "c")
 
+    // test counting and edge cases
+    s1.add(Int.MaxValue)
+    s1.add(0)
+    s1.add(Int.MaxValue)
+    s1.add(0)
+
+    // test other edges cases
+    s2.add(-5)
+    s2.add(Long.MaxValue)
+    assert(stats.histogramDetails("a/b").counts == 
+      Seq(BucketAndCount(0, 1, 2), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 2)))
+    assert(stats.histogramDetails("a/c").counts == 
+      Seq(BucketAndCount(0, 1, 1), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 1)))
+  }
 }

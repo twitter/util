@@ -135,7 +135,7 @@ class InMemoryStatsReceiver
           .map { x => nearestPosInt(x) }
           .groupBy(identity)
           .mapValues(_.size)
-          .toSeq.sortWith( _._1 < _._1)
+          .toSeq.sortWith(_._1 < _._1)
           .map { case (k, v) => BucketAndCount(k, k + 1, v) }
       }
     }
