@@ -155,17 +155,48 @@ object Activity {
    * of values.
    *
    * @usecase def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
-   *
-   *   @inheritdoc
    */
-  def collect[T: ClassTag, CC[X] <: Traversable[X]](acts: CC[Activity[T]])
-      (implicit newBuilder: CanBuild[T, CC[T]])
-      : Activity[CC[T]] = {
+  def collect[T: ClassTag, CC[X] <: Traversable[X]](
+    acts: CC[Activity[T]]
+  )(
+    implicit newBuilder: CanBuild[T, CC[T]]
+  ): Activity[CC[T]] = {
+    collect(acts, false)
+  }
+
+  /**
+   * Collect a collection of activities into an activity of a collection
+   * of values. This version relies on [[Var]]'s collectIndependent, and has
+   * the same benefits and drawbacks of that method.
+   *
+   * Like Var.collectIndependent this is a workaround and should be deprecated when a version
+   * of Var.collect without a stack overflow issue is implemented.
+   *
+   * @usecase def collectIndependent[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
+   */
+  def collectIndependent[T: ClassTag, CC[X] <: Traversable[X]](
+    acts: CC[Activity[T]]
+  )(
+    implicit newBuilder: CanBuild[T, CC[T]]
+  ): Activity[CC[T]] = {
+    collect(acts, true)
+  }
+
+  private[this] def collect[T: ClassTag, CC[X] <: Traversable[X]](
+    acts: CC[Activity[T]],
+    collectIndependent: Boolean
+  )(
+    implicit newBuilder: CanBuild[T, CC[T]]
+  ): Activity[CC[T]] = {
     if (acts.isEmpty)
       return Activity.value(newBuilder().result)
 
     val states: Traversable[Var[State[T]]] = acts.map(_.run)
-    val stateVar: Var[Traversable[State[T]]] = Var.collect(states)
+    val stateVar: Var[Traversable[State[T]]] = if (collectIndependent) {
+      Var.collectIndependent(states)
+    } else {
+      Var.collect(states)
+    }
 
     def flip(states: Traversable[State[T]]): State[CC[T]] = {
       val notOk = states find {
