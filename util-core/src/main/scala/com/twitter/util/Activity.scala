@@ -34,7 +34,7 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
   /**
    * Map the states of a T-typed activity to a U-typed one.
    */
-  def mapState[U](f: Activity.State[T] => Activity.State[U]): Activity[U] = Activity(states.map(f))
+  def mapState[U](f: Activity.State[T] => Activity.State[U]): Activity[U] = Activity(run.map(f))
 
   /**
    * Build a new activity by applying `f` to each value. When
