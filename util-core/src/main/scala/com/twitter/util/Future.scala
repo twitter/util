@@ -728,7 +728,8 @@ abstract class FutureTransformer[-A, +B] {
    *
    * ''Note'': this method will throw an `AbstractMethodError` if it is not overridden.
    */
-  def map(value: A): B = throw new AbstractMethodError
+  def map(value: A): B =
+    throw new AbstractMethodError(s"`map` must be implemented by $this")
 
   /**
    * Invoked if the computation completes unsuccessfully. Returns the
