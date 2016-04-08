@@ -323,7 +323,8 @@ object Util extends Build {
     settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
-    name := "util-stats"
+    name := "util-stats",
+    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
   ).dependsOn(utilCore, utilLint)
 
   lazy val utilTest = Project(

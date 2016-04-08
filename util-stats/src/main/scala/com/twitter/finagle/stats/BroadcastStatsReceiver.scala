@@ -1,18 +1,6 @@
 package com.twitter.finagle.stats
 
 /**
- * Marker for a [[StatsReceiver]] that broadcasts metrics to more
- * than one underlying [[StatsReceiver]].
- */
-trait BroadcastStatsReceiver {
-  /**
-   * The underlying [[StatsReceiver StatsReceivers]] that are being
-   * broadcast to.
-   */
-  def statsReceivers: Seq[StatsReceiver]
-}
-
-/**
  * BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
  * StatsReceivers (n).
  */
@@ -25,7 +13,7 @@ object BroadcastStatsReceiver {
   }
 
   private class Two(first: StatsReceiver, second: StatsReceiver) extends StatsReceiver
-    with BroadcastStatsReceiver
+    with DelegatingStatsReceiver
   {
     val repr = this
 
@@ -44,14 +32,14 @@ object BroadcastStatsReceiver {
       }
     }
 
-    def statsReceivers: Seq[StatsReceiver] = Seq(first, second)
+    def underlying: Seq[StatsReceiver] = Seq(first, second)
 
     override def toString: String =
       s"Broadcast($first, $second)"
   }
 
   private class N(srs: Seq[StatsReceiver]) extends StatsReceiver
-    with BroadcastStatsReceiver
+    with DelegatingStatsReceiver
   {
     val repr = this
 
@@ -66,10 +54,10 @@ object BroadcastStatsReceiver {
       def remove(): Unit = gauges.foreach { _.remove() }
     }
 
-    def statsReceivers: Seq[StatsReceiver] = srs
+    def underlying: Seq[StatsReceiver] = srs
 
     override def toString: String =
-      s"Broadcast(${statsReceivers.mkString(", ")})"
+      s"Broadcast(${underlying.mkString(", ")})"
   }
 }
 

@@ -11,7 +11,7 @@ package com.twitter.finagle.stats
  * - "/errors/clientErrors/java_net_ConnectException"
  */
 class RollupStatsReceiver(val self: StatsReceiver)
-  extends StatsReceiver with Proxy
+  extends StatsReceiver with DelegatingStatsReceiver with Proxy
 {
   val repr = self.repr
 
@@ -45,4 +45,6 @@ class RollupStatsReceiver(val self: StatsReceiver)
     private[this] val underlying = tails(names) map { self.addGauge(_: _*)(f) }
     def remove() = underlying foreach { _.remove() }
   }
+
+  def underlying: Seq[StatsReceiver] = Seq(self)
 }

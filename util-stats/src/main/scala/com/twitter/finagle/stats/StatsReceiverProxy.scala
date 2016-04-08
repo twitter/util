@@ -1,6 +1,6 @@
 package com.twitter.finagle.stats
 
-trait StatsReceiverProxy extends StatsReceiver {
+trait StatsReceiverProxy extends StatsReceiver with DelegatingStatsReceiver {
   def self: StatsReceiver
 
   val repr = self
@@ -10,4 +10,5 @@ trait StatsReceiverProxy extends StatsReceiver {
   def addGauge(names: String*)(f: => Float): Gauge = self.addGauge(names:_*)(f)
 
   override def toString: String = self.toString
+  def underlying: Seq[StatsReceiver] = Seq(self)
 }

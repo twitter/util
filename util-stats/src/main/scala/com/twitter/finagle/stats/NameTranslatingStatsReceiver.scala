@@ -11,7 +11,7 @@ package com.twitter.finagle.stats
 abstract class NameTranslatingStatsReceiver(
     val self: StatsReceiver,
     namespacePrefix: String)
-  extends StatsReceiver
+  extends StatsReceiver with DelegatingStatsReceiver
 {
   def this(self: StatsReceiver) = this(self, "<namespacePrefix>")
 
@@ -30,4 +30,6 @@ abstract class NameTranslatingStatsReceiver(
 
   def addGauge(name: String*)(f: => Float): Gauge =
     self.addGauge(translate(name): _*)(f)
+
+  def underlying: Seq[StatsReceiver] = Seq(self)
 }

@@ -10,11 +10,13 @@ package com.twitter.finagle.stats
  *        blacklist, and false to let it pass through
  */
 class BlacklistStatsReceiver(
-    underlying: StatsReceiver,
+    self: StatsReceiver,
     blacklisted: Seq[String] => Boolean)
-  extends StatsReceiver {
-  val repr = underlying.repr
-  override def isNull = underlying.isNull
+  extends StatsReceiver
+  with DelegatingStatsReceiver {
+
+  val repr = self.repr
+  override def isNull = self.isNull
 
   def counter(name: String*): Counter = getStatsReceiver(name).counter(name: _*)
 
@@ -23,9 +25,10 @@ class BlacklistStatsReceiver(
   def addGauge(name: String*)(f: => Float): Gauge = getStatsReceiver(name).addGauge(name: _*)(f)
 
   private[this] def getStatsReceiver(name: Seq[String]): StatsReceiver =
-    if (blacklisted(name)) NullStatsReceiver else underlying
+    if (blacklisted(name)) NullStatsReceiver else self
 
   override def toString: String =
-    s"BlacklistStatsReceiver($underlying)"
+    s"BlacklistStatsReceiver($self)"
 
+  def underlying: Seq[StatsReceiver] = Seq(self)
 }

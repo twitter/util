@@ -11,6 +11,10 @@ New Features:
   * util-core: Add `Throwables.unchecked` to help Java users deal with checked
     exceptions. ``RB_ID=811441``
 
+  * util-stats: Can now get from a `com.twitter.finagle.stats.StatsReceiver`` to all "leaf"
+    StatsReceivers that don't delegate to another StatsReceiver with
+    `com.twitter.finagle.stats.DelegatingStatsReceiver.all`.  ``RB_ID=819519``
+
 API Changes:
 
   * util-core: Removed deprecated methods from Buf.scala ``RB_ID=809948``
@@ -20,6 +24,10 @@ API Changes:
     - Removed `c.t.io.Buf.toByteBuffer`, replace usage with `Buf.ByteBuffer.Owned.extract`.
 
   * util-core: Removed deprecated `Future.apply` methods ``RB_ID=811617``
+
+  * util-stats: Removed `com.twitter.finagle.stats.BroadcastStatsReceiver` marker trait in favor of
+    `com.twiter.finagle.stats.DelegatingStatsReceiver` marker trait, which lets us specify that we
+    only delegate to a single `com.twitter.finagle.stats.StatsReceiver`.  ``RB_ID=819519``
 
 Bug Fixes:
 
