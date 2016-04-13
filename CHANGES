@@ -29,6 +29,9 @@ API Changes:
     `com.twiter.finagle.stats.DelegatingStatsReceiver` marker trait, which lets us specify that we
     only delegate to a single `com.twitter.finagle.stats.StatsReceiver`.  ``RB_ID=819519``
 
+  * util-zk-common: Removed `com.twitter.zk.ServerSet`. Use implementations of ServerSets in the
+    finagle-serversets project. ``RB_ID=821355``
+
 Bug Fixes:
 
   * util-core: Fix memory leak in `Var.apply(T, Event[T])` and `Var.patch`.
