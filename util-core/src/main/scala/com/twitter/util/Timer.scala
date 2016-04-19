@@ -186,12 +186,16 @@ class ReferenceCountingTimer(factory: () => Timer)
  *
  * @param isDaemon whether or not the associated [[Thread]] should run
  *   as a daemon.
- *
  * @param name used as the name of the associated [[Thread]] when specified.
  */
 class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
   def this(isDaemon: Boolean) = this(isDaemon, None)
   def this() = this(false)
+
+  override def toString: String = name match {
+    case Some(n) => s"com.twitter.util.JavaTimer($n)"
+    case None => super.toString
+  }
 
   private[this] val underlying = name match {
     case Some(n) => new java.util.Timer(n, isDaemon)
