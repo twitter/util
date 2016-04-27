@@ -164,7 +164,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from an <a href="Updatable.html" class="extype" name="com.twitter.util.Updatable">Updatable</a>.</p>
     </li><li name="com.twitter.util.Witness#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](f:T=&gt;Unit):com.twitter.util.Witness[T]"></a>
       <a id="apply[T]((T)⇒Unit):Witness[T]"></a>
@@ -181,7 +181,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Create a Witness from a function.</p>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from a <span class="extype" name="Function1">Function1</span>.</p>
     </li><li name="com.twitter.util.Witness#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](p:com.twitter.util.Promise[T]):com.twitter.util.Witness[T]"></a>
       <a id="apply[T](Promise[T]):Witness[T]"></a>
@@ -198,7 +198,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Create a Witness from a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p>
     </li><li name="com.twitter.util.Witness#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](ref:java.util.concurrent.atomic.AtomicReference[T]):com.twitter.util.Witness[T]"></a>
       <a id="apply[T](AtomicReference[T]):Witness[T]"></a>
@@ -215,7 +215,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Create a Witness from an atomic reference.</p>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from an <span class="extype" name="AtomicReference">atomic reference</span>.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -431,7 +431,7 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">A Witness which prints to the console.</p>
+      <p class="shortcomment cmt">A <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which prints to the console.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -535,6 +535,46 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Witness#weakReference" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="weakReference[T](u:com.twitter.util.Updatable[T]):com.twitter.util.Witness[T]"></a>
+      <a id="weakReference[T](Updatable[T]):Witness[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">weakReference</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="u">u: <a href="Updatable.html" class="extype" name="com.twitter.util.Updatable">Updatable</a>[<span class="extype" name="com.twitter.util.Witness.weakReference.T">T</span>]</span>)</span><span class="result">: <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.Witness.weakReference.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Witness$@weakReference[T](u:com.twitter.util.Updatable[T]):com.twitter.util.Witness[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
+to <code>u</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
+to <code>u</code>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Var$.html#apply[T](init:T,e:com.twitter.util.Event[T]):com.twitter.util.Var[T]" class="extmbr" name="com.twitter.util.Var#apply">Var.apply</a> for example.</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.Witness#weakReference" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="weakReference[T](f:T=&gt;Unit):com.twitter.util.Witness[T]"></a>
+      <a id="weakReference[T]((T)⇒Unit):Witness[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">weakReference</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Witness.weakReference.T">T</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.Witness.weakReference.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Witness$@weakReference[T](f:T=&gt;Unit):com.twitter.util.Witness[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
+to the <span class="extype" name="Function1">Function1</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
+to the <span class="extype" name="Function1">Function1</span>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Var$.html#patch[CC[_],T](diffs:com.twitter.util.Event[com.twitter.util.Diff[CC,T]])(implicitevidence$2:com.twitter.util.Diffable[CC]):com.twitter.util.Var[CC[T]]" class="extmbr" name="com.twitter.util.Var#patch">Var.patch</a> for example.</p></span></dd></dl></div>
     </li></ol>
             </div>
 

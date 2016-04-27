@@ -45,7 +45,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">BlacklistStatsReceiver</span><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <span class="name">BlacklistStatsReceiver</span><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
       </span>
       </h4>
       
@@ -53,7 +53,7 @@
 blacklisted, nothing is recorded.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a>, <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -71,7 +71,7 @@ blacklisted, nothing is recorded.
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.finagle.stats.BlacklistStatsReceiver"><span>BlacklistStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.finagle.stats.BlacklistStatsReceiver"><span>BlacklistStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.DelegatingStatsReceiver"><span>DelegatingStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -91,7 +91,7 @@ blacklisted, nothing is recorded.
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(underlying:com.twitter.finagle.stats.StatsReceiver,blacklisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.BlacklistStatsReceiver"></a>
+      <a id="&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,blacklisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.BlacklistStatsReceiver"></a>
       <a id="&lt;init&gt;:BlacklistStatsReceiver"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -99,10 +99,10 @@ blacklisted, nothing is recorded.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">BlacklistStatsReceiver</span><span class="params">(<span name="underlying">underlying: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="blacklisted">blacklisted: (<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span>
+        <span class="name">BlacklistStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="blacklisted">blacklisted: (<a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.BlacklistStatsReceiver@&lt;init&gt;(underlying:com.twitter.finagle.stats.StatsReceiver,blacklisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.BlacklistStatsReceiver" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.BlacklistStatsReceiver@&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,blacklisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.BlacklistStatsReceiver" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -619,6 +619,24 @@ usable from java.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#underlying" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="underlying:Seq[com.twitter.finagle.stats.StatsReceiver]"></a>
+      <a id="underlying:Seq[StatsReceiver]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">underlying</span><span class="result">: <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.BlacklistStatsReceiver@underlying:Seq[com.twitter.finagle.stats.StatsReceiver]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that the class delegates to.</p><div class="fullcomment"><div class="comment cmt"><p>The underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that the class delegates to.</p><p>Must be nonempty.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -697,7 +715,9 @@ usable from java.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
+        <div class="parent" name="com.twitter.finagle.stats.DelegatingStatsReceiver">
+              <h3>Inherited from <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></h3>
+            </div><div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
               <h3>Inherited from <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>

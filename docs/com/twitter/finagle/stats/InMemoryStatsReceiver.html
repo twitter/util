@@ -45,7 +45,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">InMemoryStatsReceiver</span><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <span class="name">InMemoryStatsReceiver</span><span class="result"> extends <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a> with <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       </h4>
       
@@ -59,7 +59,7 @@ irs.print(<span class="std">Console</span>.out) <span class="cmt">// will print 
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>) == <span class="num">0</span>)) <span class="cmt">// ok</span>
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"bar"</span>) == <span class="num">0</span>)) <span class="cmt">// fail</span></pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -77,7 +77,7 @@ assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.finagle.stats.InMemoryStatsReceiver"><span>InMemoryStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.finagle.stats.InMemoryStatsReceiver"><span>InMemoryStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.WithHistogramDetails"><span>WithHistogramDetails</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -410,6 +410,23 @@ assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#histogramDetails" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="histogramDetails:Map[String,com.twitter.finagle.stats.HistogramDetail]"></a>
+      <a id="histogramDetails:Map[String,HistogramDetail]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">histogramDetails</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="HistogramDetail.html" class="extype" name="com.twitter.finagle.stats.HistogramDetail">HistogramDetail</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.InMemoryStatsReceiver@histogramDetails:Map[String,com.twitter.finagle.stats.HistogramDetail]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> → <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -784,6 +801,8 @@ usable from java.
         <div id="inheritedMembers">
         <div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
               <h3>Inherited from <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></h3>
+            </div><div class="parent" name="com.twitter.finagle.stats.WithHistogramDetails">
+              <h3>Inherited from <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">

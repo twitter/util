@@ -156,6 +156,24 @@ bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="A
       </a>
     </span>
       
+    </li><li name="com.twitter.io.ConcatBuf" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConcatBufextendsBufwithProductwithSerializable"></a>
+      <a id="ConcatBuf:ConcatBuf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConcatBuf.html"><span class="name">ConcatBuf</span></a><span class="params">(<span name="chain">chain: <a href="../../../scala/package.html#Vector[+A]=scala.collection.immutable.Vector[A]" class="extmbr" name="scala.Vector">Vector</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>)</span><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.package@ConcatBufextendsBufwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A Buf that concat multiple Bufs together
+</p>
     </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a>
       <a id="InputStreamReader:InputStreamReader"></a>
@@ -274,7 +292,7 @@ Owned APIs, each of which with construction &amp; extraction utilities.</p><p>Th
 implementation; and so mutating the data structure invalidates a Buf's
 immutability constraint. Users must take care to handle this data
 immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
-with the caller (at the cost of additional allocation).</p><p>Note: There is a Java-friendly API for this object: <a href="Bufs.html" class="extype" name="com.twitter.io.Bufs">com.twitter.io.Bufs</a>.
+with the caller (at the cost of additional allocation).</p><p>Note: There is a Java-friendly API for this object: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a>.
 </p></div></div>
     </li><li name="com.twitter.io.BufReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BufReader"></a>

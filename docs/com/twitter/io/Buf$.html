@@ -56,7 +56,7 @@ Owned APIs, each of which with construction &amp; extraction utilities.</p><p>Th
 implementation; and so mutating the data structure invalidates a Buf's
 immutability constraint. Users must take care to handle this data
 immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
-with the caller (at the cost of additional allocation).</p><p>Note: There is a Java-friendly API for this object: <a href="Bufs.html" class="extype" name="com.twitter.io.Bufs">com.twitter.io.Bufs</a>.
+with the caller (at the cost of additional allocation).</p><p>Note: There is a Java-friendly API for this object: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
@@ -138,6 +138,27 @@ affected.</p><p>Modifications to the ByteBuffer's content will be
 visible to the resulting Buf. The ByteBuffer should
 be immutable in practice.
 </p></div></div>
+    </li><li name="com.twitter.io.Buf.StringCoder" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="StringCoderextendsAnyRef"></a>
+      <a id="StringCoder:StringCoder"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Buf$$StringCoder.html"><span class="name">StringCoder</span></a><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Buf$@StringCoderextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">a StringCoder for a given <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> provides an
+encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String].</p><div class="fullcomment"><div class="comment cmt"><p>a StringCoder for a given <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> provides an
+encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String].
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
+      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -256,7 +277,7 @@ be immutable in practice.
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$Iso8859_1$.html"><span class="name">Iso8859_1</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+        <a href="Buf$$Iso8859_1$.html"><span class="name">Iso8859_1</span></a><span class="result"> extends <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.io.Buf$@Iso8859_1" title="Permalink" target="_top">
@@ -360,7 +381,7 @@ as well as the remaining buffer.
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$UsAscii$.html"><span class="name">UsAscii</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+        <a href="Buf$$UsAscii$.html"><span class="name">UsAscii</span></a><span class="result"> extends <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.io.Buf$@UsAscii" title="Permalink" target="_top">
@@ -382,7 +403,7 @@ Unicode character set.</p></div><dl class="attributes block"> <dt>Note</dt><dd><
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$Utf16$.html"><span class="name">Utf16</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+        <a href="Buf$$Utf16$.html"><span class="name">Utf16</span></a><span class="result"> extends <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.io.Buf$@Utf16" title="Permalink" target="_top">
@@ -400,7 +421,7 @@ Unicode character set.</p></div><dl class="attributes block"> <dt>Note</dt><dd><
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$Utf16BE$.html"><span class="name">Utf16BE</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+        <a href="Buf$$Utf16BE$.html"><span class="name">Utf16BE</span></a><span class="result"> extends <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.io.Buf$@Utf16BE" title="Permalink" target="_top">
@@ -420,7 +441,7 @@ with big-endian byte order.</p></div><dl class="attributes block"> <dt>Note</dt>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$Utf16LE$.html"><span class="name">Utf16LE</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+        <a href="Buf$$Utf16LE$.html"><span class="name">Utf16LE</span></a><span class="result"> extends <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.io.Buf$@Utf16LE" title="Permalink" target="_top">
@@ -440,7 +461,7 @@ with little-endian byte order.</p></div><dl class="attributes block"> <dt>Note</
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Buf$$Utf8$.html"><span class="name">Utf8</span></a><span class="result"> extends <span class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</span></span>
+        <a href="Buf$$Utf8$.html"><span class="name">Utf8</span></a><span class="result"> extends <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.io.Buf$@Utf8" title="Permalink" target="_top">
@@ -809,30 +830,7 @@ contents in hexadecimal.</p>
 
         
 
-        <div id="values" class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="com.twitter.io.Buf#toByteBuffer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toByteBuffer(buf:com.twitter.io.Buf):java.nio.ByteBuffer"></a>
-      <a id="toByteBuffer(Buf):java.nio.ByteBuffer"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.23.0) Use Buf.ByteBuffer.Owned.extract.">toByteBuffer</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.io.Buf$@toByteBuffer(buf:com.twitter.io.Buf):java.nio.ByteBuffer" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Convert the Buf to a <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Convert the Buf to a <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span>.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.23.0)</i> Use Buf.ByteBuffer.Owned.extract.</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">

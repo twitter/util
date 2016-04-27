@@ -45,7 +45,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">RollupStatsReceiver</span><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <span class="extype" name="scala.Proxy">Proxy</span></span>
+        <span class="name">RollupStatsReceiver</span><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a> with <span class="extype" name="scala.Proxy">Proxy</span></span>
       </span>
       </h4>
       
@@ -59,7 +59,7 @@ will actually increment those three counters:
 - &quot;/errors/clientErrors/java_net_ConnectException&quot;
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Proxy">Proxy</span>, <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Proxy">Proxy</span>, <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a>, <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -77,7 +77,7 @@ will actually increment those three counters:
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.finagle.stats.RollupStatsReceiver"><span>RollupStatsReceiver</span></li><li class="in" name="scala.Proxy"><span>Proxy</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.finagle.stats.RollupStatsReceiver"><span>RollupStatsReceiver</span></li><li class="in" name="scala.Proxy"><span>Proxy</span></li><li class="in" name="com.twitter.finagle.stats.DelegatingStatsReceiver"><span>DelegatingStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -642,6 +642,24 @@ usable from java.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.RollupStatsReceiver">RollupStatsReceiver</a> → Proxy → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.RollupStatsReceiver#underlying" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="underlying:Seq[com.twitter.finagle.stats.StatsReceiver]"></a>
+      <a id="underlying:Seq[StatsReceiver]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">underlying</span><span class="result">: <a href="../../../../scala/package.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.RollupStatsReceiver@underlying:Seq[com.twitter.finagle.stats.StatsReceiver]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that the class delegates to.</p><div class="fullcomment"><div class="comment cmt"><p>The underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that the class delegates to.</p><p>Must be nonempty.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.RollupStatsReceiver">RollupStatsReceiver</a> → <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -722,6 +740,8 @@ usable from java.
         <div id="inheritedMembers">
         <div class="parent" name="scala.Proxy">
               <h3>Inherited from <span class="extype" name="scala.Proxy">Proxy</span></h3>
+            </div><div class="parent" name="com.twitter.finagle.stats.DelegatingStatsReceiver">
+              <h3>Inherited from <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></h3>
             </div><div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
               <h3>Inherited from <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></h3>
             </div><div class="parent" name="scala.AnyRef">

@@ -181,10 +181,10 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Constructs a Var from an initial value plus an event stream of
-changes.</p><div class="fullcomment"><div class="comment cmt"><p>Constructs a Var from an initial value plus an event stream of
+      <p class="shortcomment cmt">Constructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> from an initial value plus an event stream of
+changes.</p><div class="fullcomment"><div class="comment cmt"><p>Constructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> from an initial value plus an event stream of
 changes. Note that this eagerly subscribes to the event stream;
-it is unsubscribed whenever the returned Var is collected.
+it is unsubscribed whenever the returned <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> is collected.
 </p></div></div>
     </li><li name="com.twitter.util.Var#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply[T](init:T):com.twitter.util.Var[T]withcom.twitter.util.Updatable[T]withcom.twitter.util.Extractable[T]"></a>
@@ -295,7 +295,7 @@ at all.</p><p>Updates from <code>update</code> are ignored after the returned
     </span>
       <p class="shortcomment cmt">Collect a List of Vars into a new Var of List.</p><div class="fullcomment"><div class="comment cmt"><p>Collect a List of Vars into a new Var of List.
 </p></div><dl class="paramcmts block"><dt class="param">vars</dt><dd class="cmt"><p>a java.util.List of Vars</p></dd><dt>returns</dt><dd class="cmt"><p>a Var[java.util.List[A]] containing the collected values from vars.</p></dd></dl></div>
-    </li><li name="com.twitter.util.Var#collect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Var#collect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collect[T,CC[X]&lt;:Traversable[X]](vars:CC[com.twitter.util.Var[T]])(implicitevidence$3:scala.reflect.ClassTag[T],implicitnewBuilder:scala.collection.generic.CanBuildFrom[CC[T],T,CC[T]]):com.twitter.util.Var[CC[T]]"></a>
       <a id="collect[T,CC[X]&lt;:Traversable[X]](CC[Var[T]])(ClassTag[T],CanBuildFrom[CC[T],T,CC[T]]):Var[CC[T]]"></a>
       <h4 class="signature">
@@ -311,7 +311,54 @@ at all.</p><p>Updates from <code>update</code> are ignored after the returned
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Collect a collection of Vars into a Var of collection.</p>
+      <p class="shortcomment cmt">Collect a collection of Vars into a Var of collection.</p><div class="fullcomment"><div class="comment cmt"><p>Collect a collection of Vars into a Var of collection.
+Var.collect can result in a stack overflow if called with a large sequence.
+Var.collectIndependent breaks composition with respect to update propagation.
+That is, collectIndependent can fail to correctly update interdependent vars,
+but is safe for independent vars.</p><pre><span class="cmt">// Example of difference between collect and collectIndependent:</span>
+<span class="kw">val</span> v1 = Var(<span class="num">1</span>)
+<span class="kw">val</span> v2 = v1.map(_*<span class="num">2</span>)
+<span class="kw">val</span> vCollect = Var.collect(<span class="std">Seq</span>(v1, v2)).map { <span class="kw">case</span> <span class="std">Seq</span>(a, b) <span class="kw">=&gt;</span> (a, b) }
+<span class="kw">val</span> vCollectIndependent = Var.collectIndependent(<span class="std">Seq</span>(v1, v2)).map { <span class="kw">case</span> <span class="std">Seq</span>(a, b) <span class="kw">=&gt;</span> (a, b) }
+<span class="kw">val</span> refCollect = <span class="kw">new</span> AtomicReference[<span class="std">Seq</span>[(<span class="std">Int</span>, <span class="std">Int</span>)]]
+vCollect.changes.build.register(Witness(refCollect))
+<span class="kw">val</span> refCollectIndependent = <span class="kw">new</span> AtomicReference[<span class="std">Seq</span>[(<span class="std">Int</span>, <span class="std">Int</span>)]]
+vCollectIndependent.changes.build.register(Witness(refCollectIndependent))
+v1() = <span class="num">2</span>
+<span class="cmt">// refCollect == Vector((1,2), (2,4))</span>
+<span class="cmt">// refCollectIndependent == Vector((1,2), (2,2), (2,4))</span></pre></div></div>
+    </li><li name="com.twitter.util.Var#collectIndependent" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="collectIndependent[T,CC[X]&lt;:Traversable[X]](vars:CC[com.twitter.util.Var[T]])(implicitevidence$4:scala.reflect.ClassTag[T],implicitnewBuilder:scala.collection.generic.CanBuildFrom[CC[T],T,CC[T]]):com.twitter.util.Var[CC[T]]"></a>
+      <a id="collectIndependent[T,CC[X]&lt;:Traversable[X]](CC[Var[T]])(ClassTag[T],CanBuildFrom[CC[T],T,CC[T]]):Var[CC[T]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">collectIndependent</span><span class="tparams">[<span name="T">T</span>, <span name="CC">CC<span class="tparams">[<span name="X">X</span>]</span> &lt;: <a href="../../../scala/package.html#Traversable[+A]=Traversable[A]" class="extmbr" name="scala.Traversable">Traversable</a>[<span class="extype" name="com.twitter.util.Var.collectIndependent.CC.X">X</span>]</span>]</span><span class="params">(<span name="vars">vars: <span class="extype" name="com.twitter.util.Var.collectIndependent.CC">CC</span>[<a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<span class="extype" name="com.twitter.util.Var.collectIndependent.T">T</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="com.twitter.util.Var.collectIndependent.T">T</span>]</span>, <span name="newBuilder">newBuilder: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.generic.CanBuildFrom" class="extype" target="_top">CanBuildFrom</a>[<span class="extype" name="com.twitter.util.Var.collectIndependent.CC">CC</span>[<span class="extype" name="com.twitter.util.Var.collectIndependent.T">T</span>], <span class="extype" name="com.twitter.util.Var.collectIndependent.T">T</span>, <span class="extype" name="com.twitter.util.Var.collectIndependent.CC">CC</span>[<span class="extype" name="com.twitter.util.Var.collectIndependent.T">T</span>]]</span>)</span><span class="result">: <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<span class="extype" name="com.twitter.util.Var.collectIndependent.CC">CC</span>[<span class="extype" name="com.twitter.util.Var.collectIndependent.T">T</span>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Var$@collectIndependent[T,CC[X]&lt;:Traversable[X]](vars:CC[com.twitter.util.Var[T]])(implicitevidence$4:scala.reflect.ClassTag[T],implicitnewBuilder:scala.collection.generic.CanBuildFrom[CC[T],T,CC[T]]):com.twitter.util.Var[CC[T]]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Collect a collection of Vars into a Var of collection.</p><div class="fullcomment"><div class="comment cmt"><p>Collect a collection of Vars into a Var of collection.
+Var.collect can result in a stack overflow if called with a large sequence.
+Var.collectIndependent breaks composition with respect to update propagation.
+That is, collectIndependent can fail to correctly update interdependent vars,
+but is safe for independent vars.</p><pre><span class="cmt">// Example of difference between collect and collectIndependent:</span>
+<span class="kw">val</span> v1 = Var(<span class="num">1</span>)
+<span class="kw">val</span> v2 = v1.map(_*<span class="num">2</span>)
+<span class="kw">val</span> vCollect = Var.collect(<span class="std">Seq</span>(v1, v2)).map { <span class="kw">case</span> <span class="std">Seq</span>(a, b) <span class="kw">=&gt;</span> (a, b) }
+<span class="kw">val</span> vCollectIndependent = Var.collectIndependent(<span class="std">Seq</span>(v1, v2)).map { <span class="kw">case</span> <span class="std">Seq</span>(a, b) <span class="kw">=&gt;</span> (a, b) }
+<span class="kw">val</span> refCollect = <span class="kw">new</span> AtomicReference[<span class="std">Seq</span>[(<span class="std">Int</span>, <span class="std">Int</span>)]]
+vCollect.changes.build.register(Witness(refCollect))
+<span class="kw">val</span> refCollectIndependent = <span class="kw">new</span> AtomicReference[<span class="std">Seq</span>[(<span class="std">Int</span>, <span class="std">Int</span>)]]
+vCollectIndependent.changes.build.register(Witness(refCollectIndependent))
+v1() = <span class="num">2</span>
+<span class="cmt">// refCollect == Vector((1,2), (2,4))</span>
+<span class="cmt">// refCollectIndependent == Vector((1,2), (2,2), (2,4))</span></pre></div></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -488,9 +535,9 @@ at all.</p><p>Updates from <code>update</code> are ignored after the returned
       </a>
     </span>
       <p class="shortcomment cmt">Patch reconstructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> based on observing the incremental
-changes presented in the underlying <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>s.</p><div class="fullcomment"><div class="comment cmt"><p>Patch reconstructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> based on observing the incremental
-changes presented in the underlying <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a>s.</p><p>Note that this eagerly subscribes to the event stream;
-it is unsubscribed whenever the returned Var is collected.
+changes presented in the underlying <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diffs</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Patch reconstructs a <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> based on observing the incremental
+changes presented in the underlying <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diffs</a>.</p><p>Note that this eagerly subscribes to the event stream;
+it is unsubscribed whenever the returned <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a> is collected.
 </p></div></div>
     </li><li name="com.twitter.util.Var#sample" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sample[T](v:com.twitter.util.Var[T]):T"></a>

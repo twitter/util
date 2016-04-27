@@ -1,9 +1,9 @@
 <!DOCTYPE html >
 <html>
         <head>
-          <title>Status - com.twitter.zk.ServerSet.Status</title>
-          <meta name="description" content="Status - com.twitter.zk.ServerSet.Status" />
-          <meta name="keywords" content="Status com.twitter.zk.ServerSet.Status" />
+          <title>ConcatBuf - com.twitter.io.ConcatBuf</title>
+          <meta name="description" content="ConcatBuf - com.twitter.io.ConcatBuf" />
+          <meta name="keywords" content="ConcatBuf com.twitter.io.ConcatBuf" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -16,7 +16,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.zk.ServerSet$$Status';
+            var hash = 'com.twitter.io.ConcatBuf';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -28,14 +28,12 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="ServerSet$$Status$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.zk">zk</a>.<a href="ServerSet$.html" class="extype" name="com.twitter.zk.ServerSet">ServerSet</a></p>
-        <h1><a href="ServerSet$$Status$.html" title="See companion object">Status</a></h1><h3><span class="morelinks"><div>
-            Related Docs:
-            <a href="ServerSet$$Status$.html" title="See companion object">object Status</a>
-            | <a href="ServerSet$.html" class="extype" name="com.twitter.zk.ServerSet">package ServerSet</a>
+        <img alt="Class" src="../../../lib/class_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.io">io</a></p>
+        <h1>ConcatBuf</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.twitter.io">package io</a>
           </div></span></h3><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -44,20 +42,18 @@
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Status</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">ConcatBuf</span><span class="params">(<span name="chain">chain: <a href="../../../scala/package.html#Vector[+A]=scala.collection.immutable.Vector[A]" class="extmbr" name="scala.Vector">Vector</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>)</span><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Wraps a common Status in a matchable way.</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Buf that concat multiple Bufs together
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
-        </div><div class="toggleContainer block">
-            <span class="toggle">Known Subclasses</span>
-            <div class="subClasses hiddenContent"><a href="ServerSet$$Status$$Alive$.html" class="extype" name="com.twitter.zk.ServerSet.Status.Alive">Alive</a>, <a href="ServerSet$$Status$$Dead$.html" class="extype" name="com.twitter.zk.ServerSet.Status.Dead">Dead</a>, <a href="ServerSet$$Status$$Starting$.html" class="extype" name="com.twitter.zk.ServerSet.Status.Starting">Starting</a>, <a href="ServerSet$$Status$$Stopped$.html" class="extype" name="com.twitter.zk.ServerSet.Status.Stopped">Stopped</a>, <a href="ServerSet$$Status$$Stopping$.html" class="extype" name="com.twitter.zk.ServerSet.Status.Stopping">Stopping</a>, <a href="ServerSet$$Status$$Warning$.html" class="extype" name="com.twitter.zk.ServerSet.Status.Warning">Warning</a></div>
-          </div></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
         
 
       <div id="mbrsel">
@@ -74,7 +70,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.zk.ServerSet.Status"><span>Status</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.io.ConcatBuf"><span>ConcatBuf</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.twitter.io.Buf"><span>Buf</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -93,19 +89,19 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.zk.ServerSet.Status#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(underlying:com.twitter.thrift.Status):com.twitter.zk.ServerSet.Status"></a>
-      <a id="&lt;init&gt;:Status"></a>
+              <ol><li name="com.twitter.io.ConcatBuf#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(chain:Vector[com.twitter.io.Buf]):com.twitter.io.ConcatBuf"></a>
+      <a id="&lt;init&gt;:ConcatBuf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Status</span><span class="params">(<span name="underlying">underlying: <span class="extype" name="com.twitter.thrift.Status">thrift.Status</span></span>)</span>
+        <span class="name">ConcatBuf</span><span class="params">(<span name="chain">chain: <a href="../../../scala/package.html#Vector[+A]=scala.collection.immutable.Vector[A]" class="extmbr" name="scala.Vector">Vector</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@&lt;init&gt;(underlying:com.twitter.thrift.Status):com.twitter.zk.ServerSet.Status" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@&lt;init&gt;(chain:Vector[com.twitter.io.Buf]):com.twitter.io.ConcatBuf" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -131,7 +127,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@!=(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -148,7 +144,7 @@
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@##():Int" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@##():Int" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -165,28 +161,11 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@==(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@==(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.zk.ServerSet.Status#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply():com.twitter.thrift.Status"></a>
-      <a id="apply():thrift.Status"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.thrift.Status">thrift.Status</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@apply():com.twitter.thrift.Status" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -199,11 +178,28 @@
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@asInstanceOf[T0]:T0" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.io.ConcatBuf#chain" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="chain:Vector[com.twitter.io.Buf]"></a>
+      <a id="chain:Vector[Buf]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">chain</span><span class="result">: <a href="../../../scala/package.html#Vector[+A]=scala.collection.immutable.Vector[A]" class="extmbr" name="scala.Vector">Vector</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@chain:Vector[com.twitter.io.Buf]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -216,7 +212,7 @@
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@clone():Object" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@clone():Object" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -227,6 +223,41 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.ConcatBuf#concat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="concat(right:com.twitter.io.Buf):com.twitter.io.Buf"></a>
+      <a id="concat(Buf):Buf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">concat</span><span class="params">(<span name="right">right: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@concat(right:com.twitter.io.Buf):com.twitter.io.Buf" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Concatenate this buffer with the given buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Concatenate this buffer with the given buffer.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
+    </li><li name="com.twitter.io.Buf#copiedByteArray" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="copiedByteArray:Array[Byte]"></a>
+      <a id="copiedByteArray:Array[Byte]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">copiedByteArray</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@copiedByteArray:Array[Byte]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Definitely requires copying.</p><div class="fullcomment"><div class="comment cmt"><p>Definitely requires copying.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -239,13 +270,13 @@
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
+    </li><li name="com.twitter.io.ConcatBuf#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(other:Any):Boolean"></a>
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -253,14 +284,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="other">other: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@equals(other:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a> → Equals → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -273,7 +304,7 @@
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@finalize():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@finalize():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -296,12 +327,12 @@
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@getClass():Class[_]" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@getClass():Class[_]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.io.Buf#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
       <h4 class="signature">
@@ -313,11 +344,28 @@
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@hashCode():Int" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@hashCode():Int" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.io.Buf#isEmpty" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isEmpty:Boolean"></a>
+      <a id="isEmpty:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isEmpty</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@isEmpty:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -330,11 +378,30 @@
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.io.ConcatBuf#length" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="length:Int"></a>
+      <a id="length:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">length</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@length:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The number of bytes in the buffer
+</p><div class="fullcomment"><div class="comment cmt"><p>The number of bytes in the buffer
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -347,7 +414,7 @@
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -364,7 +431,7 @@
         <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@notify():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@notify():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -381,11 +448,29 @@
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@notifyAll():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@notifyAll():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.io.ConcatBuf#slice" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="slice(from:Int,until:Int):com.twitter.io.Buf"></a>
+      <a id="slice(Int,Int):Buf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">slice</span><span class="params">(<span name="from">from: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="until">until: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@slice(from:Int,until:Int):com.twitter.io.Buf" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Note</dt><dd><span class="cmt"><p>we are foregoing clarity for performance
+      slice only entails 3 necessary allocations</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -398,62 +483,45 @@
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
+    </li><li name="com.twitter.io.Buf#unsafeByteArray" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsafeByteArray:Array[Byte]"></a>
+      <a id="unsafeByteArray:Array[Byte]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">unsafeByteArray</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@toString():String" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@unsafeByteArray:Array[Byte]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.zk.ServerSet.Status#unapply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="unapply(status:com.twitter.thrift.Status):Boolean"></a>
-      <a id="unapply(thrift.Status):Boolean"></a>
+      <p class="shortcomment cmt">May require copying.</p><div class="fullcomment"><div class="comment cmt"><p>May require copying.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
+    </li><li name="com.twitter.io.ConcatBuf#unsafeByteArrayBuf" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unsafeByteArrayBuf:Option[com.twitter.io.Buf.ByteArray]"></a>
+      <a id="unsafeByteArrayBuf:Option[ByteArray]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">unapply</span><span class="params">(<span name="status">status: <span class="extype" name="com.twitter.thrift.Status">thrift.Status</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">unsafeByteArrayBuf</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@unapply(status:com.twitter.thrift.Status):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@unsafeByteArrayBuf:Option[com.twitter.io.Buf.ByteArray]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
-    </li><li name="com.twitter.zk.ServerSet.Status#underlying" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="underlying:com.twitter.thrift.Status"></a>
-      <a id="underlying:thrift.Status"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">underlying</span><span class="result">: <span class="extype" name="com.twitter.thrift.Status">thrift.Status</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@underlying:com.twitter.thrift.Status" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      <p class="shortcomment cmt">Helper to support 0-copy coercion to Buf.ByteArray.</p><div class="fullcomment"><div class="comment cmt"><p>Helper to support 0-copy coercion to Buf.ByteArray.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -466,7 +534,7 @@
         <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@wait():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@wait():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -489,7 +557,7 @@
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -512,7 +580,7 @@
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.zk.ServerSet$$Status@wait(x$1:Long):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@wait(x$1:Long):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -523,6 +591,28 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.ConcatBuf#write" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="write(output:Array[Byte],off:Int):Unit"></a>
+      <a id="write(Array[Byte],Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">write</span><span class="params">(<span name="output">output: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="off">off: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.ConcatBuf@write(output:Array[Byte],off:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Write the entire contents of the buffer into the given array at
+the given offset.</p><div class="fullcomment"><div class="comment cmt"><p>Write the entire contents of the buffer into the given array at
+the given offset. Partial writes aren't supported directly
+through this API; they easily performed by first slicing the
+buffer.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> when <code>output</code> is too small to
+contain all the data.</p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -532,7 +622,17 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+            </div><div class="parent" name="com.twitter.io.Buf">
+              <h3>Inherited from <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

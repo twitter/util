@@ -109,7 +109,7 @@ the transition, we kept the namespace.
     </span>
       <p class="shortcomment cmt">For Java clients that want to implement a <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p>
     </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BlacklistStatsReceiverextendsStatsReceiver"></a>
+      <a id="BlacklistStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver"></a>
       <a id="BlacklistStatsReceiver:BlacklistStatsReceiver"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -117,34 +117,35 @@ the transition, we kept the namespace.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BlacklistStatsReceiver.html"><span class="name">BlacklistStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <a href="BlacklistStatsReceiver.html"><span class="name">BlacklistStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.package@BlacklistStatsReceiverextendsStatsReceiver" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@BlacklistStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.  If the name for a metric is found to be
 blacklisted, nothing is recorded.
 </p></div></div>
-    </li><li name="com.twitter.finagle.stats.BroadcastStatsReceiver" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="BroadcastStatsReceiverextendsAnyRef"></a>
-      <a id="BroadcastStatsReceiver:BroadcastStatsReceiver"></a>
+    </li><li name="com.twitter.finagle.stats.BucketAndCount" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="BucketAndCountextendsProductwithSerializable"></a>
+      <a id="BucketAndCount:BucketAndCount"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="BroadcastStatsReceiver.html"><span class="name">BroadcastStatsReceiver</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a href="BucketAndCount.html"><span class="name">BucketAndCount</span></a><span class="params">(<span name="lowerLimit">lowerLimit: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="upperLimit">upperLimit: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="count">count: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.package@BroadcastStatsReceiverextendsAnyRef" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@BucketAndCountextendsProductwithSerializable" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Marker for a <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> that broadcasts metrics to more
-than one underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p>
+      <p class="shortcomment cmt">Buckets consist of a lower limit and an upper limit.</p><div class="fullcomment"><div class="comment cmt"><p>Buckets consist of a lower limit and an upper limit. In histograms, all
+values that fall inside these limits are counted as the same.</p><p>The lower limit is inclusive and the upper limit is exclusive
+</p></div><dl class="paramcmts block"><dt class="param">count</dt><dd class="cmt"><p>number of data points which landed in that bucket.</p></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.CategorizingExceptionStatsHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CategorizingExceptionStatsHandlerextendsExceptionStatsHandler"></a>
       <a id="CategorizingExceptionStatsHandler:CategorizingExceptionStatsHandler"></a>
@@ -202,6 +203,24 @@ Counter is &quot;number of requests served&quot;.
                 <span class="name">@State</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.DelegatingStatsReceiver" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DelegatingStatsReceiverextendsAnyRef"></a>
+      <a id="DelegatingStatsReceiver:DelegatingStatsReceiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DelegatingStatsReceiver.html"><span class="name">DelegatingStatsReceiver</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@DelegatingStatsReceiverextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Should be mixed into <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that delegate to other
+<a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a>.</p>
     </li><li name="com.twitter.finagle.stats.ExceptionStatsHandler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ExceptionStatsHandlerextendsAnyRef"></a>
       <a id="ExceptionStatsHandler:ExceptionStatsHandler"></a>
@@ -238,8 +257,25 @@ Counter is &quot;number of requests served&quot;.
       <p class="shortcomment cmt">Exposes the value of a function.</p><div class="fullcomment"><div class="comment cmt"><p>Exposes the value of a function. For example, one could add a gauge for a
 computed health metric.
 </p></div></div>
+    </li><li name="com.twitter.finagle.stats.HistogramDetail" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HistogramDetailextendsAnyRef"></a>
+      <a id="HistogramDetail:HistogramDetail"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HistogramDetail.html"><span class="name">HistogramDetail</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@HistogramDetailextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Details of a histogram's data points.</p>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="InMemoryStatsReceiverextendsStatsReceiver"></a>
+      <a id="InMemoryStatsReceiverextendsWithHistogramDetailswithStatsReceiver"></a>
       <a id="InMemoryStatsReceiver:InMemoryStatsReceiver"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -247,10 +283,10 @@ computed health metric.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="InMemoryStatsReceiver.html"><span class="name">InMemoryStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <a href="InMemoryStatsReceiver.html"><span class="name">InMemoryStatsReceiver</span></a><span class="result"> extends <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a> with <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.package@InMemoryStatsReceiverextendsStatsReceiver" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@InMemoryStatsReceiverextendsWithHistogramDetailswithStatsReceiver" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -264,7 +300,7 @@ irs.print(<span class="std">Console</span>.out) <span class="cmt">// will print 
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>) == <span class="num">0</span>)) <span class="cmt">// ok</span>
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"bar"</span>) == <span class="num">0</span>)) <span class="cmt">// fail</span></pre></div></div>
     </li><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="NameTranslatingStatsReceiverextendsStatsReceiver"></a>
+      <a id="NameTranslatingStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver"></a>
       <a id="NameTranslatingStatsReceiver:NameTranslatingStatsReceiver"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -272,10 +308,10 @@ assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="NameTranslatingStatsReceiver.html"><span class="name">NameTranslatingStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <a href="NameTranslatingStatsReceiver.html"><span class="name">NameTranslatingStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.package@NameTranslatingStatsReceiverextendsStatsReceiver" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@NameTranslatingStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -336,7 +372,7 @@ required.
     </span>
       <p class="shortcomment cmt">A variation of <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a> that also supports reading of the current time series via the <code>apply</code> method.</p>
     </li><li name="com.twitter.finagle.stats.RollupStatsReceiver" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="RollupStatsReceiverextendsStatsReceiverwithProxy"></a>
+      <a id="RollupStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiverwithProxy"></a>
       <a id="RollupStatsReceiver:RollupStatsReceiver"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -344,10 +380,10 @@ required.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RollupStatsReceiver.html"><span class="name">RollupStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <span class="extype" name="scala.Proxy">Proxy</span></span>
+        <a href="RollupStatsReceiver.html"><span class="name">RollupStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a> with <span class="extype" name="scala.Proxy">Proxy</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.package@RollupStatsReceiverextendsStatsReceiverwithProxy" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@RollupStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiverwithProxy" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -401,7 +437,7 @@ will actually increment those three counters:
 through the corresponding methods of this class.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceivers$.html" class="extype" name="com.twitter.finagle.stats.StatsReceivers">StatsReceivers</a> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="StatsReceiverProxyextendsStatsReceiver"></a>
+      <a id="StatsReceiverProxyextendsStatsReceiverwithDelegatingStatsReceiver"></a>
       <a id="StatsReceiverProxy:StatsReceiverProxy"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -409,10 +445,10 @@ through the corresponding methods of this class.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="StatsReceiverProxy.html"><span class="name">StatsReceiverProxy</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <a href="StatsReceiverProxy.html"><span class="name">StatsReceiverProxy</span></a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.package@StatsReceiverProxyextendsStatsReceiver" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@StatsReceiverProxyextendsStatsReceiverwithDelegatingStatsReceiver" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -434,6 +470,26 @@ through the corresponding methods of this class.
       </a>
     </span>
       
+    </li><li name="com.twitter.finagle.stats.WithHistogramDetails" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="WithHistogramDetailsextendsAnyRef"></a>
+      <a id="WithHistogramDetails:WithHistogramDetails"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="WithHistogramDetails.html"><span class="name">WithHistogramDetails</span></a><span class="result"> extends <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@WithHistogramDetailsextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Allow <a href="StatsReceivers$.html" class="extype" name="com.twitter.finagle.stats.StatsReceivers">StatsReceivers</a> to provide snapshots of histogram counts.</p><div class="fullcomment"><div class="comment cmt"><p>Allow <a href="StatsReceivers$.html" class="extype" name="com.twitter.finagle.stats.StatsReceivers">StatsReceivers</a> to provide snapshots of histogram counts.
+Implementations must expose a map where keys are the name
+of the stat and values are the contents of the histogram.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -441,7 +497,24 @@ through the corresponding methods of this class.
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="com.twitter.finagle.stats.BroadcastCounter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="com.twitter.finagle.stats.AggregateWithHistogramDetails" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AggregateWithHistogramDetails"></a>
+      <a id="AggregateWithHistogramDetails:AggregateWithHistogramDetails"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AggregateWithHistogramDetails$.html"><span class="name">AggregateWithHistogramDetails</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@AggregateWithHistogramDetails" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.finagle.stats.BroadcastCounter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="BroadcastCounter"></a>
       <a id="BroadcastCounter:BroadcastCounter"></a>
       <h4 class="signature">
@@ -514,6 +587,23 @@ StatsReceivers (n).</p>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.twitter.finagle.stats.package@CumulativeGaugeBenchmark" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.finagle.stats.DelegatingStatsReceiver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DelegatingStatsReceiver"></a>
+      <a id="DelegatingStatsReceiver:DelegatingStatsReceiver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DelegatingStatsReceiver$.html"><span class="name">DelegatingStatsReceiver</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@DelegatingStatsReceiver" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>

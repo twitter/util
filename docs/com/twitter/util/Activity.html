@@ -374,6 +374,23 @@ activity becomes pending.
       </a>
     </span>
       <p class="shortcomment cmt">Map a T-typed activity to a U-typed one.</p>
+    </li><li name="com.twitter.util.Activity#mapState" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="mapState[U](f:com.twitter.util.Activity.State[T]=&gt;com.twitter.util.Activity.State[U]):com.twitter.util.Activity[U]"></a>
+      <a id="mapState[U]((State[T])⇒State[U]):Activity[U]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mapState</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="f">f: (<a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.T">T</span>]) ⇒ <a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.mapState.U">U</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.mapState.U">U</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity@mapState[U](f:com.twitter.util.Activity.State[T]=&gt;com.twitter.util.Activity.State[U]):com.twitter.util.Activity[U]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Map the states of a T-typed activity to a U-typed one.</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -461,6 +478,25 @@ activity becomes pending.
       <p class="shortcomment cmt">Sample the current value of this activity.</p><div class="fullcomment"><div class="comment cmt"><p>Sample the current value of this activity. Sample throws an
 exception if the activity is in pending state or has failed.
 </p></div></div>
+    </li><li name="com.twitter.util.Activity#stabilize" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stabilize:com.twitter.util.Activity[T]"></a>
+      <a id="stabilize:Activity[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stabilize</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Activity@stabilize:com.twitter.util.Activity[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Stabilize the value of this activity such that
+once an <a href="Activity$$Ok.html" class="extype" name="com.twitter.util.Activity.Ok">Ok</a> value has been returned
+it stops error propagation and instead returns the last Ok value.</p>
     </li><li name="com.twitter.util.Activity#states" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="states:com.twitter.util.Event[com.twitter.util.Activity.State[T]]"></a>
       <a id="states:Event[State[T]]"></a>

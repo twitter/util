@@ -413,6 +413,31 @@ classname strings.</p>
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Throwables#unchecked" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unchecked[Z](t:Throwable):Z"></a>
+      <a id="unchecked[Z](Throwable):Z"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unchecked</span><span class="tparams">[<span name="Z">Z</span>]</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Throwables.unchecked.Z">Z</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.Throwables$@unchecked[Z](t:Throwable):Z" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Useful for Java developers calling an API that has thrown
+<code>Exceptions</code> declared and there is a need to treat these
+as an unchecked <code>Exception</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Useful for Java developers calling an API that has thrown
+<code>Exceptions</code> declared and there is a need to treat these
+as an unchecked <code>Exception</code>.</p><p>For example:</p><pre><span class="kw">try</span> {
+  <span class="kw">return</span> Await.result(aFuture);
+} <span class="kw">catch</span> (Exception e) {
+  <span class="kw">return</span> Throwables.unchecked(e);
+}</pre></div></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
