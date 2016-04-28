@@ -609,7 +609,7 @@ sealed class Time private[util] (protected val nanos: Long) extends {
   def sinceNow: Duration = since(now)
 
   /**
-   * Duration between current time and the givne time.
+   * Duration between current time and the given time.
    */
   def until(that: Time): Duration = that - this
 
