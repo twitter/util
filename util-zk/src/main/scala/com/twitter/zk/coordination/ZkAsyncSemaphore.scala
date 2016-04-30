@@ -4,10 +4,11 @@ import java.nio.charset.Charset
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException}
 
 import org.apache.zookeeper.{CreateMode, KeeperException}
+import org.apache.zookeeper.KeeperException.NoNodeException
 
 import com.twitter.concurrent.Permit
-import com.twitter.util.{Future, Promise}
-import com.twitter.zk.{StateEvent, ZNode, ZkClient}
+import com.twitter.util.{Future, Promise, Return, Throw}
+import com.twitter.zk.{StateEvent, ZkClient, ZNode}
 
 /**
  * ZkAsyncSemaphore is a distributed semaphore with asynchronous execution.
@@ -261,13 +262,18 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
     path.substring(permitNodePathPrefix.length).toInt
   }
 
-  private[this] def numPermitsOf(node: ZNode): Future[Int] = {
-    node.getData() map { data =>
-      try {
-        new String(data.bytes, Charset.forName("UTF8")).toInt
-      } catch {
-        case err: NumberFormatException => -1
-      }
+  private[coordination] def numPermitsOf(node: ZNode): Future[Int] = {
+    node.getData().transform {
+      case Return(data: ZNode.Data) =>
+        try {
+          Future.value(new String(data.bytes, Charset.forName("UTF8")).toInt)
+        } catch {
+          case err: NumberFormatException => Future.value(-1)
+        }
+      case Throw(t: NoNodeException) =>
+        // This permit was released (i.e. after we got the list of permits).
+        Future.value(-1)
+      case Throw(t) => Future.exception(t)
     }
   }
 
