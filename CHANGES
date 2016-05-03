@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: Add `c.t.concurrent.Scheduler.blockingTimeNanos` which tracks time spent doing
+    blocking operations. ``RB_ID=828289``
+
 6.34.0  2016-04-26
 
 New Features:

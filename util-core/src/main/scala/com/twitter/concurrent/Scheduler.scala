@@ -58,6 +58,21 @@ trait Scheduler {
   def numDispatches: Long
 
   /**
+   * Total time spent doing [[blocking]] operations, in nanoseconds.
+   *
+   * This should only include time spent on threads where
+   * [[CanAwait.trackElapsedBlocking]] returns `true`.
+   *
+   * @return -1 if the [[Scheduler]] does not support tracking this.
+   *
+   * @note this does not include time spent doing blocking code
+   *       outside of [[Scheduler.blocking]]. For example,
+   *       `Future(someSlowSynchronousIO)` would not be accounted
+   *       for here.
+   */
+  def blockingTimeNanos: Long = -1L
+
+  /**
    * Executes a function `f` in a blocking fashion.
    *
    * Note: The permit may be removed in the future.
@@ -89,12 +104,14 @@ object Scheduler extends Scheduler {
     self = sched
   }
 
-  def submit(r: Runnable) = self.submit(r)
-  def flush() = self.flush()
+  def submit(r: Runnable): Unit = self.submit(r)
+  def flush(): Unit = self.flush()
 
-  def numDispatches = self.numDispatches
+  def numDispatches: Long = self.numDispatches
 
-  def blocking[T](f: => T)(implicit perm: CanAwait) = self.blocking(f)
+  override def blockingTimeNanos: Long = self.blockingTimeNanos
+
+  def blocking[T](f: => T)(implicit perm: CanAwait): T = self.blocking(f)
 }
 
 /**
@@ -108,8 +125,10 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
   private[this] val activations = new mutable.WeakHashMap[Activation, Boolean]()
 
   private[this] val local = new ThreadLocal[Activation] {
-    override def initialValue = null
+    override def initialValue: Activation = null
   }
+
+  override def toString: String = s"LocalScheduler(${System.identityHashCode(this)})"
 
   /**
    * A task-queueing, direct-dispatch scheduler
@@ -119,8 +138,12 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
 
-    // This is safe: there's only one updater.
+    // read and increments are safe because there is only one updater,
+    // but other threads may read so must be marked volatile.
     @volatile var numDispatches = 0L
+    @volatile var blockingNanos = 0L
+
+    override def toString: String = s"Activation(${System.identityHashCode(this)})"
 
     def submit(r: Runnable): Unit = {
       assert(r != null)
@@ -181,7 +204,16 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
       }
     }
 
-    def blocking[T](f: => T)(implicit perm: CanAwait): T = f
+    def blocking[T](f: => T)(implicit perm: CanAwait): T = {
+      if (perm.trackElapsedBlocking) {
+        val start = System.nanoTime()
+        val value = f
+        blockingNanos += System.nanoTime() - start
+        value
+      } else {
+        f
+      }
+    }
   }
 
   private[this] def get(): Activation = {
@@ -208,12 +240,16 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
   def flush(): Unit = get().flush()
 
   private[this] def activationsSum(f: Activation => Long): Long =
-    activations.synchronized { activations.keysIterator.map(f).sum }
+    activations.synchronized {
+      activations.keysIterator.map(f).sum
+    }
 
   def numDispatches: Long = activationsSum(_.numDispatches)
 
+  override def blockingTimeNanos: Long = activationsSum(_.blockingNanos)
 
-  def blocking[T](f: => T)(implicit perm: CanAwait): T = f
+  def blocking[T](f: => T)(implicit perm: CanAwait): T =
+    get().blocking(f)
 }
 
 /**
@@ -228,7 +264,7 @@ trait ExecutorScheduler { self: Scheduler =>
   protected val threadGroup: ThreadGroup = new ThreadGroup(name)
   @volatile private[this] var threads = Set[Thread]()
 
-  protected val threadFactory = new ThreadFactory {
+  protected val threadFactory: ThreadFactory = new ThreadFactory {
     private val n = new AtomicInteger(1)
 
     def newThread(r: Runnable) = {
@@ -249,16 +285,16 @@ trait ExecutorScheduler { self: Scheduler =>
 
   protected[this] val executor = executorFactory(threadFactory)
 
-  def shutdown() { executor.shutdown() }
-  def submit(r: Runnable) { executor.execute(r) }
-  def flush() = ()
+  def shutdown(): Unit = executor.shutdown()
+  def submit(r: Runnable): Unit = executor.execute(r)
+  def flush(): Unit = ()
 
   // Unsupported
-  def numDispatches = -1L
+  def numDispatches: Long = -1L
 
-  def getExecutor = executor
+  def getExecutor: ExecutorService = executor
 
-  def blocking[T](f: => T)(implicit perm: CanAwait) = f
+  def blocking[T](f: => T)(implicit perm: CanAwait): T = f
 }
 
 /**
@@ -289,7 +325,7 @@ class BridgedThreadPoolScheduler(
 
   def this(name: String) = this(name, Executors.newCachedThreadPool(_))
 
-  override def submit(r: Runnable) {
+  override def submit(r: Runnable): Unit = {
     if (Thread.currentThread.getThreadGroup == threadGroup)
       local.submit(r)
     else
@@ -304,7 +340,7 @@ class BridgedThreadPoolScheduler(
       }
   }
 
-  override def flush() =
+  override def flush(): Unit =
     if (Thread.currentThread.getThreadGroup == threadGroup)
       local.flush()
 }

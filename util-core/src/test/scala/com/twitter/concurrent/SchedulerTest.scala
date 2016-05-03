@@ -1,12 +1,11 @@
 package com.twitter.concurrent
 
+import com.twitter.conversions.time._
+import com.twitter.util._
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.util.Promise
-
 
 abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
   private val scheduler = new LocalScheduler(lifo)
@@ -54,6 +53,35 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
       assert(ran == (0 until N))
     else
       assert(ran == (0 until N).reverse)
+  }
+
+  test("tracks blocking time") {
+    val prevScheduler = Scheduler()
+    Scheduler.setUnsafe(scheduler)
+    try {
+      implicit val timer = new JavaTimer(isDaemon = true)
+      val initial = Awaitable.getBlockingTimeTracking
+      Awaitable.enableBlockingTimeTracking()
+      try {
+        var start = scheduler.blockingTimeNanos
+        Await.result(Future.sleep(50.milliseconds))
+        var elapsed = scheduler.blockingTimeNanos - start
+        assert(Duration.fromNanoseconds(elapsed) > 0.seconds)
+
+        Awaitable.disableBlockingTimeTracking()
+        start = scheduler.blockingTimeNanos
+        Await.result(Future.sleep(50.milliseconds))
+        elapsed = scheduler.blockingTimeNanos - start
+        assert(elapsed == 0)
+      } finally {
+        if (initial)
+          Awaitable.enableBlockingTimeTracking()
+        else
+          Awaitable.disableBlockingTimeTracking()
+      }
+    } finally {
+      Scheduler.setUnsafe(prevScheduler)
+    }
   }
 }
 

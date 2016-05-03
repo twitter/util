@@ -37,7 +37,40 @@ trait Awaitable[+T] {
 }
 
 object Awaitable {
-  sealed trait CanAwait
+
+  private[this] val TrackElapsedBlocking = new ThreadLocal[Object]()
+
+  /**
+   * Enables tracking time spent in blocking operations for the current thread.
+   *
+   * This should only be enabled for threads where blocking is discouraged.
+   *
+   * @see [[Scheduler.blockingTimeNanos]] and [[Scheduler.blocking]]
+   */
+  def enableBlockingTimeTracking(): Unit =
+    TrackElapsedBlocking.set(java.lang.Boolean.TRUE)
+
+  /**
+   * Disables tracking time spent in blocking operations for the current thread.
+   */
+  def disableBlockingTimeTracking(): Unit =
+    TrackElapsedBlocking.remove()
+
+  /**
+   * Whether or not this thread should track time spent in blocking operations.
+   *
+   * @see [[Scheduler.blockingTimeNanos]] and [[Scheduler.blocking]]
+   */
+  def getBlockingTimeTracking: Boolean = {
+    TrackElapsedBlocking.get() != null
+  }
+
+  sealed trait CanAwait {
+    /**
+     * Should time spent in blocking operations be tracked.
+     */
+    def trackElapsedBlocking: Boolean = getBlockingTimeTracking
+  }
 }
 
 /**
