@@ -18,32 +18,10 @@ object Util extends Build {
     ExclusionRule("javax.jms", "jms")
   )
 
-  val parserCombinators = scalaVersion { sv =>
-    CrossVersion.partialVersion(sv) match {
-      case Some((2, x)) if x >= 11 =>
-        Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4")
-      case _ => Nil
-    }
-  }
-
-  def scalacOptionsVersion(sv: String): Seq[String] = {
-    Seq(
-      // Note: Add -deprecation when deprecated methods are removed
-      "-unchecked",
-      "-feature",
-      "-encoding", "utf8"
-    ) ++ (CrossVersion.partialVersion(sv) match {
-      // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
-      case Some((2, x)) if x >= 11 => Seq("-Xlint:-missing-interpolator")
-      case _ => Seq("-Xlint")
-    })
-  }
-
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    scalaVersion := "2.11.7",
-    crossScalaVersions := Seq("2.10.6", "2.11.7"),
+    scalaVersion := "2.11.8",
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
@@ -54,19 +32,22 @@ object Util extends Build {
 
     resolvers += "twitter repo" at "https://maven.twttr.com",
 
-    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := (
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 10)) => false
-        case _ => true
-      }
-    ),
+    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
 
-    scalacOptions := scalacOptionsVersion(scalaVersion.value),
+    scalacOptions := Seq(
+      // Note: Add -deprecation when deprecated methods are removed
+      "-target:jvm-1.8",
+      "-unchecked",
+      "-feature",
+      "-encoding", "utf8",
+      // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
+      "-Xlint:-missing-interpolator"
+    ),
 
     // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
     // warnings are resolved
-    javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.7", "-target", "1.7"),
-    javacOptions in doc := Seq("-source", "1.7"),
+    javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),
+    javacOptions in doc := Seq("-source", "1.8"),
 
     // This is bad news for things like com.twitter.util.Time
     parallelExecution in Test := false,
@@ -208,9 +189,9 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "com.twitter" % "jsr166e" % "1.0.0",
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
+      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     ),
-    libraryDependencies <++= parserCombinators,
     resourceGenerators in Compile <+=
       (resourceManaged in Compile, name, version) map { (dir, name, ver) =>
         val file = dir / "com" / "twitter" / name / "build.properties"

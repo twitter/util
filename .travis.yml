@@ -14,15 +14,10 @@ cache:
    - $HOME/.sbt/boot/scala-$TRAVIS_SCALA_VERSION
 
 scala:
-  - 2.10.6
-  - 2.11.7
+  - 2.11.8
 
 jdk:
-  - oraclejdk7
-  # Note: not currently testing on JDK 8 internally
   - oraclejdk8
-  # Enable once https://github.com/travis-ci/travis-ci/issues/5227 is fixed.
-  #- openjdk7
 
 notifications:
   hipchat:

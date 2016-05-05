@@ -11,6 +11,12 @@ New Features:
   * util-core: Add `c.t.concurrent.Scheduler.blockingTimeNanos` which tracks time spent doing
     blocking operations. ``RB_ID=828289``
 
+API Changes:
+
+   * Builds are now only for Java 8 and Scala 2.11. See the
+     `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
+     for details. ``RB_ID=828898``
+
 6.34.0  2016-04-26
 
 New Features:
