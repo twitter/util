@@ -1,16 +1,17 @@
 package com.twitter.hashing
 
-import _root_.java.io.{BufferedReader, InputStreamReader}
-
-import scala.collection.mutable
-
 import org.junit.runner.RunWith
+import org.scalacheck.Gen
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import scala.collection.mutable
+import java.io.{BufferedReader, InputStreamReader}
+import java.nio.{ByteBuffer, ByteOrder}
+import java.security.MessageDigest
 
 @RunWith(classOf[JUnitRunner])
-class KetamaDistributorTest extends WordSpec {
+class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks {
   "KetamaDistributor" should {
     val nodes = Seq(
       KetamaNode("10.0.1.1", 600, 1),
@@ -70,6 +71,30 @@ class KetamaDistributorTest extends WordSpec {
       knownGoodValues foreach { case (key, node) =>
         val handle = ketamaDistributor.nodeForHash(key)
         assert(handle == node)
+      }
+    }
+
+    "hashInt" in {
+      val ketama = new KetamaDistributor[Unit](Seq.empty, 0, false)
+      forAll(Gen.chooseNum(0, Int.MaxValue)) { i =>
+        val md = MessageDigest.getInstance("MD5")
+        ketama.hashInt(i, md)
+        val array = md.digest()
+
+        assert(array.deep == md.digest(i.toString.getBytes("UTF-8")).deep)
+      }
+    }
+
+    "byteArrayToLE" in {
+      val ketama = new KetamaDistributor[Unit](Seq.empty, 0, false)
+      forAll { s: String =>
+        val ba = MessageDigest.getInstance("MD5").digest(s.getBytes("UTF-8"))
+        val bb = ByteBuffer.wrap(ba).order(ByteOrder.LITTLE_ENDIAN)
+
+        assert(ketama.byteArrayToLE(ba, 0) == bb.getInt(0))
+        assert(ketama.byteArrayToLE(ba, 4) == bb.getInt(4))
+        assert(ketama.byteArrayToLE(ba, 8) == bb.getInt(8))
+        assert(ketama.byteArrayToLE(ba, 12) == bb.getInt(12))
       }
     }
   }
