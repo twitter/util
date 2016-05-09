@@ -16,6 +16,7 @@
 
 package com.twitter.logging
 
+import com.twitter.util.Local
 import java.util.{logging => javalog}
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
@@ -54,6 +55,24 @@ class QueueingHandlerTest extends WordSpec
         // let thread log
         assert(stringHandler.get == "oh noes!\n")
       }
+    }
+
+    "publish with local context" in {
+      val logger = freshLogger()
+      val local = new Local[String]
+      val formatter = new Formatter {
+         override def format(record: javalog.LogRecord) =
+            local().getOrElse("MISSING!") + ":" + formatText(record) + lineTerminator
+      }
+      val stringHandler = new StringHandler(formatter, Some(Logger.INFO))
+      logger.addHandler(new QueueingHandler(stringHandler))
+
+      local() = "foo"
+      logger.warning("oh noes!")
+
+       eventually {
+         assert(stringHandler.get == "foo:oh noes!\n")
+       }
     }
 
     "publish, drop on overflow" in {
