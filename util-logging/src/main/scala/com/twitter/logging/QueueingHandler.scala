@@ -53,6 +53,9 @@ object QueueingHandler {
   // java interop
   def apply[H <: Handler](handler: () => H): () => QueueingHandler =
     apply(handler, Int.MaxValue)
+
+  private case class RecordWithLocals(record: javalog.LogRecord, locals: Local.Context)
+
 }
 
 /**
@@ -90,7 +93,7 @@ class QueueingHandler(handler: Handler, val maxQueueSize: Int, inferClassNames: 
   protected val dropLogNode: String = ""
   protected val log: Logger = Logger(dropLogNode)
 
-  private[this] val queue = new AsyncQueue[javalog.LogRecord](maxQueueSize)
+  private[this] val queue = new AsyncQueue[RecordWithLocals](maxQueueSize)
 
   private[this] val closed = new AtomicBoolean(false)
 
@@ -104,13 +107,14 @@ class QueueingHandler(handler: Handler, val maxQueueSize: Int, inferClassNames: 
     DefaultFuturePool {
       // We run this in a FuturePool to avoid satisfying pollers
       // (which flush the record) inline.
-      if (!queue.offer(record))
+      if (!queue.offer(RecordWithLocals(record, Local.save())))
         onOverflow(record)
     }
   }
 
-  private[this] def doPublish(record: javalog.LogRecord): Unit =
-    super.publish(record)
+  private[this] def doPublish(record: RecordWithLocals): Unit = Local.let(record.locals) {
+    super.publish(record.record)
+  }
 
   private[this] def loop(): Future[Unit] = {
     queue.poll().map(doPublish).respond {
@@ -154,3 +158,4 @@ class QueueingHandler(handler: Handler, val maxQueueSize: Int, inferClassNames: 
     Console.err.println(String.format("[%s] log queue overflow - record dropped", Time.now.toString))
   }
 }
+
