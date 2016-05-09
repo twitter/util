@@ -609,6 +609,7 @@ object AsyncStream {
     extends AsyncStream[A] {
     private[this] lazy val _more: AsyncStream[A] = next()
     def more(): AsyncStream[A] = _more
+    override def toString(): String = s"Cons($fa, $next)"
   }
 
   object Cons {
