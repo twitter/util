@@ -11,6 +11,10 @@ New Features:
   * util-core: Add `c.t.concurrent.Scheduler.blockingTimeNanos` which tracks time spent doing
     blocking operations. ``RB_ID=828289``
 
+  * util-app: `com.twitter.finagle.util.LoadService` has been moved to
+    `c.t.app.LoadService` and can now be used without needing a finagle-core
+    dependency. ``RB_ID=829897``
+
 API Changes:
 
    * Builds are now only for Java 8 and Scala 2.11. See the

@@ -1,0 +1,5 @@
+# Totally contrived example classloader that stores "META-INF" as "HIDDEN-INF"
+# Not a good example of real-world issues, but it does the job at hiding the service definition from the
+# com.twitter.app.ClassPath code
+# See LoadServiceTest#LoadService should find services on non URLClassloader
+com.twitter.app.LoadServiceRandomInterfaceIgnored

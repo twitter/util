@@ -1,0 +1,4 @@
+com.twitter.app.LoadServiceRandomInterfaceImpl
+# here's a comment that should be ignored
+com.twitter.app.LoadServiceRandomInterfaceImpl # duplicate class name, should be ignore too
+
