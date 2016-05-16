@@ -3,8 +3,12 @@ package com.twitter.concurrent
 import com.twitter.conversions.time._
 import com.twitter.util._
 import java.util.concurrent.{
-  ArrayBlockingQueue, CancellationException, RejectedExecutionException}
-import scala.annotation.tailrec
+  ArrayBlockingQueue,
+  BlockingQueue,
+  CancellationException,
+  LinkedBlockingQueue,
+  RejectedExecutionException
+}
 
 // implicitly a rate of 1 token / `interval`
 private[concurrent] class Period(val interval: Duration) extends AnyVal {
@@ -30,7 +34,7 @@ object AsyncMeter {
    * This is equivalent to `AsyncMeter.newMeter(permits, 1.second, maxWaiters)`.
    */
   def perSecond(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
-    new AsyncMeter(permits, 1.second, maxWaiters)
+    newMeter(permits, 1.second, maxWaiters)
 
   /**
    * Creates an [[AsyncMeter]] that has a maximum burst size of `burstSize` over
@@ -51,7 +55,35 @@ object AsyncMeter {
     maxWaiters: Int
   )(
     implicit timer: Timer
-  ): AsyncMeter = new AsyncMeter(burstSize, burstDuration, maxWaiters)
+  ): AsyncMeter = {
+    require(maxWaiters > 0, s"max waiters of $maxWaiters, which is <= 0 doesn't make sense")
+    val q = new ArrayBlockingQueue[(Promise[Unit], Int)](maxWaiters)
+    new AsyncMeter(burstSize, burstDuration, q)
+  }
+
+  /**
+   * Creates an [[AsyncMeter]] that has a maximum burst size of `burstSize` over
+   * `burstDuration`, and an unbounded number of waiters.  The `burstSize`
+   * permits will be disbursed on a regular schedule, so that they aren't
+   * bunched up.
+   *
+   * WARNING: Only use an unbounded number of waiters when some other
+   * aspect of your implementation already bounds the number of
+   * waiters. If there is no other bound, the waiters can use up your
+   * process' resources.
+   *
+   * @param burstSize: the maximum number of waiters who may be allowed to
+   * continue over `burstDuration`
+   *
+   * @param burstDuration: the duration over which we limit ourselves
+   */
+  def newUnboundedMeter(
+    burstSize: Int,
+    burstDuration: Duration
+  )(
+    implicit timer: Timer
+  ): AsyncMeter =
+    new AsyncMeter(burstSize, burstDuration, new LinkedBlockingQueue)
 
   /**
    * Allows the user to `await` on requests that have a wider width than the
@@ -109,15 +141,14 @@ object AsyncMeter {
  * }
  * }}}
  */
-class AsyncMeter private[concurrent](
+class AsyncMeter private(
     private[concurrent] val burstSize: Int,
     burstDuration: Duration,
-    maxWaiters: Int)(implicit timer: Timer) {
+    q: BlockingQueue[(Promise[Unit], Int)])(implicit timer: Timer) {
 
   require(burstSize > 0, s"burst size of $burstSize, which is <= 0 doesn't make sense")
   require(burstDuration > Duration.Zero,
     s"burst duration of $burstDuration, which is <= 0 nanoseconds doesn't make sense")
-  require(maxWaiters > 0, s"max waiters of $maxWaiters, which is <= 0 doesn't make sense")
 
   private[this] val period = Period.fromBurstiness(burstSize, burstDuration)
 
@@ -132,14 +163,6 @@ class AsyncMeter private[concurrent](
   @volatile private[this] var running = false
   private[this] var task: Closable = Closable.nop
   private[this] var elapsed = Stopwatch.start()
-
-  // we synchronize removals on this, because we only want to satisfy when the
-  // tokenbucket has enough space to remove, but we can't know whether it has
-  // enough space or not without peeking.  after we peek, and successfully
-  // remove from the tokenbucket, if the promise is interrupted then there's a
-  // race between removing and polling-by synchronizing on peek/poll and remove,
-  // it's impossible to race.
-  private[this] val q = new ArrayBlockingQueue[(Promise[Unit], Int)](maxWaiters, true)
 
   // TODO: we may want to check the Deadline and not bother scheduling it if its
   // position in line exceeds its Deadline.  However, if earlier nodes get
@@ -192,7 +215,13 @@ class AsyncMeter private[concurrent](
 
     if (q.offer(tup)) {
       p.setInterruptHandler { case t: Throwable =>
-        // must synchronize on removals-see explanation by declaration of queue
+        // we synchronize removals, because we only want to satisfy when
+        // the tokenbucket has enough space to remove, but we can't know
+        // whether it has enough space or not without peeking.  after we
+        // peek, and successfully remove from the tokenbucket, if the
+        // promise is interrupted then there's a race between removing
+        // and polling-by synchronizing on peek/poll and remove, it's
+        // impossible to race.
         val rem = synchronized { q.remove(tup) }
         if (rem) {
           val e = new CancellationException("Request for permits was cancelled.")

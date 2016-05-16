@@ -9,9 +9,11 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AsyncMeterTest extends FunSuite {
+  import AsyncMeter._
+
   test("AsyncMeter shouldn't wait at all when there aren't any waiters.") {
     val timer = new MockTimer
-    val meter = new AsyncMeter(1, 1.second, 100)(timer)
+    val meter = newMeter(1, 1.second, 100)(timer)
     val result = meter.await(1)
     assert(result.isDone)
   }
@@ -19,7 +21,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should allow more than one waiter and allow them on the schedule.") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(1, 1.second, 100)(timer)
+      val meter = newMeter(1, 1.second, 100)(timer)
       val ready = meter.await(1)
       val waiter = meter.await(1)
       assert(ready.isDone)
@@ -34,7 +36,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter shouldn't allow a waiter until interval has passed since the last allowance.") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(1, 1.second, 100)(timer)
+      val meter = newMeter(1, 1.second, 100)(timer)
       val ready = meter.await(1)
       assert(ready.isDone)
 
@@ -53,7 +55,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should fail waiters that wait over the limit, but still allow the rest") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(1, 1.second, 1)(timer)
+      val meter = newMeter(1, 1.second, 1)(timer)
       val ready = meter.await(1)
       assert(ready.isDone)
 
@@ -74,7 +76,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should allow a waiter to be removed from the queue on interruption.") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(1, 1.second, 100)(timer)
+      val meter = newMeter(1, 1.second, 100)(timer)
       var nr = 0
       val ready = meter.await(1)
       val waiter = meter.await(1)
@@ -94,7 +96,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should allow more than one waiter in a ready period") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(2, 1.second, 100)(timer)
+      val meter = newMeter(2, 1.second, 100)(timer)
       val ready = meter.await(2)
       assert(ready.isDone)
 
@@ -113,7 +115,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should allow an expensive call to be satisfied slowly") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(2, 1.second, 100)(timer)
+      val meter = newMeter(2, 1.second, 100)(timer)
       val ready = meter.await(2)
       assert(ready.isDone)
 
@@ -132,7 +134,7 @@ class AsyncMeterTest extends FunSuite {
 
   test("AsyncMeter should reject greedy awaiters") {
     val timer = new MockTimer
-    val meter = new AsyncMeter(2, 1.second, 100)(timer)
+    val meter = newMeter(2, 1.second, 100)(timer)
     val greedy= meter.await(3)
     assert(greedy.isDefined)
     intercept[IllegalArgumentException] {
@@ -142,7 +144,7 @@ class AsyncMeterTest extends FunSuite {
 
   test("AsyncMeter should not allow small queue jumpers") {
     val timer = new MockTimer
-    val meter = new AsyncMeter(6, 1.second, 100)(timer)
+    val meter = newMeter(6, 1.second, 100)(timer)
     val ready = meter.await(3)
     val first = meter.await(4)
     val second = meter.await(4)
@@ -154,7 +156,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should allow parts of tokens") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(3, 2.millisecond, 100)(timer)
+      val meter = newMeter(3, 2.millisecond, 100)(timer)
       val ready = meter.await(3)
       val first = meter.await(1)
       val second = meter.await(1)
@@ -175,8 +177,8 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter.extraWideAwait should handle big awaits") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(6, 1.second, 100)(timer)
-      val greedy = AsyncMeter.extraWideAwait(12, meter)
+      val meter = newMeter(6, 1.second, 100)(timer)
+      val greedy = extraWideAwait(12, meter)
       assert(!greedy.isDefined)
       ctl.advance(1.second)
       timer.tick()
@@ -187,8 +189,8 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter.extraWideAwait shouldn't block after being rejected") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(6, 1.second, 2)(timer)
-      val greedy = AsyncMeter.extraWideAwait(24, meter)
+      val meter = newMeter(6, 1.second, 2)(timer)
+      val greedy = extraWideAwait(24, meter)
       val first = meter.await(6)
       assert(greedy.isDefined)
       assert(!first.isDefined)
@@ -204,8 +206,8 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter.extraWideAwait shouldn't block after being interrupted") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>
-      val meter = new AsyncMeter(6, 1.second, 100)(timer)
-      val greedy = AsyncMeter.extraWideAwait(18, meter)
+      val meter = newMeter(6, 1.second, 100)(timer)
+      val greedy = extraWideAwait(18, meter)
       val first = meter.await(6)
       assert(!greedy.isDefined)
       assert(!first.isDefined)
