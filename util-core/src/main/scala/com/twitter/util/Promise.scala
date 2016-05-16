@@ -66,10 +66,8 @@ object Promise {
    * A monitored continuation.
    *
    * @param saved The saved local context of the invocation site
-   *
    * @param k the closure to invoke in the saved context, with the
    * provided result
-   *
    * @param depth a tag used to store the chain depth of this context
    * for scheduling purposes.
    */
@@ -92,11 +90,8 @@ object Promise {
    * A transforming continuation.
    *
    * @param saved The saved local context of the invocation site
-   *
    * @param promise The Promise for the transformed value
-   *
    * @param f The closure to invoke to produce the Future of the transformed value.
-   *
    * @param depth a tag used to store the chain depth of this context
    * for scheduling purposes.
    */
@@ -129,7 +124,7 @@ object Promise {
   }
 
   /*
-   * Performance notes
+   * Performance notes:
    *
    * The following is a characteristic CDF of wait queue lengths.
    * This was retrieved by instrumenting the promise implementation
@@ -150,19 +145,67 @@ object Promise {
    *
    * todo: do this sort of profiling in a production app with
    * production load.
+   *
+   * Implementation notes:
+   *
+   * While these various states for `Promises.state` should be nicely modeled
+   * as a sealed type, by omitting the wrappers around `Done` and `Linked`
+   * we are able to save significant number of allocations for slightly
+   * more unreadable code localized within `Promise`.
    */
-  private sealed trait State[A]
-  private case class Waiting[A](first: K[A], rest: List[K[A]]) extends State[A]
-  private case class Interruptible[A](waitq: List[K[A]], handler: PartialFunction[Throwable, Unit]) extends State[A]
-  private case class Transforming[A](waitq: List[K[A]], other: Future[_]) extends State[A]
-  private case class Interrupted[A](waitq: List[K[A]], signal: Throwable) extends State[A]
-  private case class Done[A](result: Try[A]) extends State[A]
-  private case class Linked[A](p: Promise[A]) extends State[A]
 
-  private def initState[A]: State[A] = emptyState.asInstanceOf[State[A]]
-  private val emptyState: State[Nothing] = Waiting(null, Nil)
-  private val unsafe = Unsafe()
-  private val stateOff = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
+  /**
+   * The initial state of a Promise. `first` (which may be null)
+   * and `rest` are the continuations that should be run once it
+   * is satisfied.
+   */
+  private case class Waiting(first: K[Nothing], rest: List[K[Nothing]])
+
+  /**
+   * An unsatisfied Promise which has an interrupt handler attached to it.
+   * `waitq` represents the continuations that should be run once it
+   * is satisfied.
+   *
+   * @note `waitq` will always be a `List[K[A]]`
+   */
+  private case class Interruptible(
+      waitq: List[K[Nothing]],
+      handler: PartialFunction[Throwable, Unit])
+
+  /**
+   * An unsatisfied Promise which forwards interrupts to `other`.
+   * `waitq` represents the continuations that should be run once it
+   * is satisfied.
+   *
+   * @note `waitq` will always be a `List[K[A]]`
+   */
+  private case class Transforming(waitq: List[K[Nothing]], other: Future[_])
+
+  /**
+   * An unsatisified Promise that has been interrupted by `signal`.
+   * `waitq` represents the continuations that should be run once it
+   * is satisfied.
+   *
+   * @note `waitq` will always be a `List[K[A]]`
+   */
+  private case class Interrupted(waitq: List[K[Nothing]], signal: Throwable)
+
+  /**
+   * A Promise that has been satisfied with `result`.
+   * This is stored in `Promise.state` as a raw `Try[A]`
+   */
+  // private case class Done[A](result: Try[A])
+
+  /**
+   * A Promise that is "linked" to another `Promise` via `Promise.become`.
+   * This is stored in `Promise.state` as a raw `Promise[A]`
+   */
+  // private case class Linked[A](p: Promise[A])
+
+  private[this] val emptyState: Waiting = Waiting(null, Nil)
+  private def initState: Waiting = emptyState
+  private val unsafe: sun.misc.Unsafe = Unsafe()
+  private val stateOff: Long = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
   private val AlwaysUnit: Any => Unit = scala.Function.const(()) _
 
   sealed trait Responder[A] { this: Future[A] =>
@@ -317,7 +360,7 @@ object Promise {
  * A number of optimizations are employed to conserve ''space'': we pay
  * particular heed to the JVM's object representation, in particular for
  * OpenJDK (HotSpot) version 7 running on 64-bit architectures with
- * compressed OOPS. See comments on [[com.twitter.util.Promise.State]]
+ * compressed OOPS. See comments on `com.twitter.util.Promise.State`
  * for details.
  */
 class Promise[A]
@@ -326,11 +369,13 @@ class Promise[A]
   with Updatable[Try[A]] {
   import Promise._
 
-  protected[util] final def depth = 0
-  protected final def parent = this
+  protected[util] final def depth: Short = 0
+  protected final def parent: Promise[A] = this
 
-  @volatile private[this] var state: Promise.State[A] = initState
-  private def theState(): Promise.State[A] = state
+  // Note: this will always be one of:
+  // Waiting, Interrupted, Interruptible, `Try[A]` (Done), `Promise[A]` (Linked)
+  @volatile private[this] var state: Any = initState
+  private def theState(): Any = state
 
   def this(handleInterrupt: PartialFunction[Throwable, Unit]) {
     this()
@@ -339,12 +384,19 @@ class Promise[A]
 
   def this(result: Try[A]) {
     this()
-    this.state = Done(result)
+    this.state = result
   }
 
-  override def toString = "Promise@%s(state=%s)".format(hashCode, state)
+  override def toString: String = {
+    val theState = state match {
+      case p: Promise[A] /* Linked */ => s"Linked(${p.toString})"
+      case res: Try[A] /* Done */ => s"Done($res)"
+      case s => s.toString
+    }
+    s"Promise@$hashCode(state=$theState)"
+  }
 
-  @inline private[this] def cas(oldState: State[A], newState: State[A]): Boolean =
+  @inline private[this] def cas(oldState: Any, newState: Any): Boolean =
     unsafe.compareAndSwapObject(this, stateOff, oldState, newState)
 
   private[this] def runq(first: K[A], rest: List[K[A]], result: Try[A]) = Scheduler.submit(
@@ -442,7 +494,7 @@ class Promise[A]
   @tailrec
   final def setInterruptHandler(f: PartialFunction[Throwable, Unit]): Unit = {
     state match {
-      case Linked(p) => p.setInterruptHandler(f)
+      case p: Promise[A] /* Linked */ => p.setInterruptHandler(f)
 
       case s@Waiting(first, rest) =>
         val waitq = if (first eq null) rest else first :: rest
@@ -460,7 +512,7 @@ class Promise[A]
       case Interrupted(_, signal) =>
         f.applyOrElse(signal, Promise.AlwaysUnit)
 
-      case Done(_) => // ignore
+      case _: Try[A] /* Done */ => // ignore
     }
   }
 
@@ -471,7 +523,8 @@ class Promise[A]
     case Interruptible(waitq, _) => waitq.length
     case Transforming(waitq, _) => waitq.length
     case Interrupted(waitq, _) => waitq.length
-    case Done(_) | Linked(_) => 0
+    case _: Promise[A] /* Linked */ => 0
+    case _: Try[A] /* Done */ => 0
   }
 
   /**
@@ -487,7 +540,7 @@ class Promise[A]
     // This reduces allocations in the common case.
     if (other.isDefined) return
     state match {
-      case Linked(p) => p.forwardInterruptsTo(other)
+      case p: Promise[A] /* Linked */ => p.forwardInterruptsTo(other)
 
       case s@Waiting(first, rest) =>
         val waitq = if (first eq null) rest else first :: rest
@@ -505,13 +558,14 @@ class Promise[A]
       case Interrupted(_, signal) =>
         other.raise(signal)
 
-      case Done(_) => // ignore
+      case _: Try[A] /* Done */ => () // ignore
     }
   }
 
   @tailrec final
   def raise(intr: Throwable): Unit = state match {
-    case Linked(p) => p.raise(intr)
+    case p: Promise[A] /* Linked */ => p.raise(intr)
+
     case s@Interruptible(waitq, handler) =>
       if (!cas(s, Interrupted(waitq, intr))) raise(intr) else {
         handler.applyOrElse(intr, Promise.AlwaysUnit)
@@ -531,42 +585,42 @@ class Promise[A]
       if (!cas(s, Interrupted(waitq, intr)))
         raise(intr)
 
-    case Done(_) =>
+    case _: Try[A] /* Done */ => () // nothing to do, as its already satisified.
   }
 
   @tailrec protected[Promise] final def detach(k: K[A]): Boolean = {
     state match {
-      case Linked(p) =>
+      case p: Promise[A] /* Linked */ =>
         p.detach(k)
 
       case s@Interruptible(waitq, handler) =>
-        if (!cas(s, Interruptible(waitq filterNot (_ eq k), handler)))
+        if (!cas(s, Interruptible(waitq.filterNot(_ eq k), handler)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Transforming(waitq, other) =>
-        if (!cas(s, Transforming(waitq filterNot (_ eq k), other)))
+        if (!cas(s, Transforming(waitq.filterNot(_ eq k), other)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Interrupted(waitq, intr) =>
-        if (!cas(s, Interrupted(waitq filterNot (_ eq k), intr)))
+        if (!cas(s, Interrupted(waitq.filterNot(_ eq k), intr)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Waiting(first, rest)  =>
         val waitq = if (first eq null) rest else first :: rest
-        val next = (waitq filterNot (_ eq k)) match {
-          case Nil => initState[A]
+        val next = waitq.filterNot(_ eq k) match {
+          case Nil => initState
           case head :: tail => Waiting(head, tail)
         }
         if (!cas(s, next)) detach(k)
         else waitq.contains(k)
 
-      case Done(_) => false
+      case _: Try[A] /* Done */ => false
     }
   }
 
@@ -575,10 +629,10 @@ class Promise[A]
   @throws(classOf[InterruptedException])
   def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type =
     state match {
-      case Linked(p) =>
+      case p: Promise[A] /* Linked */ =>
         p.ready(timeout)
         this
-      case Done(res) =>
+      case res: Try[A] /* Done */ =>
         this
       case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
         val condition = new java.util.concurrent.CountDownLatch(1)
@@ -590,7 +644,7 @@ class Promise[A]
 
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = {
-    val Done(theTry) = ready(timeout).compress().theState()
+    val theTry = ready(timeout).compress().theState().asInstanceOf[Try[A]]
     theTry()
   }
 
@@ -601,9 +655,10 @@ class Promise[A]
    * Returns this promise's interrupt if it is interrupted.
    */
   def isInterrupted: Option[Throwable] = state match {
-    case Linked(p) => p.isInterrupted
+    case p: Promise[A] /* Linked */ => p.isInterrupted
     case Interrupted(_, intr) => Some(intr)
-    case Done(_) | Waiting(_, _) | Interruptible(_, _) | Transforming(_, _) => None
+    case Waiting(_, _) | Interruptible(_, _) | Transforming(_, _) => None
+    case _: Try[A] /* Done */ => None
   }
 
   /**
@@ -705,39 +760,38 @@ class Promise[A]
    * @note Invoking `updateIfEmpty` without checking the boolean result is almost
    * never the right approach. Doing so is generally unsafe unless race
    * conditions are acceptable.
-   *
    * @return true only if the result is updated, false if it was already set.
    */
   @tailrec
   final def updateIfEmpty(result: Try[A]): Boolean = state match {
-    case Done(_) => false
+    case _: Try[A] /* Done */ => false
     case s@Waiting(first, rest) =>
-      if (!cas(s, Done(result))) updateIfEmpty(result) else {
-        runq(first, rest, result)
+      if (!cas(s, result)) updateIfEmpty(result) else {
+        runq(first.asInstanceOf[K[A]], rest.asInstanceOf[List[K[A]]], result)
         true
       }
     case s@Interruptible(waitq, _) =>
-      if (!cas(s, Done(result))) updateIfEmpty(result) else {
-        runq(null, waitq, result)
+      if (!cas(s, result)) updateIfEmpty(result) else {
+        runq(null, waitq.asInstanceOf[List[K[A]]], result)
         true
       }
     case s@Transforming(waitq, _) =>
-      if (!cas(s, Done(result))) updateIfEmpty(result) else {
-        runq(null, waitq, result)
+      if (!cas(s, result)) updateIfEmpty(result) else {
+        runq(null, waitq.asInstanceOf[List[K[A]]], result)
         true
       }
     case s@Interrupted(waitq, _) =>
-      if (!cas(s, Done(result))) updateIfEmpty(result) else {
-        runq(null, waitq, result)
+      if (!cas(s, result)) updateIfEmpty(result) else {
+        runq(null, waitq.asInstanceOf[List[K[A]]], result)
         true
       }
-    case Linked(p) => p.updateIfEmpty(result)
+    case p: Promise[A] /* Linked */ => p.updateIfEmpty(result)
   }
 
   @tailrec
   protected[util] final def continue(k: K[A]): Unit = {
     state match {
-      case Done(v) =>
+      case v: Try[A] /* Done */ =>
         Scheduler.submit(new Runnable {
           def run() {
             k(v)
@@ -758,7 +812,7 @@ class Promise[A]
       case s@Interrupted(waitq, signal) =>
         if (!cas(s, Interrupted(k :: waitq, signal)))
           continue(k)
-      case Linked(p) =>
+      case p: Promise[A] /* Linked */ =>
         p.continue(k)
     }
   }
@@ -768,11 +822,11 @@ class Promise[A]
    * or it is becoming another Future via `become`.
    */
   protected final def compress(): Promise[A] = state match {
-    case s@Linked(p) =>
+    case p: Promise[A] /* Linked */ =>
       val target = p.compress()
       // due to the assumptions stated above regarding when this can be called,
       // there should never be a `cas` fail.
-      cas(s, Linked(target))
+      cas(p, target)
       target
     case _ =>
       this
@@ -783,54 +837,54 @@ class Promise[A]
     if (this eq target) return
 
     state match {
-      case s@Linked(p) =>
-        if (cas(s, Linked(target)))
+      case p: Promise[A] /* Linked */ =>
+        if (cas(p, target))
           p.link(target)
         else
           link(target)
 
-      case s@Done(value) =>
+      case value: Try[A] /* Done */ =>
         if (!target.updateIfEmpty(value) && value != Await.result(target)) {
           throw new IllegalArgumentException(
             "Cannot link two Done Promises with differing values")
         }
 
       case s@Waiting(first, rest) =>
-        if (!cas(s, Linked(target))) link(target) else {
+        if (!cas(s, target)) link(target) else {
           if (first != null)
-            target.continue(first)
+            target.continue(first.asInstanceOf[K[A]])
           var ks = rest
           while (ks ne Nil) {
-            target.continue(ks.head)
+            target.continue(ks.head.asInstanceOf[K[A]])
             ks = ks.tail
           }
         }
 
       case s@Interruptible(waitq, handler) =>
-        if (!cas(s, Linked(target))) link(target) else {
+        if (!cas(s, target)) link(target) else {
           var ks = waitq
           while (ks ne Nil) {
-            target.continue(ks.head)
+            target.continue(ks.head.asInstanceOf[K[A]])
             ks = ks.tail
           }
           target.setInterruptHandler(handler)
         }
 
       case s@Transforming(waitq, other) =>
-        if (!cas(s, Linked(target))) link(target) else {
+        if (!cas(s, target)) link(target) else {
           var ks = waitq
           while (ks ne Nil) {
-            target.continue(ks.head)
+            target.continue(ks.head.asInstanceOf[K[A]])
             ks = ks.tail
           }
           target.forwardInterruptsTo(other)
         }
 
       case s@Interrupted(waitq, signal) =>
-        if (!cas(s, Linked(target))) link(target) else {
+        if (!cas(s, target)) link(target) else {
           var ks = waitq
           while (ks ne Nil) {
-            target.continue(ks.head)
+            target.continue(ks.head.asInstanceOf[K[A]])
             ks = ks.tail
           }
           target.raise(signal)
@@ -839,16 +893,16 @@ class Promise[A]
   }
 
   def poll: Option[Try[A]] = state match {
-    case Linked(p) => p.poll
-    case Done(res) => Some(res)
+    case p: Promise[A] /* Linked */ => p.poll
+    case res: Try[A] /* Done */ => Some(res)
     case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => None
   }
 
   override def isDefined: Boolean = state match {
     // Note: the basic implementation is the same as `poll()`, but we want to avoid doing
     // object allocations for `Some`s when the caller does not need the result.
-    case Linked(p) => p.isDefined
-    case Done(res) => true
+    case p: Promise[A] /* Linked */ => p.isDefined
+    case res: Try[A] /* Done */ => true
     case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => false
   }
 }
