@@ -172,7 +172,6 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       guavaLib,
-      "commons-collections"      % "commons-collections" % "3.2.2",
       "org.scalacheck"          %% "scalacheck"          % "1.12.2" % "test"
     )
   ).dependsOn(utilCore % "compile->compile;test->test")

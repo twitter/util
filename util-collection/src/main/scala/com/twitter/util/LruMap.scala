@@ -1,11 +1,9 @@
 package com.twitter.util
 
 import java.{util => ju}
-
+import java.util.LinkedHashMap
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{Map, MapLike, SynchronizedMap}
-
-import org.apache.commons.collections.map.LRUMap
 
 /**
  * A wrapper trait for java.util.Map implementations to make them behave as scala Maps.
@@ -41,11 +39,21 @@ case class JMapWrapper[A, B](underlying : ju.Map[A, B]) extends JMapWrapperLike[
 }
 
 object LruMap {
-  def makeUnderlying[K, V](maxSize: Int) = new LRUMap(maxSize).asInstanceOf[ju.Map[K, V]]
+
+  // initial capacity and load factor are the normal defaults for LinkedHashMap
+  def makeUnderlying[K, V](maxSize: Int): ju.Map[K, V] = new LinkedHashMap[K, V](
+    16, /* initial capacity */
+    0.75f, /* load factor */
+    true /* access order (as opposed to insertion order) */
+  ) {
+    override protected def removeEldestEntry(eldest: ju.Map.Entry[K, V]): Boolean = {
+      this.size() > maxSize
+    }
+  }
 }
 
 /**
- * A scala `Map` backed by an [[org.apache.commons.collections.map.LRUMap]]
+ * A scala `Map` backed by a [[java.util.LinkedHashMap]]
  */
 class LruMap[K, V](val maxSize: Int, val underlying: ju.Map[K, V])
   extends JMapWrapperLike[K, V, LruMap[K, V]]
@@ -55,7 +63,7 @@ class LruMap[K, V](val maxSize: Int, val underlying: ju.Map[K, V])
 }
 
 /**
- * A synchronized scala `Map` backed by an [[org.apache.commons.collections.map.LRUMap]]
+ * A synchronized scala `Map` backed by an [[java.util.LinkedHashMap]]
  */
 class SynchronizedLruMap[K, V](maxSize: Int, underlying: ju.Map[K, V])
   extends LruMap[K, V](maxSize, ju.Collections.synchronizedMap(underlying))
