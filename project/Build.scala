@@ -18,6 +18,8 @@ object Util extends Build {
     ExclusionRule("javax.jms", "jms")
   )
 
+  val guavaLib = "com.google.guava" % "guava" % "16.0.1"
+
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
@@ -113,7 +115,9 @@ object Util extends Build {
     settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
-    name := "util-app"
+    name := "util-app",
+    libraryDependencies ++= Seq(
+      guavaLib)
   ).dependsOn(utilCore, utilRegistry)
 
   lazy val utilBenchmark = Project(
@@ -135,10 +139,7 @@ object Util extends Build {
   ).settings(
     name := "util-cache",
     libraryDependencies ++= Seq(
-      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305"              % "2.0.1",
-      "com.google.guava"         % "guava"               % "16.0.1"
-    )
+      guavaLib)
   ).dependsOn(utilCore)
 
   lazy val utilClassPreloader = Project(
@@ -170,10 +171,7 @@ object Util extends Build {
   ).settings(
     name := "util-collection",
     libraryDependencies ++= Seq(
-      // NB: guava has a `provided` dep on jsr/javax packages, so we include them manually
-      "com.google.code.findbugs" % "jsr305"              % "2.0.1",
-      "javax.inject"             % "javax.inject"        % "1",
-      "com.google.guava"         % "guava"               % "16.0.1",
+      guavaLib,
       "commons-collections"      % "commons-collections" % "3.2.2",
       "org.scalacheck"          %% "scalacheck"          % "1.12.2" % "test"
     )
