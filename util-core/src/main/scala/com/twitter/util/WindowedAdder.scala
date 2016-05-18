@@ -1,8 +1,7 @@
 package com.twitter.util
 
-import com.twitter.jsr166e.LongAdder
 import java.util.Arrays
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.{LongAdder, AtomicInteger}
 
 private[twitter] object WindowedAdder {
 

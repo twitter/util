@@ -5,7 +5,6 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty/jvm/com/twitter:jsr166e',
     '3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators',
     'util/util-function/src/main/java',
   ],
