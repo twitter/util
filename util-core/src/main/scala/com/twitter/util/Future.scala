@@ -807,12 +807,6 @@ abstract class Future[+A] extends Awaitable[A] {
    */
   def ensure(f: => Unit): Future[A] = respond { _ => f }
 
-  /**
-   * Alias for [[Future!.apply() apply()]].
-   */
-  @deprecated("Use Await.result", "6.2.x")
-  def get(): A = Await.result(this, DEFAULT_TIMEOUT)
-
   @deprecated("Use Await.result(future.liftToTry).isReturn", "6.2.x")
   def isReturn: Boolean =  Await.result(liftToTry, DEFAULT_TIMEOUT).isReturn
 
