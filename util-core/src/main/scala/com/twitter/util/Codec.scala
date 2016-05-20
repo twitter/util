@@ -62,7 +62,7 @@ object Codec extends EncoderCompanion with DecoderCompanion {
 /**
  * A base trait for all Codecs that translate a type T into a serialized form S
  */
-trait Codec[T, S] extends Bijection[T, S] with Encoder[T, S] with Decoder[T, S]
+trait Codec[T, S] extends Encoder[T, S] with Decoder[T, S]
 
 object BinaryCodec {
   def encode[T](t: T)(implicit enc: Codec[T, Array[Byte]]): Array[Byte] = enc.encode(t)

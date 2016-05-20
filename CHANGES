@@ -25,9 +25,12 @@ New Features:
 
 API Changes:
 
-   * Builds are now only for Java 8 and Scala 2.11. See the
-     `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
-     for details. ``RB_ID=828898``
+  * util-core: `c.t.u.Bijection` is removed. use `c.t.bijection.Bijection`
+    (https://github.com/twitter/bijection) instead. ``RB_ID=834383``
+
+  * Builds are now only for Java 8 and Scala 2.11. See the
+    `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
+    for details. ``RB_ID=828898``
 
    * util-core: Deprecated method `Future.get` has been removed because it made it
      too easy to hide blocking code. Replaced usage with the more explicit
