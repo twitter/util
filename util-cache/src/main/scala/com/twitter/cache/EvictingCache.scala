@@ -1,6 +1,5 @@
 package com.twitter.cache
 
-import com.twitter.cache.guava.LoadingFutureCache
 import com.twitter.util.{Future, Throw}
 
 private[cache] class EvictingCache[K, V](underlying: FutureCache[K, V]) extends FutureCacheProxy[K, V](underlying) {
@@ -23,8 +22,8 @@ private[cache] class EvictingCache[K, V](underlying: FutureCache[K, V]) extends 
 }
 
 private[cache] class LazilyEvictingCache[K, V](
-  underlying: LoadingFutureCache[K, V]
-) extends FutureCacheProxy[K, V](underlying) {
+    underlying: FutureCache[K, V])
+  extends FutureCacheProxy[K, V](underlying) {
   private[this] def invalidateLazily(k: K, f: Future[V]): Unit = {
     f.poll match {
       case Some(Throw(e)) => underlying.evict(k, f)
@@ -59,6 +58,13 @@ object EvictingCache {
    * Wraps an underlying FutureCache, ensuring that if a failed future
    * is fetched, we evict it.
    */
-  def lazily[K, V](underlying: LoadingFutureCache[K, V]): FutureCache[K, V] =
+  def lazily[K, V](underlying: guava.LoadingFutureCache[K, V]): FutureCache[K, V] =
+    new LazilyEvictingCache[K, V](underlying)
+
+  /**
+   * Wraps an underlying FutureCache, ensuring that if a failed future
+   * is fetched, we evict it.
+   */
+  def lazily[K, V](underlying: caffeine.LoadingFutureCache[K, V]): FutureCache[K, V] =
     new LazilyEvictingCache[K, V](underlying)
 }

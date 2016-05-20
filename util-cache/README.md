@@ -45,6 +45,9 @@ We strongly encourage users to use [Guava caches][3], as the backing synchronous
 constructed your cache, you can hand it to [GuavaCache][4], which will construct it for you
 correctly.
 
+We're also experimenting with [Caffeine][5], which has a very similar api to Guava.  You should be
+able to use it in the same way, practically as a drop-in replacement.
+
 ### Quickstart
 
 To get started, all we need is a function that returns a future, and a cache.
@@ -168,3 +171,4 @@ val cachedFile: () => Future[String] = Refresh.every(5.minutes) {
 [2]: https://github.com/twitter/util/blob/f5e363e5dbfa42a49478e0324099a7f2884cf6d8/util-cache/src/main/scala/com/twitter/cache/FutureCache.scala#L101-L109
 [3]: https://github.com/google/guava/wiki/CachesExplained
 [4]: https://github.com/twitter/util/blob/develop/util-cache/src/main/scala/com/twitter/cache/guava/GuavaCache.scala
+[5]: https://github.com/ben-manes/caffeine/wiki

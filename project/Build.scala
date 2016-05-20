@@ -19,6 +19,8 @@ object Util extends Build {
   )
 
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
+  val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.0"
+  val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 
   val sharedSettings = Seq(
     version := libVersion,
@@ -138,8 +140,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-cache",
-    libraryDependencies ++= Seq(
-      guavaLib)
+    libraryDependencies ++= Seq(guavaLib, caffeineLib, jsr305Lib)
   ).dependsOn(utilCore)
 
   lazy val utilClassPreloader = Project(

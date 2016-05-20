@@ -23,6 +23,8 @@ New Features:
     `c.t.app.LoadService` and can now be used without needing a finagle-core
     dependency. ``RB_ID=829897``
 
+  * util-cache: Adds support for Caffeine-style caches. ``RB_ID=833848``
+
 API Changes:
 
   * util-core: `c.t.u.Bijection` is removed. use `c.t.bijection.Bijection`

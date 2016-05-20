@@ -1,10 +1,15 @@
 junit_tests(name='scala',
   dependencies=[
+    '3rdparty/jvm/com/github/ben-manes/caffeine',
+    '3rdparty/jvm/com/google/code/findbugs:jsr305',
+    '3rdparty/jvm/com/google/guava',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalatest',
     'util/util-cache',
+    'util/util-core',
   ],
   fatal_warnings=True,
+  strict_deps=True,
   sources=rglobs('*.scala')
 )

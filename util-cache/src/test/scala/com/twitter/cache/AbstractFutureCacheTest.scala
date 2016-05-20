@@ -1,6 +1,6 @@
 package com.twitter.cache
 
-import com.twitter.util.Future
+import com.twitter.util.{Future, Promise}
 import org.scalatest.FunSuite
 
 // TODO: should also check for races
@@ -13,6 +13,18 @@ abstract class AbstractFutureCacheTest extends FunSuite {
   trait Ctx {
     val value = Future.value("value")
     val cache: FutureCache[String, String]
+  }
+
+  final def interruptSafe(fCache: (String => Future[Int])) {
+    val f = fCache("key")
+    val exn = new Exception
+    f.raise(exn)
+
+    val f2 = fCache("key")
+    val p = new Promise[Int]
+    p.become(f2)
+
+    assert(p.isInterrupted == None)
   }
 
   test("%s should get nothing when there's nothing" format name) {
