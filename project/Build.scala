@@ -2,7 +2,7 @@ import sbt.Keys._
 import sbt._
 import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
-import scoverage.ScoverageSbtPlugin
+import scoverage.ScoverageKeys
 
 object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
@@ -37,7 +37,7 @@ object Util extends Build {
 
     resolvers += "twitter repo" at "https://maven.twttr.com",
 
-    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
+    ScoverageKeys.coverageHighlighting := true,
 
     scalacOptions := Seq(
       // Note: Add -deprecation when deprecated methods are removed
@@ -96,6 +96,21 @@ object Util extends Build {
         "com.twitter.common.zookeeper" % "client" % zkClientVersion,
         "com.twitter.common.zookeeper" % "group"  % zkGroupVersion
       )
+    },
+
+    libraryDependencies := {
+      libraryDependencies.value.map {
+        case moduleId: ModuleID
+          if moduleId.organization == "org.scoverage"
+          && scalaVersion.value.startsWith("2.12") =>
+          moduleId.copy(name = moduleId.name.replace(scalaVersion.value, "2.11"))
+        case moduleId =>
+          moduleId
+      }
+    },
+
+    ScoverageKeys.coverageEnabled := {
+      !scalaVersion.value.startsWith("2.12")
     }
   )
 
