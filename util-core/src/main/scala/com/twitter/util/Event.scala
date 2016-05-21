@@ -476,7 +476,7 @@ object Witness {
   /**
    * A [[Witness]] which prints to the console.
    */
-  val printer: Witness[Any] = Witness(println(_))
+  val printer: Witness[Any] = Witness((any: Any) => println(any))
 }
 
 /**
