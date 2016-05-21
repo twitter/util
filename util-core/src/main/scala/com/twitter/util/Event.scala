@@ -430,15 +430,20 @@ object Witness {
   /**
    * Create a [[Witness]] from a [[Function1]].
    */
-  def apply[T](f: T => Unit): Witness[T] = new Witness[T] {
-    def notify(t: T): Unit = f(t)
-  }
+  def apply[T](f: T => Unit): Witness[T] = fromFunction(f)
 
   /**
    * Create a [[Witness]] from an [[Updatable]].
    */
   def apply[T](u: Updatable[T]): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = u() = t
+  }
+
+  /**
+   * Create a [[Witness]] from a [[Function1]].
+   */
+  def fromFunction[T](f: T => Unit): Witness[T] = new Witness[T] {
+    def notify(t: T): Unit = f(t)
   }
 
   /**
@@ -476,7 +481,7 @@ object Witness {
   /**
    * A [[Witness]] which prints to the console.
    */
-  val printer: Witness[Any] = Witness((any: Any) => println(any))
+  val printer: Witness[Any] = Witness.fromFunction(println)
 }
 
 /**
