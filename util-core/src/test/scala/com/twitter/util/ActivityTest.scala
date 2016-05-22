@@ -112,7 +112,7 @@ class ActivityTest extends FunSuite {
     "cancellation back to the parent future")
   {
     val p = new Promise[Unit]
-    val obs = Activity.future(p).run.changes.register(Witness.fromFunction(_ => ()))
+    val obs = Activity.future(p).run.changes.register(Witness((_: Any) => ()))
     Await.ready(obs.close())
     assert(!p.isDefined)
   }
