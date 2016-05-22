@@ -22,6 +22,22 @@ object Util extends Build {
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.0"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 
+  def scalacheckLib(scalaVersion: String) = {
+    val scalacheckVersion = CrossVersion.partialVersion(scalaVersion) match {
+      case Some((2, 12)) => "1.12.5"
+      case _ => "1.12.2"
+    }
+    "org.scalacheck" %% "scalacheck" % scalacheckVersion
+  }
+
+  def scalatestLib(scalaVersion: String) = {
+    val scalatestVersion = CrossVersion.partialVersion(scalaVersion) match {
+      case Some((2, 12)) => "2.2.6"
+      case _ => "2.2.4"
+    }
+    "org.scalatest" %% "scalatest" % scalatestVersion
+  }
+
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
@@ -32,7 +48,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
       "org.mockito" % "mockito-all" % "1.9.5" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+      scalatestLib(scalaVersion.value) % "test"
     ),
 
     resolvers += "twitter repo" at "https://maven.twttr.com",
@@ -189,7 +205,7 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       guavaLib,
-      "org.scalacheck" %% "scalacheck" % "1.13.1" % "test"
+      scalacheckLib(scalaVersion.value) % "test"
     )
   ).dependsOn(utilCore % "compile->compile;test->test")
 
@@ -202,7 +218,7 @@ object Util extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.13.1" % "test",
+      scalacheckLib(scalaVersion.value) % "test" exclude ("org.scala-lang.modules", "scala-parser-combinators_2.11"),
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     ),
     resourceGenerators in Compile <+=
@@ -270,7 +286,7 @@ object Util extends Build {
     name := "util-hashing",
     libraryDependencies ++= Seq(
       "commons-codec" % "commons-codec" % "1.9" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.13.1" % "test"
+      scalacheckLib(scalaVersion.value) % "test"
     )
   ).dependsOn(utilCore % "test")
 
@@ -318,7 +334,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-stats",
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.1" % "test"
+    libraryDependencies += scalacheckLib(scalaVersion.value) % "test"
   ).dependsOn(utilCore, utilLint)
 
   lazy val utilTest = Project(
@@ -329,11 +345,10 @@ object Util extends Build {
   ).settings(
     name := "util-test",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.6",
+      scalatestLib(scalaVersion.value),
       "org.mockito" % "mockito-all" % "1.9.5"
     )
   ).dependsOn(utilCore, utilLogging)
-
 
   lazy val utilThrift = Project(
     id = "util-thrift",
