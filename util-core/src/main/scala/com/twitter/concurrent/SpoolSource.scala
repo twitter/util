@@ -52,7 +52,6 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * the resulting order of values in the spool is non-deterministic.
    */
   final def offer(value: A) {
-    import Spool.*::
 
     val nextPromise = new Promise[Spool[A]]
     nextPromise.setInterruptHandler(interruptHandler)
@@ -71,7 +70,6 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * non-deterministic.
    */
   final def offerAndClose(value: A) {
-    import Spool.*::
 
     updatingTailCall(emptyPromise) { currentPromise =>
       currentPromise.setValue(value *:: Future.value(Spool.empty[A]))

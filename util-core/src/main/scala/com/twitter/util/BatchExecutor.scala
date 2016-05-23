@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.CancellationException
-import java.util.logging.{Level, Logger}
+import java.util.logging.Logger
 
 import scala.collection.mutable
 

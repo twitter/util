@@ -66,7 +66,6 @@ object ActivitySource {
  * underlying ActivitySource.
  */
 class CachingActivitySource[T](underlying: ActivitySource[T]) extends ActivitySource[T] {
-  import com.twitter.io.exp.ActivitySource._
 
   private[this] val refq = new ReferenceQueue[Activity[T]]
   private[this] val forward = new HashMap[String, WeakReference[Activity[T]]]
