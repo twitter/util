@@ -122,7 +122,7 @@ class PromiseTest extends FunSuite {
   test("Promise.respond should monitor fatal exceptions") {
     val p = new Promise[Int]
     val m = new HandledMonitor()
-    val exc = new NoSuchMethodException
+    val exc = new ThreadDeath()
 
     Monitor.using(m) {
       p ensure { throw exc }
@@ -135,7 +135,7 @@ class PromiseTest extends FunSuite {
 
   test("Promise.transform should monitor fatal exceptions") {
     val m = new HandledMonitor()
-    val exc = new NoSuchMethodException
+    val exc = new ThreadDeath()
     val p = new Promise[Int]
 
     Monitor.using(m) {
@@ -143,7 +143,7 @@ class PromiseTest extends FunSuite {
     }
 
     assert(m.handled == null)
-    val actual = intercept[NoSuchMethodException] {
+    val actual = intercept[ThreadDeath] {
       p.update(Return(1))
     }
     assert(actual == exc)

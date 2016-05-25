@@ -11,6 +11,12 @@ Changes in Runtime Behavior:
   * util-collection: LruMap is now backed by jdk LinkedHashMap instead of apache
     collections LRUMap. ``RB_ID=833515``
 
+  * util-core: `com.twitter.util.NonFatal` is now implemented by Scala's
+    `scala.util.control.NonFatal`. This changes behavior such that
+    `java.lang.StackOverflowError` is considered fatal and
+    `java.lang.NoSuchMethodException` is considered non-fatal.
+    ``RB_ID=835671``
+
 New Features:
 
   * util-core: Add `c.t.concurrent.Scheduler.blockingTimeNanos` which tracks time spent doing

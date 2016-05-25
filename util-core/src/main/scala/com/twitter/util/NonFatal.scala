@@ -1,36 +1,44 @@
 package com.twitter.util
 
-import scala.util.control.ControlThrowable
+import scala.util.control.{NonFatal => ScalaNonFatal}
 
 /**
- * A classifier of fatal exceptions
+ * A classifier of non-fatal Exceptions.
+ *
+ * Developers should prefer using `scala.util.control.NonFatal` from the
+ * Scala standard library.
+ *
+ * @see Scala's [[http://www.scala-lang.org/api/current/#scala.util.control.NonFatal$ NonFatal]]
+ *      for usage notes.
+ *
+ * @note Scala added `NonFatal` to the standard library in Scala 2.10, while
+ *       Twitter's util needed to provide this for users who were still on
+ *       Scala 2.9 at the time.
  */
 object NonFatal {
-  /**
-   * This is identical in behavior to the upcoming
-   * [[scala.util.control.NonFatal]] (which appears in scala 2.10).
-   */
-  def isNonFatal(t: Throwable): Boolean = t match {
-    // StackOverflowError ok even though it is a VirtualMachineError
-    case _: StackOverflowError => true
-    // VirtualMachineError includes OutOfMemoryError and other fatal errors
-    case _: VirtualMachineError | _: ThreadDeath | _: InterruptedException |
-      _: LinkageError | _: ControlThrowable /*scala 2.10 | _: NotImplementedError*/ => false
-    case _ => true
-  }
 
   /**
-   * Determines whether `t` is a fatal exception.
+   * Determines whether `t` is a non-fatal Exception.
    *
-   * @return true when `t` is '''not''' a fatal exception.
+   * @return true when `t` is '''not''' a fatal Exception.
+   *
+   * @note This is identical in behavior to `scala.util.control.NonFatal.apply`.
    */
-  def apply(t: Throwable): Boolean = t match {
-    case _: NoSuchMethodException => false
-    case t => isNonFatal(t)
-  }
+  def isNonFatal(t: Throwable): Boolean =
+    apply(t)
 
   /**
-   * A deconstructor to be used in pattern matches, allowing use in exception
+   * Determines whether `t` is a non-fatal Exception.
+   *
+   * @return true when `t` is '''not''' a fatal Exception.
+   *
+   * @note This is identical in behavior to `scala.util.control.NonFatal.apply`.
+   */
+  def apply(t: Throwable): Boolean =
+    ScalaNonFatal(t)
+
+  /**
+   * A deconstructor to be used in pattern matches, allowing use in Exception
    * handlers.
    *
    * {{{
@@ -39,6 +47,9 @@ object NonFatal {
    *   case e => log.error("Freak out")
    * }
    * }}}
+   *
+   * @note This is identical in behavior to `scala.util.control.NonFatal.unapply`.
    */
-  def unapply(t: Throwable): Option[Throwable] = if (apply(t)) Some(t) else None
+  def unapply(t: Throwable): Option[Throwable] =
+    ScalaNonFatal.unapply(t)
 }
