@@ -31,7 +31,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
       "org.mockito" % "mockito-all" % "1.9.5" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+      "org.scalatest" %% "scalatest" % "2.2.6" % "test"
     ),
 
     resolvers += "twitter repo" at "https://maven.twttr.com",
