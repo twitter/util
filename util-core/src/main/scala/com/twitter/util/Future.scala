@@ -707,9 +707,10 @@ trait FutureEventListener[T] {
  * override one of `{map, flatMap}`, an `AbstractMethodError` will be
  * thrown at Runtime.
  *
- * '''Note:''' an exception e thrown in any of
- * map/flatMap/handle/rescue will make the result of transformedBy be
- * equivalent to Future.exception(e).
+ * '''Note:''' to end a result with a failure, we encourage you to use either
+ * `flatMap` or `rescue` and return a failed Future, instead of throwing an
+ * exception.  A failed future can be used by returning
+ * `Future.exception(throwable)` instead of throwing an exception.
  *
  * @see [[Future.transform]] which is the equivalent Scala API for further details.
  * @see [[Future.transformedBy]] for using it with a `Future`.
