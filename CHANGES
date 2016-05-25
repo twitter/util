@@ -44,6 +44,11 @@ API Changes:
      too easy to hide blocking code. Replaced usage with the more explicit
      `com.twitter.util.Await.result(Future)`. ``RB_ID=833579``
 
+Bug Fixes:
+
+    * util-zk: Fixed race when an existing permit is released between the time
+      the list was gotten and the data was checked. ``RB_ID=835856``
+
 6.34.0  2016-04-26
 
 New Features:
