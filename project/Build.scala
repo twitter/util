@@ -21,6 +21,7 @@ object Util extends Build {
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.0"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
+  val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
 
   val sharedSettings = Seq(
     version := libVersion,
@@ -173,7 +174,7 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       guavaLib,
-      "org.scalacheck"          %% "scalacheck"          % "1.12.2" % "test"
+      scalacheckLib
     )
   ).dependsOn(utilCore % "compile->compile;test->test")
 
@@ -186,7 +187,7 @@ object Util extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
+      scalacheckLib,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     ),
     resourceGenerators in Compile <+=
@@ -254,7 +255,7 @@ object Util extends Build {
     name := "util-hashing",
     libraryDependencies ++= Seq(
       "commons-codec" % "commons-codec" % "1.9" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
+      scalacheckLib
     )
   ).dependsOn(utilCore % "test")
 
@@ -302,7 +303,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-stats",
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
+    libraryDependencies += scalacheckLib
   ).dependsOn(utilCore, utilLint)
 
   lazy val utilTest = Project(
