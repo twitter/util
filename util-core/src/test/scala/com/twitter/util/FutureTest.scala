@@ -900,23 +900,6 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           }
         }
       }
-
-      "get(deprecated)" in {
-        val e = new Exception
-        val v = 123
-        assert(Future.exception[Int](e).get(0.seconds) == Throw(e))
-        assert(Future.value(v).get(0.seconds) == Return(v))
-
-        // Including fatal ones:
-        val e2 = new java.lang.IllegalAccessError
-        assert(Future.exception[Int](e2).get(0.seconds)  == Throw(e2))
-
-        implicit val timer = new JavaTimer
-        val p = new Promise[Int]
-        val r = p.get(50.milliseconds)
-        intercept[TimeoutException]{ r() }
-        timer.stop()
-      }
     }
 
     "Promise (%s)".format(name) should {
@@ -928,7 +911,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             f mustProduce Return(1)
             didRun = true
           }
-          assert(didRun == true)
+          assert(didRun)
         }
       }
 

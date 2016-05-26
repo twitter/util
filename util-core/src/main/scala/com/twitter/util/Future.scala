@@ -828,21 +828,6 @@ abstract class Future[+A] extends Awaitable[A] {
     ev(this).poll == Future.SomeReturnUnit
 
   /**
-   * Demands that the result of the future be available within
-   * `timeout`. The result is a Return[_] or Throw[_] depending upon
-   * whether the computation finished in time.
-   */
-  @deprecated("Use Await.result(future.liftToTry)", "6.2.x")
-  final def get(timeout: Duration): Try[A] =
-    try {
-      Return(Await.result(this, timeout))
-    } catch {
-      // For legacy reasons, we catch even
-      // fatal exceptions.
-      case e: Throwable => Throw(e)
-    }
-
-  /**
    * Polls for an available result.  If the Future has been
    * satisfied, returns Some(result), otherwise None.
    */

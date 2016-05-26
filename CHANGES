@@ -40,9 +40,13 @@ API Changes:
     `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
     for details. ``RB_ID=828898``
 
-   * util-core: Deprecated method `Future.get` has been removed because it made it
+   * util-core: Deprecated method `Future.get()` has been removed because it made it
      too easy to hide blocking code. Replaced usage with the more explicit
      `com.twitter.util.Await.result(Future)`. ``RB_ID=833579``
+
+   * util-core: Deprecated method `Future.get(Duration): Try` has been removed because it
+     made it too easy to hide blocking code. Replaced usage with the more explicit
+     `com.twitter.util.Await.result(Future.liftToTry)`. ``RB_ID=836066``
 
 Bug Fixes:
 
