@@ -178,12 +178,10 @@ class FormatterTest extends WordSpec {
         } catch {
           case t: Throwable => t
         }
-        assert(Formatter.formatStackTrace(exception, 2).map { scrub(_) } == List(
+        assert(Formatter.formatStackTrace(exception, 1).map { scrub(_) } == List(
           "    at com.twitter.logging.FormatterTest$$.cycle2(FormatterTest.scala:NNN)",
-          "    at com.twitter.logging.FormatterTest$$.apply$mcV$sp(FormatterTest.scala:NNN)",
           "    (...more...)",
           "Caused by java.lang.Exception: Aie!",
-          "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
           "    (...more...)"))
 

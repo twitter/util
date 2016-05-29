@@ -2,7 +2,7 @@ import sbt.Keys._
 import sbt._
 import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
-import scoverage.ScoverageSbtPlugin
+import scoverage.ScoverageKeys
 
 object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
@@ -22,21 +22,38 @@ object Util extends Build {
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.0"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 
+  def scalacheckLib(scalaVersion: String) = {
+    val scalacheckVersion = CrossVersion.partialVersion(scalaVersion) match {
+      case Some((2, 12)) => "1.12.5"
+      case _ => "1.12.2"
+    }
+    "org.scalacheck" %% "scalacheck" % scalacheckVersion
+  }
+
+  def scalatestLib(scalaVersion: String) = {
+    val scalatestVersion = CrossVersion.partialVersion(scalaVersion) match {
+      case Some((2, 12)) => "2.2.6"
+      case _ => "2.2.4"
+    }
+    "org.scalatest" %% "scalatest" % scalatestVersion
+  }
+
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.11.8",
+    crossScalaVersions := Seq("2.11.8", "2.12.0-M4"),
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
-      "org.mockito" % "mockito-all" % "1.9.5" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+      "org.mockito" % "mockito-all" % "1.10.19" % "test",
+      scalatestLib(scalaVersion.value) % "test"
     ),
 
     resolvers += "twitter repo" at "https://maven.twttr.com",
 
-    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
+    ScoverageKeys.coverageHighlighting := true,
 
     scalacOptions := Seq(
       // Note: Add -deprecation when deprecated methods are removed
@@ -95,6 +112,21 @@ object Util extends Build {
         "com.twitter.common.zookeeper" % "client" % zkClientVersion,
         "com.twitter.common.zookeeper" % "group"  % zkGroupVersion
       )
+    },
+
+    libraryDependencies := {
+      libraryDependencies.value.map {
+        case moduleId: ModuleID
+          if moduleId.organization == "org.scoverage"
+          && scalaVersion.value.startsWith("2.12") =>
+          moduleId.copy(name = moduleId.name.replace(scalaVersion.value, "2.11"))
+        case moduleId =>
+          moduleId
+      }
+    },
+
+    ScoverageKeys.coverageEnabled := {
+      !scalaVersion.value.startsWith("2.12")
     }
   )
 
@@ -173,7 +205,7 @@ object Util extends Build {
     name := "util-collection",
     libraryDependencies ++= Seq(
       guavaLib,
-      "org.scalacheck"          %% "scalacheck"          % "1.12.2" % "test"
+      scalacheckLib(scalaVersion.value) % "test"
     )
   ).dependsOn(utilCore % "compile->compile;test->test")
 
@@ -186,7 +218,8 @@ object Util extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      scalacheckLib(scalaVersion.value) % "test" exclude ("org.scala-lang.modules", "scala-parser-combinators_2.11"),
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     ),
     resourceGenerators in Compile <+=
@@ -254,7 +287,7 @@ object Util extends Build {
     name := "util-hashing",
     libraryDependencies ++= Seq(
       "commons-codec" % "commons-codec" % "1.9" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
+      scalacheckLib(scalaVersion.value) % "test"
     )
   ).dependsOn(utilCore % "test")
 
@@ -302,7 +335,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-stats",
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
+    libraryDependencies += scalacheckLib(scalaVersion.value) % "test"
   ).dependsOn(utilCore, utilLint)
 
   lazy val utilTest = Project(
@@ -313,11 +346,10 @@ object Util extends Build {
   ).settings(
     name := "util-test",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.4",
-      "org.mockito" % "mockito-all" % "1.9.5"
+      scalatestLib(scalaVersion.value),
+      "org.mockito" % "mockito-all" % "1.10.19"
     )
   ).dependsOn(utilCore, utilLogging)
-
 
   lazy val utilThrift = Project(
     id = "util-thrift",
