@@ -218,6 +218,7 @@ object Util extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.twitter.common" % "objectsize" % "0.0.10" % "test",
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       scalacheckLib(scalaVersion.value) % "test" exclude ("org.scala-lang.modules", "scala-parser-combinators_2.11"),
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     ),
