@@ -47,7 +47,7 @@ object Util extends Build {
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
-      "org.mockito" % "mockito-all" % "1.9.5" % "test",
+      "org.mockito" % "mockito-all" % "1.10.19" % "test",
       scalatestLib(scalaVersion.value) % "test"
     ),
 
@@ -347,7 +347,7 @@ object Util extends Build {
     name := "util-test",
     libraryDependencies ++= Seq(
       scalatestLib(scalaVersion.value),
-      "org.mockito" % "mockito-all" % "1.9.5"
+      "org.mockito" % "mockito-all" % "1.10.19"
     )
   ).dependsOn(utilCore, utilLogging)
 
