@@ -299,7 +299,7 @@ class Eval(target: Option[File]) {
    * NB: If this method is changed, make sure `codeWrapperLineOffset` is correct.
    */
   private[this] def wrapCodeInClass(className: String, code: String) = {
-    "class " + className + " extends (() => Any) {\n" +
+    "class " + className + " extends (() => Any) with java.io.Serializable {\n" +
     "  def apply() = {\n" +
     code + "\n" +
     "  }\n" +
