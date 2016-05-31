@@ -112,6 +112,64 @@ class AsyncMeterTest extends FunSuite {
     }
   }
 
+  test("AsyncMeter should handle small burst sizes and periods smaller than timer granularity") {
+    val timer = new MockTimer
+    Time.withCurrentTimeFrozen { ctl =>
+      val meter = newMeter(1, 500.microseconds, 100)(timer)
+      val ready = meter.await(1)
+      assert(ready.isDone)
+
+      val first = meter.await(1)
+      val second = meter.await(1)
+      assert(!first.isDefined)
+      assert(!second.isDefined)
+
+      ctl.advance(1.millisecond)
+      timer.tick()
+      assert(first.isDone)
+      assert(second.isDone)
+    }
+  }
+
+  test("AsyncMeter should handle small, short bursts with big token amounts") {
+    val timer = new MockTimer
+    Time.withCurrentTimeFrozen { ctl =>
+      val meter = newMeter(2, 500.microseconds, 100)(timer)
+      val ready = meter.await(2)
+      assert(ready.isDone)
+
+      val first = meter.await(1)
+      val second = meter.await(2)
+      val third = meter.await(1)
+      assert(!first.isDefined)
+      assert(!second.isDefined)
+      assert(!third.isDefined)
+
+      ctl.advance(1.millisecond)
+      timer.tick()
+      assert(first.isDone)
+      assert(second.isDone)
+      assert(third.isDone)
+    }
+  }
+
+  test("AsyncMeter should hit the full rate even with insufficient granularity") {
+    val timer = new MockTimer
+    Time.withCurrentTimeFrozen { ctl =>
+      val meter = newUnboundedMeter(1, 500.microseconds)(timer)
+      val ready = Future.join(Seq.fill(1000)(meter.await(1))).join {
+        FuturePool.unboundedPool {
+          for (_ <- 0 until 500) {
+            ctl.advance(1.millisecond)
+            timer.tick()
+          }
+        }
+      }
+      Await.ready(ready, 5.seconds)
+      assert(ready.isDefined)
+    }
+  }
+
   test("AsyncMeter should allow an expensive call to be satisfied slowly") {
     val timer = new MockTimer
     Time.withCurrentTimeFrozen { ctl =>

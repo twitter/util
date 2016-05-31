@@ -238,20 +238,20 @@ class AsyncMeter private(
   }
 
   private[this] def updateAndGet(tokens: Int): Boolean = {
-    refreshTokens()
+    bucket.put(getNumRefreshTokens())
     bucket.tryGet(tokens)
   }
 
   // we refresh the bucket with as many tokens as we have accrued since we last
   // refreshed.
-  private[this] def refreshTokens(): Unit = bucket.put(synchronized {
+  private[this] def getNumRefreshTokens(): Int = synchronized {
     val newTokens = period.numPeriods(elapsed())
     elapsed = Stopwatch.start()
     val num = newTokens + remainder
     val floor = math.floor(num)
     remainder = num - floor
     floor.toInt
-  })
+  }
 
   private[this] def restartTimerIfDead(): Unit = synchronized {
     if (!running) {
@@ -264,10 +264,25 @@ class AsyncMeter private(
 
   // it's safe to race on allow, because polling loop is locked
   private[this] final def allow(): Unit = {
-    refreshTokens()
+    // tokens represents overflow from lack of granularity.  we don't want to
+    // store more than `burstSize` tokens, but we want to be able to process
+    // load at the rate we advertise to, even if we can't refresh to `burstSize`
+    // as fast as `burstDuration` would like.  we get around this by ensuring
+    // that we disburse the full amount to waiters, which ensures correct
+    // behavior for small `burstSize` and `burstDuration` below the minimum
+    // granularity.
+    var tokens = getNumRefreshTokens()
+
+    if (tokens > burstSize) {
+      tokens -= burstSize
+      bucket.put(burstSize)
+    } else {
+      bucket.put(tokens)
+      tokens = 0
+    }
 
     // we loop here so that we can satisfy more than one promise at a time.
-    // imagine that start with no tokens, we distribute ten tokens, and our
+    // imagine that we start with no tokens, we distribute ten tokens, and our
     // waiters are waiting for 4, 1, 6, 3 tokens.  we should distribute 4, and
     // 1, and ask 6 and 3 to keep waiting until we have more tokens.
     while (true) {
@@ -284,7 +299,14 @@ class AsyncMeter private(
             // tokens that we're missing with the Stopwatch.
             task.close()
             None
-          case (p, num) if bucket.tryGet(num) =>
+          case (p, num) if num < tokens =>
+            tokens -= num
+            q.poll() // we wait to remove until after we're able to get tokens
+            Some(p)
+          case (p, num) if bucket.tryGet(num - tokens) =>
+            // we must zero tokens because we're implicitly pulling from the
+            // tokens first, and then the token bucket
+            tokens = 0
             q.poll() // we wait to remove until after we're able to get tokens
             Some(p)
           case _ =>
