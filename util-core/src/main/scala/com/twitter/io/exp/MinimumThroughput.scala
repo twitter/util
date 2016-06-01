@@ -3,6 +3,7 @@ package com.twitter.io.exp
 import com.twitter.conversions.time._
 import com.twitter.io.{Writer, Buf, Reader}
 import com.twitter.util._
+import scala.util.control.NoStackTrace
 
 /**
  * [[Reader Readers]] and [[Writer Writers]] that have minimum bytes
@@ -15,7 +16,7 @@ object MinimumThroughput {
   private val MinDeadline = 1.second
 
   /** internal marker used to raise on read/write timeouts. */
-  private case object MinThroughputTimeoutException extends NoStacktrace
+  private case object MinThroughputTimeoutException extends Exception with NoStackTrace
 
   private abstract class Min(minBps: Double) {
     assert(minBps >= 0, s"minBps must be non-negative: $minBps")

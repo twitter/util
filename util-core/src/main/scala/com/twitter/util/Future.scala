@@ -8,6 +8,7 @@ import scala.collection.JavaConverters.{
   asScalaBufferConverter, mapAsJavaMapConverter, mapAsScalaMapConverter, seqAsJavaListConverter}
 import scala.collection.mutable
 import scala.runtime.NonLocalReturnControl
+import scala.util.control.NoStackTrace
 
 class FutureNonLocalReturnControl(cause: NonLocalReturnControl[_]) extends Exception(cause) {
   override def getMessage: String = "Invalid use of `return` in closure passed to a Future"
@@ -58,7 +59,7 @@ object Future {
   private val AlwaysMasked: PartialFunction[Throwable, Boolean] = { case _ => true }
 
   // Exception used to raise on Futures.
-  private[this] val RaiseException = new Exception with NoStacktrace
+  private[this] val RaiseException = new Exception with NoStackTrace
   @inline private final def raiseException = RaiseException
 
   /**

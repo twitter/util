@@ -1,9 +1,9 @@
 package com.twitter.util.registry
 
-import com.twitter.util.NoStacktrace
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import scala.util.control.NoStackTrace
 
 @RunWith(classOf[JUnitRunner])
 class FormatterTest extends FunSuite {
@@ -48,7 +48,7 @@ class FormatterTest extends FunSuite {
   }
 
   test("add should bail on collisions") {
-    val actual = intercept[Exception with NoStacktrace] {
+    val actual = intercept[Exception with NoStackTrace] {
       Formatter.add(Map("it's" -> "small"), Seq("it's"), "big")
     }
     val expected = Formatter.Collision
@@ -56,7 +56,7 @@ class FormatterTest extends FunSuite {
   }
 
   test("add should bail on finding a weird type") {
-    val actual = intercept[Exception with NoStacktrace] {
+    val actual = intercept[Exception with NoStackTrace] {
       Formatter.add(Map("it's" -> new Object), Seq("it's"), "big")
     }
     val expected = Formatter.InvalidType
@@ -75,7 +75,7 @@ class FormatterTest extends FunSuite {
   test("makeMap should fail on empties") {
     val seq = Seq.empty
     val value = "big"
-    val actual = intercept[Exception with NoStacktrace] {
+    val actual = intercept[Exception with NoStackTrace] {
       Formatter.makeMap(seq, value)
     }
     assert(actual == Formatter.Empty)

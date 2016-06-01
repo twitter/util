@@ -1,7 +1,7 @@
 package com.twitter.util.registry
 
-import com.twitter.util.NoStacktrace
 import java.util.logging.Logger
+import scala.util.control.NoStackTrace
 
 object Formatter {
   private[this] val log = Logger.getLogger(getClass.getName)
@@ -63,7 +63,7 @@ object Formatter {
     Map("registry" -> map)
   }
 
-  private[registry] val Collision = new Exception() with NoStacktrace
-  private[registry] val InvalidType = new Exception() with NoStacktrace
-  private[registry] val Empty = new Exception() with NoStacktrace
+  private[registry] val Collision = new Exception() with NoStackTrace
+  private[registry] val InvalidType = new Exception() with NoStackTrace
+  private[registry] val Empty = new Exception() with NoStackTrace
 }
