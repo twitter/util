@@ -43,24 +43,29 @@ API Changes:
     `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
     for details. ``RB_ID=828898``
 
-   * util-core: Deprecated method `Future.get()` has been removed because it made it
-     too easy to hide blocking code. Replaced usage with the more explicit
-     `com.twitter.util.Await.result(Future)`. ``RB_ID=833579``
+  * util-core: Deprecated method `Future.get()` has been removed because it made it
+    too easy to hide blocking code. Replaced usage with the more explicit
+    `com.twitter.util.Await.result(Future)`. ``RB_ID=833579``
 
-   * util-core: Deprecated method `Future.get(Duration): Try` has been removed because it
-     made it too easy to hide blocking code. Replaced usage with the more explicit
-     `com.twitter.util.Await.result(Future.liftToTry)`. ``RB_ID=836066``
+  * util-core: Deprecated method `Future.get(Duration): Try` has been removed because it
+    made it too easy to hide blocking code. Replaced usage with the more explicit
+    `com.twitter.util.Await.result(Future.liftToTry)`. ``RB_ID=836066``
+
+  * util-core: Deprecated methods `Future.isReturn` and `Future.isThrow` have been
+    removed because they made it too easy to hide blocking code. Replaced usage with
+    the more explicit `Await.result(Future.liftToTry).isReturn` and
+    `Await.result(Future.liftToTry).isThrow`. ``RB_ID=837329``
 
 Bug Fixes:
 
-    * util-core: AsyncMeter had a bug where if the burst size was smaller than
-      the number of disbursed tokens, it would discard all of the tokens over
-      the disbursal limit.  Changed to instead process tokens in the wait queue
-      with leftover tokens.  This improves behavior where the actual period is
-      smaller than can actually be simulated with the given timer.  ``RB_ID=836742``
+  * util-core: AsyncMeter had a bug where if the burst size was smaller than
+    the number of disbursed tokens, it would discard all of the tokens over
+    the disbursal limit.  Changed to instead process tokens in the wait queue
+    with leftover tokens.  This improves behavior where the actual period is
+    smaller than can actually be simulated with the given timer.  ``RB_ID=836742``
 
-    * util-zk: Fixed race when an existing permit is released between the time
-      the list was gotten and the data was checked. ``RB_ID=835856``
+  * util-zk: Fixed race when an existing permit is released between the time
+    the list was gotten and the data was checked. ``RB_ID=835856``
 
 6.34.0  2016-04-26
 
