@@ -36,7 +36,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(Var.sample(s) == "8923")
 
     var buf = mutable.Buffer[String]()
-    s.changes.register(Witness({ v => buf += v }))
+    s.changes.register(Witness({ (v: String) => buf += v; () }))
     assert(buf.toSeq == Seq("8923"))
     v() = 111
     assert(buf.toSeq == Seq("8923", "111"))
@@ -50,8 +50,8 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val v4 = v3 flatMap { i => v0 }
 
     var result = 1
-    v4.changes.register(Witness({ i => result = result+2 })) // result = 3
-    v0.changes.register(Witness({ i => result = result*2 })) // result = 6
+    v4.changes.register(Witness({ (i: Int) => result = result+2 })) // result = 3
+    v0.changes.register(Witness({ (i: Int) => result = result*2 })) // result = 6
     assert(result == 6)
 
     result = 1 // reset the value, but this time the ordering will go v0, v4 because of depth
@@ -65,9 +65,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val v1 = Var(2)
     var result = 0
 
-    val o1 = v1.changes.register(Witness({ i => result = result + i })) // result = 2
-    val o2 = v1.changes.register(Witness({ i => result = result * i * i })) // result = 2 * 2 * 2 = 8
-    val o3 = v1.changes.register(Witness({ i => result = result + result + i })) // result = 8 + 8 + 2 = 18
+    val o1 = v1.changes.register(Witness({ (i: Int) => result = result + i })) // result = 2
+    val o2 = v1.changes.register(Witness({ (i: Int) => result = result * i * i })) // result = 2 * 2 * 2 = 8
+    val o3 = v1.changes.register(Witness({ (i: Int) => result = result + result + i })) // result = 8 + 8 + 2 = 18
 
     assert(result == 18) // ensure those three things happened in sequence
 
@@ -101,7 +101,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
     // Now maintain a subscription.
     var cur = Var.sample(s)
-    val sub = s.changes.register(Witness({ cur = _ }))
+    val sub = s.changes.register(Witness({ cur = (_: Int) }))
     assert(cur == -1)
 
     assert(us forall (_.observerCount == 1))
@@ -131,7 +131,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("Var(init)") {
     val v = Var(123)
     var cur = Var.sample(v)
-    val sub = v.changes.register(Witness({ cur = _ }))
+    val sub = v.changes.register(Witness({ cur = (_: Int) }))
     v() = 333
     assert(cur == 333)
     v() = 111
@@ -149,8 +149,8 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val b = v map(_*3)
 
     var x, y = 0
-    a.changes.register(Witness({ x = _ }))
-    b.changes.register(Witness({ y = _ }))
+    a.changes.register(Witness({ x = (_: Int) }))
+    b.changes.register(Witness({ y = (_: Int) }))
 
     assert(x == 4)
     assert(y == 6)
@@ -171,13 +171,13 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
     val v = Var.async(123) { v =>
       called += 1
-      x.changes.register(Witness({ v() = _ }))
+      x.changes.register(Witness({ v() = (_: Int) }))
       c
     }
 
     assert(called == 0)
     var vv: Int = 0
-    val o = v.changes.register(Witness({ vv = _ }))
+    val o = v.changes.register(Witness({ vv = (_: Int) }))
     assert(called == 1)
     assert(vv == 333)
     assert(closed == Time.Zero)
@@ -186,7 +186,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(vv == 111)
     assert(closed == Time.Zero)
 
-    val o1 = v.changes.register(Witness({ v => () }))
+    val o1 = v.changes.register(Witness({ (v: Int) => () }))
 
     val t = Time.now
     val f = o.close(t)
@@ -275,7 +275,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val contents = List(1,2,3,4)
     val v1 = Var.value(contents)
     assert(Var.sample(v1) eq contents)
-    v1.changes.register(Witness({ l => assert(contents eq l) }))
+    v1.changes.register(Witness({ (l: List[Int]) => assert(contents eq l) }))
   }
 
   /**
@@ -289,8 +289,8 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       Var.value(i*2)
     }
 
-    val c1 = f.changes.register(Witness({ i => assert(i == 22) }))
-    val c2 = f.changes.register(Witness({ i => assert(i == 22) }))
+    val c1 = f.changes.register(Witness({ (i: Int) => assert(i == 22) }))
+    val c2 = f.changes.register(Witness({ (i: Int) => assert(i == 22) }))
 
     c1.close()
     c2.close()
@@ -299,7 +299,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     v() = 22 // now it's safe to re-observe
 
     var observed = 3
-    f.changes.register(Witness({ i => observed = i }))
+    f.changes.register(Witness({ (i: Int) => observed = i }))
 
     assert(Var.sample(f) == 44)
     assert(Var.sample(v) == 22)
@@ -352,7 +352,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       val w = newVar(333)
       val x = v flatMap { _ => w }
       var buf = mutable.Buffer[Int]()
-      x.changes.register(Witness({ v => buf += v }))
+      x.changes.register(Witness({ (v: Int) => buf += v; () }))
 
       assert(buf == Seq(333))
       v() = 333
@@ -369,7 +369,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       }
 
       var buf = mutable.Buffer[Int]()
-      x.changes.register(Witness({ v => buf += v }))
+      x.changes.register(Witness({ (v: Int) => buf += v; () }))
 
       assert(buf == Seq(333))
       v() = 333
@@ -402,7 +402,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val c = a.flatMap(_ => b)
 
     @volatile var j = -1
-    c.changes.register(Witness({ i =>
+    c.changes.register(Witness({ (i: Int) =>
       assert(i == j+1)
       j = i
     }))
