@@ -53,10 +53,13 @@ object Future {
 
   private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
-  private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied) _
+  private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied)
   private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
   private val toVoid: Any => Future[Void] = scala.Function.const(Void)
   private val AlwaysMasked: PartialFunction[Throwable, Boolean] = { case _ => true }
+
+  private val toTuple2Instance: (Any, Any) => (Any, Any) = Tuple2.apply
+  private def toTuple2[A, B]: (A, B) => (A, B) = toTuple2Instance.asInstanceOf[(A, B) => (A, B)]
 
   // Exception used to raise on Futures.
   private[this] val RaiseException = new Exception with NoStackTrace
@@ -156,7 +159,7 @@ object Future {
     monitored {
       val f = mkFuture
       p.forwardInterruptsTo(f)
-      f.respond(monitored.setTo(_))
+      f.respond(monitored.setTo)
     }
     p
   }
@@ -766,7 +769,6 @@ abstract class FutureTransformer[-A, +B] {
  * @see [[Futures]] for Java-friendly APIs.
  */
 abstract class Future[+A] extends Awaitable[A] {
-  import Future.DEFAULT_TIMEOUT
 
   /**
    * When the computation completes, invoke the given callback
@@ -1133,15 +1135,34 @@ abstract class Future[+A] extends Awaitable[A] {
   def or[U >: A](other: Future[U]): Future[U] = select(other)
 
   /**
-   * Combines two `Futures` into one `Future` of the `Tuple2` of the two results.
+   * Joins this future with a given `other` future into a `Future[(A, B)]`
+   * (future of a `Tuple2`). If this or `other` future fails, the returned `Future`
+   * is immediately satisfied by that failure.
    */
-  def join[B](other: Future[B]): Future[(A, B)] = {
-    val p = Promise.interrupts[(A, B)](this, other)
+  def join[B](other: Future[B]): Future[(A, B)] = joinWith(other)(Future.toTuple2)
+
+  /**
+   * Joins this future with a given `other` future and applies `fn` to its result.
+   * If this or `other` future fails, the returned `Future` is immediately satisfied
+   * by that failure.
+   *
+   * Before (using [[join]]):
+   * {{{
+   *   val ab = a.join(b).map { case (a, b) => Foo(a, b) }
+   * }}}
+   *
+   * After (using [[joinWith]]):
+   * {{{
+   *   val ab = a.joinWith(b)(Foo.apply)
+   * }}}
+   */
+  def joinWith[B, C](other: Future[B])(fn: (A, B) => C): Future[C] = {
+    val p = Promise.interrupts[C](this, other)
     this.respond {
       case Throw(t) => p.update(Throw(t))
       case Return(a) => other.respond {
         case Throw(t) => p.update(Throw(t))
-        case Return(b) => p.update(Return((a, b)))
+        case Return(b) => p.update(Return(fn(a, b)))
       }
     }
     p
@@ -1276,7 +1297,7 @@ abstract class Future[+A] extends Awaitable[A] {
   /**
    * Lowers a `Future[Try[T]]` into a `Future[T]`.
    */
-  def lowerFromTry[T](implicit ev: A <:< Try[T]): Future[T] =
+  def lowerFromTry[B](implicit ev: A <:< Try[B]): Future[B] =
     this.flatMap { a =>
       ev(a) match {
         case Return(t) => Future.value(t)

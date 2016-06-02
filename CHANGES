@@ -28,6 +28,9 @@ New Features:
   * util-core: `c.t.util.NoStacktrace` is removed. Use `scala.util.control.NoStackTrace` instead.
     ``RB_ID=833188``
 
+  * util-core: Add `Future.joinWith` that also accepts a function `(A, B) => C` for mapping
+    a joined result. ``RB_ID=838169``
+
   * util-app: `com.twitter.finagle.util.LoadService` has been moved to
     `c.t.app.LoadService` and can now be used without needing a finagle-core
     dependency. ``RB_ID=829897``
