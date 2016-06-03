@@ -26,4 +26,24 @@ class PromiseBenchmark extends StdBenchAnnotations {
     p.updateIfEmpty(Value)
   }
 
+  @Benchmark
+  def interrupts(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+    Promise.interrupts(state.futures: _*)
+  }
+
+}
+
+object PromiseBenchmark {
+
+  @State(Scope.Thread)
+  class InterruptsState {
+    var futures: List[Future[Int]] = _
+
+    @Setup
+    def prepare(): Unit = {
+      futures = (0 until 100).map { i =>
+        Future.value(i)
+      }.toList
+    }
+  }
 }

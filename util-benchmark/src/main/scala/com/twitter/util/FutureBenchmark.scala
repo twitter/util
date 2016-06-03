@@ -25,7 +25,21 @@ class FutureBenchmark extends StdBenchAnnotations {
   def timeCollect(state: CollectState) {
     import state._
 
-    Future.collect(stream)
+    Future.collect(futures)
+  }
+
+  @Benchmark
+  def timeCollectToTry(state: CollectState) {
+    import state._
+
+    Future.collectToTry(futures)
+  }
+
+  @Benchmark
+  def timeJoin(state: CollectState) {
+    import state._
+
+    Future.join(futures)
   }
 
   @Benchmark
@@ -63,6 +77,53 @@ class FutureBenchmark extends StdBenchAnnotations {
     import state._
 
     Future.selectIndex(futures)
+  }
+
+  @Benchmark
+  def timeWhileDo(state: WhileDoState) {
+    import state._
+
+    Future.whileDo(continue)(future)
+  }
+
+  @Benchmark
+  def timeEach(state: EachState) {
+    import state._
+
+    Future.each(next)(body)
+  }
+
+  @Benchmark
+  @OperationsPerInvocation(N)
+  def timeParallel(): Unit = {
+
+    Future.parallel(N)(Future.Unit)
+  }
+
+  @Benchmark
+  def timeToOffer(): Unit = {
+
+    Future.Unit.toOffer
+  }
+
+  @Benchmark
+  def timeFlatten(state: FlattenState) {
+    import state._
+
+    future.flatten
+  }
+
+  @Benchmark
+  def timeLiftTotry(): Unit = {
+
+    Future.Unit.liftToTry
+  }
+
+  @Benchmark
+  def timeLowerFromTry(state: LowerFromTryState) {
+    import state._
+
+    future.lowerFromTry
   }
 
   @Benchmark
@@ -120,13 +181,16 @@ object FutureBenchmark {
 
   @State(Scope.Thread)
   class CollectState {
-    var stream: Stream[Future[Int]] = _
+    @Param(Array("0", "100"))
+    var size: Int = 0
+
+    var futures: List[Future[Int]] = _
 
     @Setup
-    def prepare() {
-      stream = (0 until FutureBenchmark.N * 100).map { i =>
+    def prepare(): Unit = {
+      futures = (0 until size).map { i =>
         Future.value(i)
-      }.toStream
+      }.toList
     }
   }
 
@@ -138,7 +202,57 @@ object FutureBenchmark {
     var promise: Promise[Unit] = _
 
     @Setup
-    def prepare() { promise = new Promise[Unit] }
+    def prepare(): Unit = {
+      promise = new Promise[Unit]
+    }
+  }
+
+  @State(Scope.Thread)
+  class WhileDoState {
+    private var i = 0
+
+    def continue =
+      if (i < N) {
+        i += 1
+        true
+      } else
+        false
+
+    val future = Future.Unit
+
+    @Setup
+    def prepare(): Unit = {
+      i = 0
+    }
+  }
+
+  @State(Scope.Thread)
+  class EachState {
+    private var i = 0
+
+    def next =
+      if (i < N) {
+        i += 1
+        Future.Unit
+      } else
+        Future.???
+
+    val body: Unit => Unit = _ => ()
+
+    @Setup
+    def prepare(): Unit = {
+      i = 0
+    }
+  }
+
+  @State(Scope.Benchmark)
+  class FlattenState {
+    val future = Future.value(Future.Unit)
+  }
+
+  @State(Scope.Benchmark)
+  class LowerFromTryState {
+    val future = Future.Unit.liftToTry
   }
 
   @State(Scope.Benchmark)

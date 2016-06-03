@@ -60,6 +60,35 @@ object Future {
 
   private val toTuple2Instance: (Any, Any) => (Any, Any) = Tuple2.apply
   private def toTuple2[A, B]: (A, B) => (A, B) = toTuple2Instance.asInstanceOf[(A, B) => (A, B)]
+  private val toValueInstance: Any => Future[Any] = Future.value _
+  private def toValue[T]: T => Future[T] = toValueInstance.asInstanceOf[T => Future[T]]
+
+  private val lowerFromTryInstance: Any => Future[Any] =
+    _ match {
+      case Return(t) => Future.value(t)
+      case Throw(exc) => Future.exception(exc)
+    }
+
+  private def lowerFromTry[A, T]: A => Future[T] =
+    lowerFromTryInstance.asInstanceOf[A => Future[T]]
+
+  private val toTxInstance: Try[Any] => Future[Tx[Try[Any]]] =
+    res => {
+      val tx = new Tx[Try[Any]] {
+        def ack(): Future[Tx.Result[Try[Any]]] = Future.value(Tx.Commit(res))
+        def nack(): Unit = ()
+      }
+
+      Future.value(tx)
+    }
+  private def toTx[A]: Try[A] => Future[Tx[Try[A]]] =
+    toTxInstance.asInstanceOf[Try[A] => Future[Tx[Try[A]]]]
+
+  private val emptySeqInstance: Future[Seq[Any]] = Future.value(Seq.empty)
+  private def emptySeq[A]: Future[Seq[A]] = emptySeqInstance.asInstanceOf[Future[Seq[A]]]
+
+  private val emptyMapInstance: Future[Map[Any, Any]] = Future.value(Map.empty[Any, Any])
+  private def emptyMap[A, B]: Future[Map[A, B]] = emptyMapInstance.asInstanceOf[Future[Map[A, B]]]
 
   // Exception used to raise on Futures.
   private[this] val RaiseException = new Exception with NoStackTrace
@@ -212,15 +241,17 @@ object Future {
     if (fs.isEmpty) Unit else {
       val count = new AtomicInteger(fs.size)
       val p = Promise.interrupts[Unit](fs:_*)
-      for (f <- fs) {
-        f respond {
+      val update: Try[A] => Unit =
+        _ match {
           case Return(_) =>
             if (count.decrementAndGet() == 0)
               p.update(Return.Unit)
           case Throw(cause) =>
             p.updateIfEmpty(Throw(cause))
         }
-      }
+      val iterator = fs.iterator
+      while (iterator.hasNext)
+        iterator.next().respond(update)
       p
     }
   }
@@ -431,16 +462,20 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    */
   def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
     if (fs.isEmpty) {
-      Future(Seq[A]())
+      emptySeq
     } else {
       val fsSize = fs.size
       val results = new AtomicReferenceArray[A](fsSize)
       val count = new AtomicInteger(fsSize)
       val p = Promise.interrupts[Seq[A]](fs:_*)
-      for ((f,i) <- fs.iterator.zipWithIndex) {
-        f respond {
+
+      var i = 0
+      val iterator = fs.iterator
+      while (iterator.hasNext) {
+        val ii = i
+        iterator.next().respond {
           case Return(x) =>
-            results.set(i, x)
+            results.set(ii, x)
             if (count.decrementAndGet() == 0) {
               val resultsArray = new mutable.ArraySeq[A](fsSize)
               var j = 0
@@ -453,6 +488,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
           case Throw(cause) =>
             p.updateIfEmpty(Throw(cause))
         }
+        i += 1
       }
       p
     }
@@ -467,7 +503,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @return a `Future[Map[A, B]]` containing the collected values from fs
    */
   def collect[A, B](fs: Map[A, Future[B]]): Future[Map[A, B]] =
-    if (fs.isEmpty) Future(Map.empty[A, B])
+    if (fs.isEmpty) emptyMap
     else {
       val (keys, values) = fs.toSeq.unzip
       Future.collect(values) map { seq =>
@@ -497,7 +533,13 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @return a `Future[Seq[Try[A]]]` containing the collected values from fs.
    */
   def collectToTry[A](fs: Seq[Future[A]]): Future[Seq[Try[A]]] =
-    Future.collect(fs map(_.liftToTry))
+    Future.collect {
+      val seq = new mutable.ArrayBuffer[Future[Try[A]]](fs.size)
+      val iterator = fs.iterator
+      while (iterator.hasNext)
+        seq += iterator.next().liftToTry
+      seq
+    }
 
   /**
    * Collect the results from the given futures into a new future of java.util.List[Try[A]].
@@ -522,12 +564,48 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
       Future.exception(new IllegalArgumentException("empty future list"))
     } else {
       val p = Promise.interrupts[(Try[A], Seq[Future[A]])](fs:_*)
-      val as = fs.map(f => (Promise.attached(f), f))
-      for ((a, f) <- as) a respond { t =>
-        if (!p.isDefined) {
-          p.updateIfEmpty(Return(t -> fs.filterNot(_ eq f)))
-          for (z <- as) z._1.detach()
+      val size = fs.size
+
+      val as = {
+        val array = new Array[(Promise[A] with Promise.Detachable, Future[A])](size)
+        val iterator = fs.iterator
+        var i = 0
+        while (iterator.hasNext) {
+          val f = iterator.next()
+          array(i) = Promise.attached(f) -> f
+          i += 1
         }
+        array
+      }
+
+      var i = 0
+      while (i < size) {
+        val tuple = as(i)
+        val a = tuple._1
+        val f = tuple._2
+        a.respond { t =>
+          if (!p.isDefined) {
+            val filtered = {
+              val seq = new mutable.ArrayBuffer[Future[A]](size - 1)
+              var j = 0
+              while (j < size) {
+                val (_, fi) = as(j)
+                if (fi ne f)
+                  seq += fi
+                j += 1
+              }
+              seq
+            }
+            p.updateIfEmpty(Return(t -> filtered))
+
+            var j = 0
+            while (j < size) {
+              as(j)._1.detach()
+              j += 1
+            }
+          }
+        }
+        i += 1
       }
       p
     }
@@ -544,14 +622,23 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
       Future.exception(new IllegalArgumentException("empty future list"))
     } else {
       val p = Promise.interrupts[Int](fs:_*)
-      val as = fs.map(Promise.attached)
+      val size = fs.size
+      val as = {
+        val array = new Array[Promise[A] with Promise.Detachable](size)
+        var i = 0
+        while (i < fs.size) {
+          array(i) = Promise.attached(fs(i))
+          i += 1
+        }
+        array
+      }
       var i = 0
-      while (i < as.size) {
+      while (i < size) {
         val ii = i
         as(ii) ensure {
           if (!p.isDefined && p.updateIfEmpty(Return(ii))) {
             var j = 0
-            while (j < as.size) {
+            while (j < size) {
               as(j).detach()
               j += 1
             }
@@ -623,7 +710,13 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   }
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
-    (0 until n) map { i => f }
+    var i = 0
+    val result = new mutable.ArrayBuffer[Future[A]](n)
+    while (i < n) {
+      result += f
+      i += 1
+    }
+    result
   }
 
   /**
@@ -1208,14 +1301,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * The offer is activated when the future is satisfied.
    */
   def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
-    def prepare() = transform { res: Try[A] =>
-      val tx = new Tx[Try[A]] {
-        def ack(): Future[Tx.Result[Try[A]]] = Future.value(Tx.Commit(res))
-        def nack(): Unit = ()
-      }
-
-      Future.value(tx)
-    }
+    def prepare() = transform(Future.toTx)
   }
 
   /**
@@ -1257,7 +1343,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * Converts a `Future[Future[B]]` into a `Future[B]`.
    */
   def flatten[B](implicit ev: A <:< Future[B]): Future[B] =
-    flatMap[B] { x => x }
+    flatMap[B](ev)
 
   /**
    * Returns an identical future except that it ignores interrupts which match a predicate
@@ -1292,18 +1378,13 @@ abstract class Future[+A] extends Awaitable[A] {
   /**
    * Returns the result of the computation as a `Future[Try[A]]`.
    */
-  def liftToTry: Future[Try[A]] = transform(Future.value)
+  def liftToTry: Future[Try[A]] = transform(Future.toValue)
 
   /**
    * Lowers a `Future[Try[T]]` into a `Future[T]`.
    */
   def lowerFromTry[B](implicit ev: A <:< Try[B]): Future[B] =
-    this.flatMap { a =>
-      ev(a) match {
-        case Return(t) => Future.value(t)
-        case Throw(exc) => Future.exception(exc)
-      }
-    }
+    this.flatMap(Future.lowerFromTry)
 
   /**
    * Makes a derivative `Future` which will be satisfied with the result

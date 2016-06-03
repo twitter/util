@@ -284,7 +284,10 @@ object Promise {
    */
   def interrupts[A](fs: Future[_]*): Promise[A] = {
     val handler: PartialFunction[Throwable, Unit] = {
-      case intr => for (f <- fs) f.raise(intr)
+      case intr =>
+        val iterator = fs.iterator
+        while (iterator.hasNext)
+          iterator.next().raise(intr)
     }
     new Promise[A](handler)
   }
@@ -453,8 +456,9 @@ class Promise[A]
         // shallow distributions, this number should likely be higher.
         // that said, this number is empirically large and should be a
         // rare run code path.
-        if (rest.size > 13) {
-          var rem = mutable.ArrayBuffer[K[A]]()
+        val size = rest.size
+        if (size > 13) {
+          var rem = new mutable.ArrayBuffer[K[A]](size)
           var ks = rest
           while (ks ne Nil) {
             val k = ks.head
@@ -589,31 +593,48 @@ class Promise[A]
   }
 
   @tailrec protected[Promise] final def detach(k: K[A]): Boolean = {
+
+    def remove(list: List[K[Nothing]], k: K[_]): List[K[Nothing]] = {
+      @tailrec def go(l: List[K[Nothing]], acc: List[K[Nothing]] = Nil): List[K[Nothing]] = {
+        if (l eq Nil)
+          acc
+        else {
+          val h = l.head
+          if (h eq k)
+            go(l.tail, acc)
+          else
+            go(l.tail, acc :+ h)
+        }
+      }
+
+      go(list)
+    }
+
     state match {
       case p: Promise[A] /* Linked */ =>
         p.detach(k)
 
       case s@Interruptible(waitq, handler) =>
-        if (!cas(s, Interruptible(waitq.filterNot(_ eq k), handler)))
+        if (!cas(s, Interruptible(remove(waitq, k), handler)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Transforming(waitq, other) =>
-        if (!cas(s, Transforming(waitq.filterNot(_ eq k), other)))
+        if (!cas(s, Transforming(remove(waitq, k), other)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Interrupted(waitq, intr) =>
-        if (!cas(s, Interrupted(waitq.filterNot(_ eq k), intr)))
+        if (!cas(s, Interrupted(remove(waitq, k), intr)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Waiting(first, rest)  =>
         val waitq = if (first eq null) rest else first :: rest
-        val next = waitq.filterNot(_ eq k) match {
+        val next = remove(waitq, k) match {
           case Nil => initState
           case head :: tail => Waiting(head, tail)
         }
