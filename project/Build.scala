@@ -180,10 +180,7 @@ object Util extends Build {
     settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
-    name := "util-codec",
-    libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.9"
-    )
+    name := "util-codec"
   ).dependsOn(utilCore)
 
   lazy val utilCollection = Project(
@@ -275,10 +272,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-hashing",
-    libraryDependencies ++= Seq(
-      "commons-codec" % "commons-codec" % "1.9" % "test",
-      scalacheckLib
-    )
+    libraryDependencies += scalacheckLib
   ).dependsOn(utilCore % "test")
 
   lazy val utilJvm = Project(

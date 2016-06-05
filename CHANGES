@@ -8,6 +8,10 @@ Next Version
 
 Changes in Runtime Behavior:
 
+  * util-codec: StringEncoder no longer depends on apache commons-codec, and
+    decode will now throw an exception when it fails to decode a byte, instead
+    of failing silently. ``RB_ID=833478``
+
   * util-collection: LruMap is now backed by jdk LinkedHashMap instead of apache
     collections LRUMap. ``RB_ID=833515``
 

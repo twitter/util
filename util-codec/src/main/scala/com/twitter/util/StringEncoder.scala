@@ -1,11 +1,10 @@
 package com.twitter.util
 
+import com.twitter.io.{StreamIO, Charsets}
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.util.Base64
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 
-import org.apache.commons.codec.binary.Base64
-
-import com.twitter.io.StreamIO
 
 trait StringEncoder {
   def encode(bytes: Array[Byte]): String = new String(bytes)
@@ -13,15 +12,16 @@ trait StringEncoder {
 }
 
 /**
-  * A utility for encoding strings and byte arrays to a base64 string, and
-  * decoding from strings encoded in base64 to byte arrays.
+  * A utility for encoding strings and byte arrays to a MIME base64 string, and
+  * decoding from strings encoded in MIME base64 to byte arrays.
   *
   * The encoding for strings is UTF-8.
   */
 trait Base64StringEncoder extends StringEncoder {
-  private[this] def codec = new Base64()
-  override def encode(bytes: Array[Byte]): String = codec.encodeToString(bytes)
-  override def decode(str: String): Array[Byte] = codec.decode(str)
+  private[this] val encoder = Base64.getMimeEncoder(0, "\r\n".getBytes(Charsets.Utf8))
+  private[this] val decoder = Base64.getMimeDecoder
+  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.Utf8)
+  override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.Utf8))
 }
 
 /**
@@ -31,11 +31,11 @@ trait Base64StringEncoder extends StringEncoder {
  * The encoding for strings is UTF-8.
  */
 trait Base64UrlSafeStringEncoder extends StringEncoder {
-  // This uses a null line separator since maximum line length (0) is disabled.
-  private[this] def codec = new Base64(0, null, true)
+  private[this] val encoder = Base64.getUrlEncoder.withoutPadding
+  private[this] val decoder = Base64.getUrlDecoder
 
-  override def encode(bytes: Array[Byte]): String = codec.encodeToString(bytes)
-  override def decode(str: String): Array[Byte] = codec.decode(str)
+  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.Utf8)
+  override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.Utf8))
 }
 
 object StringEncoder extends StringEncoder

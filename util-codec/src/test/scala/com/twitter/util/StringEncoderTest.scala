@@ -51,7 +51,9 @@ class Base64StringEncoderTest extends WordSpec {
   }
 
   "decode url-unsafe strings" in {
-    assert(Base64UrlSafeStringEncoder.decode(resultUnsafe) === urlUnsafeBytes)
+    intercept[IllegalArgumentException] {
+      Base64UrlSafeStringEncoder.decode(resultUnsafe)
+    }
   }
 }
 

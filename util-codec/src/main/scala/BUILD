@@ -5,7 +5,6 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty/jvm/commons-codec:commons-codec',
     'util/util-core/src/main/scala'
   ],
   fatal_warnings=True,
