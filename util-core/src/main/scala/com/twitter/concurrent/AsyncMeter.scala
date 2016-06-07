@@ -28,13 +28,37 @@ object AsyncMeter {
   private[concurrent] val MinimumInterval = 1.millisecond
 
   /**
-   * Creates an [[AsyncMeter]] that allows smoothed out `permits` permits per
+   * Creates an [[AsyncMeter]] that allows smoothed out `permits` per
    * second, and has a maximum burst size of `permits` over one second.
    *
    * This is equivalent to `AsyncMeter.newMeter(permits, 1.second, maxWaiters)`.
    */
   def perSecond(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
     newMeter(permits, 1.second, maxWaiters)
+
+  /**
+   * Creates an [[AsyncMeter]] that allows smoothed out `permits` per second,
+   * and has a maximum burst size of 1 permit over `1.second  / permits`.
+   *
+   * This method produces [[AsyncMeter]]s that might be placed before an
+   * external API forcing a rate limit over a one second. For example, the
+   * following meter rate limits its callers to make sure no more than 8 QPS
+   * is sent at any point of time.
+   *
+   * {{{
+   *  val meter = AsyncMeter.perSecondLimited(8, 100)
+   * }}}
+   *
+   * This is equivalent to `AsyncMeter.newMeter(1, 1.second / permits, maxWaiters)`.
+   *
+   * @note If you don't need an exact limit, you'll be able to handle bursts\
+   *       faster by using either [[newMeter]] or [[perSecond]].
+   *
+   * @note It's possible to get `permits` + 1 waiters to continue over the very first
+   *       second, but the burst should be smoothed out after that.
+   */
+  def perSecondLimited(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
+    newMeter(1, 1.second / permits, maxWaiters)
 
   /**
    * Creates an [[AsyncMeter]] that has a maximum burst size of `burstSize` over

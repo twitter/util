@@ -283,4 +283,33 @@ class AsyncMeterTest extends FunSuite {
       assert(first.isDone)
     }
   }
+
+  test("AsyncMeter.perSecondLimited shouldn't allow more than N waiters to continue over 1 s") {
+    val timer = new MockTimer
+    Time.withCurrentTimeFrozen { ctl =>
+      val meter = perSecondLimited(2, 100)(timer) // 2 QPS
+
+      val first = meter.await(1)
+      val second = meter.await(1)
+      val third = meter.await(1)
+      val forth = meter.await(1)
+      val fifth = meter.await(1)
+      val sixth = meter.await(1)
+
+      assert(first.isDefined)
+      assert(!second.isDefined)
+
+      ctl.advance(1.second)
+      timer.tick()
+      assert(second.isDefined)
+      assert(third.isDefined)
+      assert(!forth.isDefined)
+
+      ctl.advance(1.second)
+      timer.tick()
+      assert(forth.isDefined)
+      assert(fifth.isDefined)
+      assert(!sixth.isDefined)
+    }
+  }
 }
