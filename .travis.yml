@@ -29,5 +29,9 @@ before_script:
   - unset SBT_OPTS
   - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION update
 
-script: ./sbt ++$TRAVIS_SCALA_VERSION coverage test && ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
-after_success: ./sbt ++$TRAVIS_SCALA_VERSION coveralls
+script:
+    - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+    - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
+
+after_success:
+    - ./sbt ++$TRAVIS_SCALA_VERSION coveralls

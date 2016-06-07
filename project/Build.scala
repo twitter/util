@@ -2,7 +2,7 @@ import sbt.Keys._
 import sbt._
 import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
-import scoverage.ScoverageKeys
+import scoverage.ScoverageSbtPlugin
 
 object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
@@ -27,7 +27,6 @@ object Util extends Build {
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.11.8",
-    crossScalaVersions := Seq("2.11.8", "2.12.0-M4"),
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
@@ -38,7 +37,7 @@ object Util extends Build {
 
     resolvers += "twitter repo" at "https://maven.twttr.com",
 
-    ScoverageKeys.coverageHighlighting := true,
+    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
 
     scalacOptions := Seq(
       // Note: Add -deprecation when deprecated methods are removed
@@ -97,26 +96,6 @@ object Util extends Build {
         "com.twitter.common.zookeeper" % "client" % zkClientVersion,
         "com.twitter.common.zookeeper" % "group"  % zkGroupVersion
       )
-    },
-
-    // scoverage automatically brings in libraries on our behalf, but it hasn't
-    // been updated for 2.12 yet[0].  for now, we need to rely on the 2.11 ones
-    // (which seem to work OK)
-    //
-    // [0]: https://github.com/scoverage/sbt-scoverage/issues/126
-    libraryDependencies := {
-      libraryDependencies.value.map {
-        case moduleId: ModuleID
-          if moduleId.organization == "org.scoverage"
-          && scalaVersion.value.startsWith("2.12") =>
-          moduleId.copy(name = moduleId.name.replace(scalaVersion.value, "2.11"))
-        case moduleId =>
-          moduleId
-      }
-    },
-
-    ScoverageKeys.coverageEnabled := {
-      !scalaVersion.value.startsWith("2.12")
     }
   )
 
@@ -126,7 +105,7 @@ object Util extends Build {
     settings = Defaults.coreDefaultSettings ++
       sharedSettings ++
       unidocSettings
-  ) aggregate(
+  ).aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLint, utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
