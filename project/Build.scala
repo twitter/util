@@ -113,10 +113,6 @@ object Util extends Build {
         case moduleId =>
           moduleId
       }
-    },
-
-    ScoverageKeys.coverageEnabled := {
-      !scalaVersion.value.startsWith("2.12")
     }
   )
 
