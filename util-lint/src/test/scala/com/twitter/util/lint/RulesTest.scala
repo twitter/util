@@ -42,6 +42,19 @@ class RulesTest extends FunSuite {
     assert(Seq(maybeRule, maybeRule) == rs.iterable.toSeq)
   }
 
+  test("removal by id") {
+    val rs = new RulesImpl()
+    rs.add(maybeRule)
+    rs.add(alwaysRule)
+    rs.add(alwaysRule)
+    rs.add(maybeRule)
+    rs.add(neverRule)
+
+    rs.removeById(maybeRule.id)
+
+    assert(Seq(neverRule, alwaysRule, alwaysRule) == rs.iterable.toSeq)
+  }
+
   test("evaluation") {
     val rs = new RulesImpl()
     rs.add(maybeRule)

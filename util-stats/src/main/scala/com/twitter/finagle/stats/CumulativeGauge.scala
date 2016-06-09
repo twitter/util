@@ -88,8 +88,8 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
 
   private[this] val gauges = new ConcurrentHashMap[Seq[String], CumulativeGauge]()
 
-  def registerLargeGaugeLinter(rules: Rules): Unit = {
-    rules.add(Rule(
+  def largeGaugeLinterRule: Rule = {
+    Rule(
       Category.Performance,
       "Large CumulativeGauges",
       "Identifies CumulativeGauges which are backed by very large numbers (100k+) " +
@@ -107,7 +107,7 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
           Issue(ks.mkString("/") + "=" + size)
         }.toSeq
       }
-    })
+    }
   }
 
   /**

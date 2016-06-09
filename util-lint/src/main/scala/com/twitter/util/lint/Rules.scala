@@ -25,6 +25,11 @@ trait Rules {
    * Duplicates are allowed.
    */
   def add(rule: Rule): Unit
+
+  /**
+   * Removes all rules matching the provided id.
+   */
+  def removeById(ruleId: String): Unit
 }
 
 class RulesImpl extends Rules {
@@ -38,6 +43,10 @@ class RulesImpl extends Rules {
 
   def add(rule: Rule): Unit = synchronized {
     rules = rule :: rules
+  }
+
+  def removeById(ruleId: String): Unit = synchronized {
+    rules = rules.filterNot(_.id == ruleId)
   }
 
 }

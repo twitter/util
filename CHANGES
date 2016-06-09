@@ -43,12 +43,12 @@ New Features:
 
 API Changes:
 
-  * util-core: `c.t.u.Bijection` is removed. use `c.t.bijection.Bijection`
-    (https://github.com/twitter/bijection) instead. ``RB_ID=834383``
-
   * Builds are now only for Java 8 and Scala 2.11. See the
     `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
     for details. ``RB_ID=828898``
+
+  * util-core: `c.t.u.Bijection` is removed. use `c.t.bijection.Bijection`
+    (https://github.com/twitter/bijection) instead. ``RB_ID=834383``
 
   * util-core: Deprecated method `Future.get()` has been removed because it made it
     too easy to hide blocking code. Replaced usage with the more explicit
@@ -62,6 +62,11 @@ API Changes:
     removed because they made it too easy to hide blocking code. Replaced usage with
     the more explicit `Await.result(Future.liftToTry).isReturn` and
     `Await.result(Future.liftToTry).isThrow`. ``RB_ID=837329``
+
+  * util-lint: Added methods `com.twitter.util.lint.Rules.removeById(String)` and
+    `com.twitter.util.lint.RulesImpl.removeById(String)` so that it is now possible
+    to remove a `com.twitter.util.lint.Rule` from the `com.twitter.util.lint.GlobalRules`
+    set. ``RB_ID=840753``
 
 Bug Fixes:
 
