@@ -76,6 +76,11 @@ Bug Fixes:
     with leftover tokens.  This improves behavior where the actual period is
     smaller than can actually be simulated with the given timer.  ``RB_ID=836742``
 
+  * util-core: Once didn't actually provide the guarantee it tried to, because
+    of an issue with the scala compiler,
+    https://issues.scala-lang.org/browse/SI-9814.  It should now actually be
+    synchronized. ``RB_ID=842245``
+
   * util-zk: Fixed race when an existing permit is released between the time
     the list was gotten and the data was checked. ``RB_ID=835856``
 

@@ -1,5 +1,6 @@
 package com.twitter.concurrent
 
+import com.twitter.conversions.time._
 import com.twitter.util.{Promise, Await}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
@@ -33,10 +34,11 @@ class OnceTest extends FunSuite {
         p.setDone()
       }
     })
-    once()
     t.start()
+    once()
     assert(x == 1)
-    t.join()
-    Await.result(p)
+    t.join(5.seconds.inMilliseconds)
+    Await.result(p, 5.seconds)
+    assert(x == 1)
   }
 }
