@@ -1,6 +1,6 @@
 package com.twitter.util;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import scala.runtime.BoxedUnit;
 

@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import java.io.{ByteArrayInputStream, DataInputStream, File}
+import java.io.{ByteArrayInputStream, DataInputStream}
 import java.util.Arrays
 
 import org.junit.runner.RunWith

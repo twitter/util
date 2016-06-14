@@ -5,7 +5,7 @@ import com.twitter.conversions.time.intToTimeableNumber
 import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
 import org.junit.runner.RunWith
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks

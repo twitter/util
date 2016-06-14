@@ -16,7 +16,6 @@
 
 package com.twitter.util
 
-import java.util.regex.Pattern
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

@@ -2,7 +2,7 @@ package com.twitter.concurrent;
 
 import com.twitter.util.Await;
 import com.twitter.util.Future;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import scala.Tuple2;
 import scala.runtime.BoxedUnit;

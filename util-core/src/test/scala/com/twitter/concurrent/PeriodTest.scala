@@ -4,7 +4,6 @@ import com.twitter.conversions.time._
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 @RunWith(classOf[JUnitRunner])
 class PeriodTest extends FunSuite {

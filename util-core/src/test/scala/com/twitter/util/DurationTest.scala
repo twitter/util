@@ -23,7 +23,6 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
-  import ops._
 
   "Duration" should {
     "*" in {

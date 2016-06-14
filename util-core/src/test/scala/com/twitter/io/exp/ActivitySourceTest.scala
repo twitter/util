@@ -1,7 +1,7 @@
 package com.twitter.io.exp
 
 import com.twitter.io.Buf
-import com.twitter.util.{Activity, FuturePool, MockTimer, Time, Var}
+import com.twitter.util.{Activity, FuturePool, MockTimer, Time}
 import java.io.{File, ByteArrayInputStream}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
