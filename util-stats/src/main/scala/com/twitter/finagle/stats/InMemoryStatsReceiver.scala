@@ -15,9 +15,9 @@ import scala.collection.JavaConverters._
  * {{{
  * val isr = new InMemoryStatsReceiver
  * isr.counter("a", "b", "foo")
- * irs.counter("a/b", "bar")
+ * isr.counter("a/b", "bar")
  *
- * irs.print(Console.out) // will print two lines "a/b/foo 0" and "a/b/bar 0"
+ * isr.print(Console.out) // will print two lines "a/b/foo 0" and "a/b/bar 0"
  *
  * assert(isr.counters(Seq("a", "b", "foo") == 0)) // ok
  * assert(isr.counters(Seq("a", "b", "bar") == 0)) // fail
