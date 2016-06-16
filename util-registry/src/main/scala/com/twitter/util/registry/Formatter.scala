@@ -6,6 +6,11 @@ import scala.util.control.NoStackTrace
 object Formatter {
   private[this] val log = Logger.getLogger(getClass.getName)
 
+  /**
+   * The top-level key in the `Map` returned by [[asMap]].
+   */
+  val RegistryKey = "registry"
+
   private[registry] val Eponymous = "__eponymous"
 
   /**
@@ -60,7 +65,7 @@ object Formatter {
           log.severe(s"incorrectly found an empty seq on $returnString")
       }
     }
-    Map("registry" -> map)
+    Map(RegistryKey -> map)
   }
 
   private[registry] val Collision = new Exception() with NoStackTrace
