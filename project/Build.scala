@@ -315,7 +315,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-security"
-  ).dependsOn(utilCore)
+  ).dependsOn(utilCore, utilLogging)
 
   lazy val utilStats = Project(
     id = "util-stats",
