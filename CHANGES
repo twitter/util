@@ -23,6 +23,12 @@ Changes in Runtime Behavior:
 
 New Features:
 
+  * util-app: `com.twitter.finagle.util.LoadService` has been moved to
+    `c.t.app.LoadService` and can now be used without needing a finagle-core
+    dependency. ``RB_ID=829897``
+
+  * util-cache: Adds support for Caffeine-style caches. ``RB_ID=833848``
+
   * util-core: Add `c.t.concurrent.Scheduler.blockingTimeNanos` which tracks time spent doing
     blocking operations. ``RB_ID=828289``
 
@@ -35,11 +41,7 @@ New Features:
   * util-core: Add `Future.joinWith` that also accepts a function `(A, B) => C` for mapping
     a joined result. ``RB_ID=838169``
 
-  * util-app: `com.twitter.finagle.util.LoadService` has been moved to
-    `c.t.app.LoadService` and can now be used without needing a finagle-core
-    dependency. ``RB_ID=829897``
-
-  * util-cache: Adds support for Caffeine-style caches. ``RB_ID=833848``
+  * util-security: Added new project. ``RB_ID=843070``
 
 API Changes:
 

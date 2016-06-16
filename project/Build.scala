@@ -126,7 +126,7 @@ object Util extends Build {
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
     utilLint, utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
-    utilEvents, utilStats, utilEval
+    utilEvents, utilSecurity, utilStats, utilEval
   )
 
   lazy val utilApp = Project(
@@ -306,6 +306,15 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-registry"
+  ).dependsOn(utilCore)
+
+  lazy val utilSecurity = Project(
+    id = "util-security",
+    base = file("util-security"),
+    settings = Defaults.coreDefaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-security"
   ).dependsOn(utilCore)
 
   lazy val utilStats = Project(
