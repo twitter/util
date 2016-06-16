@@ -12,10 +12,12 @@ object Once {
   def apply(fn: => Unit): () => Unit = {
     new Function0[Unit] {
       // we can't use method synchronization because of https://issues.scala-lang.org/browse/SI-9814
-      val lock = new Object
+      // this `val self = this` indirection convinces the scala compiler to use object
+      // synchronization instead of method synchronization
+      val self = this
       @volatile var executed = false
       def apply(): Unit = if (!executed) {
-        lock.synchronized {
+        self.synchronized {
           if (!executed) {
             fn
             executed = true
