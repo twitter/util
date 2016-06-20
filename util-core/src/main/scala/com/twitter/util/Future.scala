@@ -941,7 +941,9 @@ abstract class Future[+A] extends Awaitable[A] {
   def cancel() { raise(new FutureCancelledException) }
 
   /**
-   * Same as the other raiseWithin, but with an implicit timer. Sometimes this is more convenient.
+   * Returns a new Future that fails if this Future does not return in time.
+   *
+   * Same as the other `raiseWithin`, but with an implicit timer. Sometimes this is more convenient.
    *
    * ''Note'': On timeout, the underlying future is interrupted.
    */
@@ -949,7 +951,9 @@ abstract class Future[+A] extends Awaitable[A] {
     raiseWithin(timer, timeout, new TimeoutException(timeout.toString))
 
   /**
-   * Same as the other raiseWithin, but with an implicit timer. Sometimes this is more convenient.
+   * Returns a new Future that fails if this Future does not return in time.
+   *
+   * Same as the other `raiseWithin`, but with an implicit timer. Sometimes this is more convenient.
    *
    * ''Note'': On timeout, the underlying future is interrupted.
    */
@@ -957,7 +961,7 @@ abstract class Future[+A] extends Awaitable[A] {
     raiseWithin(timer, timeout, exc)
 
   /**
-   * Returns a new Future that will error if this Future does not return in time.
+   * Returns a new Future that fails if this Future does not return in time.
    *
    * ''Note'': On timeout, the underlying future is interrupted.
    */
@@ -973,7 +977,9 @@ abstract class Future[+A] extends Awaitable[A] {
   }
 
   /**
-   * Same as the other within, but with an implicit timer. Sometimes this is more convenient.
+   * Returns a new Future that fails if it is not satisfied in time.
+   *
+   * Same as the other `within`, but with an implicit timer. Sometimes this is more convenient.
    *
    * ''Note'': On timeout, the underlying future is not interrupted.
    */
@@ -981,7 +987,7 @@ abstract class Future[+A] extends Awaitable[A] {
     within(timer, timeout)
 
   /**
-   * Returns a new Future that will error if this Future does not return in time.
+   * Returns a new Future that fails if it is not satisfied in time.
    *
    * ''Note'': On timeout, the underlying future is not interrupted.
    */
@@ -989,7 +995,7 @@ abstract class Future[+A] extends Awaitable[A] {
     within(timer, timeout, new TimeoutException(timeout.toString))
 
   /**
-   * Returns a new Future that will error if this Future does not return in time.
+   * Returns a new Future that fails if it is not satisfied in time.
    *
    * ''Note'': On timeout, the underlying future is not interrupted.
    *
@@ -997,12 +1003,42 @@ abstract class Future[+A] extends Awaitable[A] {
    * @param timeout indicates how long you are willing to wait for the result to be available.
    * @param exc exception to throw.
    */
-  def within(timer: Timer, timeout: Duration, exc: => Throwable): Future[A] = {
-    if (timeout == Duration.Top || isDefined)
+  def within(timer: Timer, timeout: Duration, exc: => Throwable): Future[A] =
+    by(timer, timeout.fromNow, exc)
+
+  /**
+   * Returns a new Future that fails if it is not satisfied before the given time.
+   *
+   * Same as the other `by`, but with an implicit timer. Sometimes this is more convenient.
+   *
+   * ''Note'': On timeout, the underlying future is not interrupted.
+   */
+  def by(when: Time)(implicit timer: Timer): Future[A] =
+    by(timer, when)
+
+  /**
+   * Returns a new Future that fails if it is not satisfied before the given time.
+   *
+   * ''Note'': On timeout, the underlying future is not interrupted.
+   */
+  def by(timer: Timer, when: Time): Future[A] =
+    by(timer, when, new TimeoutException(when.toString))
+
+  /**
+   * Returns a new Future that fails if it is not satisfied before the given time.
+   *
+   * ''Note'': On timeout, the underlying future is not interrupted.
+   *
+   * @param timer to run timeout on.
+   * @param when indicates when to stop waiting for the result to be available.
+   * @param exc exception to throw.
+   */
+  def by(timer: Timer, when: Time, exc: => Throwable): Future[A] = {
+    if (when == Time.Top || isDefined)
       return this
 
     val p = Promise.interrupts[A](this)
-    val task = timer.schedule(timeout.fromNow) {
+    val task = timer.schedule(when) {
       p.updateIfEmpty(Throw(exc))
     }
     respond { r =>

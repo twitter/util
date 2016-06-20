@@ -485,7 +485,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
       }
 
-     "traverseSequentially" should {
+      "traverseSequentially" should {
         class TraverseTestSpy() {
           var goWasCalled = false
           var promise     = Promise[Int]()
@@ -1396,48 +1396,58 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
       }
 
-      "within" should {
-        "when we run out of time" in {
-          implicit val timer = new JavaTimer
-          val p = new HandledPromise[Int]
-          intercept[TimeoutException] { Await.result(p.within(50.milliseconds)) }
-          timer.stop()
-          assert(p.handled == None)
-        }
+      val uw = (p: Promise[Int], d: Duration, t: Timer) => {
+        p.within(d)(t)
+      }
 
-        "when everything is chill" in {
-          implicit val timer = new JavaTimer
-          val p = new Promise[Int]
-          p.setValue(1)
-          assert(Await.result(p.within(50.milliseconds)) == 1)
-          timer.stop()
-        }
+      val ub = (p: Promise[Int], d: Duration, t: Timer) => {
+        p.by(d.fromNow)(t)
+      }
 
-        "when timeout is forever" in {
-          // We manage to throw an exception inside
-          // the scala compiler if we use MockTimer
-          // here. Sigh.
-          implicit val timer = FailingTimer
-          val p = new Promise[Int]
-          assert(p.within(Duration.Top) == p)
-        }
+      Seq(("within", uw), ("by", ub)).foreach { case (label, use) =>
+        label should {
+          "when we run out of time" in {
+            implicit val timer = new JavaTimer
+            val p = new HandledPromise[Int]
+            intercept[TimeoutException] { Await.result(use(p, 50.milliseconds, timer)) }
+            timer.stop()
+            assert(p.handled == None)
+          }
 
-        "when future already satisfied" in {
-          implicit val timer = new NullTimer
-          val p = new Promise[Int]
-          p.setValue(3)
-          assert(p.within(1.minute) == p)
-        }
+          "when everything is chill" in {
+            implicit val timer = new JavaTimer
+            val p = new Promise[Int]
+            p.setValue(1)
+            assert(Await.result(use(p, 50.milliseconds, timer)) == 1)
+            timer.stop()
+          }
 
-        "interruption" in Time.withCurrentTimeFrozen { tc =>
-          implicit val timer = new MockTimer
-          val p = new HandledPromise[Int]
-          val f = p.within(50.milliseconds)
-          assert(p.handled == None)
-          f.raise(new Exception)
-          p.handled  match {
-            case Some(_) =>
-            case None => assert(false == true)
+          "when timeout is forever" in {
+            // We manage to throw an exception inside
+            // the scala compiler if we use MockTimer
+            // here. Sigh.
+            implicit val timer = FailingTimer
+            val p = new Promise[Int]
+            assert(use(p, Duration.Top, timer) == p)
+          }
+
+          "when future already satisfied" in {
+            implicit val timer = new NullTimer
+            val p = new Promise[Int]
+            p.setValue(3)
+            assert(use(p, 1.minute, timer) == p)
+          }
+
+          "interruption" in Time.withCurrentTimeFrozen { tc =>
+            implicit val timer = new MockTimer
+            val p = new HandledPromise[Int]
+            val f = use(p, 50.milliseconds, timer)
+            assert(p.handled == None)
+            f.raise(new Exception)
+            p.handled match {
+              case Some(_) =>
+              case None => assert(false == true)
+            }
           }
         }
       }

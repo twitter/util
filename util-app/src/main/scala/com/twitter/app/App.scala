@@ -115,7 +115,7 @@ trait App extends Closable with CloseAwaitably {
       Closable.make { deadline => // close() ensures that this deadline is sane
         // finagle isn't available here, so no DefaultTimer
         val exitTimer = new JavaTimer(isDaemon = true)
-        FuturePool.unboundedPool(f).within(exitTimer, deadline - Time.now)
+        FuturePool.unboundedPool(f).by(exitTimer, deadline)
       }
     }
   }

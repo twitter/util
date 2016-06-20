@@ -10,6 +10,21 @@ import scala.Tuple3;
 import scala.runtime.BoxedUnit;
 
 public class FutureCompilationTest {
+
+  @Test
+  public void testBy() throws Exception {
+    Future<String> a = Future.value("23");
+    Future<String> b = a.by(new MockTimer(), Duration.fromSeconds(5).fromNow());
+    Assert.assertEquals(Await.result(a), Await.result(b));
+  }
+
+  @Test
+  public void testWithin() throws Exception {
+    Future<String> a = Future.value("23");
+    Future<String> b = a.within(new MockTimer(), Duration.fromSeconds(5));
+    Assert.assertEquals(Await.result(a), Await.result(b));
+  }
+
   @Test
   public void testFutureCastMap() throws Exception {
     Future<String> a = Future.value("23");

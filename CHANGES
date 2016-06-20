@@ -41,6 +41,9 @@ New Features:
   * util-core: Add `Future.joinWith` that also accepts a function `(A, B) => C` for mapping
     a joined result. ``RB_ID=838169``
 
+  * util-core: Add `Future.by(Time)`, complementary to the existing `Future.within(Duration)`
+    ``RB_ID=838169``
+
   * util-security: Added new project. ``RB_ID=843070``
 
 API Changes:
