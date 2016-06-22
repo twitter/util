@@ -199,4 +199,21 @@ class TryTest extends FunSuite {
     val exc = new Exception("boom!")
     assert(Some("OK").orThrow { exc } == Return("OK"))
   }
+
+  test("Try from scala.util.Try works") {
+    import scala.util.{Try => STry}
+
+    assert(Try.fromScalaTry(STry(1)) == Try(1))
+    assert(Try.fromScalaTry(STry(sys.error("boom!"))).isThrow)
+  }
+
+  test("Try to scala.util.Try works") {
+    import scala.util.{Try => STry, Failure, Success}
+
+    assert(STry(1) == Try(1).asScalaTry)
+    assert(Try(sys.error("boom!")).asScalaTry match {
+      case Failure(_) => true
+      case Success(_) => false
+    })
+  }
 }
