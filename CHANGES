@@ -89,6 +89,9 @@ Bug Fixes:
   * util-zk: Fixed race when an existing permit is released between the time
     the list was gotten and the data was checked. ``RB_ID=835856``
 
+  * util-core: Memoize apply now throws IllegalStateException if a thread
+    re-enters with identical input parameters instead of deadlocking.
+
 6.34.0  2016-04-26
 
 New Features:

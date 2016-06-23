@@ -102,6 +102,17 @@ class MemoizeTest extends FunSuite {
     assert(callCount.get() == 2)
   }
 
+  test("Memoize.apply: does not allow reentrant calls with identical inputs") {
+    class Test(fn: Test => Int) {
+      val memo = Memoize(fn)
+    }
+    val t = new Test(t => t.memo(t))
+
+    intercept[IllegalStateException] {
+      t.memo(t)
+    }
+  }
+
   test("Memoize.snappable: produce map of memoized computations") {
     val memoizer = Memoize.snappable[Int, Int] { _ + 1 }
     assert(memoizer.snap.isEmpty)
