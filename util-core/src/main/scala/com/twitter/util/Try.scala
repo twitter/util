@@ -17,6 +17,11 @@ object Try {
     }
   }
 
+  /**
+   * Build a Try from a scala.util.Try. This does nothing
+   * more than pattern match and translate Success and Failure
+   * to Return and Throw respectively.
+   */
   def fromScalaTry[R](tr: scala.util.Try[R]): Try[R] =
     tr match {
       case Success(r) => Return(r)

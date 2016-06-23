@@ -104,15 +104,6 @@ object Future {
   def const[A](result: Try[A]): Future[A] = new ConstFuture[A](result)
 
   /**
-   * Creates a satisfied `Future` from a [[scala.util.Try]].
-   *
-   * @see [[value]] for creation from a constant value.
-   * @see [[apply]] for creation from a `Function`.
-   * @see [[exception]] for creation from a `Throwable`.
-   */
-  def const[A](result: scala.util.Try[A]): Future[A] = const(Try.fromScalaTry(result))
-
-  /**
    * Creates a successful satisfied `Future` from the value `a`.
    *
    * @see [[const]] for creation from a [[Try]]
