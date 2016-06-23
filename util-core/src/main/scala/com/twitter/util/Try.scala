@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import scala.util.{ Success, Failure }
+import scala.util.{Success, Failure}
 
 /**
  * The Try type represents a computation that may either result in an exception
