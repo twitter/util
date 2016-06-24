@@ -22,7 +22,7 @@ object Try {
    * more than pattern match and translate Success and Failure
    * to Return and Throw respectively.
    */
-  def fromScalaTry[R](tr: scala.util.Try[R]): Try[R] =
+  def fromScala[R](tr: scala.util.Try[R]): Try[R] =
     tr match {
       case Success(r) => Return(r)
       case Failure(e) => Throw(e)
@@ -82,7 +82,7 @@ sealed abstract class Try[+R] {
   /**
    * Convert to a scala.util.Try
    */
-  def asScalaTry: scala.util.Try[R]
+  def asScala: scala.util.Try[R]
 
   /**
    * Returns true if the Try is a Throw, false otherwise.
@@ -226,7 +226,7 @@ object Throw {
 }
 
 final case class Throw[+R](e: Throwable) extends Try[R] {
-  def asScalaTry: scala.util.Try[R] = Failure(e)
+  def asScala: scala.util.Try[R] = Failure(e)
   def isThrow = true
   def isReturn = false
   def throwable: Throwable = e
@@ -266,7 +266,7 @@ object Return {
 }
 
 final case class Return[+R](r: R) extends Try[R] {
-  def asScalaTry: scala.util.Try[R] = Success(r)
+  def asScala: scala.util.Try[R] = Success(r)
   def isThrow: Boolean = false
 
   def isReturn: Boolean = true

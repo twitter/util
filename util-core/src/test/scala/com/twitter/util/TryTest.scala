@@ -203,15 +203,15 @@ class TryTest extends FunSuite {
   test("Try from scala.util.Try works") {
     import scala.util.{Try => STry}
 
-    assert(Try.fromScalaTry(STry(1)) == Try(1))
-    assert(Try.fromScalaTry(STry(sys.error("boom!"))).isThrow)
+    assert(Try.fromScala(STry(1)) == Try(1))
+    assert(Try.fromScala(STry(sys.error("boom!"))).isThrow)
   }
 
   test("Try to scala.util.Try works") {
     import scala.util.{Try => STry, Failure, Success}
 
-    assert(STry(1) == Try(1).asScalaTry)
-    assert(Try(sys.error("boom!")).asScalaTry match {
+    assert(STry(1) == Try(1).asScala)
+    assert(Try(sys.error("boom!")).asScala match {
       case Failure(_) => true
       case Success(_) => false
     })
