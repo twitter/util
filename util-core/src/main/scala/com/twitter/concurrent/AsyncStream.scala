@@ -2,6 +2,7 @@ package com.twitter.concurrent
 
 import com.twitter.io.{Buf, Reader}
 import com.twitter.util.{Future, Promise, Return, Throw}
+import scala.annotation.varargs
 import scala.collection.mutable
 
 /**
@@ -702,4 +703,35 @@ object AsyncStream {
    */
   def flattens[A](as: AsyncStream[AsyncStream[A]]): AsyncStream[A] =
     as.flatten
+
+
+  /**
+   * Combinator, merges multiple [[AsyncStream]]s into a single stream. The
+   * resulting stream contains elements in FIFO order per input stream but order
+   * between streams is not guaranteed. The resulting stream is completed when
+   * all input streams are completed. The stream is failed when any input stream
+   * is failed
+   */
+  @varargs
+  def merge[A](s: AsyncStream[A]*): AsyncStream[A] = {
+    def step(next: Seq[Future[Option[(A, () => AsyncStream[A])]]]): AsyncStream[A] = {
+      fromFuture(Future.select(next)).flatMap {
+        case (Return(Some((head, tail))), tails) =>
+          head +:: step(tail().uncons +: tails)
+        case (Throw(cause), tails) =>
+          fromFuture(Future.exception(cause))
+        case (Return(None), Nil) =>
+          empty
+        case (Return(None), tails) =>
+          step(tails)
+      }
+    }
+
+    if (s.isEmpty) {
+      empty
+    } else {
+      step(s.map(_.uncons))
+    }
+  }
+
 }

@@ -45,5 +45,12 @@ public class AsyncStreamCompilationTest {
     );
 
     AsyncStream.flattens(AsyncStream.of(AsyncStream.of(1)));
+
+    AsyncStream<Integer> merged = AsyncStream.merge(
+        AsyncStream.<Integer>of(1),
+        AsyncStream.<Integer>of(2),
+        AsyncStream.<Integer>of(3)
+    );
+
   }
 }

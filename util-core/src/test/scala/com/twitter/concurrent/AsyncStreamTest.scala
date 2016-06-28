@@ -2,7 +2,7 @@ package com.twitter.concurrent
 
 import com.twitter.conversions.time._
 import com.twitter.io.{Buf, Reader}
-import com.twitter.util.{Await, Future, Promise, Throw, Try}
+import com.twitter.util._
 import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
@@ -657,6 +657,50 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       assert(toSeq(s) == xs)
     }
   }
+
+  test("merge generates a stream equal to all input streams") {
+    forAll { (lists: Seq[List[Int]]) =>
+      val streams = lists.map(fromSeq)
+      val merged = AsyncStream.merge(streams: _*)
+
+      val input = AsyncStream(streams: _*).flatten
+
+      assert(toSeq(input).sorted == toSeq(merged).sorted)
+    }
+  }
+
+  test("merge fails the result stream if an input stream fails") {
+    forAll() { (lists: Seq[List[Int]]) =>
+      val s = mk(1, undefined: AsyncStream[Int])
+      val streams = s +: lists.map(fromSeq)
+      val merged = AsyncStream.merge(streams: _*)
+
+      intercept[Exception](toSeq(merged))
+    }
+  }
+
+  test("merged stream contains elements as they become available from input streams") {
+    forAll { (input: List[Int]) =>
+      val promises = List.fill(input.size)(Promise[Int]())
+
+      // grouped into lists of 10 elements each
+      val grouped = promises.grouped(10).toList
+
+      // merged list of streams
+      val streams = grouped.map(fromSeq(_).flatMap(AsyncStream.fromFuture))
+      val merged = AsyncStream.merge(streams: _*).toSeq()
+
+      // build an interleaved list of the promises for the stream
+      // [s1(1), s2(1), s3(1), s1(2), s2(2), s3(2), ...]
+      val interleavedHeads = grouped.flatMap(_.zipWithIndex).sortBy(_._2).map(_._1)
+      interleavedHeads.zip(input).foreach { case (p, i) =>
+        p.update(Return(i))
+      }
+
+      assert(Await.result(merged) == input)
+    }
+  }
+
 }
 
 private object AsyncStreamTest {
