@@ -44,6 +44,9 @@ New Features:
   * util-core: Add `Future.by(Time)`, complementary to the existing `Future.within(Duration)`
     ``RB_ID=838169``
 
+  * util-core: Add `c.t.util.ProxyTimer` which allows for creating proxy based
+    `Timers` outside of the `com.twitter.util` package. ``RB_ID=846194``
+
   * util-security: Added new project. ``RB_ID=843070``
 
 API Changes:

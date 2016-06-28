@@ -133,15 +133,29 @@ object NullTimerTask extends TimerTask {
   def cancel(): Unit = ()
 }
 
-class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends Timer {
+/**
+ * A [[Timer]] that proxies methods to `self`.
+ */
+abstract class ProxyTimer extends Timer {
+  /** The underlying [[Timer]] instance used for proxying methods. */
+  protected def self: Timer
+
   protected def scheduleOnce(when: Time)(f: => Unit): TimerTask =
-    underlying.schedule(when)(f)
+    self.schedule(when)(f)
 
   protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask =
-    underlying.schedule(when, period)(f)
+    self.schedule(when, period)(f)
 
-  def stop(): Unit = {
-    executor.submit(new Runnable { def run() = underlying.stop() })
+  def stop(): Unit =
+    self.stop()
+}
+
+class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends ProxyTimer {
+  protected def self: Timer = underlying
+  override def stop(): Unit = {
+    executor.submit(new Runnable {
+      def run(): Unit = underlying.stop()
+    })
   }
 }
 
@@ -150,10 +164,13 @@ trait ReferenceCountedTimer extends Timer {
 }
 
 class ReferenceCountingTimer(factory: () => Timer)
-  extends ReferenceCountedTimer
+  extends ProxyTimer
+  with ReferenceCountedTimer
 {
   private[this] var refcount = 0
   private[this] var underlying: Timer = null
+
+  protected def self: Timer = underlying
 
   def acquire(): Unit = synchronized {
     refcount += 1
@@ -163,22 +180,13 @@ class ReferenceCountingTimer(factory: () => Timer)
     }
   }
 
-  def stop(): Unit = synchronized {
+  override def stop(): Unit = synchronized {
     refcount -= 1
     if (refcount == 0) {
       underlying.stop()
       underlying = null
     }
   }
-
-  // Just dispatch to the underlying timer. It's the responsibility of
-  // the API consumer to not call into the timer once it has been
-  // stopped.
-  protected def scheduleOnce(when: Time)(f: => Unit): TimerTask =
-    underlying.schedule(when)(f)
-
-  protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask =
-    underlying.schedule(when, period)(f)
 }
 
 /**
