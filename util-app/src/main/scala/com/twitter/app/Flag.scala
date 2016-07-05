@@ -110,11 +110,11 @@ object Flaggable {
 
   implicit val ofFloat: Flaggable[Float] = mandatory(_.toFloat)
   implicit val ofJavaFloat: Flaggable[JFloat] =
-    mandatory { s: String => JFloat.valueOf(s.toInt) }
+    mandatory { s: String => JFloat.valueOf(s.toFloat) }
 
   implicit val ofDouble: Flaggable[Double] = mandatory(_.toDouble)
   implicit val ofJavaDouble: Flaggable[JDouble] =
-    mandatory { s: String => JDouble.valueOf(s.toInt) }
+    mandatory { s: String => JDouble.valueOf(s.toDouble) }
 
   // Conversions for common non-primitive types and collections.
   implicit val ofDuration: Flaggable[Duration] = mandatory(Duration.parse(_))
