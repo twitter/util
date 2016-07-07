@@ -6,6 +6,8 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+6.35.0  2016-07-07
+
 Changes in Runtime Behavior:
 
   * util-codec: StringEncoder no longer depends on apache commons-codec, and
