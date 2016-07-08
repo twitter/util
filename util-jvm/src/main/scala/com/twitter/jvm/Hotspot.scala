@@ -185,6 +185,10 @@ class Hotspot extends Jvm {
     } yield Jvm.MetaspaceUsage(used.bytes, cap.bytes, maxCap.bytes)
   }
 
+  def applicationTime: Long = counter("sun.rt.applicationTime").map(long).getOrElse(0L)
+
+  def tenuringThreshold: Long = counter("sun.gc.policy.tenuringThreshold").map(long).getOrElse(0L)
+
   def snapCounters: Map[String, String] =
     counters("") mapValues(_.getValue().toString)
 

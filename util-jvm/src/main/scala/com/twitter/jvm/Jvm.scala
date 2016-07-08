@@ -131,6 +131,18 @@ trait Jvm {
   def metaspaceUsage: Option[Jvm.MetaspaceUsage]
 
   /**
+   * Gets the applicationTime (total time running application code since the process started)
+   * in nanoseconds or 0, if the metric is unavailable.
+   */
+  def applicationTime: Long
+
+  /**
+   * Gets the current tenuringThreshold (times an object must survive GC
+   * in order to be promoted) or 0, if the metric is unavailable.
+   */
+  def tenuringThreshold: Long
+
+  /**
    * Gets the time spent at safepoints (totalTimeMillis), the time getting 
    * to safepoints (syncTimeMillis), and safepoints reached (count).
    */

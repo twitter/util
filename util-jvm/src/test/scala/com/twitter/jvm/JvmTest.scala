@@ -37,6 +37,8 @@ class JvmTest extends WordSpec with TestLogging {
         def edenPool = NilJvm.edenPool
         def metaspaceUsage = NilJvm.metaspaceUsage
         def safepoint = NilJvm.safepoint
+        def applicationTime = NilJvm.applicationTime
+        def tenuringThreshold = NilJvm.tenuringThreshold
       }
     }
 

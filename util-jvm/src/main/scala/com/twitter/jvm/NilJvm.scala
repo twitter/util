@@ -20,4 +20,8 @@ object NilJvm extends Jvm {
 
   val safepoint: Safepoint = Safepoint(0, 0, 0)
 
+  val applicationTime: Long = 0L
+
+  val tenuringThreshold: Long = 0L
+
 }
