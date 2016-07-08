@@ -52,7 +52,7 @@ because we found they didn't depend on anything finagle-specific.  To ease
 the transition, we kept the namespace.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -63,7 +63,7 @@ the transition, we kept the namespace.
               <ol>
                 
                 <li class="alpha in"><span>Alphabetic</span></li>
-                <li class="inherit out"><span>By inheritance</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
               </ol>
             </div>
         <div id="ancestors">
@@ -76,7 +76,7 @@ the transition, we kept the namespace.
             <span class="filtertype"></span>
             <ol>
               <li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show all</span></li>
+              <li class="showall in"><span>Show All</span></li>
             </ol>
           </div>
         <div id="visbl">
@@ -136,7 +136,7 @@ blacklisted, nothing is recorded.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="BucketAndCount.html"><span class="name">BucketAndCount</span></a><span class="params">(<span name="lowerLimit">lowerLimit: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="upperLimit">upperLimit: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="count">count: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="BucketAndCount.html"><span class="name">BucketAndCount</span></a><span class="params">(<span name="lowerLimit">lowerLimit: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="upperLimit">upperLimit: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="count">count: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.twitter.finagle.stats.package@BucketAndCountextendsProductwithSerializable" title="Permalink" target="_top">
@@ -293,9 +293,9 @@ computed health metric.
       <p class="shortcomment cmt">An in-memory implementation of <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, which is mostly used for testing.</p><div class="fullcomment"><div class="comment cmt"><p>An in-memory implementation of <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, which is mostly used for testing.</p><p>Note that an <a href="InMemoryStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> does not conflate <code>Seq(&quot;a&quot;, &quot;b&quot;)</code> and <code>Seq(&quot;a/b&quot;)</code>
 names no matter how they look when printed.</p><pre><span class="kw">val</span> isr = <span class="kw">new</span> InMemoryStatsReceiver
 isr.counter(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>)
-irs.counter(<span class="lit">"a/b"</span>, <span class="lit">"bar"</span>)
+isr.counter(<span class="lit">"a/b"</span>, <span class="lit">"bar"</span>)
 
-irs.print(<span class="std">Console</span>.out) <span class="cmt">// will print two lines "a/b/foo 0" and "a/b/bar 0"</span>
+isr.print(<span class="std">Console</span>.out) <span class="cmt">// will print two lines "a/b/foo 0" and "a/b/bar 0"</span>
 
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>) == <span class="num">0</span>)) <span class="cmt">// ok</span>
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"bar"</span>) == <span class="num">0</span>)) <span class="cmt">// fail</span></pre></div></div>
@@ -727,7 +727,7 @@ errors separately so success rate can from valid non cancelled requests.
         <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

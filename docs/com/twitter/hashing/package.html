@@ -121,7 +121,7 @@
                 <span class="name">@State</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.hashing.KetamaDistributor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.hashing.KetamaDistributor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="KetamaDistributor[A]extendsDistributor[A]"></a>
       <a id="KetamaDistributor[A]:KetamaDistributor[A]"></a>
       <h4 class="signature">
@@ -137,7 +137,40 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Certain versions of libmemcached return subtly different results for points on
+ring. In order to always hash a key to the same server as the
+clients who depend on those versions of libmemcached, we have to reproduce their result.
+If the <code>oldLibMemcachedVersionComplianceMode</code> is <code>true</code> the behavior will be reproduced.</p></span></dd></dl></div>
+    </li><li name="com.twitter.hashing.KetamaDistributorBench" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="KetamaDistributorBenchextendsStdBenchAnnotations"></a>
+      <a id="KetamaDistributorBench:KetamaDistributorBench"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="KetamaDistributorBench.html"><span class="name">KetamaDistributorBench</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.hashing.package@KetamaDistributorBenchextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+                <span class="name">@BenchmarkMode</span><span class="args">()</span>
+              
+                <span class="name">@OutputTimeUnit</span><span class="args">()</span>
+              
+                <span class="name">@Warmup</span><span class="args">()</span>
+              
+                <span class="name">@Measurement</span><span class="args">()</span>
+              
+                <span class="name">@Fork</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.hashing.KetamaNode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="KetamaNode[A]extendsProductwithSerializable"></a>
       <a id="KetamaNode[A]:KetamaNode[A]"></a>
@@ -147,7 +180,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="KetamaNode.html"><span class="name">KetamaNode</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="weight">weight: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="handle">handle: <span class="extype" name="com.twitter.hashing.KetamaNode.A">A</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="KetamaNode.html"><span class="name">KetamaNode</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="weight">weight: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="handle">handle: <span class="extype" name="com.twitter.hashing.KetamaNode.A">A</span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.hashing.package@KetamaNode[A]extendsProductwithSerializable" title="Permalink" target="_top">

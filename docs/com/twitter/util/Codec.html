@@ -47,14 +47,14 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Codec</span><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>] with <a href="Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>] with <a href="Decoder.html" class="extype" name="com.twitter.util.Decoder">Decoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</span>
+        <span class="name">Codec</span><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends <a href="Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>] with <a href="Decoder.html" class="extype" name="com.twitter.util.Decoder">Decoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A base trait for all Codecs that translate a type T into a serialized form S
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Decoder.html" class="extype" name="com.twitter.util.Decoder">Decoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>], <a href="Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>], <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>], (<span class="extype" name="com.twitter.util.Codec.T">T</span>) ⇒ <span class="extype" name="com.twitter.util.Codec.S">S</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="Decoder.html" class="extype" name="com.twitter.util.Decoder">Decoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>], <a href="Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>], (<span class="extype" name="com.twitter.util.Codec.T">T</span>) ⇒ <span class="extype" name="com.twitter.util.Codec.S">S</span>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">Known Subclasses</span>
             <div class="subClasses hiddenContent"><a href="BinaryThriftCodec.html" class="extype" name="com.twitter.util.BinaryThriftCodec">BinaryThriftCodec</a>, <a href="CompactThriftCodec.html" class="extype" name="com.twitter.util.CompactThriftCodec">CompactThriftCodec</a>, <a href="ThriftCodec.html" class="extype" name="com.twitter.util.ThriftCodec">ThriftCodec</a></div>
@@ -68,20 +68,20 @@
               <ol>
                 
                 <li class="alpha in"><span>Alphabetic</span></li>
-                <li class="inherit out"><span>By inheritance</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
               </ol>
             </div>
         <div id="ancestors">
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.util.Codec"><span>Codec</span></li><li class="in" name="com.twitter.util.Decoder"><span>Decoder</span></li><li class="in" name="com.twitter.util.Encoder"><span>Encoder</span></li><li class="in" name="com.twitter.util.Bijection"><span>Bijection</span></li><li class="in" name="scala.Function1"><span>Function1</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.util.Codec"><span>Codec</span></li><li class="in" name="com.twitter.util.Decoder"><span>Decoder</span></li><li class="in" name="com.twitter.util.Encoder"><span>Encoder</span></li><li class="in" name="scala.Function1"><span>Function1</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
             <ol>
               <li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show all</span></li>
+              <li class="showall in"><span>Show All</span></li>
             </ol>
           </div>
         <div id="visbl">
@@ -146,7 +146,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@!=(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -163,7 +163,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@##():Int" title="Permalink" target="_top">
@@ -180,7 +180,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@==(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -188,24 +188,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.Bijection#andThen" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="andThen[C](g:com.twitter.util.Bijection[B,C]):com.twitter.util.Bijection[A,C]"></a>
-      <a id="andThen[C](Bijection[S,C]):Bijection[T,C]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">andThen</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="g">g: <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.S">S</span>, <span class="extype" name="com.twitter.util.Bijection.andThen.C">C</span>]</span>)</span><span class="result">: <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Bijection.andThen.C">C</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Codec@andThen[C](g:com.twitter.util.Bijection[B,C]):com.twitter.util.Bijection[A,C]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Composes two instances of Bijection in a new Bijection, with this one applied first.</p><div class="fullcomment"><div class="comment cmt"><p>Composes two instances of Bijection in a new Bijection, with this one applied first.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a></dd></dl></div>
     </li><li name="scala.Function1#andThen" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="andThen[A](g:R=&gt;A):T1=&gt;A"></a>
       <a id="andThen[A]((S)⇒A):(T)⇒A"></a>
@@ -283,24 +265,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Bijection#compose" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="compose[T](g:com.twitter.util.Bijection[T,A]):com.twitter.util.Bijection[T,B]"></a>
-      <a id="compose[T](Bijection[T,T]):Bijection[T,S]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">compose</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="g">g: <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Bijection.compose.T">T</span>, <span class="extype" name="com.twitter.util.Codec.T">T</span>]</span>)</span><span class="result">: <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Bijection.compose.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Codec@compose[T](g:com.twitter.util.Bijection[T,A]):com.twitter.util.Bijection[T,B]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Composes two instances of Bijection in a new Bijection, with this one applied last.</p><div class="fullcomment"><div class="comment cmt"><p>Composes two instances of Bijection in a new Bijection, with this one applied last.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a></dd></dl></div>
     </li><li name="scala.Function1#compose" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="compose[A](g:A=&gt;T1):A=&gt;R"></a>
       <a id="compose[A]((A)⇒T):(A)⇒S"></a>
@@ -330,7 +294,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -347,7 +311,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@equals(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -364,7 +328,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@finalize():Unit" title="Permalink" target="_top">
@@ -404,7 +368,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@hashCode():Int" title="Permalink" target="_top">
@@ -412,24 +376,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.Bijection#inverse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="inverse:com.twitter.util.Bijection[B,A]"></a>
-      <a id="inverse:Bijection[S,T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">inverse</span><span class="result">: <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.S">S</span>, <span class="extype" name="com.twitter.util.Codec.T">T</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Codec@inverse:com.twitter.util.Bijection[B,A]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Return a Bijection that is the inverse of this one.</p><div class="fullcomment"><div class="comment cmt"><p>Return a Bijection that is the inverse of this one.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a></dd></dl></div>
     </li><li name="com.twitter.util.Decoder#invert" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="invert(s:S):T"></a>
       <a id="invert(S):T"></a>
@@ -456,7 +402,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
@@ -473,7 +419,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -490,7 +436,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@notify():Unit" title="Permalink" target="_top">
@@ -507,7 +453,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@notifyAll():Unit" title="Permalink" target="_top">
@@ -549,23 +495,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1 → AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.Bijection#unapply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="unapply(b:B):Option[A]"></a>
-      <a id="unapply(S):Option[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unapply</span><span class="params">(<span name="b">b: <span class="extype" name="com.twitter.util.Codec.S">S</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Codec@unapply(b:B):Option[A]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -575,7 +504,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@wait():Unit" title="Permalink" target="_top">
@@ -598,7 +527,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
@@ -621,7 +550,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.Codec@wait(x$1:Long):Unit" title="Permalink" target="_top">
@@ -648,14 +577,12 @@
               <h3>Inherited from <a href="Decoder.html" class="extype" name="com.twitter.util.Decoder">Decoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</h3>
             </div><div class="parent" name="com.twitter.util.Encoder">
               <h3>Inherited from <a href="Encoder.html" class="extype" name="com.twitter.util.Encoder">Encoder</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</h3>
-            </div><div class="parent" name="com.twitter.util.Bijection">
-              <h3>Inherited from <a href="Bijection.html" class="extype" name="com.twitter.util.Bijection">Bijection</a>[<span class="extype" name="com.twitter.util.Codec.T">T</span>, <span class="extype" name="com.twitter.util.Codec.S">S</span>]</h3>
             </div><div class="parent" name="scala.Function1">
               <h3>Inherited from (<span class="extype" name="com.twitter.util.Codec.T">T</span>) ⇒ <span class="extype" name="com.twitter.util.Codec.S">S</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

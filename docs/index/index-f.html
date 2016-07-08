@@ -86,6 +86,9 @@
       <div class="name">FlatMapFn</div>
       <div class="occurrences"><a href="../com/twitter/util/FutureBenchmark$$PromiseUnitState.html" class="extype" name="com.twitter.util.FutureBenchmark.PromiseUnitState">PromiseUnitState</a> </div>
     </div><div class="entry">
+      <div class="name">FlattenState</div>
+      <div class="occurrences"><a href="../com/twitter/util/FutureBenchmark$.html" class="extype" name="com.twitter.util.FutureBenchmark">FutureBenchmark</a> </div>
+    </div><div class="entry">
       <div class="name">Formatter</div>
       <div class="occurrences"><a href="../com/twitter/logging/package.html" class="extype" name="com.twitter.logging">logging</a> <a href="../com/twitter/util/registry/package.html" class="extype" name="com.twitter.util.registry">registry</a> </div>
     </div><div class="entry">
@@ -162,7 +165,7 @@
       <div class="occurrences"><a href="../com/twitter/logging/FileHandler.html" class="extype" name="com.twitter.logging.FileHandler">FileHandler</a> </div>
     </div><div class="entry">
       <div class="name">fillInStackTrace</div>
-      <div class="occurrences"><a href="../com/twitter/concurrent/Offer$$LostSynchronization$.html" class="extype" name="com.twitter.concurrent.Offer.LostSynchronization">LostSynchronization</a> <a href="../com/twitter/util/NoStacktrace.html" class="extype" name="com.twitter.util.NoStacktrace">NoStacktrace</a> </div>
+      <div class="occurrences"><a href="../com/twitter/concurrent/Offer$$LostSynchronization$.html" class="extype" name="com.twitter.concurrent.Offer.LostSynchronization">LostSynchronization</a> </div>
     </div><div class="entry">
       <div class="name">filter</div>
       <div class="occurrences"><a href="../com/twitter/concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a> <a href="../com/twitter/concurrent/AsyncStreamBenchmark.html" class="extype" name="com.twitter.concurrent.AsyncStreamBenchmark">AsyncStreamBenchmark</a> <a href="../com/twitter/concurrent/Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> <a href="../com/twitter/util/Event.html" class="extype" name="com.twitter.util.Event">Event</a> <a href="../com/twitter/util/Future.html" class="extype" name="com.twitter.util.Future">Future</a> <a href="../com/twitter/util/Return.html" class="extype" name="com.twitter.util.Return">Return</a> <a href="../com/twitter/util/Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a> <a href="../com/twitter/util/Try.html" class="extype" name="com.twitter.util.Try">Try</a> </div>
@@ -263,9 +266,6 @@
       <div class="name">formatter</div>
       <div class="occurrences"><a href="../com/twitter/logging/Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a> <a href="../com/twitter/logging/config/HandlerConfig.html" class="extype" name="com.twitter.logging.config.HandlerConfig">HandlerConfig</a> </div>
     </div><div class="entry">
-      <div class="name">forward</div>
-      <div class="occurrences"><a href="../com/twitter/concurrent/ConcurrentBijection.html" class="extype" name="com.twitter.concurrent.ConcurrentBijection">ConcurrentBijection</a> </div>
-    </div><div class="entry">
       <div class="name">forwardInterruptsTo</div>
       <div class="occurrences"><a href="../com/twitter/util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> </div>
     </div><div class="entry">
@@ -276,7 +276,7 @@
       <div class="occurrences"><a href="../com/twitter/util/JsonThriftSerializer.html" class="extype" name="com.twitter.util.JsonThriftSerializer">JsonThriftSerializer</a> <a href="../com/twitter/util/ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> </div>
     </div><div class="entry">
       <div class="name">fromCache</div>
-      <div class="occurrences"><a href="../com/twitter/cache/guava/GuavaCache$.html" class="extype" name="com.twitter.cache.guava.GuavaCache">GuavaCache</a> </div>
+      <div class="occurrences"><a href="../com/twitter/cache/caffeine/CaffeineCache$.html" class="extype" name="com.twitter.cache.caffeine.CaffeineCache">CaffeineCache</a> <a href="../com/twitter/cache/guava/GuavaCache$.html" class="extype" name="com.twitter.cache.guava.GuavaCache">GuavaCache</a> </div>
     </div><div class="entry">
       <div class="name">fromFile</div>
       <div class="occurrences"><a href="../com/twitter/io/Reader$.html" class="extype" name="com.twitter.io.Reader">Reader</a> </div>
@@ -300,7 +300,7 @@
       <div class="occurrences"><a href="../com/twitter/logging/Level$.html" class="extype" name="com.twitter.logging.Level">Level</a> </div>
     </div><div class="entry">
       <div class="name">fromLoadingCache</div>
-      <div class="occurrences"><a href="../com/twitter/cache/guava/GuavaCache$.html" class="extype" name="com.twitter.cache.guava.GuavaCache">GuavaCache</a> </div>
+      <div class="occurrences"><a href="../com/twitter/cache/caffeine/CaffeineCache$.html" class="extype" name="com.twitter.cache.caffeine.CaffeineCache">CaffeineCache</a> <a href="../com/twitter/cache/guava/GuavaCache$.html" class="extype" name="com.twitter.cache.guava.GuavaCache">GuavaCache</a> </div>
     </div><div class="entry">
       <div class="name">fromMap</div>
       <div class="occurrences"><a href="../com/twitter/cache/FutureCache$.html" class="extype" name="com.twitter.cache.FutureCache">FutureCache</a> </div>
@@ -360,9 +360,9 @@
       <div class="occurrences"><a href="../com/twitter/package.html" class="extype" name="com.twitter">twitter</a> </div>
     </div><div class="entry">
       <div class="name">future</div>
-      <div class="occurrences"><a href="../com/twitter/util/Activity$.html" class="extype" name="com.twitter.util.Activity">Activity</a> </div>
+      <div class="occurrences"><a href="../com/twitter/util/Activity$.html" class="extype" name="com.twitter.util.Activity">Activity</a> <a href="../com/twitter/util/FutureBenchmark$$FlattenState.html" class="extype" name="com.twitter.util.FutureBenchmark.FlattenState">FlattenState</a> <a href="../com/twitter/util/FutureBenchmark$$LowerFromTryState.html" class="extype" name="com.twitter.util.FutureBenchmark.LowerFromTryState">LowerFromTryState</a> <a href="../com/twitter/util/FutureBenchmark$$WhileDoState.html" class="extype" name="com.twitter.util.FutureBenchmark.WhileDoState">WhileDoState</a> </div>
     </div><div class="entry">
       <div class="name">futures</div>
-      <div class="occurrences"><a href="../com/twitter/util/FutureBenchmark$$SelectIndexState.html" class="extype" name="com.twitter.util.FutureBenchmark.SelectIndexState">SelectIndexState</a> <a href="../com/twitter/util/FutureBenchmark$$SelectState.html" class="extype" name="com.twitter.util.FutureBenchmark.SelectState">SelectState</a> </div>
+      <div class="occurrences"><a href="../com/twitter/util/FutureBenchmark$$CollectState.html" class="extype" name="com.twitter.util.FutureBenchmark.CollectState">CollectState</a> <a href="../com/twitter/util/FutureBenchmark$$SelectIndexState.html" class="extype" name="com.twitter.util.FutureBenchmark.SelectIndexState">SelectIndexState</a> <a href="../com/twitter/util/FutureBenchmark$$SelectState.html" class="extype" name="com.twitter.util.FutureBenchmark.SelectState">SelectState</a> <a href="../com/twitter/util/PromiseBenchmark$$InterruptsState.html" class="extype" name="com.twitter.util.PromiseBenchmark.InterruptsState">InterruptsState</a> </div>
     </div></body>
       </html>

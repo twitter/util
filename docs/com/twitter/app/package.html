@@ -127,7 +127,7 @@ instance. Its current value can be extracted via <code>apply()</code>.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FlagParseException.html"><span class="name">FlagParseException</span></a><span class="params">(<span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="cause">cause: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a> = <span class="symbol">null</span></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="FlagParseException.html"><span class="name">FlagParseException</span></a><span class="params">(<span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="cause">cause: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a> = <span class="symbol">null</span></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.app.package@FlagParseExceptionextendsExceptionwithProductwithSerializable" title="Permalink" target="_top">
@@ -164,7 +164,7 @@ account of incorrectly-interpreted or malformed flag values.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FlagUsageError.html"><span class="name">FlagUsageError</span></a><span class="params">(<span name="usage">usage: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <a href="FlagUsageError.html"><span class="name">FlagUsageError</span></a><span class="params">(<span name="usage">usage: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="../../../scala/package.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.app.package@FlagUsageErrorextendsExceptionwithProductwithSerializable" title="Permalink" target="_top">
@@ -294,7 +294,7 @@ those supplied by system properties.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="GlobalFlagVisible.html"><span class="name">GlobalFlagVisible</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.annotation.Annotation" class="extype" target="_top">Annotation</a> with <span class="extype" name="java.lang.annotation.Annotation">Annotation</span> with <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.annotation.ClassfileAnnotation" class="extype" target="_top">ClassfileAnnotation</a></span>
+        <a href="GlobalFlagVisible.html"><span class="name">GlobalFlagVisible</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.annotation.Annotation" class="extype" target="_top">Annotation</a> with <span class="extype" name="java.lang.annotation.Annotation">Annotation</span> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.annotation.ClassfileAnnotation" class="extype" target="_top">ClassfileAnnotation</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.app.package@GlobalFlagVisibleextendsAnnotationwithAnnotationwithClassfileAnnotation" title="Permalink" target="_top">
@@ -377,6 +377,25 @@ those supplied by system properties.
       </a>
     </span>
       
+    </li><li name="com.twitter.app.LoadService" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="LoadService"></a>
+      <a id="LoadService:LoadService"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LoadService$.html"><span class="name">LoadService</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.package@LoadService" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>. It is
+more resilient to varying Java packaging configurations than ServiceLoader.
+</p></div></div>
     </li></ol>
             </div>
 

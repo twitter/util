@@ -198,6 +198,8 @@ pollers.
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@State</span><span class="args">()</span>
               
+                <span class="name">@Threads</span><span class="args">()</span>
+              
         </dd></dl></div>
     </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AsyncSemaphoreextendsAnyRef"></a>
@@ -224,6 +226,28 @@ semaphore.acquireAndRun() {
 }</pre><p>Calls to acquire() and acquireAndRun are serialized, and tickets are
 given out fairly (in order of arrival).
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AsyncMutex.html" class="extype" name="com.twitter.concurrent.AsyncMutex">AsyncMutex</a> for a mutex version.</p></span></dd></dl></div>
+    </li><li name="com.twitter.concurrent.AsyncSemaphoreBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AsyncSemaphoreBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="AsyncSemaphoreBenchmark:AsyncSemaphoreBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AsyncSemaphoreBenchmark.html"><span class="name">AsyncSemaphoreBenchmark</span></a><span class="result"> extends <a href="../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.concurrent.package@AsyncSemaphoreBenchmarkextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+                <span class="name">@Threads</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.concurrent.AsyncStream" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="AsyncStream[+A]extendsAnyRef"></a>
       <a id="AsyncStream[+A]:AsyncStream[A]"></a>
@@ -324,23 +348,6 @@ b ! <span class="num">2</span></pre><p>But rather we need to explicitly sequence
 } ()</pre><p>BUGS: the implementation would be much simpler in the absence of
 cancellation.
 </p></div></div>
-    </li><li name="com.twitter.concurrent.ConcurrentBijection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ConcurrentBijection[A,B]extendsMap[A,B]"></a>
-      <a id="ConcurrentBijection[A,B]:ConcurrentBijection[A,B]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="ConcurrentBijection.html"><span class="name">ConcurrentBijection</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.mutable.Map" class="extype" target="_top">Map</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentBijection.A">A</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentBijection.B">B</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.concurrent.package@ConcurrentBijection[A,B]extendsMap[A,B]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
     </li><li name="com.twitter.concurrent.ConduitSpscBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConduitSpscBenchmarkextendsStdBenchAnnotations"></a>
       <a id="ConduitSpscBenchmark:ConduitSpscBenchmark"></a>
