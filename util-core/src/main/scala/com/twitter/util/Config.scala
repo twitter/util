@@ -127,7 +127,7 @@ trait Config[T] extends (() => T) {
     val alreadyVisited = mutable.Set[AnyRef]()
     val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]], classOf[Option[_]])
     val buf = new mutable.ListBuffer[String]
-    val mirror = reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
+    val mirror = scala.reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
     def collect(prefix: String, config: Config[_]) {
       if (!alreadyVisited.contains(config)) {
         alreadyVisited += config
