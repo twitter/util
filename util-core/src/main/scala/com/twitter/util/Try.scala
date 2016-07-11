@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import scala.util.{Success, Failure}
+
 /**
  * The Try type represents a computation that may either result in an exception
  * or return a success value. It is analogous to the Either type but encodes
@@ -14,6 +16,17 @@ object Try {
       case NonFatal(e) => Throw(e)
     }
   }
+
+  /**
+   * Build a Try from a scala.util.Try. This does nothing
+   * more than pattern match and translate Success and Failure
+   * to Return and Throw respectively.
+   */
+  def fromScala[R](tr: scala.util.Try[R]): Try[R] =
+    tr match {
+      case Success(r) => Return(r)
+      case Failure(e) => Throw(e)
+    }
 
   /**
    * Like [[Try.apply]] but allows the caller to specify a handler for fatal
@@ -66,6 +79,11 @@ object Try {
  * concrete implementations, Return (for success) and Throw (for failure)
  */
 sealed abstract class Try[+R] {
+  /**
+   * Convert to a scala.util.Try
+   */
+  def asScala: scala.util.Try[R]
+
   /**
    * Returns true if the Try is a Throw, false otherwise.
    */
@@ -199,6 +217,7 @@ sealed abstract class Try[+R] {
   def andThen[R2](f: R => Try[R2]) = flatMap(f)
 
   def flatten[T](implicit ev: R <:< Try[T]): Try[T]
+
 }
 
 object Throw {
@@ -207,6 +226,7 @@ object Throw {
 }
 
 final case class Throw[+R](e: Throwable) extends Try[R] {
+  def asScala: scala.util.Try[R] = Failure(e)
   def isThrow = true
   def isReturn = false
   def throwable: Throwable = e
@@ -246,6 +266,7 @@ object Return {
 }
 
 final case class Return[+R](r: R) extends Try[R] {
+  def asScala: scala.util.Try[R] = Success(r)
   def isThrow: Boolean = false
 
   def isReturn: Boolean = true
