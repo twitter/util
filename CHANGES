@@ -6,6 +6,12 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: `c.t.util.FuturePool` now optionally exposes metrics on
+    their internal state such as active tasks, and completed tasks.
+    ``RB_ID=850652``
+
 6.35.0  2016-07-07
 
 Changes in Runtime Behavior:

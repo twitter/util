@@ -112,7 +112,7 @@ class FuturePoolTest extends FunSuite with Eventually {
 
     val rv = pool { "yay!" }
 
-    assert(rv.isDefined == true)
+    assert(rv.isDefined)
     intercept[RejectedExecutionException] { Await.result(rv) }
 
     source.setValue(1)
@@ -194,4 +194,38 @@ class FuturePoolTest extends FunSuite with Eventually {
 
     assert(fake() == "FINISHED")
   }
+
+  test("FuturePool metrics") {
+    // We want isolation and thus can't use FuturePool.unboundedPool
+    // But we want to make sure it will have the correct behavior.
+    // We compromise by roughly creating an ExecutorService/FuturePool
+    // that behaves the same.
+    val executor = Executors.newCachedThreadPool()
+    val pool = new ExecutorServiceFuturePool(executor)
+    // verify the initial state
+    assert(pool.poolSize == 0)
+    assert(pool.numActiveTasks == 0)
+    assert(pool.numCompletedTasks == 0)
+
+    // execute a task we can control
+    val latch = new CountDownLatch(1)
+    val future = pool {
+      latch.await(10.seconds)
+      true
+    }
+    assert(pool.poolSize == 1)
+    assert(pool.numActiveTasks == 1)
+    assert(pool.numCompletedTasks == 0)
+
+    // let the task complete
+    latch.countDown()
+    Await.ready(future, 5.seconds)
+    assert(pool.poolSize == 1)
+    assert(pool.numActiveTasks == 0)
+    assert(pool.numCompletedTasks == 1)
+
+    // cleanup.
+    executor.shutdown()
+  }
+
 }

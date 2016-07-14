@@ -2,16 +2,42 @@ package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{
-  CancellationException, ExecutionException, ExecutorService, Executors, RejectedExecutionException}
+import java.util.concurrent._
 import scala.runtime.NonLocalReturnControl
 
 /**
- * A FuturePool executes tasks asynchronously, typically using a pool
+ * A `FuturePool` executes tasks asynchronously, typically using a pool
  * of worker threads.
  */
 trait FuturePool {
+  /**
+   * Execute `f`, returning a [[Future]] that represents the outcome.
+   */
   def apply[T](f: => T): Future[T]
+
+  /**
+   * The approximate size of the pool.
+   *
+   * While this is implementation specific, this often represents
+   * the number of threads in the pool.
+   *
+   * @return -1 if this [[FuturePool]] implementation doesn't support this statistic.
+   */
+  def poolSize: Int = -1
+
+  /**
+   * The approximate number of tasks actively executing.
+   *
+   * @return -1 if this [[FuturePool]] implementation doesn't support this statistic.
+   */
+  def numActiveTasks: Int = -1
+
+  /**
+   * The approximate number of tasks that have completed execution.
+   *
+   * @return -1 if this [[FuturePool]] implementation doesn't support this statistic.
+   */
+  def numCompletedTasks: Long = -1L
 }
 
 /**
@@ -37,6 +63,8 @@ object FuturePool {
    */
   val immediatePool: FuturePool = new FuturePool {
     def apply[T](f: => T): Future[T] = Future(f)
+
+    override def toString: String = "FuturePool.immediatePool"
   }
 
   private lazy val defaultExecutor = Executors.newCachedThreadPool(
@@ -52,7 +80,10 @@ object FuturePool {
    * thread will not be interrupted.
    */
   lazy val unboundedPool: FuturePool =
-    new ExecutorServiceFuturePool(defaultExecutor)
+    new ExecutorServiceFuturePool(defaultExecutor) {
+      override def toString: String =
+        s"FuturePool.unboundedPool($defaultExecutor)"
+    }
 
   /**
    * The default future pool, using a cached threadpool, provided by
@@ -63,7 +94,10 @@ object FuturePool {
    * will will be made to interrupt the worker thread.
    */
   lazy val interruptibleUnboundedPool: FuturePool =
-    new InterruptibleExecutorServiceFuturePool(defaultExecutor)
+    new InterruptibleExecutorServiceFuturePool(defaultExecutor) {
+      override def toString: String =
+        s"FuturePool.interruptibleUnboundedPool($defaultExecutor)"
+    }
 }
 
 /**
@@ -140,4 +174,21 @@ class ExecutorServiceFuturePool protected[this](
 
     p
   }
+
+  override def toString: String =
+    s"ExecutorServiceFuturePool(interruptible=$interruptible, executor=$executor)"
+
+  override def poolSize: Int = executor match {
+    case tpe: ThreadPoolExecutor => tpe.getPoolSize
+    case _ => super.poolSize
+  }
+  override def numActiveTasks: Int = executor match {
+    case tpe: ThreadPoolExecutor => tpe.getActiveCount
+    case _ => super.numActiveTasks
+  }
+  override def numCompletedTasks: Long = executor match {
+    case tpe: ThreadPoolExecutor => tpe.getCompletedTaskCount
+    case _ => super.numCompletedTasks
+  }
+
 }
