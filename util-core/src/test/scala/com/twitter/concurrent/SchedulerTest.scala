@@ -2,6 +2,7 @@ package com.twitter.concurrent
 
 import com.twitter.conversions.time._
 import com.twitter.util._
+import java.util.concurrent.{Executors, TimeUnit}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
@@ -9,8 +10,8 @@ import org.scalatest.junit.JUnitRunner
 
 abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
   private val scheduler = new LocalScheduler(lifo)
-  def submit(f: => Unit) = scheduler.submit(new Runnable {
-    def run() = f
+  def submit(f: => Unit): Unit = scheduler.submit(new Runnable {
+    def run(): Unit = f
   })
 
   val N = 100
@@ -50,9 +51,9 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
         }
     }
     if (lifo)
-      assert(ran == (0 until N))
+      assert(ran == 0.until(N).toList)
     else
-      assert(ran == (0 until N).reverse)
+      assert(ran == 0.until(N).reverse.toList)
   }
 
   test("tracks blocking time") {
@@ -83,6 +84,29 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
       Scheduler.setUnsafe(prevScheduler)
     }
   }
+
+  test("numDispatches") {
+    val runnable = new Runnable {
+      def run(): Unit = ()
+    }
+    val start = scheduler.numDispatches
+
+    // verify increments are seen by the calling thread
+    scheduler.submit(runnable)
+    assert(start + 1 == scheduler.numDispatches)
+
+    // verify increments are seen by a different thread
+    val exec = Executors.newCachedThreadPool()
+    val result = exec.submit {
+      new Runnable {
+        def run(): Unit = scheduler.submit(runnable)
+      }
+    }
+    exec.shutdown()
+    result.get(5, TimeUnit.SECONDS)
+    assert(start + 2 == scheduler.numDispatches)
+  }
+
 }
 
 @RunWith(classOf[JUnitRunner])
@@ -97,7 +121,7 @@ class ThreadPoolSchedulerTest extends FunSuite with Eventually with IntegrationP
     val p = new Promise[Unit]
     val scheduler = new ThreadPoolScheduler("test")
     scheduler.submit(new Runnable {
-      def run() { p.setDone() }
+      def run(): Unit = p.setDone()
     })
 
     eventually { p.isDone }

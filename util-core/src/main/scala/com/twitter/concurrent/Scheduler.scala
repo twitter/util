@@ -229,10 +229,10 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
     activation
   }
 
-  /** An implementaiton of Iterator over runnable tasks */
+  /** An implementation of Iterator over runnable tasks */
   @inline def hasNext: Boolean = get().hasNext
 
-  /** An implementaiton of Iterator over runnable tasks */
+  /** An implementation of Iterator over runnable tasks */
   @inline def next(): Runnable = get().next()
 
   // Scheduler implementation:
@@ -262,12 +262,11 @@ trait ExecutorScheduler { self: Scheduler =>
   val executorFactory: ThreadFactory => ExecutorService
 
   protected val threadGroup: ThreadGroup = new ThreadGroup(name)
-  @volatile private[this] var threads = Set[Thread]()
 
   protected val threadFactory: ThreadFactory = new ThreadFactory {
     private val n = new AtomicInteger(1)
 
-    def newThread(r: Runnable) = {
+    def newThread(r: Runnable): Thread = {
       val thread = new Thread(threadGroup, r, name + "-" + n.getAndIncrement())
       thread.setDaemon(true)
       thread
@@ -280,10 +279,10 @@ trait ExecutorScheduler { self: Scheduler =>
     // don't try too hard.
     val threads = new Array[Thread](threadGroup.activeCount*2)
     val n = threadGroup.enumerate(threads)
-    threads take n
+    threads.take(n)
   }
 
-  protected[this] val executor = executorFactory(threadFactory)
+  protected[this] val executor: ExecutorService = executorFactory(threadFactory)
 
   def shutdown(): Unit = executor.shutdown()
   def submit(r: Runnable): Unit = executor.execute(r)
