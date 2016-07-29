@@ -1,33 +1,44 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Util &mdash; Util 6.35.0-SNAPSHOT documentation</title>
-    
-    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '6.35.0-SNAPSHOT',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Util 6.35.0-SNAPSHOT documentation" href="#" />
-    <link rel="next" title="util-stats Guide" href="util-stats/index.html" />
-   
-  
-  <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <style type="text/css">
+      body {
+        font-family: 'Georgia', serif;
+        font-size: 17px;
+      }
+
+      .content {
+        width: 530px;
+        margin: 40px auto;
+      }
+
+      h1, h2, h3, h4, h5 {
+        font-family: 'Garamond', 'Georgia', serif;
+        font-weight: normal;
+        color: #444;
+      }
+
+      blockquote {
+        font-style: italic;
+        color: #444;
+      }
+
+      ul {
+        margin: 15px 0 15 px 0;
+        list-style: none;
+        line-height: 1.4;
+      }
+
+      ul li:before {
+        content: '\2014\a0';
+        color: #888;
+        position: absolute;
+        margin-left: -16px;
+      }
+    </style>
+
+  <title>Util</title>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -38,92 +49,49 @@
     ga('send', 'pageview');
 
   </script>
-
   </head>
-  <body role="document">
-  
-  
-  <div class=indexwrapper>
-  
 
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="util-stats/index.html" title="util-stats Guide"
-             accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Util</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body>
+  <a href="https://github.com/twitter/util"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  <div class="content">
+    <h1>Finagle</h1>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="util">
-<h1>Util<a class="headerlink" href="#util" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/twitter/util">util</a> is a collection of Twitter&#8217;s core JVM
-libraries including: concurrency, I/O, caching, stats, time and duration,
-conversions and so on.</p>
-<div class="section" id="guides">
-<h2>Guides<a class="headerlink" href="#guides" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="util-stats/index.html">util-stats Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="util-cookbook/index.html">Util Cookbook</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
-<p>View the <a class="reference external" href="http://twitter.github.io/util/docs">API Documentation</a>.</p>
-</div>
-<div class="section" id="contact">
-<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
-<p>For questions email <a class="reference external" href="mailto:finaglers&#37;&#52;&#48;twitter&#46;com">finaglers<span>&#64;</span>twitter<span>&#46;</span>com</a> or post on the
-<a class="reference external" href="https://groups.google.com/forum/#!forum/finaglers">Finaglers Google Group</a>.</p>
-</div>
-</div>
-
-
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
-<p>
-  Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
-</p>
-
-<h3>Useful Links</h3>
-<ul>
-  <li><a href="http://github.com/twitter/util">Util on GitHub</a></li>
-  <li><a href="http://github.com/twitter/util/issues">Issue Tracker</a></li>
-</ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Search the contents of this site.
+    <blockquote style="margin: 0;">
+    <p>
+      Util is a collection of Twitter's core JVM
+      libraries including: concurrency, I/O, caching, stats, time and duration,
+      conversions and so on.
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-  <div class="footer">&copy; Copyright 2016 Twitter, Inc.</div>
-  
+    </blockquote>
+
+    <ul>
+      <li><a href="https://github.com/twitter/util">Github project</a></li>
+      <li><a href="guide">User’s guides</a></li>
+      <li><a href="docs/#com.twitter.util.package">API documentation</a></li>
+      <li><a href="https://gitter.im/twitter/finagle">Gitter channel</a></li>
+      <li><a href="http://groups.google.com/group/finaglers?hl=en">Google groups</a></li>
+    </ul>
+cd font-size
+    <h2>Contributing</h2>
+
+    We feel that a welcoming community is important and we ask that you follow Twitter’s
+    <a href="https://engineering.twitter.com/opensource/code-of-conduct">Open Source Code of Conduct</a>
+    in all interactions with the community.
+
+    Finagle is actively maintained by Twitter’s infrastructure
+    team, but we have <a href="https://github.com/twitter/finagle/graphs/contributors">
+    many external contributors</a> as well.
+
+    The master branch represents the most recent published release
+    while active development happens on the develop branch.
+
+    Before endeavoring on large
+    changes, please discuss them with the
+    <a href="http://groups.google.com/group/finaglers?hl=en">Google groups</a>
+    to receive feedback and suggestions.
+
+    For all patches, please review our
+    <a href="https://github.com/twitter/util/blob/develop/CONTRIBUTING.md">contributing docs</a>.
   </div>
-  
   </body>
 </html>
