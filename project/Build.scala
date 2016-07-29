@@ -1,5 +1,7 @@
 import sbt.Keys._
 import sbt._
+import com.typesafe.sbt.SbtSite.site
+import com.typesafe.sbt.site.SphinxSupport.Sphinx
 import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
 import scoverage.ScoverageSbtPlugin
@@ -123,7 +125,7 @@ object Util extends Build {
       sharedSettings ++
       unidocSettings
   ).aggregate(
-    utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilReflect,
+    utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
     utilLint, utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
     utilEvents, utilSecurity, utilStats, utilEval
@@ -215,6 +217,14 @@ object Util extends Build {
         Seq(file)
       }
   ).dependsOn(utilFunction)
+
+  lazy val utilDoc = Project(
+    id = "util-doc",
+    base = file("doc"),
+    settings = Defaults.coreDefaultSettings ++ site.settings ++ site.sphinxSupport() ++ sharedSettings ++ Seq(
+      scalacOptions in doc <++= version.map(v => Seq("-doc-title", "Util", "-doc-version", v)),
+      includeFilter in Sphinx := ("*.html" | "*.png" | "*.svg" | "*.js" | "*.css" | "*.gif" | "*.txt")
+  ))
 
   lazy val utilEval = Project(
     id = "util-eval",
