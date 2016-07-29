@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FAQ &mdash; Util 6.35.0-SNAPSHOT documentation</title>
+    
+    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.35.0-SNAPSHOT',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Util 6.35.0-SNAPSHOT documentation" href="../index.html" />
+    <link rel="up" title="util-stats Guide" href="index.html" />
+    <link rel="next" title="Filter Stats" href="filter_stats.html" />
+    <link rel="prev" title="User Guide" href="user_guide.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_flask.css" type= "text/css" rel="stylesheet" />
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-39101739-4', 'twitter.github.io');
+    ga('send', 'pageview');
+
+  </script>
+
+  </head>
+  <body role="document">
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="filter_stats.html" title="Filter Stats"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="user_guide.html" title="User Guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="faq">
+<h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="why-are-util-stats-in-the-com-twitter-finagle-stats-package">
+<h2>Why are util-stats in the com.twitter.finagle.stats package?<a class="headerlink" href="#why-are-util-stats-in-the-com-twitter-finagle-stats-package" title="Permalink to this headline">¶</a></h2>
+<p>This is a historical artifact that reflects how the code was
+originally written as part of <a class="reference external" href="http://twitter.github.io/finagle/">Finagle</a>
+but turned out to not actually depend on anything Finagle-specific.
+The code was moved to <a class="reference external" href="http://twitter.github.io/util/">util</a>
+in order to allow usage without depending on finagle-core.
+To ease the transition, the package namespace was left as is.</p>
+</div>
+<div class="section" id="why-are-there-three-different-implementations">
+<h2>Why are there three(!) different implementations?<a class="headerlink" href="#why-are-there-three-different-implementations" title="Permalink to this headline">¶</a></h2>
+<p>This is somewhat historical, as early on in Twitter, Commons Stats
+was created for Java developers and Ostrich was created for Scala developers.
+Code initially was written directly to the implementations and there were
+(and still are) some subtle differences in their behavior.
+<code class="docutils literal"><span class="pre">StatsReceiver</span></code> was written in order to bridge the gap between the
+two implementations. Commons Metrics was written quite a bit later in order to
+improve upon both of these implementations in terms of
+allocation efficiency and histogram precision.</p>
+</div>
+<div class="section" id="why-migrate-to-commons-metrics">
+<h2>Why migrate to Commons Metrics?<a class="headerlink" href="#why-migrate-to-commons-metrics" title="Permalink to this headline">¶</a></h2>
+<p>The Commons Metrics library is designed to replace the other two libraries
+supported by Twitter: Ostrich and Commons Stats. The comparison table below
+illustrates the advantages of Commons Metrics over the older libraries.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="21%" />
+<col width="14%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">Commons Stats</th>
+<th class="head">Ostrich</th>
+<th class="head">Commons Metrics</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Allocations per <cite>Stat.add</cite></td>
+<td>16 bytes</td>
+<td>0 bytes</td>
+<td>0 bytes</td>
+</tr>
+<tr class="row-odd"><td>Highest histogram resolution</td>
+<td>p99</td>
+<td>p9999</td>
+<td>p9999</td>
+</tr>
+<tr class="row-even"><td>Sampling error</td>
+<td>N/A</td>
+<td>±5%</td>
+<td>±0.5%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
+<p>
+  Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
+</p>
+
+<h3>Useful Links</h3>
+<ul>
+  <li><a href="http://github.com/twitter/util">Util on GitHub</a></li>
+  <li><a href="http://github.com/twitter/util/issues">Issue Tracker</a></li>
+</ul>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FAQ</a><ul>
+<li><a class="reference internal" href="#why-are-util-stats-in-the-com-twitter-finagle-stats-package">Why are util-stats in the com.twitter.finagle.stats package?</a></li>
+<li><a class="reference internal" href="#why-are-there-three-different-implementations">Why are there three(!) different implementations?</a></li>
+<li><a class="reference internal" href="#why-migrate-to-commons-metrics">Why migrate to Commons Metrics?</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">util-stats Guide</a><ul>
+      <li>Previous: <a href="user_guide.html" title="previous chapter">User Guide</a></li>
+      <li>Next: <a href="filter_stats.html" title="next chapter">Filter Stats</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Search the contents of this site.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">&copy; Copyright 2016 Twitter, Inc.</div>
+  
+  </body>
+</html>

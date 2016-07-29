@@ -51,7 +51,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A FuturePool executes tasks asynchronously, typically using a pool
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <code>FuturePool</code> executes tasks asynchronously, typically using a pool
 of worker threads.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -115,7 +115,7 @@ of worker threads.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Execute <code>f</code>, returning a <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a> that represents the outcome.</p>
     </li></ol>
             </div>
 
@@ -371,6 +371,61 @@ of worker threads.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.FuturePool#numActiveTasks" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="numActiveTasks:Int"></a>
+      <a id="numActiveTasks:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numActiveTasks</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.FuturePool@numActiveTasks:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The approximate number of tasks actively executing.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate number of tasks actively executing.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl></div>
+    </li><li name="com.twitter.util.FuturePool#numCompletedTasks" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="numCompletedTasks:Long"></a>
+      <a id="numCompletedTasks:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numCompletedTasks</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.FuturePool@numCompletedTasks:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The approximate number of tasks that have completed execution.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate number of tasks that have completed execution.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl></div>
+    </li><li name="com.twitter.util.FuturePool#poolSize" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="poolSize:Int"></a>
+      <a id="poolSize:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">poolSize</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.FuturePool@poolSize:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The approximate size of the pool.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate size of the pool.</p><p>While this is implementation specific, this often represents
+the number of threads in the pool.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

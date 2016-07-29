@@ -183,7 +183,8 @@ that supports cancellation.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a> → <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a></dd></dl></div>
+      <p class="shortcomment cmt">Execute <code>f</code>, returning a <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a> that represents the outcome.</p><div class="fullcomment"><div class="comment cmt"><p>Execute <code>f</code>, returning a <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a> that represents the outcome.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a> → <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -417,6 +418,61 @@ that supports cancellation.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.ExecutorServiceFuturePool#numActiveTasks" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="numActiveTasks:Int"></a>
+      <a id="numActiveTasks:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numActiveTasks</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.InterruptibleExecutorServiceFuturePool@numActiveTasks:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The approximate number of tasks actively executing.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate number of tasks actively executing.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a> → <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a></dd></dl></div>
+    </li><li name="com.twitter.util.ExecutorServiceFuturePool#numCompletedTasks" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="numCompletedTasks:Long"></a>
+      <a id="numCompletedTasks:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numCompletedTasks</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.InterruptibleExecutorServiceFuturePool@numCompletedTasks:Long" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The approximate number of tasks that have completed execution.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate number of tasks that have completed execution.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a> → <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a></dd></dl></div>
+    </li><li name="com.twitter.util.ExecutorServiceFuturePool#poolSize" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="poolSize:Int"></a>
+      <a id="poolSize:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">poolSize</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.InterruptibleExecutorServiceFuturePool@poolSize:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The approximate size of the pool.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate size of the pool.</p><p>While this is implementation specific, this often represents
+the number of threads in the pool.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a> → <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePool</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -434,7 +490,7 @@ that supports cancellation.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.ExecutorServiceFuturePool#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -443,14 +499,14 @@ that supports cancellation.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.util.InterruptibleExecutorServiceFuturePool@toString():String" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ExecutorServiceFuturePool.html" class="extype" name="com.twitter.util.ExecutorServiceFuturePool">ExecutorServiceFuturePool</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
