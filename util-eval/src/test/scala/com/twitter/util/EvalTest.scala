@@ -205,7 +205,7 @@ class EvalTest extends WordSpec {
         assert(eval.errors.nonEmpty)
       }
 
-      "reset reporter between invocations" in {
+      "reset state between invocations" in {
         val ctx = new Ctx
         import ctx._
 
@@ -214,6 +214,22 @@ class EvalTest extends WordSpec {
         }
         assert(eval.errors.nonEmpty)
         assert(eval[Int]("val d = 3; val e = 2; d + e", true) == 5)
+        assert(eval.errors.isEmpty)
+      }
+
+      "reporter should be reset between checks, but loaded class should remain" in {
+        val ctx = new Ctx
+        import ctx._
+
+        // compile and load compiled class
+        eval.compile("class A()")
+
+        intercept[Throwable] {
+          eval.check("new B()")
+        }
+        assert(eval.errors.nonEmpty)
+
+        eval.check("new A()")
         assert(eval.errors.isEmpty)
       }
     }

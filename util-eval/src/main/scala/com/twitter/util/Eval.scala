@@ -242,6 +242,7 @@ class Eval(target: Option[File]) {
     val id = uniqueId(sourceForString(code))
     val className = "Evaluator__" + id
     val wrappedCode = wrapCodeInClass(className, code)
+    resetReporter()
     compile(wrappedCode) // may throw CompilerException
   }
 
@@ -265,6 +266,11 @@ class Eval(target: Option[File]) {
   def findClass(className: String): Class[_] = {
     compiler.findClass(className).getOrElse { throw new ClassNotFoundException("no such class: " + className) }
   }
+
+  private[util] def resetReporter() = {
+    compiler.resetReporter()
+  }
+
 
   private[util] def uniqueId(code: String, idOpt: Option[Int] = Some(jvmId)): String = {
     val digest = MessageDigest.getInstance("SHA-1").digest(code.getBytes())
@@ -531,6 +537,12 @@ class Eval(target: Option[File]) {
       cache.clear()
       reporter.reset()
       classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
+    }
+
+    def resetReporter() {
+      synchronized {
+        reporter.reset()
+      }
     }
 
     object Debug {
