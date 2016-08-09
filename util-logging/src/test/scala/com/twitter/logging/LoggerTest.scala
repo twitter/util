@@ -280,30 +280,27 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
         }
       }
 
-      // CSL-2175
-      if (!sys.props.contains("SKIP_FLAKY")) {
-        "syslog handler" in {
-          withTempFolder {
-            val log: Logger = LoggerFactory(
-              node = "com.twitter",
-              handlers = SyslogHandler(
-                formatter = new SyslogFormatter(
-                  serverName = Some("elmo"),
-                  priority = 128
-                ),
-                server = "example.com",
-                port = 212
-              ) :: Nil
-            ).apply()
+      "syslog handler" in {
+        withTempFolder {
+          val log: Logger = LoggerFactory(
+            node = "com.twitter",
+            handlers = SyslogHandler(
+              formatter = new SyslogFormatter(
+                serverName = Some("elmo"),
+                priority = 128
+              ),
+              server = "localhost",
+              port = 212
+            ) :: Nil
+          ).apply()
 
-            assert(log.getHandlers.length == 1)
-            val h = log.getHandlers()(0).asInstanceOf[SyslogHandler]
-            assert(h.dest.asInstanceOf[InetSocketAddress].getHostName == "example.com")
-            assert(h.dest.asInstanceOf[InetSocketAddress].getPort == 212)
-            val formatter = h.formatter.asInstanceOf[SyslogFormatter]
-            assert(formatter.serverName == Some("elmo"))
-            assert(formatter.priority == 128)
-          }
+          assert(log.getHandlers.length == 1)
+          val h = log.getHandlers()(0).asInstanceOf[SyslogHandler]
+          assert(h.dest.asInstanceOf[InetSocketAddress].getHostName == "localhost")
+          assert(h.dest.asInstanceOf[InetSocketAddress].getPort == 212)
+          val formatter = h.formatter.asInstanceOf[SyslogFormatter]
+          assert(formatter.serverName == Some("elmo"))
+          assert(formatter.priority == 128)
         }
       }
 
