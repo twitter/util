@@ -12,6 +12,13 @@ New Features:
     their internal state such as active tasks, and completed tasks.
     ``RB_ID=850652``
 
+Changes in Runtime Behavior:
+
+  * util-eval: The compiler reporter is now reset between code check invocations.
+    This means that when there is a failure that it is no longer required to reset
+    the entire state to recover and that already compiled and loaded classes can still
+    be used. ``RB_ID=859878``
+
 6.35.0  2016-07-07
 
 Changes in Runtime Behavior:
@@ -55,7 +62,7 @@ New Features:
   * util-core: Add `c.t.util.ProxyTimer` which allows for creating proxy based
     `Timers` outside of the `com.twitter.util` package. ``RB_ID=846194``
 
-  * util-core: Add `AsyncStream.merge` merge potentially inifite streams 
+  * util-core: Add `AsyncStream.merge` merge potentially inifite streams
     ``RB_ID=846681``
 
   * util-security: Added new project. ``RB_ID=843070``
