@@ -3,12 +3,14 @@ package com.twitter.concurrent
 import com.twitter.conversions.time._
 import com.twitter.util._
 import java.util.concurrent.{Executors, TimeUnit}
+import java.util.logging.{Handler, LogRecord}
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
+import org.scalatest.{FunSuite, Matchers}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 
-abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
+abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite
+  with Matchers {
   private val scheduler = new LocalScheduler(lifo)
   def submit(f: => Unit): Unit = scheduler.submit(new Runnable {
     def run(): Unit = f
@@ -105,6 +107,47 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite {
     exec.shutdown()
     result.get(5, TimeUnit.SECONDS)
     assert(start + 2 == scheduler.numDispatches)
+  }
+
+  private def sampleBlockingFraction(fraction: Double): LogRecord = {
+    val prevScheduler = Scheduler()
+    Scheduler.setUnsafe(new LocalScheduler.Activation(lifo, fraction))
+    try {
+      var record: LogRecord = null
+      val handler = new Handler {
+        def flush(): Unit = ()
+        def close(): Unit = ()
+        def publish(rec: LogRecord): Unit =
+          record = rec
+      }
+      LocalScheduler.log.addHandler(handler)
+
+      val initial = Awaitable.getBlockingTimeTracking
+      Awaitable.enableBlockingTimeTracking()
+      try {
+        Await.result(Future.sleep(20.milliseconds)(new JavaTimer(true)))
+        record
+      } finally {
+        if (initial)
+          Awaitable.enableBlockingTimeTracking()
+        else
+          Awaitable.disableBlockingTimeTracking()
+      }
+    } finally {
+      Scheduler.setUnsafe(prevScheduler)
+    }
+  }
+
+  test("sampleBlockingFraction enabled") {
+    val record = sampleBlockingFraction(1.0)
+    assert(record != null)
+    record.getMessage should include("Scheduler blocked for")
+    assert(record.getThrown != null)
+  }
+
+  test("sampleBlockingFraction disabled") {
+    val record = sampleBlockingFraction(0.0)
+    assert(record == null)
   }
 
 }

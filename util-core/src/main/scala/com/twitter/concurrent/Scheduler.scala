@@ -4,6 +4,7 @@ import com.twitter.util.Awaitable.CanAwait
 import java.util.ArrayDeque
 import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.logging.{Level, Logger}
 import scala.collection.mutable
 
 /**
@@ -114,32 +115,30 @@ object Scheduler extends Scheduler {
   def blocking[T](f: => T)(implicit perm: CanAwait): T = self.blocking(f)
 }
 
-/**
- * An efficient thread-local, direct-dispatch scheduler.
- */
-class LocalScheduler(lifo: Boolean) extends Scheduler {
-  def this() = this(false)
+private[concurrent] object LocalScheduler {
 
-  // use weak refs to prevent Activations from causing a memory leak
-  // thread-safety provided by synchronizing on `activations`
-  private[this] val activations = new mutable.WeakHashMap[Activation, Boolean]()
+  val log: Logger = Logger.getLogger(getClass.getSimpleName)
 
-  private[this] val local = new ThreadLocal[Activation] {
-    override def initialValue: Activation = null
-  }
-
-  override def toString: String = s"LocalScheduler(${System.identityHashCode(this)})"
+  /** Used to produce a stacktrace to help with finding blocking */
+  private[this] class BlockingHere extends Exception
 
   /**
-   * A task-queueing, direct-dispatch scheduler
+   * A task-queueing, direct-dispatch scheduler.
+   *
+   * There is at most one `Activation` instance per Thread,
+   * and thus at most only one Thread updating local state, but
+   * there can be multiple Threads reading state.
    */
-  private class Activation extends Scheduler with Iterator[Runnable] {
+  class Activation(
+      lifo: Boolean,
+      sampleBlockingFraction: Double)
+    extends Scheduler
+    with Iterator[Runnable] {
+
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
 
-    // read and increments are safe because there is only one updater,
-    // but other threads may read so must be marked volatile.
     @volatile var numDispatches = 0L
     @volatile var blockingNanos = 0L
 
@@ -208,20 +207,54 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
       if (perm.trackElapsedBlocking) {
         val start = System.nanoTime()
         val value = f
-        blockingNanos += System.nanoTime() - start
+        val elapsedNs = System.nanoTime() - start
+        blockingNanos += elapsedNs
+        if (ThreadLocalRandom.current().nextDouble() < sampleBlockingFraction) {
+          val micros = TimeUnit.NANOSECONDS.toMicros(elapsedNs)
+          log.log(Level.INFO,
+            s"Scheduler blocked for $micros micros via the following stacktrace",
+            new BlockingHere())
+        }
         value
       } else {
         f
       }
     }
   }
+}
+
+/**
+ * An efficient thread-local, direct-dispatch scheduler.
+ */
+class LocalScheduler(lifo: Boolean) extends Scheduler {
+  def this() = this(false)
+
+  import LocalScheduler.Activation
+
+  // use weak refs to prevent Activations from causing a memory leak
+  // thread-safety provided by synchronizing on `activations`
+  private[this] val activations = new mutable.WeakHashMap[Activation, Boolean]()
+
+  private[this] val local = new ThreadLocal[Activation]()
+
+  private[this] val sampleBlockingFraction: Double =
+    try {
+      sys.props.getOrElse("com.twitter.concurrent.schedulerSampleBlockingFraction", "0.0").toDouble
+    } catch {
+      case _: NumberFormatException => 0.0
+    }
+
+  assert(sampleBlockingFraction >= 0.0 && sampleBlockingFraction <= 1.0,
+    s"sampleBlockingFraction must be between 0 and 1, inclusive: $sampleBlockingFraction")
+
+  override def toString: String = s"LocalScheduler(${System.identityHashCode(this)})"
 
   private[this] def get(): Activation = {
     val a = local.get()
     if (a != null)
       return a
 
-    val activation = new Activation()
+    val activation = new Activation(lifo, sampleBlockingFraction)
     local.set(activation)
     activations.synchronized {
       activations.put(activation, java.lang.Boolean.TRUE)

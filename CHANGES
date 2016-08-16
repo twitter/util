@@ -12,6 +12,12 @@ New Features:
     their internal state such as active tasks, and completed tasks.
     ``RB_ID=850652``
 
+  * util-core: Add a system property
+    `com.twitter.concurrent.schedulerSampleBlockingFraction` that can be
+    set to a value between 0.0 and 1.0 (inclusive). When the Scheduler
+    runs blocking code, it will log the stacktrace for that fraction of
+    the calls. ``RB_ID=861892``
+
 Changes in Runtime Behavior:
 
   * util-eval: The compiler reporter is now reset between code check invocations.
