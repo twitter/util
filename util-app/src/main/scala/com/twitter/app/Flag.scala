@@ -106,7 +106,7 @@ object Flaggable {
 
   implicit val ofLong: Flaggable[Long] = mandatory(_.toLong)
   implicit val ofJavaLong: Flaggable[JLong] =
-    mandatory { s: String => JLong.valueOf(s.toInt) }
+    mandatory { s: String => JLong.valueOf(s.toLong) }
 
   implicit val ofFloat: Flaggable[Float] = mandatory(_.toFloat)
   implicit val ofJavaFloat: Flaggable[JFloat] =

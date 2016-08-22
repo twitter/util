@@ -1,16 +1,20 @@
 package com.twitter.app;
 
-import org.junit.Test;
-import com.twitter.util.Duration;
-import com.twitter.util.Function;
-import com.twitter.util.Function0;
-import com.twitter.util.StorageUnit;
-import com.twitter.util.Time;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Test;
+
+import com.twitter.util.Duration;
+import com.twitter.util.Function;
+import com.twitter.util.StorageUnit;
+import com.twitter.util.Time;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class JavaFlagTest {
 
@@ -72,5 +76,24 @@ public class JavaFlagTest {
     // non-default flags test
     Flag<Integer> nonDefaultIntFlag = flag.createMandatory("mandatory-int", "you better supply this", "Integer", Flaggable.ofJavaInteger());
     Flag<String> nonDefaultStringFlag = flag.createMandatory("mandatory-str", "you better supply this", "String", Flaggable.ofString());
+  }
+
+  @Test
+  public void testJavaLongFlags() {
+    Flags flags = new Flags("ApplicationName");
+    Flag<Long> longFlag = flags.create("long", 1234567890L, "", Flaggable.ofJavaLong());
+
+    longFlag.parse();
+    assertEquals(1234567890L, longFlag.apply().longValue());
+
+    longFlag.parse("9876543210");
+    assertEquals(9876543210L, longFlag.apply().longValue());
+
+    try {
+      longFlag.parse("9876543210L");
+      fail();
+    } catch (NumberFormatException expected) {
+      assertEquals("For input string: \"9876543210L\"", expected.getMessage());
+    }
   }
 }
