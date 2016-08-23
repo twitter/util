@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAction}
+import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAction, StandardCharsets}
 import java.util
 
 /**
@@ -13,40 +13,40 @@ object Charsets {
    * 16-bit UTF (UCS Transformation Format) whose byte order is identified by
    * an optional byte-order mark
    */
-  val Utf16: Charset = Charset.forName("UTF-16")
+  val Utf16: Charset = StandardCharsets.UTF_16
 
   /**
    * 16-bit UTF (UCS Transformation Format) whose byte order is big-endian
    */
-  val Utf16BE: Charset = Charset.forName("UTF-16BE")
+  val Utf16BE: Charset = StandardCharsets.UTF_16BE
 
   /**
    * 16-bit UTF (UCS Transformation Format) whose byte order is little-endian
    */
-  val Utf16LE: Charset = Charset.forName("UTF-16LE")
+  val Utf16LE: Charset = StandardCharsets.UTF_16LE
 
   /**
    * 8-bit UTF (UCS Transformation Format)
    */
-  val Utf8: Charset = Charset.forName("UTF-8")
+  val Utf8: Charset = StandardCharsets.UTF_8
 
   /**
    * ISO Latin Alphabet No. 1, also known as `ISO-LATIN-1`
    */
-  val Iso8859_1: Charset = Charset.forName("ISO-8859-1")
+  val Iso8859_1: Charset = StandardCharsets.ISO_8859_1
 
   /**
    * 7-bit ASCII, also known as ISO646-US or the Basic Latin block of the
    * Unicode character set
    */
-  val UsAscii: Charset = Charset.forName("US-ASCII")
+  val UsAscii: Charset = StandardCharsets.US_ASCII
 
   private[this] val encoders = new ThreadLocal[util.Map[Charset, CharsetEncoder]] {
-    protected override def initialValue = new util.HashMap()
+    protected override def initialValue: util.HashMap[Charset, CharsetEncoder] = new util.HashMap()
   }
 
   private[this] val decoders = new ThreadLocal[util.Map[Charset, CharsetDecoder]] {
-    protected override def initialValue = new util.HashMap()
+    protected override def initialValue: util.Map[Charset, CharsetDecoder] = new util.HashMap()
   }
 
   /**
