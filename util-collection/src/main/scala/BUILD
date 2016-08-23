@@ -8,5 +8,6 @@ scala_library(name='scala',
     '3rdparty/jvm/com/google/guava',
     'util/util-core/src/main/scala',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )

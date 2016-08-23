@@ -9,5 +9,6 @@ scala_library(name='scala',
     '3rdparty/jvm/org/scala-lang:scala-reflect',
     'util/util-function/src/main/java',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala')
 )

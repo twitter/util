@@ -286,7 +286,7 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
     }
 
     int lastComparison = 0;
-    TestThriftStructure typedOther = (TestThriftStructure)other;
+    TestThriftStructure typedOther = other;
 
     lastComparison = Boolean.valueOf(isSetAString()).compareTo(typedOther.isSetAString());
     if (lastComparison != 0) {

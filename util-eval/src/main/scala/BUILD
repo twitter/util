@@ -8,5 +8,6 @@ scala_library(name='scala',
     '3rdparty/jvm/org/scala-lang:scala-compiler',
     'util/util-core/src/main/scala'
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )

@@ -8,6 +8,7 @@ junit_tests(name='scala',
     'util/util-hashing/src/main/scala',
   ],
   sources=rglobs('*.scala'),
+  fatal_warnings=True,
   resources=[
     'util/util-hashing/src/test/resources'
   ]

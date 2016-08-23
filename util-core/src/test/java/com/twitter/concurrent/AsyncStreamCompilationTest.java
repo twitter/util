@@ -1,6 +1,5 @@
 package com.twitter.concurrent;
 
-import com.twitter.concurrent.AsyncStream;
 import com.twitter.util.Await;
 import com.twitter.util.Function;
 import com.twitter.util.Function0;
@@ -46,6 +45,7 @@ public class AsyncStreamCompilationTest {
 
     AsyncStream.flattens(AsyncStream.of(AsyncStream.of(1)));
 
+    @SuppressWarnings({"unchecked"})
     AsyncStream<Integer> merged = AsyncStream.merge(
         AsyncStream.<Integer>of(1),
         AsyncStream.<Integer>of(2),

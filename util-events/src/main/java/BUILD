@@ -7,6 +7,6 @@ java_library(name='java',
   dependencies=[
     'util/util-events/src/main/scala',
   ],
-  fatal_warnings=False,
+  fatal_warnings=True,
   sources=rglobs('*.java'),
 )

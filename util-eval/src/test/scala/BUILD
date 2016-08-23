@@ -7,6 +7,7 @@ junit_tests(name='scala',
     'util/util-eval/src/main/scala',
   ],
   sources=rglobs('*.scala'),
+  fatal_warnings=True,
   resources=[
     'util/util-eval/src/test/resources'
   ]

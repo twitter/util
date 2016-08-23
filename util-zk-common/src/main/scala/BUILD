@@ -17,5 +17,6 @@ scala_library(name='scala',
     'util/util-logging/src/main/scala',
     'util/util-zk/src/main/scala',
   ],
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )

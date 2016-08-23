@@ -4,5 +4,6 @@ scala_library(name='scala',
     name = 'util-hashing',
     repo = artifactory,
   ),
+  fatal_warnings=True,
   sources=rglobs('*.scala'),
 )
