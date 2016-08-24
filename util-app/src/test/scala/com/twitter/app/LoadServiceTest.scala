@@ -1,19 +1,21 @@
 package com.twitter.app
 
 import com.google.common.io.ByteStreams
+import com.twitter.conversions.time._
 import com.twitter.finagle.util.loadServiceDenied
-import com.twitter.util.registry.{GlobalRegistry, SimpleRegistry, Entry}
+import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
+import com.twitter.util.{Await, Future, FuturePool}
 import java.io.{File, InputStream}
 import java.net.URL
 import java.util
+import java.util.Random
 import java.util.concurrent
-import java.util.concurrent.{Callable, Executors, ExecutorService}
+import java.util.concurrent.{Callable, CountDownLatch, ExecutorService, Executors}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
 import scala.collection.mutable
-import scala.util.Random
 
 // These traits correspond to files in:
 // util-app/src/test/resources/META-INF/services
@@ -33,8 +35,28 @@ class LoadServiceMultipleImpls1 extends LoadServiceMultipleImpls
 class LoadServiceMultipleImpls2 extends LoadServiceMultipleImpls
 class LoadServiceMultipleImpls3 extends LoadServiceMultipleImpls
 
+private object LoadServiceTest {
+  val insideLoadSvcLatch: CountDownLatch = new CountDownLatch(1)
+  val deadlockLatch: CountDownLatch = new CountDownLatch(1)
+}
+
+private object UsesLoadService {
+  LoadServiceTest.deadlockLatch.countDown()
+  val lsd: Seq[LoadServiceRandomInterface] =
+    LoadService[LoadServiceRandomInterface]()
+}
+
+trait LoadServiceDeadlock
+class LoadServiceDeadlockImpl extends LoadServiceDeadlock {
+  LoadServiceTest.insideLoadSvcLatch.countDown()
+  LoadServiceTest.deadlockLatch.await()
+  val lsd: Seq[LoadServiceRandomInterface] =
+    UsesLoadService.lsd
+}
+
 @RunWith(classOf[JUnitRunner])
 class LoadServiceTest extends FunSuite with MockitoSugar {
+
   test("LoadService should apply[T] and return a set of instances of T") {
     assert(LoadService[LoadServiceRandomInterface]().nonEmpty)
   }
@@ -176,6 +198,26 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       assert(1 == loaded.size)
       assert(classOf[LoadServiceMultipleImpls3] == loaded.head.getClass)
     }
+  }
+
+  test("does not deadlock") {
+    val f0: Future[Seq[LoadServiceDeadlock]] = FuturePool.unboundedPool {
+      // this will be inside of `LoadService.apply` where it
+      // will run the `LoadServiceDeadlockImpl` constructor body
+      LoadService[LoadServiceDeadlock]()
+    }
+
+    // after this latch is tripped, we know the other thread is inside of `LoadService.apply`
+    LoadServiceTest.insideLoadSvcLatch.await()
+
+    // now we want to be inside of `UsesLoadService` and try to run `LoadService.apply`
+    // while the other thread is still in there.
+    val lsds1 = UsesLoadService.lsd
+    assert(lsds1.size == 1)
+
+    val lsds0 = Await.result(f0, 5.seconds)
+    assert(lsds0.size == 1)
+    assert(lsds0.head.getClass == classOf[LoadServiceDeadlockImpl])
   }
 
 }

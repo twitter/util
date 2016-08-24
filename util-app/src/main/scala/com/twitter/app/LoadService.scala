@@ -4,6 +4,8 @@ import com.twitter.finagle.util.loadServiceDenied
 import com.twitter.util.NonFatal
 import com.twitter.util.registry.GlobalRegistry
 import java.util.ServiceConfigurationError
+import java.util.concurrent.ConcurrentHashMap
+import java.util.function.{Function => JFunction}
 import java.util.logging.{Level, Logger}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -16,11 +18,16 @@ import scala.reflect.ClassTag
  */
 object LoadService {
 
-  private val log = Logger.getLogger("com.twitter.app.LoadService")
+  private[this] val log = Logger.getLogger("com.twitter.app.LoadService")
 
-  private val cache = mutable.Map.empty[ClassLoader, Seq[ClassPath.LoadServiceInfo]]
+  private[this] val cache =
+    new ConcurrentHashMap[ClassLoader, Seq[ClassPath.LoadServiceInfo]]()
 
-  def apply[T: ClassTag](): Seq[T] = synchronized {
+  /**
+   * Returns classes for the given `ClassTag` as specified by
+   * resource files in `META-INF/services/FullyQualifiedClassTagsClassName`.
+   */
+  def apply[T: ClassTag](): Seq[T] = {
     val iface = implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]]
     val ifaceName = iface.getName
     val loader = iface.getClassLoader
@@ -28,9 +35,14 @@ object LoadService {
     val denied: Set[String] = loadServiceDenied()
 
     val cp = new LoadServiceClassPath()
+    val whenAbsent = new JFunction[ClassLoader, Seq[ClassPath.LoadServiceInfo]] {
+      def apply(loader: ClassLoader): Seq[ClassPath.LoadServiceInfo] = {
+        cp.browse(loader)
+      }
+    }
+
     val classNames = for {
-      info <- cache.getOrElseUpdate(loader, cp.browse(loader))
-      if info.iface == ifaceName
+      info <- cache.computeIfAbsent(loader, whenAbsent) if info.iface == ifaceName
       className <- info.lines
     } yield className
 
