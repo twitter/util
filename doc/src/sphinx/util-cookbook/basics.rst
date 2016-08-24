@@ -35,3 +35,36 @@ Java:
       }
     }
 
+Conversions between Twitter's Try and Scala's Try
+-------------------------------------------------
+
+Scala's `scala.util.Try`, `scala.util.Success`, and `scala.util.Failure`
+were based on Twitter's `com.twitter.util.Try`, `com.twitter.util.Return`,
+and `com.twitter.util.Throw` and converting to and from them is sometimes
+necessary.
+
+Scala:
+
+.. code-block:: scala
+
+    import com.twitter.util.{Try => TwitterTry}
+
+    def toScalaTry(twitterTry: TwitterTry[String]): scala.util.Try[String] =
+      twitterTry.asScala
+
+    def fromScalaTry(scalaTry: scala.util.Try[String]): TwitterTry[String] =
+      TwitterTry.fromScala(scalaTry)
+
+Java:
+
+.. code-block:: java
+
+    import com.twitter.util.Try;
+
+    scala.util.Try<String> toScalaTry(Try<String> twitterTry) {
+      return twitterTry.asScala();
+    }
+
+    Try<String> fromScalaTry(scala.util.Try<String> scalaTry) {
+      return Try.fromScala(scalaTry);
+    }
