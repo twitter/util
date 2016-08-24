@@ -22,17 +22,17 @@ import scala.language.implicitConversions
 object storage {
   class RichWholeNumber(wrapped: Long) {
     def byte: StorageUnit      = bytes
-    def bytes: StorageUnit     = new StorageUnit(wrapped)
+    def bytes: StorageUnit     = StorageUnit.fromBytes(wrapped)
     def kilobyte: StorageUnit  = kilobytes
-    def kilobytes: StorageUnit = new StorageUnit(wrapped * 1024)
+    def kilobytes: StorageUnit = StorageUnit.fromKilobytes(wrapped)
     def megabyte: StorageUnit  = megabytes
-    def megabytes: StorageUnit = new StorageUnit(wrapped * 1024 * 1024)
+    def megabytes: StorageUnit = StorageUnit.fromMegabytes(wrapped)
     def gigabyte: StorageUnit  = gigabytes
-    def gigabytes: StorageUnit = new StorageUnit(wrapped * 1024 * 1024 * 1024)
+    def gigabytes: StorageUnit = StorageUnit.fromGigabytes(wrapped)
     def terabyte: StorageUnit  = terabytes
-    def terabytes: StorageUnit = new StorageUnit(wrapped * 1024 * 1024 * 1024 * 1024)
+    def terabytes: StorageUnit = StorageUnit.fromTerabytes(wrapped)
     def petabyte: StorageUnit  = petabytes
-    def petabytes: StorageUnit = new StorageUnit(wrapped * 1024 * 1024 * 1024 * 1024 * 1024)
+    def petabytes: StorageUnit = StorageUnit.fromPetabytes(wrapped)
 
     def thousand: Long  = wrapped * 1000
     def million: Long   = wrapped * 1000 * 1000

@@ -18,6 +18,9 @@ New Features:
     runs blocking code, it will log the stacktrace for that fraction of
     the calls. ``RB_ID=861892``
 
+  * util-core: Add Java-friendly API for `StorageUnit`. See `StorageUnit.fromX`
+    and `StorageUnit.{times, plus, minus, divide}` methods. ``RB_ID=864546``
+
 Changes in Runtime Behavior:
 
   * util-eval: The compiler reporter is now reset between code check invocations.

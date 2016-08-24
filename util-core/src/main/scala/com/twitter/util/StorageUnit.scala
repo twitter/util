@@ -19,10 +19,19 @@ package com.twitter.util
 import java.util.Locale
 
 object StorageUnit {
+
+  def fromBytes(bytes: Long): StorageUnit = new StorageUnit(bytes)
+  def fromKilobytes(kilobytes: Long): StorageUnit = new StorageUnit(kilobytes * 1024)
+  def fromMegabytes(megabytes: Long): StorageUnit = new StorageUnit(megabytes * 1024 * 1024)
+  def fromGigabytes(gigabytes: Long): StorageUnit = new StorageUnit(gigabytes * 1024 * 1024 * 1024)
+  def fromTerabytes(terabytes: Long): StorageUnit = new StorageUnit(terabytes * 1024 * 1024 * 1024 * 1024)
+  def fromPetabytes(petabytes: Long): StorageUnit = new StorageUnit(petabytes * 1024 * 1024 * 1024 * 1024 * 1024)
+  def fromExabytes(exabytes: Long): StorageUnit = new StorageUnit(exabytes * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+
   val infinite = new StorageUnit(Long.MaxValue)
   val zero = new StorageUnit(0)
 
-  private def factor(s: String) = {
+  private def factor(s: String): Long = {
     var lower = s.toLowerCase
     if (lower endsWith "s")
       lower = lower dropRight 1
@@ -58,20 +67,31 @@ object StorageUnit {
 /**
  * Representation of storage units.
  *
- * If you import the [[com.twitter.conversions.storage]] implicits you can
- * write human-readable values such as `1.gigabyte` or `50.megabytes`.
+ * Use either `StorageUnit.fromX` or [[com.twitter.conversions.storage implicit conversions]]
+ * from `Long` and `Int` to construct instances.
  *
- * Note: operations can cause overflows of the Long used to represent the
- * number of bytes.
+ * {{{
+ *   import com.twitter.conversions.storage._
+ *   import com.twitter.util.StorageUnit
+ *
+ *   val size: StorageUnit = 10.kilobytes
+ * }}}
+ *
+ * @note While all the methods in this abstraction are prefixed according
+ *       to the International System of Units (kilo-, mega-, etc), they
+ *       actually operate on the 1024 scale (not 1000).
+ *
+ * @note Operations can cause overflows of the `Long` used to represent the
+ *       number of bytes.
  */
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
-  def inBytes     = bytes
-  def inKilobytes = bytes / (1024L)
-  def inMegabytes = bytes / (1024L * 1024)
-  def inGigabytes = bytes / (1024L * 1024 * 1024)
-  def inTerabytes = bytes / (1024L * 1024 * 1024 * 1024)
-  def inPetabytes = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
-  def inExabytes  = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
+  def inBytes: Long = bytes
+  def inKilobytes: Long = bytes / 1024L
+  def inMegabytes: Long = bytes / (1024L * 1024)
+  def inGigabytes: Long = bytes / (1024L * 1024 * 1024)
+  def inTerabytes: Long = bytes / (1024L * 1024 * 1024 * 1024)
+  def inPetabytes: Long  = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
+  def inExabytes: Long  = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
 
   def +(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes + that.bytes)
   def -(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes - that.bytes)
@@ -79,18 +99,23 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def *(scalar: Long): StorageUnit = new StorageUnit(this.bytes * scalar)
   def /(scalar: Long): StorageUnit = new StorageUnit(this.bytes / scalar)
 
-  override def equals(other: Any) = {
-    other match {
-      case other: StorageUnit =>
-        inBytes == other.inBytes
-      case _ =>
-        false
-    }
+  // Java-friendly API for binary operations.
+  def plus(that: StorageUnit): StorageUnit = this + that
+  def minus(that: StorageUnit): StorageUnit = this - that
+  def times(scalar: Double): StorageUnit = this * scalar
+  def times(scalar: Long): StorageUnit = this * scalar
+  def divide(scalar: Long): StorageUnit = this / scalar
+
+  override def equals(other: Any): Boolean = other match {
+    case other: StorageUnit =>
+      inBytes == other.inBytes
+    case _ =>
+      false
   }
 
   override def hashCode: Int = bytes.hashCode
 
-  override def compare(other: StorageUnit) =
+  override def compare(other: StorageUnit): Int =
     if (bytes < other.bytes) -1 else if (bytes > other.bytes) 1 else 0
 
   def min(other: StorageUnit): StorageUnit =
@@ -99,7 +124,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def max(other: StorageUnit): StorageUnit =
     if (this > other) this else other
 
-  override def toString() = inBytes + ".bytes"
+  override def toString(): String = inBytes + ".bytes"
 
   def toHuman(): String = {
     val prefix = "KMGTPE"
