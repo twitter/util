@@ -261,6 +261,11 @@ class AsyncMeter private(
     }
   }
 
+  /**
+   * Returns the current number of outstanding waiters in the queue
+   */
+  def numWaiters(): Int = q.size()
+
   private[this] def updateAndGet(tokens: Int): Boolean = {
     bucket.put(getNumRefreshTokens())
     bucket.tryGet(tokens)
