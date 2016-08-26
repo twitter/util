@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &mdash; Util 6.35.0-SNAPSHOT documentation</title>
+    <title>Basics &mdash; Util 6.36.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.35.0-SNAPSHOT',
+        VERSION:     '6.36.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.35.0-SNAPSHOT documentation" href="../index.html" />
+    <link rel="top" title="Util 6.36.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Futures" href="futures.html" />
     <link rel="prev" title="Util Cookbook" href="index.html" />
@@ -42,11 +42,11 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -58,15 +58,15 @@
         <li class="right" >
           <a href="index.html" title="Util Cookbook"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
+        <li><a href="../index.html">Util</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="basics">
 <h1>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h1>
@@ -99,13 +99,42 @@ less obvious from Java.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="conversions-between-twitter-s-try-and-scala-s-try">
+<h2>Conversions between Twitter&#8217;s Try and Scala&#8217;s Try<a class="headerlink" href="#conversions-between-twitter-s-try-and-scala-s-try" title="Permalink to this headline">¶</a></h2>
+<p>Scala&#8217;s <cite>scala.util.Try</cite>, <cite>scala.util.Success</cite>, and <cite>scala.util.Failure</cite>
+were based on Twitter&#8217;s <cite>com.twitter.util.Try</cite>, <cite>com.twitter.util.Return</cite>,
+and <cite>com.twitter.util.Throw</cite> and converting to and from them is sometimes
+necessary.</p>
+<p>Scala:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Try</span> <span class="k">=&gt;</span> <span class="nc">TwitterTry</span><span class="o">}</span>
+
+<span class="k">def</span> <span class="n">toScalaTry</span><span class="o">(</span><span class="n">twitterTry</span><span class="k">:</span> <span class="kt">TwitterTry</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">scala.util.Try</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">twitterTry</span><span class="o">.</span><span class="n">asScala</span>
+
+<span class="k">def</span> <span class="n">fromScalaTry</span><span class="o">(</span><span class="n">scalaTry</span><span class="k">:</span> <span class="kt">scala.util.Try</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">TwitterTry</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nc">TwitterTry</span><span class="o">.</span><span class="n">fromScala</span><span class="o">(</span><span class="n">scalaTry</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Java:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
+
+<span class="n">scala</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">toScalaTry</span><span class="o">(</span><span class="n">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">twitterTry</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="n">twitterTry</span><span class="o">.</span><span class="na">asScala</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="n">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">fromScalaTry</span><span class="o">(</span><span class="n">scala</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">scalaTry</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="n">Try</span><span class="o">.</span><span class="na">fromScala</span><span class="o">(</span><span class="n">scalaTry</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
@@ -120,6 +149,7 @@ less obvious from Java.</p>
   <ul>
 <li><a class="reference internal" href="#">Basics</a><ul>
 <li><a class="reference internal" href="#getting-the-result-out-of-a-try">Getting the result out of a Try</a></li>
+<li><a class="reference internal" href="#conversions-between-twitter-s-try-and-scala-s-try">Conversions between Twitter&#8217;s Try and Scala&#8217;s Try</a></li>
 </ul>
 </li>
 </ul>

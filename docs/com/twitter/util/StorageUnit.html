@@ -51,10 +51,14 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of storage units.</p><p>If you import the <a href="../conversions/storage$.html" class="extype" name="com.twitter.conversions.storage">com.twitter.conversions.storage</a> implicits you can
-write human-readable values such as <code>1.gigabyte</code> or <code>50.megabytes</code>.</p><p>Note: operations can cause overflows of the Long used to represent the
-number of bytes.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of storage units.</p><p>Use either <code>StorageUnit.fromX</code> or <a href="../conversions/storage$.html" class="extype" name="com.twitter.conversions.storage">implicit conversions</a>
+from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><span class="kw">import</span> com.twitter.conversions.storage._
+<span class="kw">import</span> com.twitter.util.StorageUnit
+
+<span class="kw">val</span> size: StorageUnit = <span class="num">10.</span>kilobytes</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Operations can cause overflows of the <code>Long</code> used to represent the
+      number of bytes.</p></span>, <span class="cmt"><p>While all the methods in this abstraction are prefixed according
+      to the International System of Units (kilo-, mega-, etc), they
+      actually operate on the 1024 scale (not 1000).</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.math.Ordered" class="extype" target="_top">Ordered</a>[<a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a>], <span class="extype" name="java.lang.Comparable">Comparable</span>[<a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
@@ -414,6 +418,23 @@ number of bytes.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Ordered → Comparable</dd></dl></div>
+    </li><li name="com.twitter.util.StorageUnit#divide" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="divide(scalar:Long):com.twitter.util.StorageUnit"></a>
+      <a id="divide(Long):StorageUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">divide</span><span class="params">(<span name="scalar">scalar: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.StorageUnit@divide(scalar:Long):com.twitter.util.StorageUnit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -675,6 +696,23 @@ number of bytes.
       </a>
     </span>
       
+    </li><li name="com.twitter.util.StorageUnit#minus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="minus(that:com.twitter.util.StorageUnit):com.twitter.util.StorageUnit"></a>
+      <a id="minus(StorageUnit):StorageUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">minus</span><span class="params">(<span name="that">that: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.StorageUnit@minus(that:com.twitter.util.StorageUnit):com.twitter.util.StorageUnit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -726,6 +764,23 @@ number of bytes.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.StorageUnit#plus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="plus(that:com.twitter.util.StorageUnit):com.twitter.util.StorageUnit"></a>
+      <a id="plus(StorageUnit):StorageUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">plus</span><span class="params">(<span name="that">that: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.StorageUnit@plus(that:com.twitter.util.StorageUnit):com.twitter.util.StorageUnit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -743,6 +798,40 @@ number of bytes.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.StorageUnit#times" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="times(scalar:Long):com.twitter.util.StorageUnit"></a>
+      <a id="times(Long):StorageUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">times</span><span class="params">(<span name="scalar">scalar: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.StorageUnit@times(scalar:Long):com.twitter.util.StorageUnit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.util.StorageUnit#times" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="times(scalar:Double):com.twitter.util.StorageUnit"></a>
+      <a id="times(Double):StorageUnit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">times</span><span class="params">(<span name="scalar">scalar: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.StorageUnit@times(scalar:Double):com.twitter.util.StorageUnit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="com.twitter.util.StorageUnit#toHuman" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="toHuman():String"></a>
       <a id="toHuman():String"></a>

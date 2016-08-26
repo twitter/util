@@ -6,6 +6,51 @@ Futures
    and the `section on futures <http://twitter.github.io/effectivescala/#Twitter's%20standard%20libraries-Futures>`_
    in Effective Scala for details on concurrent programming with futures.
 
+Conversions between Twitter's Future and Scala's Future
+-------------------------------------------------------
+
+Twitter's ``com.twitter.util.Future`` is similar to, but
+`predates <http://twitter.github.io/finagle/guide/Futures.html#futures>`_,
+`Scala's <http://docs.scala-lang.org/overviews/core/futures.html>`_
+``scala.concurrent.Future`` and as such they are not directly compatible
+(e.g. support for continuation-local variables and interruptibility).
+
+You can use the `Twitter Bijection <https://github.com/twitter/bijection>`_
+library to transform one into the other, or use a small bit of code shown
+below to avoid the extra dependency.
+
+Scala:
+
+.. code-block:: scala
+
+  import com.twitter.util.{Future => TwitterFuture, Promise => TwitterPromise, Return, Throw}
+  import scala.concurrent.{Future => ScalaFuture, Promise => ScalaPromise, ExecutionContext}
+  import scala.util.{Success, Failure}
+
+  /** Convert from a Twitter Future to a Scala Future */
+  implicit class RichTwitterFuture[A](val tf: TwitterFuture[A]) extends AnyVal {
+    def asScala(implicit e: ExecutionContext): ScalaFuture[A] = {
+      val promise: ScalaPromise[A] = ScalaPromise()
+      tf.respond {
+        case Return(value) => promise.success(value)
+        case Throw(exception) => promise.failure(exception)
+      }
+      promise.future
+    }
+  }
+
+  /** Convert from a Scala Future to a Twitter Future */
+  implicit class RichScalaFuture[A](val sf: ScalaFuture[A]) extends AnyVal {
+    def asTwitter(implicit e: ExecutionContext): TwitterFuture[A] = {
+      val promise: TwitterPromise[A] = new TwitterPromise[A]()
+      sf.onComplete {
+        case Success(value) => promise.setValue(value)
+        case Failure(exception) => promise.setException(exception)
+      }
+      promise
+    }
+  }
+
 Blocking or synchronous work
 ----------------------------
 

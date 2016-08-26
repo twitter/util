@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &mdash; Util 6.35.0-SNAPSHOT documentation</title>
+    <title>Basics &mdash; Util 6.36.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.35.0-SNAPSHOT',
+        VERSION:     '6.36.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.35.0-SNAPSHOT documentation" href="../index.html" />
+    <link rel="top" title="Util 6.36.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="User Guide" href="user_guide.html" />
     <link rel="prev" title="Overview" href="overview.html" />
@@ -42,11 +42,11 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -58,15 +58,15 @@
         <li class="right" >
           <a href="overview.html" title="Overview"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
+        <li><a href="../index.html">Util</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="basics">
 <h1>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h1>
@@ -90,7 +90,7 @@ These are useful for measuring queue depths and pool sizes.</p>
 <span class="kd">private</span> <span class="kd">final</span> <span class="n">Gauge</span> <span class="n">queueSize</span> <span class="o">=</span> <span class="n">StatsReceivers</span><span class="o">.</span><span class="na">addGauge</span><span class="o">(</span>
   <span class="n">statsReceiver</span><span class="o">,</span>
   <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Float</span><span class="o">&gt;()</span> <span class="o">{</span>
-    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">Float</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">aQueue</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="o">}</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">Float</span> <span class="n">call</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">aQueue</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="o">}</span>
   <span class="o">},</span>
   <span class="s">&quot;queue_size&quot;</span>
 <span class="o">);</span>
@@ -136,7 +136,7 @@ of requests or capturing the distribution of work batches.</p>
 <span class="n">JStat</span><span class="o">.</span><span class="na">time</span><span class="o">(</span>
   <span class="n">latency</span><span class="o">,</span>
   <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;()</span> <span class="o">{</span>
-    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span> <span class="n">twiddleBits</span><span class="o">();</span> <span class="o">}</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">call</span><span class="o">()</span> <span class="o">{</span> <span class="n">twiddleBits</span><span class="o">();</span> <span class="o">}</span>
   <span class="o">},</span>
   <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span>
 <span class="o">);</span>
@@ -149,7 +149,7 @@ of requests or capturing the distribution of work batches.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.

@@ -1885,10 +1885,14 @@ string</p></span></dd></dl></div>
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Representation of storage units.</p><div class="fullcomment"><div class="comment cmt"><p>Representation of storage units.</p><p>If you import the <a href="../conversions/storage$.html" class="extype" name="com.twitter.conversions.storage">com.twitter.conversions.storage</a> implicits you can
-write human-readable values such as <code>1.gigabyte</code> or <code>50.megabytes</code>.</p><p>Note: operations can cause overflows of the Long used to represent the
-number of bytes.
-</p></div></div>
+      <p class="shortcomment cmt">Representation of storage units.</p><div class="fullcomment"><div class="comment cmt"><p>Representation of storage units.</p><p>Use either <code>StorageUnit.fromX</code> or <a href="../conversions/storage$.html" class="extype" name="com.twitter.conversions.storage">implicit conversions</a>
+from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><span class="kw">import</span> com.twitter.conversions.storage._
+<span class="kw">import</span> com.twitter.util.StorageUnit
+
+<span class="kw">val</span> size: StorageUnit = <span class="num">10.</span>kilobytes</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Operations can cause overflows of the <code>Long</code> used to represent the
+      number of bytes.</p></span>, <span class="cmt"><p>While all the methods in this abstraction are prefixed according
+      to the International System of Units (kilo-, mega-, etc), they
+      actually operate on the 1024 scale (not 1000).</p></span></dd></dl></div>
     </li><li name="com.twitter.util.StringEncoder" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StringEncoderextendsAnyRef"></a>
       <a id="StringEncoder:StringEncoder"></a>
