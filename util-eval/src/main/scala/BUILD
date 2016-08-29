@@ -6,7 +6,8 @@ scala_library(name='scala',
   ),
   dependencies=[
     '3rdparty/jvm/org/scala-lang:scala-compiler',
-    'util/util-core/src/main/scala'
+    'util/util-core/src/main/scala',
+    '//:scala-reflect',
   ],
   fatal_warnings=True,
   sources=rglobs('*.scala'),

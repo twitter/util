@@ -5,6 +5,8 @@ junit_tests(name='scala',
     '3rdparty/jvm/org/scalatest',
     'util/util-core/src/main/scala',
     'util/util-logging/src/main/scala',
+    'util/util-app/src/main/scala:scala',
+    'util/util-stats/src/main/scala:scala',
   ],
   fatal_warnings=True,
   sources=rglobs('*.scala')

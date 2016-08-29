@@ -2,6 +2,7 @@ junit_tests(name='java',
   dependencies=[
     '3rdparty/jvm/junit',
     'util/util-stats/src/main/scala',
+    'util/util-core/src/main/scala:scala',
   ],
   fatal_warnings=True,
   sources=rglobs('*.java')

@@ -1,16 +1,13 @@
 junit_tests(name='scala',
   dependencies=[
-    '3rdparty/jvm/com/google/guava',
     'science/src/java/com/twitter/common/zookeeper:client',
-    'science/src/java/com/twitter/common/zookeeper:server-set',
     'science/src/java/com/twitter/common/net:util',
-    'science/src/thrift/com/twitter/thrift:thrift-java',
-    '3rdparty/jvm/cglib',
     '3rdparty/jvm/org/jmock',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/scalatest',
     'util/util-core/src/main/scala',
     'util/util-zk-common/src/main/scala',
+    'util/util-zk/src/main/scala:scala',
   ],
   fatal_warnings=True,
   sources=rglobs('*.scala')

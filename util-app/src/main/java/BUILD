@@ -5,5 +5,7 @@ java_library(name='java',
     repo = artifactory,
   ),
   fatal_warnings=True,
-  sources=rglobs('*.java')
+  sources=rglobs('*.java'),
+  # Not detected as required by zinc.
+  scope='forced',
 )

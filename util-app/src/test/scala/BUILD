@@ -4,7 +4,9 @@ junit_tests(name='scala',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalatest',
-    'util/util-app/src/main/scala'
+    'util/util-app/src/main/scala',
+    'util/util-core/src/main/scala:scala',
+    'util/util-registry/src/main/scala:scala',
   ],
   resources=[
     'util/util-app/src/test/resources'

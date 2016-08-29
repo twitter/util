@@ -1,7 +1,11 @@
 junit_tests(name='scala',
   dependencies=[
-    'util/util-core/src/test:base',
-    'util/util-core/src/test/java',
+    '3rdparty/jvm/junit:junit',
+    '3rdparty/jvm/org/mockito:mockito-all',
+    '3rdparty/jvm/org/scalacheck:scalacheck',
+    '3rdparty/jvm/org/scalatest:scalatest',
+    'science/src/java/com/twitter/common/objectsize:objectsize',
+    'util/util-core/src/main/scala:scala',
   ],
   # fatal_warnings runs into an issue with scalatest/Future.isDone:
   #

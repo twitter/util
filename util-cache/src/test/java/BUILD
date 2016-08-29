@@ -4,6 +4,8 @@ junit_tests(name='java',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scala-lang:scala-library',
     'util/util-cache',
+    '3rdparty/jvm/com/google/guava:guava',
+    'util/util-core/src/main/scala:scala',
   ],
   fatal_warnings=True,
   sources=rglobs('*.java')

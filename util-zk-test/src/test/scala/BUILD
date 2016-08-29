@@ -4,7 +4,8 @@ junit_tests(name='scala',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalatest',
-    'util/util-zk-test'
+    'util/util-zk-test',
+    '3rdparty/jvm/org/apache/zookeeper:zookeeper-server',
   ],
   fatal_warnings=True,
   sources=rglobs('*.scala')
