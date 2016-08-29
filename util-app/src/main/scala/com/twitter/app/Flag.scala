@@ -933,14 +933,19 @@ private object GlobalFlag {
   }
 
   def getAll(loader: ClassLoader): Seq[Flag[_]] = {
+
+    // Since Scala object class names end with $, we search for them.
+    // One thing we know for sure, Scala package objects can never be flags
+    // so we filter those out.
+    def couldBeFlag(className: String): Boolean =
+      className.endsWith("$") && !className.endsWith("package$")
+
     val markerClass = classOf[GlobalFlagVisible]
     val flags = new ArrayBuffer[Flag[_]]
 
     // Search for Scala objects annotated with GlobalFlagVisible:
-    // Since Scala object classnames end with $, filter by name first
-    // before attempting to load the class.
     val cp = new FlagClassPath()
-    for (info <- cp.browse(loader) if info.className.endsWith("$")) {
+    for (info <- cp.browse(loader) if couldBeFlag(info.className)) {
       try {
         val cls: Class[_] = Class.forName(info.className, false, loader)
         if (cls.isAnnotationPresent(markerClass)) {
