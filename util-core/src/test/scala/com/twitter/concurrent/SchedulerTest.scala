@@ -3,7 +3,7 @@ package com.twitter.concurrent
 import com.twitter.conversions.time._
 import com.twitter.util._
 import java.util.concurrent.{Executors, TimeUnit}
-import java.util.logging.{Handler, LogRecord}
+import java.util.logging.{Handler, Level, LogRecord}
 import org.junit.runner.RunWith
 import org.scalatest.{FunSuite, Matchers}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
@@ -120,6 +120,8 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite
         def publish(rec: LogRecord): Unit =
           record = rec
       }
+      // setting the log level was necessary for this test to pass via `./sbt test`
+      LocalScheduler.log.setLevel(Level.INFO)
       LocalScheduler.log.addHandler(handler)
 
       val initial = Awaitable.getBlockingTimeTracking
