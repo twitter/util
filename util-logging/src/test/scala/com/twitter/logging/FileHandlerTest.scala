@@ -80,7 +80,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
       }
     }
 
-    // /* Test is commented out according to http://jira.local.twitter.com/browse/REPLA-618 */
+    // /* Test is commented out according to REPLA-618 */
     //
     // "respond to a sighup to reopen a logfile with sun.misc" in {
     //   try {
