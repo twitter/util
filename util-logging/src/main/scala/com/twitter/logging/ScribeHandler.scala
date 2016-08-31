@@ -153,6 +153,8 @@ class ScribeHandler(
   private[logging] def updateLastTransmission(): Unit = _lastTransmission = Time.now
 
   private var socket: Option[Socket] = None
+  // visible for testing
+  private[logging] def setSocket(newSocket: Option[Socket]) = synchronized { socket = newSocket }
 
   private var serverType: ServerType = Unknown
 
@@ -409,8 +411,8 @@ class ScribeHandler(
     }
 
     def incrDroppedRecords(count: Int = 1): Unit = {
-      droppedRecords.incrementAndGet()
-      totalDroppedRecords.incr()
+      droppedRecords.addAndGet(count)
+      totalDroppedRecords.incr(count)
     }
 
     def incrConnectionFailure(): Unit = {

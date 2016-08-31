@@ -21,17 +21,20 @@ import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.finagle.stats.InMemoryStatsReceiver
 import com.twitter.util.{RandomSocket, Time}
+import java.net.Socket
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{ArrayBlockingQueue, RejectedExecutionHandler, TimeUnit, ThreadPoolExecutor}
 import java.util.{logging => javalog}
 import org.junit.runner.RunWith
+import org.mockito.Mockito._
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, WordSpec}
 import org.scalatest.concurrent.Eventually
+import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Millis, Minutes, Span}
 
 @RunWith(classOf[JUnitRunner])
-class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually {
+class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually with MockitoSugar {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")
@@ -208,6 +211,38 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually {
       // There will be 1 task dequeued by the executor.
       // That leaves either 94 rejected tasks.
       assert(rejected.get() == 94)
+    }
+
+    "handle batch write errors" in {
+      val statsReceiver = new InMemoryStatsReceiver
+      val mockSocket = mock[Socket]
+      when(mockSocket.getOutputStream).thenReturn(null)
+
+      val scribe = ScribeHandler(
+        port = portWithoutListener,
+        category = "test",
+        bufferTime = 5.seconds,
+        formatter = BareFormatter,
+        level = None,
+        statsReceiver = statsReceiver
+      ).apply()
+
+      scribe.setSocket(Some(mockSocket))
+
+      // Make sure multiple records get flushed together
+      Time.withCurrentTimeFrozen { _ =>
+        scribe.updateLastTransmission()
+        scribe.publish(record2)
+        scribe.publish(record1)
+      }
+
+      // Throws exception writing to null output stream
+      scribe.flush()
+
+      scribe.flusher.shutdown()
+      scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
+
+      assert(statsReceiver.counter("dropped_records")() == 2L)
     }
   }
 }
