@@ -19,6 +19,7 @@ package com.twitter.logging
 import java.io.IOException
 import java.net._
 import java.nio.{ByteBuffer, ByteOrder}
+import java.nio.charset.StandardCharsets.ISO_8859_1
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.{ArrayBlockingQueue, LinkedBlockingQueue, TimeUnit, ThreadPoolExecutor}
 import java.util.{Arrays, logging => javalog}
@@ -27,7 +28,6 @@ import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
-import com.twitter.io.Charsets
 import com.twitter.util.{Duration, NonFatal, Time}
 
 object ScribeHandler {
@@ -300,7 +300,7 @@ class ScribeHandler(
     recordHeader.put(11: Byte)
     recordHeader.putShort(1)
     recordHeader.putInt(category.length)
-    recordHeader.put(category.getBytes(Charsets.Iso8859_1))
+    recordHeader.put(category.getBytes(ISO_8859_1))
     recordHeader.put(11: Byte)
     recordHeader.putShort(2)
 
