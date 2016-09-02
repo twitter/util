@@ -6,6 +6,12 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-app: Introduce `c.t.app.Flag.letClear` allowing flags to be unset.
+    ``RB_ID=868177``
+
+
 6.36.0  2016-08-25
 
 New Features:

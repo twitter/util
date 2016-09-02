@@ -286,7 +286,7 @@ class Flag[T: Flaggable] private[app](
 
   private[this] val log = Logger.getLogger("")
 
-  protected val flaggable = implicitly[Flaggable[T]]
+  protected val flaggable: Flaggable[T] = implicitly[Flaggable[T]]
 
   private[this] def localValue: Option[T] = localFlagValues() match {
     case None => None
@@ -329,7 +329,7 @@ class Flag[T: Flaggable] private[app](
   }
 
   @volatile private[this] var _parsingDone = false
-  protected[this] def parsingDone = _parsingDone
+  protected[this] def parsingDone: Boolean = _parsingDone
 
   private lazy val default: Option[T] = defaultOrUsage match {
     case Right(_) => None
@@ -353,10 +353,25 @@ class Flag[T: Flaggable] private[app](
   /**
    * Override the value of this flag with `t`, only for the scope of the current
    * [[com.twitter.util.Local]] for the given function `f`.
+   *
+   * @see [[letClear]]
    */
-  def let(t: T)(f: => Unit): Unit = {
+  def let(t: T)(f: => Unit): Unit =
+    let(Some(t), f)
+
+  /**
+   * Unset the value of this flag, such that [[isDefined]] will return `false`,
+   * only for the scope of the current [[com.twitter.util.Local]] for the
+   * given function `f`.
+   *
+   * @see [[let]]
+   */
+  def letClear(f: => Unit): Unit =
+    let(None, f)
+
+  private[this] def let(t: Option[T], f: => Unit): Unit = {
     val prev = localValue
-    setLocalValue(Some(t))
+    setLocalValue(t)
     try f finally {
       setLocalValue(prev)
     }
@@ -380,7 +395,7 @@ class Flag[T: Flaggable] private[app](
   }
 
   /** Reset this flag's value */
-  def reset() {
+  def reset(): Unit = {
     value = None
     _parsingDone = false
   }
@@ -443,7 +458,7 @@ class Flag[T: Flaggable] private[app](
    * String representation of this flag in -foo='bar' format,
    * suitable for being used on the command line.
    */
-  override def toString = {
+  override def toString: String = {
     valueOrDefault match {
       case None => "-" + name + "=unset"
       case Some(v) => "-" + name + "='" + flaggable.show(v).replaceAll("'", "'\"'\"'") + "'"
@@ -451,18 +466,18 @@ class Flag[T: Flaggable] private[app](
   }
 
   /** Parse value `raw` into this flag. */
-  def parse(raw: String) {
+  def parse(raw: String): Unit = {
     value = Some(flaggable.parse(raw))
     _parsingDone = true
   }
 
   /** Parse this flag with no argument. */
-  def parse() {
+  def parse(): Unit = {
     value = flaggable.default
     _parsingDone = true
   }
 
-  private[app] def finishParsing() {
+  private[app] def finishParsing(): Unit = {
     _parsingDone = true
   }
 
@@ -542,8 +557,8 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
   private[this] val helpFlag = this("help", false, "Show this help")
 
 
-  def reset() = synchronized {
-    flags foreach { case (_, f) => f.reset() }
+  def reset(): Unit = synchronized {
+    flags.foreach { case (_, f) => f.reset() }
   }
 
   private[app] def finishParsing(): Unit = {
@@ -694,7 +709,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    *
    * @param f A concrete Flag to add
    */
-  def add(f: Flag[_]) = synchronized {
+  def add(f: Flag[_]): Unit = synchronized {
     if (flags contains f.name)
       System.err.printf("Flag %s already defined!\n", f.name)
     flags(f.name) = f
@@ -707,7 +722,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param default A default value, as a thunk.
    * @param help The help string of the flag.
    */
-  def apply[T: Flaggable](name: String, default: => T, help: String) = {
+  def apply[T: Flaggable](name: String, default: => T, help: String): Flag[T] = {
     val f = new Flag[T](name, help, default, failFastUntilParsed)
     add(f)
     f
@@ -719,7 +734,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param name The name of the flag.
    * @param help The help string of the flag.
    */
-  def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = {
+  def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]): Flag[T] = {
     val f = new Flag[T](name, help, m.toString, failFastUntilParsed)
     add(f)
     f
@@ -755,7 +770,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * Set the flags' command usage; this is a message printed
    * before the flag definitions in the usage string.
    */
-  def setCmdUsage(u: String) {
+  def setCmdUsage(u: String): Unit = {
     cmdUsage = u
   }
 
@@ -895,9 +910,9 @@ class GlobalFlag[T] private[app](
 
   // Unfortunately, `getClass` in the the extends... above
   // doesn't give the right answer.
-  override val name = getClass.getName.stripSuffix("$")
+  override val name: String = getClass.getName.stripSuffix("$")
 
-  protected override def getValue = super.getValue match {
+  protected override def getValue: Option[T] = super.getValue match {
     case v@Some(_) => v
     case _ => propertyValue
   }

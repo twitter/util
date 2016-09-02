@@ -157,18 +157,36 @@ class FlagTest extends FunSuite {
     var buf = Buffer[Int]()
 
     // make sure they stack properly
-    assert(current == false)
+    assert(!current)
     MyGlobalBooleanFlag.let(true) {
       buf += 1
-      assert(current == true)
+      assert(current)
       MyGlobalBooleanFlag.let(false) {
         buf += 2
-        assert(current == false)
+        assert(!current)
       }
       buf += 3
-      assert(current == true)
+      assert(current)
     }
-    assert(current == false)
+    assert(!current)
+
+    assert(buf == Seq(1, 2, 3))
+  }
+
+  test("Flag: letClear") {
+    // track the order the blocks execute and that they only execute once
+    var buf = Buffer[Int]()
+
+    MyGlobalBooleanFlag.let(true) {
+      assert(MyGlobalBooleanFlag.isDefined)
+      buf += 1
+      MyGlobalBooleanFlag.letClear {
+        assert(!MyGlobalBooleanFlag.isDefined)
+        buf += 2
+      }
+      assert(MyGlobalBooleanFlag.isDefined)
+      buf += 3
+    }
 
     assert(buf == Seq(1, 2, 3))
   }
