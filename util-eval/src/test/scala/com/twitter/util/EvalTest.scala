@@ -217,6 +217,18 @@ class EvalTest extends WordSpec {
         assert(eval.errors.isEmpty)
       }
 
+      "reset reporter between inPlace invocations" in {
+        val ctx = new Ctx
+        import ctx._
+
+        intercept[Throwable] {
+          eval.inPlace[Int]("val a = 3; val b = q; a + b")
+        }
+        assert(eval.errors.nonEmpty)
+        assert(eval.inPlace[Int]("val d = 3; val e = 2; d + e") == 5)
+        assert(eval.errors.isEmpty)
+      }
+
       "reporter should be reset between checks, but loaded class should remain" in {
         val ctx = new Ctx
         import ctx._
