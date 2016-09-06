@@ -2,9 +2,26 @@ package com.twitter.finagle.stats
 
 import com.twitter.util.lint._
 import java.lang.ref.WeakReference
-import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.{ThreadLocalRandom, ConcurrentHashMap}
 import scala.collection.mutable
 import scala.collection.JavaConverters._
+
+private object CumulativeGauge {
+
+  /**
+   * To avoid cleaning up unreferenced gauges too often (a costly operation),
+   * we clean only on gauge removal, and `CleanupFreq` fraction of cleanup calls (in `addGauge`
+   * and `get`)
+   */
+  private[this] val CleanupFreq = 0.01
+
+  /**
+   * Used to determine whether we should clean up gauges. Returns true with `cleanupFreq`
+   * probability
+   */
+  def shouldClean(): Boolean =
+    ThreadLocalRandom.current().nextDouble() <= CleanupFreq
+}
 
 /**
  * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)
@@ -12,6 +29,8 @@ import scala.collection.JavaConverters._
  * semantics of [[Gauge Gauges]] as outlined in [[StatsReceiver]].
  */
 private[finagle] abstract class CumulativeGauge {
+  import CumulativeGauge._
+
   private[this] case class UnderlyingGauge(f: () => Float) extends Gauge {
     def remove(): Unit = removeGauge(this)
   }
@@ -23,7 +42,10 @@ private[finagle] abstract class CumulativeGauge {
    * Returns a buffered version of the current gauges
    */
   private[this] def get(): IndexedSeq[UnderlyingGauge] = {
-    removeGauge(null) // clean up weakrefs
+    // Clean up gauges with `CleanupFreq` probability
+    if (shouldClean()) {
+      removeGauge(null)
+    }
 
     val gs = new mutable.ArrayBuffer[UnderlyingGauge](underlying.size)
     underlying.foreach { weakRef =>
@@ -56,7 +78,8 @@ private[finagle] abstract class CumulativeGauge {
 
   def addGauge(f: => Float): Gauge = synchronized {
     val shouldRegister = underlying.isEmpty
-    if (!shouldRegister)
+    // Clean gauges with `CleanupFreq` probability
+    if (!shouldRegister && shouldClean())
       removeGauge(null) // there is at least 1 gauge that may need to be cleaned
     val underlyingGauge = UnderlyingGauge(() => f)
     underlying :+= new WeakReference(underlyingGauge)
