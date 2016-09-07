@@ -10,7 +10,7 @@ object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
   val suffix = if (branch == "master") "" else "-SNAPSHOT"
 
-  val libVersion = "6.36.0" + suffix
+  val libVersion = "6.37.0" + suffix
   val zkVersion = "3.5.0-alpha"
   val zkClientVersion = "0.0.79"
   val zkGroupVersion = "0.0.90"

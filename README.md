@@ -37,7 +37,7 @@ for more details about how to contribute.
 An example SBT dependency string for the `util-collection` tools would look like this:
 
 ```scala
-val collUtils = "com.twitter" %% "util-collection" % "6.36.0"
+val collUtils = "com.twitter" %% "util-collection" % "6.37.0"
 ```
 
 # Units
