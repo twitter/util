@@ -45,7 +45,7 @@ class CumulativeGaugeTest extends FunSuite {
   }
 
   if (!sys.props.contains("SKIP_FLAKY"))
-  test("a CumulativeGauge with size = 1 should deregister after a System.gc when no references are held onto") {
+  test("a CumulativeGauge with size = 1 should deregister after a System.gc when no references are held onto, after enough gets") {
     val gauge = new TestGauge()
     var added = gauge.addGauge { 1.0f }
     assert(0 == gauge.numDeregisters.get)
@@ -54,8 +54,11 @@ class CumulativeGaugeTest extends FunSuite {
     System.gc()
 
     // We have to incite some action for the weakref GC to take place.
+    // We clean up gauges with probability 0.01 when getting the value,
+    // so get the value 500 times to near-guarantee a cleaning.
+    0 until 500 foreach { _ => gauge.getValue }
     assert(gauge.getValue == 0.0f)
-    assert(1 == gauge.numDeregisters.get)
+    assert(gauge.numDeregisters.get > 0)
   }
 
   test("a CumulativeGauge should sum values across all registered gauges") {
