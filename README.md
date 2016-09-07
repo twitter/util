@@ -17,6 +17,21 @@ and is being actively developed and maintained. Please note that some
 sub-projects (including `util-eval`), classes, and methods may be deprecated,
 however.
 
+## Releases
+
+[Releases](https://maven-badges.herokuapp.com/maven-central/com.twitter/util_2.11)
+are done on an approximately monthly schedule. While [semver](http://semver.org/)
+is not followed, the [changelogs](CHANGES) are detailed and include sections on
+public API breaks and changes in runtime behavior.
+
+## Contributing
+
+The `master` branch of this repository contains the latest stable release of
+Util, and weekly snapshots are published to the `develop` branch. In general
+pull requests should be submitted against `develop`. See
+[CONTRIBUTING.md](https://github.com/twitter/util/blob/master/CONTRIBUTING.md)
+for more details about how to contribute.
+
 # Using in your project
 
 An example SBT dependency string for the `util-collection` tools would look like this:
@@ -68,7 +83,7 @@ g.onSuccess { result =>
 val xFuture = Future(1)
 val yFuture = Future(2)
 
-for { 
+for {
   x <- xFuture
   y <- yFuture
 } {
@@ -346,16 +361,6 @@ generally just add a prefix containing the date, log level, and logger name.
   A formatter required by the syslog protocol, with configurable syslog
   priority and date format.
 
-
-# Version 6.x
-
-Major version 6 introduced some breaking changes:
-
-* Futures are no longer `Cancellable`; cancellation is replaced with a simpler interrupt mechanism.
-* Time and duration implement true sentinels (similar to infinities in doubles). `Time.now` uses system time instead of nanotime + offset.
-* The (dangerous) implicit conversion from a `Duration` to a `Long` was removed.
-* `Try`s and `Future`s no longer handle fatal exceptions: these are propagated to the dispatching thread.
-
 ## Future interrupts
 
 Method `raise` on `Future` (`def raise(cause: Throwable)`) raises the interrupt described by `cause` to the producer of this `Future`. Interrupt handlers are installed on a `Promise` using `setInterruptHandler`, which takes a partial function:
@@ -388,11 +393,3 @@ which is read by applying `elapsed`:
 ```scala
 val duration: Duration = elapsed()
 ```
-
-## Contributing
-
-The `master` branch of this repository contains the latest stable release of
-Util, and weekly snapshots are published to the `develop` branch. In general
-pull requests should be submitted against `develop`. See
-[CONTRIBUTING.md](https://github.com/twitter/util/blob/master/CONTRIBUTING.md)
-for more details about how to contribute.

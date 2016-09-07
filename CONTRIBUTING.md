@@ -39,10 +39,39 @@ Travis CI more useful for development, but for now you don't need to worry if
 it's failing (assuming that you are able to build and test your changes
 locally).
 
+## Compatibility
+
+We try to keep public APIs stable for the obvious reasons. Often,
+compatibility can be kept by adding a forwarding method. Note that we
+avoid adding default arguments because this is not a compatible change
+for our Java users.  However, when the benefits outweigh the costs, we
+are willing to break APIs. The break should be noted in the Breaking
+API Changes section of the [changelog](CHANGES). Note that changes to
+non-public APIs will not be called out in the [changelog](CHANGES).
+
+## Java
+
+While the project is written in Scala, its public APIs should be usable from
+Java. This occasionally works out naturally from the Scala interop, but more
+often than not, if care is not taken Java users will have rough corners
+(e.g. `SomeCompanion$.MODULE$.someMethod()` or a symbolic operator).
+We take a variety of approaches to minimize this.
+
+1. Add a "compilation" unit test, written in Java, that verifies the APIs are
+   usable from Java.
+2. If there is anything gnarly, we add Java adapters either by adding
+   a non-symbolic method name or by adding a class that does forwarding.
+3. Prefer `abstract` classes over `traits` as they are easier for Java
+   developers to extend.
+
 ## Style
 
 We generally follow [Effective Scala][es] and the [Scala Style Guide][ssg]. When
 in doubt, look around the codebase and see how it's done elsewhere.
+
+Please note that any additions or changes to the API must be thoroughly
+described in [Scaladoc][sd] comments. We will also happily consider pull
+requests that improve the existing Scaladocs!
 
 ## Issues
 
@@ -115,6 +144,7 @@ Please let us know if you have any questions about this process!
 [0]: https://github.com/twitter/util/pull/109
 [1]: https://github.com/twitter/util/blob/master/util-core/src/test/java/com/twitter/util/VarCompilationTest.java
 [es]: https://twitter.github.io/effectivescala/
+[sd]: http://docs.scala-lang.org/style/scaladoc.html
 [funsuite]: http://www.scalatest.org/getting_started_with_fun_suite
 [scalatest]: http://www.scalatest.org/
 [ssg]: http://docs.scala-lang.org/style/scaladoc.html
