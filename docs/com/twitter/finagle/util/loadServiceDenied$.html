@@ -480,7 +480,29 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
       <p class="shortcomment cmt">Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../../app/Flag.html#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
+    </li><li name="com.twitter.app.Flag#letClear" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="letClear(f:=&gt;Unit):Unit"></a>
+      <a id="letClear(⇒Unit):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">letClear</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.util.loadServiceDenied$@letClear(f:=&gt;Unit):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Unset the value of this flag, such that <a href="../../app/Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
+only for the scope of the current <a href="../../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the
+given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Unset the value of this flag, such that <a href="../../app/Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
+only for the scope of the current <a href="../../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the
+given function <code>f</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../../app/Flag.html#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.GlobalFlag#name" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <a id="name:String"></a>
@@ -490,7 +512,7 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">name</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.twitter.finagle.util.loadServiceDenied$@name:String" title="Permalink" target="_top">
@@ -660,7 +682,7 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#com.twitter.finagle.util.loadServiceDenied$@toString():String" title="Permalink" target="_top">
