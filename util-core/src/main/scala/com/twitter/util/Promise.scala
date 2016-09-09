@@ -595,19 +595,15 @@ class Promise[A]
   @tailrec protected[Promise] final def detach(k: K[A]): Boolean = {
 
     def remove(list: List[K[Nothing]], k: K[_]): List[K[Nothing]] = {
-      @tailrec def go(l: List[K[Nothing]], acc: List[K[Nothing]] = Nil): List[K[Nothing]] = {
-        if (l eq Nil)
-          acc
-        else {
-          val h = l.head
-          if (h eq k)
-            go(l.tail, acc)
-          else
-            go(l.tail, acc :+ h)
-        }
+      var res: List[K[Nothing]] = Nil
+      var ls = list
+      while (ls != Nil) {
+        val h = ls.head
+        ls = ls.tail
+        if (h ne k) res = h :: res
       }
 
-      go(list)
+      res.reverse
     }
 
     state match {

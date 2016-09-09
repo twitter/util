@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.util.Promise.Detachable
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Benchmark)
@@ -13,6 +14,13 @@ class PromiseBenchmark extends StdBenchAnnotations {
   def attached(): Promise[String] = {
     Promise.attached(StringFuture)
   }
+
+  @Benchmark
+  def detach(state: PromiseBenchmark.PromiseDetachState) {
+    import state._
+    promise.detach()
+  }
+
 
   // used to isolate the work in the `updateIfEmpty` benchmark
   @Benchmark
@@ -34,6 +42,23 @@ class PromiseBenchmark extends StdBenchAnnotations {
 }
 
 object PromiseBenchmark {
+  @State(Scope.Thread)
+  class PromiseDetachState {
+
+    @Param(Array("10", "100", "1000"))
+    var numAttached: Int = _
+
+    var global: Promise[Unit] = _
+    var attachedFutures: List[Future[Unit]] = _
+    var promise: Promise[Unit] with Detachable = _
+
+    @Setup
+    def prepare(): Unit = {
+      global = new Promise[Unit]
+      attachedFutures = List.fill(numAttached) { Promise.attached(global) }
+      promise = Promise.attached(global)
+    }
+  }
 
   @State(Scope.Thread)
   class InterruptsState {

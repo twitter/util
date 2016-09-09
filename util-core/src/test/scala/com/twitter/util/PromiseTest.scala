@@ -6,6 +6,20 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class PromiseTest extends FunSuite {
+
+  test("Promise.detach should not detach other attached promises") {
+    val p = new Promise[Unit]
+    val attached1 = Promise.attached(p)
+    val attached2 = Promise.attached(p)
+
+    // detaching `attached2` doesn't detach `attached1`
+    assert(attached2.detach())
+
+    p.setDone()
+    assert(!attached2.isDefined)
+    assert(attached1.isDefined)
+  }
+
   test("Promise.attached should detach via interruption") {
     val p = new HandledPromise[Unit]()
     val f = Promise.attached(p)
