@@ -90,7 +90,17 @@ trait Logging { self: App =>
     ) :: Nil
   }
 
-  premain {
+  /**
+   * Configuration of the Logger Factories removes any other configured 
+   * loggers. Override if you do not want the default LoggerFactories
+   * to be configured. This is generally when you want to ensure that
+   * any handlers already installed are not removed or replaced. 
+   */
+  protected def configureLoggerFactories(): Unit = {
     Logger.configure(loggerFactories)
+  }
+
+  premain {
+    configureLoggerFactories()
   }
 }

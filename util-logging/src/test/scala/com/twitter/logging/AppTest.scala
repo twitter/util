@@ -16,22 +16,40 @@
 
 package com.twitter.logging
 
-import org.junit.runner.RunWith
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-
 import com.twitter.app.App
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
-class AppTest extends FunSuite {
+class AppTest extends FunSuite with BeforeAndAfterEach {
 
   object TestLoggingApp extends App with Logging {
     override def handlers = ScribeHandler() :: super.handlers
+  }
+
+  object TestLoggingWithConfigureApp extends App with Logging {
+    override def handlers = ScribeHandler() :: super.handlers
+    override def configureLoggerFactories(): Unit = {}
   }
 
   test("TestLoggingApp should have one factory with two log handlers") {
     TestLoggingApp.main(Array.empty)
     assert(TestLoggingApp.loggerFactories.size == 1)
     assert(TestLoggingApp.loggerFactories.head.handlers.size == 2)
+    // Logger is configured with two handlers/loggers
+    assert(Logger.iterator.size == 2)
+  }
+
+  test("TestLoggingWithConfigureApp should set up a Logger with no Loggers") {
+    TestLoggingWithConfigureApp.main(Array.empty)
+    assert(TestLoggingApp.loggerFactories.size == 1)
+    assert(TestLoggingWithConfigureApp.loggerFactories.head.handlers.size == 2)
+    // Logger is not configured with any handler/logger
+    assert(Logger.iterator.isEmpty)
+  }
+
+  override protected def afterEach(): Unit = {
+    Logger.reset()
   }
 }

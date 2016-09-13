@@ -6,6 +6,9 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+  * util-logging: Allow users to override `c.t.util.logging.Logger` installation,
+    making it easier to work with SLF4J bridges. ``RB_ID=870684``
+
 6.37.0  2016-09-07
 
 New Features:
