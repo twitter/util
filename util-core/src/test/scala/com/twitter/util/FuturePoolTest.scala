@@ -213,16 +213,16 @@ class FuturePoolTest extends FunSuite with Eventually {
       latch.await(10.seconds)
       true
     }
-    assert(pool.poolSize == 1)
-    assert(pool.numActiveTasks == 1)
-    assert(pool.numCompletedTasks == 0)
+    eventually { assert(pool.poolSize == 1) }
+    eventually { assert(pool.numActiveTasks == 1) }
+    eventually { assert(pool.numCompletedTasks == 0) }
 
     // let the task complete
     latch.countDown()
     Await.ready(future, 5.seconds)
-    assert(pool.poolSize == 1)
-    assert(pool.numActiveTasks == 0)
-    assert(pool.numCompletedTasks == 1)
+    eventually { assert(pool.poolSize == 1) }
+    eventually { assert(pool.numActiveTasks == 0) }
+    eventually { assert(pool.numCompletedTasks == 1) }
 
     // cleanup.
     executor.shutdown()
