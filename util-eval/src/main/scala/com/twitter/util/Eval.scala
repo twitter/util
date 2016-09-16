@@ -580,6 +580,9 @@ class Eval(target: Option[File]) {
       if (Debug.enabled)
         Debug.printWithLineNumbers(code)
 
+      //reset reporter, or will always throw exception after one error while resetState==false
+      resetReporter()
+
       // if you're looking for the performance hit, it's 1/2 this line...
       val compiler = new global.Run
       val sourceFiles = List(new BatchSourceFile("(inline)", code))
