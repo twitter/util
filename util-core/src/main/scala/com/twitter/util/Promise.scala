@@ -77,7 +77,7 @@ object Promise {
       val depth: Short)
     extends K[A]
   {
-    def apply(result: Try[A]) {
+    def apply(result: Try[A]): Unit = {
       val current = Local.save()
       Local.restore(saved)
       try k(result)
@@ -111,7 +111,7 @@ object Promise {
       )
     }
 
-    def apply(result: Try[A]) {
+    def apply(result: Try[A]): Unit = {
       val current = Local.save()
       Local.restore(saved)
       try k(result)
@@ -256,15 +256,15 @@ object Promise {
     def isReady(implicit permit: Awaitable.CanAwait): Boolean =
       parent.isReady
 
-    def poll = parent.poll
+    def poll: Option[Try[A]] = parent.poll
 
-    override def isDefined = parent.isDefined
+    override def isDefined: Boolean = parent.isDefined
 
-    def raise(interrupt: Throwable) = parent.raise(interrupt)
+    def raise(interrupt: Throwable): Unit = parent.raise(interrupt)
 
-    protected[util] def continue(k: K[A]) = parent.continue(k)
+    protected[util] def continue(k: K[A]): Unit = parent.continue(k)
 
-    override def toString = "Future@%s(depth=%s,parent=%s)".format(hashCode, depth, parent)
+    override def toString: String = s"Future@$hashCode(depth=$depth,parent=$parent)"
   }
 
   // PUBLIC API
@@ -654,7 +654,16 @@ class Promise[A]
       case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
         val condition = new java.util.concurrent.CountDownLatch(1)
         respond { _ => condition.countDown() }
+
+        // we need to `flush` pending tasks to give ourselves a chance
+        // to complete. As a succinct example, this hangs without the `flush`:
+        //
+        //   Future.Done.map { _ =>
+        //     Await.result(Future.Done.map(Predef.identity))
+        //   }
+        //
         Scheduler.flush()
+
         if (condition.await(timeout.inNanoseconds, TimeUnit.NANOSECONDS)) this
         else throw new TimeoutException(timeout.toString)
     }
@@ -765,7 +774,7 @@ class Promise[A]
   def update(result: Try[A]): Unit = {
     updateIfEmpty(result) || {
       val current = Await.result(liftToTry)
-      throw new ImmutableResult(s"Result set multiple times. Value='$current', New='$result'")
+      throw ImmutableResult(s"Result set multiple times. Value='$current', New='$result'")
     }
   }
 
@@ -810,7 +819,7 @@ class Promise[A]
     state match {
       case v: Try[A] /* Done */ =>
         Scheduler.submit(new Runnable {
-          def run() {
+          def run(): Unit = {
             k(v)
           }
         })
