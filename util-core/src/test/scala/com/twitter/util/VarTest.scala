@@ -430,7 +430,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
 
+  if (!sys.props.contains("SKIP_FLAKY"))
   test("Var: diff/patch") {
+    // Note: repeated runnings of this test appear to eventually hang
     forAll(arbitrary[Seq[Set[Int]]].suchThat(_.nonEmpty)) { sets =>
       val v = Var(sets.head)
       val w = new AtomicReference[Set[Int]]
