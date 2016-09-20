@@ -603,7 +603,7 @@ class Promise[A]
         if (h ne k) res = h :: res
       }
 
-      res.reverse
+      res
     }
 
     state match {
