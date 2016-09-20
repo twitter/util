@@ -37,9 +37,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
     var buf = mutable.Buffer[String]()
     s.changes.register(Witness({ (v: String) => buf += v; () }))
-    assert(buf.toSeq == Seq("8923"))
+    assert(buf == Seq("8923"))
     v() = 111
-    assert(buf.toSeq == Seq("8923", "111"))
+    assert(buf == Seq("8923", "111"))
   }
 
   test("depth ordering") {
@@ -101,7 +101,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
     // Now maintain a subscription.
     var cur = Var.sample(s)
-    val sub = s.changes.register(Witness({ cur = (_: Int) }))
+    val sub = s.changes.register(Witness({ cur = _: Int }))
     assert(cur == -1)
 
     assert(us forall (_.observerCount == 1))
@@ -131,7 +131,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("Var(init)") {
     val v = Var(123)
     var cur = Var.sample(v)
-    val sub = v.changes.register(Witness({ cur = (_: Int) }))
+    val sub = v.changes.register(Witness({ cur = _: Int }))
     v() = 333
     assert(cur == 333)
     v() = 111
@@ -149,8 +149,8 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val b = v map(_*3)
 
     var x, y = 0
-    a.changes.register(Witness({ x = (_: Int) }))
-    b.changes.register(Witness({ y = (_: Int) }))
+    a.changes.register(Witness({ x = _: Int }))
+    b.changes.register(Witness({ y = _: Int }))
 
     assert(x == 4)
     assert(y == 6)
@@ -171,13 +171,13 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
     val v = Var.async(123) { v =>
       called += 1
-      x.changes.register(Witness({ v() = (_: Int) }))
+      x.changes.register(Witness({ v() = _: Int }))
       c
     }
 
     assert(called == 0)
     var vv: Int = 0
-    val o = v.changes.register(Witness({ vv = (_: Int) }))
+    val o = v.changes.register(Witness({ vv = _: Int }))
     assert(called == 1)
     assert(vv == 333)
     assert(closed == Time.Zero)
@@ -346,7 +346,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
   }
 
-  def testPropagation(typ: String, newVar: Int => Var[Int]) {
+  def testPropagation(typ: String, newVar: Int => Var[Int]): Unit = {
     test("Don't propagate up-to-date "+typ+"-valued Var observations") {
       val v = Var(123)
       val w = newVar(333)
@@ -388,7 +388,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("Race-a-Var") {
     class Counter(n: Int, u: Updatable[Int]) extends Thread {
-      override def run() {
+      override def run(): Unit = {
         var i = 1
         while (i < n) {
           u() = i
@@ -429,10 +429,12 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(ref.get == Seq((0, 0), (1, 1)))
   }
 
-
-  if (!sys.props.contains("SKIP_FLAKY"))
   test("Var: diff/patch") {
-    // Note: repeated runnings of this test appear to eventually hang
+    // in order to avoid extremely long runtimes, we limit the max size
+    // of the generated Seqs and Sets. A limit of 50 keeps runtime below
+    // 1 second on my crufty old laptop.
+    implicit val generatorDrivenConfig = PropertyCheckConfig(maxSize = 50)
+
     forAll(arbitrary[Seq[Set[Int]]].suchThat(_.nonEmpty)) { sets =>
       val v = Var(sets.head)
       val w = new AtomicReference[Set[Int]]
