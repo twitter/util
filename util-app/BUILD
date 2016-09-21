@@ -1,6 +1,7 @@
 target(name='util-app',
   dependencies=[
-    'util/util-app/src/main/scala'
+    'util/util-app/src/main/scala',
+    'util/util-app/src/main/java'
   ]
 )
 
