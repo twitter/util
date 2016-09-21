@@ -23,14 +23,14 @@ trait Reader {
   /**
    * Discard this reader: its output is no longer required.
    */
-  def discard()
+  def discard(): Unit
 }
 
 object Reader {
 
-  val Null = new Reader {
-    def read(n: Int) = Future.None
-    def discard() = ()
+  val Null: Reader = new Reader {
+    def read(n: Int): Future[Option[Buf]] = Future.None
+    def discard(): Unit = ()
   }
 
   /**
@@ -38,7 +38,7 @@ object Reader {
    */
   def readAll(r: Reader): Future[Buf] = {
     def loop(left: Buf): Future[Buf] =
-      r.read(Int.MaxValue) flatMap {
+      r.read(Int.MaxValue).flatMap {
         case Some(right) => loop(left concat right)
         case none => Future.value(left)
       }
@@ -258,20 +258,28 @@ object Reader {
   }
 
   /**
-   * Create a new Reader for a File
+   * Create a new [[Reader]] for a `File`.
    *
-   * @see Readers.fromFile for a Java API
+   * The resources held by the returned [[Reader]] are released
+   * on reading of EOF and [[Reader.discard()]].
+   *
+   * @see `Readers.fromFile` for a Java API
    */
   @throws(classOf[FileNotFoundException])
   @throws(classOf[SecurityException])
-  def fromFile(f: File): Reader = fromStream(new FileInputStream(f))
+  def fromFile(f: File): Reader =
+    fromStream(new FileInputStream(f))
 
   /**
-   * Wrap InputStream s in with a Reader
+   * Wrap `InputStream` with a [[Reader]].
    *
-   * @see Readers.fromStream for a Java API
+   * Note that the given `InputStream` will be closed
+   * on reading of EOF and [[Reader.discard()]].
+   *
+   * @see `Readers.fromStream` for a Java API
    */
-  def fromStream(s: InputStream): Reader = InputStreamReader(s)
+  def fromStream(s: InputStream): Reader =
+    InputStreamReader(s)
 
   /**
    * Convenient abstraction to read from a stream of Readers as if it were a
@@ -279,13 +287,13 @@ object Reader {
    */
   def concat(readers: AsyncStream[Reader]): Reader = {
     val target = Reader.writable()
-    val f = copyMany(readers, target) respond {
+    val f = copyMany(readers, target).respond {
       case Throw(exc) => target.fail(exc)
       case _ => target.close()
     }
     new Reader {
-      def read(n: Int) = target.read(n)
-      def discard() {
+      def read(n: Int): Future[Option[Buf]] = target.read(n)
+      def discard(): Unit = {
         // We have to do this so that when the the target is discarded we can
         // interrupt the read operation. Consider the following:
         //
@@ -336,15 +344,15 @@ object Reader {
    */
   def copy(r: Reader, w: Writer, n: Int): Future[Unit] = {
     def loop(): Future[Unit] =
-      r.read(n) flatMap {
+      r.read(n).flatMap {
         case None => Future.Done
         case Some(buf) => w.write(buf) before loop()
       }
     val p = new Promise[Unit]
     // We have to do this because discarding the writer doesn't interrupt read
     // operations, it only fails the next write operation.
-    loop() proxyTo p
-    p setInterruptHandler { case exc => r.discard() }
+    loop().proxyTo(p)
+    p.setInterruptHandler { case exc => r.discard() }
     p
   }
 
@@ -378,7 +386,7 @@ trait Writer {
    * Indicate that the producer of the bytestream has
    * failed. No further writes are allowed.
    */
-  def fail(cause: Throwable)
+  def fail(cause: Throwable): Unit
 }
 
 /**
@@ -393,7 +401,7 @@ object Writer {
    */
   trait ClosableWriter extends Writer with Closable
 
-  val BufferSize = 4096
+  val BufferSize: Int = 4096
 
   /**
    * Construct a [[ClosableWriter]] from a given OutputStream.

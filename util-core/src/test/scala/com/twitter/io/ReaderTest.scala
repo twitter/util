@@ -1,16 +1,23 @@
 package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
+import com.twitter.conversions.time._
 import com.twitter.io.Reader.ReaderDiscarded
-import com.twitter.util.{Return, Await, Future, Promise}
-import java.io.{ByteArrayOutputStream, OutputStream}
+import com.twitter.util.{Await, Future, Promise, Return}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, OutputStream}
 import org.junit.runner.RunWith
+import org.mockito.Mockito._
+import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FunSuite, Matchers}
 
 @RunWith(classOf[JUnitRunner])
-class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matchers {
+class ReaderTest extends FunSuite
+  with GeneratorDrivenPropertyChecks
+  with Matchers
+  with Eventually
+  with IntegrationPatience {
 
   def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
@@ -23,7 +30,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
       a.toSeq
   }
 
-  def assertRead(r: Reader, i: Int, j: Int) {
+  def assertRead(r: Reader, i: Int, j: Int): Unit = {
     val n = j-i
     val f = r.read(n)
     assertRead(f, i, j)
@@ -37,33 +44,33 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     assert(toSeq(b) == Seq.range(i, j))
   }
 
-  def assertWrite(w: Writer, i: Int, j: Int) {
+  def assertWrite(w: Writer, i: Int, j: Int): Unit = {
     val buf = Buf.ByteArray.Owned(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
     assert(Await.result(f.liftToTry) == Return(()))
   }
 
-  def assertWriteEmpty(w: Writer) {
+  def assertWriteEmpty(w: Writer): Unit = {
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
     assert(Await.result(f.liftToTry) == Return(()))
   }
 
-  def assertDiscard(r: Reader) {
+  def assertDiscard(r: Reader): Unit = {
     val f = r.read(1)
     assert(!f.isDefined)
     r.discard()
     intercept[Reader.ReaderDiscarded] { Await.result(f) }
   }
 
-  def assertReadWhileReading(r: Reader) {
+  def assertReadWhileReading(r: Reader): Unit = {
     val f = r.read(1)
     intercept[IllegalStateException] { Await.result(r.read(1)) }
     assert(!f.isDefined)
   }
 
-  def assertFailed(r: Reader, p: Promise[Option[Buf]]) {
+  def assertFailed(r: Reader, p: Promise[Option[Buf]]): Unit = {
     val f = r.read(1)
     assert(!f.isDefined)
     p.setException(new Exception)
@@ -138,7 +145,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val closep = new Promise[Unit]
     val writep = new Promise[Array[Byte]]
     val os = new OutputStream {
-      def write(b: Int) { }
+      def write(b: Int): Unit = { }
       override def write(b: Array[Byte], n: Int, m: Int) { writep.setValue(b) }
       override def close() { closep.setDone() }
     }
@@ -513,7 +520,7 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
   test("Reader.concat - lazy tail") {
     val head = new Reader {
       def read(n: Int) = Future.exception(new Exception)
-      def discard() { }
+      def discard(): Unit = { }
     }
     val p = new Promise[Unit]
     def tail: AsyncStream[Reader] = {
@@ -524,5 +531,22 @@ class ReaderTest extends FunSuite with GeneratorDrivenPropertyChecks with Matche
     val buf = Reader.readAll(combined)
     intercept[Exception] { Await.result(buf) }
     assert(!p.isDefined)
+  }
+
+  test("Reader.fromStream closes resources on EOF read") {
+    val in = spy(new ByteArrayInputStream(arr(0, 10)))
+    val r = Reader.fromStream(in)
+    val f = Reader.readAll(r)
+    assert(Await.result(f, 5.seconds) == buf(0, 10))
+    verify(in, times(1)).close()
+  }
+
+  test("Reader.fromStream closes resources on discard") {
+    val in = spy(new ByteArrayInputStream(arr(0, 10)))
+    val r = Reader.fromStream(in)
+    r.discard()
+    eventually {
+      verify(in, times(1)).close()
+    }
   }
 }

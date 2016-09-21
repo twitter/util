@@ -6,8 +6,17 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
   * util-logging: Allow users to override `c.t.util.logging.Logger` installation,
     making it easier to work with SLF4J bridges. ``RB_ID=870684``
+
+Bug Fixes:
+
+  * util-core: `c.t.io.InputStreamReader` and `Readers` created by
+    `c.t.io.Reader.fromFile` and `fromStream` now close the underlying
+    `InputStream` on reading of EOF and on calls to `Reader.discard`.
+    ``RB_ID=873319``
 
 6.37.0  2016-09-07
 
@@ -15,7 +24,6 @@ New Features:
 
   * util-app: Introduce `c.t.app.Flag.letClear` allowing flags to be unset.
     ``RB_ID=868177``
-
 
 6.36.0  2016-08-25
 
