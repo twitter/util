@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import java.nio.CharBuffer
-import java.nio.charset.Charset
+import java.nio.charset.{Charset, StandardCharsets => JChar}
 
 /**
  * Buf represents a fixed, immutable byte buffer. Buffers may be
@@ -512,50 +512,56 @@ object Buf {
 
   /**
    * Create and deconstruct Utf-8 encoded buffers.
+   *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object Utf8 extends StringCoder(Charsets.Utf8)
+  object Utf8 extends StringCoder(JChar.UTF_8)
 
   /**
    * Create and deconstruct 16-bit UTF buffers.
+   *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object Utf16 extends StringCoder(Charsets.Utf16)
+  object Utf16 extends StringCoder(JChar.UTF_16)
 
   /**
    * Create and deconstruct buffers encoded by the 16-bit UTF charset
    * with big-endian byte order.
+   *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object Utf16BE extends StringCoder(Charsets.Utf16BE)
+  object Utf16BE extends StringCoder(JChar.UTF_16BE)
 
   /**
    * Create and deconstruct buffers encoded by the 16-bit UTF charset
    * with little-endian byte order.
+   *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object Utf16LE extends StringCoder(Charsets.Utf16LE)
+  object Utf16LE extends StringCoder(JChar.UTF_16LE)
 
   /**
    * Create and deconstruct buffers encoded by the
    * ISO Latin Alphabet No. 1 charset.
+   *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object Iso8859_1 extends StringCoder(Charsets.Iso8859_1)
+  object Iso8859_1 extends StringCoder(JChar.ISO_8859_1)
 
   /**
    * Create and deconstruct buffers encoded by the 7-bit ASCII,
    * also known as ISO646-US or the Basic Latin block of the
    * Unicode character set.
+   *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
    */
-  object UsAscii extends StringCoder(Charsets.UsAscii)
+  object UsAscii extends StringCoder(JChar.US_ASCII)
 
   /**
    * a StringCoder for a given [[java.nio.charset.Charset]] provides an

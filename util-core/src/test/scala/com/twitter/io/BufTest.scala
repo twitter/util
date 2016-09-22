@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import java.nio.CharBuffer
+import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
 import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen, Prop}
@@ -17,12 +18,12 @@ class BufTest extends FunSuite
   with AssertionsForJUnit {
 
   val AllCharsets = Seq(
-    Charsets.Iso8859_1,
-    Charsets.UsAscii,
-    Charsets.Utf8,
-    Charsets.Utf16,
-    Charsets.Utf16BE,
-    Charsets.Utf16LE
+    JChar.ISO_8859_1,
+    JChar.US_ASCII,
+    JChar.UTF_8,
+    JChar.UTF_16,
+    JChar.UTF_16BE,
+    JChar.UTF_16LE
   )
 
   test("Buf.ByteArray.slice") {
