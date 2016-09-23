@@ -3,13 +3,8 @@ package com.twitter.app
 import com.twitter.util._
 import com.twitter.util.registry.GlobalRegistry
 import java.io.File
-import java.lang.{
-  Boolean => JBoolean,
-  Double  => JDouble,
-  Float   => JFloat,
-  Integer => JInteger,
-  Long    => JLong
-}
+import java.lang.reflect.{Method, Modifier}
+import java.lang.{Boolean => JBoolean, Double => JDouble, Float => JFloat, Integer => JInteger, Long => JLong}
 import java.net.InetSocketAddress
 import java.util.{List => JList, Map => JMap, Set => JSet}
 import java.util.concurrent.atomic.AtomicBoolean
@@ -84,20 +79,20 @@ object Flaggable {
    * @param f Function that parses a string into an object of type `T`
    */
   def mandatory[T](f: String => T): Flaggable[T] = new Flaggable[T] {
-    def parse(s: String) = f(s)
+    def parse(s: String): T = f(s)
   }
 
   implicit val ofString: Flaggable[String] = mandatory(identity)
 
   // Pairs of Flaggable conversions for types with corresponding Java boxed types.
   implicit val ofBoolean: Flaggable[Boolean] = new Flaggable[Boolean] {
-    override def default = Some(true)
-    def parse(s: String) = s.toBoolean
+    override def default: Option[Boolean] = Some(true)
+    def parse(s: String): Boolean = s.toBoolean
   }
 
   implicit val ofJavaBoolean: Flaggable[JBoolean] = new Flaggable[JBoolean] {
-    override def default = Some(JBoolean.TRUE)
-    def parse(s: String) = JBoolean.valueOf(s.toBoolean)
+    override def default: Option[JBoolean] = Some(JBoolean.TRUE)
+    def parse(s: String): JBoolean = JBoolean.valueOf(s.toBoolean)
   }
 
   implicit val ofInt: Flaggable[Int] = mandatory(_.toInt)
@@ -125,7 +120,7 @@ object Flaggable {
 
   implicit val ofInetSocketAddress: Flaggable[InetSocketAddress] =
     new Flaggable[InetSocketAddress] {
-      def parse(v: String) =  v.split(":") match {
+      def parse(v: String): InetSocketAddress = v.split(":") match {
         case Array("", p) =>
           new InetSocketAddress(p.toInt)
         case Array(h, p) =>
@@ -134,7 +129,7 @@ object Flaggable {
           throw new IllegalArgumentException
       }
 
-      override def show(addr: InetSocketAddress) =
+      override def show(addr: InetSocketAddress): String =
         "%s:%d".format(
           Option(addr.getAddress) match {
             case Some(a) if a.isAnyLocalAddress => ""
@@ -145,7 +140,7 @@ object Flaggable {
 
   implicit val ofFile: Flaggable[File] = new Flaggable[File] {
     override def parse(v: String): File = new File(v)
-    override def show(file: File) = file.toString
+    override def show(file: File): String = file.toString
   }
 
   implicit def ofTuple[T: Flaggable, U: Flaggable]: Flaggable[(T, U)] = new Flaggable[(T, U)] {
@@ -160,7 +155,7 @@ object Flaggable {
       case _ => throw new IllegalArgumentException("not a 't,u'")
     }
 
-    override def show(tup: (T, U)) = {
+    override def show(tup: (T, U)): String = {
       val (t, u) = tup
       tflag.show(t)+","+uflag.show(u)
     }
@@ -170,14 +165,14 @@ object Flaggable {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)
     override def parse(v: String): Set[T] = v.split(",").map(flag.parse(_)).toSet
-    override def show(set: Set[T]) = set map flag.show mkString ","
+    override def show(set: Set[T]): String = set.map(flag.show).mkString(",")
   }
 
   private[app] class SeqFlaggable[T: Flaggable] extends Flaggable[Seq[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)
-    def parse(v: String): Seq[T] = v.split(",") map flag.parse
-    override def show(seq: Seq[T]) = seq map flag.show mkString ","
+    def parse(v: String): Seq[T] = v.split(",").map(flag.parse)
+    override def show(seq: Seq[T]): String = seq.map(flag.show).mkString(",")
   }
 
   private[app] class MapFlaggable[K: Flaggable, V: Flaggable] extends Flaggable[Map[K, V]] {
@@ -204,7 +199,7 @@ object Flaggable {
       }.toMap
     }
 
-    override def show(out: Map[K, V]) = {
+    override def show(out: Map[K, V]): String = {
       out.toSeq.map { case (k, v) => k.toString + "=" + v.toString }.mkString(",")
     }
   }
@@ -216,13 +211,13 @@ object Flaggable {
   implicit def ofJavaSet[T: Flaggable]: Flaggable[JSet[T]] = new Flaggable[JSet[T]] {
     val setFlaggable = new SetFlaggable[T]
     override def parse(v: String): JSet[T] = setFlaggable.parse(v).asJava
-    override def show(set: JSet[T]) = setFlaggable.show(set.asScala.toSet)
+    override def show(set: JSet[T]): String = setFlaggable.show(set.asScala.toSet)
   }
 
   implicit def ofJavaList[T: Flaggable]: Flaggable[JList[T]] = new Flaggable[JList[T]] {
     val seqFlaggable = new SeqFlaggable[T]
     override def parse(v: String): JList[T] = seqFlaggable.parse(v).asJava
-    override def show(list: JList[T]) = seqFlaggable.show(list.asScala)
+    override def show(list: JList[T]): String = seqFlaggable.show(list.asScala)
   }
 
   implicit def ofJavaMap[K: Flaggable, V: Flaggable]: Flaggable[JMap[K, V]] = {
@@ -230,7 +225,7 @@ object Flaggable {
 
     new Flaggable[JMap[K, V]] {
       def parse(in: String): JMap[K, V] = mapFlaggable.parse(in).asJava
-      override def show(out: JMap[K, V]) = mapFlaggable.show(out.asScala.toMap)
+      override def show(out: JMap[K, V]): String = mapFlaggable.show(out.asScala.toMap)
     }
   }
 }
@@ -865,8 +860,11 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
  * The set of defined GlobalFlags can be enumerated (via `GlobalFlag.getAll)` by
  * the application.
  *
+ * A [[GlobalFlag]] must be declared as an `object` (see below for Java):
  * {{{
- * object MyFlag extends GlobalFlag("my", "default value", "this is my global flag")
+ * import com.twitter.app.GlobalFlag
+ *
+ * object myFlag extends GlobalFlag[String]("default value", "this is my global flag")
  * }}}
  *
  * All such global flag declarations in a given classpath are visible to and
@@ -878,34 +876,55 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
  * {{{
  * package com.twitter.server
  *
- * object port extends GlobalFlag(8080, "the TCP port to which we bind")
+ * import com.twitter.app.GlobalFlag
+ *
+ * object port extends GlobalFlag[Int](8080, "the TCP port to which we bind")
  * }}}
  *
- * is settable by the command-line flag `-com.twitter.server.port`.
+ * is settable by the command-line flag `-com.twitter.server.port=8080`.
  *
  * Global flags may also be set by Java system properties with keys
  * named in the same way. However, values supplied by flags override
  * those supplied by system properties.
+ *
+ * @define java_declaration
+ *
+ * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
  */
 @GlobalFlagVisible
 class GlobalFlag[T] private[app](
-  defaultOrUsage: Either[() => T, String],
-  help: String
-)(implicit _f: Flaggable[T]) extends Flag[T](null, help, defaultOrUsage, false) {
+    defaultOrUsage: Either[() => T, String],
+    help: String)
+    (implicit _f: Flaggable[T])
+  extends Flag[T](null, help, defaultOrUsage, false) {
 
   override protected[this] def parsingDone: Boolean = true
+
   private[this] lazy val propertyValue =
-    Option(System.getProperty(name)) flatMap { p =>
+    Option(System.getProperty(name)).flatMap { p =>
       try Some(flaggable.parse(p)) catch {
         case NonFatal(exc) =>
-          java.util.logging.Logger.getLogger("").log(
+          GlobalFlag.log.log(
             java.util.logging.Level.SEVERE,
-            "Failed to parse system property "+name+" as flag", exc)
+            "Failed to parse system property "+name+" as flag",
+            exc)
           None
       }
     }
 
+  /**
+   * $java_declaration
+   *
+   * @param default the default value used if the value is not specified by the user.
+   * @param help documentation regarding usage of this [[Flag]].
+   */
   def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
+
+  /**
+   * $java_declaration
+   *
+   * @param help documentation regarding usage of this [[Flag]].
+   */
   def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
 
   // Unfortunately, `getClass` in the the extends... above
@@ -917,23 +936,53 @@ class GlobalFlag[T] private[app](
     case _ => propertyValue
   }
 
+  /**
+   * Used by [[Flags.parseArgs]] to initialize [[Flag]] values.
+   *
+   * @note Called via reflection assuming it will be a `static`
+   *       method on a singleton `object`. This causes problems
+   *       for Java developers who want to create a [[GlobalFlag]]
+   *       as there is no good means for them to have it be a
+   *       `static` method. Thus, Java devs must add a method
+   *       `public static Flag<?> globalFlagInstance()` which
+   *       returns the singleton instance of the flag.
+   *       See [[JavaGlobalFlag]] for more details.
+   */
   def getGlobalFlag: Flag[_] = this
 }
 
-private object GlobalFlag {
-  def get(f: String): Option[Flag[_]] = try {
-    val cls = Class.forName(f)
-    val m = cls.getMethod("getGlobalFlag")
-    Some(m.invoke(null).asInstanceOf[Flag[_]])
-  } catch {
-    case _: ClassNotFoundException
-      | _: NoSuchMethodException
-      | _: IllegalArgumentException => None
+object GlobalFlag {
+
+  private[app] def get(f: String): Option[Flag[_]] = {
+    def validMethod(m: Method): Boolean =
+      m != null &&
+        Modifier.isStatic(m.getModifiers) &&
+        m.getReturnType == classOf[Flag[_]] &&
+        m.getParameterCount == 0
+
+    def tryMethod(clsName: String, methodName: String): Option[Flag[_]] =
+      try {
+        val cls = Class.forName(clsName)
+        val m = cls.getMethod(methodName)
+        if (validMethod(m))
+          Some(m.invoke(null).asInstanceOf[Flag[_]])
+        else
+          None
+      } catch {
+        case _: ClassNotFoundException
+          | _: NoSuchMethodException
+          | _: IllegalArgumentException => None
+      }
+
+    tryMethod(f, "getGlobalFlag").orElse {
+      // fallback for GlobalFlags declared in Java
+      tryMethod(f + "$", "globalFlagInstance")
+    }
   }
 
-  private[this] val log = java.util.logging.Logger.getLogger("")
+  private val log = java.util.logging.Logger.getLogger("")
 
-  def getAllOrEmptyArray(loader: ClassLoader): Seq[Flag[_]] = {
+  private[app] def getAllOrEmptyArray(loader: ClassLoader): Seq[Flag[_]] = {
     try {
       getAll(loader)
     } catch {
@@ -947,7 +996,7 @@ private object GlobalFlag {
     }
   }
 
-  def getAll(loader: ClassLoader): Seq[Flag[_]] = {
+  private[app] def getAll(loader: ClassLoader): Seq[Flag[_]] = {
 
     // Since Scala object class names end with $, we search for them.
     // One thing we know for sure, Scala package objects can never be flags

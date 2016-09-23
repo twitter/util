@@ -26,14 +26,14 @@ public class JavaFlagTest {
   static class Named {
     String name;
 
-    public static Flaggable<Named> ofNamed =
+    static Flaggable<Named> ofNamed =
       Flaggable.mandatory(new Function<String, Named>() {
         @Override public Named apply(String n) {
           return new Named(n);
         }
       });
 
-    public Named(String name) {
+    Named(String name) {
       this.name = name;
     }
   }
@@ -61,14 +61,14 @@ public class JavaFlagTest {
 
     Flag<List<Integer>> listFlag = flag.create(
         "list",
-        new ArrayList<Integer>(),
+        new ArrayList<>(),
         "",
         Flaggable.ofJavaList(Flaggable.ofJavaInteger())
     );
 
     Flag<Map<Integer, String>> mapFlag = flag.create(
         "map",
-        new HashMap<Integer, String>(),
+        new HashMap<>(),
         "",
         Flaggable.ofJavaMap(Flaggable.ofJavaInteger(), Flaggable.ofString())
     );
@@ -96,4 +96,5 @@ public class JavaFlagTest {
       assertEquals("For input string: \"9876543210L\"", expected.getMessage());
     }
   }
+
 }

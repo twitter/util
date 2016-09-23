@@ -8,6 +8,9 @@ Next Version
 
 New Features:
 
+  * util-app: Java developers can now declare instances of `GlobalFlag`
+    from Java. See `c.t.app.JavaGlobalFlag` for details. ``RB_ID=874073``
+
   * util-logging: Allow users to override `c.t.util.logging.Logger` installation,
     making it easier to work with SLF4J bridges. ``RB_ID=870684``
 
