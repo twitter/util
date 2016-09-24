@@ -13,7 +13,7 @@ object StreamIO {
     inputStream: InputStream,
     outputStream: OutputStream,
     bufferSize: Int = 1024
-  ) {
+  ): Unit = {
     val buffer = new Array[Byte](bufferSize)
     copy(inputStream, outputStream, buffer)
   }
@@ -33,7 +33,7 @@ object StreamIO {
     inputStream: InputStream,
     outputStream: OutputStream,
     buffer: Array[Byte]
-  ) {
+  ): Unit = {
     inputStream.read(buffer, 0, buffer.length) match {
       case -1 => ()
       case n =>
