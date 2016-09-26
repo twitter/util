@@ -9,19 +9,13 @@ object StreamIO {
    * Copy an InputStream to an OutputStream in chunks of the given
    * buffer size (default = 1KB).
    */
-  @tailrec
   final def copy(
-    inputStream:  InputStream,
+    inputStream: InputStream,
     outputStream: OutputStream,
-    bufferSize:   Int = 1024
-  ) {
-    val buf = new Array[Byte](bufferSize)
-    inputStream.read(buf, 0, buf.length) match {
-      case -1 => ()
-      case n =>
-        outputStream.write(buf, 0, n)
-        copy(inputStream, outputStream, bufferSize)
-    }
+    bufferSize: Int = 1024
+  ): Unit = {
+    val buffer = new Array[Byte](bufferSize)
+    copy(inputStream, outputStream, buffer)
   }
 
   /**
@@ -32,5 +26,19 @@ object StreamIO {
     val bos = new java.io.ByteArrayOutputStream
     copy(inputStream, bos)
     bos
+  }
+
+  @tailrec
+  final private def copy(
+    inputStream: InputStream,
+    outputStream: OutputStream,
+    buffer: Array[Byte]
+  ): Unit = {
+    inputStream.read(buffer, 0, buffer.length) match {
+      case -1 => ()
+      case n =>
+        outputStream.write(buffer, 0, n)
+        copy(inputStream, outputStream, buffer)
+    }
   }
 }
