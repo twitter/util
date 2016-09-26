@@ -1,0 +1,181 @@
+package com.twitter.app
+
+import com.twitter.util.NonFatal
+import java.lang.reflect.{Method, Modifier}
+import scala.collection.mutable.ArrayBuffer
+
+/**
+ * Subclasses of GlobalFlag (that are defined in libraries) are "global" in the
+ * sense that they are accessible by any application that depends on that library.
+ * Regardless of where in a library a GlobalFlag is defined, a value for it can
+ * be passed as a command-line flag by any binary that includes the library.
+ * The set of defined GlobalFlags can be enumerated (via `GlobalFlag.getAll)` by
+ * the application.
+ *
+ * A [[GlobalFlag]] must be declared as an `object` (see below for Java):
+ * {{{
+ * import com.twitter.app.GlobalFlag
+ *
+ * object myFlag extends GlobalFlag[String]("default value", "this is my global flag")
+ * }}}
+ *
+ * All such global flag declarations in a given classpath are visible to and
+ * used by [[com.twitter.app.App]].
+ *
+ * A flag's name (as set on the command line) is its fully-qualified classname.
+ * For example, the flag
+ *
+ * {{{
+ * package com.twitter.server
+ *
+ * import com.twitter.app.GlobalFlag
+ *
+ * object port extends GlobalFlag[Int](8080, "the TCP port to which we bind")
+ * }}}
+ *
+ * is settable by the command-line flag `-com.twitter.server.port=8080`.
+ *
+ * Global flags may also be set by Java system properties with keys
+ * named in the same way. However, values supplied by flags override
+ * those supplied by system properties.
+ *
+ * @define java_declaration
+ *
+ * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
+ */
+@GlobalFlagVisible
+class GlobalFlag[T] private[app](
+    defaultOrUsage: Either[() => T, String],
+    help: String)
+    (implicit _f: Flaggable[T])
+  extends Flag[T](null, help, defaultOrUsage, false) {
+
+  override protected[this] def parsingDone: Boolean = true
+
+  private[this] lazy val propertyValue =
+    Option(System.getProperty(name)).flatMap { p =>
+      try Some(flaggable.parse(p)) catch {
+        case NonFatal(exc) =>
+          GlobalFlag.log.log(
+            java.util.logging.Level.SEVERE,
+            "Failed to parse system property "+name+" as flag",
+            exc)
+          None
+      }
+    }
+
+  /**
+   * $java_declaration
+   *
+   * @param default the default value used if the value is not specified by the user.
+   * @param help documentation regarding usage of this [[Flag]].
+   */
+  def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
+
+  /**
+   * $java_declaration
+   *
+   * @param help documentation regarding usage of this [[Flag]].
+   */
+  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
+
+  // Unfortunately, `getClass` in the the extends... above
+  // doesn't give the right answer.
+  override val name: String = getClass.getName.stripSuffix("$")
+
+  protected override def getValue: Option[T] = super.getValue match {
+    case v@Some(_) => v
+    case _ => propertyValue
+  }
+
+  /**
+   * Used by [[Flags.parseArgs]] to initialize [[Flag]] values.
+   *
+   * @note Called via reflection assuming it will be a `static`
+   *       method on a singleton `object`. This causes problems
+   *       for Java developers who want to create a [[GlobalFlag]]
+   *       as there is no good means for them to have it be a
+   *       `static` method. Thus, Java devs must add a method
+   *       `public static Flag<?> globalFlagInstance()` which
+   *       returns the singleton instance of the flag.
+   *       See [[JavaGlobalFlag]] for more details.
+   */
+  def getGlobalFlag: Flag[_] = this
+}
+
+object GlobalFlag {
+
+  private[app] def get(f: String): Option[Flag[_]] = {
+    def validMethod(m: Method): Boolean =
+      m != null &&
+        Modifier.isStatic(m.getModifiers) &&
+        m.getReturnType == classOf[Flag[_]] &&
+        m.getParameterCount == 0
+
+    def tryMethod(clsName: String, methodName: String): Option[Flag[_]] =
+      try {
+        val cls = Class.forName(clsName)
+        val m = cls.getMethod(methodName)
+        if (validMethod(m))
+          Some(m.invoke(null).asInstanceOf[Flag[_]])
+        else
+          None
+      } catch {
+        case _: ClassNotFoundException
+          | _: NoSuchMethodException
+          | _: IllegalArgumentException => None
+      }
+
+    tryMethod(f, "getGlobalFlag").orElse {
+      // fallback for GlobalFlags declared in Java
+      tryMethod(f + "$", "globalFlagInstance")
+    }
+  }
+
+  private val log = java.util.logging.Logger.getLogger("")
+
+  private[app] def getAllOrEmptyArray(loader: ClassLoader): Seq[Flag[_]] = {
+    try {
+      getAll(loader)
+    } catch {
+      //NOTE: We catch Throwable as ExceptionInInitializerError and any errors really so that
+      //we don't hide the real issue that a developer just added an unparseable arg.
+      case e: Throwable =>
+        log.log(java.util.logging.Level.SEVERE,
+          "failure reading in flags",
+          e)
+        new ArrayBuffer[Flag[_]]
+    }
+  }
+
+  private[app] def getAll(loader: ClassLoader): Seq[Flag[_]] = {
+
+    // Since Scala object class names end with $, we search for them.
+    // One thing we know for sure, Scala package objects can never be flags
+    // so we filter those out.
+    def couldBeFlag(className: String): Boolean =
+      className.endsWith("$") && !className.endsWith("package$")
+
+    val markerClass = classOf[GlobalFlagVisible]
+    val flags = new ArrayBuffer[Flag[_]]
+
+    // Search for Scala objects annotated with GlobalFlagVisible:
+    val cp = new FlagClassPath()
+    for (info <- cp.browse(loader) if couldBeFlag(info.className)) {
+      try {
+        val cls: Class[_] = Class.forName(info.className, false, loader)
+        if (cls.isAnnotationPresent(markerClass)) {
+          get(info.className.dropRight(1)) match {
+            case Some(f) => flags += f
+            case None => println("failed for " + info.className)
+          }
+        }
+      } catch {
+        case _: IllegalStateException
+             | _: NoClassDefFoundError
+             | _: ClassNotFoundException =>
+      }
+    }
+    flags
+  }
+}
