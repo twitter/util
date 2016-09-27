@@ -44,7 +44,7 @@ import scala.collection.mutable.ArrayBuffer
  * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
  */
 @GlobalFlagVisible
-class GlobalFlag[T] private[app](
+abstract class GlobalFlag[T] private[app](
     defaultOrUsage: Either[() => T, String],
     help: String)
     (implicit _f: Flaggable[T])
@@ -70,17 +70,25 @@ class GlobalFlag[T] private[app](
    * @param default the default value used if the value is not specified by the user.
    * @param help documentation regarding usage of this [[Flag]].
    */
-  def this(default: T, help: String)(implicit _f: Flaggable[T]) = this(Left(() => default), help)
+  def this(default: T, help: String)(implicit _f: Flaggable[T]) =
+    this(Left(() => default), help)
 
   /**
    * $java_declaration
    *
    * @param help documentation regarding usage of this [[Flag]].
    */
-  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) = this(Right(m.toString), help)
+  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) =
+    this(Right(m.toString), help)
 
-  // Unfortunately, `getClass` in the the extends... above
-  // doesn't give the right answer.
+  /**
+   * The "name", or "id", of this [[Flag]].
+   *
+   * While not marked `final`, if a subclass overrides this value, then
+   * developers '''must''' set that flag via System properties as otherwise it
+   * will not be recognized with command-line arguments.
+   * e.g. `-DyourGlobalFlagName=flagName`
+   */
   override val name: String = getClass.getName.stripSuffix("$")
 
   protected override def getValue: Option[T] = super.getValue match {

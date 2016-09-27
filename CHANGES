@@ -21,6 +21,12 @@ Bug Fixes:
     `InputStream` on reading of EOF and on calls to `Reader.discard`.
     ``RB_ID=873319``
 
+API Changes:
+
+  * util-core: `c.t.app.GlobalFlag` is now `abstract` to reflect how the class
+    is intended to be used. ``RB_ID=875409``
+
+
 6.37.0  2016-09-07
 
 New Features:
