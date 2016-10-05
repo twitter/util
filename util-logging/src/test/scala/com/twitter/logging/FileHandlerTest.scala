@@ -311,7 +311,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
       * The test succeeds if the roll over takes place as desired else fails.
       */
     withTempFolder {
-      1 to 5 foreach{testRun =>
+      (1 to 5) foreach { testRun =>
         s" should succeed to rollover at set limit when test is restarted, execution ${testRun}" in {
           val logLevel = Level.INFO
           val fileSizeInMegaBytes: Long = 1
@@ -324,7 +324,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
             formatter = BareFormatter
           ).apply()
 
-          for (a <- 1 to 10000){
+          for (a <- 1 to 10000) {
             handler.publish(record1)
           }
 
@@ -337,9 +337,9 @@ class FileHandlerTest extends WordSpec with TempFolder {
             }
           }
           val files = listLogFiles(folderName+"/LogFileDir")
-          files.foreach{f: File =>
+          files.foreach { f: File =>
             val len = f.length().bytes
-            if (len > fileSizeInMegaBytes.megabytes){
+            if (len > fileSizeInMegaBytes.megabytes) {
               fail("Failed to roll over the log file")
             }
           }
