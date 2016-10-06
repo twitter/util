@@ -338,7 +338,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
           }
           val files = listLogFiles(folderName+"/LogFileDir")
           files.foreach { f: File =>
-            val len = f.length().megabytes
+            val len = f.length().bytes
             if (len > fileSizeInMegaBytes.megabytes) {
               fail("Failed to roll over the log file")
             }
