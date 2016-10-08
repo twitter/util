@@ -14,6 +14,9 @@ New Features:
   * util-logging: Allow users to override `c.t.util.logging.Logger` installation,
     making it easier to work with SLF4J bridges. ``RB_ID=870684``
 
+  * util: No longer need to add an additional resolver that points to maven.twttr.com.
+    ``RB_ID=878967``
+
 Bug Fixes:
 
   * util-core: `c.t.io.InputStreamReader` and `Readers` created by

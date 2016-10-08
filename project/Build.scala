@@ -12,8 +12,8 @@ object Util extends Build {
 
   val libVersion = "6.37.0" + suffix
   val zkVersion = "3.5.0-alpha"
-  val zkClientVersion = "0.0.79"
-  val zkGroupVersion = "0.0.90"
+  val zkClientVersion = "0.0.80"
+  val zkGroupVersion = "0.0.91"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
     ExclusionRule("com.sun.jmx", "jmxri"),
@@ -24,6 +24,21 @@ object Util extends Build {
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.0"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
   val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+
+  // for various reasons, we use poms that point to the wrong
+  // versions of certain libraries.
+  def commonsZookeeper(name: String, version: String) =
+    "com.twitter.common.zookeeper" % name % version excludeAll(
+      ExclusionRule("com.twitter", "finagle-core-java"),
+      ExclusionRule("com.twitter", "finagle-core_2.11"),
+      ExclusionRule("com.twitter", "util-core-java"),
+      ExclusionRule("com.twitter", "util-core_2.11"),
+      ExclusionRule("com.twitter.common", "service-thrift"),
+      ExclusionRule("org.apache.thrift", "libthrift"),
+      ExclusionRule("org.apache.zookeeper", "zookeeper"),
+      ExclusionRule("org.apache.zookeeper", "zookeeper-client"),
+      ExclusionRule("org.scala-lang.modules", "scala-parser-combinators_2.11")
+    )
 
   val sharedSettings = Seq(
     version := libVersion,
@@ -37,8 +52,6 @@ object Util extends Build {
       "org.mockito" % "mockito-all" % "1.10.19" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test"
     ),
-
-    resolvers += "twitter repo" at "https://maven.twttr.com",
 
     ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
 
@@ -112,8 +125,8 @@ object Util extends Build {
     // Prevent eviction warnings
     dependencyOverrides <++= scalaVersion { vsn =>
       Set(
-        "com.twitter.common.zookeeper" % "client" % zkClientVersion,
-        "com.twitter.common.zookeeper" % "group"  % zkGroupVersion
+        commonsZookeeper("client", zkClientVersion),
+        commonsZookeeper("group", zkGroupVersion)
       )
     }
   )
@@ -202,7 +215,7 @@ object Util extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "objectsize" % "0.0.10" % "test",
+      "com.twitter.common" % "objectsize" % "0.0.11" % "test",
       scalacheckLib,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
@@ -386,9 +399,9 @@ object Util extends Build {
   ).settings(
     name := "util-zk-common",
     libraryDependencies ++= Seq(
-      "com.twitter.common.zookeeper" % "client"     % zkClientVersion,
-      "com.twitter.common.zookeeper" % "group"      % zkGroupVersion,
-      "com.twitter.common.zookeeper" % "server-set" % "1.0.103",
+      commonsZookeeper("client", zkClientVersion),
+      commonsZookeeper("group", zkGroupVersion),
+      commonsZookeeper("server-set", "1.0.111"),
       zkDependency
     )
   ).dependsOn(utilCore, utilLogging, utilZk,
@@ -405,7 +418,7 @@ object Util extends Build {
   ).settings(
     name := "util-zk-test",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "io" % "0.0.67" % "test",
+      "com.twitter.common" % "io" % "0.0.68" % "test",
       zkDependency
     )
   )
