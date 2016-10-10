@@ -22,10 +22,9 @@ import java.util.{Calendar, Date, logging => javalog}
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-
 import com.twitter.conversions.storage._
 import com.twitter.conversions.time._
-import com.twitter.util.{TempFolder, Time}
+import com.twitter.util.{StorageUnit, TempFolder, Time}
 
 
 @RunWith(classOf[JUnitRunner])
@@ -304,47 +303,52 @@ class FileHandlerTest extends WordSpec with TempFolder {
     }
 
     /**
-      * Execute this test individually to affirm that the roll policy based upon the size works
-      * even after the test case is executed couple of times.
       * This test mimics the scenario that, if log file exists, FileHandler should pick up it's size
       * and roll over at the set limit, in order to prevent the file size from growing.
       * The test succeeds if the roll over takes place as desired else fails.
       */
     withTempFolder {
-      (1 to 5).foreach { testRun =>
-        s" should succeed to rollover at set limit when test is restarted, execution ${testRun}" in {
-          val logLevel = Level.INFO
-          val fileSizeInMegaBytes: Long = 1
-          val record1 = new javalog.LogRecord(logLevel, "Sending bytes to fill up file")
-          val handler = FileHandler(
-            filename = folderName+"/LogFileDir/testFileSize.log",
-            rollPolicy = Policy.MaxSize(fileSizeInMegaBytes.megabytes),
-            rotateCount = 8,
-            append = true,
-            formatter = BareFormatter
-          ).apply()
+      "rollover at set limit when test is restarted, execution" in {
+        val logLevel = Level.INFO
+        val fileSizeInMegaBytes: Long = 1
+        val record1 = new javalog.LogRecord(logLevel, "Sending bytes to fill up file")
+        val filename = folderName + "/LogFileDir/testFileSize.log"
+        val rollPolicy = Policy.MaxSize(fileSizeInMegaBytes.megabytes)
+        val rotateCount = 8
+        val append = true
+        val formatter = BareFormatter
 
-          for (a <- 1 to 10000) {
-            handler.publish(record1)
-          }
+        val handler = FileHandler(filename, rollPolicy, append, rotateCount, formatter).apply()
+        for (a <- 1 to 20000) {
+          handler.publish(record1)
+        }
+        handler.close()
 
-          def listLogFiles(dir: String):List[File] = {
-            val d = new File(dir)
-            if (d.exists && d.isDirectory) {
-              d.listFiles.filter(_.isFile).toList
-            } else {
-              List[File]()
-            }
+        val handler2 = FileHandler(filename,rollPolicy, append, rotateCount, formatter).apply()
+        for (a <- 1 to 20000) {
+          handler2.publish(record1)
+        }
+        handler2.close()
+
+
+        def listLogFiles(dir: String):List[File] = {
+          val d = new File(dir)
+          if (d.exists && d.isDirectory) {
+            d.listFiles.filter(_.isFile).toList
+          } else {
+            List[File]()
           }
-          val files = listLogFiles(folderName+"/LogFileDir")
-          files.foreach { f: File =>
-            val len = f.length().bytes
-            if (len > fileSizeInMegaBytes.megabytes) {
-              fail("Failed to roll over the log file")
-            }
+        }
+
+        val files = listLogFiles(folderName + "/LogFileDir")
+        files.foreach { f: File =>
+          val len = f.length().bytes
+          if (len > fileSizeInMegaBytes.megabytes) {
+            fail("Failed to roll over the log file")
           }
         }
       }
     }
+
   }
 }
