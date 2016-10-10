@@ -330,7 +330,6 @@ class FileHandlerTest extends WordSpec with TempFolder {
         }
         handler2.close()
 
-
         def listLogFiles(dir: String):List[File] = {
           val d = new File(dir)
           if (d.exists && d.isDirectory) {
@@ -349,6 +348,5 @@ class FileHandlerTest extends WordSpec with TempFolder {
         }
       }
     }
-
   }
 }
