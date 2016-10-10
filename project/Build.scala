@@ -376,7 +376,8 @@ object Util extends Build {
       "org.slf4j"                  % "slf4j-api"        % "1.7.7" % "provided",
       "com.fasterxml.jackson.core" % "jackson-core"     % "2.6.5",
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5"
-    )
+    ),
+    resolvers += "twitter-repo" at "https://maven.twttr.com"
   ).dependsOn(utilCodec)
 
   lazy val utilZk = Project(
