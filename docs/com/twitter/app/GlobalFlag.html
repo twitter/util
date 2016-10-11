@@ -28,10 +28,12 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img alt="Class" src="../../../lib/class_big.png" />
+        <a href="GlobalFlag$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.app">app</a></p>
-        <h1>GlobalFlag</h1><h3><span class="morelinks"><div>Related Doc:
-            <a href="package.html" class="extype" name="com.twitter.app">package app</a>
+        <h1><a href="GlobalFlag$.html" title="See companion object">GlobalFlag</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="GlobalFlag$.html" title="See companion object">object GlobalFlag</a>
+            | <a href="package.html" class="extype" name="com.twitter.app">package app</a>
           </div></span></h3><span class="permalink">
       <a href="../../../index.html#com.twitter.app.GlobalFlag" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
@@ -41,7 +43,7 @@
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -54,14 +56,17 @@ sense that they are accessible by any application that depends on that library.
 Regardless of where in a library a GlobalFlag is defined, a value for it can
 be passed as a command-line flag by any binary that includes the library.
 The set of defined GlobalFlags can be enumerated (via <code>GlobalFlag.getAll)</code> by
-the application.</p><pre><span class="kw">object</span> MyFlag <span class="kw">extends</span> GlobalFlag(<span class="lit">"my"</span>, <span class="lit">"default value"</span>, <span class="lit">"this is my global flag"</span>)</pre><p>All such global flag declarations in a given classpath are visible to and
+the application.</p><p>A <a href="" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> must be declared as an <code>object</code> (see below for Java):</p><pre><span class="kw">import</span> com.twitter.app.GlobalFlag
+
+<span class="kw">object</span> myFlag <span class="kw">extends</span> GlobalFlag[<span class="std">String</span>](<span class="lit">"default value"</span>, <span class="lit">"this is my global flag"</span>)</pre><p>All such global flag declarations in a given classpath are visible to and
 used by <a href="App.html" class="extype" name="com.twitter.app.App">com.twitter.app.App</a>.</p><p>A flag's name (as set on the command line) is its fully-qualified classname.
 For example, the flag</p><pre><span class="kw">package</span> com.twitter.server
 
-<span class="kw">object</span> port <span class="kw">extends</span> GlobalFlag(<span class="num">8080</span>, <span class="lit">"the TCP port to which we bind"</span>)</pre><p>is settable by the command-line flag <code>-com.twitter.server.port</code>.</p><p>Global flags may also be set by Java system properties with keys
+<span class="kw">import</span> com.twitter.app.GlobalFlag
+
+<span class="kw">object</span> port <span class="kw">extends</span> GlobalFlag[<span class="std">Int</span>](<span class="num">8080</span>, <span class="lit">"the TCP port to which we bind"</span>)</pre><p>is settable by the command-line flag <code>-com.twitter.server.port=8080</code>.</p><p>Global flags may also be set by Java system properties with keys
 named in the same way. However, values supplied by flags override
-those supplied by system properties.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+those supplied by system properties.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="GlobalFlagVisible.html" class="extype" name="com.twitter.app.GlobalFlagVisible">GlobalFlagVisible</a></span><span class="args">()</span>
               
         </dd></dl><div class="toggleContainer block">
@@ -69,7 +74,7 @@ those supplied by system properties.
           <div class="superTypes hiddenContent"><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.GlobalFlag.T">T</span>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">Known Subclasses</span>
-            <div class="subClasses hiddenContent"><a href="../finagle/util/loadServiceDenied$.html" class="extype" name="com.twitter.finagle.util.loadServiceDenied">loadServiceDenied</a>, <a href="../finagle/util/loadServiceIgnoredPaths$.html" class="extype" name="com.twitter.finagle.util.loadServiceIgnoredPaths">loadServiceIgnoredPaths</a>, <a href="../jvm/numProcs$.html" class="extype" name="com.twitter.jvm.numProcs">numProcs</a></div>
+            <div class="subClasses hiddenContent"><a href="JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a>, <a href="../finagle/util/loadServiceDenied$.html" class="extype" name="com.twitter.finagle.util.loadServiceDenied">loadServiceDenied</a>, <a href="../finagle/util/loadServiceIgnoredPaths$.html" class="extype" name="com.twitter.finagle.util.loadServiceIgnoredPaths">loadServiceIgnoredPaths</a>, <a href="../jvm/numProcs$.html" class="extype" name="com.twitter.jvm.numProcs">numProcs</a></div>
           </div></div>
         
 
@@ -106,7 +111,7 @@ those supplied by system properties.
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.app.GlobalFlag#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.app.GlobalFlag#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(help:String)(implicit_f:com.twitter.app.Flaggable[T],implicitm:Manifest[T]):com.twitter.app.GlobalFlag[T]"></a>
       <a id="&lt;init&gt;:GlobalFlag[T]"></a>
       <h4 class="signature">
@@ -122,8 +127,9 @@ those supplied by system properties.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
-    </li><li name="com.twitter.app.GlobalFlag#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">_declaration</p><div class="fullcomment"><div class="comment cmt"><p>_declaration</p><p>If you'd like to declare a new <a href="" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, see <a href="JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a>._declaration
+</p></div><dl class="paramcmts block"><dt class="param">help</dt><dd class="cmt"><p>documentation regarding usage of this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p></dd></dl></div>
+    </li><li name="com.twitter.app.GlobalFlag#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(default:T,help:String)(implicit_f:com.twitter.app.Flaggable[T]):com.twitter.app.GlobalFlag[T]"></a>
       <a id="&lt;init&gt;:GlobalFlag[T]"></a>
       <h4 class="signature">
@@ -139,7 +145,8 @@ those supplied by system properties.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">_declaration</p><div class="fullcomment"><div class="comment cmt"><p>_declaration</p><p>If you'd like to declare a new <a href="" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, see <a href="JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a>._declaration
+</p></div><dl class="paramcmts block"><dt class="param">default</dt><dd class="cmt"><p>the default value used if the value is not specified by the user.</p></dd><dt class="param">help</dt><dd class="cmt"><p>documentation regarding usage of this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -386,7 +393,7 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.app.GlobalFlag#getGlobalFlag" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.GlobalFlag#getGlobalFlag" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getGlobalFlag:com.twitter.app.Flag[_]"></a>
       <a id="getGlobalFlag:Flag[_]"></a>
       <h4 class="signature">
@@ -402,7 +409,15 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Used by <a href="Flags.html#parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult" class="extmbr" name="com.twitter.app.Flags#parseArgs">Flags.parseArgs</a> to initialize <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> values.</p><div class="fullcomment"><div class="comment cmt"><p>Used by <a href="Flags.html#parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult" class="extmbr" name="com.twitter.app.Flags#parseArgs">Flags.parseArgs</a> to initialize <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> values.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Called via reflection assuming it will be a <code>static</code>
+      method on a singleton <code>object</code>. This causes problems
+      for Java developers who want to create a <a href="" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>
+      as there is no good means for them to have it be a
+      <code>static</code> method. Thus, Java devs must add a method
+      <code>public static Flag&lt;?&gt; globalFlagInstance()</code> which
+      returns the singleton instance of the flag.
+      See <a href="JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a> for more details.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.GlobalFlag#getValue" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getValue:Option[T]"></a>
       <a id="getValue:Option[T]"></a>
@@ -567,7 +582,11 @@ given function <code>f</code>.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+      <p class="shortcomment cmt">The &quot;name&quot;, or &quot;id&quot;, of this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The &quot;name&quot;, or &quot;id&quot;, of this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p><p>While not marked <code>final</code>, if a subclass overrides this value, then
+developers <b>must</b> set that flag via System properties as otherwise it
+will not be recognized with command-line arguments.
+e.g. <code>-DyourGlobalFlagName=flagName</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

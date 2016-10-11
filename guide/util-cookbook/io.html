@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Input/Output &mdash; Util 6.37.0 documentation</title>
+    <title>Input/Output &mdash; Util 6.38.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.37.0',
+        VERSION:     '6.38.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.37.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 6.38.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Usage from Java" href="java.html" />
     <link rel="prev" title="Futures" href="futures.html" />
@@ -42,11 +42,11 @@
   </script>
 
   </head>
-  <body>
+  <body role="document">
   
   
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -58,23 +58,23 @@
         <li class="right" >
           <a href="futures.html" title="Futures"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Util</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="input-output">
 <h1>Input/Output<a class="headerlink" href="#input-output" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="getting-the-byte-array-out-of-a-buf">
 <h2>Getting the byte array out of a Buf<a class="headerlink" href="#getting-the-byte-array-out-of-a-buf" title="Permalink to this headline">¶</a></h2>
-<p>This can be done via <tt class="docutils literal"><span class="pre">Buf.ByteArray.Owned.extract(byteArrayBuf)</span></tt>.
-If you intend to mutate the data use the <tt class="docutils literal"><span class="pre">Shared</span></tt> variant instead of
-<tt class="docutils literal"><span class="pre">Owned</span></tt>.</p>
+<p>This can be done via <code class="docutils literal"><span class="pre">Buf.ByteArray.Owned.extract(byteArrayBuf)</span></code>.
+If you intend to mutate the data use the <code class="docutils literal"><span class="pre">Shared</span></code> variant instead of
+<code class="docutils literal"><span class="pre">Owned</span></code>.</p>
 <p>Scala:</p>
 <div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.io.Buf</span>
 
@@ -94,9 +94,9 @@ If you intend to mutate the data use the <tt class="docutils literal"><span clas
 </div>
 <div class="section" id="getting-the-string-out-of-a-buf-utf8">
 <h2>Getting the String out of a Buf.Utf8<a class="headerlink" href="#getting-the-string-out-of-a-buf-utf8" title="Permalink to this headline">¶</a></h2>
-<p>This can be done by the <tt class="docutils literal"><span class="pre">Buf.StringCoder.unapply(Buf)</span></tt>
-methods for the various charsets on the <tt class="docutils literal"><span class="pre">Buf</span></tt> companion object
-and <tt class="docutils literal"><span class="pre">Bufs</span></tt> from Java.</p>
+<p>This can be done by the <code class="docutils literal"><span class="pre">Buf.StringCoder.unapply(Buf)</span></code>
+methods for the various charsets on the <code class="docutils literal"><span class="pre">Buf</span></code> companion object
+and <code class="docutils literal"><span class="pre">Bufs</span></code> from Java.</p>
 <p>Scala:</p>
 <div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.io.Buf</span>
 
@@ -121,7 +121,7 @@ and <tt class="docutils literal"><span class="pre">Bufs</span></tt> from Java.</
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.

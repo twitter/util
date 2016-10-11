@@ -1,9 +1,9 @@
 <!DOCTYPE html >
 <html>
         <head>
-          <title>Flag - com.twitter.app.Flag</title>
-          <meta name="description" content="Flag - com.twitter.app.Flag" />
-          <meta name="keywords" content="Flag com.twitter.app.Flag" />
+          <title>JavaGlobalFlag - com.twitter.app.JavaGlobalFlag</title>
+          <meta name="description" content="JavaGlobalFlag - com.twitter.app.JavaGlobalFlag" />
+          <meta name="keywords" content="JavaGlobalFlag com.twitter.app.JavaGlobalFlag" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -16,7 +16,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'com.twitter.app.Flag';
+            var hash = 'com.twitter.app.JavaGlobalFlag';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -28,14 +28,12 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Flag$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
+        <img alt="Class" src="../../../lib/class_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.app">app</a></p>
-        <h1><a href="Flag$.html" title="See companion object">Flag</a></h1><h3><span class="morelinks"><div>
-            Related Docs:
-            <a href="Flag$.html" title="See companion object">object Flag</a>
-            | <a href="package.html" class="extype" name="com.twitter.app">package app</a>
+        <h1>JavaGlobalFlag</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.twitter.app">package app</a>
           </div></span></h3><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -43,44 +41,18 @@
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Flag</span><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">JavaGlobalFlag</span><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A single command-line flag, instantiated by a <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a>
-instance.</p><p>The current value can be extracted via <span class="extype" name="apply()">apply()</span>, <a href="#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">get</a>, and
-<a href="#getWithDefault:Option[T]" class="extmbr" name="com.twitter.app.Flag#getWithDefault">getWithDefault</a>. <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">Local</a>-scoped modifications
-of their values, which can be useful for tests, can be done by calls to
-<a href="#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a> and <a href="#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a>.</p><p>Using a <code>String</code>-typed <a href="" class="extype" name="com.twitter.app.Flag">Flag</a>, <code>myFlag</code>, which is unset and has a default
-value of &quot;DEFAULT&quot; as an example:</p><pre>myFlag.isDefined <span class="cmt">// => false</span>
-myFlag.get <span class="cmt">// => None</span>
-myFlag.getWithDefault <span class="cmt">// => Some("DEFAULT")</span>
-myFlag() <span class="cmt">// => "DEFAULT"</span>
-
-myFlag.let(<span class="lit">"a value"</span>) {
-  myFlag.isDefined <span class="cmt">// => true</span>
-  myFlag.get <span class="cmt">// => Some("a value")</span>
-  myFlag.getWithDefault <span class="cmt">// => Some("a value")</span>
-  myFlag() <span class="cmt">// => "a value"</span>
-
-  myFlag.letClear {
-    myFlag.isDefined <span class="cmt">// => false</span>
-    myFlag.get <span class="cmt">// => None</span>
-    myFlag.getWithDefault <span class="cmt">// => Some("DEFAULT")</span>
-    myFlag() <span class="cmt">// => "DEFAULT"</span>
-  }
-}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">com.twitter.app.GlobalFlag</a></p></span><span class="cmt"><p><a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a> for information on how flags can be set by
-    the command line.</p></span></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div><div class="toggleContainer block">
-            <span class="toggle">Known Subclasses</span>
-            <div class="subClasses hiddenContent"><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>, <a href="JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a>, <a href="../finagle/util/loadServiceDenied$.html" class="extype" name="com.twitter.finagle.util.loadServiceDenied">loadServiceDenied</a>, <a href="../finagle/util/loadServiceIgnoredPaths$.html" class="extype" name="com.twitter.finagle.util.loadServiceIgnoredPaths">loadServiceIgnoredPaths</a>, <a href="../jvm/numProcs$.html" class="extype" name="com.twitter.jvm.numProcs">numProcs</a></div>
-          </div></div>
+          <div class="superTypes hiddenContent"><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>], <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
         
 
       <div id="mbrsel">
@@ -97,7 +69,7 @@ myFlag.let(<span class="lit">"a value"</span>) {
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.twitter.app.Flag"><span>Flag</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.twitter.app.JavaGlobalFlag"><span>JavaGlobalFlag</span></li><li class="in" name="com.twitter.app.GlobalFlag"><span>GlobalFlag</span></li><li class="in" name="com.twitter.app.Flag"><span>Flag</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -114,7 +86,90 @@ myFlag.let(<span class="lit">"a value"</span>) {
 
       <div id="template">
         <div id="allMembers">
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.twitter.app.JavaGlobalFlag#&lt;init&gt;" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(help:String,flaggable:com.twitter.app.Flaggable[T],clazz:Class[T]):com.twitter.app.JavaGlobalFlag[T]"></a>
+      <a id="&lt;init&gt;:JavaGlobalFlag[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">JavaGlobalFlag</span><span class="params">(<span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="flaggable">flaggable: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>, <span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@&lt;init&gt;(help:String,flaggable:com.twitter.app.Flaggable[T],clazz:Class[T]):com.twitter.app.JavaGlobalFlag[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A flag without a default value.</p><div class="fullcomment"><div class="comment cmt"><p>A flag without a default value.</p><p>_declaration</p><p>In order to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, it can be done with a bit
+of ceremony by following a few steps:</p><p>1. the flag's class name must end with &quot;$&quot;, e.g. <code>javaGlobalWithDefault$</code>.
+This is done to mimic the behavior of Scala's singleton <code>object</code>.
+1. the class must have a method, <code>public static Flag&lt;?&gt; globalFlagInstance()</code>,
+that returns the singleton instance of the <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.
+1. the class should have a <code>static final</code> field holding the singleton
+instance of the flag.
+1. the class should extend <code>JavaGlobalFlag</code>.
+1. to avoid extraneous creation of instances, thus forcing users to only
+access the singleton, the constructor should be <code>private</code> and the class
+should be <code>public final</code>.</p><p>An example of a <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> declared in Java:</p><pre><span class="kw">import</span> com.twitter.app.Flag;
+<span class="kw">import</span> com.twitter.app.Flaggable;
+<span class="kw">import</span> com.twitter.app.JavaGlobalFlag;
+
+public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGlobalFlag$ <span class="kw">extends</span> JavaGlobalFlag&lt;<span class="std">String</span>&gt; {
+  <span class="kw">private</span> exampleJavaGlobalFlag() {
+    <span class="kw">super</span>(<span class="lit">"The default value"</span>, <span class="lit">"The help string"</span>, Flaggable.ofString());
+  }
+  public static <span class="kw">final</span> Flag&lt;<span class="std">String</span>&gt; Flag = <span class="kw">new</span> exampleJavaGlobalFlag();
+  public static Flag&lt;?&gt; globalFlagInstance() {
+    <span class="kw">return</span> Flag;
+  }
+}</pre><p>_declaration
+</p></div><dl class="paramcmts block"><dt class="param">help</dt><dd class="cmt"><p>documentation regarding usage of this flag.</p></dd><dt class="param">clazz</dt><dd class="cmt"><p>the type of the flag</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="com.twitter.app.JavaGlobalFlag#&lt;init&gt;" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(default:T,help:String,flaggable:com.twitter.app.Flaggable[T]):com.twitter.app.JavaGlobalFlag[T]"></a>
+      <a id="&lt;init&gt;:JavaGlobalFlag[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">JavaGlobalFlag</span><span class="params">(<span name="default">default: <span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span></span>, <span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="flaggable">flaggable: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@&lt;init&gt;(default:T,help:String,flaggable:com.twitter.app.Flaggable[T]):com.twitter.app.JavaGlobalFlag[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A flag with a default value.</p><div class="fullcomment"><div class="comment cmt"><p>A flag with a default value.</p><p>_declaration</p><p>In order to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, it can be done with a bit
+of ceremony by following a few steps:</p><p>1. the flag's class name must end with &quot;$&quot;, e.g. <code>javaGlobalWithDefault$</code>.
+This is done to mimic the behavior of Scala's singleton <code>object</code>.
+1. the class must have a method, <code>public static Flag&lt;?&gt; globalFlagInstance()</code>,
+that returns the singleton instance of the <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.
+1. the class should have a <code>static final</code> field holding the singleton
+instance of the flag.
+1. the class should extend <code>JavaGlobalFlag</code>.
+1. to avoid extraneous creation of instances, thus forcing users to only
+access the singleton, the constructor should be <code>private</code> and the class
+should be <code>public final</code>.</p><p>An example of a <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> declared in Java:</p><pre><span class="kw">import</span> com.twitter.app.Flag;
+<span class="kw">import</span> com.twitter.app.Flaggable;
+<span class="kw">import</span> com.twitter.app.JavaGlobalFlag;
+
+public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGlobalFlag$ <span class="kw">extends</span> JavaGlobalFlag&lt;<span class="std">String</span>&gt; {
+  <span class="kw">private</span> exampleJavaGlobalFlag() {
+    <span class="kw">super</span>(<span class="lit">"The default value"</span>, <span class="lit">"The help string"</span>, Flaggable.ofString());
+  }
+  public static <span class="kw">final</span> Flag&lt;<span class="std">String</span>&gt; Flag = <span class="kw">new</span> exampleJavaGlobalFlag();
+  public static Flag&lt;?&gt; globalFlagInstance() {
+    <span class="kw">return</span> Flag;
+  }
+}</pre><p>_declaration
+</p></div><dl class="paramcmts block"><dt class="param">default</dt><dd class="cmt"><p>the default value used if the value is not specified by the user.</p></dd><dt class="param">help</dt><dd class="cmt"><p>documentation regarding usage of this flag.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li></ol>
+            </div>
 
         
 
@@ -134,7 +189,7 @@ myFlag.let(<span class="lit">"a value"</span>) {
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@!=(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -151,7 +206,7 @@ myFlag.let(<span class="lit">"a value"</span>) {
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@##():Int" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@##():Int" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -168,7 +223,7 @@ myFlag.let(<span class="lit">"a value"</span>) {
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@==(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@==(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -182,16 +237,16 @@ myFlag.let(<span class="lit">"a value"</span>) {
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.app.Flag.T">T</span></span>
+        <span class="name">apply</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@apply():T" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@apply():T" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">Return this flag's current value.</p><div class="fullcomment"><div class="comment cmt"><p>Return this flag's current value. The default value is returned
 when the flag has not otherwise been set.
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -204,7 +259,7 @@ when the flag has not otherwise been set.
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@asInstanceOf[T0]:T0" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -221,7 +276,7 @@ when the flag has not otherwise been set.
         <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@clone():Object" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@clone():Object" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -232,7 +287,7 @@ when the flag has not otherwise been set.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.app.Flag#defaultString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.Flag#defaultString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="defaultString():String"></a>
       <a id="defaultString():String"></a>
       <h4 class="signature">
@@ -244,11 +299,11 @@ when the flag has not otherwise been set.
         <span class="name">defaultString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@defaultString():String" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@defaultString():String" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">String representation of this flag's default value</p>
+      <p class="shortcomment cmt">String representation of this flag's default value</p><div class="fullcomment"><div class="comment cmt"><p>String representation of this flag's default value</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -261,7 +316,7 @@ when the flag has not otherwise been set.
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -278,7 +333,7 @@ when the flag has not otherwise been set.
         <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@equals(x$1:Any):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -295,7 +350,7 @@ when the flag has not otherwise been set.
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@finalize():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@finalize():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -315,14 +370,14 @@ when the flag has not otherwise been set.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">flaggable</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.Flag.T">T</span>]</span>
+        <span class="name">flaggable</span><span class="result">: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@flaggable:com.twitter.app.Flaggable[T]" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@flaggable:com.twitter.app.Flaggable[T]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="com.twitter.app.Flag#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get:Option[T]"></a>
       <a id="get:Option[T]"></a>
@@ -332,16 +387,16 @@ when the flag has not otherwise been set.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">get</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.app.Flag.T">T</span>]</span>
+        <span class="name">get</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@get:Option[T]" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@get:Option[T]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">Get the value if it has been set.</p><div class="fullcomment"><div class="comment cmt"><p>Get the value if it has been set.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>if no user-defined value has been set, <code>None</code> will be
-returned even when a default value is supplied.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#getWithDefault:Option[T]" class="extmbr" name="com.twitter.app.Flag#getWithDefault">Flag.getWithDefault</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>Note</dt><dd><span class="cmt"><p>if no user-defined value has been set, <code>None</code> will be
+returned even when a default value is supplied.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#getWithDefault:Option[T]" class="extmbr" name="com.twitter.app.Flag#getWithDefault">Flag.getWithDefault</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -354,12 +409,37 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@getClass():Class[_]" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@getClass():Class[_]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.app.Flag#getValue" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.app.GlobalFlag#getGlobalFlag" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getGlobalFlag:com.twitter.app.Flag[_]"></a>
+      <a id="getGlobalFlag:Flag[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getGlobalFlag</span><span class="result">: <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@getGlobalFlag:com.twitter.app.Flag[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Used by <a href="Flags.html#parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult" class="extmbr" name="com.twitter.app.Flags#parseArgs">Flags.parseArgs</a> to initialize <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> values.</p><div class="fullcomment"><div class="comment cmt"><p>Used by <a href="Flags.html#parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult" class="extmbr" name="com.twitter.app.Flags#parseArgs">Flags.parseArgs</a> to initialize <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> values.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a></dd><dt>Note</dt><dd><span class="cmt"><p>Called via reflection assuming it will be a <code>static</code>
+      method on a singleton <code>object</code>. This causes problems
+      for Java developers who want to create a <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>
+      as there is no good means for them to have it be a
+      <code>static</code> method. Thus, Java devs must add a method
+      <code>public static Flag&lt;?&gt; globalFlagInstance()</code> which
+      returns the singleton instance of the flag.
+      See <a href="" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a> for more details.</p></span></dd></dl></div>
+    </li><li name="com.twitter.app.GlobalFlag#getValue" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getValue:Option[T]"></a>
       <a id="getValue:Option[T]"></a>
       <h4 class="signature">
@@ -368,14 +448,14 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getValue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.app.Flag.T">T</span>]</span>
+        <span class="name">getValue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@getValue:Option[T]" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@getValue:Option[T]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="com.twitter.app.Flag#getWithDefault" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getWithDefault:Option[T]"></a>
       <a id="getWithDefault:Option[T]"></a>
@@ -385,15 +465,15 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getWithDefault</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.app.Flag.T">T</span>]</span>
+        <span class="name">getWithDefault</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@getWithDefault:Option[T]" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@getWithDefault:Option[T]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">Get the value if it has been set or if there is a default value supplied.</p><div class="fullcomment"><div class="comment cmt"><p>Get the value if it has been set or if there is a default value supplied.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">Flag.get</a> and <a href="#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">Flag.isDefined</a> if you are interested in
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">Flag.get</a> and <a href="Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">Flag.isDefined</a> if you are interested in
      determining if there is a supplied value.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -407,12 +487,12 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@hashCode():Int" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@hashCode():Int" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.app.Flag#help" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.Flag#help" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="help:String"></a>
       <a id="help:String"></a>
       <h4 class="signature">
@@ -424,11 +504,11 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="name">help</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@help:String" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@help:String" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="com.twitter.app.Flag#isDefined" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isDefined:Boolean"></a>
       <a id="isDefined:Boolean"></a>
@@ -441,12 +521,12 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="name">isDefined</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@isDefined:Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@isDefined:Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">True if the flag has been set.</p><div class="fullcomment"><div class="comment cmt"><p>True if the flag has been set.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>if no user-defined value has been set, <code>false</code> will be
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>Note</dt><dd><span class="cmt"><p>if no user-defined value has been set, <code>false</code> will be
 returned even when a default value is supplied.</p></span></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -460,7 +540,7 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -474,17 +554,17 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">let</span><span class="params">(<span name="t">t: <span class="extype" name="com.twitter.app.Flag.T">T</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">let</span><span class="params">(<span name="t">t: <span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@let(t:T)(f:=&gt;Unit):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@let(t:T)(f:=&gt;Unit):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.Flag#letClear" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="letClear(f:=&gt;Unit):Unit"></a>
       <a id="letClear(⇒Unit):Unit"></a>
@@ -497,17 +577,17 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="name">letClear</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@letClear(f:=&gt;Unit):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@letClear(f:=&gt;Unit):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Unset the value of this flag, such that <a href="#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
+      <p class="shortcomment cmt">Unset the value of this flag, such that <a href="Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
 only for the scope of the current <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the
-given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Unset the value of this flag, such that <a href="#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
+given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Unset the value of this flag, such that <a href="Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
 only for the scope of the current <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the
 given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span></dd></dl></div>
-    </li><li name="com.twitter.app.Flag#name" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span></dd></dl></div>
+    </li><li name="com.twitter.app.GlobalFlag#name" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <a id="name:String"></a>
       <h4 class="signature">
@@ -519,11 +599,15 @@ given function <code>f</code>.
         <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@name:String" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@name:String" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">The &quot;name&quot;, or &quot;id&quot;, of this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The &quot;name&quot;, or &quot;id&quot;, of this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p><p>While not marked <code>final</code>, if a subclass overrides this value, then
+developers <b>must</b> set that flag via System properties as otherwise it
+will not be recognized with command-line arguments.
+e.g. <code>-DyourGlobalFlagName=flagName</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -536,12 +620,12 @@ given function <code>f</code>.
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.app.Flag#noArgumentOk" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.Flag#noArgumentOk" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="noArgumentOk:Boolean"></a>
       <a id="noArgumentOk:Boolean"></a>
       <h4 class="signature">
@@ -553,11 +637,11 @@ given function <code>f</code>.
         <span class="name">noArgumentOk</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@noArgumentOk:Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@noArgumentOk:Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Indicates whether or not the flag is valid without an argument.</p>
+      <p class="shortcomment cmt">Indicates whether or not the flag is valid without an argument.</p><div class="fullcomment"><div class="comment cmt"><p>Indicates whether or not the flag is valid without an argument.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
@@ -570,7 +654,7 @@ given function <code>f</code>.
         <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@notify():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@notify():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -587,12 +671,12 @@ given function <code>f</code>.
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@notifyAll():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@notifyAll():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.app.Flag#parse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.Flag#parse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parse():Unit"></a>
       <a id="parse():Unit"></a>
       <h4 class="signature">
@@ -604,12 +688,12 @@ given function <code>f</code>.
         <span class="name">parse</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@parse():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@parse():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Parse this flag with no argument.</p>
-    </li><li name="com.twitter.app.Flag#parse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Parse this flag with no argument.</p><div class="fullcomment"><div class="comment cmt"><p>Parse this flag with no argument.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+    </li><li name="com.twitter.app.Flag#parse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parse(raw:String):Unit"></a>
       <a id="parse(String):Unit"></a>
       <h4 class="signature">
@@ -621,12 +705,12 @@ given function <code>f</code>.
         <span class="name">parse</span><span class="params">(<span name="raw">raw: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@parse(raw:String):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@parse(raw:String):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Parse value <code>raw</code> into this flag.</p>
-    </li><li name="com.twitter.app.Flag#parsingDone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <p class="shortcomment cmt">Parse value <code>raw</code> into this flag.</p><div class="fullcomment"><div class="comment cmt"><p>Parse value <code>raw</code> into this flag.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+    </li><li name="com.twitter.app.GlobalFlag#parsingDone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parsingDone:Boolean"></a>
       <a id="parsingDone:Boolean"></a>
       <h4 class="signature">
@@ -638,12 +722,12 @@ given function <code>f</code>.
         <span class="name">parsingDone</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@parsingDone:Boolean" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@parsingDone:Boolean" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd></dl></div>
-    </li><li name="com.twitter.app.Flag#reset" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+    </li><li name="com.twitter.app.Flag#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="reset():Unit"></a>
       <a id="reset():Unit"></a>
       <h4 class="signature">
@@ -655,11 +739,11 @@ given function <code>f</code>.
         <span class="name">reset</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@reset():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@reset():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Reset this flag's value</p>
+      <p class="shortcomment cmt">Reset this flag's value</p><div class="fullcomment"><div class="comment cmt"><p>Reset this flag's value</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -672,7 +756,7 @@ given function <code>f</code>.
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -689,15 +773,15 @@ given function <code>f</code>.
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@toString():String" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@toString():String" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">String representation of this flag in -foo='bar' format,
 suitable for being used on the command line.</p><div class="fullcomment"><div class="comment cmt"><p>String representation of this flag in -foo='bar' format,
 suitable for being used on the command line.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.app.Flag">Flag</a> → AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.app.Flag#usageString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.app.Flag#usageString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="usageString:String"></a>
       <a id="usageString:String"></a>
       <h4 class="signature">
@@ -709,11 +793,11 @@ suitable for being used on the command line.
         <span class="name">usageString</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@usageString:String" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@usageString:String" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -726,7 +810,7 @@ suitable for being used on the command line.
         <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@wait():Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@wait():Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -749,7 +833,7 @@ suitable for being used on the command line.
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -772,7 +856,7 @@ suitable for being used on the command line.
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.app.Flag@wait(x$1:Long):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.app.JavaGlobalFlag@wait(x$1:Long):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -792,7 +876,11 @@ suitable for being used on the command line.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="com.twitter.app.GlobalFlag">
+              <h3>Inherited from <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</h3>
+            </div><div class="parent" name="com.twitter.app.Flag">
+              <h3>Inherited from <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

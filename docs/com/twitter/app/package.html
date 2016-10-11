@@ -116,8 +116,29 @@ does not require defining a custom <code>main</code> method.
     </span>
       <p class="shortcomment cmt">A single command-line flag, instantiated by a <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a>
 instance.</p><div class="fullcomment"><div class="comment cmt"><p>A single command-line flag, instantiated by a <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a>
-instance. Its current value can be extracted via <code>apply()</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a></p></span></dd></dl></div>
+instance.</p><p>The current value can be extracted via <span class="extype" name="apply()">apply()</span>, <a href="Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">get</a>, and
+<a href="Flag.html#getWithDefault:Option[T]" class="extmbr" name="com.twitter.app.Flag#getWithDefault">getWithDefault</a>. <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">Local</a>-scoped modifications
+of their values, which can be useful for tests, can be done by calls to
+<a href="Flag.html#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a> and <a href="Flag.html#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a>.</p><p>Using a <code>String</code>-typed <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>, <code>myFlag</code>, which is unset and has a default
+value of &quot;DEFAULT&quot; as an example:</p><pre>myFlag.isDefined <span class="cmt">// => false</span>
+myFlag.get <span class="cmt">// => None</span>
+myFlag.getWithDefault <span class="cmt">// => Some("DEFAULT")</span>
+myFlag() <span class="cmt">// => "DEFAULT"</span>
+
+myFlag.let(<span class="lit">"a value"</span>) {
+  myFlag.isDefined <span class="cmt">// => true</span>
+  myFlag.get <span class="cmt">// => Some("a value")</span>
+  myFlag.getWithDefault <span class="cmt">// => Some("a value")</span>
+  myFlag() <span class="cmt">// => "a value"</span>
+
+  myFlag.letClear {
+    myFlag.isDefined <span class="cmt">// => false</span>
+    myFlag.get <span class="cmt">// => None</span>
+    myFlag.getWithDefault <span class="cmt">// => Some("DEFAULT")</span>
+    myFlag() <span class="cmt">// => "DEFAULT"</span>
+  }
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">com.twitter.app.GlobalFlag</a></p></span><span class="cmt"><p><a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a> for information on how flags can be set by
+    the command line.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.FlagParseException" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="FlagParseExceptionextendsExceptionwithProductwithSerializable"></a>
       <a id="FlagParseException:FlagParseException"></a>
@@ -252,12 +273,12 @@ to assign instances of <code>Flags</code> to a singular <code>flag</code> val:</
 <span class="kw">val</span> i = flag(<span class="lit">"i"</span>, <span class="num">123</span>, <span class="lit">"iteration count"</span>)</pre><p>Global flags, detached from a particular <code>Flags</code> instance but
 accessible to all, are defined by <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">com.twitter.app.GlobalFlag</a>.
 </p></div></div>
-    </li><li name="com.twitter.app.GlobalFlag" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.app.GlobalFlag" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="GlobalFlag[T]extendsFlag[T]"></a>
       <a id="GlobalFlag[T]:GlobalFlag[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -274,14 +295,17 @@ sense that they are accessible by any application that depends on that library.
 Regardless of where in a library a GlobalFlag is defined, a value for it can
 be passed as a command-line flag by any binary that includes the library.
 The set of defined GlobalFlags can be enumerated (via <code>GlobalFlag.getAll)</code> by
-the application.</p><pre><span class="kw">object</span> MyFlag <span class="kw">extends</span> GlobalFlag(<span class="lit">"my"</span>, <span class="lit">"default value"</span>, <span class="lit">"this is my global flag"</span>)</pre><p>All such global flag declarations in a given classpath are visible to and
+the application.</p><p>A <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> must be declared as an <code>object</code> (see below for Java):</p><pre><span class="kw">import</span> com.twitter.app.GlobalFlag
+
+<span class="kw">object</span> myFlag <span class="kw">extends</span> GlobalFlag[<span class="std">String</span>](<span class="lit">"default value"</span>, <span class="lit">"this is my global flag"</span>)</pre><p>All such global flag declarations in a given classpath are visible to and
 used by <a href="App.html" class="extype" name="com.twitter.app.App">com.twitter.app.App</a>.</p><p>A flag's name (as set on the command line) is its fully-qualified classname.
 For example, the flag</p><pre><span class="kw">package</span> com.twitter.server
 
-<span class="kw">object</span> port <span class="kw">extends</span> GlobalFlag(<span class="num">8080</span>, <span class="lit">"the TCP port to which we bind"</span>)</pre><p>is settable by the command-line flag <code>-com.twitter.server.port</code>.</p><p>Global flags may also be set by Java system properties with keys
+<span class="kw">import</span> com.twitter.app.GlobalFlag
+
+<span class="kw">object</span> port <span class="kw">extends</span> GlobalFlag[<span class="std">Int</span>](<span class="num">8080</span>, <span class="lit">"the TCP port to which we bind"</span>)</pre><p>is settable by the command-line flag <code>-com.twitter.server.port=8080</code>.</p><p>Global flags may also be set by Java system properties with keys
 named in the same way. However, values supplied by flags override
-those supplied by system properties.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+those supplied by system properties.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="GlobalFlagVisible.html" class="extype" name="com.twitter.app.GlobalFlagVisible">GlobalFlagVisible</a></span><span class="args">()</span>
               
         </dd></dl></div>
@@ -302,6 +326,23 @@ those supplied by system properties.
       </a>
     </span>
       
+    </li><li name="com.twitter.app.JavaGlobalFlag" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JavaGlobalFlag[T]extendsGlobalFlag[T]"></a>
+      <a id="JavaGlobalFlag[T]:JavaGlobalFlag[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="JavaGlobalFlag.html"><span class="name">JavaGlobalFlag</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.package@JavaGlobalFlag[T]extendsGlobalFlag[T]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p>
     </li></ol>
             </div>
 
@@ -373,6 +414,23 @@ those supplied by system properties.
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#com.twitter.app.package@Flags" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.twitter.app.GlobalFlag" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GlobalFlag"></a>
+      <a id="GlobalFlag:GlobalFlag"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="GlobalFlag$.html"><span class="name">GlobalFlag</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.app.package@GlobalFlag" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>

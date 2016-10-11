@@ -174,7 +174,7 @@ bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="A
     </span>
       <p class="shortcomment cmt">A Buf that concat multiple Bufs together
 </p>
-    </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.InputStreamReader" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a>
       <a id="InputStreamReader:InputStreamReader"></a>
       <h4 class="signature">
@@ -190,8 +190,9 @@ bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="A
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Provides the Reader API for an InputStream
-</p>
+      <p class="shortcomment cmt">Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
+reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
+</p></div></div>
     </li><li name="com.twitter.io.Reader" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="ReaderextendsAnyRef"></a>
       <a id="Reader:Reader"></a>

@@ -354,7 +354,15 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a></dd></dl></div>
+      <p class="shortcomment cmt">Used by <a href="../../app/Flags.html#parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult" class="extmbr" name="com.twitter.app.Flags#parseArgs">Flags.parseArgs</a> to initialize <a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> values.</p><div class="fullcomment"><div class="comment cmt"><p>Used by <a href="../../app/Flags.html#parseArgs(args:Array[String],allowUndefinedFlags:Boolean):com.twitter.app.Flags.FlagParseResult" class="extmbr" name="com.twitter.app.Flags#parseArgs">Flags.parseArgs</a> to initialize <a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> values.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a></dd><dt>Note</dt><dd><span class="cmt"><p>Called via reflection assuming it will be a <code>static</code>
+      method on a singleton <code>object</code>. This causes problems
+      for Java developers who want to create a <a href="../../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>
+      as there is no good means for them to have it be a
+      <code>static</code> method. Thus, Java devs must add a method
+      <code>public static Flag&lt;?&gt; globalFlagInstance()</code> which
+      returns the singleton instance of the flag.
+      See <a href="../../app/JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a> for more details.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.GlobalFlag#getValue" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getValue:Option[T]"></a>
       <a id="getValue:Option[Set[String]]"></a>
@@ -519,7 +527,11 @@ given function <code>f</code>.
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+      <p class="shortcomment cmt">The &quot;name&quot;, or &quot;id&quot;, of this <a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The &quot;name&quot;, or &quot;id&quot;, of this <a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</p><p>While not marked <code>final</code>, if a subclass overrides this value, then
+developers <b>must</b> set that flag via System properties as otherwise it
+will not be recognized with command-line arguments.
+e.g. <code>-DyourGlobalFlagName=flagName</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

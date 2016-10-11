@@ -197,18 +197,18 @@ rw.close().ensure {
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.io.Reader#Null" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Null:com.twitter.io.Reader{defread(n:Int):com.twitter.util.Future[Option[Nothing]]}"></a>
-      <a id="Null:Reader{defread(n:Int):com.twitter.util.Future[Option[Nothing]]}"></a>
+      <a id="Null:com.twitter.io.Reader"></a>
+      <a id="Null:Reader"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">Null</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> { def read(n: Int): com.twitter.util.Future[Option[Nothing]] }</span>
+        <span class="name">Null</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.io.Reader$@Null:com.twitter.io.Reader{defread(n:Int):com.twitter.util.Future[Option[Nothing]]}" title="Permalink" target="_top">
+      <a href="../../../index.html#com.twitter.io.Reader$@Null:com.twitter.io.Reader" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -436,8 +436,8 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Create a new Reader for a File
-</p><div class="fullcomment"><div class="comment cmt"><p>Create a new Reader for a File
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> for a <code>File</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> for a <code>File</code>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released
+on reading of EOF and <span class="extype" name="Reader.discard()">Reader.discard()</span>.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -449,7 +449,7 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       <span class="symbol">classOf[SecurityException]</span>
     </span>)</span>
               
-        </dd><dt>See also</dt><dd><span class="cmt"><p>Readers.fromFile for a Java API</p></span></dd></dl></div>
+        </dd><dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromFile</code> for a Java API</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromStream" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromStream(s:java.io.InputStream):com.twitter.io.Reader"></a>
       <a id="fromStream(InputStream):Reader"></a>
@@ -466,9 +466,9 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Wrap InputStream s in with a Reader
-</p><div class="fullcomment"><div class="comment cmt"><p>Wrap InputStream s in with a Reader
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Readers.fromStream for a Java API</p></span></dd></dl></div>
+      <p class="shortcomment cmt">Wrap <code>InputStream</code> with a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Wrap <code>InputStream</code> with a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>.</p><p>Note that the given <code>InputStream</code> will be closed
+on reading of EOF and <span class="extype" name="Reader.discard()">Reader.discard()</span>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromStream</code> for a Java API</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>

@@ -51,7 +51,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides the Reader API for an InputStream
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
+reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>, <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
@@ -224,8 +225,8 @@
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Discards this Reader and closes the underlying InputStream
-</p><div class="fullcomment"><div class="comment cmt"><p>Discards this Reader and closes the underlying InputStream
+      <p class="shortcomment cmt">Discards this <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and closes the underlying <code>InputStream</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Discards this <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and closes the underlying <code>InputStream</code>
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
     </li><li name="com.twitter.util.Closable#close" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="close(after:com.twitter.util.Duration):com.twitter.util.Future[Unit]"></a>
@@ -302,7 +303,7 @@ the resource has been fully relinquished.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this reader: its output is no longer required.
+      <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this reader: its output is no longer required.</p><p>This closes the underlying <code>InputStream</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -501,11 +502,11 @@ the resource has been fully relinquished.
       </a>
     </span>
       <p class="shortcomment cmt">Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
-the InputStream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
-the InputStream. The returned future represents the results of
+the <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
+the <code>InputStream</code>. The returned <span class="extype" name="Future">Future</span> represents the results of
 the read operation.  Any failure indicates an error; an empty buffer
 indicates that the stream has completed.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>the underlying <code>InputStream</code> is closed on read of EOF.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.CloseAwaitably0#ready" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):CloseAwaitably0.this.type"></a>
       <a id="ready(Duration)(CanAwait):InputStreamReader.this.type"></a>
