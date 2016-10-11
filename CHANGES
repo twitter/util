@@ -6,6 +6,8 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+6.38.0  2016-10-10
+
 New Features:
 
   * util-app: Java developers can now declare instances of `GlobalFlag`
