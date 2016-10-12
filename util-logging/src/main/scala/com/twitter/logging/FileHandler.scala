@@ -166,8 +166,10 @@ class FileHandler(
   }
 
   private def openStream(): OutputStream = {
-    val dir = new File(filename).getParentFile
+    val file = new File(filename)
+    val dir = file.getParentFile
     if ((dir ne null) && !dir.exists) dir.mkdirs
+    bytesWrittenToFile = if (file.exists()) file.length() else 0
     new FileOutputStream(filename, append)
   }
 
@@ -176,7 +178,6 @@ class FileHandler(
       stream = openStream()
       openTime = Time.now.inMilliseconds
       nextRollTime = computeNextRollTime(openTime)
-      bytesWrittenToFile = 0
     }
   }
 
