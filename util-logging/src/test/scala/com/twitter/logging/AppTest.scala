@@ -19,10 +19,10 @@ package com.twitter.logging
 import com.twitter.app.App
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.{BeforeAndAfterEach, BeforeAndAfterAll, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
-class AppTest extends FunSuite with BeforeAndAfterEach {
+class AppTest extends FunSuite with BeforeAndAfterEach with BeforeAndAfterAll {
 
   object TestLoggingApp extends App with Logging {
     override def handlers = ScribeHandler() :: super.handlers
@@ -38,7 +38,7 @@ class AppTest extends FunSuite with BeforeAndAfterEach {
     assert(TestLoggingApp.loggerFactories.size == 1)
     assert(TestLoggingApp.loggerFactories.head.handlers.size == 2)
     // Logger is configured with two handlers/loggers
-    assert(Logger.iterator.size == 2)
+    assert(Logger.iterator.size == 1)
   }
 
   test("TestLoggingWithConfigureApp should set up a Logger with no Loggers") {
@@ -49,7 +49,11 @@ class AppTest extends FunSuite with BeforeAndAfterEach {
     assert(Logger.iterator.isEmpty)
   }
 
-  override protected def afterEach(): Unit = {
+  override protected def afterAll(): Unit = {
+    Logger.reset()
+  }
+
+  override protected def beforeEach(): Unit = {
     Logger.reset()
   }
 }
