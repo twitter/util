@@ -38,9 +38,9 @@ trait Logging { self: App =>
   protected[this] val outputFlag = flag("log.output", defaultOutput, "Output file")
   protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
 
-  private[this] val asyncFlag = flag("log.async", true, "Log asynchronously")
+  protected[this] val asyncFlag = flag("log.async", true, "Log asynchronously")
 
-  private[this] val asyncMaxSizeFlag =
+  protected[this] val asyncMaxSizeFlag =
     flag("log.async.maxsize", 4096, "Max queue size for async logging")
 
   // FileHandler-related flags are ignored if outputFlag is not overridden.
