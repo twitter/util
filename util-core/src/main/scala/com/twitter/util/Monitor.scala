@@ -7,10 +7,10 @@ import java.util.logging.{Level, Logger}
  * a monitor.
  */
 case class MonitorException(
-  handlingExc: Throwable,
-  monitorExc: Throwable
-) extends Exception(monitorExc) {
-  override def getMessage =
+    handlingExc: Throwable,
+    monitorExc: Throwable)
+  extends Exception(monitorExc) {
+  override def getMessage: String =
     "threw exception \""+monitorExc+"\" while handling "+
     "another exception \""+handlingExc+"\""
 }
@@ -165,17 +165,19 @@ object Monitor extends Monitor {
  * removing NullMonitor from the chain.
  */
 object NullMonitor extends Monitor {
-  def handle(exc: Throwable) = false
-  override def orElse(next: Monitor) = next
-  override def andThen(next: Monitor) = next
+  def handle(exc: Throwable): Boolean = false
+  override def orElse(next: Monitor): Monitor = next
+  override def andThen(next: Monitor): Monitor = next
 
   def getInstance: Monitor = this
+
+  override def toString: String = "NullMonitor"
 }
 
 object RootMonitor extends Monitor {
   private[this] val log = Logger.getLogger("monitor")
 
-  def handle(exc: Throwable) = exc match {
+  def handle(exc: Throwable): Boolean = exc match {
     case NonFatal(e) =>
       log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
       true /* Never propagate non fatal exception */
