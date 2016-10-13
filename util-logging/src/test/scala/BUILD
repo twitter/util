@@ -9,5 +9,6 @@ junit_tests(name='scala',
     'util/util-stats/src/main/scala:scala',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  known_to_fail='CSL-3418'
 )
