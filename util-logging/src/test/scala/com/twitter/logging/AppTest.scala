@@ -23,6 +23,9 @@ import org.scalatest.{BeforeAndAfterEach, BeforeAndAfterAll, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
 class AppTest extends FunSuite with BeforeAndAfterEach with BeforeAndAfterAll {
+  // ensure this is initialized--we need to do something with it or scala
+  // complains about purity
+  require(ScribeHandler.log != null)
 
   object TestLoggingApp extends App with Logging {
     override def handlers = ScribeHandler() :: super.handlers
@@ -37,7 +40,7 @@ class AppTest extends FunSuite with BeforeAndAfterEach with BeforeAndAfterAll {
     TestLoggingApp.main(Array.empty)
     assert(TestLoggingApp.loggerFactories.size == 1)
     assert(TestLoggingApp.loggerFactories.head.handlers.size == 2)
-    // Logger is configured with two handlers/loggers
+    // Logger is configured with two handlers, and has one logger
     assert(Logger.iterator.size == 1)
   }
 
