@@ -460,6 +460,12 @@ class Eval(target: Option[File]) {
     classpath.value = (pathList ::: impliedClassPath).mkString(File.pathSeparator)
   }
 
+  /** Class loader for finding classes compiled by StringCompiler.
+  *  Override if the classloader of Eval does not have access to
+  *  all classes used by the code it compiles.
+  */
+  def classLoader = this.getClass.getClassLoader
+
   /**
    * Dynamic scala compiler. Lots of (slow) state is created, so it may be advantageous to keep
    * around one of these and reuse it.
@@ -518,7 +524,7 @@ class Eval(target: Option[File]) {
      * Class loader for finding classes compiled by this StringCompiler.
      * After each reset, this class loader will not be able to find old compiled classes.
      */
-    var classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
+    var classLoader = new AbstractFileClassLoader(target, Eval.this.classLoader)
 
     def reset() {
       targetDir match {
@@ -535,7 +541,7 @@ class Eval(target: Option[File]) {
       }
       cache.clear()
       reporter.reset()
-      classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
+      classLoader = new AbstractFileClassLoader(target, Eval.this.classLoader)
     }
 
     def resetReporter(): Unit = {
