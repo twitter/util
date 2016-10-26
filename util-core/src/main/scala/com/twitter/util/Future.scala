@@ -63,11 +63,9 @@ object Future {
   private val toValueInstance: Any => Future[Any] = Future.value _
   private def toValue[T]: T => Future[T] = toValueInstance.asInstanceOf[T => Future[T]]
 
-  private val lowerFromTryInstance: Any => Future[Any] =
-    _ match {
-      case Return(t) => Future.value(t)
-      case Throw(exc) => Future.exception(exc)
-    }
+  private val lowerFromTryInstance: Any => Future[Any] = {
+    case t: Try[_] => Future.const(t)
+  }
 
   private def lowerFromTry[A, T]: A => Future[T] =
     lowerFromTryInstance.asInstanceOf[A => Future[T]]
@@ -241,14 +239,13 @@ object Future {
     if (fs.isEmpty) Unit else {
       val count = new AtomicInteger(fs.size)
       val p = Promise.interrupts[Unit](fs:_*)
-      val update: Try[A] => Unit =
-        _ match {
-          case Return(_) =>
-            if (count.decrementAndGet() == 0)
-              p.update(Return.Unit)
-          case Throw(cause) =>
-            p.updateIfEmpty(Throw(cause))
-        }
+      val update: Try[A] => Unit = {
+        case Return(_) =>
+          if (count.decrementAndGet() == 0)
+            p.update(Return.Unit)
+        case t@Throw(_) =>
+          p.updateIfEmpty(t.cast[Unit])
+      }
       val iterator = fs.iterator
       while (iterator.hasNext)
         iterator.next().respond(update)
@@ -914,7 +911,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * convention, futures of type Future[Unit] are used
    * for signalling.
    */
-  def isDone(implicit ev: this.type <:< Future[Unit]) =
+  def isDone(implicit ev: this.type <:< Future[Unit]): Boolean =
     ev(this).poll == Future.SomeReturnUnit
 
   /**
@@ -1337,7 +1334,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * The offer is activated when the future is satisfied.
    */
   def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
-    def prepare() = transform(Future.toTx)
+    def prepare(): Future[Tx[Try[A]]] = transform(Future.toTx)
   }
 
   /**
@@ -1509,7 +1506,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   @throws(classOf[Exception])
   def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A = result()
 
-  def isReady(implicit permit: Awaitable.CanAwait) = true
+  def isReady(implicit permit: Awaitable.CanAwait): Boolean = true
 }
 
 /**
@@ -1763,15 +1760,15 @@ class NoFuture extends Future[Nothing] {
 
   def poll: Option[Try[Nothing]] = None
 
-  def isReady(implicit permit: Awaitable.CanAwait) = false
+  def isReady(implicit permit: Awaitable.CanAwait): Boolean = false
 }
 
 class FutureTask[A](fn: => A) extends Promise[A] with Runnable {
-  def run() {
+  def run(): Unit = {
     update(Try(fn))
   }
 }
 
 object FutureTask {
-  def apply[A](fn: => A) = new FutureTask[A](fn)
+  def apply[A](fn: => A): FutureTask[A] = new FutureTask[A](fn)
 }
