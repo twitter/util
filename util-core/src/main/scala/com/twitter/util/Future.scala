@@ -1452,10 +1452,18 @@ abstract class Future[+A] extends Awaitable[A] {
  * These are cheap in construction compared to `Promises`.
  */
 class ConstFuture[A](result: Try[A]) extends Future[A] {
+
+  // It is not immediately obvious why `ConstFuture` uses the `Scheduler`
+  // instead of executing the `k` immediately and inline.
+  // The first is that this allows us to unwind the stack and thus do Future
+  // "recursion". See
+  // http://twitter.github.io/util/guide/util-cookbook/futures.html#future-recursion
+  // for details. The second is that this keeps the execution order consistent
+  // with `Promise`.
   def respond(k: Try[A] => Unit): Future[A] = {
     val saved = Local.save()
     Scheduler.submit(new Runnable {
-      def run() {
+      def run(): Unit = {
         val current = Local.save()
         Local.restore(saved)
         try k(result)
@@ -1470,9 +1478,10 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
+    // see the note on `respond` for an explanation of why `Scheduler` is used.
     val saved = Local.save()
     Scheduler.submit(new Runnable {
-      def run() {
+      def run(): Unit = {
         val current = Local.save()
         Local.restore(saved)
         val computed = try f(result)
@@ -1733,13 +1742,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 }
 
 /**
- * A future with no future (never completes).
+ * A [[Future]] which can never be satisfied and is thus always in
+ * the pending state.
+ *
+ * @see [[Future.never]] for an instance of it.
  */
 class NoFuture extends Future[Nothing] {
   def respond(k: Try[Nothing] => Unit): Future[Nothing] = this
   def transform[B](f: Try[Nothing] => Future[B]): Future[B] = this
 
-  def raise(interrupt: Throwable) {}
+  def raise(interrupt: Throwable): Unit = ()
 
   // Awaitable
   private[this] def sleepThenTimeout(timeout: Duration): TimeoutException = {
