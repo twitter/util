@@ -19,10 +19,10 @@ class ReaderTest extends FunSuite
   with Eventually
   with IntegrationPatience {
 
-  def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
-  def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
+  private def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
+  private def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
 
-  def toSeq(b: Option[Buf]) = b match {
+  private def toSeq(b: Option[Buf]): Seq[Byte] = b match {
     case None => fail("Expected full buffer")
     case Some(buf) =>
       val a = new Array[Byte](buf.length)
@@ -102,11 +102,13 @@ class ReaderTest extends FunSuite
       val bos = new ByteArrayOutputStream
 
       val w = Writer.fromOutputStream(bos, 31)
-      val f = Reader.copy(rw, w) ensure w.close()
+      val f = Reader.copy(rw, w).ensure(w.close())
       val g =
-        rw.write(Buf.ByteArray.Owned(p)) before
-          rw.write(Buf.ByteArray.Owned(q)) before
-            rw.write(Buf.ByteArray.Owned(r)) before rw.close()
+        rw.write(Buf.ByteArray.Owned(p)).before {
+          rw.write(Buf.ByteArray.Owned(q)).before {
+            rw.write(Buf.ByteArray.Owned(r)).before { rw.close() }
+          }
+        }
 
       Await.result(Future.join(f, g))
 
@@ -134,8 +136,8 @@ class ReaderTest extends FunSuite
 
   test("Writer.fromOutputStream - error") {
     val os = new OutputStream {
-      def write(b: Int) { }
-      override def write(b: Array[Byte], n: Int, m: Int) { throw new Exception }
+      def write(b: Int): Unit = ()
+      override def write(b: Array[Byte], n: Int, m: Int): Unit = throw new Exception
     }
     val f = Writer.fromOutputStream(os).write(Buf.Utf8("."))
     intercept[Exception] { Await.result(f) }
@@ -145,9 +147,9 @@ class ReaderTest extends FunSuite
     val closep = new Promise[Unit]
     val writep = new Promise[Array[Byte]]
     val os = new OutputStream {
-      def write(b: Int): Unit = { }
-      override def write(b: Array[Byte], n: Int, m: Int) { writep.setValue(b) }
-      override def close() { closep.setDone() }
+      def write(b: Int): Unit = ()
+      override def write(b: Array[Byte], n: Int, m: Int): Unit = writep.setValue(b)
+      override def close(): Unit = closep.setDone()
     }
     val w = Writer.fromOutputStream(os)
     assert(!writep.isDefined)
@@ -480,7 +482,7 @@ class ReaderTest extends FunSuite
 
   test("Reader.concat") {
     forAll { (ss: List[String]) =>
-      val readers = ss map { s => BufReader(Buf.Utf8(s)) }
+      val readers = ss.map { s => BufReader(Buf.Utf8(s)) }
       val buf = Reader.readAll(Reader.concat(AsyncStream.fromSeq(readers)))
       Await.result(buf) should equal(Buf.Utf8(ss.mkString))
     }
@@ -489,8 +491,8 @@ class ReaderTest extends FunSuite
   test("Reader.concat - discard") {
     val p = new Promise[Option[Buf]]
     val head = new Reader {
-      def read(n: Int) = p
-      def discard() = p.setException(new Reader.ReaderDiscarded)
+      def read(n: Int): Future[Option[Buf]] = p
+      def discard(): Unit = p.setException(new Reader.ReaderDiscarded)
     }
     val reader = Reader.concat(head +:: undefined)
     reader.discard()
@@ -500,8 +502,8 @@ class ReaderTest extends FunSuite
   test("Reader.concat - read while reading") {
     val p = new Promise[Option[Buf]]
     val head = new Reader {
-      def read(n: Int) = p
-      def discard() = p.setException(new Reader.ReaderDiscarded)
+      def read(n: Int): Future[Option[Buf]] = p
+      def discard(): Unit = p.setException(new Reader.ReaderDiscarded)
     }
     val reader = Reader.concat(head +:: undefined)
     assertReadWhileReading(reader)
@@ -510,8 +512,8 @@ class ReaderTest extends FunSuite
   test("Reader.concat - failed") {
     val p = new Promise[Option[Buf]]
     val head = new Reader {
-      def read(n: Int) = p
-      def discard() = p.setException(new Reader.ReaderDiscarded)
+      def read(n: Int): Future[Option[Buf]] = p
+      def discard(): Unit = p.setException(new Reader.ReaderDiscarded)
     }
     val reader = Reader.concat(head +:: undefined)
     assertFailed(reader, p)
@@ -519,8 +521,8 @@ class ReaderTest extends FunSuite
 
   test("Reader.concat - lazy tail") {
     val head = new Reader {
-      def read(n: Int) = Future.exception(new Exception)
-      def discard(): Unit = { }
+      def read(n: Int): Future[Option[Buf]] = Future.exception(new Exception)
+      def discard(): Unit = ()
     }
     val p = new Promise[Unit]
     def tail: AsyncStream[Reader] = {
@@ -538,7 +540,9 @@ class ReaderTest extends FunSuite
     val r = Reader.fromStream(in)
     val f = Reader.readAll(r)
     assert(Await.result(f, 5.seconds) == buf(0, 10))
-    verify(in, times(1)).close()
+    eventually {
+      verify(in).close()
+    }
   }
 
   test("Reader.fromStream closes resources on discard") {
@@ -546,7 +550,7 @@ class ReaderTest extends FunSuite
     val r = Reader.fromStream(in)
     r.discard()
     eventually {
-      verify(in, times(1)).close()
+      verify(in).close()
     }
   }
 }
