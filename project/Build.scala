@@ -21,7 +21,7 @@ object Util extends Build {
   )
 
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
-  val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.3"
+  val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.4"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
   val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
 
