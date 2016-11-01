@@ -372,12 +372,11 @@ object Util extends Build {
   ).settings(
     name := "util-thrift",
     libraryDependencies ++= Seq(
-      "thrift"                     % "libthrift"        % "0.5.0",
+      "com.twitter"                % "libthrift"        % "0.5.0-7",
       "org.slf4j"                  % "slf4j-api"        % "1.7.7" % "provided",
       "com.fasterxml.jackson.core" % "jackson-core"     % "2.8.3",
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.3"
-    ),
-    resolvers += "twitter-repo" at "https://maven.twttr.com"
+    )
   ).dependsOn(utilCodec)
 
   lazy val utilZk = Project(
