@@ -13,6 +13,12 @@ New Features:
   * util-app: Java developers can now declare instances of `GlobalFlag`
     from Java. See `c.t.app.JavaGlobalFlag` for details. ``RB_ID=874073``
 
+  * util-thrift: We now depend on a fork of libthrift hosted in the Central Repository.
+    The new package lives in the 'com.twitter' organization. This removes the necessity of
+    depending on maven.twttr.com. This also means that eviction will not be automatic and
+    using a newer libthrift library requires manual eviction if artifacts are being pulled
+    in transitively. ``RB_ID=885879``
+
   * util-logging: Allow users to override `c.t.util.logging.Logger` installation,
     making it easier to work with SLF4J bridges. ``RB_ID=870684``
 
