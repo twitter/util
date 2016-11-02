@@ -347,7 +347,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-stats",
-    libraryDependencies ++= Seq(caffeineLib, jsr305Lib, scalacheckLib, guavaLibForTest)
+    libraryDependencies ++= Seq(caffeineLib, jsr305Lib, scalacheckLib, guavaLib % "test")
   ).dependsOn(utilCore, utilLint)
 
   lazy val utilTest = Project(
