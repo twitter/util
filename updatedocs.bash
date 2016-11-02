@@ -6,13 +6,13 @@ dir=/tmp/util.$$
 trap "rm -fr $dir" 0 1 2
 
 echo 'making site...' 1>&2
-./sbt util-doc/make-site >/dev/null 2>&1
+./sbt --warn util-doc/make-site
 
 unidoc=target/scala-2.11/unidoc/
 rm -fr "$unidoc"
 
 echo 'making unidoc...' 1>&2
-./sbt unidoc >/dev/null 2>&1
+./sbt --warn unidoc
 
 echo 'cloning...' 1>&2
 git clone -b gh-pages git@github.com:twitter/util.git $dir >/dev/null 2>&1
