@@ -1,21 +1,27 @@
 package com.twitter.finagle.stats
 
-import com.twitter.util.{Future, Stopwatch, NonFatal}
+import com.twitter.util.{Future, NonFatal, Stopwatch}
 import java.util.concurrent.{Callable, TimeUnit}
 
 /**
  * An append-only collection of time-series data. Example Stats are
  * "queue depth" or "query width in a stream of requests".
+ *
+ * Utilities for timing synchronous execution and asynchronous
+ * execution are on the companion object ([[Stat.time(Stat)]] and
+ * [[Stat.timeFuture(Stat)]].
  */
 trait Stat {
   def add(value: Float): Unit
 }
 
 /**
- * Helpers for working with histograms.  Java-friendly versions can be found in
- * [[com.twitter.finagle.stats.JStats]].
+ * Helpers for working with histograms.
+ *
+ * Java-friendly versions can be found in [[com.twitter.finagle.stats.JStats]].
  */
 object Stat {
+
   /**
    * Time a given `f` using the given `unit`.
    */
@@ -37,12 +43,14 @@ object Stat {
    * Time a given asynchronous `f` using the given `unit`.
    */
   def timeFuture[A](stat: Stat, unit: TimeUnit)(f: => Future[A]): Future[A] = {
-    val elapsed = Stopwatch.start()
+    val start = Stopwatch.timeNanos()
     try {
-      f.ensure { stat.add(elapsed().inUnit(unit)) }
+      f.respond { _ =>
+        stat.add(unit.convert(Stopwatch.timeNanos() - start, TimeUnit.NANOSECONDS))
+      }
     } catch {
       case NonFatal(e) =>
-        stat.add(elapsed().inUnit(unit))
+        stat.add(unit.convert(Stopwatch.timeNanos() - start, TimeUnit.NANOSECONDS))
         Future.exception(e)
     }
   }
