@@ -1,96 +1,77 @@
 package com.twitter.finagle.stats
 
+import com.github.benmanes.caffeine.cache.{Cache, Caffeine, RemovalCause, RemovalListener}
 import com.twitter.util.lint._
-import java.lang.ref.WeakReference
-import java.util.concurrent.{ThreadLocalRandom, ConcurrentHashMap}
-import scala.collection.mutable
+import java.lang.Boolean
+import java.util.concurrent.{ConcurrentHashMap, Executor, ForkJoinPool}
 import scala.collection.JavaConverters._
-
-private object CumulativeGauge {
-
-  /**
-   * To avoid cleaning up unreferenced gauges too often (a costly operation),
-   * we clean only on gauge removal, and `CleanupFreq` fraction of cleanup calls (in `addGauge`
-   * and `get`)
-   */
-  private[this] val CleanupFreq = 0.01
-
-  /**
-   * Used to determine whether we should clean up gauges. Returns true with `cleanupFreq`
-   * probability
-   */
-  def shouldClean(): Boolean =
-    ThreadLocalRandom.current().nextDouble() <= CleanupFreq
-}
 
 /**
  * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)
  * of several underlying gauges. It follows the weak reference
  * semantics of [[Gauge Gauges]] as outlined in [[StatsReceiver]].
+ *
+ * @param executor exposed for testing purposes so that a tests can be
+ *                 run deterministically using a same thread `Executor`.
  */
-private[finagle] abstract class CumulativeGauge {
-  import CumulativeGauge._
+private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
 
-  private[this] case class UnderlyingGauge(f: () => Float) extends Gauge {
-    def remove(): Unit = removeGauge(this)
+  // uses the default `Executor` for the cache.
+  def this() = this(ForkJoinPool.commonPool())
+
+  private[this] class UnderlyingGauge(val f: () => Float) extends Gauge {
+    def remove(): Unit = self.remove(this)
   }
 
-  @volatile private[this] var underlying =
-    IndexedSeq.empty[WeakReference[UnderlyingGauge]]
+  private[this] val removals = new RemovalListener[UnderlyingGauge, java.lang.Boolean] {
+    def onRemoval(key: UnderlyingGauge, value: Boolean, cause: RemovalCause): Unit =
+      self.deregister()
+  }
 
   /**
-   * Returns a buffered version of the current gauges
+   * A cache of `UnderlyingGauges` to sentinel values (Boolean.TRUE).
+   * The keys are held by `WeakReferences` and cleaned out occasionally,
+   * when there are no longer strong references to the key.
+   *
+   * @see [[cleanup()]] to allow for more predictable testing.
    */
-  private[this] def get(): IndexedSeq[UnderlyingGauge] = {
-    // Clean up gauges with `CleanupFreq` probability
-    if (shouldClean()) {
-      removeGauge(null)
-    }
+  private[this] val refs: Cache[UnderlyingGauge, java.lang.Boolean] =
+    Caffeine.newBuilder()
+      .executor(executor)
+      .weakKeys()
+      .removalListener(removals)
+      .build[UnderlyingGauge, java.lang.Boolean]()
 
-    val gs = new mutable.ArrayBuffer[UnderlyingGauge](underlying.size)
-    underlying.foreach { weakRef =>
-      val g = weakRef.get()
-      if (g != null)
-        gs += g
-    }
-    gs
-  }
+  /** Removes expired gauges. Exposed for testing. */
+  protected def cleanup(): Unit =
+    refs.cleanUp()
 
   /** The number of active gauges */
-  private[stats] def size: Int =
-    get().size
-
-  /** Total number of gauges, including inactive */
-  private[stats] def totalSize: Int = underlying.size
-
-  private[this] def removeGauge(underlyingGauge: UnderlyingGauge): Unit = synchronized {
-    // first, clean up weakrefs
-    val newUnderlying = mutable.IndexedSeq.newBuilder[WeakReference[UnderlyingGauge]]
-    underlying.foreach { weakRef =>
-      val g = weakRef.get()
-      if (g != null && (g ne underlyingGauge))
-        newUnderlying += weakRef
-    }
-    underlying = newUnderlying.result()
-    if (underlying.isEmpty)
-      deregister()
+  private[stats] def size: Int = {
+    cleanup()
+    totalSize
   }
 
-  def addGauge(f: => Float): Gauge = synchronized {
-    val shouldRegister = underlying.isEmpty
-    // Clean gauges with `CleanupFreq` probability
-    if (!shouldRegister && shouldClean())
-      removeGauge(null) // there is at least 1 gauge that may need to be cleaned
-    val underlyingGauge = UnderlyingGauge(() => f)
-    underlying :+= new WeakReference(underlyingGauge)
-    if (shouldRegister)
-      register()
+  /** Total number of gauges, including inactive */
+  private[stats] def totalSize: Int =
+    refs.estimatedSize().toInt
+
+  private def remove(underlyingGauge: UnderlyingGauge): Unit =
+    refs.invalidate(underlyingGauge)
+
+  def addGauge(f: => Float): Gauge = {
+    val underlyingGauge = new UnderlyingGauge(() => f)
+    refs.put(underlyingGauge, java.lang.Boolean.TRUE)
+    register()
+
     underlyingGauge
   }
 
   def getValue: Float = {
     var sum = 0f
-    get().foreach { g =>
+    val iter = refs.asMap().keySet().iterator()
+    while (iter.hasNext) {
+      val g = iter.next()
       sum += g.f()
     }
     sum
@@ -143,14 +124,26 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
   def addGauge(name: String*)(f: => Float): Gauge = {
     var cumulativeGauge = gauges.get(name)
     if (cumulativeGauge == null) {
-      val insert = new CumulativeGauge {
-        override def register(): Unit = synchronized {
-          self.registerGauge(name, getValue)
+      val insert = new CumulativeGauge { cg =>
+        // thread safety provided by synchronization on `this/cg`
+        private[this] var registers = 0
+
+        def register(): Unit = cg.synchronized {
+          registers += 1
+          if (registers == 1) {
+            self.registerGauge(name, getValue)
+            // in order to avoid races with `deregister`, we make sure
+            // we are always in `gauges`.
+            gauges.putIfAbsent(name, this)
+          }
         }
 
-        override def deregister(): Unit = synchronized {
-          gauges.remove(name)
-          self.deregisterGauge(name)
+        def deregister(): Unit = cg.synchronized {
+          registers -= 1
+          if (registers == 0) {
+            gauges.remove(name)
+            self.deregisterGauge(name)
+          }
         }
       }
       val prev = gauges.putIfAbsent(name, insert)

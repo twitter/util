@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.google.common.util.concurrent.MoreExecutors
 import java.util.concurrent.atomic.AtomicInteger
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
@@ -7,9 +8,12 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CumulativeGaugeTest extends FunSuite {
-  class TestGauge extends CumulativeGauge {
+
+  class TestGauge extends CumulativeGauge(MoreExecutors.sameThreadExecutor()) {
     val numRegisters = new AtomicInteger()
     val numDeregisters = new AtomicInteger()
+
+    def cleanRefs(): Unit = cleanup()
 
     def register(): Unit = numRegisters.incrementAndGet()
     def deregister(): Unit = numDeregisters.incrementAndGet()
@@ -38,9 +42,8 @@ class CumulativeGaugeTest extends FunSuite {
     val added = gauge.addGauge { 1.0f }
 
     System.gc()
+    gauge.cleanRefs()
 
-    // We have to incite some action for the weakref GC to take place.
-    assert(gauge.getValue == 1.0f)
     assert(0 == gauge.numDeregisters.get)
   }
 
@@ -52,11 +55,8 @@ class CumulativeGaugeTest extends FunSuite {
 
     added = null
     System.gc()
+    gauge.cleanRefs()
 
-    // We have to incite some action for the weakref GC to take place.
-    // We clean up gauges with probability 0.01 when getting the value,
-    // so get the value 500 times to near-guarantee a cleaning.
-    0 until 500 foreach { _ => gauge.getValue }
     assert(gauge.getValue == 0.0f)
     assert(gauge.numDeregisters.get > 0)
   }
@@ -64,14 +64,14 @@ class CumulativeGaugeTest extends FunSuite {
   test("a CumulativeGauge should sum values across all registered gauges") {
     val gauge = new TestGauge()
 
-    0 until 100 foreach { _ => gauge.addGauge { 10.0f } }
+    val underlying = 0.until(100).foreach { _ => gauge.addGauge { 10.0f } }
     assert(gauge.getValue == (10.0f * 100))
   }
 
   test("a CumulativeGauge should discount gauges once removed") {
     val gauge = new TestGauge()
 
-    val underlying = 0 until 100 map { _ => gauge.addGauge { 10.0f } }
+    val underlying = Array.fill(100) { gauge.addGauge { 10.0f } }
     assert(gauge.getValue == (10.0f * 100))
     underlying(0).remove()
     assert(gauge.getValue == (10.0f * 99))
