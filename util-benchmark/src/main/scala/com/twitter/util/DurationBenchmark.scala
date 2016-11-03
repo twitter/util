@@ -2,7 +2,7 @@ package com.twitter.util
 
 import org.openjdk.jmh.annotations._
 
-// ./sbt 'project util-benchmark' 'run .*DurationBenchmark.*'
+// ./sbt 'project util-benchmark' 'jmh:run DurationBenchmark'
 @State(Scope.Benchmark)
 class DurationBenchmark extends StdBenchAnnotations {
 

@@ -9,7 +9,7 @@ import org.openjdk.jmh.annotations._
  * performance of future scheduling (particularly because this
  * does not wait for the tasks to be executed).
  */
-// ./sbt 'project util-benchmark' 'run .*TimerBenchmark.*'
+// ./sbt 'project util-benchmark' 'jmh:run TimerBenchmark'
 @State(Scope.Benchmark)
 @Warmup(batchSize = 250)
 @Measurement(batchSize = 1000)

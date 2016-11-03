@@ -4,7 +4,7 @@ import com.twitter.util.StdBenchAnnotations
 import org.openjdk.jmh.annotations._
 import scala.util.Random
 
-// ./sbt 'project util-benchmark' 'run .*StringConcatenationBenchmark.*'
+// ./sbt 'project util-benchmark' 'jmh:run StringConcatenationBenchmark'
 @State(Scope.Benchmark)
 class StringConcatenationBenchmark extends StdBenchAnnotations {
 

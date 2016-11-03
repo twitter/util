@@ -4,7 +4,7 @@ import com.twitter.util.{Await, Future, StdBenchAnnotations}
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
-// ./sbt 'project util-benchmark' 'run StatBenchmark'
+// ./sbt 'project util-benchmark' 'jmh:run StatBenchmark'
 @State(Scope.Benchmark)
 class StatBenchmark extends StdBenchAnnotations {
 

@@ -5,11 +5,11 @@ import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 
 // Run this via:
-// ./sbt 'project util-benchmark' 'run .*SchedulerBenchmark.* -i 10 -wi 5 -f 1 -t 8 -bm avgt -tu ns'
+// ./sbt 'project util-benchmark' 'jmh:run SchedulerBenchmark -i 10 -wi 5 -f 1 -t 8 -bm avgt -tu ns'
 //
 // Notes:
 //  - threads, -t, should be 2x number of logical cores.
-//  - to run a specific benchmark, use: .*SchedulerBenchmark.timeSubmit
+//  - to run a specific benchmark, use: SchedulerBenchmark.timeSubmit
 //  - to send specific params, use: -p lifo=false -p m=1,8,16
 /**
  * Measure Scheduler.submit/run time when there are multiple threads.  Previous
