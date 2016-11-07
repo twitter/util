@@ -1,4 +1,4 @@
-junit_tests(name='scala',
+junit_tests(
   dependencies=[
     'science/src/java/com/twitter/common/io:io',
     '3rdparty/jvm/junit',

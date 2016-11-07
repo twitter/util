@@ -1,4 +1,4 @@
-target(name='util-app',
+target(
   dependencies=[
     'util/util-app/src/main/scala',
     'util/util-app/src/main/java'

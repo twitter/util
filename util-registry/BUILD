@@ -1,4 +1,4 @@
-target(name='util-registry',
+target(
   dependencies=[
     'util/util-registry/src/main/scala'
   ]

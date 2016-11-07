@@ -1,4 +1,4 @@
-target(name='util-logging',
+target(
   dependencies=[
     'util/util-logging/src/main/scala'
   ]

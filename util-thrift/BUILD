@@ -1,4 +1,4 @@
-target(name='util-thrift',
+target(
   dependencies=[
     'util/util-thrift/src/main/scala'
   ]

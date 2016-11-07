@@ -1,4 +1,4 @@
-junit_tests(name = 'scala',
+junit_tests(
   fatal_warnings = True,
   strict_deps = True,
   dependencies = [

@@ -1,4 +1,4 @@
-target(name='util-hashing',
+target(
   dependencies=[
     'util/util-hashing/src/main/scala'
   ]

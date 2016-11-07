@@ -1,4 +1,4 @@
-target(name='util-core',
+target(
   dependencies=[
     'util/util-core/src/main/java',
     'util/util-core/src/main/scala'

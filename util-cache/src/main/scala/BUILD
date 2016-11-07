@@ -1,4 +1,4 @@
-scala_library(name='scala',
+scala_library(
   fatal_warnings=True,
   strict_deps=True,
   sources=rglobs('*.scala'),

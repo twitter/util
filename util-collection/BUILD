@@ -1,4 +1,4 @@
-target(name='util-collection',
+target(
   dependencies=[
     'util/util-collection/src/main/scala'
   ]

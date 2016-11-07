@@ -1,4 +1,4 @@
-target(name='util-security',
+target(
   dependencies=[
     'util/util-security/src/main/scala'
   ]

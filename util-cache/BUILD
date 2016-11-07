@@ -1,4 +1,4 @@
-target(name='util-cache',
+target(
   dependencies=[
     'util/util-cache/src/main/scala'
   ]

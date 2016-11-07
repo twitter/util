@@ -1,4 +1,4 @@
-scala_library(name='scala',
+scala_library(
   dependencies=[
     '3rdparty/jvm/org/openjdk/jmh:jmh-core',
     '3rdparty/jvm/org/scala-lang:scala-library',

@@ -1,4 +1,4 @@
-target(name='util-events',
+target(
   dependencies=[
     'util/util-events/src/main/scala',
     'util/util-events/src/main/java'

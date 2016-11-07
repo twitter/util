@@ -1,4 +1,4 @@
-target(name='util-test',
+target(
   dependencies=[
     'util/util-test/src/main/scala'
   ]

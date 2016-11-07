@@ -1,4 +1,4 @@
-target(name='util-lint',
+target(
   dependencies=[
     'util/util-lint/src/main/scala'
   ]

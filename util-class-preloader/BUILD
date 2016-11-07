@@ -1,4 +1,4 @@
-target(name='util-class-preloader',
+target(
   dependencies=[
     'util/util-class-preloader/src/main/java'
   ]

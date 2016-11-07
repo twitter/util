@@ -1,4 +1,4 @@
-target(name='util-eval',
+target(
   dependencies=[
     'util/util-eval/src/main/scala'
   ]
