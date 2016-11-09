@@ -23,7 +23,7 @@ object Util extends Build {
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.4"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
-  val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+  val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.1" % "test"
 
   // for various reasons, we use poms that point to the wrong
   // versions of certain libraries.
@@ -44,13 +44,13 @@ object Util extends Build {
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.11.8",
-    crossScalaVersions := Seq("2.11.8", "2.12.0-M4"),
+    crossScalaVersions := Seq("2.11.8", "2.12.0-RC1"),
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
       "junit" % "junit" % "4.8.1" % "test",
       "org.mockito" % "mockito-all" % "1.10.19" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     ),
 
     ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
@@ -358,7 +358,7 @@ object Util extends Build {
   ).settings(
     name := "util-test",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.6",
+      "org.scalatest" %% "scalatest" % "3.0.0",
       "org.mockito" % "mockito-all" % "1.10.19"
     )
   ).dependsOn(utilCore, utilLogging)

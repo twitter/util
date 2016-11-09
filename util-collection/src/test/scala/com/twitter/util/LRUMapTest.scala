@@ -11,7 +11,7 @@ class LRUMapTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   // don't waste too much time testing this and keep things small
   implicit override val generatorDrivenConfig =
-    PropertyCheckConfig(minSuccessful=5, minSize=2, maxSize=10)
+    PropertyCheckConfiguration(minSuccessful=5, minSize=2, sizeRange=8)
 
   test("LRUMap creation") {
     forAll (Gen.choose(1, 200)) { size =>

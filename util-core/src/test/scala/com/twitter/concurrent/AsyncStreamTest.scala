@@ -146,21 +146,21 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(p.isDefined)
   }
 
-  test("memoized stream") {
-    class Ctx[A](ops: AsyncStream[Int] => AsyncStream[A]) {
-      var once = 0
-      val s: AsyncStream[Int] = 2 +:: {
-        once = once + 1
-        if (once > 1) throw new Exception("evaluated more than once")
-        AsyncStream.of(1)
-      }
-
-      val ss = ops(s)
-      ss.foreach(_ => ())
-      // does not throw
-      ss.foreach(_ => ())
+  class Ctx[A](ops: AsyncStream[Int] => AsyncStream[A]) {
+    var once = 0
+    val s: AsyncStream[Int] = 2 +:: {
+      once = once + 1
+      if (once > 1) throw new Exception("evaluated more than once")
+      AsyncStream.of(1)
     }
 
+    val ss = ops(s)
+    ss.foreach(_ => ())
+    // does not throw
+    ss.foreach(_ => ())
+  }
+
+  test("memoized stream") {
     new Ctx(s => s.map(_ => 0))
     new Ctx(s => s.mapF(_ => Future.value(1)))
     new Ctx(s => s.flatMap(of(_)))

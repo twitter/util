@@ -4,10 +4,9 @@ package com.twitter.util
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
-class ConfigTest extends WordSpec with MockitoSugar with Matchers {
+class ConfigTest extends WordSpec with Matchers {
   import Config._
 
   "Config" should {
@@ -38,20 +37,20 @@ class ConfigTest extends WordSpec with MockitoSugar with Matchers {
       assert((bar.y: Int) == 45) // use type annotation to force implicit conversion
     }
 
-    "missingValues" should {
-      class Bar extends Config.Nothing {
-        var z = required[Int]
-      }
-      class Baz extends Config.Nothing {
-        var w = required[Int]
-      }
-      class Foo extends Config.Nothing {
-        var x = required[Int]
-        var y = 3
-        var bar = required[Bar]
-        var baz = optional[Baz]
-      }
+    class Bar extends Config.Nothing {
+      var z = required[Int]
+    }
+    class Baz extends Config.Nothing {
+      var w = required[Int]
+    }
+    class Foo extends Config.Nothing {
+      var x = required[Int]
+      var y = 3
+      var bar = required[Bar]
+      var baz = optional[Baz]
+    }
 
+    "missingValues" should {
       "must return empty Seq when no values are missing" in {
         val foo = new Foo {
           x = 42

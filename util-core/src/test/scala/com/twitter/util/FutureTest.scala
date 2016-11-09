@@ -1129,11 +1129,11 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       "flatMap (values)" should {
         val f = Future(1) flatMap { x => Future(x + 1) }
 
-        "apply" which {
+        "apply" in {
           assert(Await.result(f) == 2)
         }
 
-        "respond" which {
+        "respond" in {
           f mustProduce Return(2)
         }
       }
@@ -1742,7 +1742,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
     import Arbitrary.arbitrary
     val genLen = Gen.choose(1, 10)
 
-    "return the first result" which {
+    "return the first result" in {
       forAll(genLen, arbitrary[Boolean]) { (n, fail) =>
         val ps = ((0 until n) map(_ => new Promise[Int])).toList
         assert(ps.map(_.waitqLength).sum == 0)
@@ -1813,7 +1813,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
     import Arbitrary.arbitrary
     val genLen = Gen.choose(1, 10)
 
-    "return the first result" which {
+    "return the first result" in {
       forAll(genLen, arbitrary[Boolean]) { (n, fail) =>
         val ps = ((0 until n) map(_ => new Promise[Int])).toIndexedSeq
         assert(ps.map(_.waitqLength).sum == 0)

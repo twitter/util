@@ -200,7 +200,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(closed == t)
     assert(f1.isDone)
   }
-  
+
   test("Var.collect: empty") {
     assert(Var.collect(Seq.empty[Var[Int]]).sample == Seq.empty)
   }
@@ -214,7 +214,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       val ref = new AtomicReference[Seq[Int]]
       coll.changes.register(Witness(ref))
       assert(ref.get == Seq.range(0, i))
-      
+
       vars(i/2).update(999)
       assert(ref.get == Seq.range(0, i).patch(i/2, Seq(999), 1))
     }
@@ -247,9 +247,9 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
     val ref = new AtomicReference[Seq[(Int, Int)]]
     v.changes.build.register(Witness(ref))
-    
+
     assert(ref.get == Seq((1, 2)))
-    
+
     v1() = 2
     assert(ref.get == Seq((1, 2), (2, 4)))
   }
@@ -433,7 +433,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     // in order to avoid extremely long runtimes, we limit the max size
     // of the generated Seqs and Sets. A limit of 50 keeps runtime below
     // 1 second on my crufty old laptop.
-    implicit val generatorDrivenConfig = PropertyCheckConfig(maxSize = 50)
+    implicit val generatorDrivenConfig = PropertyCheckConfiguration(sizeRange = 50)
 
     forAll(arbitrary[Seq[Set[Int]]].suchThat(_.nonEmpty)) { sets =>
       val v = Var(sets.head)
