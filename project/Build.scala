@@ -374,8 +374,8 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "com.twitter"                % "libthrift"        % "0.5.0-7",
       "org.slf4j"                  % "slf4j-api"        % "1.7.7" % "provided",
-      "com.fasterxml.jackson.core" % "jackson-core"     % "2.8.3",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.3"
+      "com.fasterxml.jackson.core" % "jackson-core"     % "2.8.4",
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.4"
     )
   ).dependsOn(utilCodec)
 
