@@ -275,7 +275,7 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
     val contents = List(1,2,3,4)
     val v1 = Var.value(contents)
     assert(Var.sample(v1) eq contents)
-    v1.changes.register(Witness({ (l: List[Int]) => assert(contents eq l) }))
+    v1.changes.register(Witness({ (l: List[Int]) => assert(contents eq l); () }))
   }
 
   /**
@@ -289,8 +289,8 @@ class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
       Var.value(i*2)
     }
 
-    val c1 = f.changes.register(Witness({ (i: Int) => assert(i == 22) }))
-    val c2 = f.changes.register(Witness({ (i: Int) => assert(i == 22) }))
+    val c1 = f.changes.register(Witness({ (i: Int) => assert(i == 22); () }))
+    val c2 = f.changes.register(Witness({ (i: Int) => assert(i == 22); () }))
 
     c1.close()
     c2.close()

@@ -4,7 +4,7 @@ import com.typesafe.sbt.SbtSite.site
 import com.typesafe.sbt.site.SphinxSupport.Sphinx
 import pl.project13.scala.sbt.JmhPlugin
 import sbtunidoc.Plugin.unidocSettings
-import scoverage.ScoverageSbtPlugin
+import scoverage.ScoverageKeys
 
 object Util extends Build {
   val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
@@ -23,7 +23,7 @@ object Util extends Build {
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.4"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
-  val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.1" % "test"
+  val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 
   // for various reasons, we use poms that point to the wrong
   // versions of certain libraries.
@@ -44,7 +44,7 @@ object Util extends Build {
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.11.8",
-    crossScalaVersions := Seq("2.11.8", "2.12.0-RC1"),
+    crossScalaVersions := Seq("2.11.8", "2.12.0"),
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
@@ -53,7 +53,7 @@ object Util extends Build {
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     ),
 
-    ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true,
+    ScoverageKeys.coverageHighlighting := true,
 
     scalacOptions := Seq(
       // Note: Add -deprecation when deprecated methods are removed
