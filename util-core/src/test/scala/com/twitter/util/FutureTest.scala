@@ -12,7 +12,7 @@ import org.mockito.stubbing.Answer
 import org.scalacheck.{Gen, Arbitrary}
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl

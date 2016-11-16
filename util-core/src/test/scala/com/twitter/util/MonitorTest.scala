@@ -6,7 +6,7 @@ import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 object MonitorSpec {
   class MockMonitor extends Monitor {

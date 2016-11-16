@@ -711,6 +711,7 @@ private object AsyncStreamTest {
 
   val genListAndSentinel = for {
     as <- Arbitrary.arbitrary[List[Int]]
+    if as.nonEmpty
     n <- Gen.choose(0, as.length - 1)
   } yield (as, as(n))
 
