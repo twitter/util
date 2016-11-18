@@ -2,18 +2,14 @@ package com.twitter.finagle.stats
 
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine, RemovalCause, RemovalListener}
 import com.twitter.util.lint._
-import java.lang.{Boolean => JBoolean}
-import java.util.concurrent.{ConcurrentHashMap, Executor, ForkJoinPool, Phaser}
-import java.util.function.{Function => JFunction}
+import java.lang.Boolean
+import java.util.concurrent.{ConcurrentHashMap, Executor, ForkJoinPool}
 import scala.collection.JavaConverters._
 
 /**
- * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the
- * (addition) of several underlying gauges. It follows the weak reference
+ * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)
+ * of several underlying gauges. It follows the weak reference
  * semantics of [[Gauge Gauges]] as outlined in [[StatsReceiver]].
- *
- * After all underlying gauges have been released, it is dead and cannot be
- * reused.
  *
  * @param executor exposed for testing purposes so that a tests can be
  *                 run deterministically using a same thread `Executor`.
@@ -28,7 +24,7 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
   }
 
   private[this] val removals = new RemovalListener[UnderlyingGauge, java.lang.Boolean] {
-    def onRemoval(key: UnderlyingGauge, value: JBoolean, cause: RemovalCause): Unit =
+    def onRemoval(key: UnderlyingGauge, value: Boolean, cause: RemovalCause): Unit =
       self.deregister()
   }
 
@@ -39,12 +35,12 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
    *
    * @see [[cleanup()]] to allow for more predictable testing.
    */
-  private[this] val refs: Cache[UnderlyingGauge, JBoolean] =
+  private[this] val refs: Cache[UnderlyingGauge, java.lang.Boolean] =
     Caffeine.newBuilder()
       .executor(executor)
       .weakKeys()
       .removalListener(removals)
-      .build[UnderlyingGauge, JBoolean]()
+      .build[UnderlyingGauge, java.lang.Boolean]()
 
   /** Removes expired gauges. Exposed for testing. */
   protected def cleanup(): Unit =
@@ -63,14 +59,12 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
   private def remove(underlyingGauge: UnderlyingGauge): Unit =
     refs.invalidate(underlyingGauge)
 
-  /**
-   * Returns a gauge unless it is dead, in which case it returns null.
-   */
   def addGauge(f: => Float): Gauge = {
     val underlyingGauge = new UnderlyingGauge(() => f)
-    refs.put(underlyingGauge, JBoolean.TRUE)
+    refs.put(underlyingGauge, java.lang.Boolean.TRUE)
+    register()
 
-    if (register()) underlyingGauge else null
+    underlyingGauge
   }
 
   def getValue: Float = {
@@ -83,18 +77,14 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
     sum
   }
 
-  // Special care must be taken in implementing these so that they are free
-  // of race conditions.
   /**
-   * Indicates when the gauge needs to be registered.
+   * These need to be implemented by the gauge provider. They indicate
+   * when the gauge needs to be registered & deregistered.
    *
-   * Returns true until the gauge is dead, after which it returns false.
+   * Special care must be taken in implementing these so that they are free
+   * of race conditions.
    */
-  def register(): Boolean
-
-  /**
-   * Indicates when the gauge needs to be deregistered.
-   */
+  def register(): Unit
   def deregister(): Unit
 }
 
@@ -131,35 +121,35 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
   protected[this] def registerGauge(name: Seq[String], f: => Float): Unit
   protected[this] def deregisterGauge(name: Seq[String]): Unit
 
-  private[this] val gaugeFn: JFunction[Seq[String], CumulativeGauge] =
-    new JFunction[Seq[String], CumulativeGauge] {
-      // the gauge's state machine only goes Alive => Dead to simplify trickiness
-      // around garbage collection and races
-      def apply(key: Seq[String]): CumulativeGauge = {
-        new CumulativeGauge {
-          self.registerGauge(key, getValue)
-          private[this] val phaser = new Phaser() {
-            override protected def onAdvance(phase: Int, registeredParties: Int): Boolean = {
-              self.deregisterGauge(key)
-              gauges.remove(key)
-              true
-            }
+  def addGauge(name: String*)(f: => Float): Gauge = {
+    var cumulativeGauge = gauges.get(name)
+    if (cumulativeGauge == null) {
+      val insert = new CumulativeGauge { cg =>
+        // thread safety provided by synchronization on `this/cg`
+        private[this] var registers = 0
+
+        def register(): Unit = cg.synchronized {
+          registers += 1
+          if (registers == 1) {
+            self.registerGauge(name, getValue)
+            // in order to avoid races with `deregister`, we make sure
+            // we are always in `gauges`.
+            gauges.putIfAbsent(name, this)
           }
+        }
 
-          def register(): Boolean = phaser.register() >= 0
-
-          def deregister(): Unit = phaser.arriveAndDeregister()
+        def deregister(): Unit = cg.synchronized {
+          registers -= 1
+          if (registers == 0) {
+            gauges.remove(name)
+            self.deregisterGauge(name)
+          }
         }
       }
+      val prev = gauges.putIfAbsent(name, insert)
+      cumulativeGauge = if (prev == null) insert else prev
     }
-
-  def addGauge(name: String*)(f: => Float): Gauge = {
-    var gauge: Gauge = null
-    while (gauge == null) {
-      var cumulativeGauge = gauges.computeIfAbsent(name, gaugeFn)
-      gauge = cumulativeGauge.addGauge(f)
-    }
-    gauge
+    cumulativeGauge.addGauge(f)
   }
 
   /**

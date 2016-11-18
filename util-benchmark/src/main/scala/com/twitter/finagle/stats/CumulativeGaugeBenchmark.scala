@@ -49,7 +49,7 @@ object CumulativeGaugeBenchmark {
 
   class CGauge extends CumulativeGauge {
 
-    override def register(): Boolean = true
+    override def register(): Unit = ()
 
     override def deregister(): Unit = ()
   }

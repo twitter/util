@@ -15,10 +15,7 @@ class CumulativeGaugeTest extends FunSuite {
 
     def cleanRefs(): Unit = cleanup()
 
-    def register(): Boolean = {
-      numRegisters.incrementAndGet()
-      true
-    }
+    def register(): Unit = numRegisters.incrementAndGet()
     def deregister(): Unit = numDeregisters.incrementAndGet()
   }
 
