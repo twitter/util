@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &mdash; Util 6.38.0 documentation</title>
+    <title>User Guide &#8212; Util 6.39.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.38.0',
+        VERSION:     '6.39.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.38.0 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 6.39.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -58,8 +60,8 @@
         <li class="right" >
           <a href="basics.html" title="Basics"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -109,7 +111,7 @@ you should initialize these up front, typically in a class constructor.
 This is because while capturing usage via <code class="docutils literal"><span class="pre">Stat.add</span></code> and <code class="docutils literal"><span class="pre">Counter.incr</span></code>
 is optimized for performance, the construction of a <code class="docutils literal"><span class="pre">Stat</span></code> and <code class="docutils literal"><span class="pre">Counter</span></code>
 is not.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CountingExample</span><span class="o">(</span><span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CountingExample</span><span class="o">(</span><span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
   <span class="c1">// create the Counter once and store it in a member</span>
   <span class="k">private</span> <span class="k">val</span> <span class="n">numSheep</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;sheep&quot;</span><span class="o">)</span>
 
@@ -138,7 +140,7 @@ This is due to the common implementation of <code class="docutils literal"><span
 If a <code class="docutils literal"><span class="pre">CumulativeGauge</span></code> is not held by a strong reference,
 <em>the gauge is eligible for garbage collection</em>, which would cause your metric
 to disappear unexpectedly at runtime.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// bad, don&#39;t do this:</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// bad, don&#39;t do this:</span>
 <span class="k">class</span> <span class="nc">BadExample</span><span class="o">(</span><span class="n">queue</span><span class="k">:</span> <span class="kt">BlockingQueue</span><span class="o">[</span><span class="kt">Work</span><span class="o">],</span> <span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
   <span class="n">statsReceiver</span><span class="o">.</span><span class="n">addGauge</span><span class="o">(</span><span class="s">&quot;num_waiting&quot;</span><span class="o">)</span> <span class="o">{</span> <span class="n">queue</span><span class="o">.</span><span class="n">size</span> <span class="o">}</span>
   <span class="c1">// code that may do incredible things but you&#39;d never know</span>
@@ -161,7 +163,7 @@ to disappear unexpectedly at runtime.</p>
 <code class="docutils literal"><span class="pre">provideGauge</span></code>, and whenever possible <code class="docutils literal"><span class="pre">addGauge</span></code> should be preferred.
 <code class="docutils literal"><span class="pre">provideGauge</span></code> is basically a call to <code class="docutils literal"><span class="pre">addGauge</span></code> along with code that
 holds a strong reference to the gauge in a global linked list. Recall from the
-<a class="reference internal" href="#gauges-in-members"><span>previous note</span></a> that <code class="docutils literal"><span class="pre">Gauges</span></code> need to held in
+<a class="reference internal" href="#gauges-in-members"><span class="std std-ref">previous note</span></a> that <code class="docutils literal"><span class="pre">Gauges</span></code> need to held in
 strong references and as such you should only rely on <code class="docutils literal"><span class="pre">provideGauge</span></code> when
 you do not have a place to keep a strong reference.</p>
 </div>

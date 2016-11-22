@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &mdash; Util 6.38.0 documentation</title>
+    <title>Basics &#8212; Util 6.39.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.38.0',
+        VERSION:     '6.39.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.38.0 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 6.39.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="User Guide" href="user_guide.html" />
     <link rel="prev" title="Overview" href="overview.html" />
@@ -58,8 +60,8 @@
         <li class="right" >
           <a href="overview.html" title="Overview"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -75,7 +77,7 @@
 <p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Gauge.scala">Gauges</a>
 measure discrete values at the time they are sampled.
 These are useful for measuring queue depths and pool sizes.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">private</span> <span class="k">val</span> <span class="n">aQueue</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ArrayBlockingQueue</span><span class="o">[</span><span class="kt">Job</span><span class="o">]()</span>
 
 <span class="k">private</span> <span class="k">val</span> <span class="n">queueSize</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">addGauge</span><span class="o">(</span><span class="s">&quot;queue_size&quot;</span><span class="o">)</span> <span class="o">{</span>
@@ -83,7 +85,7 @@ These are useful for measuring queue depths and pool sizes.</p>
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span class="c1">// java</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
 <span class="kd">private</span> <span class="kd">final</span> <span class="n">ArrayBlockingQueue</span><span class="o">[</span><span class="n">Job</span><span class="o">]</span> <span class="n">aQueue</span> <span class="o">=</span>
   <span class="k">new</span> <span class="n">ArrayBlockingQueue</span><span class="o">[</span><span class="n">Job</span><span class="o">]();</span>
 
@@ -102,13 +104,13 @@ These are useful for measuring queue depths and pool sizes.</p>
 <p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Counter.scala">Counters</a>
 are used to, well, count how often something happens.
 Common examples include the number of requests dispatched and failure counts.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">private</span> <span class="k">val</span> <span class="n">numRequests</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;num_requests&quot;</span><span class="o">)</span>
 
 <span class="n">numRequests</span><span class="o">.</span><span class="n">incr</span><span class="o">()</span>
 </pre></div>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span class="c1">// java</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
 <span class="kd">private</span> <span class="kd">final</span> <span class="n">Counter</span> <span class="n">numRequests</span> <span class="o">=</span>
   <span class="n">StatsReceivers</span><span class="o">.</span><span class="na">counter</span><span class="o">(</span><span class="n">statsReceiver</span><span class="o">,</span> <span class="s">&quot;num_requests&quot;</span><span class="o">);</span>
 
@@ -122,7 +124,7 @@ Common examples include the number of requests dispatched and failure counts.</p
 provide a distribution of values that are seen, including percentiles, averages and maximums.
 Stats are quite useful for measuring the n-th percentiles for latency
 of requests or capturing the distribution of work batches.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">private</span> <span class="k">val</span> <span class="n">latency</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">stat</span><span class="o">(</span><span class="s">&quot;latency_ms&quot;</span><span class="o">)</span>
 
 <span class="nc">Stat</span><span class="o">.</span><span class="n">time</span><span class="o">(</span><span class="n">latency</span><span class="o">,</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="nc">MILLISECONDS</span><span class="o">)</span> <span class="o">{</span>
@@ -130,7 +132,7 @@ of requests or capturing the distribution of work batches.</p>
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span class="c1">// java</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
 <span class="kd">private</span> <span class="kd">final</span> <span class="n">Stat</span> <span class="n">latency</span> <span class="o">=</span> <span class="n">StatsReceivers</span><span class="o">.</span><span class="na">stat</span><span class="o">(</span><span class="n">statsReceiver</span><span class="o">,</span> <span class="s">&quot;latency_ms&quot;</span><span class="o">);</span>
 
 <span class="n">JStat</span><span class="o">.</span><span class="na">time</span><span class="o">(</span>

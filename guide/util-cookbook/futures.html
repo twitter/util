@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Futures &mdash; Util 6.38.0 documentation</title>
+    <title>Futures &#8212; Util 6.39.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.38.0',
+        VERSION:     '6.39.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.38.0 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 6.39.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Input/Output" href="io.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -58,8 +60,8 @@
         <li class="right" >
           <a href="basics.html" title="Basics"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -87,7 +89,7 @@ in Effective Scala for details on concurrent programming with futures.</p>
 library to transform one into the other, or use a small bit of code shown
 below to avoid the extra dependency.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span> <span class="k">=&gt;</span> <span class="nc">TwitterFuture</span><span class="o">,</span> <span class="nc">Promise</span> <span class="k">=&gt;</span> <span class="nc">TwitterPromise</span><span class="o">,</span> <span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">}</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span> <span class="k">=&gt;</span> <span class="nc">TwitterFuture</span><span class="o">,</span> <span class="nc">Promise</span> <span class="k">=&gt;</span> <span class="nc">TwitterPromise</span><span class="o">,</span> <span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">}</span>
 <span class="k">import</span> <span class="nn">scala.concurrent.</span><span class="o">{</span><span class="nc">Future</span> <span class="k">=&gt;</span> <span class="nc">ScalaFuture</span><span class="o">,</span> <span class="nc">Promise</span> <span class="k">=&gt;</span> <span class="nc">ScalaPromise</span><span class="o">,</span> <span class="nc">ExecutionContext</span><span class="o">}</span>
 <span class="k">import</span> <span class="nn">scala.util.</span><span class="o">{</span><span class="nc">Success</span><span class="o">,</span> <span class="nc">Failure</span><span class="o">}</span>
 
@@ -130,7 +132,7 @@ have a memory leak. You can create a bounded <code class="docutils literal"><spa
 <code class="docutils literal"><span class="pre">FuturePool.apply(ExecutorService)</span></code>.</p>
 <p>For better Java compatibility, take a look at <code class="docutils literal"><span class="pre">com.twitter.util.FuturePools</span></code>.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span><span class="o">,</span> <span class="nc">FuturePool</span><span class="o">}</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span><span class="o">,</span> <span class="nc">FuturePool</span><span class="o">}</span>
 
 <span class="k">def</span> <span class="n">someIO</span><span class="o">()</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
   <span class="c1">// does some blocking I/O and returns a string</span>
@@ -141,7 +143,7 @@ have a memory leak. You can create a bounded <code class="docutils literal"><spa
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="o">;</span>
 
@@ -162,7 +164,7 @@ Twitter&#8217;s <code class="docutils literal"><span class="pre">Future</span></
 which means you will not see a stack overflow with code written
 in this manner.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.Future</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.Future</span>
 <span class="k">import</span> <span class="nn">java.util.concurrent.atomic.AtomicBoolean</span>
 
 <span class="k">val</span> <span class="n">done</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicBoolean</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
@@ -181,7 +183,7 @@ in this manner.</p>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Function</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicBoolean</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">scala.runtime.BoxedUnit</span><span class="o">;</span>
@@ -219,7 +221,7 @@ acquires a permit and runs the given function once acquired, then releases
 the permit after the future is satisfied. While that should be fine for
 most use cases <code class="docutils literal"><span class="pre">acquire()</span></code> can be used for more fine-grained control.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span>
 
 <span class="k">val</span> <span class="n">semaphore</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AsyncSemaphore</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
 
@@ -234,7 +236,7 @@ most use cases <code class="docutils literal"><span class="pre">acquire()</span>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 
@@ -256,7 +258,7 @@ failed <code class="docutils literal"><span class="pre">Futures</span></code> an
 <a class="reference external" href="https://github.com/ben-manes/caffeine">Caffeine cache</a>
 for the correct behavior.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.github.benmanes.caffeine.cache._</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.github.benmanes.caffeine.cache._</span>
 <span class="k">import</span> <span class="nn">com.twitter.util.Future</span>
 
 <span class="k">val</span> <span class="n">loader</span><span class="k">:</span> <span class="kt">CacheLoader</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="k">=</span>
@@ -274,7 +276,7 @@ for the correct behavior.</p>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.CacheLoader</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.CacheLoader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.Caffeine</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.LoadingCache</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.LoadingFutureCache</span><span class="o">;</span>

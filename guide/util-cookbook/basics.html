@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &mdash; Util 6.38.0 documentation</title>
+    <title>Basics &#8212; Util 6.39.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.38.0',
+        VERSION:     '6.39.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Util 6.38.0 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 6.39.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Futures" href="futures.html" />
     <link rel="prev" title="Util Cookbook" href="index.html" />
@@ -58,8 +60,8 @@
         <li class="right" >
           <a href="index.html" title="Util Cookbook"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -75,7 +77,7 @@
 <p>While trivial with Scala&#8217;s pattern matching it is
 less obvious from Java.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">,</span> <span class="nc">Try</span><span class="o">}</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">,</span> <span class="nc">Try</span><span class="o">}</span>
 
 <span class="k">def</span> <span class="n">extract</span><span class="o">(</span><span class="n">t</span><span class="k">:</span> <span class="kt">Try</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
   <span class="n">t</span> <span class="k">match</span> <span class="o">{</span>
@@ -85,7 +87,7 @@ less obvious from Java.</p>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Return</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Return</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Throw</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
 
@@ -106,7 +108,7 @@ were based on Twitter&#8217;s <cite>com.twitter.util.Try</cite>, <cite>com.twitt
 and <cite>com.twitter.util.Throw</cite> and converting to and from them is sometimes
 necessary.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Try</span> <span class="k">=&gt;</span> <span class="nc">TwitterTry</span><span class="o">}</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Try</span> <span class="k">=&gt;</span> <span class="nc">TwitterTry</span><span class="o">}</span>
 
 <span class="k">def</span> <span class="n">toScalaTry</span><span class="o">(</span><span class="n">twitterTry</span><span class="k">:</span> <span class="kt">TwitterTry</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">scala.util.Try</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span>
   <span class="n">twitterTry</span><span class="o">.</span><span class="n">asScala</span>
@@ -116,7 +118,7 @@ necessary.</p>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
 
 <span class="n">scala</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">toScalaTry</span><span class="o">(</span><span class="n">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">twitterTry</span><span class="o">)</span> <span class="o">{</span>
   <span class="k">return</span> <span class="n">twitterTry</span><span class="o">.</span><span class="na">asScala</span><span class="o">();</span>

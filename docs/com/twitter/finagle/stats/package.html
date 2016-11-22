@@ -414,8 +414,30 @@ will actually increment those three counters:
       </a>
     </span>
       <p class="shortcomment cmt">An append-only collection of time-series data.</p><div class="fullcomment"><div class="comment cmt"><p>An append-only collection of time-series data. Example Stats are
-&quot;queue depth&quot; or &quot;query width in a stream of requests&quot;.
+&quot;queue depth&quot; or &quot;query width in a stream of requests&quot;.</p><p>Utilities for timing synchronous execution and asynchronous
+execution are on the companion object (<span class="extype" name="Stat.time(Stat)">Stat.time(Stat)</span> and
+<span class="extype" name="Stat.timeFuture(Stat)">Stat.timeFuture(Stat)</span>.
 </p></div></div>
+    </li><li name="com.twitter.finagle.stats.StatBenchmark" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="StatBenchmarkextendsStdBenchAnnotations"></a>
+      <a id="StatBenchmark:StatBenchmark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StatBenchmark.html"><span class="name">StatBenchmark</span></a><span class="result"> extends <a href="../../util/StdBenchAnnotations.html" class="extype" name="com.twitter.util.StdBenchAnnotations">StdBenchAnnotations</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.twitter.finagle.stats.package@StatBenchmarkextendsStdBenchAnnotations" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@State</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="StatsReceiverextendsAnyRef"></a>
       <a id="StatsReceiver:StatsReceiver"></a>
@@ -678,8 +700,7 @@ errors separately so success rate can from valid non cancelled requests.
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Helpers for working with histograms.</p><div class="fullcomment"><div class="comment cmt"><p>Helpers for working with histograms.  Java-friendly versions can be found in
-<a href="JStats$.html" class="extype" name="com.twitter.finagle.stats.JStats">com.twitter.finagle.stats.JStats</a>.
+      <p class="shortcomment cmt">Helpers for working with histograms.</p><div class="fullcomment"><div class="comment cmt"><p>Helpers for working with histograms.</p><p>Java-friendly versions can be found in <a href="JStats$.html" class="extype" name="com.twitter.finagle.stats.JStats">com.twitter.finagle.stats.JStats</a>.
 </p></div></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StatsReceiver"></a>
