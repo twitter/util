@@ -1,8 +1,8 @@
 package com.twitter.app
 
-import com.twitter.util.NonFatal
 import java.lang.reflect.{Method, Modifier}
 import scala.collection.mutable.ArrayBuffer
+import scala.util.control.NonFatal
 
 /**
  * Subclasses of GlobalFlag (that are defined in libraries) are "global" in the

@@ -6,9 +6,15 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-core: `com.twitter.util.NonFatal` is deprecated, use
+    `scala.util.control.NonFatal` instead. ``RB_ID=892475``
+
 6.39.0  2016-11-22
 
 No Changes
+==========
 
 6.38.0  2016-10-10
 

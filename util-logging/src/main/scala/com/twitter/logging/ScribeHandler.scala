@@ -28,7 +28,8 @@ import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
 import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
-import com.twitter.util.{Duration, NonFatal, Time}
+import com.twitter.util.{Duration, Time}
+import scala.util.control.NonFatal
 
 object ScribeHandler {
   private sealed trait ServerType

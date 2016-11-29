@@ -4,6 +4,7 @@ import com.twitter.util._
 import java.util.ArrayDeque
 import java.util.concurrent.RejectedExecutionException
 import scala.collection.JavaConverters._
+import scala.util.control.NonFatal
 
 /**
  * An AsyncSemaphore is a traditional semaphore but with asynchronous

@@ -1,7 +1,6 @@
 package com.twitter.app
 
 import com.twitter.finagle.util.loadServiceDenied
-import com.twitter.util.NonFatal
 import com.twitter.util.registry.GlobalRegistry
 import java.util.ServiceConfigurationError
 import java.util.concurrent.ConcurrentHashMap
@@ -11,6 +10,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.io.Source
 import scala.reflect.ClassTag
+import scala.util.control.NonFatal
 
 /**
  * Load classes in the manner of [[java.util.ServiceLoader]]. It is

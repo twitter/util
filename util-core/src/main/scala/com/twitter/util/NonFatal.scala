@@ -15,6 +15,7 @@ import scala.util.control.{NonFatal => ScalaNonFatal}
  *       Twitter's util needed to provide this for users who were still on
  *       Scala 2.9 at the time.
  */
+@deprecated("Use scala.util.control.NonFatal instead", "2016-11-21")
 object NonFatal {
 
   /**
@@ -24,6 +25,7 @@ object NonFatal {
    *
    * @note This is identical in behavior to `scala.util.control.NonFatal.apply`.
    */
+  @deprecated("Use scala.util.control.NonFatal instead", "2016-11-21")
   def isNonFatal(t: Throwable): Boolean =
     apply(t)
 
@@ -34,6 +36,7 @@ object NonFatal {
    *
    * @note This is identical in behavior to `scala.util.control.NonFatal.apply`.
    */
+  @deprecated("Use scala.util.control.NonFatal instead", "2016-11-21")
   def apply(t: Throwable): Boolean =
     ScalaNonFatal(t)
 
@@ -50,6 +53,7 @@ object NonFatal {
    *
    * @note This is identical in behavior to `scala.util.control.NonFatal.unapply`.
    */
+  @deprecated("Use scala.util.control.NonFatal instead", "2016-11-21")
   def unapply(t: Throwable): Option[Throwable] =
     ScalaNonFatal.unapply(t)
 }

@@ -16,7 +16,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl
-import scala.util.control.ControlThrowable
+import scala.util.control.{ControlThrowable, NonFatal}
 import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])

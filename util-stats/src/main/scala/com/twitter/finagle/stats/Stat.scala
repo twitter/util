@@ -1,7 +1,8 @@
 package com.twitter.finagle.stats
 
-import com.twitter.util.{Future, NonFatal, Stopwatch}
+import com.twitter.util.{Future, Stopwatch}
 import java.util.concurrent.{Callable, TimeUnit}
+import scala.util.control.NonFatal
 
 /**
  * An append-only collection of time-series data. Example Stats are

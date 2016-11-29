@@ -8,6 +8,7 @@ import org.scalatest.concurrent.Eventually
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.time.{Millis, Seconds, Span}
 import scala.runtime.NonLocalReturnControl
+import scala.util.control.NonFatal
 
 @RunWith(classOf[JUnitRunner])
 class FuturePoolTest extends FunSuite with Eventually {
@@ -163,7 +164,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     val executor = Executors.newFixedThreadPool(1)
     val pool = FuturePool(executor)
     val fatal = new LinkageError
-    assert(!NonFatal.isNonFatal(fatal))
+    assert(!NonFatal(fatal))
     val rv = pool { throw fatal }
 
     val ex = intercept[ExecutionException] { Await.result(rv) }

@@ -1,9 +1,9 @@
 package com.twitter.app
 
-import com.twitter.util.NonFatal
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.util.control.NonFatal
 
 /**
  * Exception thrown upon flag-parsing failure. Should typically lead to process
