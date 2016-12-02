@@ -18,7 +18,7 @@ package com.twitter.logging
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.{logging => javalog}
-import scala.annotation.varargs
+import scala.annotation.{tailrec, varargs}
 import scala.collection.JavaConverters._
 import scala.collection.Map
 
@@ -63,6 +63,29 @@ object Level {
  */
 trait HasLogLevel {
   def logLevel: Level
+}
+
+object HasLogLevel {
+
+  /**
+   * Finds the first [[HasLogLevel]] for the given `Throwable` including
+   * its chain of causes and returns its `logLevel`.
+   *
+   * @note this finds the first [[HasLogLevel]], and should be there
+   *       be multiple in the chain of causes, it '''will not use'''
+   *       the most severe.
+   *
+   * @return `None` if neither `t` nor any of its causes are a
+   *        [[HasLogLevel]]. Otherwise, returns `Some` of the first
+   *        one found.
+   */
+  @tailrec
+  def unapply(t: Throwable): Option[Level] = t match {
+    case null => None
+    case hll: HasLogLevel => Some(hll.logLevel)
+    case _ => unapply(t.getCause)
+  }
+
 }
 
 class LoggingException(reason: String) extends Exception(reason)
