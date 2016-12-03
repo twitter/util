@@ -29,21 +29,21 @@ object Config {
   sealed trait Required[+A] extends Serializable {
     def value: A
     def isSpecified: Boolean
-    def isEmpty = !isSpecified
+    def isEmpty: Boolean = !isSpecified
   }
 
   object Specified {
-    def unapply[A](specified: Specified[A]) = Some(specified.value)
+    def unapply[A](specified: Specified[A]): Some[A] = Some(specified.value)
   }
 
   class Specified[+A](f: => A) extends Required[A] {
-    lazy val value = f
-    def isSpecified = true
+    lazy val value: A = f
+    def isSpecified: Boolean = true
   }
 
   case object Unspecified extends Required[scala.Nothing] {
-    def value = throw new NoSuchElementException
-    def isSpecified = false
+    def value: scala.Nothing = throw new NoSuchElementException
+    def isSpecified: Boolean = false
   }
 
   class RequiredValuesMissing(names: Seq[String]) extends Exception(names.mkString(","))
@@ -54,12 +54,13 @@ object Config {
    * classes and methods.
    */
   class Nothing extends Config[scala.Nothing] {
-    def apply() = throw new UnsupportedOperationException
+    def apply(): scala.Nothing = throw new UnsupportedOperationException
   }
 
-  implicit def toSpecified[A](value: => A) = new Specified(value)
-  implicit def toSpecifiedOption[A](value: => A) = new Specified(Some(value))
-  implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def toSpecified[A](value: => A): Specified[A] = new Specified(value)
+  implicit def toSpecifiedOption[A](value: => A): Specified[Some[A]] =
+    new Specified(Some(value))
+  implicit def fromRequired[A](req: Required[A]): A = req.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def intoList[A](item: A): List[A] = List(item)
 }
@@ -109,11 +110,12 @@ trait Config[T] extends (() => T) {
   def computed[A](f: => A): Required[A] = new Specified(f)
 
   /** a non-lazy way to create a Specified that can be called from java */
-  def specified[A](value: A) = new Specified(value)
+  def specified[A](value: A): Specified[A] = new Specified(value)
 
-  implicit def toSpecified[A](value: => A) = new Specified(value)
-  implicit def toSpecifiedOption[A](value: => A) = new Specified(Some(value))
-  implicit def fromRequired[A](req: Required[A]) = req.value
+  implicit def toSpecified[A](value: => A): Specified[A] = new Specified(value)
+  implicit def toSpecifiedOption[A](value: => A): Specified[Some[A]] =
+    new Specified(Some(value))
+  implicit def fromRequired[A](req: Required[A]): A = req.value
   implicit def intoOption[A](item: A): Option[A] = Some(item)
   implicit def intoList[A](item: A): List[A] = List(item)
 
@@ -122,13 +124,16 @@ trait Config[T] extends (() => T) {
    * this object and in any child Config objects, and returns the names
    * of those missing values.  For missing values in child Config objects,
    * the name is the dot-separated path down to that value.
+   *
+   * @note as of Scala 2.12 the returned values are not always correct.
+   *       See `ConfigTest` for an example.
    */
   def missingValues: Seq[String] = {
     val alreadyVisited = mutable.Set[AnyRef]()
     val interestingReturnTypes = Seq(classOf[Required[_]], classOf[Config[_]], classOf[Option[_]])
     val buf = new mutable.ListBuffer[String]
     val mirror = scala.reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
-    def collect(prefix: String, config: Config[_]) {
+    def collect(prefix: String, config: Config[_]): Unit = {
       if (!alreadyVisited.contains(config)) {
         alreadyVisited += config
         val nullaryMethods = config.getClass.getMethods.toSeq filter { _.getParameterTypes.isEmpty }
@@ -136,7 +141,8 @@ trait Config[T] extends (() => T) {
           val configSymbol = mirror.reflect(config).symbol
           val configMembers = configSymbol.toType.members
           configMembers.collect {
-            case symbol if symbol.isTerm && symbol.isSynthetic => symbol.name.decodedName.toString
+            case symbol if symbol.isTerm && symbol.isSynthetic =>
+              symbol.name.decodedName.toString
           }(scala.collection.breakOut)
         }
         for (method <- nullaryMethods) {
@@ -174,8 +180,8 @@ trait Config[T] extends (() => T) {
   /**
    * @throws RequiredValuesMissing if there are any missing values.
    */
-  def validate() {
+  def validate(): Unit = {
     val missing = missingValues
-    if (!missing.isEmpty) throw new RequiredValuesMissing(missing)
+    if (missing.nonEmpty) throw new RequiredValuesMissing(missing)
   }
 }
