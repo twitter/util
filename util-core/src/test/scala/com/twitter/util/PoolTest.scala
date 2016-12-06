@@ -52,7 +52,7 @@ class PoolTest extends WordSpec {
         assert(Await.result(promise) === 8)
         assert(Await.result(pool.reserve()) === 6)
         intercept[TimeoutException] {
-          Await.result(pool.reserve, 1.millisecond)
+          Await.result(pool.reserve(), 1.millisecond)
         }
       }
 
