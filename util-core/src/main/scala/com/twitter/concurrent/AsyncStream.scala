@@ -1,7 +1,7 @@
 package com.twitter.concurrent
 
 import com.twitter.io.{Buf, Reader}
-import com.twitter.util.{Future, Promise, Return, Throw}
+import com.twitter.util.{Future, Promise, Return, Throw, Try}
 import scala.annotation.varargs
 import scala.collection.mutable
 
@@ -127,66 +127,13 @@ sealed abstract class AsyncStream[+A] {
    *   the next item available in the stream.
    */
   def mapConcurrent[B](concurrencyLevel: Int)(f: A => Future[B]): AsyncStream[B] = {
-    def step(pending: Seq[Future[Option[B]]], inputs: () => AsyncStream[A]): Future[AsyncStream[B]] = {
-      // We only invoke inputs().uncons if there is space for more work
-      // to be started.
-      val inputReady =
-        if (pending.size >= concurrencyLevel) Future.never
-        else inputs().uncons.flatMap {
-          case None if pending.nonEmpty => Future.never
-          case other => Future.value(Left(other))
-        }
-
-      // The inputReady.isDefined check is an optimization to avoid the
-      // wasted allocation of calling Future.select when we know that
-      // there is more work that is ready to be started.
-      val workDone =
-        if (pending.isEmpty || inputReady.isDefined) Future.never
-        else Future.select(pending).map(Right(_))
-
-      // Wait for either the next input to be ready (Left) or for some pending
-      // work to complete (Right).
-      inputReady.or(workDone).flatMap {
-        case Left(None) =>
-          // There is no work pending and we have exhausted the
-          // inputs, so we are done.
-          Future.value(empty)
-
-        case Left(Some((a, tl))) =>
-          // There is available concurrency and a new input is ready,
-          // so start the work and add it to `pending`.
-          step(f(a).map(Some(_)) +: pending, tl)
-
-        case Right((Throw(t), _)) =>
-          // Some work finished with failure, so terminate the stream.
-          Future.exception(t)
-
-        case Right((Return(None), newPending)) =>
-          // A cons cell was forced, freeing up a spot in `pending`.
-          step(newPending, inputs)
-
-        case Right((Return(Some(a)), newPending)) =>
-          // Some work finished. Eagerly start the next step, so
-          // that all available inputs have work started on them. In
-          // the next step, we replace the pending Future for the
-          // work that just completed with a Future that will be
-          // satisfied by forcing the next element of the result
-          // stream. Keeping `pending` full is the mechanism that we
-          // use to bound the evaluation depth at `concurrencyLevel`
-          // until the stream is forced.
-          val cellForced = new Promise[Option[B]]
-          val rest = step(cellForced +: newPending, inputs)
-          Future.value(mk(a, { cellForced.setValue(None); embed(rest) }))
-      }
-    }
-
     if (concurrencyLevel == 1) {
       mapF(f)
     } else if (concurrencyLevel < 1) {
       throw new IllegalArgumentException(
         s"concurrencyLevel must be at least one. got: $concurrencyLevel")
     } else {
-      embed(step(Nil, () => this))
+      embed(AsyncStream.mapConcStep(concurrencyLevel, f, Nil, () => this))
     }
   }
 
@@ -422,7 +369,7 @@ sealed abstract class AsyncStream[+A] {
    * every cons with the folded function `f`, and the empty element with `z`.
    *
    * Note: For clarity, we imagine that surrounding a function with backticks
-   * (`) allows infix usage.
+   * (&#96;) allows infix usage.
    *
    * {{{
    *     (1 +:: 2 +:: 3 +:: empty).foldRight(z)(f)
@@ -734,4 +681,59 @@ object AsyncStream {
     }
   }
 
+  /**
+   * This must exist here, otherwise scalac will be greedy and hold a reference to the head of the stream
+   */
+  private def mapConcStep[A, B](concurrencyLevel: Int, f: (A => Future[B]), pending: Seq[Future[Option[B]]], inputs: () => AsyncStream[A]): Future[AsyncStream[B]] = {
+    // We only invoke inputs().uncons if there is space for more work
+    // to be started.
+    val inputReady: Future[Left[Option[(A, () => AsyncStream[A])], Nothing]] =
+      if (pending.size >= concurrencyLevel) Future.never
+      else inputs().uncons.flatMap {
+        case None if pending.nonEmpty => Future.never
+        case other => Future.value(Left(other))
+      }
+
+    // The inputReady.isDefined check is an optimization to avoid the
+    // wasted allocation of calling Future.select when we know that
+    // there is more work that is ready to be started.
+    val workDone: Future[Right[Nothing, (Try[Option[B]], Seq[Future[Option[B]]])]] =
+      if (pending.isEmpty || inputReady.isDefined) Future.never
+      else Future.select(pending).map(Right(_))
+
+    // Wait for either the next input to be ready (Left) or for some pending
+    // work to complete (Right).
+    inputReady.or(workDone).flatMap {
+      case Left(None) =>
+        // There is no work pending and we have exhausted the
+        // inputs, so we are done.
+        Future.value(empty)
+
+      case Left(Some((a, tl))) =>
+        // There is available concurrency and a new input is ready,
+        // so start the work and add it to `pending`.
+        mapConcStep(concurrencyLevel, f, f(a).map(Some(_)) +: pending, tl)
+
+      case Right((Throw(t), _)) =>
+        // Some work finished with failure, so terminate the stream.
+        Future.exception(t)
+
+      case Right((Return(None), newPending)) =>
+        // A cons cell was forced, freeing up a spot in `pending`.
+        mapConcStep(concurrencyLevel, f, newPending, inputs)
+
+      case Right((Return(Some(a)), newPending)) =>
+        // Some work finished. Eagerly start the next step, so
+        // that all available inputs have work started on them. In
+        // the next step, we replace the pending Future for the
+        // work that just completed with a Future that will be
+        // satisfied by forcing the next element of the result
+        // stream. Keeping `pending` full is the mechanism that we
+        // use to bound the evaluation depth at `concurrencyLevel`
+        // until the stream is forced.
+        val cellForced = new Promise[Option[B]]
+        val rest = mapConcStep(concurrencyLevel, f, cellForced +: newPending, inputs)
+        Future.value(mk(a, { cellForced.setValue(None); embed(rest) }))
+    }
+  }
 }

@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Bug Fixes:
+
+  * util-core: Fix issue with c.t.concurrent.AsyncStream.mapConcurrent which
+    will cause the stream head to be held for life of operation. ``RB_ID=896168``
+    
 API Changes:
 
   * util-core: `com.twitter.util.NonFatal` is deprecated, use
