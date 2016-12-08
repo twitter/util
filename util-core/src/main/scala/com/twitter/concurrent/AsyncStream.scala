@@ -606,6 +606,12 @@ object AsyncStream {
     Cons(Future.value(a), () => tail)
 
   /**
+   * A failed AsyncStream
+   */
+  def exception[A](e: Throwable): AsyncStream[A] =
+    fromFuture[A](Future.exception(e))
+
+  /**
    * Transformation (or lift) from [[Seq]] into `AsyncStream`.
    */
   def fromSeq[A](seq: Seq[A]): AsyncStream[A] = seq match {

@@ -701,6 +701,19 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
     }
   }
 
+  test("exception produces a failed stream") {
+    intercept[Exception](
+      toSeq(AsyncStream.exception(new Exception()))
+    )
+  }
+
+  test("exception eventually produces a failed stream") {
+    forAll { (xs: List[Int]) =>
+      val stream = fromSeq(xs) ++ AsyncStream.exception(new Exception())
+      intercept[Exception](toSeq(stream))
+    }
+  }
+
 }
 
 private object AsyncStreamTest {
