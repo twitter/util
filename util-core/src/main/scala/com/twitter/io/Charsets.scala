@@ -1,51 +1,12 @@
 package com.twitter.io
 
-import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAction, StandardCharsets}
+import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAction}
 import java.util
 
 /**
- * Provides a set of frequently used [[java.nio.charset.Charset]] instances and
- * the utilities related to them.
+ * A set of [[java.nio.charset.Charset]] utilities.
  */
 object Charsets {
-
-  /**
-   * 16-bit UTF (UCS Transformation Format) whose byte order is identified by
-   * an optional byte-order mark
-   */
-  @deprecated("Use java.nio.charset.StandardCharsets.UTF_16", "2016-08-23")
-  val Utf16: Charset = StandardCharsets.UTF_16
-
-  /**
-   * 16-bit UTF (UCS Transformation Format) whose byte order is big-endian
-   */
-  @deprecated("Use java.nio.charset.StandardCharsets.UTF_16BE", "2016-08-23")
-  val Utf16BE: Charset = StandardCharsets.UTF_16BE
-
-  /**
-   * 16-bit UTF (UCS Transformation Format) whose byte order is little-endian
-   */
-  @deprecated("Use java.nio.charset.StandardCharsets.UTF_16LE", "2016-08-23")
-  val Utf16LE: Charset = StandardCharsets.UTF_16LE
-
-  /**
-   * 8-bit UTF (UCS Transformation Format)
-   */
-  @deprecated("Use java.nio.charset.StandardCharsets.UTF_8", "2016-08-23")
-  val Utf8: Charset = StandardCharsets.UTF_8
-
-  /**
-   * ISO Latin Alphabet No. 1, also known as `ISO-LATIN-1`
-   */
-  @deprecated("Use java.nio.charset.StandardCharsets.ISO_8859_1", "2016-08-23")
-  val Iso8859_1: Charset = StandardCharsets.ISO_8859_1
-
-  /**
-   * 7-bit ASCII, also known as ISO646-US or the Basic Latin block of the
-   * Unicode character set
-   */
-  @deprecated("Use java.nio.charset.StandardCharsets.US_ASCII", "2016-08-23")
-  val UsAscii: Charset = StandardCharsets.US_ASCII
 
   private[this] val encoders = new ThreadLocal[util.Map[Charset, CharsetEncoder]] {
     protected override def initialValue: util.HashMap[Charset, CharsetEncoder] = new util.HashMap()

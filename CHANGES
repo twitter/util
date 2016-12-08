@@ -13,6 +13,9 @@ Bug Fixes:
     
 API Changes:
 
+  * util-core: Deprecated charset constants in `c.t.io.Charsets` have been
+    removed. Use java.nio.charset.StandardCharsets instead. ``RB_ID=893542``
+
   * util-core: `com.twitter.util.NonFatal` is deprecated, use
     `scala.util.control.NonFatal` instead. ``RB_ID=892475``
 

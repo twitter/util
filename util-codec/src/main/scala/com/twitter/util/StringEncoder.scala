@@ -1,7 +1,8 @@
 package com.twitter.util
 
-import com.twitter.io.{StreamIO, Charsets}
+import com.twitter.io.StreamIO
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.nio.charset.{StandardCharsets => Charsets}
 import java.util.Base64
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 
@@ -18,10 +19,10 @@ trait StringEncoder {
   * The encoding for strings is UTF-8.
   */
 trait Base64StringEncoder extends StringEncoder {
-  private[this] val encoder = Base64.getMimeEncoder(0, "\r\n".getBytes(Charsets.Utf8))
+  private[this] val encoder = Base64.getMimeEncoder(0, "\r\n".getBytes(Charsets.UTF_8))
   private[this] val decoder = Base64.getMimeDecoder
-  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.Utf8)
-  override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.Utf8))
+  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.UTF_8)
+  override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.UTF_8))
 }
 
 /**
@@ -34,8 +35,8 @@ trait Base64UrlSafeStringEncoder extends StringEncoder {
   private[this] val encoder = Base64.getUrlEncoder.withoutPadding
   private[this] val decoder = Base64.getUrlDecoder
 
-  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.Utf8)
-  override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.Utf8))
+  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.UTF_8)
+  override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.UTF_8))
 }
 
 object StringEncoder extends StringEncoder

@@ -1,11 +1,12 @@
 package com.twitter.hashing
 
-import com.twitter.io.{TempFile, Charsets}
+import com.twitter.io.TempFile
 import java.util.Base64
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import scala.collection.mutable.ListBuffer
+import java.nio.charset.StandardCharsets.UTF_8
 
 @RunWith(classOf[JUnitRunner])
 class KeyHasherTest extends WordSpec {
@@ -16,7 +17,7 @@ class KeyHasherTest extends WordSpec {
   }
 
   val base64 = Base64.getDecoder
-  def decode(str: String) = base64.decode(str.getBytes(Charsets.Utf8))
+  def decode(str: String) = base64.decode(str.getBytes(UTF_8))
 
   def testHasher(name: String, hasher: KeyHasher) = {
     val sources = readResource(name + "_source") map { decode(_) }
