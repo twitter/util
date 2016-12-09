@@ -8,9 +8,9 @@ trait Pool[A] {
 }
 
 class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
-  def this(items: Seq[A]) = this {
+  def this(initialItems: Seq[A]) = this {
     val queue = new mutable.Queue[Future[A]]
-    queue ++= items map { item => Future(item) }
+    queue ++= initialItems map { item => Future(item) }
     queue
   }
 
@@ -33,14 +33,14 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
         Some((requests.dequeue(), items.dequeue()))
       else
         None
-    } map { case (request, item) =>
-      item respond(request() = _)
+    } map { case (request, currItem) =>
+      currItem.respond(request() = _)
     }
   }
 }
 
 abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
-  private val healthyQueue = new HealthyQueue[A](makeItem _, numItems, isHealthy(_))
+  private val healthyQueue = new HealthyQueue[A](makeItem, numItems, isHealthy)
   private val simplePool = new SimplePool[A](healthyQueue)
 
   def reserve() = simplePool.reserve()
@@ -57,26 +57,29 @@ private class HealthyQueue[A](
   makeItem: () => Future[A],
   numItems: Int,
   isHealthy: A => Boolean)
-  extends mutable.QueueProxy[Future[A]]
+  extends mutable.Queue[Future[A]]
 {
-  val self = new mutable.Queue[Future[A]]
-  0.until(numItems) foreach { _ => self += makeItem() }
 
-  override def +=(item: Future[A]) = {
-    synchronized { self += item }
-    this
+  0.until(numItems) foreach { _ => this += makeItem() }
+
+  override def +=:(elem: Future[A]): HealthyQueue.this.type = synchronized {
+    super.+=:(elem)
   }
 
-  override def dequeue() = synchronized {
+  override def enqueue(elems: Future[A]*): Unit = synchronized{
+    super.enqueue(elems: _*)
+  }
+
+  override def dequeue(): Future[A] = synchronized {
     if (isEmpty) throw new NoSuchElementException("queue empty")
 
-    self.dequeue() flatMap { item =>
+    super.dequeue() flatMap { item =>
       if (isHealthy(item)) {
         Future(item)
       } else {
         val item = makeItem()
         synchronized {
-          this += item
+          enqueue(item)
           dequeue()
         }
       }
