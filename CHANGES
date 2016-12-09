@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-core: `FactoryPool`/`SimplePool` now inherits `scala.collection.mutable.Queue[A]`
+    not deprecated `scala.collection.mutable.QueueProxy[A]` ``RB_ID=896485``
+
 Bug Fixes:
 
   * util-core: Fix issue with c.t.concurrent.AsyncStream.mapConcurrent which
@@ -522,7 +527,7 @@ Documentation:
 
 6.21.2  2014-09-08
   * util-cache: Adds a Guava-backed asynchronous cache
-  * util-core: Fixed FuturePool for NLRC
+  * util-core: Fixed FuturePool for NLRCK
   * util-core: Improve java friendliness of futures
   * util-core: Make register/close on Event() work atomically
   * util-core: Reimplement Buf.Utf8 encoder/extractor using io.Charsets
