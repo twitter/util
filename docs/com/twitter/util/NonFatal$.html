@@ -45,13 +45,16 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">NonFatal</span>
+        <span class="name deprecated" title="Deprecated: (Since version 2016-11-21) Use scala.util.control.NonFatal instead">NonFatal</span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A classifier of non-fatal Exceptions.</p><p>Developers should prefer using <code>scala.util.control.NonFatal</code> from the
 Scala standard library.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Scala added <code>NonFatal</code> to the standard library in Scala 2.10, while
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2016-11-21)</i> Use scala.util.control.NonFatal instead</p></dd><dt>Note</dt><dd><span class="cmt"><p>Scala added <code>NonFatal</code> to the standard library in Scala 2.10, while
       Twitter's util needed to provide this for users who were still on
       Scala 2.9 at the time.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p>Scala's <a href="http://www.scala-lang.org/api/current/#scala.util.control.NonFatal$" target="_blank">NonFatal</a>
      for usage notes.</p></span></dd></dl><div class="toggleContainer block">
@@ -150,24 +153,6 @@ Scala standard library.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.NonFatal#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(t:Throwable):Boolean"></a>
-      <a id="apply(Throwable):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.NonFatal$@apply(t:Throwable):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Determines whether <code>t</code> is a non-fatal Exception.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>t</code> is a non-fatal Exception.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>true when <code>t</code> is <b>not</b> a fatal Exception.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This is identical in behavior to <code>scala.util.control.NonFatal.apply</code>.</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -316,24 +301,6 @@ Scala standard library.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.NonFatal#isNonFatal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isNonFatal(t:Throwable):Boolean"></a>
-      <a id="isNonFatal(Throwable):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">isNonFatal</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.NonFatal$@isNonFatal(t:Throwable):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Determines whether <code>t</code> is a non-fatal Exception.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>t</code> is a non-fatal Exception.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>true when <code>t</code> is <b>not</b> a fatal Exception.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This is identical in behavior to <code>scala.util.control.NonFatal.apply</code>.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -419,28 +386,6 @@ Scala standard library.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.NonFatal#unapply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="unapply(t:Throwable):Option[Throwable]"></a>
-      <a id="unapply(Throwable):Option[Throwable]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unapply</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.NonFatal$@unapply(t:Throwable):Option[Throwable]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">A deconstructor to be used in pattern matches, allowing use in Exception
-handlers.</p><div class="fullcomment"><div class="comment cmt"><p>A deconstructor to be used in pattern matches, allowing use in Exception
-handlers.</p><pre><span class="kw">try</span> dangerousOperation() <span class="kw">catch</span> {
-  <span class="kw">case</span> NonFatal(e) <span class="kw">=&gt;</span> log.error(<span class="lit">"Chillax"</span>)
-  <span class="kw">case</span> e <span class="kw">=&gt;</span> log.error(<span class="lit">"Freak out"</span>)
-}</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This is identical in behavior to <code>scala.util.control.NonFatal.unapply</code>.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -515,7 +460,77 @@ handlers.</p><pre><span class="kw">try</span> dangerousOperation() <span class="
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.util.NonFatal#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(t:Throwable):Boolean"></a>
+      <a id="apply(Throwable):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2016-11-21) Use scala.util.control.NonFatal instead">apply</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.NonFatal$@apply(t:Throwable):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Determines whether <code>t</code> is a non-fatal Exception.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>t</code> is a non-fatal Exception.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>true when <code>t</code> is <b>not</b> a fatal Exception.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2016-11-21)</i> Use scala.util.control.NonFatal instead</p></dd><dt>Note</dt><dd><span class="cmt"><p>This is identical in behavior to <code>scala.util.control.NonFatal.apply</code>.</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.NonFatal#isNonFatal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isNonFatal(t:Throwable):Boolean"></a>
+      <a id="isNonFatal(Throwable):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2016-11-21) Use scala.util.control.NonFatal instead">isNonFatal</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.NonFatal$@isNonFatal(t:Throwable):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Determines whether <code>t</code> is a non-fatal Exception.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>t</code> is a non-fatal Exception.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>true when <code>t</code> is <b>not</b> a fatal Exception.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2016-11-21)</i> Use scala.util.control.NonFatal instead</p></dd><dt>Note</dt><dd><span class="cmt"><p>This is identical in behavior to <code>scala.util.control.NonFatal.apply</code>.</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.NonFatal#unapply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unapply(t:Throwable):Option[Throwable]"></a>
+      <a id="unapply(Throwable):Option[Throwable]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2016-11-21) Use scala.util.control.NonFatal instead">unapply</span><span class="params">(<span name="t">t: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.NonFatal$@unapply(t:Throwable):Option[Throwable]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A deconstructor to be used in pattern matches, allowing use in Exception
+handlers.</p><div class="fullcomment"><div class="comment cmt"><p>A deconstructor to be used in pattern matches, allowing use in Exception
+handlers.</p><pre><span class="kw">try</span> dangerousOperation() <span class="kw">catch</span> {
+  <span class="kw">case</span> NonFatal(e) <span class="kw">=&gt;</span> log.error(<span class="lit">"Chillax"</span>)
+  <span class="kw">case</span> e <span class="kw">=&gt;</span> log.error(<span class="lit">"Freak out"</span>)
+}</pre></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2016-11-21)</i> Use scala.util.control.NonFatal instead</p></dd><dt>Note</dt><dd><span class="cmt"><p>This is identical in behavior to <code>scala.util.control.NonFatal.unapply</code>.</p></span></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

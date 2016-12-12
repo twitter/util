@@ -181,7 +181,8 @@
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CumulativeGauge</dd></dl></div>
+      <p class="shortcomment cmt">Returns a gauge unless it is dead, in which case it returns null.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a gauge unless it is dead, in which case it returns null.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CumulativeGauge</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -255,7 +256,8 @@
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.CumulativeGaugeBenchmark.CGauge">CGauge</a> → CumulativeGauge</dd></dl></div>
+      <p class="shortcomment cmt">Indicates when the gauge needs to be deregistered.</p><div class="fullcomment"><div class="comment cmt"><p>Indicates when the gauge needs to be deregistered.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.CumulativeGaugeBenchmark.CGauge">CGauge</a> → CumulativeGauge</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -433,24 +435,22 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.CumulativeGaugeBenchmark.CGauge#register" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="register():Unit"></a>
-      <a id="register():Unit"></a>
+      <a id="register():Boolean"></a>
+      <a id="register():Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">register</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">register</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#com.twitter.finagle.stats.CumulativeGaugeBenchmark$$CGauge@register():Unit" title="Permalink" target="_top">
+      <a href="../../../../index.html#com.twitter.finagle.stats.CumulativeGaugeBenchmark$$CGauge@register():Boolean" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">These need to be implemented by the gauge provider.</p><div class="fullcomment"><div class="comment cmt"><p>These need to be implemented by the gauge provider. They indicate
-when the gauge needs to be registered &amp; deregistered.</p><p>Special care must be taken in implementing these so that they are free
-of race conditions.
+      <p class="shortcomment cmt">Indicates when the gauge needs to be registered.</p><div class="fullcomment"><div class="comment cmt"><p>Indicates when the gauge needs to be registered.</p><p>Returns true until the gauge is dead, after which it returns false.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.CumulativeGaugeBenchmark.CGauge">CGauge</a> → CumulativeGauge</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>

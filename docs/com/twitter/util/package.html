@@ -3106,28 +3106,6 @@ object.</p><div class="fullcomment"><div class="comment cmt"><p>A trivial implem
 object.</p><p>All calls to <span class="extype" name="Stopwatch.start()">Stopwatch.start()</span> return an <a href="Stopwatch$.html#Elapsed=()=&gt;com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Stopwatch.Elapsed">Stopwatch.Elapsed</a>
 instance that always returns <a href="Duration$.html#Bottom:com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#Bottom">Duration.Bottom</a> for its elapsed time.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>NilStopwatch.get</code> for accessing this instance from Java.</p></span></dd></dl></div>
-    </li><li name="com.twitter.util.NonFatal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="NonFatal"></a>
-      <a id="NonFatal:NonFatal"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="NonFatal$.html"><span class="name">NonFatal</span></a>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.package@NonFatal" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">A classifier of non-fatal Exceptions.</p><div class="fullcomment"><div class="comment cmt"><p>A classifier of non-fatal Exceptions.</p><p>Developers should prefer using <code>scala.util.control.NonFatal</code> from the
-Scala standard library.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Scala added <code>NonFatal</code> to the standard library in Scala 2.10, while
-      Twitter's util needed to provide this for users who were still on
-      Scala 2.9 at the time.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p>Scala's <a href="http://www.scala-lang.org/api/current/#scala.util.control.NonFatal$" target="_blank">NonFatal</a>
-     for usage notes.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.NullMonitor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="NullMonitor"></a>
       <a id="NullMonitor:NullMonitor"></a>
@@ -3862,6 +3840,31 @@ that does not inherit from trait Config.
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.8.1)</i> use a throw-away instance of Eval instead</p></dd></dl></div>
+    </li><li name="com.twitter.util.NonFatal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NonFatal"></a>
+      <a id="NonFatal:NonFatal"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NonFatal$.html"><span class="name deprecated" title="Deprecated: (Since version 2016-11-21) Use scala.util.control.NonFatal instead">NonFatal</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.util.package@NonFatal" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A classifier of non-fatal Exceptions.</p><div class="fullcomment"><div class="comment cmt"><p>A classifier of non-fatal Exceptions.</p><p>Developers should prefer using <code>scala.util.control.NonFatal</code> from the
+Scala standard library.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2016-11-21)</i> Use scala.util.control.NonFatal instead</p></dd><dt>Note</dt><dd><span class="cmt"><p>Scala added <code>NonFatal</code> to the standard library in Scala 2.10, while
+      Twitter's util needed to provide this for users who were still on
+      Scala 2.9 at the time.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p>Scala's <a href="http://www.scala-lang.org/api/current/#scala.util.control.NonFatal$" target="_blank">NonFatal</a>
+     for usage notes.</p></span></dd></dl></div>
     </li></ol>
             </div>
         </div>

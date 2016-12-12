@@ -467,7 +467,7 @@ is equivalent to Future.never.
       <p class="shortcomment cmt">This is a powerful and expert level function.</p><div class="fullcomment"><div class="comment cmt"><p>This is a powerful and expert level function. A fold operation
 encapsulated in a Future. Like foldRight on normal lists, it replaces
 every cons with the folded function <code>f</code>, and the empty element with <code>z</code>.</p><p>Note: For clarity, we imagine that surrounding a function with backticks
-(<code>) allows infix usage.</code></p><pre>  (<span class="num">1</span> +:: <span class="num">2</span> +:: <span class="num">3</span> +:: empty).foldRight(z)(f)
+(&#96;) allows infix usage.</p><pre>  (<span class="num">1</span> +:: <span class="num">2</span> +:: <span class="num">3</span> +:: empty).foldRight(z)(f)
 = <span class="num">1</span> `f` flatMap (<span class="num">2</span> `f` flatMap (<span class="num">3</span> `f` z))</pre><p>Note: if <code>f</code> always forces the second parameter, for infinite streams the
 future never resolves.
 </p></div><dl class="paramcmts block"><dt class="param">z</dt><dd class="cmt"><p>the parameter that replaces the end of the list.</p></dd><dt class="param">f</dt><dd class="cmt"><p>a binary operator applied to elements of this stream. Note that
