@@ -39,7 +39,7 @@ Conversions between Twitter's Try and Scala's Try
 -------------------------------------------------
 
 Scala's `scala.util.Try`, `scala.util.Success`, and `scala.util.Failure`
-were based on Twitter's `com.twitter.util.Try`, `com.twitter.util.Return`,
+were based on Twitter's `com.twitter.util.Try`, `com.twitter.util.Return`
 and `com.twitter.util.Throw` and converting to and from them is sometimes
 necessary.
 
