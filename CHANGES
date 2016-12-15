@@ -6,11 +6,6 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
-API Changes:
-
-  * util-core: `FactoryPool`/`SimplePool` now inherits `scala.collection.mutable.Queue[A]`
-    not deprecated `scala.collection.mutable.QueueProxy[A]` ``RB_ID=896485``
-
 Bug Fixes:
 
   * util-core: Fix issue with c.t.concurrent.AsyncStream.mapConcurrent which
@@ -23,6 +18,13 @@ API Changes:
 
   * util-core: `com.twitter.util.NonFatal` is deprecated, use
     `scala.util.control.NonFatal` instead. ``RB_ID=892475``
+
+  * util-core: `FactoryPool`/`SimplePool` now inherits `scala.collection.mutable.Queue[A]`
+    not deprecated `scala.collection.mutable.QueueProxy[A]` ``RB_ID=896485``
+
+  * util-core: `Buf` has been promoted from a trait to an abstract class to facilitate
+    memoization of the `Buf` hash code. This also removes the need for the Java friendly
+    abstract class: `AbstractBuf`. ``RB_ID=897476``
 
 6.39.0  2016-11-22
 

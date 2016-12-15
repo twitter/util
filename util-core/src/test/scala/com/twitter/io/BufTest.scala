@@ -1,5 +1,6 @@
 package com.twitter.io
 
+import com.twitter.io.Buf.ByteArray
 import java.nio.CharBuffer
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
@@ -8,7 +9,7 @@ import org.scalacheck.{Arbitrary, Gen, Prop}
 import org.scalatest.FunSuite
 import org.scalatest.junit.{AssertionsForJUnit, JUnitRunner}
 import org.scalatest.mockito.MockitoSugar
-import org.scalatest.prop.{GeneratorDrivenPropertyChecks, Checkers}
+import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 
 @RunWith(classOf[JUnitRunner])
 class BufTest extends FunSuite
@@ -318,6 +319,25 @@ class BufTest extends FunSuite
     val shifted = new Array[Byte](bytes.length + 3)
     System.arraycopy(bytes, 0, shifted, 3, bytes.length)
     ae(Buf.Utf8(string), Buf.ByteArray.Owned(shifted, 3, 3+bytes.length))
+  }
+
+  test("hash code memoization") {
+    var count = 0
+    val buf = new Buf {
+      def write(output: Array[Byte], off: Int): Unit = {}
+      def length: Int = 0
+      def slice(from: Int, until: Int): Buf = this
+      protected def unsafeByteArrayBuf: Option[ByteArray] = None
+      override protected def computeHashCode: Int = {
+        count += 1
+        super.computeHashCode
+      }
+    }
+
+    assert(buf.hashCode != 0) // This is true for the used FNV-1 hash implementation.
+    assert(count == 1)
+    buf.hashCode
+    assert(count == 1)
   }
 
   check(Prop.forAll { (in: Int) =>

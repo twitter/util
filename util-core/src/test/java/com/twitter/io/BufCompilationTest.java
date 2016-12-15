@@ -8,31 +8,33 @@ import java.nio.ByteBuffer;
 
 public class BufCompilationTest {
 
-  private static class OwnBuf extends AbstractBuf {
-    @Override
-    public void write(byte[] output, int off) throws IllegalArgumentException {
-      // do nothing
-    }
+  private Buf getOwnBuf() {
+    return new Buf() {
+      @Override
+      public void write(byte[] output, int off) throws IllegalArgumentException {
+        // do nothing
+      }
 
-    @Override
-    public Option<ByteArray> unsafeByteArrayBuf() {
-      return Option.apply(null);
-    }
+      @Override
+      public Option<ByteArray> unsafeByteArrayBuf() {
+        return Option.apply(null);
+      }
 
-    @Override
-    public int length() {
-      return 0;
-    }
+      @Override
+      public int length() {
+        return 0;
+      }
 
-    @Override
-    public Buf slice(int from, int until) {
-      return Bufs.EMPTY;
-    }
+      @Override
+      public Buf slice(int from, int until) {
+        return Bufs.EMPTY;
+      }
+    };
   }
 
   @Test
   public void testOwnBufImplementation() {
-    OwnBuf own = new OwnBuf();
+    Buf own = getOwnBuf();
     Assert.assertEquals(0, own.length());
   }
 

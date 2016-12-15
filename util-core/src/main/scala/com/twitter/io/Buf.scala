@@ -7,10 +7,15 @@ import java.nio.charset.{Charset, StandardCharsets => JChar}
  * Buf represents a fixed, immutable byte buffer. Buffers may be
  * sliced and concatenated, and thus be used to implement
  * bytestreams.
- *
- * Note: There is a Java-friendly API for this trait: [[com.twitter.io.AbstractBuf]].
 */
-trait Buf { outer =>
+abstract class Buf { outer =>
+
+  // Cached hash code for the Buf.
+  // Note: there is an opportunity for a race in computing cachedHashCode
+  // but since the computed hash code is deterministic the worst case
+  // scenario is duplication of work.
+  private[this] var cachedHashCode = 0
+
   /**
    * Write the entire contents of the buffer into the given array at
    * the given offset. Partial writes aren't supported directly
@@ -40,14 +45,23 @@ trait Buf { outer =>
   def concat(right: Buf): Buf =
     if (right.isEmpty) outer else ConcatBuf(Vector(outer)).concat(right)
 
-  override def hashCode = Buf.hash(this)
-
   override def equals(other: Any): Boolean = other match {
     case other: Buf => Buf.equals(this, other)
     case _ => false
   }
 
-  def isEmpty = length == 0
+  final override def hashCode: Int = {
+    // A magic number of 0 signifies that the hash code has not been computed.
+    // Note: 0 may be the legitimate hash code of a Buf, in which case the
+    // hash code will be recomputed every invocation of Buf.hashCode. However,
+    // this is very unlikely.
+    if (cachedHashCode == 0) {
+      cachedHashCode = computeHashCode
+    }
+    cachedHashCode
+  }
+
+  def isEmpty: Boolean = length == 0
 
   /** Helper to support 0-copy coercion to Buf.ByteArray. */
   protected def unsafeByteArrayBuf: Option[Buf.ByteArray]
@@ -59,6 +73,9 @@ trait Buf { outer =>
     case _ =>
       copiedByteArray
   }
+
+  /** Compute the 32-bit FNV-1 hash code of this buf. */
+  protected def computeHashCode: Int = Buf.hash(this)
 
   /** Definitely requires copying. */
   protected def copiedByteArray: Array[Byte] = {
@@ -192,11 +209,6 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
 }
 
 /**
- * Abstract `Buf` class for Java compatibility.
- */
-abstract class AbstractBuf extends Buf
-
-/**
  * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
  * Owned APIs, each of which with construction & extraction utilities.
  *
@@ -211,6 +223,7 @@ abstract class AbstractBuf extends Buf
  * Note: There is a Java-friendly API for this object: [[com.twitter.io.Buf]].
  */
 object Buf {
+
   private class NoopBuf extends Buf {
     def write(buf: Array[Byte], off: Int) = ()
     override val isEmpty = true
@@ -368,9 +381,9 @@ object Buf {
    * be immutable in practice.
    */
   class ByteBuffer(private[Buf] val underlying: java.nio.ByteBuffer) extends Buf {
-    def length = underlying.remaining
+    def length: Int = underlying.remaining
 
-    override def toString = s"ByteBuffer($length)"
+    override def toString: String = s"ByteBuffer($length)"
 
     def write(output: Array[Byte], off: Int): Unit = {
       require(length <= output.length - off)
