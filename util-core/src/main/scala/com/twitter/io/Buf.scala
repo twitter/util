@@ -80,6 +80,16 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
     case buf => ConcatBuf(chain :+ right)
   }
 
+  override def isEmpty: Boolean = {
+    var i = 0
+    while (i < chain.length) {
+      if (!chain(i).isEmpty) return false
+      i += 1
+    }
+
+    true
+  }
+
   // Incrementally determine equality over each segment of the ConcatBuf.
   // TODO detect if the other Buf is a ConcatBuf and special-case.
   override def equals(other: Any): Boolean = other match {
