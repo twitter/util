@@ -20,7 +20,7 @@ class BufBenchmark extends StdBenchAnnotations {
   private[this] var string: String = _
   private[this] var stringBuf: Buf = _
 
-  @Setup(Level.Iteration)
+  @Setup(Level.Trial)
   def setup(): Unit = {
     val cap = size * 2
     val start = cap / 4

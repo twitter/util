@@ -1,6 +1,5 @@
 package com.twitter.io
 
-import java.nio.CharBuffer
 import java.nio.charset.{Charset, StandardCharsets => JChar}
 
 /**
@@ -598,11 +597,9 @@ object Buf {
     /**
      * Encode the String to its Buf representation per the charset
      */
-    def apply(s: String): Buf =  {
-      val enc = Charsets.encoder(charset)
-      val cb = CharBuffer.wrap(s.toCharArray)
-      Buf.ByteBuffer.Owned(enc.encode(cb))
-    }
+    def apply(s: String): Buf =
+      // Note: this was faster than `String.getBytes(Charset)` in JMH tests
+      Buf.ByteArray.Owned(s.getBytes(charset.name))
 
     /**
      * @return Some(String representation of the Buf)
