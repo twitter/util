@@ -609,11 +609,8 @@ object Buf {
      *       ("\uFFFD") in the returned String. This behavior may change
      *       in the future.
      */
-    def unapply(buf: Buf): Option[String] = {
-      val dec = Charsets.decoder(charset)
-      val bb = Buf.ByteBuffer.Owned.extract(buf).asReadOnlyBuffer
-      Some(dec.decode(bb).toString)
-    }
+    def unapply(buf: Buf): Option[String] =
+      Some(new String(Buf.ByteArray.Owned.extract(buf), charset.name))
   }
 
   /**
