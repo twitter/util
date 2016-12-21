@@ -1406,7 +1406,7 @@ computation completes.</p>
       </a>
     </span>
       <p class="shortcomment cmt">Take a sequence and sequentially apply a function <code>f</code> to each item.</p><div class="fullcomment"><div class="comment cmt"><p>Take a sequence and sequentially apply a function <code>f</code> to each item.
-Then return all future results <code>as</code> as a single <code>Future[Seq[_]]</code>.</p><p>If during execution any <code>f</code> is satsified <code>as</code> as a failure (<a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">Future.exception</a>)
+Then return all future results <code>as</code> as a single <code>Future[Seq[_]]</code>.</p><p>If during execution any <code>f</code> is satisfied <code>as</code> as a failure (<a href="#exception[A](e:Throwable):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#exception">Future.exception</a>)
 then that failed Future will be returned and the remaining elements of <code>as</code>
 will not be processed.</p><p>usage:</p><pre><span class="cmt">// will return a Future of `Seq(2, 3, 4)`</span>
 Future.traverseSequentially(<span class="std">Seq</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)) { i <span class="kw">=&gt;</span>

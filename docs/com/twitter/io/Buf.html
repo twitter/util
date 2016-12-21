@@ -28,7 +28,7 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Buf$.html" title="See companion object"><img alt="Trait/Object" src="../../../lib/trait_to_object_big.png" /></a>
+        <a href="Buf$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.io">io</a></p>
         <h1><a href="Buf$.html" title="See companion object">Buf</a></h1><h3><span class="morelinks"><div>
             Related Docs:
@@ -43,8 +43,8 @@
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
         <span class="name">Buf</span><span class="result"> extends <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
@@ -53,12 +53,12 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Buf represents a fixed, immutable byte buffer. Buffers may be
 sliced and concatenated, and thus be used to implement
-bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractBuf.html" class="extype" name="com.twitter.io.AbstractBuf">com.twitter.io.AbstractBuf</a>.</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl><div class="toggleContainer block">
+bytestreams.</p></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">Known Subclasses</span>
-            <div class="subClasses hiddenContent"><a href="AbstractBuf.html" class="extype" name="com.twitter.io.AbstractBuf">AbstractBuf</a>, <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>, <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a>, <a href="ConcatBuf.html" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a></div>
+            <div class="subClasses hiddenContent"><a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a>, <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a>, <a href="ConcatBuf.html" class="extype" name="com.twitter.io.ConcatBuf">ConcatBuf</a></div>
           </div></div>
         
 
@@ -93,7 +93,27 @@ bytestreams.</p><p>Note: There is a Java-friendly API for this trait: <a href="A
 
       <div id="template">
         <div id="allMembers">
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.twitter.io.Buf#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;():com.twitter.io.Buf"></a>
+      <a id="&lt;init&gt;:Buf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Buf</span><span class="params">()</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Buf@&lt;init&gt;():com.twitter.io.Buf" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
 
         
 
@@ -279,6 +299,23 @@ contain all the data.</p></span></dd></dl></div>
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Buf#computeHashCode" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="computeHashCode:Int"></a>
+      <a id="computeHashCode:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">computeHashCode</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.twitter.io.Buf@computeHashCode:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Compute the 32-bit FNV-1 hash code of this buf.</p><div class="fullcomment"><div class="comment cmt"><p>Compute the 32-bit FNV-1 hash code of this buf.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.io.Buf#concat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="concat(right:com.twitter.io.Buf):com.twitter.io.Buf"></a>
       <a id="concat(Buf):Buf"></a>
@@ -392,7 +429,7 @@ contain all the data.</p></span></dd></dl></div>
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
