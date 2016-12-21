@@ -1,36 +1,47 @@
 package com.twitter.util
 
 /**
- * Efficient conversion of Longs to base 64 encoded strings.
+ * Efficient conversion between Longs and base 64 encoded strings.
  *
  * This is intended for use in e.g. cache keys.
  */
 object Base64Long {
-  val StandardBase64Alphabet: Int => Char = Array[Char](
-    'A','B','C','D','E','F','G','H',
-    'I','J','K','L','M','N','O','P',
-    'Q','R','S','T','U','V','W','X',
-    'Y','Z','a','b','c','d','e','f',
-    'g','h','i','j','k','l','m','n',
-    'o','p','q','r','s','t','u','v',
-    'w','x','y','z','0','1','2','3',
-    '4','5','6','7','8','9','+','/'
-  )
-
   /**
    * The bit width of a base-64 digit.
    */
   private[this] val DigitWidth = 6
 
   /**
+   * The number of characters in the base 64 alphabet.
+   */
+  private[this] val AlphabetSize = 1 << DigitWidth
+
+  /**
    * Mask for the least-significant digit.
    */
-  private[this] val DigitMask = (1 << DigitWidth) - 1
+  private[this] val DigitMask = AlphabetSize - 1
 
   /**
    * The amount to shift right for the first base-64 digit in a Long.
    */
-  private[this] val StartingBitPosition = 60
+  private[this] val StartingBitPosition =
+    AlphabetSize - (AlphabetSize % DigitWidth)
+
+  /**
+   * Convert an ordered sequence of 64 characters into a base 64 alphabet.
+   */
+  def alphabet(chars: Iterable[Char]): PartialFunction[Int, Char] = {
+    require(
+      chars.size == AlphabetSize,
+      s"base-64 alphabet must have exactly $AlphabetSize characters")
+    val result = chars.toArray
+    require(java.util.Arrays.equals(result.distinct, result),
+      s"base-64 alphabet must not repeat characters")
+    result
+  }
+
+  val StandardBase64Alphabet: PartialFunction[Int, Char] =
+    alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 
   /**
    * Enable re-use of the StringBuilder for toBase64(Long): String
@@ -80,4 +91,73 @@ object Base64Long {
       }
     }
   }
+
+  /**
+   * Invert a base 64 alphabet, creating a function suitable for use in
+   * `fromBase64`.
+   */
+  def invertAlphabet(forward: Int => Char): PartialFunction[Char, Int] = {
+    val chars = 0.until(AlphabetSize).map(forward)
+
+    if (chars.forall(_ <= 0xff)) {
+      // If all of the characters fit in a byte, then pack the mapping
+      // into an array indexed by the value of the char.
+      new PartialFunction[Char, Int] {
+        private[this] val maxChar = chars.max
+        private[this] val reverse = Array.fill[Byte](maxChar.toInt + 1)(-1)
+        0.until(AlphabetSize).foreach { i => reverse(forward(i)) = i.toByte }
+        def isDefinedAt(c: Char): Boolean = (c <= maxChar) && (reverse(c) != -1)
+        def apply(c: Char): Int = reverse(c)
+      }
+    } else {
+      0.until(AlphabetSize).map(i => forward(i) -> i).toMap
+    }
+  }
+
+  private[this] val StandardBase64AlphabetInverted =
+    invertAlphabet(StandardBase64Alphabet)
+
+  /**
+   * Decode a sequence of characters representing a base-64-encoded
+   * Long, as produced by [[toBase64]].  An empty range of characters
+   * will yield 0L. Leading "zero" digits will not cause overflow.
+   *
+   * @param alphabet defines the mapping between characters in the
+   *   string and 6-bit numbers.
+   *
+   * @throws IllegalArgumentException if any characters in the specified
+   *   range are not in the specified base-64 alphabet.
+   *
+   * @throws ArithmeticException if the resulting value overflows a Long.
+   */
+  def fromBase64(
+    chars: CharSequence,
+    start: Int,
+    end: Int,
+    alphabet: PartialFunction[Char, Int] = StandardBase64AlphabetInverted
+  ): Long = {
+    var i: Int = start
+    var result: Long = 0
+    while (i < end) {
+      val c = chars.charAt(i)
+      if (alphabet.isDefinedAt(c)) {
+        val shifted = result * AlphabetSize
+        if (shifted >>> DigitWidth != result) {
+          throw new ArithmeticException("long overflow")
+        }
+        result = shifted | (alphabet(c) & DigitMask)
+        i += 1
+      } else {
+        throw new IllegalArgumentException(s"Invalid base 64 character at $i: ${chars.charAt(i)}")
+      }
+    }
+    result
+  }
+
+  /**
+   * Decode a full CharSequence as a base-64-encoded Long, using the
+   * standard base-64 alphabet.
+   */
+  def fromBase64(chars: CharSequence): Long =
+    fromBase64(chars, 0, chars.length, StandardBase64AlphabetInverted)
 }
