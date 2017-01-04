@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Runtime Behavior Changes:
+
+  * util-core: Standardized argument checking in implementations of
+    `c.t.io.Buf.write` and `c.t.io.Buf.slice`. ``RB_ID=899935``
+
 6.40.0  2016-12-20
 
 Bug Fixes:

@@ -18,10 +18,12 @@ abstract class Buf { outer =>
   /**
    * Write the entire contents of the buffer into the given array at
    * the given offset. Partial writes aren't supported directly
-   * through this API; they easily performed by first slicing the
+   * through this API; they can be accomplished by first [[slice slicing]] the
    * buffer.
    * @throws IllegalArgumentException when `output` is too small to
    * contain all the data.
+   *
+   * @note [[Buf]] implementors should use the helper [[checkWriteArgs]].
    */
   @throws(classOf[IllegalArgumentException])
   def write(output: Array[Byte], off: Int): Unit
@@ -35,6 +37,9 @@ abstract class Buf { outer =>
    * Returns a new buffer representing a slice of this buffer, delimited
    * by the indices `from` inclusive and `until` exclusive: `[from, until)`.
    * Out of bounds indices are truncated. Negative indices are not accepted.
+   *
+   * @note [[Buf]] implementors should use the helpers [[checkSliceArgs]],
+   *       [[isSliceEmpty]], and [[isSliceIdentity]].
    */
   def slice(from: Int, until: Int): Buf
 
@@ -82,6 +87,36 @@ abstract class Buf { outer =>
     write(bytes, 0)
     bytes
   }
+
+  /** Helps implementations validate the arguments to [[slice]]. */
+  protected[this] def checkSliceArgs(from: Int, until: Int): Unit = {
+    if (from < 0)
+      throw new IllegalArgumentException(s"'from' must be non-negative: $from")
+    if (until < 0)
+      throw new IllegalArgumentException(s"'until' must be non-negative: $until")
+  }
+
+  /** Helps implementations of [[slice]]. */
+  protected[this] def isSliceEmpty(from: Int, until: Int): Boolean =
+    until <= from || from >= length
+
+  /** Helps implementations of [[slice]]. */
+  protected[this] def isSliceIdentity(from: Int, until: Int): Boolean =
+    from == 0 && until >= length
+
+  /** Helps implementations validate the arguments to [[write]]. */
+  protected[this] def checkWriteArgs(
+    outputLen: Int,
+    outputOff: Int
+  ): Unit = {
+    if (outputOff < 0)
+      throw new IllegalArgumentException(s"offset must be non-negative: $outputOff")
+    val len = length
+    if (len > outputLen - outputOff)
+      throw new IllegalArgumentException(
+        s"Output too small, capacity=${outputLen-outputOff}, need=$len")
+  }
+
 }
 
 /**
@@ -137,9 +172,9 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
   }
 
   def write(output: Array[Byte], off: Int) = {
-    require(length <= output.length - off)
+    checkWriteArgs(output.length, off)
     var offset = off
-    chain foreach { buf =>
+    chain.foreach { buf =>
       buf.write(output, offset)
       offset += buf.length
     }
@@ -150,8 +185,9 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
    *       slice only entails 3 necessary allocations
    */
   def slice(from: Int, until: Int): Buf = {
-    if (from == until) return Buf.Empty
-    require(0 <= from && from < until)
+    checkSliceArgs(from, until)
+    if (isSliceEmpty(from, until)) return Buf.Empty
+    if (isSliceIdentity(from, until)) return this
 
     var begin = from
     var end = until
@@ -224,14 +260,16 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
 object Buf {
 
   private class NoopBuf extends Buf {
-    def write(buf: Array[Byte], off: Int) = ()
+    override def toString: String = "Buf.Empty"
+    def write(buf: Array[Byte], off: Int): Unit =
+      checkWriteArgs(buf.length, off)
     override val isEmpty = true
-    def length = 0
+    def length: Int = 0
     def slice(from: Int, until: Int): Buf = {
-      require(from >= 0 && until >= 0, "Index out of bounds")
+      checkSliceArgs(from, until)
       this
     }
-    override def concat(right: Buf) = right
+    override def concat(right: Buf): Buf = right
     protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
   }
 
@@ -249,14 +287,16 @@ object Buf {
     private[Buf] val end: Int
   ) extends Buf {
 
-    def write(buf: Array[Byte], off: Int): Unit =
+    def write(buf: Array[Byte], off: Int): Unit = {
+      checkWriteArgs(buf.length, off)
       System.arraycopy(bytes, begin, buf, off, length)
+    }
 
     def slice(from: Int, until: Int): Buf = {
-      require(from >=0 && until >= 0, "Index out of bounds")
+      checkSliceArgs(from, until)
 
-      if (until <= from || from >= length) Buf.Empty
-      else if (from == 0 && until >= length) this
+      if (isSliceEmpty(from, until)) Buf.Empty
+      else if (isSliceIdentity(from, until)) this
       else {
         val cap = math.min(until, length)
         ByteArray.Owned(bytes, begin+from, math.min(begin+cap, end))
@@ -385,14 +425,14 @@ object Buf {
     override def toString: String = s"ByteBuffer($length)"
 
     def write(output: Array[Byte], off: Int): Unit = {
-      require(length <= output.length - off)
+      checkWriteArgs(output.length, off)
       underlying.duplicate.get(output, off, length)
     }
 
     def slice(from: Int, until: Int): Buf = {
-      require(from >= 0 && until >= 0, "Index out of bounds")
-      if (until <= from || from >= length) Buf.Empty
-      else if (from == 0 && until >= length) this
+      checkSliceArgs(from, until)
+      if (isSliceEmpty(from, until)) Buf.Empty
+      else if (isSliceIdentity(from, until)) this
       else {
         val dup = underlying.duplicate()
         val limit = dup.position + math.min(until, length)

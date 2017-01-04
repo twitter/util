@@ -1,7 +1,5 @@
 package com.twitter.io
 
-import java.io.IOException
-
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -26,17 +24,9 @@ class BufInputStreamTest extends FunSuite {
 
     val i = is.read()
     assert(i != -1)
-    try {
-      is.close()
-    } catch { case e: IOException =>
-        fail("Test 1: Failed to close the input stream.")
-    }
-    try {
-      val j = is.read()
-      assert(j != -1)
-    } catch { case e: Exception =>
-        fail("Test 2: Should be able to read from closed stream.")
-    }
+    is.close()
+    val j = is.read()
+    assert(j != -1)
   }
 
   test("markI") {
@@ -45,19 +35,15 @@ class BufInputStreamTest extends FunSuite {
     // Test for method void java.io.ByteArrayInputStream.mark(int)
     val array1 = new Array[Byte](100)
     val array2 = new Array[Byte](100)
-    try {
-      is.skip(3000)
-      is.mark(1000)
-      is.read(array1, 0, array1.length)
-      is.reset()
-      is.read(array2, 0, array2.length)
-      is.reset()
-      val s1 = new String(array1, 0, array1.length)
-      val s2 = new String(array2, 0, array2.length)
-      assert(s1.equals(s2), "Failed to mark correct position")
-    } catch { case e: Exception =>
-        fail("Exception during mark test")
-    }
+    is.skip(3000)
+    is.mark(1000)
+    is.read(array1, 0, array1.length)
+    is.reset()
+    is.read(array2, 0, array2.length)
+    is.reset()
+    val s1 = new String(array1, 0, array1.length)
+    val s2 = new String(array2, 0, array2.length)
+    assert(s1.equals(s2), "Failed to mark correct position")
   }
 
   test("markSupported") {
@@ -88,7 +74,6 @@ class BufInputStreamTest extends FunSuite {
 
     intercept[NullPointerException] {
       is.read(null, 0, 1)
-      fail("NullPointerException expected.")
     }
   }
 
@@ -96,9 +81,8 @@ class BufInputStreamTest extends FunSuite {
     val is = new BufInputStream(fileBuf)
     val array = new Array[Byte](20)
 
-    intercept[IndexOutOfBoundsException] {
+    intercept[IllegalArgumentException] {
       is.read(array , -1, 1)
-      fail("IndexOutOfBoundsException expected.")
     }
   }
 
@@ -108,7 +92,6 @@ class BufInputStreamTest extends FunSuite {
 
     intercept[IllegalArgumentException] {
       is.read(array , 1, -1)
-      fail("IllegalArgumentException expected.")
     }
   }
 
@@ -116,14 +99,12 @@ class BufInputStreamTest extends FunSuite {
     val is = new BufInputStream(fileBuf)
     val array = new Array[Byte](20)
 
-    intercept[IndexOutOfBoundsException] {
+    intercept[IllegalArgumentException] {
       is.read(array, 1, array.length)
-      fail("IndexOutOfBoundsException expected.")
     }
 
-    intercept[IndexOutOfBoundsException] {
+    intercept[IllegalArgumentException] {
       is.read(array, array.length, array.length)
-      fail("IndexOutOfBoundsException expected.")
     }
   }
 

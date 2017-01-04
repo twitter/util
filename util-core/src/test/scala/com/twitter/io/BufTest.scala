@@ -27,6 +27,73 @@ class BufTest extends FunSuite
     JChar.UTF_16LE
   )
 
+  private[this] val bufs: Seq[Buf] =
+    Seq(
+      Buf.Empty,
+      Buf.ByteArray.Owned(Array[Byte](0, 1, 2)),
+      Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(Array[Byte](0, 1, 2))),
+      Buf.Utf8("abc"),
+      Buf.Utf8("abc").concat(Buf.Utf8("def"))
+    )
+
+  test("Buf.slice validates inputs must be non-negative") {
+    bufs.foreach { buf =>
+      withClue(buf.toString) {
+        intercept[IllegalArgumentException] {
+          buf.slice(-1, 0)
+        }
+        intercept[IllegalArgumentException] {
+          buf.slice(0, -1)
+        }
+      }
+    }
+  }
+
+  test("Buf.slice returns empty buf") {
+    bufs.foreach { buf =>
+      withClue(buf.toString) {
+        assert(Buf.Empty == buf.slice(5, 0))
+        assert(Buf.Empty == buf.slice(buf.length + 1, buf.length + 2))
+      }
+    }
+  }
+
+  test("Buf.slice is no-op when from and until are covering") {
+    bufs.foreach { buf =>
+      withClue(buf.toString) {
+        assert(buf == buf.slice(0, buf.length))
+        assert(buf == buf.slice(0, buf.length + 1))
+      }
+    }
+  }
+
+  test("Buf.write validates output array is large enough") {
+    // we skip Empty because we cannot create an array
+    // too small for this test.
+    bufs.filterNot(_.isEmpty).foreach { buf =>
+      withClue(buf.toString) {
+        val notBigEnough = new Array[Byte](buf.length - 1)
+        intercept[IllegalArgumentException] {
+          buf.write(notBigEnough, 0)
+        }
+      }
+    }
+  }
+
+  test("Buf.write validates offset") {
+    bufs.foreach { buf =>
+      withClue(buf.toString) {
+        val bigEnough = new Array[Byte](buf.length)
+        intercept[IllegalArgumentException] {
+          // negative offsets are not allowed
+          buf.write(bigEnough, -1)
+          // not enough room in the output after the offset
+          buf.write(bigEnough, 2)
+        }
+      }
+    }
+  }
+
   test("Buf.ByteArray.slice") {
     val arr = Array.range(0, 16).map(_.toByte)
     val buf = Buf.ByteArray.Owned(arr)
@@ -131,7 +198,7 @@ class BufTest extends FunSuite
       buf.slice(-1, 0)
     }
     intercept[IllegalArgumentException] {
-      buf.slice(1, 0)
+      buf.slice(0, -1)
     }
   }
 
