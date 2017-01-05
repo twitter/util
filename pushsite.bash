@@ -2,13 +2,15 @@
 
 set -e
 
+VERSION=2.12
+
 dir=/tmp/util.$$
 trap "rm -fr $dir" 0 1 2
 
 echo 'making site...' 1>&2
 ./sbt --warn util-doc/make-site
 
-unidoc=target/scala-2.11/unidoc/
+unidoc="target/scala-$VERSION/unidoc/"
 rm -fr "$unidoc"
 
 echo 'making unidoc...' 1>&2

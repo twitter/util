@@ -43,8 +43,8 @@ object Util extends Build {
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
-    scalaVersion := "2.11.8",
-    crossScalaVersions := Seq("2.11.8", "2.12.0"),
+    scalaVersion := "2.12.1",
+    crossScalaVersions := Seq("2.11.8", "2.12.1"),
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
@@ -64,22 +64,6 @@ object Util extends Build {
       // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
       "-Xlint:-missing-interpolator"
     ),
-
-    // scoverage automatically brings in libraries on our behalf, but it hasn't
-    // been updated for 2.12 yet[0].  for now, we need to rely on the 2.11 ones
-    // (which seem to work OK)
-    //
-    // [0]: https://github.com/scoverage/sbt-scoverage/issues/126
-    libraryDependencies := {
-      libraryDependencies.value.map {
-        case moduleId: ModuleID
-          if moduleId.organization == "org.scoverage"
-            && scalaVersion.value.startsWith("2.12") =>
-            moduleId.copy(name = moduleId.name.replace(scalaVersion.value, "2.11"))
-        case moduleId =>
-          moduleId
-      }
-    },
 
     // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
     // warnings are resolved
