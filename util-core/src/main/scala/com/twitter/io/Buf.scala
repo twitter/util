@@ -6,7 +6,7 @@ import java.nio.charset.{Charset, StandardCharsets => JChar}
  * Buf represents a fixed, immutable byte buffer. Buffers may be
  * sliced and concatenated, and thus be used to implement
  * bytestreams.
-*/
+ */
 abstract class Buf { outer =>
 
   // Cached hash code for the Buf.
@@ -47,7 +47,8 @@ abstract class Buf { outer =>
    * Concatenate this buffer with the given buffer.
    */
   def concat(right: Buf): Buf =
-    if (right.isEmpty) outer else ConcatBuf(Vector(outer)).concat(right)
+    if (right.isEmpty) outer
+    else Buf(Vector(outer, right))
 
   override def equals(other: Any): Boolean = other match {
     case other: Buf => Buf.equals(this, other)
@@ -120,16 +121,15 @@ abstract class Buf { outer =>
 }
 
 /**
- * A Buf that concat multiple Bufs together
+ * A Buf that concats multiple Bufs together
  */
-case class ConcatBuf(chain: Vector[Buf]) extends Buf {
-  require(chain.length > 0)
+@deprecated("Use `Buf.apply` instead", "2016-12-21")
+case class ConcatBuf(chain: Vector[Buf])
+  extends Buf.Composite {
+  require(chain.nonEmpty)
 
-  override def concat(right: Buf): Buf = right match {
-    case buf if buf.isEmpty => this
-    case ConcatBuf(rightChain) => ConcatBuf(chain ++ rightChain)
-    case buf => ConcatBuf(chain :+ right)
-  }
+  def bufs: IndexedSeq[Buf] = chain
+  protected def computedLength: Int = throw new UnsupportedOperationException
 
   override def isEmpty: Boolean = {
     var i = 0
@@ -137,31 +137,10 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
       if (!chain(i).isEmpty) return false
       i += 1
     }
-
     true
   }
 
-  // Incrementally determine equality over each segment of the ConcatBuf.
-  // TODO detect if the other Buf is a ConcatBuf and special-case.
-  override def equals(other: Any): Boolean = other match {
-    case other: Buf if isEmpty && other.isEmpty => true
-
-    case other: Buf if other.length == length =>
-      var i = 0
-      var offset = 0
-      while (i < chain.length) {
-        val buf = chain(i)
-        val sz = buf.length
-        if (!buf.equals(other.slice(offset, offset + sz))) return false
-        offset += sz
-        i += 1
-      }
-      true
-
-    case _ => false
-  }
-
-  def length: Int = {
+  override def length: Int = {
     var i = 0
     var sum = 0
     while (i < chain.length) {
@@ -170,77 +149,6 @@ case class ConcatBuf(chain: Vector[Buf]) extends Buf {
     }
     sum
   }
-
-  def write(output: Array[Byte], off: Int) = {
-    checkWriteArgs(output.length, off)
-    var offset = off
-    chain.foreach { buf =>
-      buf.write(output, offset)
-      offset += buf.length
-    }
-  }
-
-  /**
-   * @note we are foregoing clarity for performance
-   *       slice only entails 3 necessary allocations
-   */
-  def slice(from: Int, until: Int): Buf = {
-    checkSliceArgs(from, until)
-    if (isSliceEmpty(from, until)) return Buf.Empty
-    if (isSliceIdentity(from, until)) return this
-
-    var begin = from
-    var end = until
-    var start, startBegin, startEnd, finish, finishBegin, finishEnd = -1
-    var cur = 0
-    while (cur < chain.length && finish == -1) {
-      val buf = chain(cur)
-      val len = buf.length
-      if (begin >= 0 && begin < len) {
-        start = cur
-        startBegin = begin
-        startEnd = end
-      }
-      if (end <= len) {
-        finish = cur
-        finishBegin = math.max(0, begin)
-        finishEnd = end
-      }
-      begin -= len
-      end -= len
-      cur += 1
-    }
-    if (start == -1) Buf.Empty
-    else if (start == finish || (start == (cur - 1) && finish == -1)) {
-      chain(start).slice(startBegin, startEnd)
-    } else if (finish == -1) {
-      val untrimmedFirst = chain(start)
-      val first: Buf =
-        if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
-        else untrimmedFirst.slice(startBegin, startEnd)
-      ConcatBuf(
-        if (first == null) chain.slice(start, length)
-        else first +: chain.slice(start + 1, length))
-    } else {
-      val untrimmedFirst = chain(start)
-      val first: Buf =
-        if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
-        else untrimmedFirst.slice(startBegin, startEnd)
-
-      val untrimmedLast = chain(finish)
-      val last: Buf =
-        if (finishBegin == 0 && finishEnd >= untrimmedLast.length) null
-        else untrimmedLast.slice(finishBegin, finishEnd)
-
-      ConcatBuf(
-        if (first == null && last == null) chain.slice(start, finish + 1)
-        else if (first == null) chain.slice(start, finish) :+ last
-        else if (last == null) first +: chain.slice(start + 1, finish + 1)
-        else first +: chain.slice(start + 1, finish) :+ last)
-    }
-  }
-
-  protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
 }
 
 /**
@@ -279,13 +187,167 @@ object Buf {
   val Empty: Buf = new NoopBuf
 
   /**
+   * Create a `Buf` out of the given `Bufs`.
+   */
+  def apply(bufs: Iterable[Buf]): Buf = {
+    val builder = Vector.newBuilder[Buf]
+    var length = 0
+    bufs.foreach { b =>
+      val len = b.length
+      length += len
+      if (len > 0) builder += b
+    }
+
+    val filtered = builder.result()
+    if (length == 0)
+      Buf.Empty
+    else if (filtered.size == 1)
+      filtered.head
+    else
+      new Composite.Impl(filtered, length)
+  }
+
+  /**
+   * A `Buf` which is composed of other `Bufs`.
+   *
+   * @see [[Buf.apply]] for creating new instances.
+   */
+  sealed abstract class Composite extends Buf {
+    def bufs: IndexedSeq[Buf]
+    protected def computedLength: Int
+
+    def length: Int = computedLength
+
+    override def toString: String = s"Buf.Composite(length=$length)"
+
+    def write(output: Array[Byte], off: Int): Unit = {
+      if (length > output.length - off)
+        throw new IllegalArgumentException(
+          s"Output too small, capacity=${output.length-off}, need=$length")
+      var offset = off
+      var i = 0
+      while (i < bufs.length) {
+        val buf = bufs(i)
+        buf.write(output, offset)
+        offset += buf.length
+        i += 1
+      }
+    }
+
+    def slice(from: Int, until: Int): Buf = {
+      checkSliceArgs(from, until)
+
+      if (isSliceEmpty(from, until)) return Buf.Empty
+      else if (isSliceIdentity(from, until)) return this
+
+      var begin = from
+      var end = until
+      var start, startBegin, startEnd, finish, finishBegin, finishEnd = -1
+      var cur = 0
+      while (cur < bufs.length && finish == -1) {
+        val buf = bufs(cur)
+        val len = buf.length
+        if (begin >= 0 && begin < len) {
+          start = cur
+          startBegin = begin
+          startEnd = end
+        }
+        if (end <= len) {
+          finish = cur
+          finishBegin = math.max(0, begin)
+          finishEnd = end
+        }
+        begin -= len
+        end -= len
+        cur += 1
+      }
+      if (start == -1) Buf.Empty
+      else if (start == finish || (start == (cur - 1) && finish == -1)) {
+        bufs(start).slice(startBegin, startEnd)
+      } else if (finish == -1) {
+        val untrimmedFirst = bufs(start)
+        val first: Buf =
+          if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
+          else untrimmedFirst.slice(startBegin, startEnd)
+        Buf(
+          if (first == null) bufs.slice(start, length)
+          else first +: bufs.slice(start + 1, length))
+      } else {
+        val untrimmedFirst = bufs(start)
+        val first: Buf =
+          if (startBegin == 0 && startEnd >= untrimmedFirst.length) null
+          else untrimmedFirst.slice(startBegin, startEnd)
+
+        val untrimmedLast = bufs(finish)
+        val last: Buf =
+          if (finishBegin == 0 && finishEnd >= untrimmedLast.length) null
+          else untrimmedLast.slice(finishBegin, finishEnd)
+
+        Buf(
+          if (first == null && last == null) bufs.slice(start, finish + 1)
+          else if (first == null) bufs.slice(start, finish) :+ last
+          else if (last == null) first +: bufs.slice(start + 1, finish + 1)
+          else first +: bufs.slice(start + 1, finish) :+ last)
+      }
+    }
+
+    override def concat(right: Buf): Buf = right match {
+      case _ if right.isEmpty => this
+      // this special ConcatBuf case is needed as `this` may be a ConcatBuf
+      // which could be empty. otherwise we can skip the copying of Buf.apply.
+      case ConcatBuf(rightBufs) => Buf(bufs ++ rightBufs)
+      case c: Composite => new Composite.Impl(bufs ++ c.bufs, length + c.length)
+      case _ => new Composite.Impl(bufs :+ right, length + right.length)
+    }
+
+    protected def unsafeByteArrayBuf: Option[ByteArray] = None
+
+    override def equals(other: Any): Boolean = other match {
+      case otherBuf: Buf if length == otherBuf.length =>
+        var i = 0
+        var offset = 0
+        while (i < bufs.length) {
+          val buf = bufs(i)
+          val otherSlice = otherBuf.slice(offset, offset + buf.length)
+          if (!buf.equals(otherSlice)) return false
+          offset += buf.length
+          i += 1
+        }
+        true
+
+      case _ =>
+        false
+    }
+  }
+
+  object Composite {
+    def unapply(buf: Composite): Option[IndexedSeq[Buf]] =
+      Some(buf.bufs)
+
+    /** Basic implementation of a [[Buf]] created from n-`Bufs`. */
+    private[Buf] class Impl(
+        bs: IndexedSeq[Buf],
+        protected val computedLength: Int)
+      extends Buf.Composite {
+      // ensure there is a need for a `Composite`
+      if (bs.length <= 1)
+        throw new IllegalArgumentException(s"Must have 2 or more bufs: $bs")
+      if (computedLength <= 0)
+        throw new IllegalArgumentException(s"Length must be positive: $computedLength")
+      def bufs: IndexedSeq[Buf] = bs
+
+      override def isEmpty: Boolean = false
+    }
+  }
+
+  /**
    * A buffer representing an array of bytes.
    */
   class ByteArray(
-    private[Buf] val bytes: Array[Byte],
-    private[Buf] val begin: Int,
-    private[Buf] val end: Int
-  ) extends Buf {
+      private[Buf] val bytes: Array[Byte],
+      private[Buf] val begin: Int,
+      private[Buf] val end: Int)
+    extends Buf {
 
     def write(buf: Array[Byte], off: Int): Unit = {
       checkWriteArgs(buf.length, off)
@@ -303,9 +365,9 @@ object Buf {
       }
     }
 
-    def length = end-begin
+    def length: Int = end - begin
 
-    override def toString = s"ByteArray($length)"
+    override def toString: String = s"ByteArray(length=$length)"
 
     private[this] def equalsBytes(other: Array[Byte], offset: Int): Boolean = {
       var i = 0
@@ -319,14 +381,14 @@ object Buf {
     }
 
     override def equals(other: Any): Boolean = other match {
-      case other: Buf.ByteArray if other.length == length =>
-        equalsBytes(other.bytes, other.begin)
-      case other: Buf if other.length == length =>
-        other.unsafeByteArrayBuf match {
-          case Some(other) =>
-            equalsBytes(other.bytes, other.begin)
+      case ba: Buf.ByteArray if ba.length == length =>
+        equalsBytes(ba.bytes, ba.begin)
+      case buf: Buf if buf.length == length =>
+        buf.unsafeByteArrayBuf match {
+          case Some(ba) =>
+            equalsBytes(ba.bytes, ba.begin)
           case None =>
-            equalsBytes(other.copiedByteArray, 0)
+            equalsBytes(buf.copiedByteArray, 0)
         }
       case _ => false
     }
@@ -347,8 +409,8 @@ object Buf {
      */
     def coerce(buf: Buf): Buf.ByteArray = buf match {
       case buf: Buf.ByteArray => buf
-      case buf => buf.unsafeByteArrayBuf match {
-        case Some(buf) => buf
+      case _ => buf.unsafeByteArrayBuf match {
+        case Some(b) => b
         case None =>
           val bytes = buf.copiedByteArray
           new ByteArray(bytes, 0, bytes.length)
@@ -422,7 +484,7 @@ object Buf {
   class ByteBuffer(private[Buf] val underlying: java.nio.ByteBuffer) extends Buf {
     def length: Int = underlying.remaining
 
-    override def toString: String = s"ByteBuffer($length)"
+    override def toString: String = s"ByteBuffer(length=$length)"
 
     def write(output: Array[Byte], off: Int): Unit = {
       checkWriteArgs(output.length, off)
@@ -535,18 +597,18 @@ object Buf {
   private[this] val Fnv1a32Init: Long = 0x811c9dc5L
   private[this] def finishHash(hash: Long): Int = (hash & UintMax).toInt
   private[this] def hashBuf(buf: Buf, init: Long = Fnv1a32Init): Long = buf match {
-    case buf if buf.isEmpty => init
+    case b if b.isEmpty => init
 
-    case buf: ConcatBuf =>
+    case buf: Buf.Composite =>
       var i = 0
       var h = init
-      while (i < buf.chain.length) {
-        h = hashBuf(buf.chain(i), h)
+      while (i < buf.bufs.length) {
+        h = hashBuf(buf.bufs(i), h)
         i += 1
       }
       h
 
-    case buf =>
+    case _ =>
       val ba = Buf.ByteArray.coerce(buf)
       var i = ba.begin
       var h = init
@@ -666,7 +728,7 @@ object Buf {
       arr(0) = ((i >> 24) & 0xff).toByte
       arr(1) = ((i >> 16) & 0xff).toByte
       arr(2) = ((i >>  8) & 0xff).toByte
-      arr(3) = ((i      ) & 0xff).toByte
+      arr(3) = ( i        & 0xff).toByte
       ByteArray.Owned(arr)
     }
 
@@ -680,7 +742,7 @@ object Buf {
           ((arr(0) & 0xff) << 24) |
           ((arr(1) & 0xff) << 16) |
           ((arr(2) & 0xff) <<  8) |
-          ((arr(3) & 0xff)      )
+           (arr(3) & 0xff       )
         Some((value, rem))
       }
     }
@@ -702,7 +764,7 @@ object Buf {
       arr(4) = ((l >> 24) & 0xff).toByte
       arr(5) = ((l >> 16) & 0xff).toByte
       arr(6) = ((l >>  8) & 0xff).toByte
-      arr(7) = ((l      ) & 0xff).toByte
+      arr(7) = ( l        & 0xff).toByte
       ByteArray.Owned(arr)
     }
 
@@ -720,7 +782,7 @@ object Buf {
           ((arr(4) & 0xff).toLong << 24) |
           ((arr(5) & 0xff).toLong << 16) |
           ((arr(6) & 0xff).toLong <<  8) |
-          ((arr(7) & 0xff).toLong      )
+           (arr(7) & 0xff).toLong
         Some((value, rem))
       }
     }
@@ -735,7 +797,7 @@ object Buf {
   object U32LE {
     def apply(i: Int): Buf = {
       val arr = new Array[Byte](4)
-      arr(0) = ((i      ) & 0xff).toByte
+      arr(0) = ( i        & 0xff).toByte
       arr(1) = ((i >>  8) & 0xff).toByte
       arr(2) = ((i >> 16) & 0xff).toByte
       arr(3) = ((i >> 24) & 0xff).toByte
@@ -749,7 +811,7 @@ object Buf {
         val rem = buf.slice(4, buf.length)
 
         val value =
-          ((arr(0) & 0xff)      ) |
+          ( arr(0) & 0xff      ) |
           ((arr(1) & 0xff) <<  8) |
           ((arr(2) & 0xff) << 16) |
           ((arr(3) & 0xff) << 24)
@@ -767,7 +829,7 @@ object Buf {
   object U64LE {
     def apply(l: Long): Buf = {
       val arr = new Array[Byte](8)
-      arr(0) = ((l      ) & 0xff).toByte
+      arr(0) = ( l        & 0xff).toByte
       arr(1) = ((l >>  8) & 0xff).toByte
       arr(2) = ((l >> 16) & 0xff).toByte
       arr(3) = ((l >> 24) & 0xff).toByte
@@ -785,7 +847,7 @@ object Buf {
         val rem = buf.slice(8, buf.length)
 
         val value =
-          ((arr(0) & 0xff).toLong      ) |
+           (arr(0) & 0xff).toLong        |
           ((arr(1) & 0xff).toLong <<  8) |
           ((arr(2) & 0xff).toLong << 16) |
           ((arr(3) & 0xff).toLong << 24) |

@@ -202,6 +202,48 @@ class BufTest extends FunSuite
     }
   }
 
+  test("Buf.apply with no Bufs") {
+    assert(Buf.Empty == Buf(Seq.empty))
+  }
+
+  test("Buf.apply with 1 Buf") {
+    assert(Buf.Empty == Buf(Seq(Buf.Empty)))
+    val abc = Buf.Utf8("abc")
+    assert(abc == Buf(Seq(abc)))
+  }
+
+  test("Buf.apply with 2 or more Bufs") {
+    val abc = Buf.Utf8("abc")
+    val xyz = Buf.Utf8("xyz")
+    assert(Buf.Utf8("abcxyz") == Buf(Seq(abc, xyz)))
+    assert(Buf.Utf8("abcxyzabc") == Buf(Seq(abc, xyz, abc)))
+  }
+
+  test("Buf.apply ignores empty Bufs") {
+    val abc = Buf.Utf8("abc")
+    assert(Buf.Utf8("abcabc") == Buf(Seq(abc, Buf.Empty, abc)))
+  }
+
+  test("Buf.Composite.unapply") {
+    Buf.Empty match {
+      case Buf.Composite(_) => fail()
+      case _ =>
+    }
+
+    val abc = Buf.Utf8("abc")
+    abc match {
+      case Buf.Composite(_) => fail()
+      case _ =>
+    }
+
+    val xyz = Buf.Utf8("xyz")
+    abc.concat(xyz) match {
+      case Buf.Composite(bufs) =>
+        assert(bufs == IndexedSeq(abc, xyz))
+      case _ => fail()
+    }
+  }
+
   test("Buf.Utf8: English") {
     val buf = Buf.Utf8("Hello, world!")
     assert(buf.length == 13)
@@ -239,9 +281,9 @@ class BufTest extends FunSuite
   test("Buf.Utf8.unapply with a non-Buf.ByteArray") {
     val buf = new Buf {
       protected val unsafeByteArrayBuf = None
-      def slice(i: Int, j: Int) = throw new Exception("not implemented")
-      def length = 12
-      def write(output: Array[Byte], off: Int) =
+      def slice(i: Int, j: Int): Buf = throw new Exception("not implemented")
+      def length: Int = 12
+      def write(output: Array[Byte], off: Int): Unit =
         (off until off+length) foreach { i =>
           output(i) = 'a'.toByte
         }
@@ -498,7 +540,7 @@ class BufTest extends FunSuite
   }
 
   test("highly nested concat buffer shouldn't throw StackOverflowError") {
-    val size = 50 * 1000
+    val size = 100
     val b = 'x'.toByte
     val bigBuf = (1 to size).foldLeft(Buf.Empty) {
       case (buf, _) => buf concat Buf.ByteArray.Owned(Array[Byte](b))

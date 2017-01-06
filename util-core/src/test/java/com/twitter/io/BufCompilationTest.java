@@ -3,8 +3,10 @@ package com.twitter.io;
 import org.junit.Assert;
 import org.junit.Test;
 import scala.Option;
+import scala.collection.JavaConversions;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class BufCompilationTest {
 
@@ -30,6 +32,15 @@ public class BufCompilationTest {
         return Bufs.EMPTY;
       }
     };
+  }
+
+  @Test
+  public void testBufApply() {
+    Buf empty = Buf.Empty();
+    Buf abc = Bufs.utf8Buf("abc");
+    Buf def = Bufs.utf8Buf("def");
+    Buf merged = Buf.apply(
+      JavaConversions.asScalaBuffer(Arrays.asList(empty, abc, def)));
   }
 
   @Test
