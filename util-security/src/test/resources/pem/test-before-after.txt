@@ -1,0 +1,5 @@
+SOMETHING before
+-----BEGIN HELLO-----
+aGVsbG8=
+-----END HELLO-----
+SOMETHING after

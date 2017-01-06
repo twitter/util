@@ -3,6 +3,7 @@ junit_tests(
   strict_deps = True,
   dependencies = [
     '3rdparty/jvm/junit',
+    'util/util-core/src/main/scala',
     'util/util-security/src/main/scala'
   ],
   sources = rglobs('*.java')
