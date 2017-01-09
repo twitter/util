@@ -38,6 +38,17 @@ class X509CertificateFile(file: File) {
       .onFailure(logException)
   }
 
+  /**
+   * Attempts to read the contents of multiple X.509 Certificates from the file.
+   */
+  def readX509Certificates(): Try[Seq[X509Certificate]] = {
+    val pemFile = new PemFile(file)
+    pemFile
+      .readMessages(MessageType)
+      .map(certBytes => certBytes.map(generateX509Certificate))
+      .onFailure(logException)
+  }
+
 }
 
 object X509CertificateFile {

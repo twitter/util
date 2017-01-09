@@ -4,6 +4,7 @@ import com.twitter.util.Try
 import com.twitter.util.security.PemFile._
 import java.io.{BufferedReader, File, FileReader, IOException}
 import java.util.Base64
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * Signals that the PEM file failed to parse properly due to a
@@ -38,11 +39,25 @@ class PemFile(file: File) {
   ): Array[Byte] =
     decodeMessage(readEncodedMessage(bufReader, messageType))
 
+  private[this] def readDecodedMessages(
+    bufReader: BufferedReader,
+    messageType: String
+  ): Seq[Array[Byte]] =
+    readEncodedMessages(bufReader, messageType).map(decodeMessage)
+
   private[this] def readEncodedMessage(bufReader: BufferedReader, messageType: String): String = {
+    val contents = readEncodedMessages(bufReader, messageType)
+    if (contents.isEmpty)
+      throw new InvalidPemFormatException(file, "Empty input")
+    else contents.head
+  }
+
+  private[this] def readEncodedMessages(bufReader: BufferedReader, messageType: String): Seq[String] = {
     val header = constructHeader(messageType)
     val footer = constructFooter(messageType)
 
-    val content: StringBuilder = new StringBuilder()
+    val contents: ArrayBuffer[String] = ArrayBuffer()
+    var content: StringBuilder = null
 
     var state: PemState = PemState.Begin
     var line: String = bufReader.readLine()
@@ -51,21 +66,39 @@ class PemFile(file: File) {
       throw new InvalidPemFormatException(file, "Empty input")
 
     while (line != null) {
-      if (state == PemState.Begin) {
-        if (line == header) state = PemState.Content
-      } else if (state == PemState.Content) {
-        if (line == header) throw new InvalidPemFormatException(file, "Missing " + footer)
-        if (line == footer) state = PemState.End
-        else content.append(line)
+      if (state == PemState.Begin || state == PemState.End) {
+        // We are either before the first matching header or after a footer
+        // and are only looking for the next matching header. Other lines are ignored.
+        if (line == header) {
+          content = new StringBuilder()
+          state = PemState.Content
+        }
+      } else { // PemState.Content
+        if (line == header) {
+          // A new matching header, but the previous one had no footer
+          throw new InvalidPemFormatException(file, "Missing " + footer)
+        }
+        if (line == footer) {
+          // A good message, handle it and move to the end state
+          // where we ignore lines until the next message
+          contents.append(content.toString())
+          state = PemState.End
+        } else {
+          // In the middle of a message, append the line and move forward
+          content.append(line)
+        }
       }
       line = bufReader.readLine()
     }
-    if (state == PemState.Begin)
+    if (state == PemState.Begin) {
+      // We didn't see any matching header
       throw new InvalidPemFormatException(file, "Missing " + header)
-    else if (state == PemState.Content)
+    } else if (state == PemState.Content) {
+      // We didn't see a corresponding footer for the current message
       throw new InvalidPemFormatException(file, "Missing " + footer)
+    }
 
-    content.toString()
+    contents.toSeq
   }
 
   /**
@@ -76,19 +109,46 @@ class PemFile(file: File) {
    * @note The message must contain a footer. Items after the footer
    * are ignored.
    * @note If there are multiple messages within the same file,
-   * only the first one will be read.
+   * only the first one will be returned.
    */
   def readMessage(messageType: String): Try[Array[Byte]] =
     Try(openReader(file)).flatMap(reader =>
       Try(readDecodedMessage(reader, messageType)).ensure(closeReader(reader)))
+
+  /**
+   * This method attemps to read multiple PEM encoded messages
+   * of the same type.
+   *
+   * @note Messages must contain a header. Items before the header
+   * are ignored.
+   * @note Messages must contain a footer. Items after the footer
+   * are ignored.
+   */
+  def readMessages(messageType: String): Try[Seq[Array[Byte]]] =
+    Try(openReader(file)).flatMap(reader =>
+      Try(readDecodedMessages(reader, messageType)).ensure(closeReader(reader)))
+
 }
 
 object PemFile {
 
   private trait PemState
   private object PemState {
+    /**
+     * Begin indicates that no message headers have been seen yet.
+     */
     case object Begin extends PemState
+
+    /**
+     * Content indicates that a Begin header has been seen, but
+     * not yet a corresponding End footer.
+     */
     case object Content extends PemState
+
+    /**
+     * End indicates that an End footer has been seen for a message,
+     * but that another one has not started yet.
+     */
     case object End extends PemState
   }
 

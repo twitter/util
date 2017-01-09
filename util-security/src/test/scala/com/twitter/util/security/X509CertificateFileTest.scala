@@ -11,6 +11,11 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class X509CertificateFileTest extends FunSuite {
 
+  private[this] def assertIsCslCert(cert: X509Certificate): Unit = {
+    val subjectData: String = cert.getSubjectX500Principal().getName()
+    assert(subjectData.contains("Core Systems Libraries"))
+  }
+
   private[this] val assertLogMessage =
     PemFileTestUtils.assertLogMessage("X509Certificate") _
 
@@ -64,6 +69,25 @@ class X509CertificateFileTest extends FunSuite {
     val cert = tryCert.get()
 
     assert(cert.getSigAlgName == "SHA256withRSA")
+  }
+
+  test("File with multiple X509 Certificates") {
+    val tempFile = TempFile.fromResourcePath("/certs/test-rsa-chain.crt")
+    // deleteOnExit is handled by TempFile
+
+    val certsFile = new X509CertificateFile(tempFile)
+    val tryCerts = certsFile.readX509Certificates()
+
+    assert(tryCerts.isReturn)
+    val certs = tryCerts.get()
+
+    assert(certs.length == 2)
+
+    val intermediate = certs(0)
+    assertIsCslCert(intermediate)
+
+    val root = certs(1)
+    assertIsCslCert(root)
   }
 
 }
