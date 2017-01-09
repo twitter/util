@@ -12,6 +12,7 @@ cache:
   directories:
    - $HOME/.ivy2/cache
    - $HOME/.sbt/boot/scala-$TRAVIS_SCALA_VERSION
+   - $HOME/.dodo
 
 scala:
   - 2.11.8
