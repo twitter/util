@@ -51,8 +51,8 @@ class X509CertificateFile(file: File) {
 
 }
 
-object X509CertificateFile {
-  val MessageType: String = "CERTIFICATE"
+private object X509CertificateFile {
+  private val MessageType: String = "CERTIFICATE"
 
   private val log = Logger.get("com.twitter.util.security")
 }

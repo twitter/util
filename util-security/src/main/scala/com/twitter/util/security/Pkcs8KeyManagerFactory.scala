@@ -17,7 +17,8 @@ import javax.net.ssl.{KeyManager, KeyManagerFactory}
 class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
 
   private[this] def logException(ex: Throwable): Unit =
-    log.warning(s"Pkcs8KeyManagerFactory failed to create key manager: ${ex.getMessage()}.")
+    log.warning(s"Pkcs8KeyManagerFactory (${certFile.getName()}, ${keyFile.getName()}) " +
+      s"failed to create key manager: ${ex.getMessage()}.")
 
   private[this] def keySpecToPrivateKey(keySpec: PKCS8EncodedKeySpec): PrivateKey = {
     val kf: KeyFactory = KeyFactory.getInstance("RSA")
@@ -42,7 +43,7 @@ class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
    * Attempts to read the contents of both the X.509 Certificate file and the PKCS#8
    * Private Key file and combine the contents into a [[javax.net.ssl.KeyManager KeyManager]].
    * The singular value is returned in an Array for ease of use with
-   * [[javax.net.ssl.SSLContext SSLContext's] init method.
+   * [[javax.net.ssl.SSLContext SSLContext's]] init method.
    */
   def getKeyManagers(): Try[Array[KeyManager]] = {
     val tryCert: Try[X509Certificate] = new X509CertificateFile(certFile).readX509Certificate()
@@ -56,7 +57,7 @@ class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
 
 }
 
-object Pkcs8KeyManagerFactory {
+private object Pkcs8KeyManagerFactory {
   private val log = Logger.get("com.twitter.util.security")
 
   private def join[A, B](tryA: Try[A], tryB: Try[B]): Try[(A, B)] = {

@@ -130,7 +130,7 @@ class PemFile(file: File) {
 
 }
 
-object PemFile {
+private object PemFile {
 
   private trait PemState
   private object PemState {
