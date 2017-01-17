@@ -5,8 +5,8 @@ scala_library(
     repo = artifactory,
   ),
   dependencies=[
-    'science/src/java/com/twitter/common/zookeeper:client',
-    'science/src/java/com/twitter/common/quantity:quantity',
+    'src/java/com/twitter/common/zookeeper:client',
+    'src/java/com/twitter/common/quantity:quantity',
     'util/util-core/src/main/scala',
     'util/util-zk/src/main/scala',
   ],

@@ -1,7 +1,7 @@
 junit_tests(
   dependencies=[
-    'science/src/java/com/twitter/common/zookeeper:client',
-    'science/src/java/com/twitter/common/net:util',
+    'src/java/com/twitter/common/zookeeper:client',
+    'src/java/com/twitter/common/net:util',
     '3rdparty/jvm/org/jmock',
     '3rdparty/jvm/junit',
     '3rdparty/jvm/org/scalatest',

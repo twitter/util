@@ -4,7 +4,7 @@ junit_tests(
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scalacheck:scalacheck',
     '3rdparty/jvm/org/scalatest:scalatest',
-    'science/src/java/com/twitter/common/objectsize:objectsize',
+    'src/java/com/twitter/common/objectsize:objectsize',
     'util/util-core/src/main/scala:scala',
   ],
   # fatal_warnings runs into an issue with scalatest/Future.isDone:
