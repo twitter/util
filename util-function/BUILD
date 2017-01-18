@@ -1,4 +1,4 @@
-target(name='util-stats',
+target(
   dependencies=[
     'util/util-function/src/main/java'
   ]
