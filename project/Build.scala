@@ -19,11 +19,13 @@ object Util extends Build {
     ExclusionRule("com.sun.jmx", "jmxri"),
     ExclusionRule("javax.jms", "jms")
   )
+  val slf4jVersion = "1.7.21"
 
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.4"
   val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
   val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+  val slf4jLib = "org.slf4j" % "slf4j-api" % slf4jVersion
 
   // for various reasons, we use poms that point to the wrong
   // versions of certain libraries.
@@ -123,7 +125,7 @@ object Util extends Build {
       unidocSettings
   ).aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
-    utilLint, utilLogging, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
+    utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
     utilEvents, utilSecurity, utilStats, utilEval
   )
@@ -305,6 +307,27 @@ object Util extends Build {
     name := "util-logging"
   ).dependsOn(utilCore, utilApp, utilStats)
 
+  lazy val utilSlf4jApi = Project(
+    id = "util-slf4j-api",
+    base = file("util-slf4j-api"),
+    settings = Defaults.coreDefaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-slf4j-api",
+    libraryDependencies ++= Seq(slf4jLib)
+  ).dependsOn(utilCore % "test")
+
+  lazy val utilSlf4jJulBridge = Project(
+    id = "util-slf4j-jul-bridge",
+    base = file("util-slf4j-jul-bridge"),
+    settings = Defaults.coreDefaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-slf4j-jul-bridge",
+    libraryDependencies ++= Seq(
+      slf4jLib,
+      "org.slf4j" % "jul-to-slf4j" % slf4jVersion)
+  ).dependsOn(utilCore, utilSlf4jApi)
 
   lazy val utilRegistry = Project(
     id = "util-registry",
@@ -347,7 +370,6 @@ object Util extends Build {
     )
   ).dependsOn(utilCore, utilLogging)
 
-
   lazy val utilThrift = Project(
     id = "util-thrift",
     base = file("util-thrift"),
@@ -357,7 +379,7 @@ object Util extends Build {
     name := "util-thrift",
     libraryDependencies ++= Seq(
       "com.twitter"                % "libthrift"        % "0.5.0-7",
-      "org.slf4j"                  % "slf4j-api"        % "1.7.7" % "provided",
+      slf4jLib % "provided",
       "com.fasterxml.jackson.core" % "jackson-core"     % "2.8.4",
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.4"
     )

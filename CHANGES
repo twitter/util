@@ -6,6 +6,14 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-slf4j-api: Introduce slf4j-api support into util. This includes a
+    small scala wrapper over the `org.slf4j.Logger` and a scala-friendly
+    `Logging` trait. Changes also include the util-slf4j-jul-bridge module which
+    is a library that provides a utility to "smartly" install the
+    Slf4jBridgeHandler. ``RB_ID=900815``
+
 Runtime Behavior Changes:
 
   * util-core: Standardized argument checking in implementations of
