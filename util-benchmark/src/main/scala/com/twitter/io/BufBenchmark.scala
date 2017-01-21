@@ -6,16 +6,22 @@ import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 import scala.util.Random
 
+// run via:
+// ./sbt 'project util-benchmark' 'jmh:run BufBenchmark'
 @State(Scope.Benchmark)
 class BufBenchmark extends StdBenchAnnotations {
 
   @Param(Array("1000"))
   var size: Int = 1000
 
+  private[this] var bytes: Array[Byte] = _
+
   private[this] var byteArrayBuf: Buf = _
   private[this] var byteBufferBuf: Buf = _
   private[this] var concatBuf: Buf = _
-  private[this] var all: Array[Buf] = _
+  // create a 2nd composite that is sliced differently from the other
+  // to avoid some implementation artifacts changing the perf.
+  private[this] var concatBuf2: Buf = _
 
   private[this] var string: String = _
   private[this] var stringBuf: Buf = _
@@ -25,53 +31,105 @@ class BufBenchmark extends StdBenchAnnotations {
     val cap = size * 2
     val start = cap / 4
     val end = start + size
-    val raw = 0.until(cap).map(_.toByte).toArray
+    bytes = 0.until(cap).map(_.toByte).toArray
 
-    val bb = java.nio.ByteBuffer.wrap(raw, start, size)
+    val bb = java.nio.ByteBuffer.wrap(bytes, start, size)
 
-    byteArrayBuf = Buf.ByteArray.Owned(raw, start, end)
+    byteArrayBuf = Buf.ByteArray.Owned(bytes, start, end)
     byteBufferBuf = Buf.ByteBuffer.Owned(bb)
     concatBuf = byteArrayBuf.slice(0, size / 2).concat(byteArrayBuf.slice(size / 2, size))
-    all = Array(byteArrayBuf, byteBufferBuf, concatBuf)
+    concatBuf2 = byteArrayBuf.slice(0, size / 4).concat(byteArrayBuf.slice(size / 4, size))
 
     val rnd = new Random(120412421512L)
     string = rnd.nextString(size)
     stringBuf = Buf.Utf8(string)
   }
 
-  private[this] def equality(buf: Buf, hole: Blackhole): Unit = {
-    var i = 0
-    while (i < all.length) {
-      hole.consume(buf == all(i))
-      i += 1
-    }
-  }
+  @Benchmark
+  def equalityByteArrayByteArray(): Boolean =
+    byteArrayBuf == byteArrayBuf
 
   @Benchmark
-  def equalityByteArrayBuf(hole: Blackhole): Unit =
-    equality(byteArrayBuf, hole)
+  def equalityByteArrayByteBuffer(): Boolean =
+    byteArrayBuf == byteBufferBuf
 
   @Benchmark
-  def equalityByteBufferBuf(hole: Blackhole): Unit =
-    equality(byteBufferBuf, hole)
+  def equalityByteArrayConcat(): Boolean =
+    byteArrayBuf == concatBuf
 
   @Benchmark
-  def equalityConcatBuf(hole: Blackhole): Unit =
-    equality(concatBuf, hole)
+  def equalityByteBufferByteArray(): Boolean =
+    byteBufferBuf == byteArrayBuf
+
+  @Benchmark
+  def equalityConcatByteArray(): Boolean =
+    concatBuf == byteArrayBuf
+
+  @Benchmark
+  def equalityConcatByteBuffer(): Boolean =
+    concatBuf == byteBufferBuf
+
+  @Benchmark
+  def equalityByteBufferByteBuffer(): Boolean =
+    byteBufferBuf == byteBufferBuf
+
+  @Benchmark
+  def equalityByteBufferConcat(): Boolean =
+    byteBufferBuf == concatBuf
+
+  @Benchmark
+  def equalityConcatConcat(): Boolean =
+    concatBuf == concatBuf2
 
   private[this] def hash(buf: Buf): Int = buf.hashCode()
 
   @Benchmark
-  def hashCodeByteArrayBuf(): Int =
-    hash(byteArrayBuf)
+  @Warmup(iterations = 5)
+  @Measurement(iterations = 5)
+  def hashCodeByteArrayBufBaseline(): Buf =
+    Buf.ByteArray.Owned(bytes, 1, size + 1)
+
+  // subtract the results of the Baseline run to get the results
+  @Benchmark
+  @Warmup(iterations = 5)
+  @Measurement(iterations = 5)
+  def hashCodeByteArrayBuf(hole: Blackhole): Int = {
+    val buf = hashCodeByteArrayBufBaseline()
+    hole.consume(buf)
+    hash(buf)
+  }
 
   @Benchmark
-  def hashCodeByteBufferBuf(): Int =
-    hash(byteBufferBuf)
+  @Warmup(iterations = 5)
+  @Measurement(iterations = 5)
+  def hashCodeByteBufferBufBaseline(): Buf =
+    Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes, 1, size))
+
+  // subtract the results of the Baseline run to get the results
+  @Benchmark
+  @Warmup(iterations = 5)
+  @Measurement(iterations = 5)
+  def hashCodeByteBufferBuf(hole: Blackhole): Int = {
+    val buf = hashCodeByteBufferBufBaseline()
+    hole.consume(buf)
+    hash(buf)
+  }
 
   @Benchmark
-  def hashCodeConcatBuf(): Int =
-    hash(concatBuf)
+  @Warmup(iterations = 5)
+  @Measurement(iterations = 5)
+  def hashCodeConcatBufBaseline(): Buf =
+    Buf.ByteArray.Owned(bytes, 0, 5).concat(Buf.ByteArray.Owned(bytes, 5, size))
+
+  // subtract the results of the Baseline run to get the results
+  @Benchmark
+  @Warmup(iterations = 5)
+  @Measurement(iterations = 5)
+  def hashCodeConcatBuf(hole: Blackhole): Int = {
+    val buf = hashCodeConcatBufBaseline()
+    hole.consume(buf)
+    hash(buf)
+  }
 
   private[this] def slice(buf: Buf): Buf =
     buf.slice(size / 4, size / 4 + size / 2)
@@ -132,8 +190,6 @@ class BufBenchmark extends StdBenchAnnotations {
   @Benchmark
   def asByteArrayConcatBuf(): Array[Byte] =
     asByteArray(concatBuf)
-
-
 
   @Benchmark
   def stringToUtf8Buf(): Buf =

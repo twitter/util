@@ -6,6 +6,13 @@ import java.nio.charset.{Charset, StandardCharsets => JChar}
  * Buf represents a fixed, immutable byte buffer. Buffers may be
  * sliced and concatenated, and thus be used to implement
  * bytestreams.
+ *
+ * @see [[com.twitter.io.Buf.ByteArray]] for an `Array[Byte]` backed
+ *     implementation.
+ * @see [[com.twitter.io.Buf.ByteBuffer]] for an `nio.ByteBuffer` backed
+ *     implementation.
+ * @see [[com.twitter.io.Buf.apply]] for creating a `Buf` from other `Bufs`
+ * @see [[com.twitter.io.Buf.Empty]] for an empty `Buf`.
  */
 abstract class Buf { outer =>
 
@@ -58,10 +65,10 @@ abstract class Buf { outer =>
   final override def hashCode: Int = {
     // A magic number of 0 signifies that the hash code has not been computed.
     // Note: 0 may be the legitimate hash code of a Buf, in which case the
-    // hash code will be recomputed every invocation of Buf.hashCode. However,
-    // this is very unlikely.
+    // hash code will have extra collisions with -1.
     if (cachedHashCode == 0) {
-      cachedHashCode = computeHashCode
+      val computed = computeHashCode
+      cachedHashCode = if (computed == 0) -1 else computed
     }
     cachedHashCode
   }
@@ -163,7 +170,7 @@ case class ConcatBuf(chain: Vector[Buf])
  * The Shared variants, on the other hand, ensure that the Buf shares no state
  * with the caller (at the cost of additional allocation).
  *
- * Note: There is a Java-friendly API for this object: [[com.twitter.io.Buf]].
+ * Note: There are Java-friendly APIs for this object at `com.twitter.io.Bufs`.
  */
 object Buf {
 
@@ -221,9 +228,7 @@ object Buf {
     override def toString: String = s"Buf.Composite(length=$length)"
 
     def write(output: Array[Byte], off: Int): Unit = {
-      if (length > output.length - off)
-        throw new IllegalArgumentException(
-          s"Output too small, capacity=${output.length-off}, need=$length")
+      checkWriteArgs(output.length, off)
       var offset = off
       var i = 0
       while (i < bufs.length) {
@@ -335,7 +340,7 @@ object Buf {
       if (computedLength <= 0)
         throw new IllegalArgumentException(s"Length must be positive: $computedLength")
       def bufs: IndexedSeq[Buf] = bs
-
+      // the factory method requires non-empty Bufs
       override def isEmpty: Boolean = false
     }
   }
@@ -356,7 +361,6 @@ object Buf {
 
     def slice(from: Int, until: Int): Buf = {
       checkSliceArgs(from, until)
-
       if (isSliceEmpty(from, until)) Buf.Empty
       else if (isSliceIdentity(from, until)) this
       else {
@@ -599,11 +603,11 @@ object Buf {
   private[this] def hashBuf(buf: Buf, init: Long = Fnv1a32Init): Long = buf match {
     case b if b.isEmpty => init
 
-    case buf: Buf.Composite =>
+    case c: Buf.Composite =>
       var i = 0
       var h = init
-      while (i < buf.bufs.length) {
-        h = hashBuf(buf.bufs(i), h)
+      while (i < c.bufs.length) {
+        h = hashBuf(c.bufs(i), h)
         i += 1
       }
       h
