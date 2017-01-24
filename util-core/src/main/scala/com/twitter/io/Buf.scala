@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import java.nio.charset.{Charset, StandardCharsets => JChar}
+import scala.collection.immutable.VectorBuilder
 
 /**
  * Buf represents a fixed, immutable byte buffer. Buffers may be
@@ -12,6 +13,7 @@ import java.nio.charset.{Charset, StandardCharsets => JChar}
  * @see [[com.twitter.io.Buf.ByteBuffer]] for an `nio.ByteBuffer` backed
  *     implementation.
  * @see [[com.twitter.io.Buf.apply]] for creating a `Buf` from other `Bufs`
+ * @see [[com.twitter.io.Buf.Indexed]] for efficient positional access.
  * @see [[com.twitter.io.Buf.Empty]] for an empty `Buf`.
  */
 abstract class Buf { outer =>
@@ -174,8 +176,64 @@ case class ConcatBuf(chain: Vector[Buf])
  */
 object Buf {
 
-  private class NoopBuf extends Buf {
-    override def toString: String = "Buf.Empty"
+  /**
+   * Indicates the `Buf` offers efficient positional element access by index.
+   *
+   * @see [[Indexed.coerce(Buf)]] to convert a `Buf` to an `Indexed`.
+   *
+   * @note this is marked `private[twitter]` while the tires are kicked.
+   */
+  private[twitter] trait Indexed extends Buf {
+    /**
+     * Returns the byte at the given index.
+     */
+    private[twitter] def apply(index: Int): Byte
+
+    /**
+     * Process the `Buf` 1-byte at a time using the given
+     * [[Indexed.Processor]], starting at index `0` until
+     * index `length`. Processing will halt if the processor
+     * returns `false` or after processing the final byte.
+     *
+     * @return -1 if the processor processed all bytes or
+     *         the last processed index if the processor returns
+     *         `false`.
+     *
+     * @note this mimics the design of Netty 4's
+     *       `io.netty.buffer.ByteBuf.forEachByte`
+     */
+    private[twitter] def process(processor: Indexed.Processor): Int
+  }
+
+  private[twitter] object Indexed {
+
+    /**
+     * @return `true` if the processor would like to continue processing
+     *        more bytes and `false` otherwise.
+     *
+     * @see [[Indexed.process]]
+     *
+     * @note this is not a `Function1[Byte, Boolean]` despite very
+     *       much fitting that interface. This was done to avoiding boxing
+     *       of the `Bytes` which was quite squirrely and had an impact on
+     *       performance.
+     */
+    abstract class Processor {
+      def apply(byte: Byte): Boolean
+    }
+
+    /**
+     * Convert the given [[Buf]] into a [[Buf.Indexed]].
+     *
+     * @see `Bufs.asIndexedBuf` for the Java API
+     */
+    def coerce(buf: Buf): Indexed = buf match {
+      case indexed: Indexed => indexed
+      case _ => Buf.ByteArray.coerce(buf)
+    }
+  }
+
+  private class NoopBuf extends Buf.Indexed {
     def write(buf: Array[Byte], off: Int): Unit =
       checkWriteArgs(buf.length, off)
     override val isEmpty = true
@@ -186,6 +244,9 @@ object Buf {
     }
     override def concat(right: Buf): Buf = right
     protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
+    private[twitter] def apply(index: Int): Byte =
+      throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
+    private[twitter] def process(processor: Indexed.Processor): Int = -1
   }
 
   /**
@@ -197,12 +258,12 @@ object Buf {
    * Create a `Buf` out of the given `Bufs`.
    */
   def apply(bufs: Iterable[Buf]): Buf = {
-    val builder = Vector.newBuilder[Buf]
+    val builder = Vector.newBuilder[Indexed]
     var length = 0
     bufs.foreach { b =>
       val len = b.length
       length += len
-      if (len > 0) builder += b
+      if (len > 0) builder += Indexed.coerce(b)
     }
 
     val filtered = builder.result()
@@ -220,8 +281,13 @@ object Buf {
    * @see [[Buf.apply]] for creating new instances.
    */
   sealed abstract class Composite extends Buf {
+    import Composite._
+
     def bufs: IndexedSeq[Buf]
     protected def computedLength: Int
+
+    // the factory method requires non-empty Bufs
+    override def isEmpty: Boolean = false
 
     def length: Int = computedLength
 
@@ -301,8 +367,8 @@ object Buf {
       // this special ConcatBuf case is needed as `this` may be a ConcatBuf
       // which could be empty. otherwise we can skip the copying of Buf.apply.
       case ConcatBuf(rightBufs) => Buf(bufs ++ rightBufs)
-      case c: Composite => new Composite.Impl(bufs ++ c.bufs, length + c.length)
-      case _ => new Composite.Impl(bufs :+ right, length + right.length)
+      case c: Composite => new Composite.Impl(concatBufs(bufs, c.bufs), length + c.length)
+      case _ => new Composite.Impl(concatBuf(bufs, right), length + right.length)
     }
 
     protected def unsafeByteArrayBuf: Option[ByteArray] = None
@@ -331,9 +397,10 @@ object Buf {
 
     /** Basic implementation of a [[Buf]] created from n-`Bufs`. */
     private[Buf] class Impl(
-        bs: IndexedSeq[Buf],
+        bs: IndexedSeq[Buf.Indexed],
         protected val computedLength: Int)
-      extends Buf.Composite {
+      extends Buf.Composite
+      with Buf.Indexed {
       // ensure there is a need for a `Composite`
       if (bs.length <= 1)
         throw new IllegalArgumentException(s"Must have 2 or more bufs: $bs")
@@ -342,7 +409,71 @@ object Buf {
       def bufs: IndexedSeq[Buf] = bs
       // the factory method requires non-empty Bufs
       override def isEmpty: Boolean = false
+
+      private[twitter] def apply(index: Int): Byte = {
+        var bufIdx = 0
+        var byteIdx = 0
+        while (bufIdx < bs.length) {
+          val buf = bs(bufIdx)
+          val bufLen = buf.length
+          if (index < byteIdx + bufLen) {
+            return buf(index - byteIdx)
+          } else {
+            byteIdx += bufLen
+          }
+          bufIdx += 1
+        }
+        throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
+      }
+
+      private[twitter] def process(processor: Indexed.Processor): Int = {
+        var i = 0
+        var continue = true
+        var bufIdx = 0
+        while (continue && bufIdx < bs.length) {
+          val buf = bs(bufIdx)
+          val bufLen = buf.length
+          var byteIdx = 0
+          while (continue && byteIdx < bufLen) {
+            val byte = buf(byteIdx)
+            if (processor(byte)) {
+              byteIdx += 1
+            } else {
+              continue = false
+            }
+          }
+          bufIdx += 1
+          i += byteIdx
+        }
+        if (continue) -1
+        else i
+      }
     }
+
+    private[Buf] def concatBufs(
+      head: IndexedSeq[Buf],
+      tail: IndexedSeq[Buf]
+    ): IndexedSeq[Buf.Indexed] = {
+      val builder = new VectorBuilder[Buf.Indexed]()
+      val addToBuilder: Buf => Unit =
+        b => builder += Buf.Indexed.coerce(b)
+      head.foreach(addToBuilder)
+      tail.foreach(addToBuilder)
+      builder.result()
+    }
+
+    private[Buf] def concatBuf(
+      head: IndexedSeq[Buf],
+      tail: Buf
+    ): IndexedSeq[Buf.Indexed] = {
+      val builder = new VectorBuilder[Buf.Indexed]()
+      val addToBuilder: Buf => Unit =
+        b => builder += Buf.Indexed.coerce(b)
+      head.foreach(addToBuilder)
+      addToBuilder(tail)
+      builder.result()
+    }
+
   }
 
   /**
@@ -352,7 +483,28 @@ object Buf {
       private[Buf] val bytes: Array[Byte],
       private[Buf] val begin: Int,
       private[Buf] val end: Int)
-    extends Buf {
+    extends Buf.Indexed {
+
+    private[twitter] def apply(index: Int): Byte = {
+      val off = begin + index
+      if (off >= end)
+        throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
+      bytes(off)
+    }
+
+    private[twitter] def process(processor: Indexed.Processor): Int = {
+      var i = begin
+      var continue = true
+      while (continue && i < end) {
+        val byte = bytes(i)
+        if (processor(byte))
+          i += 1
+        else
+          continue = false
+      }
+      if (continue) -1
+      else i - begin
+    }
 
     def write(buf: Array[Byte], off: Int): Unit = {
       checkWriteArgs(buf.length, off)
@@ -485,8 +637,28 @@ object Buf {
    * visible to the resulting Buf. The ByteBuffer should
    * be immutable in practice.
    */
-  class ByteBuffer(private[Buf] val underlying: java.nio.ByteBuffer) extends Buf {
+  class ByteBuffer(private[Buf] val underlying: java.nio.ByteBuffer)
+    extends Buf.Indexed {
     def length: Int = underlying.remaining
+
+    private[twitter] def apply(index: Int): Byte =
+      underlying.get(underlying.position() + index)
+
+    private[twitter] def process(processor: Indexed.Processor): Int = {
+      val len = length
+      val pos = underlying.position()
+      var i = 0
+      var continue = true
+      while (continue && i < len) {
+        val byte = underlying.get(pos + i)
+        if (processor(byte))
+          i += 1
+        else
+          continue = false
+      }
+      if (continue) -1
+      else i
+    }
 
     override def toString: String = s"ByteBuffer(length=$length)"
 
@@ -583,9 +755,9 @@ object Buf {
   }
 
   /**
-   * Byte equality between two buffers. May copy.
+   * Byte equality between two buffers.
    *
-   * Relies on Buf.ByteArray.equals.
+   * May trigger copies if neither [[Buf]] is [[Indexed]].
    */
   def equals(x: Buf, y: Buf): Boolean = {
     if (x.length != y.length) return false

@@ -62,20 +62,20 @@ class BufBenchmark extends StdBenchAnnotations {
     byteBufferBuf == byteArrayBuf
 
   @Benchmark
-  def equalityConcatByteArray(): Boolean =
-    concatBuf == byteArrayBuf
-
-  @Benchmark
-  def equalityConcatByteBuffer(): Boolean =
-    concatBuf == byteBufferBuf
-
-  @Benchmark
   def equalityByteBufferByteBuffer(): Boolean =
     byteBufferBuf == byteBufferBuf
 
   @Benchmark
   def equalityByteBufferConcat(): Boolean =
     byteBufferBuf == concatBuf
+
+  @Benchmark
+  def equalityConcatByteArray(): Boolean =
+    concatBuf == byteArrayBuf
+
+  @Benchmark
+  def equalityConcatByteBuffer(): Boolean =
+    concatBuf == byteBufferBuf
 
   @Benchmark
   def equalityConcatConcat(): Boolean =
@@ -200,5 +200,41 @@ class BufBenchmark extends StdBenchAnnotations {
     val Buf.Utf8(str) = stringBuf
     str
   }
+
+  private val out = new Array[Byte](1)
+
+  private[this] def singleByteSliceAndWrite(buf: Buf): Byte = {
+    buf.slice(0, 1).write(out, 0)
+    out(0)
+  }
+
+  private[this] def singleByteIndexed(buf: Buf): Byte = {
+    val idx = Buf.Indexed.coerce(buf)
+    idx(0)
+  }
+
+  @Benchmark
+  def singleByteSliceAndWriteByteArray(): Byte =
+    singleByteSliceAndWrite(byteArrayBuf)
+
+  @Benchmark
+  def singleByteSliceAndWriteByteBuffer(): Byte =
+    singleByteSliceAndWrite(byteBufferBuf)
+
+  @Benchmark
+  def singleByteSliceAndWriteConcatBuf(): Byte =
+    singleByteSliceAndWrite(concatBuf)
+
+  @Benchmark
+  def singleByteIndexedByteArray(): Byte =
+    singleByteIndexed(byteArrayBuf)
+
+  @Benchmark
+  def singleByteIndexedByteBuffer(): Byte =
+    singleByteIndexed(byteBufferBuf)
+
+  @Benchmark
+  def singleByteIndexedConcatBuf(): Byte =
+    singleByteIndexed(concatBuf)
 
 }

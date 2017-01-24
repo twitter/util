@@ -120,4 +120,12 @@ public class BufCompilationTest {
     String hex = Bufs.slowHexString(a);
     Assert.assertEquals("01020304", hex);
   }
+
+  @Test
+  public void testIndexedApply() {
+    byte bytes[] = new byte[] { 0x1, 0x2, 0x3, 0x4 };
+    Buf a = Bufs.ownedBuf(bytes);
+    Buf.Indexed i = Bufs.asIndexedBuf(a);
+    Assert.assertEquals(0x1, i.apply(0));
+  }
 }

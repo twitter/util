@@ -104,6 +104,58 @@ class BufTest extends FunSuite
     }
   }
 
+  private def assertAllProcessed(buf: Buf): Unit = {
+    var n = 0
+    val processor = new Buf.Indexed.Processor {
+      def apply(byte: Byte): Boolean = {
+        n += 1
+        true
+      }
+    }
+    assert(-1 == Buf.Indexed.coerce(buf).process(processor))
+    assert(n == buf.length)
+  }
+
+  test("Buf.Indexed.process returns -1 when fully processed") {
+    val arr = Array.range(0, 9).map(_.toByte)
+    val byteArray = Buf.ByteArray.Owned(arr, 3, 8)
+    assertAllProcessed(byteArray)
+
+    val byteBuffer = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(arr))
+    assertAllProcessed(byteBuffer)
+
+    val composite = byteArray.concat(byteBuffer)
+    assertAllProcessed(composite)
+  }
+
+  private def assertProcessReturns0WhenProcessorReturnsFalse(buf: Buf.Indexed) =
+    assert(0 == buf.process(new Buf.Indexed.Processor {
+      def apply(byte: Byte): Boolean = false
+    }))
+
+  test("Buf.Indexed.process returns index where processing stopped") {
+    val arr = Array.range(0, 9).map(_.toByte)
+    val byteArray = Buf.Indexed.coerce(Buf.ByteArray.Owned(arr, 3, 8))
+    assertProcessReturns0WhenProcessorReturnsFalse(byteArray)
+    assert(2 == byteArray.process(new Buf.Indexed.Processor {
+      def apply(byte: Byte): Boolean = byte < 5
+    }))
+
+    val byteBuffer = Buf.Indexed.coerce(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(arr)))
+    assertProcessReturns0WhenProcessorReturnsFalse(byteBuffer)
+    assert(5 == byteBuffer.process(new Buf.Indexed.Processor {
+      def apply(byte: Byte): Boolean = byte < 5
+    }))
+
+    val composite = Buf.Indexed.coerce(
+      Buf.ByteArray.Owned(arr, 0, 1).concat(
+        Buf.ByteArray.Owned(arr, 1, 10)))
+    assertProcessReturns0WhenProcessorReturnsFalse(composite)
+    assert(5 == composite.process(new Buf.Indexed.Processor {
+      def apply(byte: Byte): Boolean = byte < 5
+    }))
+  }
+
   test("Buf.ByteArray.Shared.apply is safe") {
     val array = Array.fill(10)(0.toByte)
     val buf = Buf.ByteArray.Shared(array)
@@ -199,6 +251,52 @@ class BufTest extends FunSuite
     }
     intercept[IllegalArgumentException] {
       buf.slice(0, -1)
+    }
+  }
+
+  test("Buf.Indexed.apply") {
+    // compare slice/write to apply
+    val out = new Array[Byte](1)
+    bufs
+      .filter(b => b.length >= 2 && b.isInstanceOf[Buf.Indexed])
+      .map(_.asInstanceOf[Buf.Indexed])
+      .foreach { buf =>
+        withClue(buf) {
+          buf.slice(0, 1).write(out, 0)
+          assert(out(0) == buf(0))
+
+          buf.slice(1, 2).write(out, 0)
+          assert(out(0) == buf(1))
+
+          buf.slice(buf.length-1, buf.length).write(out, 0)
+          assert(out(0) == buf(buf.length-1))
+        }
+      }
+  }
+
+  test("Buf.Indexed.apply over the length") {
+    bufs
+      .filter(b => b.length >= 1 && b.isInstanceOf[Buf.Indexed])
+      .map(_.asInstanceOf[Buf.Indexed])
+      .foreach { buf =>
+        withClue(buf) {
+          intercept[IndexOutOfBoundsException] {
+            buf(buf.length)
+          }
+        }
+      }
+  }
+
+  test("Buf.ByteArray.apply") {
+    // ba => [2, 3]
+    val ba = Buf.ByteArray.Owned(Array[Byte](0, 1, 2, 3, 4), 2, 4)
+    assert(2 == ba.length)
+    val idx = Buf.Indexed.coerce(ba)
+    assert(ba eq idx)
+    assert(2 == idx(0))
+    assert(3 == idx(1))
+    intercept[IndexOutOfBoundsException] {
+      idx(2)
     }
   }
 
