@@ -385,6 +385,15 @@ object Util extends Build {
     )
   ).dependsOn(utilCodec)
 
+  lazy val utilTunable = Project(
+    id = "util-tunable",
+    base = file("util-tunable"),
+    settings = Defaults.coreDefaultSettings ++
+      sharedSettings
+  ).settings(
+    name := "util-tunable"
+  )
+
   lazy val utilZk = Project(
     id = "util-zk",
     base = file("util-zk"),

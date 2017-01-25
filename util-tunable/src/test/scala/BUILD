@@ -1,0 +1,11 @@
+junit_tests(
+  dependencies=[
+    '3rdparty/jvm/junit',
+    '3rdparty/jvm/org/scalacheck',
+    '3rdparty/jvm/org/scalatest',
+    'util/util-tunable',
+  ],
+  sources=rglobs('*.scala'),
+  fatal_warnings=True,
+  strict_deps=True,
+)
