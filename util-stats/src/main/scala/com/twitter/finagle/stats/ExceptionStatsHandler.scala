@@ -6,10 +6,19 @@ import com.twitter.util.Throwables
  * API for deciding where request exceptions are reported in stats.
  * Typical implementations may report any cancellations or validation
  * errors separately so success rate can from valid non cancelled requests.
+ *
+ * @see [[Null]] for a no-op handler.
  */
 object ExceptionStatsHandler {
   private[stats] val Failures = "failures"
   private[stats] val SourcedFailures = "sourcedfailures"
+
+  /**
+   * An [[ExceptionStatsHandler]] which does nothing on `record`.
+   */
+  val Null: ExceptionStatsHandler = new ExceptionStatsHandler {
+    def record(statsReceiver: StatsReceiver, t: Throwable): Unit = ()
+  }
 
   /**
    * Returns the set of paths to record an exception against.

@@ -4,9 +4,9 @@ package com.twitter.finagle.stats
  * A blacklisting [[StatsReceiver]].  If the name for a metric is found to be
  * blacklisted, nothing is recorded.
  *
- * @param underlying: a base [[StatsReceiver]], used for metrics that aren't
+ * @param self a base [[StatsReceiver]], used for metrics that aren't
  *        blacklisted
- * @param blacklisted: a predicate that reads a name and returns true to
+ * @param blacklisted a predicate that reads a name and returns true to
  *        blacklist, and false to let it pass through
  */
 class BlacklistStatsReceiver(
@@ -16,7 +16,7 @@ class BlacklistStatsReceiver(
   with DelegatingStatsReceiver {
 
   val repr = self.repr
-  override def isNull = self.isNull
+  override def isNull: Boolean = self.isNull
 
   def counter(name: String*): Counter = getStatsReceiver(name).counter(name: _*)
 
