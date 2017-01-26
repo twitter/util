@@ -3,7 +3,7 @@
 # Documentation config
 #
 
-import sys, os
+import sys, os, datetime
 
 sys.path.append(os.path.abspath('utils'))
 
@@ -22,14 +22,15 @@ html_short_title = 'Util'
 html_static_path = ['_static']
 html_sidebars = {
    'index':    ['sidebarintro.html', 'searchbox.html'],
-    '**':      ['sidebarintro.html', 'localtoc.html', 'relations.html', 'searchbox.html']
+   '**':       ['sidebarintro.html', 'localtoc.html', 'relations.html', 'searchbox.html']
 }
+html_favicon = '_static/favicon.ico'
 html_theme_options = {
   'index_logo': None
 }
 
 project = u'Util'
-copyright = u'2016 Twitter, Inc'
+copyright = u'{} Twitter, Inc'.format(datetime.datetime.now().year)
 htmlhelp_basename = "util"
 release = sbt_versions.find_release(os.path.abspath('../../../project/Build.scala'))
 version = sbt_versions.release_to_version(release)
