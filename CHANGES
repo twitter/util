@@ -16,6 +16,9 @@ New Features:
 
 Runtime Behavior Changes:
 
+  * util-core: Improved performance and allocation rates of some "random access"
+    `Buf` operations. ``RB_ID=905253``
+
   * util-core: Standardized argument checking in implementations of
     `c.t.io.Buf.write` and `c.t.io.Buf.slice`. ``RB_ID=899935``
 

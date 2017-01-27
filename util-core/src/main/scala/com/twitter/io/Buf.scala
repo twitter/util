@@ -206,7 +206,6 @@ object Buf {
   }
 
   private[twitter] object Indexed {
-
     /**
      * @return `true` if the processor would like to continue processing
      *        more bytes and `false` otherwise.
@@ -373,18 +372,63 @@ object Buf {
 
     protected def unsafeByteArrayBuf: Option[ByteArray] = None
 
+    private[this] def equalsIndexed(other: Buf.Indexed): Boolean = {
+      var otherIdx = 0
+      var bufIdx = 0
+      while (bufIdx < bufs.length) {
+        val buf = Indexed.coerce(bufs(bufIdx))
+        val bufLen = buf.length
+        var byteIdx = 0
+        while (otherIdx < length && byteIdx < bufLen) {
+          if (other(otherIdx) != buf(byteIdx))
+            return false
+          byteIdx += 1
+          otherIdx += 1
+        }
+        bufIdx += 1
+      }
+      true
+    }
+
     override def equals(other: Any): Boolean = other match {
       case otherBuf: Buf if length == otherBuf.length =>
-        var i = 0
-        var offset = 0
-        while (i < bufs.length) {
-          val buf = bufs(i)
-          val otherSlice = otherBuf.slice(offset, offset + buf.length)
-          if (!buf.equals(otherSlice)) return false
-          offset += buf.length
-          i += 1
+        otherBuf match {
+          case Composite(otherBufs) =>
+            // this is 2 nested loops, with the outer loop tracking which
+            // Buf's they are on. The inner loop compares individual bytes across
+            // the Bufs "segments".
+            var otherBufIdx = 0
+            var bufIdx = 0
+            var byteIdx = 0
+            var otherByteIdx = 0
+            while (bufIdx < bufs.length && otherBufIdx < otherBufs.length) {
+              val buf = Indexed.coerce(bufs(bufIdx))
+              val otherB = Indexed.coerce(otherBufs(otherBufIdx))
+              while (byteIdx < buf.length && otherByteIdx < otherB.length) {
+                if (buf(byteIdx) != otherB(otherByteIdx))
+                  return false
+                byteIdx += 1
+                otherByteIdx += 1
+              }
+              if (byteIdx == buf.length) {
+                byteIdx = 0
+                bufIdx += 1
+              }
+              if (otherByteIdx == otherB.length) {
+                otherByteIdx = 0
+                otherBufIdx += 1
+              }
+            }
+            true
+
+          case _ =>
+            otherBuf.unsafeByteArrayBuf match {
+              case Some(otherBab) =>
+                equalsIndexed(otherBab)
+              case None =>
+                equalsIndexed(Indexed.coerce(otherBuf))
+            }
         }
-        true
 
       case _ =>
         false
@@ -473,7 +517,6 @@ object Buf {
       addToBuilder(tail)
       builder.result()
     }
-
   }
 
   /**
@@ -537,14 +580,30 @@ object Buf {
     }
 
     override def equals(other: Any): Boolean = other match {
-      case ba: Buf.ByteArray if ba.length == length =>
-        equalsBytes(ba.bytes, ba.begin)
-      case buf: Buf if buf.length == length =>
-        buf.unsafeByteArrayBuf match {
-          case Some(ba) =>
+      case c: Buf.Composite =>
+        c == this
+      case other: Buf if other.length == length =>
+        other match {
+          case ba: Buf.ByteArray =>
             equalsBytes(ba.bytes, ba.begin)
-          case None =>
-            equalsBytes(buf.copiedByteArray, 0)
+          case _ =>
+            other.unsafeByteArrayBuf match {
+              case Some(bs) =>
+                equalsBytes(bs.bytes, bs.begin)
+              case None =>
+                val processor = new Indexed.Processor {
+                  private[this] var pos = 0
+                  def apply(b: Byte): Boolean = {
+                    if (b == bytes(begin + pos)) {
+                      pos += 1
+                      true
+                    } else {
+                      false
+                    }
+                  }
+                }
+                Indexed.coerce(other).process(processor) == -1
+            }
         }
       case _ => false
     }
@@ -681,8 +740,7 @@ object Buf {
     }
 
     override def equals(other: Any): Boolean = other match {
-      case ByteBuffer(otherBB) =>
-        underlying.equals(otherBB)
+      case ByteBuffer(otherBB) => underlying.equals(otherBB)
       case buf: Buf => Buf.equals(this, buf)
       case _ => false
     }
@@ -760,8 +818,34 @@ object Buf {
    * May trigger copies if neither [[Buf]] is [[Indexed]].
    */
   def equals(x: Buf, y: Buf): Boolean = {
-    if (x.length != y.length) return false
-    Buf.ByteArray.coerce(x).equals(Buf.ByteArray.coerce(y))
+    if (x eq y) return true
+
+    val len = x.length
+    if (len != y.length) return false
+
+    // Prefer Composite's equals implementation to minimize overhead
+    x match {
+      case _: Composite => return x == y
+      case _ => ()
+    }
+    y match {
+      case _: Composite => return y == x
+      case _ => ()
+    }
+
+    val processor = new Indexed.Processor {
+      private[this] val iy = Buf.Indexed.coerce(y)
+      private[this] var pos = 0
+      def apply(b: Byte): Boolean = {
+        if (b == iy(pos)) {
+          pos += 1
+          true
+        } else {
+          false
+        }
+      }
+    }
+    Buf.Indexed.coerce(x).process(processor) == -1
   }
 
   /** The 32-bit FNV-1 of Buf */
@@ -785,14 +869,17 @@ object Buf {
       h
 
     case _ =>
-      val ba = Buf.ByteArray.coerce(buf)
-      var i = ba.begin
-      var h = init
-      while (i < ba.end) {
-        h = (h ^ (ba.bytes(i) & 0xff)) * Fnv1a32Prime
-        i += 1
+      // use an explicit class in order to have fast access to `hash`
+      // without boxing.
+      class HashingProcessor(var hash: Long) extends Indexed.Processor {
+        def apply(byte: Byte): Boolean = {
+          hash = (hash ^ (byte & 0xff)) * Fnv1a32Prime
+          true
+        }
       }
-      h
+      val processor = new HashingProcessor(init)
+      Buf.Indexed.coerce(buf).process(processor)
+      processor.hash
   }
 
   /**
@@ -800,11 +887,12 @@ object Buf {
    * contents in hexadecimal.
    */
   def slowHexString(buf: Buf): String = {
-    val ba = Buf.ByteArray.coerce(buf)
-    val digits = new StringBuilder(2 * ba.length)
-    var i = ba.begin
-    while (i < ba.end) {
-      digits ++= f"${ba.bytes(i)}%02x"
+    val indexed = Buf.Indexed.coerce(buf)
+    val digits = new StringBuilder(2 * indexed.length)
+    val len = buf.length
+    var i = 0
+    while (i < len) {
+      digits ++= f"${indexed(i)}%02x"
       i += 1
     }
     digits.toString
