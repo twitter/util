@@ -8,6 +8,13 @@ Next Version
 
 New Features:
 
+  * util-core: Introduced a positional `Buf` API, `Buf.Indexed`, and retrofitted
+    all existing implementations in util and finagle to adopt it. It is now used
+    throughout for a reductions in allocation and latency. In two services at
+    Twitter we saw a 1–2% reduction in allocations. We plan to open the API to
+    the public and make it a part of `Buf` once we are confident in the APIs.
+    ``RB_ID=904559`` ``RB_ID=905253`` ``RB_ID=906201``
+
   * util-slf4j-api: Introduce slf4j-api support into util. This includes a
     small scala wrapper over the `org.slf4j.Logger` and a scala-friendly
     `Logging` trait. Changes also include the util-slf4j-jul-bridge module which
