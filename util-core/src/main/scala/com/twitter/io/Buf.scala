@@ -192,7 +192,7 @@ object Buf {
     /**
      * Process the `Buf` 1-byte at a time using the given
      * [[Indexed.Processor]], starting at index `0` until
-     * index `length`. Processing will halt if the processor
+     * index [[length]]. Processing will halt if the processor
      * returns `false` or after processing the final byte.
      *
      * @return -1 if the processor processed all bytes or
@@ -202,7 +202,31 @@ object Buf {
      * @note this mimics the design of Netty 4's
      *       `io.netty.buffer.ByteBuf.forEachByte`
      */
-    private[twitter] def process(processor: Indexed.Processor): Int
+    private[twitter] def process(processor: Indexed.Processor): Int =
+      process(0, length, processor)
+
+    /**
+     * Process the `Buf` 1-byte at a time using the given
+     * [[Indexed.Processor]], starting at index `from` until
+     * index `until`. Processing will halt if the processor
+     * returns `false` or after processing the final byte.
+     *
+     * @return -1 if the processor processed all bytes or
+     *         the last processed index if the processor returns
+     *         `false`.
+     *         Will return -1 if `from` is greater than or equal to
+     *         `until` or [[length]].
+     *         Will return -1 if `until` is greater than or equal to
+     *         [[length]].
+     *
+     * @param from the starting index, inclusive. Must be non-negative.
+     *
+     * @param until the ending index, exclusive. Must be non-negative.
+     *
+     * @note this mimics the design of Netty 4's
+     *       `io.netty.buffer.ByteBuf.forEachByte`
+     */
+    private[twitter] def process(from: Int, until: Int, processor: Indexed.Processor): Int
   }
 
   private[twitter] object Indexed {
@@ -245,7 +269,10 @@ object Buf {
     protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
     private[twitter] def apply(index: Int): Byte =
       throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
-    private[twitter] def process(processor: Indexed.Processor): Int = -1
+    private[twitter] def process(from: Int, until: Int, processor: Indexed.Processor): Int = {
+      checkSliceArgs(from, until)
+      -1
+    }
   }
 
   /**
@@ -470,24 +497,37 @@ object Buf {
         throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
       }
 
-      private[twitter] def process(processor: Indexed.Processor): Int = {
+      private[twitter] def process(from: Int, until: Int, processor: Indexed.Processor): Int = {
+        checkSliceArgs(from, until)
+        if (isSliceEmpty(from, until)) return -1
         var i = 0
-        var continue = true
         var bufIdx = 0
-        while (continue && bufIdx < bs.length) {
+        var continue = true
+        while (continue && i < until && bufIdx < bs.length) {
           val buf = bs(bufIdx)
           val bufLen = buf.length
-          var byteIdx = 0
-          while (continue && byteIdx < bufLen) {
-            val byte = buf(byteIdx)
-            if (processor(byte)) {
-              byteIdx += 1
-            } else {
-              continue = false
+
+          if (i + bufLen < from) {
+            // skip ahead to the right Buf for `from`
+            bufIdx += 1
+            i += bufLen
+          } else {
+            // ensure we are positioned correctly in the first Buf
+            var byteIdx =
+              if (i >= from) 0
+              else from - i
+            val endAt = math.min(bufLen, until - i)
+            while (continue && byteIdx < endAt) {
+              val byte = buf(byteIdx)
+              if (processor(byte)) {
+                byteIdx += 1
+              } else {
+                continue = false
+              }
             }
+            bufIdx += 1
+            i += byteIdx
           }
-          bufIdx += 1
-          i += byteIdx
         }
         if (continue) -1
         else i
@@ -535,18 +575,21 @@ object Buf {
       bytes(off)
     }
 
-    private[twitter] def process(processor: Indexed.Processor): Int = {
-      var i = begin
+    private[twitter] def process(from: Int, until: Int, processor: Indexed.Processor): Int = {
+      checkSliceArgs(from, until)
+      if (isSliceEmpty(from, until)) return -1
+      var i = from
       var continue = true
-      while (continue && i < end) {
-        val byte = bytes(i)
+      val endAt = math.min(until, length)
+      while (continue && i < endAt) {
+        val byte = bytes(begin + i)
         if (processor(byte))
           i += 1
         else
           continue = false
       }
       if (continue) -1
-      else i - begin
+      else i
     }
 
     def write(buf: Array[Byte], off: Int): Unit = {
@@ -703,12 +746,14 @@ object Buf {
     private[twitter] def apply(index: Int): Byte =
       underlying.get(underlying.position() + index)
 
-    private[twitter] def process(processor: Indexed.Processor): Int = {
-      val len = length
+    private[twitter] def process(from: Int, until: Int, processor: Indexed.Processor): Int = {
+      checkSliceArgs(from, until)
+      if (isSliceEmpty(from, until)) return -1
       val pos = underlying.position()
-      var i = 0
+      var i = from
       var continue = true
-      while (continue && i < len) {
+      val endAt = math.min(until, length)
+      while (continue && i < endAt) {
         val byte = underlying.get(pos + i)
         if (processor(byte))
           i += 1
