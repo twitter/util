@@ -2,6 +2,8 @@ package com.twitter.util.javainterop;
 
 import java.util.*;
 
+import scala.Option;
+
 import org.junit.Test;
 
 import static com.twitter.util.javainterop.Scala.*;
@@ -74,6 +76,20 @@ public class ScalaTest {
     assertEquals(2, sMap2.size());
     assertEquals("a", sMap2.apply("1"));
     assertEquals("b", sMap2.apply("2"));
+  }
+
+  @Test
+  public void testAsOption() {
+    assertTrue(asOption(Optional.empty()).isEmpty());
+    assertTrue(asOption(Optional.ofNullable(null)).isEmpty());
+
+    Option<String> strOption = asOption(Optional.of("hello"));
+    assertTrue(strOption.isDefined());
+    assertEquals("hello", strOption.get());
+
+    Option<Integer> intOption = asOption(Optional.of(5));
+    assertTrue(intOption.isDefined());
+    assertEquals(5, (int) intOption.get());
   }
 
 }

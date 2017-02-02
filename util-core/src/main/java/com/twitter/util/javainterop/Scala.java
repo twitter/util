@@ -1,5 +1,6 @@
 package com.twitter.util.javainterop;
 
+import scala.Option;
 import scala.Tuple2;
 
 import static scala.collection.JavaConversions.asScalaBuffer;
@@ -72,6 +73,16 @@ public final class Scala {
       }
     }
     return sMap;
+  }
+
+  /**
+   * Converts a {@link java.util.Optional} to a Scala Option.
+   */
+  public static <T> Option<T> asOption(
+      java.util.Optional<T> optional
+  ) {
+    if (optional.isPresent()) return Option.<T>apply(optional.get());
+    else return Option.<T>empty();
   }
 
 }

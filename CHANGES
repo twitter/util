@@ -8,6 +8,9 @@ Next Version
 
 New Features:
 
+  * util-core: Add Java-friendly API to Scala.java for converting from
+    a Java 8 `Optional` to a Scala `Option`. ``RB_ID=906512``
+
   * util-core: Introduced a positional `Buf` API, `Buf.Indexed`, and retrofitted
     all existing implementations in util and finagle to adopt it. It is now used
     throughout for a reductions in allocation and latency. In two services at
@@ -40,7 +43,7 @@ Bug Fixes:
 
   * util-core: Fix issue with c.t.concurrent.AsyncStream.mapConcurrent which
     will cause the stream head to be held for life of operation. ``RB_ID=896168``
-    
+
 API Changes:
 
   * util-core: Deprecated charset constants in `c.t.io.Charsets` have been
