@@ -3,7 +3,8 @@ import sbt._
 import com.typesafe.sbt.SbtSite.site
 import com.typesafe.sbt.site.SphinxSupport.Sphinx
 import pl.project13.scala.sbt.JmhPlugin
-import sbtunidoc.Plugin.unidocSettings
+import sbtunidoc.Plugin.UnidocKeys._
+import sbtunidoc.Plugin.{ScalaUnidoc, unidocSettings}
 import scoverage.ScoverageKeys
 
 object Util extends Build {
@@ -122,7 +123,9 @@ object Util extends Build {
     base = file("."),
     settings = Defaults.coreDefaultSettings ++
       sharedSettings ++
-      unidocSettings
+      unidocSettings  ++ Seq(
+        unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(utilBenchmark)
+      )
   ).aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
     utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
