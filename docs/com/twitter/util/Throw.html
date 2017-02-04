@@ -1,44 +1,1176 @@
 <!DOCTYPE html >
 <html>
         <head>
-          <title>Throw - com.twitter.util.Throw</title>
-          <meta name="description" content="Throw - com.twitter.util.Throw" />
-          <meta name="keywords" content="Throw com.twitter.util.Throw" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <title></title>
+          <meta name="description" content="" />
+          <meta name="keywords" content="" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
+      <link href="../../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
-      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery.panzoom.min.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery.mousewheel.min.js"></script>
+      <script type="text/javascript" src="../../../lib/index.js"></script>
+      <script type="text/javascript" src="../../../index.js"></script>
+      <script type="text/javascript" src="../../../lib/scheduler.js"></script>
       <script type="text/javascript" src="../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
       
       <script type="text/javascript">
-         if(top === self) {
-            var url = '../../../index.html';
-            var hash = 'com.twitter.util.Throw';
-            var anchor = window.location.hash;
-            var anchor_opt = '';
-            if (anchor.length >= 1)
-              anchor_opt = '@' + anchor.substring(1);
-            window.location.href = url + '#' + hash + anchor_opt;
-         }
-   	  </script>
+        /* this variable can be used by the JS to determine the path to the root document */
+        var toRoot = '../../../';
+      </script>
     
         </head>
-        <body class="type">
-      <div id="definition">
-        <a href="Throw$.html" title="See companion object"><img alt="Class/Object" src="../../../lib/class_to_object_big.png" /></a>
-        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.twitter">twitter</a>.<a href="package.html" class="extype" name="com.twitter.util">util</a></p>
-        <h1><a href="Throw$.html" title="See companion object">Throw</a></h1><h3><span class="morelinks"><div>
-            Related Docs:
-            <a href="Throw$.html" title="See companion object">object Throw</a>
-            | <a href="package.html" class="extype" name="com.twitter.util">package util</a>
-          </div></span></h3><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+        <body>
+      <div id="search">
+        <span id="doc-title"><span id="doc-version"></span></span>
+        <span class="close-results"><span class="left">&lt;</span> Back</span>
+        <div id="textfilter">
+          <span class="input">
+            <input autocapitalize="none" placeholder="Search" id="index-input" type="text" accesskey="/" />
+            <i class="clear material-icons"></i>
+            <i id="search-icon" class="material-icons"></i>
+          </span>
+        </div>
+    </div>
+      <div id="search-results">
+        <div id="search-progress">
+          <div id="progress-fill"></div>
+        </div>
+        <div id="results-content">
+          <div id="entity-results"></div>
+          <div id="member-results"></div>
+        </div>
+      </div>
+      <div id="content-scroll-container" style="-webkit-overflow-scrolling: touch;">
+        <div id="content-container" style="-webkit-overflow-scrolling: touch;">
+          <div id="subpackage-spacer">
+            <div id="packages">
+              <h1>Packages</h1>
+              <ul>
+                <li name="_root_.root" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_root_"></a><a id="root:_root_"></a>
+      <span class="permalink">
+      <a href="index.html#_root_" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../../index.html">
+              <span class="name">root</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="_root_.com" visbl="pub" class="indented1 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="com"></a><a id="com:com"></a>
+      <span class="permalink">
+      <a href="index.html#com" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../index.html">
+              <span class="name">com</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="com.twitter" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="twitter"></a><a id="twitter:twitter"></a>
+      <span class="permalink">
+      <a href="../com/index.html#twitter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../index.html">
+              <span class="name">twitter</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com">com</a></dd></dl></div>
+    </li><li name="com.twitter.util" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="util"></a><a id="util:util"></a>
+      <span class="permalink">
+      <a href="../../com/twitter/index.html#util" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="index.html">
+              <span class="name">util</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
+    </li><li name="com.twitter.util.events" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="events"></a><a id="events:events"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#events" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="events/index.html">
+              <span class="name">events</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.javainterop" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="javainterop"></a><a id="javainterop:javainterop"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#javainterop" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="javainterop/index.html">
+              <span class="name">javainterop</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.lint" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="lint"></a><a id="lint:lint"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#lint" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="lint/index.html">
+              <span class="name">lint</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.logging" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="logging"></a><a id="logging:logging"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#logging" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="logging/index.html">
+              <span class="name">logging</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.reflect" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reflect"></a><a id="reflect:reflect"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#reflect" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="reflect/index.html">
+              <span class="name">reflect</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.registry" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="registry"></a><a id="registry:registry"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#registry" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="registry/index.html">
+              <span class="name">registry</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.security" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="security"></a><a id="security:security"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#security" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="security/index.html">
+              <span class="name">security</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li name="com.twitter.util.testing" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="testing"></a><a id="testing:testing"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#testing" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="testing/index.html">
+              <span class="name">testing</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+    </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractClosable.html" title="Abstract Closable class for Java compatibility."></a>
+                        <a href="AbstractClosable.html" title="Abstract Closable class for Java compatibility.">
+                          AbstractClosable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractCloseAwaitably.html" title="Java's analog of Scala's com.twitter.util.CloseAwaitably."></a>
+                        <a href="AbstractCloseAwaitably.html" title="Java's analog of Scala's com.twitter.util.CloseAwaitably.">
+                          AbstractCloseAwaitably
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractEvent.html" title="Abstract Event class for Java compatibility."></a>
+                        <a href="AbstractEvent.html" title="Abstract Event class for Java compatibility.">
+                          AbstractEvent
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractVar.html" title="Abstract Var class for Java compatibility."></a>
+                        <a href="AbstractVar.html" title="Abstract Var class for Java compatibility.">
+                          AbstractVar
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractWitness.html" title="Abstract Witness class for Java compatibility."></a>
+                        <a href="AbstractWitness.html" title="Abstract Witness class for Java compatibility.">
+                          AbstractWitness
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Activities.html" title="A Java adaptation of com.twitter.util.Activity companion object."></a>
+                        <a href="Activities.html" title="A Java adaptation of com.twitter.util.Activity companion object.">
+                          Activities
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Activity$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.Activities."></a>
+                        <a class="class" href="Activity.html" title="An Activity is a handle to a concurrently running process, producing
+T-typed values."></a>
+                        <a href="Activity.html" title="An Activity is a handle to a concurrently running process, producing
+T-typed values.">
+                          Activity
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Await$.html" title="Synchronously await the result of some action by blocking the current
+thread."></a>
+                        <a href="Await$.html" title="Synchronously await the result of some action by blocking the current
+thread.">
+                          Await
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Awaitable$.html" title=""></a>
+                        <a class="trait" href="Awaitable.html" title="Wait for the result of some action."></a>
+                        <a href="Awaitable.html" title="Wait for the result of some action.">
+                          Awaitable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Base64Long$.html" title="Efficient conversion between Longs and base 64 encoded strings."></a>
+                        <a href="Base64Long$.html" title="Efficient conversion between Longs and base 64 encoded strings.">
+                          Base64Long
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Base64StringEncoder$.html" title=""></a>
+                        <a class="trait" href="Base64StringEncoder.html" title="A utility for encoding strings and byte arrays to a MIME base64 string, and
+decoding from strings encoded in MIME base64 to byte arrays."></a>
+                        <a href="Base64StringEncoder.html" title="A utility for encoding strings and byte arrays to a MIME base64 string, and
+decoding from strings encoded in MIME base64 to byte arrays.">
+                          Base64StringEncoder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Base64UrlSafeStringEncoder$.html" title=""></a>
+                        <a class="trait" href="Base64UrlSafeStringEncoder.html" title="A utility for encoding strings and byte arrays to a URL-safe base64 string,
+and decoding from strings encoded in base64 to byte arrays."></a>
+                        <a href="Base64UrlSafeStringEncoder.html" title="A utility for encoding strings and byte arrays to a URL-safe base64 string,
+and decoding from strings encoded in base64 to byte arrays.">
+                          Base64UrlSafeStringEncoder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Batcher.html" title="Provides an interface for working with a batched com.twitter.util.Future"></a>
+                        <a href="Batcher.html" title="Provides an interface for working with a batched com.twitter.util.Future">
+                          Batcher
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="BinaryCodec$.html" title=""></a>
+                        <a href="BinaryCodec$.html" title="">
+                          BinaryCodec
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="BinaryThriftCodec.html" title=""></a>
+                        <a href="BinaryThriftCodec.html" title="">
+                          BinaryThriftCodec
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="BinaryThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TBinaryProtocol."></a>
+                        <a href="BinaryThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TBinaryProtocol.">
+                          BinaryThriftSerializer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="BoundedStack.html" title="A &quot;stack&quot; with a bounded size."></a>
+                        <a href="BoundedStack.html" title="A &quot;stack&quot; with a bounded size.">
+                          BoundedStack
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Cancellable$.html" title=""></a>
+                        <a class="trait" href="Cancellable.html" title="Defines a trait that makes the underlying object *cancellable*."></a>
+                        <a href="Cancellable.html" title="Defines a trait that makes the underlying object *cancellable*.">
+                          Cancellable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CancellableSink.html" title=""></a>
+                        <a href="CancellableSink.html" title="">
+                          CancellableSink
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Closable$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.Closables."></a>
+                        <a class="trait" href="Closable.html" title="Closable is a mixin trait to describe a closable resource."></a>
+                        <a href="Closable.html" title="Closable is a mixin trait to describe a closable resource.">
+                          Closable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Closables.html" title="Java compatibility layer for com.twitter.util.Closable."></a>
+                        <a href="Closables.html" title="Java compatibility layer for com.twitter.util.Closable.">
+                          Closables
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="CloseAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out
+of a com.twitter.util.Closable."></a>
+                        <a href="CloseAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out
+of a com.twitter.util.Closable.">
+                          CloseAwaitably
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Codec$.html" title=""></a>
+                        <a class="trait" href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S
+"></a>
+                        <a href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S
+">
+                          Codec
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Command.html" title=""></a>
+                        <a href="Command.html" title="">
+                          Command
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CompactThriftCodec.html" title=""></a>
+                        <a href="CompactThriftCodec.html" title="">
+                          CompactThriftCodec
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CompactThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TCompactProtocol."></a>
+                        <a href="CompactThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TCompactProtocol.">
+                          CompactThriftSerializer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Config$.html" title="You can import Config._ if you want the auto-conversions in a class
+that does not inherit from trait Config."></a>
+                        <a class="trait" href="Config.html" title="A config object contains vars for configuring an object of type T, and an apply() method
+which turns this config into an object of type T."></a>
+                        <a href="Config.html" title="A config object contains vars for configuring an object of type T, and an apply() method
+which turns this config into an object of type T.">
+                          Config
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ConstFuture.html" title="A Future that is already completed."></a>
+                        <a href="ConstFuture.html" title="A Future that is already completed.">
+                          ConstFuture
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CountDownLatch.html" title=""></a>
+                        <a href="CountDownLatch.html" title="">
+                          CountDownLatch
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Credentials$.html" title="Simple helper to read authentication credentials from a text file."></a>
+                        <a class="class" href="Credentials.html" title="Java interface to Credentials."></a>
+                        <a href="Credentials.html" title="Java interface to Credentials.">
+                          Credentials
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Decoder$.html" title=""></a>
+                        <a class="trait" href="Decoder.html" title="A base trait for decoders for type T from a serialized form S
+"></a>
+                        <a href="Decoder.html" title="A base trait for decoders for type T from a serialized form S
+">
+                          Decoder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="DecoderCompanion.html" title=""></a>
+                        <a href="DecoderCompanion.html" title="">
+                          DecoderCompanion
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="Diff.html" title="A Diff stores the necessary instructions required to bring two
+version of a data structure into agreement."></a>
+                        <a href="Diff.html" title="A Diff stores the necessary instructions required to bring two
+version of a data structure into agreement.">
+                          Diff
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Diffable$.html" title="Diffable defines common type class instances for Diffable."></a>
+                        <a class="trait" href="Diffable.html" title="A type class that tells how to compute a Diff between
+two versions of a collection CC[T]."></a>
+                        <a href="Diffable.html" title="A type class that tells how to compute a Diff between
+two versions of a collection CC[T].">
+                          Diffable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Disposable$.html" title=""></a>
+                        <a class="trait" href="Disposable.html" title="com.twitter.util.Disposable represents a live resource that must be disposed after use."></a>
+                        <a href="Disposable.html" title="com.twitter.util.Disposable represents a live resource that must be disposed after use.">
+                          Disposable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="DoubleTrouble.html" title=""></a>
+                        <a href="DoubleTrouble.html" title="">
+                          DoubleTrouble
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Duration$.html" title=""></a>
+                        <a class="class" href="Duration.html" title="A Duration represents the span between two points in time."></a>
+                        <a href="Duration.html" title="A Duration represents the span between two points in time.">
+                          Duration
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Encoder$.html" title=""></a>
+                        <a class="trait" href="Encoder.html" title="A base trait for encoders of type T into a serialized form S
+"></a>
+                        <a href="Encoder.html" title="A base trait for encoders of type T into a serialized form S
+">
+                          Encoder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="EncoderCompanion.html" title=""></a>
+                        <a href="EncoderCompanion.html" title="">
+                          EncoderCompanion
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Eval$.html" title="Evaluate a file or string and return the result."></a>
+                        <a class="class" href="Eval.html" title="Evaluates files, strings, or input streams as Scala code, and returns the result."></a>
+                        <a href="Eval.html" title="Evaluates files, strings, or input streams as Scala code, and returns the result.">
+                          Eval
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Event$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.Events."></a>
+                        <a class="trait" href="Event.html" title="Events are instantaneous values, defined only at particular
+instants in time (cf."></a>
+                        <a href="Event.html" title="Events are instantaneous values, defined only at particular
+instants in time (cf.">
+                          Event
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Events.html" title="A Java adaptation of com.twitter.util.Event companion object."></a>
+                        <a href="Events.html" title="A Java adaptation of com.twitter.util.Event companion object.">
+                          Events
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ExceptionalFunction.html" title=""></a>
+                        <a href="ExceptionalFunction.html" title="">
+                          ExceptionalFunction
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ExceptionalFunction0.html" title=""></a>
+                        <a href="ExceptionalFunction0.html" title="">
+                          ExceptionalFunction0
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ExecutorServiceFuturePool.html" title="A FuturePool implementation backed by an java.util.concurrent.ExecutorService."></a>
+                        <a href="ExecutorServiceFuturePool.html" title="A FuturePool implementation backed by an java.util.concurrent.ExecutorService.">
+                          ExecutorServiceFuturePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="Extractable.html" title=""></a>
+                        <a href="Extractable.html" title="">
+                          Extractable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="FactoryPool.html" title=""></a>
+                        <a href="FactoryPool.html" title="">
+                          FactoryPool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Function$.html" title=""></a>
+                        <a class="class" href="Function.html" title="This class is for Java friendliness."></a>
+                        <a href="Function.html" title="This class is for Java friendliness.">
+                          Function
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Function0.html" title=""></a>
+                        <a href="Function0.html" title="">
+                          Function0
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Function2.html" title=""></a>
+                        <a href="Function2.html" title="">
+                          Function2
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Future$.html" title=""></a>
+                        <a class="class" href="Future.html" title="Represents an asynchronous value."></a>
+                        <a href="Future.html" title="Represents an asynchronous value.">
+                          Future
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="FutureCancelledException.html" title=""></a>
+                        <a href="FutureCancelledException.html" title="">
+                          FutureCancelledException
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="FutureEventListener.html" title="A Java friendly API for handling side-effects for a Future."></a>
+                        <a href="FutureEventListener.html" title="A Java friendly API for handling side-effects for a Future.">
+                          FutureEventListener
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="FutureNonLocalReturnControl.html" title=""></a>
+                        <a href="FutureNonLocalReturnControl.html" title="">
+                          FutureNonLocalReturnControl
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="FuturePool$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.FuturePools."></a>
+                        <a class="trait" href="FuturePool.html" title="A FuturePool executes tasks asynchronously, typically using a pool
+of worker threads."></a>
+                        <a href="FuturePool.html" title="A FuturePool executes tasks asynchronously, typically using a pool
+of worker threads.">
+                          FuturePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="FuturePools.html" title="A Java adaptation of the com.twitter.util.FuturePool companion object."></a>
+                        <a href="FuturePools.html" title="A Java adaptation of the com.twitter.util.FuturePool companion object.">
+                          FuturePools
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="FutureTask$.html" title=""></a>
+                        <a class="class" href="FutureTask.html" title=""></a>
+                        <a href="FutureTask.html" title="">
+                          FutureTask
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="FutureTransformer.html" title="An alternative interface for performing Future transformations;
+that is, converting a Future[A] to a Future[B]."></a>
+                        <a href="FutureTransformer.html" title="An alternative interface for performing Future transformations;
+that is, converting a Future[A] to a Future[B].">
+                          FutureTransformer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Futures$.html" title="Twitter Future utility methods for ease of use from java
+"></a>
+                        <a href="Futures$.html" title="Twitter Future utility methods for ease of use from java
+">
+                          Futures
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="GZIPStringEncoder$.html" title=""></a>
+                        <a class="trait" href="GZIPStringEncoder.html" title="A collection of utilities for encoding strings and byte arrays to and
+decoding from strings compressed from with gzip."></a>
+                        <a href="GZIPStringEncoder.html" title="A collection of utilities for encoding strings and byte arrays to and
+decoding from strings compressed from with gzip.">
+                          GZIPStringEncoder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="HandleSignal$.html" title=""></a>
+                        <a href="HandleSignal$.html" title="">
+                          HandleSignal
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="ImmutableLRU$.html" title="Immutable implementation of an LRU cache."></a>
+                        <a class="class" href="ImmutableLRU.html" title="An immutable key/value store that evicts the least recently accessed elements
+to stay constrained in a maximum size bound."></a>
+                        <a href="ImmutableLRU.html" title="An immutable key/value store that evicts the least recently accessed elements
+to stay constrained in a maximum size bound.">
+                          ImmutableLRU
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="InterruptibleExecutorServiceFuturePool.html" title="A FuturePool backed by a java.util.concurrent.ExecutorService
+that supports cancellation."></a>
+                        <a href="InterruptibleExecutorServiceFuturePool.html" title="A FuturePool backed by a java.util.concurrent.ExecutorService
+that supports cancellation.">
+                          InterruptibleExecutorServiceFuturePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="JMapWrapper.html" title=""></a>
+                        <a href="JMapWrapper.html" title="">
+                          JMapWrapper
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="JMapWrapperLike.html" title="A wrapper trait for java.util.Map implementations to make them behave as scala Maps."></a>
+                        <a href="JMapWrapperLike.html" title="A wrapper trait for java.util.Map implementations to make them behave as scala Maps.">
+                          JMapWrapperLike
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="JavaSingleton.html" title="A mixin to allow scala objects to be used from java."></a>
+                        <a href="JavaSingleton.html" title="A mixin to allow scala objects to be used from java.">
+                          JavaSingleton
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="JavaTimer.html" title="A Timer that is implemented via a java.util.Timer."></a>
+                        <a href="JavaTimer.html" title="A Timer that is implemented via a java.util.Timer.">
+                          JavaTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="JsonThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TSimpleJSONProtocol."></a>
+                        <a href="JsonThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TSimpleJSONProtocol.">
+                          JsonThriftSerializer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="LastWriteWinsQueue.html" title="An implementation of java.util.Queue that has LIFO order and a maximum capacity of 1
+When the Queue is full, a push replaces the item."></a>
+                        <a href="LastWriteWinsQueue.html" title="An implementation of java.util.Queue that has LIFO order and a maximum capacity of 1
+When the Queue is full, a push replaces the item.">
+                          LastWriteWinsQueue
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Local$.html" title=""></a>
+                        <a class="class" href="Local.html" title="A Local is a ThreadLocal whose scope is flexible."></a>
+                        <a href="Local.html" title="A Local is a ThreadLocal whose scope is flexible.">
+                          Local
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="LongOverflowArith$.html" title=""></a>
+                        <a href="LongOverflowArith$.html" title="">
+                          LongOverflowArith
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="LongOverflowException.html" title=""></a>
+                        <a href="LongOverflowException.html" title="">
+                          LongOverflowException
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="LruMap$.html" title=""></a>
+                        <a class="class" href="LruMap.html" title="A scala Map backed by a java.util.LinkedHashMap
+"></a>
+                        <a href="LruMap.html" title="A scala Map backed by a java.util.LinkedHashMap
+">
+                          LruMap
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Managed$.html" title=""></a>
+                        <a class="trait" href="Managed.html" title="Managed[T] is a resource of type T which lifetime is explicitly managed."></a>
+                        <a href="Managed.html" title="Managed[T] is a resource of type T which lifetime is explicitly managed.">
+                          Managed
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="MapToSetAdapter.html" title=""></a>
+                        <a href="MapToSetAdapter.html" title="">
+                          MapToSetAdapter
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Memoize$.html" title=""></a>
+                        <a href="Memoize$.html" title="">
+                          Memoize
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="MockTimer.html" title="Exceedingly useful for writing well-behaved tests that need control
+over a Timer."></a>
+                        <a href="MockTimer.html" title="Exceedingly useful for writing well-behaved tests that need control
+over a Timer.">
+                          MockTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Monitor$.html" title="Defines the (Future)-Local monitor as well as some monitor
+utilities."></a>
+                        <a class="trait" href="Monitor.html" title="A Monitor is a composable exception handler."></a>
+                        <a href="Monitor.html" title="A Monitor is a composable exception handler.">
+                          Monitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="MonitorException.html" title="Wraps an exception that happens when handling another exception in
+a monitor."></a>
+                        <a href="MonitorException.html" title="Wraps an exception that happens when handling another exception in
+a monitor.">
+                          MonitorException
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="NetUtil$.html" title=""></a>
+                        <a href="NetUtil$.html" title="">
+                          NetUtil
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="NilStopwatch$.html" title="A trivial implementation of Stopwatch for use as a null
+object."></a>
+                        <a href="NilStopwatch$.html" title="A trivial implementation of Stopwatch for use as a null
+object.">
+                          NilStopwatch
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="NoFuture.html" title="A Future which can never be satisfied and is thus always in
+the pending state."></a>
+                        <a href="NoFuture.html" title="A Future which can never be satisfied and is thus always in
+the pending state.">
+                          NoFuture
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="NonFatal$.html" title="A classifier of non-fatal Exceptions."></a>
+                        <a href="NonFatal$.html" title="A classifier of non-fatal Exceptions.">
+                          NonFatal
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="NullMonitor$.html" title="A monitor that always fails to handle an exception."></a>
+                        <a href="NullMonitor$.html" title="A monitor that always fails to handle an exception.">
+                          NullMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="NullTimer.html" title="A NullTimer is not a timer at all: it invokes all tasks immediately
+and inline."></a>
+                        <a href="NullTimer.html" title="A NullTimer is not a timer at all: it invokes all tasks immediately
+and inline.">
+                          NullTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="NullTimerTask$.html" title=""></a>
+                        <a href="NullTimerTask$.html" title="">
+                          NullTimerTask
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="Pool.html" title=""></a>
+                        <a href="Pool.html" title="">
+                          Pool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Promise$.html" title=""></a>
+                        <a class="class" href="Promise.html" title="A writeable com.twitter.util.Future that supports merging."></a>
+                        <a href="Promise.html" title="A writeable com.twitter.util.Future that supports merging.">
+                          Promise
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ProxyTimer.html" title="A Timer that proxies methods to self."></a>
+                        <a href="ProxyTimer.html" title="A Timer that proxies methods to self.">
+                          ProxyTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="RandomSocket$.html" title="A generator of random local java.net.InetSocketAddress objects with
+ephemeral ports."></a>
+                        <a href="RandomSocket$.html" title="A generator of random local java.net.InetSocketAddress objects with
+ephemeral ports.">
+                          RandomSocket
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ReadWriteVar.html" title="Java adaptation of Var[T] with Updatable[T] with Extractable[T]."></a>
+                        <a href="ReadWriteVar.html" title="Java adaptation of Var[T] with Updatable[T] with Extractable[T].">
+                          ReadWriteVar
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="ReferenceCountedTimer.html" title=""></a>
+                        <a href="ReferenceCountedTimer.html" title="">
+                          ReferenceCountedTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ReferenceCountingTimer.html" title=""></a>
+                        <a href="ReferenceCountingTimer.html" title="">
+                          ReferenceCountingTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Return$.html" title=""></a>
+                        <a class="class" href="Return.html" title=""></a>
+                        <a href="Return.html" title="">
+                          Return
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="RichU64ByteArray.html" title=""></a>
+                        <a href="RichU64ByteArray.html" title="">
+                          RichU64ByteArray
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="RichU64Long.html" title=""></a>
+                        <a href="RichU64Long.html" title="">
+                          RichU64Long
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="RichU64String.html" title="RichU64String parses string as a 64-bit unsigned hexadecimal long,
+outputting a signed Long or a byte array."></a>
+                        <a href="RichU64String.html" title="RichU64String parses string as a 64-bit unsigned hexadecimal long,
+outputting a signed Long or a byte array.">
+                          RichU64String
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="RingBuffer.html" title=""></a>
+                        <a href="RingBuffer.html" title="">
+                          RingBuffer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="RootMonitor$.html" title=""></a>
+                        <a href="RootMonitor$.html" title="">
+                          RootMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ScheduledThreadPoolTimer.html" title=""></a>
+                        <a href="ScheduledThreadPoolTimer.html" title="">
+                          ScheduledThreadPoolTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="SetMaker$.html" title="Use guava MapMaker to create a scala Set
+"></a>
+                        <a href="SetMaker$.html" title="Use guava MapMaker to create a scala Set
+">
+                          SetMaker
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="SignalHandler.html" title=""></a>
+                        <a href="SignalHandler.html" title="">
+                          SignalHandler
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="SignalHandlerFactory$.html" title=""></a>
+                        <a href="SignalHandlerFactory$.html" title="">
+                          SignalHandlerFactory
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SimplePool.html" title=""></a>
+                        <a href="SimplePool.html" title="">
+                          SimplePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="StateMachine$.html" title=""></a>
+                        <a class="trait" href="StateMachine.html" title=""></a>
+                        <a href="StateMachine.html" title="">
+                          StateMachine
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Stopwatch$.html" title="The system Stopwatch measures elapsed time using System.nanoTime."></a>
+                        <a class="trait" href="Stopwatch.html" title="A stopwatch may be used to measure elapsed time."></a>
+                        <a href="Stopwatch.html" title="A stopwatch may be used to measure elapsed time.">
+                          Stopwatch
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Stopwatches$.html" title="Java APIs for Stopwatch."></a>
+                        <a href="Stopwatches$.html" title="Java APIs for Stopwatch.">
+                          Stopwatches
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="StorageUnit$.html" title=""></a>
+                        <a class="class" href="StorageUnit.html" title="Representation of storage units."></a>
+                        <a href="StorageUnit.html" title="Representation of storage units.">
+                          StorageUnit
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="StringEncoder$.html" title=""></a>
+                        <a class="trait" href="StringEncoder.html" title=""></a>
+                        <a href="StringEncoder.html" title="">
+                          StringEncoder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="SunSignalHandler$.html" title=""></a>
+                        <a class="class" href="SunSignalHandler.html" title=""></a>
+                        <a href="SunSignalHandler.html" title="">
+                          SunSignalHandler
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SynchronizedLruMap.html" title="A synchronized scala Map backed by an java.util.LinkedHashMap
+"></a>
+                        <a href="SynchronizedLruMap.html" title="A synchronized scala Map backed by an java.util.LinkedHashMap
+">
+                          SynchronizedLruMap
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TempFolder.html" title="Test mixin that creates a temporary thread-local folder for a block of code to execute in."></a>
+                        <a href="TempFolder.html" title="Test mixin that creates a temporary thread-local folder for a block of code to execute in.">
+                          TempFolder
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ThreadStoppingTimer.html" title=""></a>
+                        <a href="ThreadStoppingTimer.html" title="">
+                          ThreadStoppingTimer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="ThriftCodec$.html" title=""></a>
+                        <a class="class" href="ThriftCodec.html" title=""></a>
+                        <a href="ThriftCodec.html" title="">
+                          ThriftCodec
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="ThriftSerializer.html" title=""></a>
+                        <a href="ThriftSerializer.html" title="">
+                          ThriftSerializer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Throw$.html" title=""></a>
+                        <a class="class" href="" title=""></a>
+                        <a href="" title="">
+                          Throw
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Throwables$.html" title=""></a>
+                        <a href="Throwables$.html" title="">
+                          Throwables
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Time$.html" title="By using Time.now in your program instead of
+System.currentTimeMillis unit tests are able to adjust
+the current time to verify timeouts and other time-dependent
+behavior, without calling sleep, and providing deterministic
+tests."></a>
+                        <a class="class" href="Time.html" title="An absolute point in time, represented as the number of
+nanoseconds since the Unix epoch."></a>
+                        <a href="Time.html" title="An absolute point in time, represented as the number of
+nanoseconds since the Unix epoch.">
+                          Time
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TimeControl.html" title=""></a>
+                        <a href="TimeControl.html" title="">
+                          TimeControl
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="TimeFormat.html" title="A thread-safe wrapper around a SimpleDateFormat object."></a>
+                        <a href="TimeFormat.html" title="A thread-safe wrapper around a SimpleDateFormat object.">
+                          TimeFormat
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TimeLike.html" title="A common trait for time-like values."></a>
+                        <a href="TimeLike.html" title="A common trait for time-like values.">
+                          TimeLike
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TimeLikeOps.html" title=""></a>
+                        <a href="TimeLikeOps.html" title="">
+                          TimeLikeOps
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="TimeoutException.html" title=""></a>
+                        <a href="TimeoutException.html" title="">
+                          TimeoutException
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Timer$.html" title=""></a>
+                        <a class="trait" href="Timer.html" title="Timers are used to schedule tasks in the future."></a>
+                        <a href="Timer.html" title="Timers are used to schedule tasks in the future.">
+                          Timer
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TimerTask.html" title="TimerTasks represent pending tasks scheduled by a Timer."></a>
+                        <a href="TimerTask.html" title="TimerTasks represent pending tasks scheduled by a Timer.">
+                          TimerTask
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="TokenBucket$.html" title=""></a>
+                        <a class="class" href="TokenBucket.html" title="A token bucket is used to control the relative rates of two
+processes: one fills the bucket, another empties it."></a>
+                        <a href="TokenBucket.html" title="A token bucket is used to control the relative rates of two
+processes: one fills the bucket, another empties it.">
+                          TokenBucket
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Try$.html" title="The Try type represents a computation that may either result in an exception
+or return a success value."></a>
+                        <a class="class" href="Try.html" title="This class represents a computation that can succeed or fail."></a>
+                        <a href="Try.html" title="This class represents a computation that can succeed or fail.">
+                          Try
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="TwitterDateFormat$.html" title="A java.text.SimpleDateFormat that avoids confusion between YYYY and yyyy."></a>
+                        <a href="TwitterDateFormat$.html" title="A java.text.SimpleDateFormat that avoids confusion between YYYY and yyyy.">
+                          TwitterDateFormat
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="U64$.html" title=""></a>
+                        <a href="U64$.html" title="">
+                          U64
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="Unsafe$.html" title=""></a>
+                        <a href="Unsafe$.html" title="">
+                          Unsafe
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Updatable$.html" title=""></a>
+                        <a class="trait" href="Updatable.html" title="Denotes an updatable container."></a>
+                        <a href="Updatable.html" title="Denotes an updatable container.">
+                          Updatable
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Var$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.Vars."></a>
+                        <a class="trait" href="Var.html" title="Trait Var represents a variable."></a>
+                        <a href="Var.html" title="Trait Var represents a variable.">
+                          Var
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Vars.html" title="A Java adaptation of com.twitter.util.Var companion object."></a>
+                        <a href="Vars.html" title="A Java adaptation of com.twitter.util.Var companion object.">
+                          Vars
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="Witness$.html" title="Note: There is Java-friendly API for this object: com.twitter.util.Witnesses."></a>
+                        <a class="trait" href="Witness.html" title="A witness is the recipient of Event."></a>
+                        <a href="Witness.html" title="A witness is the recipient of Event.">
+                          Witness
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="WitnessedEvent.html" title="A Java analog of Event[A]()."></a>
+                        <a href="WitnessedEvent.html" title="A Java analog of Event[A]().">
+                          WitnessedEvent
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="Witnesses.html" title="A Java adaptation of com.twitter.util.Witness companion object."></a>
+                        <a href="Witnesses.html" title="A Java adaptation of com.twitter.util.Witness companion object.">
+                          Witnesses
+                        </a>
+                      </li>
+              </ul>
+            </div>
+          </div>
+          <div id="content">
+            <body class="class type">
+      <div id="definition">
+        <a href="Throw$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.util">util</a></p>
+        <h1><a href="Throw$.html" title="See companion object">Throw</a><span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span></h1>
+        <h3><span class="morelinks"><div>
+            Companion <a href="Throw$.html" title="See companion object">object Throw</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -47,65 +1179,76 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Throw</span><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>] with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <span class="name">Throw</span><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>] with <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
+
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
-          <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>], <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <span class="toggle">
+            Linear Supertypes
+          </span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>], <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
-        <div id="order">
-              <span class="filtertype">Ordering</span>
-              <ol>
-                
-                <li class="alpha in"><span>Alphabetic</span></li>
-                <li class="inherit out"><span>By Inheritance</span></li>
-              </ol>
-            </div>
-        <div id="ancestors">
-                <span class="filtertype">Inherited<br />
-                </span>
-                <ol id="linearization">
-                  <li class="in" name="com.twitter.util.Throw"><span>Throw</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.twitter.util.Try"><span>Try</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
-                </ol>
-              </div><div id="ancestors">
-            <span class="filtertype"></span>
+        <div class="toggle"></div>
+        <div id="memberfilter">
+          <i class="material-icons arrow"></i>
+          <span class="input">
+            <input id="mbrsel-input" placeholder="Filter all members" type="text" accesskey="/" />
+          </span>
+          <i class="clear material-icons"></i>
+        </div>
+        <div id="filterby">
+          <div id="order">
+            <span class="filtertype">Ordering</span>
             <ol>
-              <li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show All</span></li>
+              
+              <li class="alpha in"><span>Alphabetic</span></li>
+              <li class="inherit out"><span>By Inheritance</span></li>
             </ol>
           </div>
-        <div id="visbl">
-            <span class="filtertype">Visibility</span>
-            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
-          </div>
+          <div class="ancestors">
+                  <span class="filtertype">Inherited<br />
+                  </span>
+                  <ol id="linearization">
+                    <li class="in" name="com.twitter.util.Throw"><span>Throw</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.twitter.util.Try"><span>Try</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  </ol>
+                </div><div class="ancestors">
+              <span class="filtertype"></span>
+              <ol>
+                <li class="hideall out"><span>Hide All</span></li>
+                <li class="showall in"><span>Show All</span></li>
+              </ol>
+            </div>
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
       </div>
 
       <div id="template">
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.util.Throw#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(e:Throwable):com.twitter.util.Throw[R]"></a>
-      <a id="&lt;init&gt;:Throw[R]"></a>
-      <h4 class="signature">
+              <ol><li name="com.twitter.util.Throw#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(e:Throwable):com.twitter.util.Throw[R]"></a><a id="&lt;init&gt;:Throw[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#&lt;init&gt;(e:Throwable):com.twitter.util.Throw[R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Throw</span><span class="params">(<span name="e">e: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span>
+        <span class="name">Throw</span><span class="params">(<span name="e">e: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@&lt;init&gt;(e:Throwable):com.twitter.util.Throw[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       
     </li></ol>
             </div>
@@ -114,63 +1257,64 @@
 
         
 
-        <div id="values" class="values members">
+        <div class="values members">
               <h3>Value Members</h3>
-              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:Any):Boolean"></a>
-      <a id="!=(Any):Boolean"></a>
-      <h4 class="signature">
+              <ol>
+                <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#!=(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@!=(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
-      <a id="##():Int"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html###():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@##():Int" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#==(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:Any):Boolean"></a>
-      <a id="==(Any):Boolean"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@==(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Try#andThen" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="andThen[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]"></a><a id="andThen[R2]((R)⇒Try[R2]):Try[R2]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#andThen[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.Try#andThen" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="andThen[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]"></a>
-      <a id="andThen[R2]((R)⇒Try[R2]):Try[R2]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -178,18 +1322,17 @@
       <span class="symbol">
         <span class="name">andThen</span><span class="tparams">[<span name="R2">R2</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.andThen.R2">R2</span>]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.andThen.R2">R2</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@andThen[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns the given function applied to the value from this Return or returns this if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the given function applied to the value from this Return or returns this if this is a Throw.
 Alias for flatMap
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.Throw#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply():R"></a>
-      <a id="apply():R"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#apply():R" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -197,18 +1340,17 @@ Alias for flatMap
       <span class="symbol">
         <span class="name">apply</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@apply():R" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns the value from this Return or throws the exception if this is a Throw
 </p><div class="fullcomment"><div class="comment cmt"><p>Returns the value from this Return or throws the exception if this is a Throw
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
-      <a id="asInstanceOf[T0]:T0"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#asInstanceOf[T0]:T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -216,35 +1358,33 @@ Alias for flatMap
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@asInstanceOf[T0]:T0" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.util.Throw#asScala" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asScala:scala.util.Try[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#asScala:scala.util.Try[R]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.Throw#asScala" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="asScala:scala.util.Try[R]"></a>
-      <a id="asScala:scala.util.Try[R]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">asScala</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.util.Try" class="extype" target="_top">scala.util.Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">asScala</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.util.Try" class="extype" target="_top">scala.util.Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@asScala:scala.util.Try[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Convert to a scala.util.Try
 </p><div class="fullcomment"><div class="comment cmt"><p>Convert to a scala.util.Try
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#cast" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="cast[X]:com.twitter.util.Try[X]"></a>
-      <a id="cast[X]:Try[X]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#cast" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="cast[X]:com.twitter.util.Try[X]"></a><a id="cast[X]:Try[X]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#cast[X]:com.twitter.util.Try[X]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -252,28 +1392,23 @@ Alias for flatMap
       <span class="symbol">
         <span class="name">cast</span><span class="tparams">[<span name="X">X</span>]</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.cast.X">X</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@cast[X]:com.twitter.util.Try[X]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      
+    </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a><a id="clone():AnyRef"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#clone():Object" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      
-    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="clone():Object"></a>
-      <a id="clone():AnyRef"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@clone():Object" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -281,116 +1416,110 @@ Alias for flatMap
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Throw#e" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Throw#e" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="e:Throwable"></a>
-      <a id="e:Throwable"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#e:Throwable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">e</span><span class="result">: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>
+        <span class="name">e</span><span class="result">: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@e:Throwable" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      
+    </li><li name="com.twitter.util.Try#ensure" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ensure(f:=&gt;Unit):com.twitter.util.Try[R]"></a><a id="ensure(⇒Unit):Try[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#ensure(f:=&gt;Unit):com.twitter.util.Try[R]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      
-    </li><li name="com.twitter.util.Try#ensure" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ensure(f:=&gt;Unit):com.twitter.util.Try[R]"></a>
-      <a id="ensure(⇒Unit):Try[R]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ensure</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">ensure</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@ensure(f:=&gt;Unit):com.twitter.util.Try[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Invoked regardless of whether the computation completed
 successfully or unsuccessfully.</p><div class="fullcomment"><div class="comment cmt"><p>Invoked regardless of whether the computation completed
 successfully or unsuccessfully.  Implemented in terms of
 <code>respond</code> so that subclasses control evaluation order.  Returns a
 chained <code>this</code> as in <code>respond</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="eq(x$1:AnyRef):Boolean"></a>
-      <a id="eq(AnyRef):Boolean"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Throw#exists" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exists(p:R=&gt;Boolean):Boolean"></a><a id="exists((R)⇒Boolean):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#exists(p:R=&gt;Boolean):Boolean" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Throw#exists" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="exists(p:R=&gt;Boolean):Boolean"></a>
-      <a id="exists((R)⇒Boolean):Boolean"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">exists</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">exists</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@exists(p:R=&gt;Boolean):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns true if this Try is a Return and the predicate p returns true when
 applied to its value.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if this Try is a Return and the predicate p returns true when
 applied to its value.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#filter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="filter(p:R=&gt;Boolean):com.twitter.util.Throw[R]"></a>
-      <a id="filter((R)⇒Boolean):Throw[R]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#filter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="filter(p:R=&gt;Boolean):com.twitter.util.Throw[R]"></a><a id="filter((R)⇒Boolean):Throw[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#filter(p:R=&gt;Boolean):com.twitter.util.Throw[R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">filter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@filter(p:R=&gt;Boolean):com.twitter.util.Throw[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Converts this to a Throw if the predicate does not obtain.</p><div class="fullcomment"><div class="comment cmt"><p>Converts this to a Throw if the predicate does not obtain.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
-      <a id="finalize():Unit"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#finalize():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@finalize():Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -398,10 +1527,13 @@ applied to its value.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Throw#flatMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="flatMap[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Throw[R2]"></a>
-      <a id="flatMap[R2]((R)⇒Try[R2]):Throw[R2]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#flatMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatMap[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Throw[R2]"></a><a id="flatMap[R2]((R)⇒Try[R2]):Throw[R2]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#flatMap[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Throw[R2]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -409,18 +1541,17 @@ applied to its value.
       <span class="symbol">
         <span class="name">flatMap</span><span class="tparams">[<span name="R2">R2</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.flatMap.R2">R2</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.flatMap.R2">R2</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@flatMap[R2](f:R=&gt;com.twitter.util.Try[R2]):com.twitter.util.Throw[R2]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns the given function applied to the value from this Return or returns this if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the given function applied to the value from this Return or returns this if this is a Throw.</p><p><i>Note</i> The gnarly type parameterization is there for Java compatibility, since Java
 does not support higher-kinded types.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#flatten" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="flatten[T](implicitev:&lt;:&lt;[R,com.twitter.util.Try[T]]):com.twitter.util.Try[T]"></a>
-      <a id="flatten[T](&lt;:&lt;[R,Try[T]]):Try[T]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatten[T](implicitev:&lt;:&lt;[R,com.twitter.util.Try[T]]):com.twitter.util.Try[T]"></a><a id="flatten[T](&lt;:&lt;[R,Try[T]]):Try[T]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#flatten[T](implicitev:&lt;:&lt;[R,com.twitter.util.Try[T]]):com.twitter.util.Try[T]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -428,34 +1559,32 @@ does not support higher-kinded types.
       <span class="symbol">
         <span class="name">flatten</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.util.Throw.R">R</span>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.flatten.T">T</span>]]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.flatten.T">T</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@flatten[T](implicitev:&lt;:&lt;[R,com.twitter.util.Try[T]]):com.twitter.util.Try[T]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
+    </li><li name="com.twitter.util.Try#foreach" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="foreach(f:R=&gt;Unit):Unit"></a><a id="foreach((R)⇒Unit):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#foreach(f:R=&gt;Unit):Unit" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Try#foreach" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="foreach(f:R=&gt;Unit):Unit"></a>
-      <a id="foreach((R)⇒Unit):Unit"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">foreach</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">foreach</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@foreach(f:R=&gt;Unit):Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Applies the given function f if this is a Result.</p><div class="fullcomment"><div class="comment cmt"><p>Applies the given function f if this is a Result.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Try#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.Try#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get():R"></a>
-      <a id="get():R"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#get():R" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -463,18 +1592,17 @@ does not support higher-kinded types.
       <span class="symbol">
         <span class="name">get</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@get():R" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns the value from this Return or throws the exception if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the value from this Return or throws the exception if this is a Throw.
 Alias for apply()
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
-      <a id="getClass():Class[_]"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#getClass():Class[_]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -482,16 +1610,15 @@ Alias for apply()
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@getClass():Class[_]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Try#getOrElse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getOrElse[R2&gt;:R](default:=&gt;R2):R2"></a><a id="getOrElse[R2&gt;:R](⇒R2):R2"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#getOrElse[R2&gt;:R](default:=&gt;R2):R2" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.util.Try#getOrElse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getOrElse[R2&gt;:R](default:=&gt;R2):R2"></a>
-      <a id="getOrElse[R2&gt;:R](⇒R2):R2"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -499,88 +1626,83 @@ Alias for apply()
       <span class="symbol">
         <span class="name">getOrElse</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>]</span><span class="params">(<span name="default">default: ⇒ <span class="extype" name="com.twitter.util.Try.getOrElse.R2">R2</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Try.getOrElse.R2">R2</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@getOrElse[R2&gt;:R](default:=&gt;R2):R2" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns the value from this Return or the given argument if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the value from this Return or the given argument if this is a Throw.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#handle" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="handle[R2&gt;:R](rescueException:PartialFunction[Throwable,R2]):com.twitter.util.Try[R2]"></a>
-      <a id="handle[R2&gt;:R](PartialFunction[Throwable,R2]):Try[R2]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#handle" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="handle[R2&gt;:R](rescueException:PartialFunction[Throwable,R2]):com.twitter.util.Try[R2]"></a><a id="handle[R2&gt;:R](PartialFunction[Throwable,R2]):Try[R2]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#handle[R2&gt;:R](rescueException:PartialFunction[Throwable,R2]):com.twitter.util.Try[R2]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">handle</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Throw.handle.R2">R2</span>]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.handle.R2">R2</span>]</span>
+        <span class="name">handle</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Throw.handle.R2">R2</span>]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.handle.R2">R2</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@handle[R2&gt;:R](rescueException:PartialFunction[Throwable,R2]):com.twitter.util.Try[R2]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Calls the exceptionHandler with the exception if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Calls the exceptionHandler with the exception if this is a Throw. This is like map for the exception.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
-      <a id="isInstanceOf[T0]:Boolean"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#isInstanceOf[T0]:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.util.Throw#isReturn" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isReturn:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#isReturn:Boolean" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.Throw#isReturn" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isReturn:Boolean"></a>
-      <a id="isReturn:Boolean"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isReturn</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isReturn</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@isReturn:Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns true if the Try is a Return, false otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if the Try is a Return, false otherwise.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#isThrow" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.Throw#isThrow" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isThrow:Boolean"></a>
-      <a id="isThrow:Boolean"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#isThrow:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isThrow</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isThrow</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@isThrow:Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns true if the Try is a Throw, false otherwise.</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if the Try is a Throw, false otherwise.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#map" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="map[X](f:R=&gt;X):com.twitter.util.Try[X]"></a>
-      <a id="map[X]((R)⇒X):Try[X]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#map" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="map[X](f:R=&gt;X):com.twitter.util.Try[X]"></a><a id="map[X]((R)⇒X):Try[X]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#map[X](f:R=&gt;X):com.twitter.util.Try[X]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -588,147 +1710,139 @@ Alias for apply()
       <span class="symbol">
         <span class="name">map</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <span class="extype" name="com.twitter.util.Throw.map.X">X</span></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.map.X">X</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@map[X](f:R=&gt;X):com.twitter.util.Try[X]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Maps the given function to the value from this Return or returns this if this is a Throw
 </p><div class="fullcomment"><div class="comment cmt"><p>Maps the given function to the value from this Return or returns this if this is a Throw
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ne(x$1:AnyRef):Boolean"></a>
-      <a id="ne(AnyRef):Boolean"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
-      <a id="notify():Unit"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#notify():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@notify():Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#notifyAll():Unit" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="notifyAll():Unit"></a>
-      <a id="notifyAll():Unit"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@notifyAll():Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Throw#onFailure" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="onFailure(rescueException:Throwable=&gt;Unit):com.twitter.util.Throw[R]"></a><a id="onFailure((Throwable)⇒Unit):Throw[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#onFailure(rescueException:Throwable=&gt;Unit):com.twitter.util.Throw[R]" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Throw#onFailure" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="onFailure(rescueException:Throwable=&gt;Unit):com.twitter.util.Throw[R]"></a>
-      <a id="onFailure((Throwable)⇒Unit):Throw[R]"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onFailure</span><span class="params">(<span name="rescueException">rescueException: (<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">onFailure</span><span class="params">(<span name="rescueException">rescueException: (<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@onFailure(rescueException:Throwable=&gt;Unit):com.twitter.util.Throw[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Invoke the function on the error, if the computation was
 unsuccessful.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke the function on the error, if the computation was
 unsuccessful.  Returns a chained <code>this</code> as in <code>respond</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#onSuccess" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="onSuccess(f:R=&gt;Unit):com.twitter.util.Throw[R]"></a>
-      <a id="onSuccess((R)⇒Unit):Throw[R]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#onSuccess" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="onSuccess(f:R=&gt;Unit):com.twitter.util.Throw[R]"></a><a id="onSuccess((R)⇒Unit):Throw[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#onSuccess(f:R=&gt;Unit):com.twitter.util.Throw[R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onSuccess</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">onSuccess</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@onSuccess(f:R=&gt;Unit):com.twitter.util.Throw[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Invoked only if the computation was successful.</p><div class="fullcomment"><div class="comment cmt"><p>Invoked only if the computation was successful.  Returns a
 chained <code>this</code> as in <code>respond</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Throw#rescue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="rescue[R2&gt;:R](rescueException:PartialFunction[Throwable,com.twitter.util.Try[R2]]):com.twitter.util.Try[R2]"></a>
-      <a id="rescue[R2&gt;:R](PartialFunction[Throwable,Try[R2]]):Try[R2]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#rescue" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="rescue[R2&gt;:R](rescueException:PartialFunction[Throwable,com.twitter.util.Try[R2]]):com.twitter.util.Try[R2]"></a><a id="rescue[R2&gt;:R](PartialFunction[Throwable,Try[R2]]):Try[R2]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#rescue[R2&gt;:R](rescueException:PartialFunction[Throwable,com.twitter.util.Try[R2]]):com.twitter.util.Try[R2]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">rescue</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.rescue.R2">R2</span>]]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.rescue.R2">R2</span>]</span>
+        <span class="name">rescue</span><span class="tparams">[<span name="R2">R2 &gt;: <span class="extype" name="com.twitter.util.Throw.R">R</span></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.rescue.R2">R2</span>]]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.rescue.R2">R2</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@rescue[R2&gt;:R](rescueException:PartialFunction[Throwable,com.twitter.util.Try[R2]]):com.twitter.util.Try[R2]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Calls the exceptionHandler with the exception if this is a Throw.</p><div class="fullcomment"><div class="comment cmt"><p>Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.</p><p><i>Note</i> The gnarly type parameterization is there for Java compatibility, since Java
 does not support higher-kinded types.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Try#respond" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="respond(k:com.twitter.util.Try[R]=&gt;Unit):com.twitter.util.Try[R]"></a>
-      <a id="respond((Try[R])⇒Unit):Try[R]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Try#respond" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="respond(k:com.twitter.util.Try[R]=&gt;Unit):com.twitter.util.Try[R]"></a><a id="respond((Try[R])⇒Unit):Try[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#respond(k:com.twitter.util.Try[R]=&gt;Unit):com.twitter.util.Try[R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">respond</span><span class="params">(<span name="k">k: (<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">respond</span><span class="params">(<span name="k">k: (<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@respond(k:com.twitter.util.Try[R]=&gt;Unit):com.twitter.util.Try[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Invokes the given closure when the value is available.</p><div class="fullcomment"><div class="comment cmt"><p>Invokes the given closure when the value is available.  Returns
 another 'This[R]' that is guaranteed to be available only *after*
 'k' has run.  This enables the enforcement of invocation ordering.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
-      <a id="synchronized[T0](⇒T0):T0"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
@@ -736,55 +1850,52 @@ another 'This[R]' that is guaranteed to be available only *after*
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Throw#throwable" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="throwable:Throwable"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#throwable:Throwable" title="Permalink">
+        <i class="material-icons"></i>
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Throw#throwable" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="throwable:Throwable"></a>
-      <a id="throwable:Throwable"></a>
-      <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">throwable</span><span class="result">: <a href="../../../scala/package.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>
+        <span class="name">throwable</span><span class="result">: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@throwable:Throwable" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns the throwable if this is a Throw, else raises IllegalStateException.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the throwable if this is a Throw, else raises IllegalStateException.</p><p>Callers should consult isThrow() prior to calling this method to determine whether
 or not this is a Throw.</p><p>This method is intended for Java compatibility. Scala consumers are encouraged to
 pattern match for Throw(t).
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Try#toOption" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.Try#toOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toOption:Option[R]"></a>
-      <a id="toOption:Option[R]"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#toOption:Option[R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toOption</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">toOption</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@toOption:Option[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Returns None if this is a Throw or a Some containing the value if this is a Return
 </p><div class="fullcomment"><div class="comment cmt"><p>Returns None if this is a Throw or a Some containing the value if this is a Return
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="com.twitter.util.Try#transform" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="transform[R2](f:com.twitter.util.Try[R]=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]"></a>
-      <a id="transform[R2]((Try[R])⇒Try[R2]):Try[R2]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Try#transform" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="transform[R2](f:com.twitter.util.Try[R]=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]"></a><a id="transform[R2]((Try[R])⇒Try[R2]):Try[R2]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#transform[R2](f:com.twitter.util.Try[R]=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -792,11 +1903,7 @@ pattern match for Throw(t).
       <span class="symbol">
         <span class="name">transform</span><span class="tparams">[<span name="R2">R2</span>]</span><span class="params">(<span name="f">f: (<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]) ⇒ <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.transform.R2">R2</span>]</span>)</span><span class="result">: <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Try.transform.R2">R2</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@transform[R2](f:com.twitter.util.Try[R]=&gt;com.twitter.util.Try[R2]):com.twitter.util.Try[R2]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Invokes the given transformation when the value is available,
 returning the transformed value.</p><div class="fullcomment"><div class="comment cmt"><p>Invokes the given transformation when the value is available,
 returning the transformed value. This method is like a combination
@@ -804,22 +1911,21 @@ of flatMap and rescue. This method is typically used for more
 imperative control-flow than flatMap/rescue which often exploits
 the Null Object Pattern.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
-      <a id="wait():Unit"></a>
-      <h4 class="signature">
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#wait():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@wait():Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -827,22 +1933,21 @@ the Null Object Pattern.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
-      <a id="wait(Long,Int):Unit"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -850,22 +1955,21 @@ the Null Object Pattern.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="wait(x$1:Long):Unit"></a>
-      <a id="wait(Long):Unit"></a>
-      <h4 class="signature">
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#wait(x$1:Long):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@wait(x$1:Long):Unit" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -873,25 +1977,25 @@ the Null Object Pattern.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Throw#withFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="withFilter(p:R=&gt;Boolean):com.twitter.util.Throw[R]"></a>
-      <a id="withFilter((R)⇒Boolean):Throw[R]"></a>
-      <h4 class="signature">
+    </li><li name="com.twitter.util.Throw#withFilter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withFilter(p:R=&gt;Boolean):com.twitter.util.Throw[R]"></a><a id="withFilter((R)⇒Boolean):Throw[R]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Throw.html#withFilter(p:R=&gt;Boolean):com.twitter.util.Throw[R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
+        <span class="name">withFilter</span><span class="params">(<span name="p">p: (<span class="extype" name="com.twitter.util.Throw.R">R</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.Throw">Throw</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#com.twitter.util.Throw@withFilter(p:R=&gt;Boolean):com.twitter.util.Throw[R]" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      
       <p class="shortcomment cmt">Converts this to a Throw if the predicate does not obtain.</p><div class="fullcomment"><div class="comment cmt"><p>Converts this to a Throw if the predicate does not obtain.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Throw">Throw</a> → <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a></dd></dl></div>
-    </li></ol>
+    </li>
+              </ol>
             </div>
 
         
@@ -901,19 +2005,19 @@ the Null Object Pattern.
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="scala.Product">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
             </div><div class="parent" name="scala.Equals">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
             </div><div class="parent" name="com.twitter.util.Try">
               <h3>Inherited from <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="../../../scala/package.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>
@@ -930,7 +2034,9 @@ the Null Object Pattern.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+    </body>
+          </div>
+        </div>
+      </div>
     </body>
       </html>
