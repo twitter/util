@@ -11,7 +11,7 @@ package com.twitter.util.tunable
  *
  * @note These APIs are still in flux and should NOT be used at this time.
  */
-private[twitter] abstract class Tunable[T](private[tunable] val id: String) { self =>
+private[twitter] abstract class Tunable[T](val id: String) { self =>
 
   // validate id is not empty
   if (id.trim.isEmpty)
@@ -32,11 +32,22 @@ private[twitter] object Tunable {
   /**
    * A [[Tunable]] that always returns `value` when applied.
    */
-  def const[T](id: String, value: T): Tunable[T] = new Tunable[T](id) {
-
+  class Const[T](id: String, private val value: T) extends Tunable[T](id) {
     private[this] val SomeValue = Some(value)
 
     def apply(): Option[T] =
       SomeValue
   }
+
+  object Const {
+    def unapply[T](tunable: Tunable[T]): Option[T] = tunable match {
+      case tunable: Tunable.Const[T] => Some(tunable.value)
+      case _ => None
+    }
+  }
+
+  /**
+   * Create a new [[Tunable.Const]] with id `id` and value `value`.
+   */
+  def const[T](id: String, value: T): Const[T] = new Const(id, value)
 }

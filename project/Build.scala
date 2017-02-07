@@ -130,7 +130,7 @@ object Util extends Build {
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
     utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
     utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
-    utilEvents, utilSecurity, utilStats, utilEval
+    utilEvents, utilSecurity, utilStats, utilEval, utilTunable
   )
 
   lazy val utilApp = Project(
