@@ -706,7 +706,7 @@ class BufTest extends FunSuite
     assert(rem == Buf.Empty)
   }
 
-  test("concat two ConcatBufs") {
+  test("concat two composite bufs") {
     val a1 = Array.range(0, 8).map(_.toByte)
     val a2 = Array.range(8, 16).map(_.toByte)
 

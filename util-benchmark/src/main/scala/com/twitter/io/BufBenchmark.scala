@@ -18,10 +18,10 @@ class BufBenchmark extends StdBenchAnnotations {
 
   private[this] var byteArrayBuf: Buf = _
   private[this] var byteBufferBuf: Buf = _
-  private[this] var concatBuf: Buf = _
+  private[this] var compositeBuf: Buf = _
   // create a 2nd composite that is sliced differently from the other
   // to avoid some implementation artifacts changing the perf.
-  private[this] var concatBuf2: Buf = _
+  private[this] var compositeBuf2: Buf = _
 
   private[this] var string: String = _
   private[this] var stringBuf: Buf = _
@@ -37,8 +37,8 @@ class BufBenchmark extends StdBenchAnnotations {
 
     byteArrayBuf = Buf.ByteArray.Owned(bytes, start, end)
     byteBufferBuf = Buf.ByteBuffer.Owned(bb)
-    concatBuf = byteArrayBuf.slice(0, size / 2).concat(byteArrayBuf.slice(size / 2, size))
-    concatBuf2 = byteArrayBuf.slice(0, size / 4).concat(byteArrayBuf.slice(size / 4, size))
+    compositeBuf = byteArrayBuf.slice(0, size / 2).concat(byteArrayBuf.slice(size / 2, size))
+    compositeBuf2 = byteArrayBuf.slice(0, size / 4).concat(byteArrayBuf.slice(size / 4, size))
 
     val rnd = new Random(120412421512L)
     string = rnd.nextString(size)
@@ -54,8 +54,8 @@ class BufBenchmark extends StdBenchAnnotations {
     byteArrayBuf == byteBufferBuf
 
   @Benchmark
-  def equalityByteArrayConcat(): Boolean =
-    byteArrayBuf == concatBuf
+  def equalityByteArrayComposite(): Boolean =
+    byteArrayBuf == compositeBuf
 
   @Benchmark
   def equalityByteBufferByteArray(): Boolean =
@@ -66,20 +66,20 @@ class BufBenchmark extends StdBenchAnnotations {
     byteBufferBuf == byteBufferBuf
 
   @Benchmark
-  def equalityByteBufferConcat(): Boolean =
-    byteBufferBuf == concatBuf
+  def equalityByteBufferComposite(): Boolean =
+    byteBufferBuf == compositeBuf
 
   @Benchmark
-  def equalityConcatByteArray(): Boolean =
-    concatBuf == byteArrayBuf
+  def equalityCompositeByteArray(): Boolean =
+    compositeBuf == byteArrayBuf
 
   @Benchmark
-  def equalityConcatByteBuffer(): Boolean =
-    concatBuf == byteBufferBuf
+  def equalityCompositeByteBuffer(): Boolean =
+    compositeBuf == byteBufferBuf
 
   @Benchmark
-  def equalityConcatConcat(): Boolean =
-    concatBuf == concatBuf2
+  def equalityCompositeComposite(): Boolean =
+    compositeBuf == compositeBuf2
 
   private[this] def hash(buf: Buf): Int = buf.hashCode()
 
@@ -118,15 +118,15 @@ class BufBenchmark extends StdBenchAnnotations {
   @Benchmark
   @Warmup(iterations = 5)
   @Measurement(iterations = 5)
-  def hashCodeConcatBufBaseline(): Buf =
+  def hashCodeCompositeBufBaseline(): Buf =
     Buf.ByteArray.Owned(bytes, 0, 5).concat(Buf.ByteArray.Owned(bytes, 5, size))
 
   // subtract the results of the Baseline run to get the results
   @Benchmark
   @Warmup(iterations = 5)
   @Measurement(iterations = 5)
-  def hashCodeConcatBuf(hole: Blackhole): Int = {
-    val buf = hashCodeConcatBufBaseline()
+  def hashCodeCompositeBuf(hole: Blackhole): Int = {
+    val buf = hashCodeCompositeBufBaseline()
     hole.consume(buf)
     hash(buf)
   }
@@ -143,8 +143,8 @@ class BufBenchmark extends StdBenchAnnotations {
     slice(byteBufferBuf)
 
   @Benchmark
-  def sliceConcatBuf(): Buf =
-    slice(concatBuf)
+  def sliceCompositeBuf(): Buf =
+    slice(compositeBuf)
 
   private[this] def concat(buf: Buf): Buf =
     buf.concat(buf)
@@ -158,8 +158,8 @@ class BufBenchmark extends StdBenchAnnotations {
     concat(byteBufferBuf)
 
   @Benchmark
-  def concatConcatBuf(): Buf =
-    concat(concatBuf)
+  def concatCompositeBuf(): Buf =
+    concat(compositeBuf)
 
   private[this] def asByteBuffer(buf: Buf): nio.ByteBuffer =
     Buf.ByteBuffer.Owned.extract(buf)
@@ -173,8 +173,8 @@ class BufBenchmark extends StdBenchAnnotations {
     asByteBuffer(byteBufferBuf)
 
   @Benchmark
-  def asByteBufferConcatBuf(): nio.ByteBuffer =
-    asByteBuffer(concatBuf)
+  def asByteBufferCompositeBuf(): nio.ByteBuffer =
+    asByteBuffer(compositeBuf)
 
   private[this] def asByteArray(buf: Buf): Array[Byte] =
     Buf.ByteArray.Owned.extract(buf)
@@ -188,8 +188,8 @@ class BufBenchmark extends StdBenchAnnotations {
     asByteArray(byteBufferBuf)
 
   @Benchmark
-  def asByteArrayConcatBuf(): Array[Byte] =
-    asByteArray(concatBuf)
+  def asByteArrayCompositeBuf(): Array[Byte] =
+    asByteArray(compositeBuf)
 
   @Benchmark
   def stringToUtf8Buf(): Buf =
@@ -222,8 +222,8 @@ class BufBenchmark extends StdBenchAnnotations {
     singleByteSliceAndWrite(byteBufferBuf)
 
   @Benchmark
-  def singleByteSliceAndWriteConcatBuf(): Byte =
-    singleByteSliceAndWrite(concatBuf)
+  def singleByteSliceAndWriteCompositeBuf(): Byte =
+    singleByteSliceAndWrite(compositeBuf)
 
   @Benchmark
   def singleByteIndexedByteArray(): Byte =
@@ -234,7 +234,7 @@ class BufBenchmark extends StdBenchAnnotations {
     singleByteIndexed(byteBufferBuf)
 
   @Benchmark
-  def singleByteIndexedConcatBuf(): Byte =
-    singleByteIndexed(concatBuf)
+  def singleByteIndexedCompositeBuf(): Byte =
+    singleByteIndexed(compositeBuf)
 
 }

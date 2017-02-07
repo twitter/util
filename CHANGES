@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-core: Remove deprecated `c.t.io.ConcatBuf` which is replaced by
+    `c.t.io.Buf.apply(Iterable[Buf])`. ``RB_ID=907180``
+
 6.41.0  2017-02-03
 
 New Features:
@@ -37,7 +42,7 @@ Runtime Behavior Changes:
 API Changes:
 
   * util-core: Deprecated `c.t.io.ConcatBuf` which is replaced by
-    `c.t.io.Buf.apply(IndexedSeq[Buf])`. ``RB_ID=899623``
+    `c.t.io.Buf.apply(Iterable[Buf])`. ``RB_ID=899623``
 
 6.40.0  2016-12-20
 

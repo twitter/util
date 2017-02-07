@@ -130,37 +130,6 @@ abstract class Buf { outer =>
 }
 
 /**
- * A Buf that concats multiple Bufs together
- */
-@deprecated("Use `Buf.apply` instead", "2016-12-21")
-case class ConcatBuf(chain: Vector[Buf])
-  extends Buf.Composite {
-  require(chain.nonEmpty)
-
-  def bufs: IndexedSeq[Buf] = chain
-  protected def computedLength: Int = throw new UnsupportedOperationException
-
-  override def isEmpty: Boolean = {
-    var i = 0
-    while (i < chain.length) {
-      if (!chain(i).isEmpty) return false
-      i += 1
-    }
-    true
-  }
-
-  override def length: Int = {
-    var i = 0
-    var sum = 0
-    while (i < chain.length) {
-      sum += chain(i).length
-      i += 1
-    }
-    sum
-  }
-}
-
-/**
  * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
  * Owned APIs, each of which with construction & extraction utilities.
  *
@@ -390,9 +359,6 @@ object Buf {
 
     override def concat(right: Buf): Buf = right match {
       case _ if right.isEmpty => this
-      // this special ConcatBuf case is needed as `this` may be a ConcatBuf
-      // which could be empty. otherwise we can skip the copying of Buf.apply.
-      case ConcatBuf(rightBufs) => Buf(bufs ++ rightBufs)
       case c: Composite => new Composite.Impl(concatBufs(bufs, c.bufs), length + c.length)
       case _ => new Composite.Impl(concatBuf(bufs, right), length + right.length)
     }
