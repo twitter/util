@@ -6,6 +6,12 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: Promoted the positional `Buf.Indexed` API to be a first-class
+    part of `c.t.io.Buf`. If you have a custom implementation of `Buf` it
+    will require some effort to become compatible. ``RB_ID=907231``
+
 API Changes:
 
   * util-core: Remove deprecated `c.t.io.ConcatBuf` which is replaced by

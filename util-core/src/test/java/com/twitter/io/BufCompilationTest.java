@@ -31,6 +31,16 @@ public class BufCompilationTest {
       public Buf slice(int from, int until) {
         return Bufs.EMPTY;
       }
+
+      @Override
+      public byte get(int index) {
+        return 0;
+      }
+
+      @Override
+      public int process(int from, int until, Processor processor) {
+        return 0;
+      }
     };
   }
 
@@ -122,10 +132,9 @@ public class BufCompilationTest {
   }
 
   @Test
-  public void testIndexedApply() {
+  public void testGet() {
     byte bytes[] = new byte[] { 0x1, 0x2, 0x3, 0x4 };
     Buf a = Bufs.ownedBuf(bytes);
-    Buf.Indexed i = Bufs.asIndexedBuf(a);
-    Assert.assertEquals(0x1, i.apply(0));
+    Assert.assertEquals(0x1, a.get(0));
   }
 }

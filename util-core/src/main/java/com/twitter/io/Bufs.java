@@ -14,13 +14,6 @@ public final class Bufs {
   public static final Buf EMPTY = Buf$.MODULE$.Empty();
 
   /**
-   * @see Buf.Indexed$#coerce(Buf)
-   */
-  public static Buf.Indexed asIndexedBuf(Buf buf) {
-    return Buf.Indexed$.MODULE$.coerce(buf);
-  }
-
-  /**
    * @see Buf.ByteArray.Shared#apply(byte[])
    */
   public static Buf sharedBuf(byte... bytes) {

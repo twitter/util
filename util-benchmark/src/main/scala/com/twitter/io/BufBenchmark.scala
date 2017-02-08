@@ -208,10 +208,8 @@ class BufBenchmark extends StdBenchAnnotations {
     out(0)
   }
 
-  private[this] def singleByteIndexed(buf: Buf): Byte = {
-    val idx = Buf.Indexed.coerce(buf)
-    idx(0)
-  }
+  private[this] def singleByteGet(buf: Buf): Byte =
+    buf.get(0)
 
   @Benchmark
   def singleByteSliceAndWriteByteArray(): Byte =
@@ -227,14 +225,14 @@ class BufBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def singleByteIndexedByteArray(): Byte =
-    singleByteIndexed(byteArrayBuf)
+    singleByteGet(byteArrayBuf)
 
   @Benchmark
   def singleByteIndexedByteBuffer(): Byte =
-    singleByteIndexed(byteBufferBuf)
+    singleByteGet(byteBufferBuf)
 
   @Benchmark
   def singleByteIndexedCompositeBuf(): Byte =
-    singleByteIndexed(compositeBuf)
+    singleByteGet(compositeBuf)
 
 }

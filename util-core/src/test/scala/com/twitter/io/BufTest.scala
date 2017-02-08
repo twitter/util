@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.io.Buf.ByteArray
+import com.twitter.io.Buf.{ByteArray, Processor}
 import java.nio.CharBuffer
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
@@ -105,59 +105,56 @@ class BufTest extends FunSuite
     }
   }
 
-  test("Buf.Indexed.process handles bad input arguments") {
-    val processor = new Buf.Indexed.Processor {
+  test("Buf.process handles bad input arguments") {
+    val processor = new Buf.Processor {
       def apply(byte: Byte): Boolean = false
     }
     bufs.foreach { buf =>
       withClue(buf) {
-        val indexed = Buf.Indexed.coerce(buf)
         intercept[IllegalArgumentException] {
-          indexed.process(-1, 5, processor)
+          buf.process(-1, 5, processor)
         }
         intercept[IllegalArgumentException] {
-          indexed.process(0, -1, processor)
+          buf.process(0, -1, processor)
         }
       }
     }
   }
 
-  test("Buf.Indexed.process handles empty inputs") {
-    val processor = new Buf.Indexed.Processor {
+  test("Buf.process handles empty inputs") {
+    val processor = new Buf.Processor {
       def apply(byte: Byte): Boolean = false
     }
     bufs.foreach { buf =>
       withClue(buf) {
-        val indexed = Buf.Indexed.coerce(buf)
-        assert(-1 == indexed.process(1, 0, processor))
-        assert(-1 == indexed.process(buf.length, buf.length + 1, processor))
+        assert(-1 == buf.process(1, 0, processor))
+        assert(-1 == buf.process(buf.length, buf.length + 1, processor))
       }
     }
   }
 
-  test("Buf.Indexed.process handles large until") {
-    val processor = new Buf.Indexed.Processor {
+  test("Buf.process handles large until") {
+    val processor = new Buf.Processor {
       def apply(byte: Byte): Boolean = true
     }
     bufs.foreach { buf =>
       withClue(buf) {
-        val indexed = Buf.Indexed.coerce(buf)
-        assert(-1 == indexed.process(0, buf.length, processor))
-        assert(-1 == indexed.process(0, buf.length + 1, processor))
+        assert(-1 == buf.process(0, buf.length, processor))
+        assert(-1 == buf.process(0, buf.length + 1, processor))
       }
     }
   }
 
-  test("Buf.Indexed.process returns -1 when fully processed") {
+  test("Buf.process returns -1 when fully processed") {
     def assertAllProcessed(buf: Buf): Unit = {
       var n = 0
-      val processor = new Buf.Indexed.Processor {
+      val processor = new Buf.Processor {
         def apply(byte: Byte): Boolean = {
           n += 1
           true
         }
       }
-      assert(-1 == Buf.Indexed.coerce(buf).process(processor))
+      assert(-1 == buf.process(processor))
       assert(n == buf.length)
     }
     val arr = Array.range(0, 9).map(_.toByte)
@@ -171,7 +168,7 @@ class BufTest extends FunSuite
     assertAllProcessed(composite)
   }
 
-  test("Buf.Indexed.process from and until returns -1 when fully processed") {
+  test("Buf.process from and until returns -1 when fully processed") {
     def assertAllProcessed(
       expected: Array[Byte],
       buf: Buf,
@@ -179,13 +176,13 @@ class BufTest extends FunSuite
       until: Int
     ): Unit = {
       var seen = new mutable.ListBuffer[Byte]()
-      val processor = new Buf.Indexed.Processor {
+      val processor = new Buf.Processor {
         def apply(byte: Byte): Boolean = {
           seen += byte
           true
         }
       }
-      assert(-1 == Buf.Indexed.coerce(buf).process(from, until, processor))
+      assert(-1 == buf.process(from, until, processor))
       assert(expected.toSeq == seen)
     }
     val arr = Array.range(0, 9).map(_.toByte)
@@ -210,16 +207,16 @@ class BufTest extends FunSuite
       composite, 6, 9)
   }
 
-  private def assertProcessReturns0WhenProcessorReturnsFalse(buf: Buf.Indexed) =
-    assert(0 == buf.process(new Buf.Indexed.Processor {
+  private def assertProcessReturns0WhenProcessorReturnsFalse(buf: Buf) =
+    assert(0 == buf.process(new Buf.Processor {
       def apply(byte: Byte): Boolean = false
     }))
 
-  test("Buf.Indexed.process returns index where processing stopped") {
+  test("Buf.process returns index where processing stopped") {
     val arr = Array.range(0, 9).map(_.toByte)
-    val byteArray = Buf.Indexed.coerce(Buf.ByteArray.Owned(arr, 3, 8))
+    val byteArray = Buf.ByteArray.Owned(arr, 3, 8)
     assertProcessReturns0WhenProcessorReturnsFalse(byteArray)
-    val stopAt5 = new Buf.Indexed.Processor {
+    val stopAt5 = new Buf.Processor {
       def apply(byte: Byte): Boolean = byte < 5
     }
     assert(2 == byteArray.process(stopAt5))
@@ -228,16 +225,16 @@ class BufTest extends FunSuite
     assert(3 == byteArray.process(3, 5, stopAt5))
     assert(-1 == byteArray.process(0, 2, stopAt5))
 
-    val byteBuffer = Buf.Indexed.coerce(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(arr)))
+    val byteBuffer = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(arr))
     assertProcessReturns0WhenProcessorReturnsFalse(byteBuffer)
     assert(5 == byteBuffer.process(stopAt5))
     assert(5 == byteBuffer.process(0, 6, stopAt5))
     assert(7 == byteBuffer.process(7, 10, stopAt5))
     assert(-1 == byteBuffer.process(0, 5, stopAt5))
 
-    val composite = Buf.Indexed.coerce(
+    val composite =
       Buf.ByteArray.Owned(arr, 0, 1).concat(
-        Buf.ByteArray.Owned(arr, 1, 10)))
+        Buf.ByteArray.Owned(arr, 1, 10))
     assertProcessReturns0WhenProcessorReturnsFalse(composite)
     assert(5 == composite.process(stopAt5))
     assert(5 == composite.process(4, 6, stopAt5))
@@ -343,49 +340,45 @@ class BufTest extends FunSuite
     }
   }
 
-  test("Buf.Indexed.apply") {
-    // compare slice/write to apply
+  test("Buf.get") {
+    // compare slice/write to get
     val out = new Array[Byte](1)
     bufs
-      .filter(b => b.length >= 2 && b.isInstanceOf[Buf.Indexed])
-      .map(_.asInstanceOf[Buf.Indexed])
+      .filter(b => b.length >= 2)
       .foreach { buf =>
         withClue(buf) {
           buf.slice(0, 1).write(out, 0)
-          assert(out(0) == buf(0))
+          assert(out(0) == buf.get(0))
 
           buf.slice(1, 2).write(out, 0)
-          assert(out(0) == buf(1))
+          assert(out(0) == buf.get(1))
 
           buf.slice(buf.length-1, buf.length).write(out, 0)
-          assert(out(0) == buf(buf.length-1))
+          assert(out(0) == buf.get(buf.length-1))
         }
       }
   }
 
-  test("Buf.Indexed.apply over the length") {
+  test("Buf.get over the length") {
     bufs
-      .filter(b => b.length >= 1 && b.isInstanceOf[Buf.Indexed])
-      .map(_.asInstanceOf[Buf.Indexed])
+      .filter(b => b.length >= 1)
       .foreach { buf =>
         withClue(buf) {
           intercept[IndexOutOfBoundsException] {
-            buf(buf.length)
+            buf.get(buf.length)
           }
         }
       }
   }
 
-  test("Buf.ByteArray.apply") {
+  test("Buf.ByteArray.get") {
     // ba => [2, 3]
     val ba = Buf.ByteArray.Owned(Array[Byte](0, 1, 2, 3, 4), 2, 4)
     assert(2 == ba.length)
-    val idx = Buf.Indexed.coerce(ba)
-    assert(ba eq idx)
-    assert(2 == idx(0))
-    assert(3 == idx(1))
+    assert(2 == ba.get(0))
+    assert(3 == ba.get(1))
     intercept[IndexOutOfBoundsException] {
-      idx(2)
+      ba.get(2)
     }
   }
 
@@ -474,6 +467,8 @@ class BufTest extends FunSuite
         (off until off+length) foreach { i =>
           output(i) = 'a'.toByte
         }
+      def get(index: Int): Byte = ???
+      def process(from: Int, until: Int, processor: Processor): Int = ???
     }
 
     val Buf.Utf8(str) = buf
@@ -628,6 +623,8 @@ class BufTest extends FunSuite
         count += 1
         super.computeHashCode
       }
+      def get(index: Int): Byte = ???
+      def process(from: Int, until: Int, processor: Processor): Int = ???
     }
 
     assert(buf.hashCode != 0) // This is true for the used FNV-1 hash implementation.
