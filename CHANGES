@@ -17,6 +17,15 @@ API Changes:
   * util-core: Remove deprecated `c.t.io.ConcatBuf` which is replaced by
     `c.t.io.Buf.apply(Iterable[Buf])`. ``RB_ID=907180``
 
+  * util-core: Remove deprecated `c.t.util.RingBuffer`. Use Guava's
+    `EvictingQueue`. ``RB_ID=907516``
+
+  * util-core: Remove deprecated `c.t.concurrent.ConcurrentPool`. Prefer
+    Finagle's `c.t.f.pool.BufferingPool`. ``RB_ID=907516``
+
+  * util-core: Remove deprecated `c.t.concurrent.ConcurrentMultiMap`. Prefer
+    Guava's Multimap. ``RB_ID=907516``
+
 6.41.0  2017-02-03
 
 New Features:
