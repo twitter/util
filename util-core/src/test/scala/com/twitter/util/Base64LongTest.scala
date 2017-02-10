@@ -120,13 +120,11 @@ class Base64LongTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
   test("fromBase64 throws an ArithmeticException when overflow is encountered") {
-    forAll { (l1: Long, l2: Long) =>
-      val s = toBase64(l1) + toBase64(l2)
-      if (l1 != 0 && s.length > expectedLength(Long.MinValue)) {
-        assertThrows[ArithmeticException](fromBase64(s))
-      } else {
-        fromBase64(s) // Does not throw
-      }
+    // 2 ^ 64, or (1 << 64) which is an overflow
+    // Q = 16 or 2^4 and each of the 10 'A's is 64 or 2^6
+    val twoToThe64th = "QAAAAAAAAAA"
+    assertThrows[ArithmeticException] {
+      fromBase64(twoToThe64th)
     }
   }
 }
