@@ -30,6 +30,8 @@ API Changes:
 
 New Features:
 
+  * util-app: App now exposes `closeOnExit` publicly.
+
   * util-core: Add Java-friendly API to Scala.java for converting from
     a Java 8 `Optional` to a Scala `Option`. ``RB_ID=906512``
 

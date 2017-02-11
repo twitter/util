@@ -101,7 +101,7 @@ trait App extends Closable with CloseAwaitably {
   /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
    */
-  protected final def closeOnExit(closable: Closable): Unit = {
+  final def closeOnExit(closable: Closable): Unit = {
     exits.add(closable)
   }
 
