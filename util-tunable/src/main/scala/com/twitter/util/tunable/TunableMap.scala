@@ -13,6 +13,11 @@ private[twitter] abstract class TunableMap {
    * of type `T` or a subclass of type `T`, throws a [[ClassCastException]]
    */
   def apply[T](key: TunableMap.Key[T]): Tunable[T]
+
+  /**
+   * Returns the size of the TunableMap. Currently only used for testing.
+   */
+  private[tunable] def size: Int
 }
 
 private[twitter] object TunableMap {
@@ -118,6 +123,8 @@ private[twitter] object TunableMap {
             (key.clazz, Tunable.mutable[T](id, value))
           }
       }
+
+    private[tunable] def size: Int = tunables.size
 
     def put[T](id: String, clazz: Class[T], value: T): Key[T] = {
       val key = Key(id, clazz)

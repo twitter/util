@@ -4,6 +4,10 @@ import org.scalatest.FunSuite
 
 class MutableTest extends FunSuite {
 
+  test("map is initially empty") {
+    assert(TunableMap.newMutable().size == 0)
+  }
+
   test("Getting a Tunable not yet in the map returns a Tunable that produces None when applied") {
     val map = TunableMap.newMutable()
     val key = TunableMap.Key[String]("key")
@@ -47,6 +51,19 @@ class MutableTest extends FunSuite {
     map.put(id, value)
     val tunable = map(key)
     assert(tunable() == Some(value))
+  }
+
+  test("Retrieving a present tunable does not create a new one") {
+    val id = "key"
+    val value = 5
+    val key = TunableMap.Key[Int](id)
+
+    val map = TunableMap.newMutable()
+    assert(map.size == 0)
+    map.put(id, value)
+    assert(map.size == 1)
+    assert(map(key) eq map(key))
+    assert(map.size == 1)
   }
 
   test("Retrieving a Tunable with a Key of the wrong type will throw a ClassCastException") {
