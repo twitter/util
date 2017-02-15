@@ -1,0 +1,190 @@
+package com.twitter.util.tunable
+
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.twitter.conversions.time._
+import com.twitter.util.{Duration, Return, Throw}
+import org.scalatest.FunSuite
+
+// Used for veryifying custom deserialization
+case class Foo(number: Double)
+
+class JsonTunableMapperTest extends FunSuite {
+
+  test("returns a Throw if json is empty") {
+    JsonTunableMapper().parse("") match {
+      case Return(_) => fail()
+      case Throw(_) =>
+    }
+  }
+
+  test("parses valid json of no tunables") {
+    val json = """{ "tunables": [ ] }"""
+      JsonTunableMapper().parse("""{ "tunables": [ ] }""") match {
+      case Return(map) =>
+        assert(map.size == 0)
+      case Throw(_) => fail()
+    }
+  }
+
+  def assertInvalid(json: String) = JsonTunableMapper().parse(json) match {
+    case Return(_) => fail()
+    case Throw(_) =>
+  }
+
+  test("returns a Throw if tunables are not valid Tunables") {
+    val json = """
+      |{ "tunables": [
+      |   { "foo" : "bar" }
+      | ]
+      |}""".stripMargin
+    assertInvalid(json)
+  }
+
+  test("returns a Throw if tunables do not contain an id") {
+    val json = """
+      |{ "tunables": [
+      |   { "type" : "com.twitter.util.Duration",
+      |     "value" : 5.seconds
+      |   }
+      | ]
+      |}""".stripMargin
+    assertInvalid(json)
+  }
+
+  test("returns a Throw if tunables do not contain a type") {
+    val json = """
+      |{ "tunables": [
+      |    { "id" : "timeoutId",
+      |      "value" : 5.seconds
+      |    }
+      | ]
+      |}""".stripMargin
+    assertInvalid(json)
+  }
+
+  test("returns a Throw if tunables do not contain a value") {
+    val json = """
+      |{ "tunables": [
+      |    { "id" : "timeoutId",
+      |      "type" : "com.twitter.util.Duration"
+      |    }
+      | ]
+      |}""".stripMargin
+    assertInvalid(json)
+  }
+
+  test("parses valid json of tunables") {
+    val json = """
+     |{ "tunables": [
+     |   { "id" : "timeoutId1",
+     |     "value" : "5.seconds",
+     |     "type" : "com.twitter.util.Duration"
+     |   },
+     |   { "id" : "timeoutId2",
+     |     "value" : "Duration.Top",
+     |     "type" : "com.twitter.util.Duration"
+     |   },
+     |   { "id" : "timeoutId3",
+     |     "value" : "Duration.Bottom",
+     |     "type" : "com.twitter.util.Duration"
+     |   },
+     |   { "id" : "timeoutId4",
+     |     "value" : "Duration.Undefined",
+     |     "type" : "com.twitter.util.Duration"
+     |   }
+     | ]
+     |}""".stripMargin
+
+    JsonTunableMapper().parse(json) match {
+      case Return(map) =>
+        assert(map.size == 4)
+        assert(map(TunableMap.Key[Duration]("timeoutId1"))() == Some(5.seconds))
+        assert(map(TunableMap.Key[Duration]("timeoutId2"))() == Some(Duration.Top))
+        assert(map(TunableMap.Key[Duration]("timeoutId3"))() == Some(Duration.Bottom))
+        assert(map(TunableMap.Key[Duration]("timeoutId4"))() == Some(Duration.Undefined))
+      case Throw(_) => fail()
+    }
+  }
+
+  test("Throws an IllegalArugmentException if multiple Tunables have the same id") {
+    val json = """
+      |{ "tunables": [
+      |   { "id" : "timeoutId",
+      |     "value" : "5.seconds",
+      |     "type" : "com.twitter.util.Duration"
+      |   },
+      |   { "id" : "timeoutId",
+      |     "value" : "10.seconds",
+      |     "type" : "com.twitter.util.Duration"
+      |   }
+      | ]
+      |}""".stripMargin
+
+    JsonTunableMapper().parse(json) match {
+      case Throw(_: IllegalArgumentException) =>
+      case _ => fail()
+    }
+  }
+
+  test("Can configure custom deserializer") {
+    val fooDeserializer = new StdDeserializer[Foo](classOf[Foo]) {
+      override def deserialize(
+        jsonParser: JsonParser,
+        deserializationContext: DeserializationContext
+      ): Foo = new Foo(jsonParser.getDoubleValue)
+    }
+
+    val json = """
+      |{ "tunables": [
+      |   { "id" : "fooId",
+      |     "value" : 1.23,
+      |     "type" : "com.twitter.util.tunable.Foo"
+      |   }
+      | ]
+      |}""".stripMargin
+
+    // make sure we can't decode a Foo without the fooDeserializer
+    JsonTunableMapper().parse(json) match {
+      case Throw(_) =>
+      case _ => fail()
+    }
+
+    // now configure the fooDeserializer and see that we can now decode a Foo
+    JsonTunableMapper(Seq(fooDeserializer)).parse(json) match {
+      case Return(map) =>
+        assert(map(TunableMap.Key[Foo]("fooId"))() == Some(Foo(1.23)))
+      case Throw(_) => fail()
+    }
+  }
+
+  test("Can configure multiple deserializers") {
+    val fooDeserializer = new StdDeserializer[Foo](classOf[Foo]) {
+      override def deserialize(
+        jsonParser: JsonParser,
+        deserializationContext: DeserializationContext
+      ): Foo = new Foo(jsonParser.getDoubleValue)
+    }
+
+    val json = """
+      |{ "tunables": [
+      |   { "id" : "fooId",
+      |     "value" : 1.23,
+      |     "type" : "com.twitter.util.tunable.Foo"
+      |   },
+      |   { "id" : "timeoutId",
+      |     "value" : "5.seconds",
+      |     "type" : "com.twitter.util.Duration"
+      |   }
+      | ]
+      |}""".stripMargin
+
+    JsonTunableMapper(JsonTunableMapper.DefaultDeserializers :+ fooDeserializer).parse(json) match {
+      case Return(map) =>
+        assert(map(TunableMap.Key[Foo]("fooId"))() == Some(Foo(1.23)))
+        assert(map(TunableMap.Key[Duration]("timeoutId"))() == Some(5.seconds))
+      case Throw(_) => fail()
+    }
+  }
+}

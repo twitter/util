@@ -21,6 +21,7 @@ object Util extends Build {
     ExclusionRule("javax.jms", "jms")
   )
   val slf4jVersion = "1.7.21"
+  val jacksonVersion = "2.8.4"
 
   val guavaLib = "com.google.guava" % "guava" % "16.0.1"
   val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.4"
@@ -383,8 +384,8 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       "com.twitter"                % "libthrift"        % "0.5.0-7",
       slf4jLib % "provided",
-      "com.fasterxml.jackson.core" % "jackson-core"     % "2.8.4",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.4"
+      "com.fasterxml.jackson.core" % "jackson-core"     % jacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
     )
   ).dependsOn(utilCodec)
 
@@ -394,8 +395,13 @@ object Util extends Build {
     settings = Defaults.coreDefaultSettings ++
       sharedSettings
   ).settings(
-    name := "util-tunable"
-  )
+    name := "util-tunable",
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude("com.google.guava", "guava")
+    )
+  ).dependsOn(utilCore)
 
   lazy val utilZk = Project(
     id = "util-zk",
