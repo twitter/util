@@ -146,21 +146,6 @@ class BufBenchmark extends StdBenchAnnotations {
   def sliceCompositeBuf(): Buf =
     slice(compositeBuf)
 
-  private[this] def concat(buf: Buf): Buf =
-    buf.concat(buf)
-
-  @Benchmark
-  def concatByteArrayBuf(): Buf =
-    concat(byteArrayBuf)
-
-  @Benchmark
-  def concatByteBufferBuf(): Buf =
-    concat(byteBufferBuf)
-
-  @Benchmark
-  def concatCompositeBuf(): Buf =
-    concat(compositeBuf)
-
   private[this] def asByteBuffer(buf: Buf): nio.ByteBuffer =
     Buf.ByteBuffer.Owned.extract(buf)
 

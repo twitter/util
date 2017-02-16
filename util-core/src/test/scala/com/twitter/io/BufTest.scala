@@ -781,4 +781,21 @@ class BufTest extends FunSuite
       }
     }
   }
+
+  test("Buf.concat of Composite") {
+    // Note: by design, not all generated Buf instances will be a Composite to make
+    // sure they are properly handled when doing multiple concat operations.
+    val bufGen: Gen[Buf] = for {
+      n <- Gen.choose(1, 6)
+      buf <- arbBuf.arbitrary
+    } yield Buf(Seq.fill(n)(buf))
+
+    forAll(Gen.listOf(bufGen)) { bufs: List[Buf] =>
+      val concatLeft = bufs.foldLeft(Buf.Empty) { (l, r) => l.concat(r) }
+      val concatRight = bufs.foldRight(Buf.Empty) { (l, r) => l.concat(r) }
+      val constructor = Buf(bufs)
+      assert(constructor == concatLeft)
+      assert(constructor == concatRight)
+    }
+  }
 }

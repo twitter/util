@@ -54,9 +54,27 @@ abstract class Buf { outer =>
   /**
    * Concatenate this buffer with the given buffer.
    */
-  def concat(right: Buf): Buf =
-    if (right.isEmpty) outer
-    else Buf(Vector(outer, right))
+  final def concat(right: Buf): Buf = {
+    if (this.isEmpty) right
+    else if (right.isEmpty) this
+    else this match {
+      // This could be much cleaner as a Tuple match, but we want to avoid the allocation.
+      case left: Buf.Composite.Impl =>
+        right match {
+          case right: Buf.Composite.Impl => // (Composite, Composite)
+            new Buf.Composite.Impl(Buf.fastConcat(left.bs, right.bs), left.length + right.length)
+          case _ => // (Composite, Buf)
+            new Buf.Composite.Impl(left.bs :+ right, left.length + right.length)
+        }
+      case left =>
+        right match {
+          case right: Buf.Composite.Impl => // (Buf, Composite)
+            new Buf.Composite.Impl(left +: right.bs, left.length + right.length)
+          case _ => // (Buf, Buf)
+            new Buf.Composite.Impl(Vector(left, right), left.length + right.length)
+        }
+    }
+  }
 
   /**
    * Returns the byte at the given index.
@@ -212,7 +230,6 @@ object Buf {
       checkSliceArgs(from, until)
       this
     }
-    override def concat(right: Buf): Buf = right
     protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
     def get(index: Int): Byte =
       throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
@@ -233,10 +250,18 @@ object Buf {
   def apply(bufs: Iterable[Buf]): Buf = {
     val builder = Vector.newBuilder[Buf]
     var length = 0
-    bufs.foreach { b =>
-      val len = b.length
-      length += len
-      if (len > 0) builder += b
+    bufs.foreach {
+      case b: Composite.Impl =>
+        // Guaranteed to be non-empty by construction
+        length += b.length
+        builder ++= b.bs
+
+      case b =>
+        val len = b.length
+        if (len > 0) {
+          length += len
+          builder += b
+        }
     }
 
     val filtered = builder.result()
@@ -254,8 +279,6 @@ object Buf {
    * @see [[Buf.apply]] for creating new instances.
    */
   sealed abstract class Composite extends Buf {
-    import Composite._
-
     def bufs: IndexedSeq[Buf]
     protected def computedLength: Int
 
@@ -335,12 +358,6 @@ object Buf {
       }
     }
 
-    override def concat(right: Buf): Buf = right match {
-      case _ if right.isEmpty => this
-      case c: Composite => new Composite.Impl(concatBufs(bufs, c.bufs), length + c.length)
-      case _ => new Composite.Impl(concatBuf(bufs, right), length + right.length)
-    }
-
     protected def unsafeByteArrayBuf: Option[ByteArray] = None
 
     private[this] def equalsIndexed(other: Buf): Boolean = {
@@ -411,8 +428,8 @@ object Buf {
       Some(buf.bufs)
 
     /** Basic implementation of a [[Buf]] created from n-`Bufs`. */
-    private[Buf] class Impl(
-        bs: IndexedSeq[Buf],
+    private[Buf] final class Impl(
+        val bs: Vector[Buf],
         protected val computedLength: Int)
       extends Buf.Composite {
       // ensure there is a need for a `Composite`
@@ -475,30 +492,6 @@ object Buf {
         if (continue) -1
         else i
       }
-    }
-
-    private[Buf] def concatBufs(
-      head: IndexedSeq[Buf],
-      tail: IndexedSeq[Buf]
-    ): IndexedSeq[Buf] = {
-      val builder = new VectorBuilder[Buf]()
-      val addToBuilder: Buf => Unit =
-        b => builder += b
-      head.foreach(addToBuilder)
-      tail.foreach(addToBuilder)
-      builder.result()
-    }
-
-    private[Buf] def concatBuf(
-      head: IndexedSeq[Buf],
-      tail: Buf
-    ): IndexedSeq[Buf] = {
-      val builder = new VectorBuilder[Buf]()
-      val addToBuilder: Buf => Unit =
-        b => builder += b
-      head.foreach(addToBuilder)
-      addToBuilder(tail)
-      builder.result()
     }
   }
 
@@ -1105,4 +1098,42 @@ object Buf {
         Some((value, rem))
       }
   }
+
+  // Modeled after the Vector.++ operator, but use indexes instead of `for`
+  // comprehensions for the optimized paths to save allocations and time.
+  // See Scala ticket SI-7725 for details.
+  private def fastConcat(head: Vector[Buf], tail: Vector[Buf]): Vector[Buf] = {
+    val tlen = tail.length
+    val hlen = head.length
+
+    if (tlen <= TinyIsFaster || tlen < (hlen / ConcatFasterFactor)) {
+      var i = 0
+      var acc = head
+      while (i < tlen) {
+        acc :+= tail(i)
+        i += 1
+      }
+      acc
+    } else if (hlen <= TinyIsFaster || hlen < (tlen / ConcatFasterFactor)) {
+      var i = head.length - 1
+      var acc = tail
+      while (i >= 0) {
+        acc = head(i) +: acc
+        i -= 1
+      }
+      acc
+    } else {
+      val builder = new VectorBuilder[Buf]
+      val headIt = head.iterator
+      while(headIt.hasNext) builder += headIt.next()
+      val tailIt = tail.iterator
+      while(tailIt.hasNext) builder += tailIt.next()
+      builder.result()
+    }
+  }
+
+  // Length at which eC append/prepend operations are always faster
+  private[this] val TinyIsFaster = 2
+  // Length ratio at which eC append/prepend operations are slower than making a new collection
+  private[this] val ConcatFasterFactor = 32
 }
