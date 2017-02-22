@@ -26,6 +26,10 @@ API Changes:
   * util-core: Remove deprecated `c.t.concurrent.ConcurrentMultiMap`. Prefer
     Guava's Multimap. ``RB_ID=907516``
 
+Dependencies:
+
+  * util: Bump guava to 19.0. ``RB_ID=907807``
+
 6.41.0  2017-02-03
 
 New Features:
