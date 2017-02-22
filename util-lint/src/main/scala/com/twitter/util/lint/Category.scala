@@ -17,4 +17,8 @@ object Category {
    */
   case object Configuration extends Category
 
+  /**
+   * Indicative of a runtime failure.
+   */
+  case object Runtime extends Category
 }
