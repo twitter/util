@@ -67,10 +67,10 @@ class Flag[T: Flaggable] private[app](
   private[app] def this(name: String, help: String, usage: String, failFastUntilParsed: Boolean) =
     this(name, help, Right(usage), failFastUntilParsed)
 
-  private[app] def this(name: String, help: String, default: => T) =
+  private[twitter] def this(name: String, help: String, default: => T) =
     this(name, help, default, false)
 
-  private[app] def this(name: String, help: String, usage: String) =
+  private[twitter] def this(name: String, help: String, usage: String) =
     this(name, help, usage, false)
 
   protected val flaggable: Flaggable[T] = implicitly[Flaggable[T]]
