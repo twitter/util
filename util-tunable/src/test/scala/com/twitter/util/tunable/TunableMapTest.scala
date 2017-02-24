@@ -126,3 +126,20 @@ class MutableTest extends FunSuite {
     assert(tunable() == None)
   }
 }
+
+class NullTunableMapTest extends FunSuite {
+
+  test("NullTunableMap returns Tunable.None") {
+    val nullTunableMap = NullTunableMap
+    val key = TunableMap.Key[String]("foo")
+    assert(nullTunableMap(key)() == None)
+  }
+
+  test("NullTunableMap does not grow in size when tunables accessed") {
+    val nullTunableMap = NullTunableMap
+    assert(nullTunableMap.size == 0)
+    val key = TunableMap.Key[String]("foo")
+    assert(nullTunableMap(key)() == None)
+    assert(nullTunableMap.size == 0)
+  }
+}

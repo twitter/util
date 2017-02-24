@@ -19,6 +19,10 @@ class TunableTest extends FunSuite {
     assert(tunable() == Some("hello"))
   }
 
+  test("Tunable.none returns None when applied") {
+    assert(Tunable.none[String]() == None)
+  }
+
   test("Tunable.toString contains the id of the Tunable") {
     val tunable = Tunable.const("MyTunableId", "hello")
     assert(tunable.toString == "Tunable(MyTunableId)")

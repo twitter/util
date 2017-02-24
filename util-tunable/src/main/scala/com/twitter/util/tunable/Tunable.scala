@@ -51,6 +51,17 @@ private[twitter] object Tunable {
    */
   def const[T](id: String, value: T): Const[T] = new Const(id, value)
 
+  private[this] val NoneTunable = new Tunable[Any]("com.twitter.util.tunable.NoneTunable") {
+    def apply(): Option[Any] =
+      None
+  }
+
+  /**
+   * Returns a [[Tunable]] that always returns `None` when applied.
+   */
+  def none[T]: Tunable[T] =
+    NoneTunable.asInstanceOf[Tunable[T]]
+
   /**
    * A [[Tunable]] whose value can be changed. Operations are thread-safe.
    */

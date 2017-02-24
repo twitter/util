@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.{JsonDeserializer, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.twitter.util.Try
+import com.twitter.util.{Return, Throw, Try}
+import java.net.URL
+import scala.collection.JavaConverters._
 
 private[twitter] object JsonTunableMapper {
 
@@ -27,6 +29,38 @@ private[twitter] object JsonTunableMapper {
    * - [[com.twitter.util.tunable.json.DurationFromString]]
    */
   val DefaultDeserializers: Seq[JsonDeserializer[_]] = Seq(DurationFromString)
+
+  /**
+   * Load and parse the JSON file located at "com/twitter/tunables/$id.json" in the application's
+   * resources, where $id is the given `id`.
+   *
+   * If no configuration files exist, return [[NullTunableMap]].
+   * If multiple configuration files exists, return [[IllegalArgumentException]]
+   * If the configuration file cannot be parsed, return [[IllegalArgumentException]]
+   *
+   * This method is exposed for testing.
+   */
+  private[tunable] def loadJsonTunables(id: String): TunableMap = {
+    val classLoader = getClass.getClassLoader
+    val path = s"com/twitter/tunables/$id.json"
+    val files = classLoader.getResources(path).asScala.toList
+
+    files match {
+      case Nil =>
+        NullTunableMap
+      case file::Nil =>
+        JsonTunableMapper().parse(file) match {
+          case Throw(t) =>
+            throw new IllegalArgumentException(
+              s"Failed to parse Tunable configuration file for $id, from $file", t)
+          case Return(tunableMap) =>
+            tunableMap
+        }
+      case _ =>
+        throw new IllegalArgumentException(
+          s"Found multiple Tunable configuration files for $id: ${files.mkString(", ")}")
+    }
+  }
 
   /**
    * Create a new [[JsonTunableMapper]], using the provided deserializers `deserializers`.
@@ -79,9 +113,7 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
   private[this] val mapper: ObjectMapper =
     new ObjectMapper().registerModules(DefaultScalaModule, DeserializationModule)
 
-  def parse(json: String): Try[TunableMap] = Try {
-    val jsonTunables = mapper.readValue(json, classOf[JsonTunables])
-
+  private[this] def jsonTunablesToTunableMap(jsonTunables: JsonTunables): TunableMap = {
     val ids = jsonTunables.tunables.map(_.id)
     val uniqueIds = ids.distinct
 
@@ -89,12 +121,30 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
       throw new IllegalArgumentException(
         s"Duplicate Toggle ids found: ${ids.mkString(",")}")
 
-    val tunableMap = TunableMap.newMutable()
+    if (jsonTunables.tunables.isEmpty) {
+      NullTunableMap
+    } else {
+      val tunableMap = TunableMap.newMutable()
 
-    jsonTunables.tunables.map { jsonTunable =>
-      val valueAsValueType = mapper.convertValue(jsonTunable.value, jsonTunable.valueType)
-      tunableMap.put(jsonTunable.id, jsonTunable.valueType, valueAsValueType)
+      jsonTunables.tunables.map { jsonTunable =>
+        val valueAsValueType = mapper.convertValue(jsonTunable.value, jsonTunable.valueType)
+        tunableMap.put(jsonTunable.id, jsonTunable.valueType, valueAsValueType)
+      }
+      tunableMap
     }
-    tunableMap
+  }
+
+  /**
+   * Parse the contents of the given file URL `url` into a [[TunableMap]]
+   */
+  def parse(url: URL): Try[TunableMap] = Try {
+    jsonTunablesToTunableMap(mapper.readValue(url, classOf[JsonTunables]))
+  }
+
+  /**
+   * Parse the given JSON string `json` into a [[TunableMap]]
+   */
+  def parse(json: String): Try[TunableMap] = Try {
+    jsonTunablesToTunableMap(mapper.readValue(json, classOf[JsonTunables]))
   }
 }

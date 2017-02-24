@@ -140,3 +140,14 @@ private[twitter] object TunableMap {
     }
   }
 }
+
+/**
+ * A [[TunableMap]] that returns a [[Tunable.none]] for every [[Tunable.Key]]
+ */
+private[tunable] object NullTunableMap extends TunableMap {
+
+  def apply[T](key: TunableMap.Key[T]): Tunable[T] =
+    Tunable.none[T]
+
+  def size: Int = 0
+}

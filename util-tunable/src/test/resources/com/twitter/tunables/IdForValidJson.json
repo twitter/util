@@ -1,0 +1,24 @@
+{
+  "tunables": [
+    {
+      "id": "timeoutId1",
+      "value": "5.seconds",
+      "type": "com.twitter.util.Duration"
+    },
+    {
+      "id": "timeoutId2",
+      "value": "Duration.Top",
+      "type": "com.twitter.util.Duration"
+    },
+    {
+      "id": "timeoutId3",
+      "value": "Duration.Bottom",
+      "type": "com.twitter.util.Duration"
+    },
+    {
+      "id": "timeoutId4",
+      "value": "Duration.Undefined",
+      "type": "com.twitter.util.Duration"
+    }
+  ]
+}
