@@ -30,6 +30,24 @@ private[twitter] object JsonTunableMapper {
    */
   val DefaultDeserializers: Seq[JsonDeserializer[_]] = Seq(DurationFromString)
 
+  // Exposed for testing
+  private[tunable] def tunableMapForResources(id: String, paths: List[URL]): TunableMap =
+    paths match {
+      case Nil =>
+        NullTunableMap
+      case path::Nil =>
+        JsonTunableMapper().parse(path) match {
+          case Throw(t) =>
+            throw new IllegalArgumentException(
+              s"Failed to parse Tunable configuration file for $id, from $path", t)
+          case Return(tunableMap) =>
+            tunableMap
+        }
+      case _ =>
+        throw new IllegalArgumentException(
+          s"Found multiple Tunable configuration files for $id: ${paths.mkString(", ")}")
+    }
+
   /**
    * Load and parse the JSON file located at "com/twitter/tunables/$id.json" in the application's
    * resources, where $id is the given `id`.
@@ -44,22 +62,7 @@ private[twitter] object JsonTunableMapper {
     val classLoader = getClass.getClassLoader
     val path = s"com/twitter/tunables/$id.json"
     val files = classLoader.getResources(path).asScala.toList
-
-    files match {
-      case Nil =>
-        NullTunableMap
-      case file::Nil =>
-        JsonTunableMapper().parse(file) match {
-          case Throw(t) =>
-            throw new IllegalArgumentException(
-              s"Failed to parse Tunable configuration file for $id, from $file", t)
-          case Return(tunableMap) =>
-            tunableMap
-        }
-      case _ =>
-        throw new IllegalArgumentException(
-          s"Found multiple Tunable configuration files for $id: ${files.mkString(", ")}")
-    }
+    tunableMapForResources(id, files)
   }
 
   /**

@@ -10,7 +10,6 @@ junit_tests(
     'util/util-tunable/src/main/scala:scala',
   ],
   resources=[
-    'util/util-tunable/src/test/duplicateResources',
     'util/util-tunable/src/test/resources',
   ],
   sources=rglobs('*.scala'),

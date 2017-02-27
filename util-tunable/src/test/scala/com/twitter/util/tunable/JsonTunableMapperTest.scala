@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.twitter.conversions.time._
 import com.twitter.util.{Duration, Return, Throw}
 import org.scalatest.FunSuite
+import scala.collection.JavaConverters._
 
 // Used for veryifying custom deserialization
 case class Foo(number: Double)
@@ -217,9 +218,13 @@ class JsonTunableMapperTest extends FunSuite {
     assert(map(TunableMap.Key[Duration]("timeoutId4"))() == Some(Duration.Undefined))
   }
 
-  test("loadJsonTunables throws an Illegal argument exception when multiple configs found") {
+  test("tunableMapForResources throws an Illegal argument exception when there are multiple paths") {
+    val rsc = getClass.getClassLoader
+      .getResources("com/twitter/tunables/IdForValidJson.json")
+      .asScala.toSeq.head
+
     val ex = intercept[IllegalArgumentException] {
-      JsonTunableMapper.loadJsonTunables("IdWithDuplicateResourceFiles")
+      JsonTunableMapper.tunableMapForResources("IdWithDuplicateResourceFiles", List(rsc, rsc))
     }
     assert(ex.getMessage.contains(
       "Found multiple Tunable configuration files for IdWithDuplicateResourceFiles"))
