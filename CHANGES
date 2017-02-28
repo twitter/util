@@ -14,6 +14,9 @@ New Features:
 
 API Changes:
 
+  * util-app: Set failFastUntilParsed on created flag added to `c.t.app.Flags`
+    via `c.t.app.Flags#add`. ``RB_ID=908804``
+
   * util-core: Remove deprecated `c.t.io.ConcatBuf` which is replaced by
     `c.t.io.Buf.apply(Iterable[Buf])`. ``RB_ID=907180``
 

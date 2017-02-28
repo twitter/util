@@ -155,7 +155,7 @@ class FlagsTest extends FunSuite {
     val ctx = new Ctx
     import ctx._
     assert(flag.parseArgs(Array("-undefined")).isInstanceOf[Flags.Error])
-    assert(flag.parseArgs(Array("-undefined"), true) == Flags.Ok(Seq("-undefined")))
+    assert(flag.parseArgs(Array("-undefined"), allowUndefinedFlags = true) == Flags.Ok(Seq("-undefined")))
   }
 
   test("formatFlagValues") {
@@ -241,6 +241,21 @@ class FlagsTest extends FunSuite {
     }
     flag.parse("4")
     assert(flag() == 4)
+  }
+
+  test("Flag has failFast from Flags when added") {
+    val somethingIdFlag = new Flag[Int]("something.id", "bar", Left(() => 3), failFastUntilParsed = false)
+    assert(somethingIdFlag() == 3) // this logs a message in SEVERE and we get the default value
+
+    val testFlags = new Flags("failFastTest", includeGlobal = false, failFastUntilParsed = true) // added flags will inherit this value
+    testFlags.add(somethingIdFlag)
+    intercept[IllegalStateException] {
+      testFlags.getAll().foreach(flag => if (flag.name == "something.id") flag.apply()) // this should fail, since all added flags should now fail fast.
+    }
+
+    // now parse and apply
+    assert(testFlags.parseArgs(Array("-something.id=5")) == Flags.Ok(Nil))
+    assert(somethingIdFlag() == 5) // we get the parsed value
   }
 
   test("Flags fail before parsing, OK after") {

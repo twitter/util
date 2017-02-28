@@ -249,7 +249,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
   def add(f: Flag[_]): Unit = synchronized {
     if (flags contains f.name)
       System.err.printf("Flag %s already defined!\n", f.name)
-    flags(f.name) = f
+    flags(f.name) = f.withFailFast(failFastUntilParsed)
   }
 
   /**

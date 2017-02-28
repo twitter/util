@@ -34,6 +34,26 @@ class FlagTest extends FunSuite {
     assert(allFlags.exists(_() == 2), "overriding flag was not present in flags set")
   }
 
+  test("Flag: withFailFast") {
+    val flag = new Flags("test") // failFastUntilParsed = false
+    var f1 = flag("foo", 1, "")
+    var f2 = flag("foo", 2, "")
+
+    assert(f1() == 1)
+    assert(f2() == 2)
+
+    f1 = f1.withFailFast(true)
+    f2 = f2.withFailFast(true)
+
+    // should now fail, as we are reading before parsed and have set the fail fast to true
+    intercept[IllegalStateException] {
+      f1()
+    }
+    intercept[IllegalStateException] {
+      f2()
+    }
+  }
+
   test("Flag: let") {
     def current: Boolean = MyGlobalBooleanFlag()
 

@@ -97,6 +97,12 @@ class Flag[T: Flaggable] private[app](
       localFlagValues.set(Some(updatedMap))
   }
 
+  @volatile private[this] var failFast = failFastUntilParsed
+  private[app] def withFailFast(fail: Boolean): this.type = {
+    failFast = fail
+    this
+  }
+
   @volatile private[this] var value: Option[T] = None
   private[this] val registered = new AtomicBoolean(false)
 
@@ -170,7 +176,7 @@ class Flag[T: Flaggable] private[app](
    */
   def apply(): T = {
     if (!parsingDone) {
-      if (failFastUntilParsed)
+      if (failFast)
         throw new IllegalStateException(s"Flag $name read before parse.")
       else
         log.log(Level.SEVERE, s"Flag $name read before parse.")
