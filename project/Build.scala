@@ -401,7 +401,7 @@ object Util extends Build {
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude("com.google.guava", "guava")
     )
-  ).dependsOn(utilCore)
+  ).dependsOn(utilApp, utilCore)
 
   lazy val utilZk = Project(
     id = "util-zk",
