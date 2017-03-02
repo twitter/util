@@ -12,8 +12,7 @@ trait TunableMapProxy extends TunableMap {
   def apply[T](key: TunableMap.Key[T]): Tunable[T] =
     underlying(key)
 
-  def size: Int = underlying.size
-
+  def entries: Iterator[TunableMap.Entry[_]] = underlying.entries
 }
 
 class ServiceLoadedTunableTestClient1 extends ServiceLoadedTunableMap with TunableMapProxy {
@@ -46,7 +45,7 @@ class ServiceLoadedTunableMapTest extends FunSuite {
   test("TunableMap returned when there is one match for id") {
     val tunableMap = ServiceLoadedTunableMap("client1")
 
-    assert(tunableMap.size == 2)
+    assert(tunableMap.entries.size == 2)
     assert(tunableMap(TunableMap.Key[String]("tunableId1"))() == Some("foo"))
     assert(tunableMap(TunableMap.Key[Int]("tunableId2"))() == Some(5))
   }

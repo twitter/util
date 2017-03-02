@@ -2,6 +2,7 @@ package com.twitter.util.tunable
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiFunction
+import scala.collection.JavaConversions._
 
 /**
  * A Map that can be used to access [[Tunable]]s using [[TunableMap.Key]]s.
@@ -15,12 +16,16 @@ private[twitter] abstract class TunableMap {
   def apply[T](key: TunableMap.Key[T]): Tunable[T]
 
   /**
-   * Returns the size of the TunableMap. Currently only used for testing.
+   * Returns an Iterator over [[TunableMap.Entry]] for each [[Tunable]] in the map with a value.
    */
-  private[tunable] def size: Int
+  private[tunable] def entries: Iterator[TunableMap.Entry[_]]
 }
 
 private[twitter] object TunableMap {
+
+  private case class TypeAndTunable[T](tunableType: Class[T], tunable: Tunable.Mutable[T])
+
+  private[tunable] case class Entry[T](key: TunableMap.Key[T], value: T)
 
   /**
    * Class used to retrieve a [[Tunable]] with id `id` of type `T`.
@@ -50,6 +55,27 @@ private[twitter] object TunableMap {
   abstract class Mutable extends TunableMap {
 
     /**
+     * Update map to have the contents of `newMap`.
+     *
+     * Updates to each [[Tunable]] in the map are atomic, but the change
+     * is not atomic at the macro level.
+     */
+    private[tunable] def replace(newMap: TunableMap): Unit = {
+      val currEntries = entries.toSeq
+      val newEntries = newMap.entries.toSeq
+
+      // clear keys no longer present
+      (currEntries.map(_.key).toSet -- newEntries.map(_.key).toSet).foreach { key =>
+        clear(key)
+      }
+
+      // add/update new tunable values
+      newEntries.foreach { case TunableMap.Entry(key, value) =>
+        put(key.id, key.clazz, value)
+      }
+    }
+
+    /**
      * Java-friendly API
      */
     def put[T](id: String, clazz: Class[T], value: T): Key[T]
@@ -73,58 +99,54 @@ private[twitter] object TunableMap {
    */
   def newMutable(): Mutable = new Mutable {
 
-    private[this] type TypeAndTunable = (Class[_], Tunable.Mutable[_])
-
     // We use a ConcurrentHashMap to synchronize operations on non-thread-safe [[Tunable.Mutable]]s.
-    private[this] val tunables = new ConcurrentHashMap[String, TypeAndTunable]()
+    private[this] val tunables = new ConcurrentHashMap[String, TypeAndTunable[_]]()
 
-    private[this] def clearTunable[T](key: Key[T]): BiFunction[String, TypeAndTunable, TypeAndTunable] =
-      new BiFunction[String, TypeAndTunable, TypeAndTunable] {
-        def apply(id: String, curr: TypeAndTunable): TypeAndTunable = {
+    private[this] def clearTunable[T](key: Key[T]): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
+      new BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] {
+        def apply(id: String, curr: TypeAndTunable[_]): TypeAndTunable[_] = {
           if (curr != null) {
-            curr._2.clear()
+            curr.tunable.clear()
           }
           curr
         }
       }
 
-    private[this] def getOrAdd[T](key: Key[T]): BiFunction[String, TypeAndTunable, TypeAndTunable] =
-      new BiFunction[String, TypeAndTunable, TypeAndTunable] {
-        def apply(id: String, curr: TypeAndTunable): TypeAndTunable =
+    private[this] def getOrAdd[T](key: Key[T]): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
+      new BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] {
+        def apply(id: String, curr: TypeAndTunable[_]): TypeAndTunable[_] =
           if (curr != null) {
-            if (key.clazz.isAssignableFrom(curr._1)) {
+            if (key.clazz.isAssignableFrom(curr.tunableType)) {
               curr
             } else {
               throw new ClassCastException(
                 s"Tried to retrieve a Tunable of type ${key.clazz}, but TunableMap contained a " +
-                s"Tunable of type ${curr._1} for id ${key.id}")
+                s"Tunable of type ${curr.tunableType} for id ${key.id}")
             }
           } else {
-            (key.clazz, Tunable.emptyMutable[T](key.id))
+            TypeAndTunable(key.clazz, Tunable.emptyMutable[T](key.id))
           }
       }
 
     private[this] def updateOrAdd[T](
       key: Key[T],
       value: T
-    ): BiFunction[String, TypeAndTunable, TypeAndTunable] =
-      new BiFunction[String, TypeAndTunable, TypeAndTunable] {
-        def apply(id: String, curr: TypeAndTunable): TypeAndTunable =
+    ): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
+      new BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] {
+        def apply(id: String, curr: TypeAndTunable[_]): TypeAndTunable[_] =
           if (curr != null) {
-            if (curr._1 == key.clazz) {
-              curr._2.asInstanceOf[Tunable.Mutable[T]].set(value)
+            if (curr.tunableType == key.clazz) {
+              curr.tunable.asInstanceOf[Tunable.Mutable[T]].set(value)
               curr
             } else {
               throw new ClassCastException(
                 s"Tried to update a Tunable of type ${key.clazz}, but TunableMap contained a " +
-                s"Tunable of type ${curr._1} for id ${key.id}")
+                s"Tunable of type ${curr.tunableType} for id ${key.id}")
             }
           } else {
-            (key.clazz, Tunable.mutable[T](id, value))
+            TypeAndTunable(key.clazz, Tunable.mutable[T](id, value))
           }
       }
-
-    private[tunable] def size: Int = tunables.size
 
     def put[T](id: String, clazz: Class[T], value: T): Key[T] = {
       val key = Key(id, clazz)
@@ -136,18 +158,27 @@ private[twitter] object TunableMap {
       tunables.computeIfPresent(key.id, clearTunable(key))
 
     def apply[T](key: Key[T]): Tunable[T] = {
-      tunables.compute(key.id, getOrAdd[T](key))._2.asInstanceOf[Tunable.Mutable[T]]
+      tunables.compute(key.id, getOrAdd[T](key)).tunable.asInstanceOf[Tunable.Mutable[T]]
+    }
+
+    private[tunable] def entries: Iterator[TunableMap.Entry[_]] = {
+      val entryOpts: Iterator[Option[TunableMap.Entry[_]]] = tunables.iterator.map {
+        case (id, TypeAndTunable(tunableType, tunable)) => tunable().map { value =>
+          TunableMap.Entry(TunableMap.Key(id, tunableType), value)
+        }
+      }
+      entryOpts.flatten
     }
   }
 }
 
 /**
- * A [[TunableMap]] that returns a [[Tunable.none]] for every [[Tunable.Key]]
+ * A [[TunableMap]] that returns a [[Tunable.none]] for every [[TunableMap.Key]]
  */
 private[tunable] object NullTunableMap extends TunableMap {
 
   def apply[T](key: TunableMap.Key[T]): Tunable[T] =
     Tunable.none[T]
 
-  def size: Int = 0
+  def entries: Iterator[TunableMap.Entry[_]] = Iterator.empty
 }
