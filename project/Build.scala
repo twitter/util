@@ -13,8 +13,8 @@ object Util extends Build {
 
   val libVersion = "6.41.0" + suffix
   val zkVersion = "3.5.0-alpha"
-  val zkClientVersion = "0.0.80"
-  val zkGroupVersion = "0.0.91"
+  val zkClientVersion = "0.0.81"
+  val zkGroupVersion = "0.0.92"
   val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
     ExclusionRule("com.sun.jdmk", "jmxtools"),
     ExclusionRule("com.sun.jmx", "jmxri"),
@@ -33,6 +33,7 @@ object Util extends Build {
   // versions of certain libraries.
   def commonsZookeeper(name: String, version: String) =
     "com.twitter.common.zookeeper" % name % version excludeAll(
+      ExclusionRule("com.fasterxml.jackson.module", "jackson-module-scala_2.11"),
       ExclusionRule("com.twitter", "finagle-core-java"),
       ExclusionRule("com.twitter", "finagle-core_2.11"),
       ExclusionRule("com.twitter", "util-core-java"),
@@ -205,7 +206,7 @@ object Util extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "objectsize" % "0.0.11" % "test",
+      "com.twitter.common" % "objectsize" % "0.0.12" % "test",
       scalacheckLib,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
@@ -425,7 +426,7 @@ object Util extends Build {
     libraryDependencies ++= Seq(
       commonsZookeeper("client", zkClientVersion),
       commonsZookeeper("group", zkGroupVersion),
-      commonsZookeeper("server-set", "1.0.111"),
+      commonsZookeeper("server-set", "1.0.112"),
       zkDependency
     )
   ).dependsOn(utilCore, utilLogging, utilZk,
@@ -442,7 +443,7 @@ object Util extends Build {
   ).settings(
     name := "util-zk-test",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "io" % "0.0.68" % "test",
+      "com.twitter.common" % "io" % "0.0.69" % "test",
       zkDependency
     )
   )
