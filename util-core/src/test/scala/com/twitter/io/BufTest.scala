@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import com.twitter.io.Buf.{ByteArray, Processor}
-import java.nio.CharBuffer
+import java.nio.{ByteBuffer, CharBuffer}
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
 import org.junit.runner.RunWith
@@ -68,7 +68,7 @@ class BufTest extends FunSuite
     }
   }
 
-  test("Buf.write validates output array is large enough") {
+  test("Buf.write(Array[Byte], offset) validates output array is large enough") {
     // we skip Empty because we cannot create an array
     // too small for this test.
     bufs.filterNot(_.isEmpty).foreach { buf =>
@@ -78,6 +78,32 @@ class BufTest extends FunSuite
           buf.write(notBigEnough, 0)
         }
       }
+    }
+  }
+
+  test("Buf.write(ByteBuffer) validates output ByteBuffer is large enough") {
+    // we skip Empty because we cannot create an array
+    // too small for this test.
+    bufs.filterNot(_.isEmpty).foreach { buf =>
+      withClue(buf.toString) {
+        val notBigEnough = ByteBuffer.allocate(buf.length - 1)
+        intercept[IllegalArgumentException] {
+          buf.write(notBigEnough)
+        }
+      }
+    }
+  }
+
+  test("Buf.write(ByteBuffer)") {
+    for (head <- bufs; tail <- bufs) {
+      val totalLength = head.length + tail.length
+      val byteBuffer = ByteBuffer.allocate(totalLength)
+      head.write(byteBuffer)
+      tail.write(byteBuffer)
+      byteBuffer.flip()
+
+      assert(byteBuffer.remaining == totalLength)
+      assert(Buf.ByteBuffer.Owned(byteBuffer) == head.concat(tail))
     }
   }
 
@@ -467,6 +493,8 @@ class BufTest extends FunSuite
         (off until off+length) foreach { i =>
           output(i) = 'a'.toByte
         }
+      def write(output: ByteBuffer): Unit = ???
+
       def get(index: Int): Byte = ???
       def process(from: Int, until: Int, processor: Processor): Int = ???
     }
@@ -615,7 +643,8 @@ class BufTest extends FunSuite
   test("hash code memoization") {
     var count = 0
     val buf = new Buf {
-      def write(output: Array[Byte], off: Int): Unit = {}
+      def write(output: Array[Byte], off: Int): Unit = ???
+      def write(output: ByteBuffer): Unit = ???
       def length: Int = 0
       def slice(from: Int, until: Int): Buf = this
       protected def unsafeByteArrayBuf: Option[ByteArray] = None

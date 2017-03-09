@@ -18,6 +18,11 @@ public class BufCompilationTest {
       }
 
       @Override
+      public void write(java.nio.ByteBuffer buffer) {
+        // do nothing
+      }
+
+      @Override
       public Option<ByteArray> unsafeByteArrayBuf() {
         return Option.apply(null);
       }

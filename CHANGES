@@ -37,7 +37,10 @@ Dependencies:
 
 New Features:
 
-  * util-app: App now exposes `closeOnExit` publicly.
+  * util-app: App now exposes `closeOnExit` publicly. ``RB_ID=906890``
+
+  * util-core: Add method to `Buf` to efficiently write to a nio `ByteBuffer`.
+    ``RB_ID=910152``
 
   * util-core: Add Java-friendly API to Scala.java for converting from
     a Java 8 `Optional` to a Scala `Option`. ``RB_ID=906512``

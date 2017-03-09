@@ -1,5 +1,6 @@
 package com.twitter.io
 
+import java.nio.ReadOnlyBufferException
 import java.nio.charset.{Charset, StandardCharsets => JChar}
 import scala.collection.immutable.VectorBuilder
 
@@ -24,10 +25,18 @@ abstract class Buf { outer =>
   private[this] var cachedHashCode = 0
 
   /**
-   * Write the entire contents of the buffer into the given array at
+   * Write the entire contents of this `Buf` into the given array at
    * the given offset. Partial writes aren't supported directly
    * through this API; they can be accomplished by first [[slice slicing]] the
    * buffer.
+   * This method should be preferred over the `Buf.ByteArray.extract`, `Buf.ByteArray.Owned`,
+   * etc family of functions when you want to control the destination of the data, as
+   * opposed to letting the `Buf` implementation manage the destination. For example, if you
+   * want to manually set the first bytes of an `Array[Byte]` and then efficiently copy the
+   * contents of this `Buf` to the remaining space.
+   *
+   * @see [[write(ByteBuffer)]] for writing to nio buffers.
+   *
    * @throws IllegalArgumentException when `output` is too small to
    * contain all the data.
    *
@@ -35,6 +44,29 @@ abstract class Buf { outer =>
    */
   @throws(classOf[IllegalArgumentException])
   def write(output: Array[Byte], off: Int): Unit
+
+  /**
+   * Write the entire contents of this `Buf` into the given nio buffer.
+   * Partial writes aren't supported directly through this API; they can be
+   * accomplished by first [[slice slicing]] the buffer.
+   * This method should be preferred over `Buf.ByteBuffer.extract`, `Buf.ByteArray.Owned`,
+   * etc family of functions when you want to control the destination of the data, as
+   * opposed to letting the `Buf` implementation manage the destination. For example, if
+   * the data is destined for an IO operation, it may be preferable to provide a direct
+   * nio `ByteBuffer` to ensure the avoidance of intermediate heap-based representations.
+   *
+   * @see [[write(Array[Byte], Int)]] for writing to byte arrays.
+   *
+   * @throws java.lang.IllegalArgumentException when `output` doesn't have enough
+   * space as defined by `ByteBuffer.remaining()` to hold the contents of this `Buf`.
+   *
+   * @throws ReadOnlyBufferException if the provided buffer is read-only.
+   *
+   * @note [[Buf]] implementors should use the helper [[checkWriteArgs]].
+   */
+  @throws(classOf[IllegalArgumentException])
+  @throws(classOf[ReadOnlyBufferException])
+  def write(output: java.nio.ByteBuffer): Unit
 
   /**
    * The number of bytes in the buffer
@@ -224,6 +256,9 @@ object Buf {
   private class NoopBuf extends Buf {
     def write(buf: Array[Byte], off: Int): Unit =
       checkWriteArgs(buf.length, off)
+
+    def write(buffer: java.nio.ByteBuffer): Unit = ()
+
     override val isEmpty = true
     def length: Int = 0
     def slice(from: Int, until: Int): Buf = {
@@ -297,6 +332,15 @@ object Buf {
         val buf = bufs(i)
         buf.write(output, offset)
         offset += buf.length
+        i += 1
+      }
+    }
+
+    def write(buffer: java.nio.ByteBuffer): Unit = {
+      checkWriteArgs(buffer.remaining, 0)
+      var i = 0
+      while (i < bufs.length) {
+        bufs(i).write(buffer)
         i += 1
       }
     }
@@ -533,6 +577,11 @@ object Buf {
       System.arraycopy(bytes, begin, buf, off, length)
     }
 
+    def write(buffer: java.nio.ByteBuffer): Unit = {
+      checkWriteArgs(buffer.remaining, 0)
+      buffer.put(bytes, begin, length)
+    }
+
     def slice(from: Int, until: Int): Buf = {
       checkSliceArgs(from, until)
       if (isSliceEmpty(from, until)) Buf.Empty
@@ -704,6 +753,11 @@ object Buf {
     def write(output: Array[Byte], off: Int): Unit = {
       checkWriteArgs(output.length, off)
       underlying.duplicate.get(output, off, length)
+    }
+
+    def write(buffer: java.nio.ByteBuffer): Unit = {
+      checkWriteArgs(buffer.remaining, 0)
+      buffer.put(underlying.duplicate)
     }
 
     def slice(from: Int, until: Int): Buf = {
