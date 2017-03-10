@@ -87,9 +87,13 @@ class BufTest extends FunSuite
     bufs.filterNot(_.isEmpty).foreach { buf =>
       withClue(buf.toString) {
         val notBigEnough = ByteBuffer.allocate(buf.length - 1)
-        intercept[IllegalArgumentException] {
+        val clonedIndexes = notBigEnough.duplicate()
+        val ex = intercept[IllegalArgumentException] {
           buf.write(notBigEnough)
         }
+        assert(ex.getMessage.startsWith("Output too small"))
+        // Make sure the indexes of the output buffer were not modified
+        assert(notBigEnough == clonedIndexes)
       }
     }
   }
@@ -97,9 +101,11 @@ class BufTest extends FunSuite
   test("Buf.write(ByteBuffer)") {
     for (head <- bufs; tail <- bufs) {
       val totalLength = head.length + tail.length
-      val byteBuffer = ByteBuffer.allocate(totalLength)
+      // add some extra space to ensure that the write method handles it correctly
+      val byteBuffer = ByteBuffer.allocate(totalLength + 10)
       head.write(byteBuffer)
       tail.write(byteBuffer)
+      assert(byteBuffer.remaining == 10)
       byteBuffer.flip()
 
       assert(byteBuffer.remaining == totalLength)
