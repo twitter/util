@@ -107,10 +107,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com">com</a></dd></dl></div>
-    </li><li name="com.twitter.concurrent" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="concurrent"></a><a id="concurrent:concurrent"></a>
+    </li><li name="com.twitter.io" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="io"></a><a id="io:io"></a>
       <span class="permalink">
-      <a href="../../com/twitter/index.html#concurrent" title="Permalink">
+      <a href="../../com/twitter/index.html#io" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -120,186 +120,148 @@
       </span>
       <span class="symbol">
         <a title="" href="index.html">
-              <span class="name">concurrent</span>
+              <span class="name">io</span>
             </a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
-    </li><li class="current-entities indented3">
+    </li><li name="com.twitter.io.Buf" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Buf"></a><a id="Buf:Buf"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#Buf" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+Owned APIs, each of which with construction &amp; extraction utilities." href="Buf$.html">
+              <span class="name">Buf</span>
+            </a>
+      </span>
+      
+      <p class="shortcomment cmt">Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+Owned APIs, each of which with construction &amp; extraction utilities.</p><div class="fullcomment"><div class="comment cmt"><p>Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
+Owned APIs, each of which with construction &amp; extraction utilities.</p><p>The Owned APIs may provide direct access to a Buf's underlying
+implementation; and so mutating the data structure invalidates a Buf's
+immutability constraint. Users must take care to handle this data
+immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
+with the caller (at the cost of additional allocation).</p><p>Note: There are Java-friendly APIs for this object at <code>com.twitter.io.Bufs</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.io">io</a></dd></dl></div>
+    </li><li class="current-entities indented4">
+                        <a class="object" href="Buf$$ByteArray$.html" title=""></a>
+                        <a class="class" href="Buf$$ByteArray.html" title="A buffer representing an array of bytes."></a>
+                        <a href="Buf$$ByteArray.html" title="A buffer representing an array of bytes.">
+                          ByteArray
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="Buf$$ByteBuffer$.html" title=""></a>
+                        <a class="class" href="Buf$$ByteBuffer.html" title="A buffer representing the remaining bytes in the
+given ByteBuffer."></a>
+                        <a href="Buf$$ByteBuffer.html" title="A buffer representing the remaining bytes in the
+given ByteBuffer.">
+                          ByteBuffer
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="Buf$$Composite$.html" title=""></a>
+                        <a class="class" href="Buf$$Composite.html" title="A Buf which is composed of other Bufs."></a>
+                        <a href="Buf$$Composite.html" title="A Buf which is composed of other Bufs.">
+                          Composite
+                        </a>
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="AbstractOffer.html" title="Abstract Offer class for Java compatibility."></a>
-                        <a href="AbstractOffer.html" title="Abstract Offer class for Java compatibility.">
-                          AbstractOffer
+                        <a class="object" href="Buf$$Iso8859_1$.html" title="Create and deconstruct buffers encoded by the
+ISO Latin Alphabet No."></a>
+                        <a href="Buf$$Iso8859_1$.html" title="Create and deconstruct buffers encoded by the
+ISO Latin Alphabet No.">
+                          Iso8859_1
                         </a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="AbstractSpool.html" title="Abstract Spool class for Java compatibility."></a>
-                        <a href="AbstractSpool.html" title="Abstract Spool class for Java compatibility.">
-                          AbstractSpool
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="AsyncMeter$.html" title=""></a>
-                        <a class="class" href="AsyncMeter.html" title="An asynchronous meter."></a>
-                        <a href="AsyncMeter.html" title="An asynchronous meter.">
-                          AsyncMeter
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="AsyncMutex.html" title="An AsyncMutex is a traditional mutex but with asynchronous
-execution."></a>
-                        <a href="AsyncMutex.html" title="An AsyncMutex is a traditional mutex but with asynchronous
-execution.">
-                          AsyncMutex
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="AsyncQueue$.html" title=""></a>
-                        <a class="class" href="AsyncQueue.html" title="An asynchronous FIFO queue."></a>
-                        <a href="AsyncQueue.html" title="An asynchronous FIFO queue.">
-                          AsyncQueue
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="AsyncSemaphore$.html" title=""></a>
-                        <a class="class" href="AsyncSemaphore.html" title="An AsyncSemaphore is a traditional semaphore but with asynchronous
-execution."></a>
-                        <a href="AsyncSemaphore.html" title="An AsyncSemaphore is a traditional semaphore but with asynchronous
-execution.">
-                          AsyncSemaphore
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="AsyncStream$.html" title=""></a>
-                        <a class="class" href="AsyncStream.html" title="A representation of a lazy (and possibly infinite) sequence of asynchronous
-values."></a>
-                        <a href="AsyncStream.html" title="A representation of a lazy (and possibly infinite) sequence of asynchronous
-values.">
-                          AsyncStream
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="BridgedThreadPoolScheduler.html" title="A scheduler that bridges tasks submitted by external threads into local
-executor threads."></a>
-                        <a href="BridgedThreadPoolScheduler.html" title="A scheduler that bridges tasks submitted by external threads into local
-executor threads.">
-                          BridgedThreadPoolScheduler
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="Broker.html" title="An unbuffered FIFO queue, brokered by Offers."></a>
-                        <a href="Broker.html" title="An unbuffered FIFO queue, brokered by Offers.">
-                          Broker
-                        </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="" title=""></a>
                         <a href="" title="">
-                          ConcurrentMultiMap
+                          Processor
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ConcurrentPool.html" title="The ConcurrentPool provides a concurrent object pool on top of the
-java.util.concurrent primitives."></a>
-                        <a href="ConcurrentPool.html" title="The ConcurrentPool provides a concurrent object pool on top of the
-java.util.concurrent primitives.">
-                          ConcurrentPool
+                        <a class="class" href="Buf$$StringCoder.html" title="a StringCoder for a given java.nio.charset.Charset provides an
+encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String]."></a>
+                        <a href="Buf$$StringCoder.html" title="a StringCoder for a given java.nio.charset.Charset provides an
+encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String].">
+                          StringCoder
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="trait" href="ExecutorScheduler.html" title="A named Scheduler mix-in that causes submitted tasks to be dispatched according to
-an java.util.concurrent.ExecutorService created by an abstract factory
-function."></a>
-                        <a href="ExecutorScheduler.html" title="A named Scheduler mix-in that causes submitted tasks to be dispatched according to
-an java.util.concurrent.ExecutorService created by an abstract factory
-function.">
-                          ExecutorScheduler
+                        <a class="object" href="Buf$$U32BE$.html" title="Create and deconstruct unsigned 32-bit
+big endian encoded buffers."></a>
+                        <a href="Buf$$U32BE$.html" title="Create and deconstruct unsigned 32-bit
+big endian encoded buffers.">
+                          U32BE
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="LocalScheduler.html" title="An efficient thread-local, direct-dispatch scheduler."></a>
-                        <a href="LocalScheduler.html" title="An efficient thread-local, direct-dispatch scheduler.">
-                          LocalScheduler
+                        <a class="object" href="Buf$$U32LE$.html" title="Create and deconstruct unsigned 32-bit
+little endian encoded buffers."></a>
+                        <a href="Buf$$U32LE$.html" title="Create and deconstruct unsigned 32-bit
+little endian encoded buffers.">
+                          U32LE
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="NamedPoolThreadFactory.html" title="A java.util.concurrent.ThreadFactory which creates threads with a name
-indicating the pool from which they originated."></a>
-                        <a href="NamedPoolThreadFactory.html" title="A java.util.concurrent.ThreadFactory which creates threads with a name
-indicating the pool from which they originated.">
-                          NamedPoolThreadFactory
+                        <a class="object" href="Buf$$U64BE$.html" title="Create and deconstruct unsigned 64-bit
+big endian encoded buffers."></a>
+                        <a href="Buf$$U64BE$.html" title="Create and deconstruct unsigned 64-bit
+big endian encoded buffers.">
+                          U64BE
                         </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="Offer$.html" title="Note: There is a Java-friendly API for this object: com.twitter.concurrent.Offers."></a>
-                        <a class="trait" href="Offer.html" title="An offer to communicate with another process."></a>
-                        <a href="Offer.html" title="An offer to communicate with another process.">
-                          Offer
-                        </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="Offers.html" title=" A Java adaptation of com.twitter.concurrent.Offer companion object."></a>
-                        <a href="Offers.html" title=" A Java adaptation of com.twitter.concurrent.Offer companion object.">
-                          Offers
+                        <a class="object" href="Buf$$U64LE$.html" title="Create and deconstruct unsigned 64-bit
+little endian encoded buffers."></a>
+                        <a href="Buf$$U64LE$.html" title="Create and deconstruct unsigned 64-bit
+little endian encoded buffers.">
+                          U64LE
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="object" href="Once$.html" title=""></a>
-                        <a href="Once$.html" title="">
-                          Once
+                        <a class="object" href="Buf$$UsAscii$.html" title="Create and deconstruct buffers encoded by the 7-bit ASCII,
+also known as ISO646-US or the Basic Latin block of the
+Unicode character set."></a>
+                        <a href="Buf$$UsAscii$.html" title="Create and deconstruct buffers encoded by the 7-bit ASCII,
+also known as ISO646-US or the Basic Latin block of the
+Unicode character set.">
+                          UsAscii
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="trait" href="Permit.html" title=""></a>
-                        <a href="Permit.html" title="">
-                          Permit
+                        <a class="object" href="Buf$$Utf16$.html" title="Create and deconstruct 16-bit UTF buffers."></a>
+                        <a href="Buf$$Utf16$.html" title="Create and deconstruct 16-bit UTF buffers.">
+                          Utf16
                         </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="Scheduler$.html" title="A global scheduler."></a>
-                        <a class="trait" href="Scheduler.html" title="An interface for scheduling java.lang.Runnable tasks."></a>
-                        <a href="Scheduler.html" title="An interface for scheduling java.lang.Runnable tasks.">
-                          Scheduler
-                        </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="trait" href="Serialized.html" title="Efficient ordered serialization of operations."></a>
-                        <a href="Serialized.html" title="Efficient ordered serialization of operations.">
-                          Serialized
+                        <a class="object" href="Buf$$Utf16BE$.html" title="Create and deconstruct buffers encoded by the 16-bit UTF charset
+with big-endian byte order."></a>
+                        <a href="Buf$$Utf16BE$.html" title="Create and deconstruct buffers encoded by the 16-bit UTF charset
+with big-endian byte order.">
+                          Utf16BE
                         </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="Spool$.html" title="Note: Spool is no longer the recommended asynchronous stream abstraction."></a>
-                        <a class="trait" href="Spool.html" title="Note: Spool is no longer the recommended asynchronous stream abstraction."></a>
-                        <a href="Spool.html" title="Note: Spool is no longer the recommended asynchronous stream abstraction.">
-                          Spool
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="SpoolSource$.html" title=""></a>
-                        <a class="class" href="SpoolSource.html" title="A SpoolSource is a simple object for creating and populating a Spool-chain."></a>
-                        <a href="SpoolSource.html" title="A SpoolSource is a simple object for creating and populating a Spool-chain.">
-                          SpoolSource
-                        </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="Spools.html" title="A Java adaptation of com.twitter.concurrent.Spool companion object."></a>
-                        <a href="Spools.html" title="A Java adaptation of com.twitter.concurrent.Spool companion object.">
-                          Spools
+                        <a class="object" href="Buf$$Utf16LE$.html" title="Create and deconstruct buffers encoded by the 16-bit UTF charset
+with little-endian byte order."></a>
+                        <a href="Buf$$Utf16LE$.html" title="Create and deconstruct buffers encoded by the 16-bit UTF charset
+with little-endian byte order.">
+                          Utf16LE
                         </a>
-                      </li><li class="current-entities indented3">
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ThreadPoolScheduler.html" title="A scheduler that dispatches directly to an underlying Java
-cached threadpool executor."></a>
-                        <a href="ThreadPoolScheduler.html" title="A scheduler that dispatches directly to an underlying Java
-cached threadpool executor.">
-                          ThreadPoolScheduler
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <a class="object" href="Tx$.html" title="Note: There is a Java-friendly API for this object: com.twitter.concurrent.Txs."></a>
-                        <a class="trait" href="Tx.html" title="A Tx is used to mediate multi-party transactions with the following
-protocol:"></a>
-                        <a href="Tx.html" title="A Tx is used to mediate multi-party transactions with the following
-protocol:">
-                          Tx
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="Txs.html" title="A Java adaptation of com.twitter.concurrent.Tx companion object."></a>
-                        <a href="Txs.html" title="A Java adaptation of com.twitter.concurrent.Tx companion object.">
-                          Txs
+                        <a class="object" href="Buf$$Utf8$.html" title="Create and deconstruct Utf-8 encoded buffers."></a>
+                        <a href="Buf$$Utf8$.html" title="Create and deconstruct Utf-8 encoded buffers.">
+                          Utf8
                         </a>
                       </li>
               </ul>
@@ -309,9 +271,9 @@ protocol:">
             <body class="class type">
       <div id="definition">
         <div class="big-circle class">c</div>
-        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.concurrent">concurrent</a></p>
-        <h1>ConcurrentMultiMap<span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html" title="Permalink">
+        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.io">io</a>.<a href="Buf$.html" class="extype" name="com.twitter.io.Buf">Buf</a></p>
+        <h1>Processor<span class="permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -320,19 +282,20 @@ protocol:">
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 6.2.x) use guava's Multimaps.synchronizedMultimap">ConcurrentMultiMap</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">Processor</span><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 6.2.x)</i> use guava's Multimaps.synchronizedMultimap</p></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if the processor would like to continue processing
+       more bytes and <code>false</code> otherwise.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this is not a <code>Function1[Byte, Boolean]</code> despite very
+      much fitting that interface. This was done to avoiding boxing
+      of the <code>Bytes</code> which was quite squirrely and had an impact on
+      performance.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf.html#process(processor:com.twitter.io.Buf.Processor):Int" class="extmbr" name="com.twitter.io.Buf#process">Buf.process</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -362,7 +325,7 @@ protocol:">
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.concurrent.ConcurrentMultiMap"><span>ConcurrentMultiMap</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.io.Buf.Processor"><span>Processor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -382,10 +345,10 @@ protocol:">
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.concurrent.ConcurrentMultiMap#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;()(implicitevidence$1:K=&gt;Ordered[K],implicitevidence$2:V=&gt;Ordered[V]):com.twitter.concurrent.ConcurrentMultiMap[K,V]"></a><a id="&lt;init&gt;:ConcurrentMultiMap[K,V]"></a>
+              <ol><li name="com.twitter.io.Buf.Processor#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;():com.twitter.io.Buf.Processor"></a><a id="&lt;init&gt;:Processor"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#&lt;init&gt;()(implicitevidence$1:K=&gt;Ordered[K],implicitevidence$2:V=&gt;Ordered[V]):com.twitter.concurrent.ConcurrentMultiMap[K,V]" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#&lt;init&gt;():com.twitter.io.Buf.Processor" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -394,30 +357,7 @@ protocol:">
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ConcurrentMultiMap</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.K">K</span>) ⇒ <a href="../../../scala/index.html#Ordered[T]=scala.math.Ordered[T]" class="extmbr" name="scala.Ordered">Ordered</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.K">K</span>]</span>, <span name="arg1">arg1: (<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.V">V</span>) ⇒ <a href="../../../scala/index.html#Ordered[T]=scala.math.Ordered[T]" class="extmbr" name="scala.Ordered">Ordered</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.V">V</span>]</span>)</span>
-      </span>
-      
-      
-    </li></ol>
-            </div>
-
-        <div id="types" class="types members">
-              <h3>Type Members</h3>
-              <ol><li name="com.twitter.concurrent.ConcurrentMultiMap.Container" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ContainerextendsProduct2[K,Option[V]]withComparable[ConcurrentMultiMap.this.Container]"></a><a id="Container:Container"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#ContainerextendsProduct2[K,Option[V]]withComparable[ConcurrentMultiMap.this.Container]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="ConcurrentMultiMap$Container.html">
-              <span class="name">Container</span>
-            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product2" class="extype" target="_top">Product2</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.K">K</span>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.V">V</span>]] with <span class="extype" name="java.lang.Comparable">Comparable</span>[<a href="ConcurrentMultiMap$Container.html" class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.Container">Container</a>]</span>
+        <span class="name">Processor</span><span class="params">()</span>
       </span>
       
       
@@ -427,12 +367,33 @@ protocol:">
         
 
         <div class="values members">
-              <h3>Value Members</h3>
+              <h3>Abstract Value Members</h3>
+              <ol><li name="com.twitter.io.Buf.Processor#apply" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="apply(byte:Byte):Boolean"></a><a id="apply(Byte):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#apply(byte:Byte):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="byte">byte: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      
+      
+    </li></ol>
+            </div>
+
+        <div class="values members">
+              <h3>Concrete Value Members</h3>
               <ol>
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -448,7 +409,7 @@ protocol:">
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html###():Int" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -461,26 +422,10 @@ protocol:">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.concurrent.ConcurrentMultiMap#+=" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="+=(kv:(K,V)):Unit"></a><a id="+=((K,V)):Unit"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#+=(kv:(K,V)):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $plus$eq" class="name">+=</span><span class="params">(<span name="kv">kv: (<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.K">K</span>, <span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.V">V</span>)</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -496,7 +441,7 @@ protocol:">
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -512,7 +457,7 @@ protocol:">
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#clone():Object" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -534,7 +479,7 @@ protocol:">
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -550,7 +495,7 @@ protocol:">
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -566,7 +511,7 @@ protocol:">
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#finalize():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -585,26 +530,10 @@ protocol:">
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.concurrent.ConcurrentMultiMap#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="get(k:K):List[V]"></a><a id="get(K):List[V]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#get(k:K):List[V]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="k">k: <span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.K">K</span></span>)</span><span class="result">: <a href="../../../scala/index.html#List[+A]=List[A]" class="extmbr" name="scala.List">List</a>[<span class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.V">V</span>]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -620,7 +549,7 @@ protocol:">
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#hashCode():Int" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -636,7 +565,7 @@ protocol:">
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -652,7 +581,7 @@ protocol:">
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -668,7 +597,7 @@ protocol:">
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#notify():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -684,7 +613,7 @@ protocol:">
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -700,7 +629,7 @@ protocol:">
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -716,7 +645,7 @@ protocol:">
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#toString():String" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -729,26 +658,10 @@ protocol:">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.concurrent.ConcurrentMultiMap#underlying" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="underlying:java.util.concurrent.ConcurrentSkipListMap[ConcurrentMultiMap.this.Container,Unit]"></a><a id="underlying:ConcurrentSkipListMap[Container,Unit]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#underlying:java.util.concurrent.ConcurrentSkipListMap[ConcurrentMultiMap.this.Container,Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">underlying</span><span class="result">: <span class="extype" name="java.util.concurrent.ConcurrentSkipListMap">ConcurrentSkipListMap</span>[<a href="ConcurrentMultiMap$Container.html" class="extype" name="com.twitter.concurrent.ConcurrentMultiMap.Container">Container</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#wait():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -770,7 +683,7 @@ protocol:">
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -792,7 +705,7 @@ protocol:">
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/ConcurrentMultiMap.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$$Processor.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>

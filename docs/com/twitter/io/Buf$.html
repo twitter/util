@@ -146,8 +146,10 @@
     </li><li class="current-entities indented3">
                         <a class="object" href="" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
 Owned APIs, each of which with construction &amp; extraction utilities."></a>
-                        <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer."></a>
-                        <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer.">
+                        <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
+positional access."></a>
+                        <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
+positional access.">
                           Buf
                         </a>
                       </li><li class="current-entities indented3">
@@ -173,14 +175,6 @@ Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="object" href="Charsets$.html" title="A set of java.nio.charset.Charset utilities."></a>
                         <a href="Charsets$.html" title="A set of java.nio.charset.Charset utilities.">
                           Charsets
-                        </a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="ConcatBuf.html" title="A Buf that concats multiple Bufs together
-"></a>
-                        <a href="ConcatBuf.html" title="A Buf that concats multiple Bufs together
-">
-                          ConcatBuf
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
@@ -329,9 +323,9 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
         <div id="types" class="types members">
               <h3>Type Members</h3>
               <ol><li name="com.twitter.io.Buf.ByteArray" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ByteArrayextendsBufwithBuf.Indexed"></a><a id="ByteArray:ByteArray"></a>
+      <a id="ByteArrayextendsBuf"></a><a id="ByteArray:ByteArray"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Buf$.html#ByteArrayextendsBufwithBuf.Indexed" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$.html#ByteArrayextendsBuf" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -342,14 +336,14 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
       <span class="symbol">
         <a title="A buffer representing an array of bytes." href="Buf$$ByteArray.html">
               <span class="name">ByteArray</span>
-            </a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> with <span class="extype" name="com.twitter.io.Buf.Indexed">Indexed</span></span>
+            </a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
       
       <p class="shortcomment cmt">A buffer representing an array of bytes.</p>
     </li><li name="com.twitter.io.Buf.ByteBuffer" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ByteBufferextendsBufwithBuf.Indexed"></a><a id="ByteBuffer:ByteBuffer"></a>
+      <a id="ByteBufferextendsBuf"></a><a id="ByteBuffer:ByteBuffer"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Buf$.html#ByteBufferextendsBufwithBuf.Indexed" title="Permalink">
+      <a href="../../../com/twitter/io/Buf$.html#ByteBufferextendsBuf" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -361,7 +355,7 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
         <a title="A buffer representing the remaining bytes in the
 given ByteBuffer." href="Buf$$ByteBuffer.html">
               <span class="name">ByteBuffer</span>
-            </a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> with <span class="extype" name="com.twitter.io.Buf.Indexed">Indexed</span></span>
+            </a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
       
       <p class="shortcomment cmt">A buffer representing the remaining bytes in the
@@ -390,6 +384,28 @@ be immutable in practice.
       
       <p class="shortcomment cmt">A <code>Buf</code> which is composed of other <code>Bufs</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>Buf</code> which is composed of other <code>Bufs</code>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#apply(bufs:Iterable[com.twitter.io.Buf]):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#apply">Buf.apply</a> for creating new instances.</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Buf.Processor" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ProcessorextendsAnyRef"></a><a id="Processor:Processor"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$.html#ProcessorextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Buf$$Processor.html">
+              <span class="name">Processor</span>
+            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if the processor would like to continue processing
+       more bytes and <code>false</code> otherwise.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this is not a <code>Function1[Byte, Boolean]</code> despite very
+      much fitting that interface. This was done to avoiding boxing
+      of the <code>Bytes</code> which was quite squirrely and had an impact on
+      performance.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf.html#process(processor:com.twitter.io.Buf.Processor):Int" class="extmbr" name="com.twitter.io.Buf#process">Buf.process</a></p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.StringCoder" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="StringCoderextendsAnyRef"></a><a id="StringCoder:StringCoder"></a>
       <span class="permalink">
@@ -555,7 +571,7 @@ encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String].
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.io.Buf#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.io.Buf#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="equals(x:com.twitter.io.Buf,y:com.twitter.io.Buf):Boolean"></a><a id="equals(Buf,Buf):Boolean"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Buf$.html#equals(x:com.twitter.io.Buf,y:com.twitter.io.Buf):Boolean" title="Permalink">
@@ -570,8 +586,7 @@ encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String].
         <span class="name">equals</span><span class="params">(<span name="x">x: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>, <span name="y">y: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Byte equality between two buffers.</p><div class="fullcomment"><div class="comment cmt"><p>Byte equality between two buffers.</p><p>May trigger copies if neither <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> is <span class="extype" name="Indexed">Indexed</span>.
-</p></div></div>
+      <p class="shortcomment cmt">Byte equality between two buffers.</p>
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">

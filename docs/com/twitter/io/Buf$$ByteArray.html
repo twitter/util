@@ -181,6 +181,12 @@ ISO Latin Alphabet No.">
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="class" href="Buf$$Processor.html" title=""></a>
+                        <a href="Buf$$Processor.html" title="">
+                          Processor
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="class" href="Buf$$StringCoder.html" title="a StringCoder for a given java.nio.charset.Charset provides an
 encoder: String -&gt; Buf and an extractor: Buf -&gt; Option[String]."></a>
                         <a href="Buf$$StringCoder.html" title="a StringCoder for a given java.nio.charset.Charset provides an
@@ -282,7 +288,7 @@ with little-endian byte order.">
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">ByteArray</span><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> with <span class="extype" name="com.twitter.io.Buf.Indexed">Indexed</span></span>
+        <span class="name">ByteArray</span><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
       </h4>
 
@@ -292,7 +298,7 @@ with little-endian byte order.">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="com.twitter.io.Buf.Indexed">Indexed</span>, <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -318,7 +324,7 @@ with little-endian byte order.">
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.io.Buf.ByteArray"><span>ByteArray</span></li><li class="in" name="com.twitter.io.Buf.Indexed"><span>Indexed</span></li><li class="in" name="com.twitter.io.Buf"><span>Buf</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.io.Buf.ByteArray"><span>ByteArray</span></li><li class="in" name="com.twitter.io.Buf"><span>Buf</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -459,7 +465,7 @@ with little-endian byte order.">
         <span class="name">checkWriteArgs</span><span class="params">(<span name="outputLen">outputLen: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="outputOff">outputOff: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Helps implementations validate the arguments to <a href="Buf.html#write(output:Array[Byte],off:Int):Unit" class="extmbr" name="com.twitter.io.Buf#write">write</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Helps implementations validate the arguments to <a href="Buf.html#write(output:Array[Byte],off:Int):Unit" class="extmbr" name="com.twitter.io.Buf#write">write</a>.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
+      <p class="shortcomment cmt">Helps implementations validate the arguments to <a href="Buf.html#write(output:java.nio.ByteBuffer):Unit" class="extmbr" name="com.twitter.io.Buf#write">write</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Helps implementations validate the arguments to <a href="Buf.html#write(output:java.nio.ByteBuffer):Unit" class="extmbr" name="com.twitter.io.Buf#write">write</a>.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -506,7 +512,7 @@ with little-endian byte order.">
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -585,6 +591,23 @@ with little-endian byte order.">
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="get(index:Int):Byte"></a><a id="get(Int):Byte"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$$ByteArray.html#get(index:Int):Byte" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="index">index: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns the byte at the given index.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the byte at the given index.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -747,6 +770,60 @@ with little-endian byte order.">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#process" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="process(from:Int,until:Int,processor:com.twitter.io.Buf.Processor):Int"></a><a id="process(Int,Int,Processor):Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$$ByteArray.html#process(from:Int,until:Int,processor:com.twitter.io.Buf.Processor):Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">process</span><span class="params">(<span name="from">from: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="until">until: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="processor">processor: <a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Processor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Process the <code>Buf</code> 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>from</code> until
+index <code>until</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Process the <code>Buf</code> 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>from</code> until
+index <code>until</code>. Processing will halt if the processor
+returns <code>false</code> or after processing the final byte.
+</p></div><dl class="paramcmts block"><dt class="param">from</dt><dd class="cmt"><p>the starting index, inclusive. Must be non-negative.</p></dd><dt class="param">until</dt><dd class="cmt"><p>the ending index, exclusive. Must be non-negative.</p></dd><dt>returns</dt><dd class="cmt"><p>-1 if the processor processed all bytes or
+        the last processed index if the processor returns
+        <code>false</code>.
+        Will return -1 if <code>from</code> is greater than or equal to
+        <code>until</code> or <a href="#length:Int" class="extmbr" name="com.twitter.io.Buf.ByteArray#length">length</a>.
+        Will return -1 if <code>until</code> is greater than or equal to
+        <a href="#length:Int" class="extmbr" name="com.twitter.io.Buf.ByteArray#length">length</a>.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Note</dt><dd><span class="cmt"><p>this mimics the design of Netty 4's
+      <code>io.netty.buffer.ByteBuf.forEachByte</code></p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Buf#process" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="process(processor:com.twitter.io.Buf.Processor):Int"></a><a id="process(Processor):Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$$ByteArray.html#process(processor:com.twitter.io.Buf.Processor):Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">process</span><span class="params">(<span name="processor">processor: <a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Processor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Process the <code>Buf</code> 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>0</code> until
+index <a href="Buf.html#length:Int" class="extmbr" name="com.twitter.io.Buf#length">length</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Process the <code>Buf</code> 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>0</code> until
+index <a href="Buf.html#length:Int" class="extmbr" name="com.twitter.io.Buf#length">length</a>. Processing will halt if the processor
+returns <code>false</code> or after processing the final byte.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if the processor processed all bytes or
+        the last processed index if the processor returns
+        <code>false</code>.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Note</dt><dd><span class="cmt"><p>this mimics the design of Netty 4's
+      <code>io.netty.buffer.ByteBuf.forEachByte</code></p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.ByteArray#slice" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="slice(from:Int,until:Int):com.twitter.io.Buf"></a><a id="slice(Int,Int):Buf"></a>
       <span class="permalink">
@@ -899,6 +976,31 @@ Out of bounds indices are truncated. Negative indices are not accepted.
               
         </dd></dl></div>
     </li><li name="com.twitter.io.Buf.ByteArray#write" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="write(buffer:java.nio.ByteBuffer):Unit"></a><a id="write(java.nio.ByteBuffer):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$$ByteArray.html#write(buffer:java.nio.ByteBuffer):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">write</span><span class="params">(<span name="buffer">buffer: <span class="extype" name="java.nio.ByteBuffer">java.nio.ByteBuffer</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Write the entire contents of this <code>Buf</code> into the given nio buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Write the entire contents of this <code>Buf</code> into the given nio buffer.
+Partial writes aren't supported directly through this API; they can be
+accomplished by first <a href="#slice(from:Int,until:Int):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf.ByteArray#slice">slicing</a> the buffer.
+This method should be preferred over <code>Buf.ByteBuffer.extract</code>, <code>Buf.ByteArray.Owned</code>,
+etc family of functions when you want to control the destination of the data, as
+opposed to letting the <code>Buf</code> implementation manage the destination. For example, if
+the data is destined for an IO operation, it may be preferable to provide a direct
+nio <code>ByteBuffer</code> to ensure the avoidance of intermediate heap-based representations.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="ReadOnlyBufferException"><code>ReadOnlyBufferException</code></span> if the provided buffer is read-only.</p></span><span class="cmt"><p><span class="extype" name="java.lang.IllegalArgumentException"><code>java.lang.IllegalArgumentException</code></span> when <code>output</code> doesn't have enough
+space as defined by <code>ByteBuffer.remaining()</code> to hold the contents of this <code>Buf</code>.</p></span></dd><dt>Note</dt><dd><span class="cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> implementors should use the helper <a href="#checkWriteArgs(outputLen:Int,outputOff:Int):Unit" class="extmbr" name="com.twitter.io.Buf.ByteArray#checkWriteArgs">checkWriteArgs</a>.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="write(Array[Byte],">Int)</span> for writing to byte arrays.</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Buf.ByteArray#write" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="write(buf:Array[Byte],off:Int):Unit"></a><a id="write(Array[Byte],Int):Unit"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Buf$$ByteArray.html#write(buf:Array[Byte],off:Int):Unit" title="Permalink">
@@ -913,12 +1015,18 @@ Out of bounds indices are truncated. Negative indices are not accepted.
         <span class="name">write</span><span class="params">(<span name="buf">buf: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="off">off: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Write the entire contents of the buffer into the given array at
-the given offset.</p><div class="fullcomment"><div class="comment cmt"><p>Write the entire contents of the buffer into the given array at
+      <p class="shortcomment cmt">Write the entire contents of this <code>Buf</code> into the given array at
+the given offset.</p><div class="fullcomment"><div class="comment cmt"><p>Write the entire contents of this <code>Buf</code> into the given array at
 the given offset. Partial writes aren't supported directly
 through this API; they can be accomplished by first <a href="#slice(from:Int,until:Int):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf.ByteArray#slice">slicing</a> the
-buffer.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> when <code>output</code> is too small to
-contain all the data.</p></span></dd><dt>Note</dt><dd><span class="cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> implementors should use the helper <a href="#checkWriteArgs(outputLen:Int,outputOff:Int):Unit" class="extmbr" name="com.twitter.io.Buf.ByteArray#checkWriteArgs">checkWriteArgs</a>.</p></span></dd></dl></div>
+buffer.
+This method should be preferred over the <code>Buf.ByteArray.extract</code>, <code>Buf.ByteArray.Owned</code>,
+etc family of functions when you want to control the destination of the data, as
+opposed to letting the <code>Buf</code> implementation manage the destination. For example, if you
+want to manually set the first bytes of an <code>Array[Byte]</code> and then efficiently copy the
+contents of this <code>Buf</code> to the remaining space.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteArray">ByteArray</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> when <code>output</code> is too small to
+contain all the data.</p></span></dd><dt>Note</dt><dd><span class="cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> implementors should use the helper <a href="#checkWriteArgs(outputLen:Int,outputOff:Int):Unit" class="extmbr" name="com.twitter.io.Buf.ByteArray#checkWriteArgs">checkWriteArgs</a>.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="write(ByteBuffer)">write(ByteBuffer)</span> for writing to nio buffers.</p></span></dd></dl></div>
     </li>
               </ol>
             </div>
@@ -929,9 +1037,7 @@ contain all the data.</p></span></dd><dt>Note</dt><dd><span class="cmt"><p><a hr
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.io.Buf.Indexed">
-              <h3>Inherited from <span class="extype" name="com.twitter.io.Buf.Indexed">Indexed</span></h3>
-            </div><div class="parent" name="com.twitter.io.Buf">
+        <div class="parent" name="com.twitter.io.Buf">
               <h3>Inherited from <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
