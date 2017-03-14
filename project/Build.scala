@@ -29,22 +29,6 @@ object Util extends Build {
   val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
   val slf4jLib = "org.slf4j" % "slf4j-api" % slf4jVersion
 
-  // for various reasons, we use poms that point to the wrong
-  // versions of certain libraries.
-  def commonsZookeeper(name: String, version: String) =
-    "com.twitter.common.zookeeper" % name % version excludeAll(
-      ExclusionRule("com.fasterxml.jackson.module", "jackson-module-scala_2.11"),
-      ExclusionRule("com.twitter", "finagle-core-java"),
-      ExclusionRule("com.twitter", "finagle-core_2.11"),
-      ExclusionRule("com.twitter", "util-core-java"),
-      ExclusionRule("com.twitter", "util-core_2.11"),
-      ExclusionRule("com.twitter.common", "service-thrift"),
-      ExclusionRule("org.apache.thrift", "libthrift"),
-      ExclusionRule("org.apache.zookeeper", "zookeeper"),
-      ExclusionRule("org.apache.zookeeper", "zookeeper-client"),
-      ExclusionRule("org.scala-lang.modules", "scala-parser-combinators_2.11")
-    )
-
   val sharedSettings = Seq(
     version := libVersion,
     organization := "com.twitter",
@@ -109,14 +93,6 @@ object Util extends Build {
         Some("snapshots" at nexus + "content/repositories/snapshots")
       else
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    },
-
-    // Prevent eviction warnings
-    dependencyOverrides <++= scalaVersion { vsn =>
-      Set(
-        commonsZookeeper("client", zkClientVersion),
-        commonsZookeeper("group", zkGroupVersion)
-      )
     }
   )
 
@@ -131,8 +107,7 @@ object Util extends Build {
   ).aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
     utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
-    utilZkCommon, utilZkTest, utilClassPreloader, utilBenchmark, utilApp,
-    utilEvents, utilSecurity, utilStats, utilEval, utilTunable
+    utilZkTest, utilClassPreloader, utilBenchmark, utilApp, utilEvents, utilSecurity, utilStats, utilEval, utilTunable
   )
 
   lazy val utilApp = Project(
@@ -411,29 +386,8 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-zk",
-    libraryDependencies ++= Seq(
-      zkDependency
-    )
+    libraryDependencies += zkDependency
   ).dependsOn(utilCore, utilCollection, utilLogging)
-
-  lazy val utilZkCommon = Project(
-    id = "util-zk-common",
-    base = file("util-zk-common"),
-    settings = Defaults.coreDefaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-zk-common",
-    libraryDependencies ++= Seq(
-      commonsZookeeper("client", zkClientVersion),
-      commonsZookeeper("group", zkGroupVersion),
-      commonsZookeeper("server-set", "1.0.112"),
-      zkDependency
-    )
-  ).dependsOn(utilCore, utilLogging, utilZk,
-    // These are depended on to provide transitive dependencies
-    // that would otherwise cause incompatibilities. See above comment.
-    utilCollection, utilHashing
-  )
 
   lazy val utilZkTest = Project(
     id = "util-zk-test",
@@ -442,10 +396,7 @@ object Util extends Build {
       sharedSettings
   ).settings(
     name := "util-zk-test",
-    libraryDependencies ++= Seq(
-      "com.twitter.common" % "io" % "0.0.69" % "test",
-      zkDependency
-    )
-  )
+    libraryDependencies += zkDependency
+  ).dependsOn(utilCore % "test")
 
 }

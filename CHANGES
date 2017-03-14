@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util: util-zk-commons was removed, since it was only a connector between
+    util and commons, which was not widely used.  ``RB_Id=910721``
+
 6.42.0  2017-03-10
 
 New Features:

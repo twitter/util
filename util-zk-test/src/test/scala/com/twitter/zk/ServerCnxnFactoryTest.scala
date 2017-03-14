@@ -1,8 +1,8 @@
 package com.twitter.zk
 
+import com.twitter.io.TempDirectory
 import java.io.File
 import java.net.InetAddress
-import com.twitter.common.io.FileUtils
 import org.apache.zookeeper.server.ZooKeeperServer
 import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfter, FunSuite}
@@ -16,7 +16,7 @@ class ServerCnxnFactoryTest extends FunSuite with BeforeAndAfter  {
   var tmpDir: File = null
 
   before {
-    tmpDir = FileUtils.createTempDir()
+    tmpDir = TempDirectory.create()
     testServer = new ZooKeeperServer(tmpDir, tmpDir, ZooKeeperServer.DEFAULT_TICK_TIME)
   }
 
