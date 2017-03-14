@@ -1,6 +1,5 @@
 package com.twitter.util
 
-import com.twitter.common.objectsize.ObjectSizeCalculator
 import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger

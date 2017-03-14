@@ -206,7 +206,7 @@ object Util extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
-      "com.twitter.common" % "objectsize" % "0.0.12" % "test",
+      guavaLib % "test",
       scalacheckLib,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
