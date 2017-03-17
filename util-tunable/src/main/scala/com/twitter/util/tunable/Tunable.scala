@@ -11,7 +11,7 @@ package com.twitter.util.tunable
  *
  * @note These APIs are still in flux and should NOT be used at this time.
  */
-private[twitter] sealed abstract class Tunable[T](val id: String) {
+private[twitter] sealed abstract class Tunable[T](val id: String) { self =>
 
   // validate id is not empty
   if (id.trim.isEmpty)
@@ -25,6 +25,22 @@ private[twitter] sealed abstract class Tunable[T](val id: String) {
 
   override def toString: String =
     s"Tunable($id)"
+
+  /**
+   * Compose this [[Tunable]] with another [[Tunable]]. Application
+   * of the returned [[Tunable]] will return the result of applying this [[Tunable]],
+   * if it is defined and the result of applying the other [[Tunable]] if not.
+   *
+   * @note the returned [[Tunable]] will have the `id` of this [[Tunable]]
+   */
+  def orElse(that: Tunable[T]): Tunable[T] =
+    new Tunable[T](id) {
+      override def toString: String =
+        s"${self.toString}.orElse(${that.toString})"
+
+      def apply(): Option[T] =
+        self().orElse(that())
+    }
 }
 
 private[twitter] object Tunable {

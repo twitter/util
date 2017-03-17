@@ -61,4 +61,65 @@ class TunableTest extends FunSuite {
     tunable.clear()
     assert(tunable() == None)
   }
+
+  test("orElse Tunable uses the id of the first Tunable") {
+    val tunable1 = Tunable.mutable("id1", "hello1")
+    val tunable2 = Tunable.mutable("id2", "hello2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed.id == tunable1.id)
+  }
+
+  test("orElse Tunable uses the value of the first Tunable if it is defined") {
+    val tunable1 = Tunable.mutable("id1", "hello1")
+    val tunable2 = Tunable.mutable("id2", "hello2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed() == Some("hello1"))
+  }
+
+  test("orElse Tunable uses the value of the second Tunable if the first is not defined") {
+    val tunable1 = Tunable.emptyMutable[String]("id1")
+    val tunable2 = Tunable.mutable("id2", "hello2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed() == Some("hello2"))
+  }
+
+  test("orElse Tunable returns None when applied if neither of the Tunables are defined") {
+    val tunable1 = Tunable.emptyMutable[String]("id1")
+    val tunable2 = Tunable.emptyMutable[String]("id2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed() == None)
+  }
+
+  test("orElse reflects the changes of mutable Tunables with an initial value") {
+    val tunable1 = Tunable.mutable("id1", "hello1")
+    val tunable2 = Tunable.mutable("id2", "hello2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed() == Some("hello1"))
+
+    tunable1.set("new hello1")
+
+    assert(composed() == Some("new hello1"))
+  }
+
+  test("orElse reflects the changes of mutable Tunables without an initial value") {
+    val tunable1 = Tunable.emptyMutable[String]("id1")
+    val tunable2 = Tunable.mutable("id2", "hello2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed() == Some("hello2"))
+
+    tunable1.set("hello1")
+
+    assert(composed() == Some("hello1"))
+  }
+
+  test("orElse reflects the changes of mutable Tunables when they are cleared") {
+    val tunable1 = Tunable.mutable("id1", "hello1")
+    val tunable2 = Tunable.mutable("id2", "hello2")
+    val composed = tunable1.orElse(tunable2)
+    assert(composed() == Some("hello1"))
+
+    tunable1.clear()
+
+    assert(composed() == Some("hello2"))
+  }
 }

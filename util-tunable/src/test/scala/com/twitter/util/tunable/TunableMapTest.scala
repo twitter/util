@@ -209,6 +209,120 @@ class MutableTest extends FunSuite {
     assert(tunable() == Some(value2))
     assert(map.entries.size == 1)
   }
+
+  test("orElse: Combined map produces an empty Tunable if both maps empty") {
+    val id = "key"
+    val map1 = TunableMap.newMutable()
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    val tunable = combined(TunableMap.Key[String](id))
+    assert(tunable() == None)
+  }
+
+  test("orElse: Combined map produces Tunable that gets updates from first map") {
+    val id = "key"
+    val map1 = TunableMap.newMutable()
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    val tunable = combined(TunableMap.Key[String](id))
+    assert(tunable() == None)
+
+    map1.put(id, "hello1")
+
+    assert(tunable() == Some("hello1"))
+  }
+
+  test("orElse: Combined map produces Tunable that gets updates from second map " +
+    "when first does not contain the key") {
+    val id = "key"
+    val map1 = TunableMap.newMutable()
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    val tunable = combined(TunableMap.Key[String](id))
+    assert(tunable() == None)
+
+    map2.put(id, "hello2")
+
+    assert(tunable() == Some("hello2"))
+  }
+
+  test("orElse: Combined map produces Tunable that gets updates from second map " +
+    "when first removes the key") {
+    val id = "key"
+    val map1 = TunableMap.newMutable()
+    val key = map1.put(id, "hello1")
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    val tunable = combined(TunableMap.Key[String](id))
+    assert(tunable() == Some("hello1"))
+
+    map1.clear(key)
+
+    assert(tunable() == None)
+
+    map2.put(id, "hello2")
+
+    assert(tunable() == Some("hello2"))
+  }
+
+  test("orElse: Combined map produces Tunable that gets updates from first map when it removes " +
+    "and then adds a key") {
+    val id = "key"
+    val map1 = TunableMap.newMutable()
+    val key = map1.put(id, "hello1")
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    val tunable = combined(TunableMap.Key[String](id))
+    assert(tunable() == Some("hello1"))
+
+    map1.clear(key)
+
+    assert(tunable() == None)
+
+    map2.put(id, "hello2")
+
+    assert(tunable() == Some("hello2"))
+
+    map1.put(id, "hello1")
+
+    assert(tunable() == Some("hello1"))
+  }
+
+  test("orElse: entries dedups keys with the same id and uses first") {
+    val map1 = TunableMap.newMutable()
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    assert(combined.entries.size == 0)
+
+    map2.put("key2", "hello2")
+
+    map1.put("key2", 5)
+
+    assert(combined.entries.size == 1)
+    assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 } )
+  }
+
+  test("orElse: entries returns entries from both maps") {
+    val map1 = TunableMap.newMutable()
+    val map2 = TunableMap.newMutable()
+    val combined = map1.orElse(map2)
+
+    assert(combined.entries.size == 0)
+
+    map1.put("key1", "hello1")
+
+    map2.put("key2", 5)
+
+    assert(combined.entries.size == 2)
+    assert(combined.entries.exists { entry => entry.key.id == "key1" && entry.value == "hello1" } )
+    assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 } )
+  }
 }
 
 class NullTunableMapTest extends FunSuite {

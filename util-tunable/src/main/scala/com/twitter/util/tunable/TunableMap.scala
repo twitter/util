@@ -3,11 +3,12 @@ package com.twitter.util.tunable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiFunction
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 
 /**
  * A Map that can be used to access [[Tunable]]s using [[TunableMap.Key]]s.
  */
-private[twitter] abstract class TunableMap {
+private[twitter] abstract class TunableMap { self =>
 
   /**
    * Returns a [[Tunable]] for the given `key.id` in the [[TunableMap]]. If the [[Tunable]] is not
@@ -19,6 +20,30 @@ private[twitter] abstract class TunableMap {
    * Returns an Iterator over [[TunableMap.Entry]] for each [[Tunable]] in the map with a value.
    */
   private[tunable] def entries: Iterator[TunableMap.Entry[_]]
+
+  /**
+   * Compose this [[TunableMap]] with another [[TunableMap]]. [[Tunables]] retrieved from
+   * the composed map prioritize the values of [[Tunables]] in the this map over the other
+   * [[TunableMap]].
+   */
+  private[tunable] def orElse(that: TunableMap): TunableMap = new TunableMap {
+    def apply[T](key: TunableMap.Key[T]): Tunable[T] =
+      self(key).orElse(that(key))
+
+    def entries: Iterator[TunableMap.Entry[_]] = {
+      val dedupedTunables = mutable.Map.empty[String, TunableMap.Entry[_]]
+      that.entries.foreach { case entry@TunableMap.Entry(key, _) =>
+        dedupedTunables.put(key.id, entry)
+      }
+
+      // entries in `self` take precedence.
+      self.entries.foreach { case entry@TunableMap.Entry(key, _) =>
+        dedupedTunables.put(key.id, entry)
+      }
+      dedupedTunables.valuesIterator
+    }
+  }
+
 }
 
 private[twitter] object TunableMap {
@@ -36,7 +61,7 @@ private[twitter] object TunableMap {
     def apply[T](id: String)(implicit m: Manifest[T]): Key[T] =
       Key[T](id, m.runtimeClass.asInstanceOf[Class[T]])
   }
-
+  
   /**
    * A [[TunableMap]] that can be updated via `put` and `clear` operations. Putting
    * a value for a given `id` will update the current value for the `id`, or create
