@@ -57,6 +57,19 @@ private[twitter] object TunableMap {
    */
   final case class Key[T](id: String, clazz: Class[T])
 
+  /**
+   * A [[TunableMap]] that forwards all calls to `underlying`.
+   */
+  private[tunable] trait Proxy extends TunableMap {
+
+    protected def underlying: TunableMap
+
+    def apply[T](key: TunableMap.Key[T]): Tunable[T] =
+      underlying(key)
+
+    def entries: Iterator[TunableMap.Entry[_]] = underlying.entries
+  }
+
   object Key {
     def apply[T](id: String)(implicit m: Manifest[T]): Key[T] =
       Key[T](id, m.runtimeClass.asInstanceOf[Class[T]])

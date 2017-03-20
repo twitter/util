@@ -2,20 +2,8 @@ package com.twitter.util.tunable
 
 import org.scalatest.FunSuite
 
-/**
- * A [[TunableMap]] that forwards all calls to `underlying`.
- */
-trait TunableMapProxy extends TunableMap {
+class ServiceLoadedTunableTestClient1 extends ServiceLoadedTunableMap with TunableMap.Proxy {
 
-  protected def underlying: TunableMap
-
-  def apply[T](key: TunableMap.Key[T]): Tunable[T] =
-    underlying(key)
-
-  def entries: Iterator[TunableMap.Entry[_]] = underlying.entries
-}
-
-class ServiceLoadedTunableTestClient1 extends ServiceLoadedTunableMap with TunableMapProxy {
   private val tunableMap = TunableMap.newMutable()
 
   tunableMap.put("tunableId1", "foo")
@@ -25,12 +13,12 @@ class ServiceLoadedTunableTestClient1 extends ServiceLoadedTunableMap with Tunab
   def id: String = "client1"
 }
 
-class ServiceLoadedTunableTestClient2 extends ServiceLoadedTunableMap with TunableMapProxy {
+class ServiceLoadedTunableTestClient2 extends ServiceLoadedTunableMap with TunableMap.Proxy {
   protected def underlying: TunableMap = NullTunableMap
   def id: String = "client2"
 }
 
-class ServiceLoadedTunableTestClient2Dup extends ServiceLoadedTunableMap with TunableMapProxy {
+class ServiceLoadedTunableTestClient2Dup extends ServiceLoadedTunableMap with TunableMap.Proxy {
   protected def underlying: TunableMap = NullTunableMap
   def id: String = "client2"
 }
