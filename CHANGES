@@ -6,6 +6,13 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: `c.t.f.u.BufReader` and `c.t.f.u.BufWriter` have been
+    moved from finagle-core to util-core and renamed to
+    `c.t.io.ByteReader` and `c.t.io.ByteWriter` respectively. They
+    are now also exposed publicly. ``RB_ID=911639``
+
 API Changes:
 
   * util: util-zk-commons was removed, since it was only a connector between
