@@ -150,6 +150,12 @@ object Await {
     if (awaitable.isReady) awaitable.result(timeout)
     else Scheduler.blocking { awaitable.result(timeout) }
 
+  /**
+   * Is this Awaitable ready? In other words: would calling
+   * [[com.twitter.util.Awaitable.ready Awaitable.ready]] block?
+   */
+  def isReady(awaitable: Awaitable[_]): Boolean = awaitable.isReady
+
   /** $all */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
