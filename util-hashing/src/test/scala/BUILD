@@ -6,10 +6,8 @@ junit_tests(
     '3rdparty/jvm/org/scalatest',
     'util/util-core/src/main/scala',
     'util/util-hashing/src/main/scala',
+    'util/util-hashing/src/test/resources'
   ],
   sources=rglobs('*.scala'),
   fatal_warnings=True,
-  resources=[
-    'util/util-hashing/src/test/resources'
-  ]
 )

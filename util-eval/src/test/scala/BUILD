@@ -5,12 +5,10 @@ junit_tests(
     '3rdparty/jvm/org/scalatest',
     'util/util-core/src/main/scala',
     'util/util-eval/src/main/scala',
+    'util/util-eval/src/test/resources',
     '//:scala-reflect',
     '//:scalac',
   ],
   sources=rglobs('*.scala'),
   fatal_warnings=True,
-  resources=[
-    'util/util-eval/src/test/resources'
-  ]
 )

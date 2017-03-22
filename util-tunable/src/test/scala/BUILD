@@ -8,9 +8,7 @@ junit_tests(
     '3rdparty/jvm/org/scalatest',
     'util/util-core/src/main/scala:scala',
     'util/util-tunable/src/main/scala:scala',
-  ],
-  resources=[
-    'util/util-tunable/src/test/resources',
+    'util/util-tunable/src/test/resources'
   ],
   sources=rglobs('*.scala'),
   fatal_warnings=True,

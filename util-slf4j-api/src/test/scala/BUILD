@@ -6,9 +6,7 @@ junit_tests(
     '3rdparty/jvm/org/slf4j:slf4j-simple',
     'util/util-core/src/main/scala:scala',
     'util/util-slf4j-api/src/main/scala:scala',
-  ],
-  resources=[
-    'util/util-slf4j-api/src/test/resources',
+    'util/util-slf4j-api/src/test/resources'
   ],
   fatal_warnings=True,
   sources=rglobs('*.scala', '*.java'),
