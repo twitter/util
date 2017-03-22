@@ -323,6 +323,34 @@ class MutableTest extends FunSuite {
     assert(combined.entries.exists { entry => entry.key.id == "key1" && entry.value == "hello1" } )
     assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 } )
   }
+
+  test("orElse on two NullTunableMaps produces NullTunableMap") {
+    assert(NullTunableMap.orElse(NullTunableMap) eq NullTunableMap)
+  }
+
+  test("orElse when first TunableMap is NullTunableMap produces second TunableMap") {
+    val nonNull = TunableMap.newMutable()
+    assert(NullTunableMap.orElse(nonNull) eq nonNull)
+  }
+
+  test("orElse when second TunableMap is NullTunableMap produces first TunableMap") {
+    val nonNull = TunableMap.newMutable()
+    assert(nonNull.orElse(NullTunableMap) eq nonNull)
+  }
+
+  test("TunableMap.components returns composing maps") {
+    val map1 = TunableMap.newMutable()
+    val map2 = TunableMap.newMutable()
+    val map3 = TunableMap.newMutable()
+
+    val composed = map1.orElse(map2).orElse((map3))
+    val components = TunableMap.components(composed)
+
+    assert(components.size == 3)
+    assert(components(0) == map1)
+    assert(components(1) == map2)
+    assert(components(2) == map3)
+  }
 }
 
 class NullTunableMapTest extends FunSuite {

@@ -1,3 +1,4 @@
 com.twitter.util.tunable.ServiceLoadedTunableTestClient1
 com.twitter.util.tunable.ServiceLoadedTunableTestClient2
 com.twitter.util.tunable.ServiceLoadedTunableTestClient2Dup
+com.twitter.util.tunable.StandardTunableMapTestClient

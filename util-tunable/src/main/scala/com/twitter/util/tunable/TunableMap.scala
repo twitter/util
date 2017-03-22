@@ -2,6 +2,7 @@ package com.twitter.util.tunable
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiFunction
+import scala.annotation.varargs
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
@@ -26,27 +27,55 @@ private[twitter] abstract class TunableMap { self =>
    * the composed map prioritize the values of [[Tunables]] in the this map over the other
    * [[TunableMap]].
    */
-  private[tunable] def orElse(that: TunableMap): TunableMap = new TunableMap {
-    def apply[T](key: TunableMap.Key[T]): Tunable[T] =
-      self(key).orElse(that(key))
+  private[tunable] def orElse(that: TunableMap): TunableMap = (self, that) match {
+    case (NullTunableMap, map) => map
+    case (map, NullTunableMap) => map
+    case _ => new TunableMap with TunableMap.Composite {
+      def apply[T](key: TunableMap.Key[T]): Tunable[T] =
+        self(key).orElse(that(key))
 
-    def entries: Iterator[TunableMap.Entry[_]] = {
-      val dedupedTunables = mutable.Map.empty[String, TunableMap.Entry[_]]
-      that.entries.foreach { case entry@TunableMap.Entry(key, _) =>
-        dedupedTunables.put(key.id, entry)
+      def entries: Iterator[TunableMap.Entry[_]] = {
+        val dedupedTunables = mutable.Map.empty[String, TunableMap.Entry[_]]
+        that.entries.foreach { case entry@TunableMap.Entry(key, _) =>
+          dedupedTunables.put(key.id, entry)
+        }
+
+        // entries in `self` take precedence.
+        self.entries.foreach { case entry@TunableMap.Entry(key, _) =>
+          dedupedTunables.put(key.id, entry)
+        }
+        dedupedTunables.valuesIterator
       }
 
-      // entries in `self` take precedence.
-      self.entries.foreach { case entry@TunableMap.Entry(key, _) =>
-        dedupedTunables.put(key.id, entry)
-      }
-      dedupedTunables.valuesIterator
+      def components: Seq[TunableMap] =
+        Seq(self, that)
     }
   }
-
 }
 
 private[twitter] object TunableMap {
+
+  /**
+   * A marker interface in support of [[components(TunableMap)]]
+   */
+  private trait Composite {
+    def components: Seq[TunableMap]
+  }
+
+  /**
+   * Get the component [[TunableMap]]s that make up `tunableMap`. For Composite [[TunableMap]]s,
+   * this returns a Seq of the components. Otherwise, it returns a Seq of `tunableMap`.
+   * 
+   * Used for testing.
+   */
+  private[tunable] def components(tunableMap: TunableMap): Seq[TunableMap] = {
+    tunableMap match {
+      case composite: Composite =>
+        composite.components.flatMap(components)
+      case _ =>
+        Seq(tunableMap)
+    }
+  }
 
   private case class TypeAndTunable[T](tunableType: Class[T], tunable: Tunable.Mutable[T])
 
@@ -56,6 +85,19 @@ private[twitter] object TunableMap {
    * Class used to retrieve a [[Tunable]] with id `id` of type `T`.
    */
   final case class Key[T](id: String, clazz: Class[T])
+
+  /**
+   * Create a [[TunableMap]] out of the given [[TunableMap TunableMaps]].
+   *
+   * If `tunableMaps` is empty, [[NullTunableMap]] will be returned.
+   */
+  @varargs
+  def of(tunableMaps: TunableMap*): TunableMap = {
+    val start: TunableMap = NullTunableMap
+    tunableMaps.foldLeft(start) { case (acc, tm) =>
+      acc.orElse(tm)
+    }
+  }
 
   /**
    * A [[TunableMap]] that forwards all calls to `underlying`.

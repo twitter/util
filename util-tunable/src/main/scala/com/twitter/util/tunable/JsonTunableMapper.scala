@@ -49,8 +49,9 @@ private[twitter] object JsonTunableMapper {
     }
 
   /**
-   * Load and parse the JSON file located at "com/twitter/tunables/$id.json" in the application's
-   * resources, where $id is the given `id`.
+   * Load and parse the JSON file located at
+   * "com/twitter/tunables/$id/instances.json" in the application's resources, where $id is the
+   * given `id`.
    *
    * If no configuration files exist, return [[NullTunableMap]].
    * If multiple configuration files exists, return [[IllegalArgumentException]]
@@ -60,7 +61,7 @@ private[twitter] object JsonTunableMapper {
    */
   private[tunable] def loadJsonTunables(id: String): TunableMap = {
     val classLoader = getClass.getClassLoader
-    val path = s"com/twitter/tunables/$id.json"
+    val path = s"com/twitter/tunables/$id/instances.json"
     val files = classLoader.getResources(path).asScala.toList
     tunableMapForResources(id, files)
   }

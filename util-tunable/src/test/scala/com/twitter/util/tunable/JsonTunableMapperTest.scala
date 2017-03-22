@@ -220,7 +220,7 @@ class JsonTunableMapperTest extends FunSuite {
 
   test("tunableMapForResources throws an Illegal argument exception when there are multiple paths") {
     val rsc = getClass.getClassLoader
-      .getResources("com/twitter/tunables/IdForValidJson.json")
+      .getResources("com/twitter/tunables/IdForValidJson/instances.json")
       .asScala.toSeq.head
 
     val ex = intercept[IllegalArgumentException] {
