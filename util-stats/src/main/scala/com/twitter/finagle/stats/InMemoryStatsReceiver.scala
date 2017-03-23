@@ -1,7 +1,6 @@
 package com.twitter.finagle.stats
 
 import java.io.PrintStream
-import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.mutable
 import scala.collection.JavaConverters._
@@ -35,7 +34,7 @@ class InMemoryStatsReceiver
     new ConcurrentHashMap[Seq[String], Seq[Float]]().asScala
 
   val gauges: mutable.Map[Seq[String], () => Float] =
-    Collections.synchronizedMap(new java.util.WeakHashMap[Seq[String], () => Float]()).asScala
+    new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
   /**
    * Creates a [[ReadableCounter]] of the given `name`.

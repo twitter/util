@@ -6,6 +6,12 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Runtime Behavior Changes:
+
+  * util-stats: InMemoryStatsReceiver's `gauges` member is now safe for
+    concurrent iteration but now holds strong references to gauge instances.
+    ``RB_ID=911951``
+
 New Features:
 
   * util-core: `c.t.f.u.BufReader` and `c.t.f.u.BufWriter` have been
