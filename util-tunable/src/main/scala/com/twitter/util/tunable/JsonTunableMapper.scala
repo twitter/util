@@ -30,42 +30,6 @@ private[twitter] object JsonTunableMapper {
    */
   val DefaultDeserializers: Seq[JsonDeserializer[_]] = Seq(DurationFromString)
 
-  // Exposed for testing
-  private[tunable] def tunableMapForResources(id: String, paths: List[URL]): TunableMap =
-    paths match {
-      case Nil =>
-        NullTunableMap
-      case path::Nil =>
-        JsonTunableMapper().parse(path) match {
-          case Throw(t) =>
-            throw new IllegalArgumentException(
-              s"Failed to parse Tunable configuration file for $id, from $path", t)
-          case Return(tunableMap) =>
-            tunableMap
-        }
-      case _ =>
-        throw new IllegalArgumentException(
-          s"Found multiple Tunable configuration files for $id: ${paths.mkString(", ")}")
-    }
-
-  /**
-   * Load and parse the JSON file located at
-   * "com/twitter/tunables/$id/instances.json" in the application's resources, where $id is the
-   * given `id`.
-   *
-   * If no configuration files exist, return [[NullTunableMap]].
-   * If multiple configuration files exists, return [[IllegalArgumentException]]
-   * If the configuration file cannot be parsed, return [[IllegalArgumentException]]
-   *
-   * This method is exposed for testing.
-   */
-  private[tunable] def loadJsonTunables(id: String): TunableMap = {
-    val classLoader = getClass.getClassLoader
-    val path = s"com/twitter/tunables/$id/instances.json"
-    val files = classLoader.getResources(path).asScala.toList
-    tunableMapForResources(id, files)
-  }
-
   /**
    * Create a new [[JsonTunableMapper]], using the provided deserializers `deserializers`.
    */
@@ -141,8 +105,39 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
   /**
    * Parse the contents of the given file URL `url` into a [[TunableMap]]
    */
-  def parse(url: URL): Try[TunableMap] = Try {
+  private[this] def parse(url: URL): Try[TunableMap] = Try {
     jsonTunablesToTunableMap(mapper.readValue(url, classOf[JsonTunables]))
+  }
+
+  // Exposed for testing
+  private[tunable] def tunableMapForResources(id: String, paths: List[URL]): TunableMap =
+    paths match {
+      case Nil =>
+        NullTunableMap
+      case path::Nil =>
+        parse(path) match {
+          case Throw(t) =>
+            throw new IllegalArgumentException(
+              s"Failed to parse Tunable configuration file for $id, from $path", t)
+          case Return(tunableMap) =>
+            tunableMap
+        }
+      case _ =>
+        throw new IllegalArgumentException(
+          s"Found multiple Tunable configuration files for $id: ${paths.mkString(", ")}")
+    }
+
+  /**
+   * Load and parse the JSON file located at `path` in the application's resources.
+   *
+   * If no configuration files exist, return [[NullTunableMap]].
+   * If multiple configuration files exists, return [[IllegalArgumentException]]
+   * If the configuration file cannot be parsed, return [[IllegalArgumentException]]
+   */
+  private[twitter] def loadJsonTunables(id: String, path: String): TunableMap = {
+    val classLoader = getClass.getClassLoader
+    val files = classLoader.getResources(path).asScala.toList
+    tunableMapForResources(id, files)
   }
 
   /**

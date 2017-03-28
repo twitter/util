@@ -20,7 +20,8 @@ private[twitter] object StandardTunableMap {
     id: String,
     mutable: TunableMap
   ): TunableMap = {
-    val json = JsonTunableMapper.loadJsonTunables(id)
+    val path = s"com/twitter/tunables/$id/instances.json"
+    val json = JsonTunableMapper().loadJsonTunables(id, path)
     TunableMap.of(
       mutable,
       ServiceLoadedTunableMap(id),

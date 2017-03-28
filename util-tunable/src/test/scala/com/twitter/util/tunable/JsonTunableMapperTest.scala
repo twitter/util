@@ -190,27 +190,32 @@ class JsonTunableMapperTest extends FunSuite {
   }
 
   test("loadJsonTunables returns a NullTunableMap when the file does not exist") {
-    assert(JsonTunableMapper.loadJsonTunables("IdForNonexistantFile") == NullTunableMap)
+
+    assert(JsonTunableMapper().loadJsonTunables("IdForNonexistantFile", "mumbojumo")
+      == NullTunableMap)
   }
 
   test("loadJsonTunables returns an IllegalArgumentException when the file exists but is empty") {
+    val path = s"com/twitter/tunables/IdForEmptyFile/instances.json"
     val ex = intercept[IllegalArgumentException] {
-      JsonTunableMapper.loadJsonTunables("IdForEmptyFile")
+      JsonTunableMapper().loadJsonTunables("IdForEmptyFile", path)
     }
     assert(ex.getMessage.contains(
       "Failed to parse Tunable configuration file for IdForEmptyFile"))
   }
 
   test("loadJsonTunables throws an IllegalArgumentException if the file cannot be parsed") {
+    val path = s"com/twitter/tunables/IdForInvalidJson/instances.json"
     val ex = intercept[IllegalArgumentException] {
-      JsonTunableMapper.loadJsonTunables("IdForInvalidJson")
+      JsonTunableMapper().loadJsonTunables("IdForInvalidJson", path)
     }
     assert(ex.getMessage.contains(
       "Failed to parse Tunable configuration file for IdForInvalidJson"))
   }
 
   test("loadJsonTunables loads JSON tunables for a given client id when the JSON is valid") {
-    val map = JsonTunableMapper.loadJsonTunables("IdForValidJson")
+    val path = s"com/twitter/tunables/IdForValidJson/instances.json"
+    val map = JsonTunableMapper().loadJsonTunables("IdForValidJson", path)
     assert(map.entries.size == 4)
     assert(map(TunableMap.Key[Duration]("timeoutId1"))() == Some(5.seconds))
     assert(map(TunableMap.Key[Duration]("timeoutId2"))() == Some(Duration.Top))
@@ -224,7 +229,7 @@ class JsonTunableMapperTest extends FunSuite {
       .asScala.toSeq.head
 
     val ex = intercept[IllegalArgumentException] {
-      JsonTunableMapper.tunableMapForResources("IdWithDuplicateResourceFiles", List(rsc, rsc))
+      JsonTunableMapper().tunableMapForResources("IdWithDuplicateResourceFiles", List(rsc, rsc))
     }
     assert(ex.getMessage.contains(
       "Found multiple Tunable configuration files for IdWithDuplicateResourceFiles"))
