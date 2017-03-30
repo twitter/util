@@ -68,7 +68,7 @@ private[twitter] object TunableMap {
    * 
    * Used for testing.
    */
-  private[tunable] def components(tunableMap: TunableMap): Seq[TunableMap] = {
+  def components(tunableMap: TunableMap): Seq[TunableMap] = {
     tunableMap match {
       case composite: Composite =>
         composite.components.flatMap(components)
@@ -102,7 +102,7 @@ private[twitter] object TunableMap {
   /**
    * A [[TunableMap]] that forwards all calls to `underlying`.
    */
-  private[tunable] trait Proxy extends TunableMap {
+  private[twitter] trait Proxy extends TunableMap {
 
     protected def underlying: TunableMap
 
