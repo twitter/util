@@ -27,7 +27,7 @@ private[twitter] abstract class TunableMap { self =>
    * the composed map prioritize the values of [[Tunables]] in the this map over the other
    * [[TunableMap]].
    */
-  private[tunable] def orElse(that: TunableMap): TunableMap = (self, that) match {
+  def orElse(that: TunableMap): TunableMap = (self, that) match {
     case (NullTunableMap, map) => map
     case (map, NullTunableMap) => map
     case _ => new TunableMap with TunableMap.Composite {
@@ -255,7 +255,7 @@ private[twitter] object TunableMap {
 /**
  * A [[TunableMap]] that returns a [[Tunable.none]] for every [[TunableMap.Key]]
  */
-private[tunable] object NullTunableMap extends TunableMap {
+private[twitter] object NullTunableMap extends TunableMap {
 
   def apply[T](key: TunableMap.Key[T]): Tunable[T] =
     Tunable.none[T]
