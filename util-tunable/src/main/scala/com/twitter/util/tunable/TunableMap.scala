@@ -68,15 +68,14 @@ private[twitter] object TunableMap {
    * 
    * Used for testing.
    */
-  def components(tunableMap: TunableMap): Seq[TunableMap] = {
+  def components(tunableMap: TunableMap): Seq[TunableMap] =
     tunableMap match {
       case composite: Composite =>
         composite.components.flatMap(components)
       case _ =>
         Seq(tunableMap)
     }
-  }
-
+ 
   private case class TypeAndTunable[T](tunableType: Class[T], tunable: Tunable.Mutable[T])
 
   private[tunable] case class Entry[T](key: TunableMap.Key[T], value: T)
@@ -141,19 +140,25 @@ private[twitter] object TunableMap {
      * is not atomic at the macro level.
      */
     private[tunable] def replace(newMap: TunableMap): Unit = {
-      val currEntries = entries.toSeq
-      val newEntries = newMap.entries.toSeq
 
       // clear keys no longer present
-      (currEntries.map(_.key).toSet -- newEntries.map(_.key).toSet).foreach { key =>
+      (entries.map(_.key).toSet -- newMap.entries.map(_.key).toSet).foreach { key =>
         clear(key)
       }
 
       // add/update new tunable values
-      newEntries.foreach { case TunableMap.Entry(key, value) =>
+      ++= (newMap)
+    }
+
+    /**
+     * Add all entries in `that` [[TunableMap]] to this [[TunableMap]]. Entries already present in
+     * this map are updated. Updates to each [[Tunable]] in the map are atomic, but the change
+     * is not atomic at the macro level.
+     */
+    private[twitter] def ++=(that: TunableMap): Unit =
+      that.entries.foreach { case TunableMap.Entry(key, value) =>
         put(key.id, key.clazz, value)
       }
-    }
 
     /**
      * Java-friendly API
