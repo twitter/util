@@ -210,6 +210,19 @@ class MutableTest extends FunSuite {
     assert(map.entries.size == 1)
   }
 
+  test("--=: Clears tunables") {
+    val map1 = TunableMap.newMutable()
+    val key1 = map1.put("key1", "value1")
+    val key2 = map1.put("key2", "value2")
+    val map2 = TunableMap.newMutable()
+    map2.put("key1", "value1")
+
+    map1 --= map2
+
+    assert(map1(key1)() == None)
+    assert(map1(key2)() == Some("value2"))
+  }
+
   test("orElse: Combined map produces an empty Tunable if both maps empty") {
     val id = "key"
     val map1 = TunableMap.newMutable()

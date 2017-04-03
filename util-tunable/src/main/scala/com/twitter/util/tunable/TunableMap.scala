@@ -161,6 +161,15 @@ private[twitter] object TunableMap {
       }
 
     /**
+     * Remove all entries by key in `that` [[TunableMap]] from this [[TunableMap]]. Removal of each
+     * [[Tunable]] in the map are atomic, but the change is not atomic at the macro level.
+     */
+    private[twitter] def --=(that: TunableMap): Unit =
+      that.entries.foreach { case TunableMap.Entry(key, _) =>
+          clear(key)
+      }
+
+    /**
      * Java-friendly API
      */
     def put[T](id: String, clazz: Class[T], value: T): Key[T]
