@@ -29,7 +29,7 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
   def release(item: A): Unit = {
     items += Future[A](item)
     synchronized {
-      if (!requests.isEmpty && !items.isEmpty)
+      if (requests.nonEmpty && items.nonEmpty)
         Some((requests.dequeue(), items.dequeue()))
       else
         None
