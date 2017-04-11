@@ -6,10 +6,11 @@ package com.twitter.util.tunable
  * Implementations may enable mutation, such that successive applications of the [[Tunable]]
  * produce different values.
  *
+ * For more information about Tunables, see
+ * [[https://twitter.github.io/finagle/guide/Configuration.html#tunables]]
+ *
  * @param id  id of this [[Tunable]], used in `toString`. Must not be empty and should be unique.
  * @tparam T  type of value this [[Tunable]] holds
- *
- * @note These APIs are still in flux and should NOT be used at this time.
  */
 private[twitter] sealed abstract class Tunable[T](val id: String) { self =>
 
