@@ -91,7 +91,7 @@ object FuturePool {
    * that this is intended for IO concurrency; computational
    * parallelism typically requires special treatment.  If an interrupt
    * is raised on a returned Future and the work has started, an attempt
-   * will will be made to interrupt the worker thread.
+   * will be made to interrupt the worker thread.
    */
   lazy val interruptibleUnboundedPool: FuturePool =
     new InterruptibleExecutorServiceFuturePool(defaultExecutor) {
