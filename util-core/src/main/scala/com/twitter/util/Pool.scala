@@ -62,6 +62,10 @@ private class HealthyQueue[A](
 
   0.until(numItems) foreach { _ => this += makeItem() }
 
+  override def +=(elem: Future[A]): HealthyQueue.this.type = synchronized {
+    super.+=(elem)
+  }
+
   override def +=:(elem: Future[A]): HealthyQueue.this.type = synchronized {
     super.+=:(elem)
   }
