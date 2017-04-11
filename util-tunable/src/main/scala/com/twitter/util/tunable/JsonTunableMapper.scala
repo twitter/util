@@ -115,7 +115,10 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
   private[this] val mapper: ObjectMapper =
     new ObjectMapper().registerModules(DefaultScalaModule, DeserializationModule)
 
-  private[this] def jsonTunablesToTunableMap(jsonTunables: JsonTunables): TunableMap = {
+  private[this] def jsonTunablesToTunableMap(
+    jsonTunables: JsonTunables,
+    source: String
+  ): TunableMap = {
     val ids = jsonTunables.tunables.map(_.id)
     val uniqueIds = ids.distinct
 
@@ -126,7 +129,7 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
     if (jsonTunables.tunables.isEmpty) {
       NullTunableMap
     } else {
-      val tunableMap = TunableMap.newMutable()
+      val tunableMap = TunableMap.newMutable(source)
 
       jsonTunables.tunables.map { jsonTunable =>
         val valueAsValueType = mapper.convertValue(jsonTunable.value, jsonTunable.valueType)
@@ -140,7 +143,7 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
    * Parse the contents of the given file URL `url` into a [[TunableMap]]
    */
   private[this] def parse(url: URL): Try[TunableMap] = Try {
-    jsonTunablesToTunableMap(mapper.readValue(url, classOf[JsonTunables]))
+    jsonTunablesToTunableMap(mapper.readValue(url, classOf[JsonTunables]), url.toString)
   }
 
   // Exposed for testing
@@ -178,6 +181,6 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
    * Parse the given JSON string `json` into a [[TunableMap]]
    */
   def parse(json: String): Try[TunableMap] = Try {
-    jsonTunablesToTunableMap(mapper.readValue(json, classOf[JsonTunables]))
+    jsonTunablesToTunableMap(mapper.readValue(json, classOf[JsonTunables]), "JSON String")
   }
 }
