@@ -58,7 +58,7 @@ private[twitter] object TunableMap {
   /**
    * A marker interface in support of [[components(TunableMap)]]
    */
-  private trait Composite {
+  private[tunable] trait Composite {
     def components: Seq[TunableMap]
   }
 

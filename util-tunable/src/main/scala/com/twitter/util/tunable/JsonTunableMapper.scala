@@ -41,6 +41,40 @@ private[twitter] object JsonTunableMapper {
    */
   def apply(): JsonTunableMapper =
     apply(JsonTunableMapper.DefaultDeserializers)
+
+  /**
+   * Construct String paths for JSON files starting with `root` using environmentOpt and instanceOpt
+   * in priority order. Where environementOpt and instanceOpt are available (env, instance),
+   * paths are ordered:
+   *
+   * i. $root/$env/instance-$id.json
+   * i. $root/$env/instances.json
+   * i. $root/instance-$id.json
+   * i. $root/instances.json
+   */
+  def pathsByPriority(
+    root: String,
+    environmentOpt: Option[String],
+    instanceIdOpt: Option[Long]
+  ): Seq[String] = {
+
+    val template = s"${root}%sinstance%s.json"
+
+    val envPathParams = (environmentOpt, instanceIdOpt) match {
+      case (Some(env), Some(id)) => Seq(Seq(s"$env/", s"-$id"), Seq(s"$env/", "s"))
+      case (Some(env), None) => Seq(Seq(s"$env/", "s"))
+      case (None, _) => Seq.empty[Seq[String]]
+    }
+
+    val instancePathParams = instanceIdOpt match {
+      case Some(instanceId) => Seq(Seq("", s"-$instanceId"), Seq("", "s"))
+      case None => Seq(Seq("", "s"))
+    }
+
+    val pathParams = envPathParams ++ instancePathParams
+
+    pathParams.map(params => template.format(params: _*))
+  }
 }
 
 /**
