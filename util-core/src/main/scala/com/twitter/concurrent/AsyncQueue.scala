@@ -16,6 +16,7 @@ object AsyncQueue {
   private val UnboundedCapacity = Int.MaxValue
 }
 
+
 /**
  * An asynchronous FIFO queue. In addition to providing [[offer]]
  * and [[poll]], the queue can be [[fail "failed"]], flushing current
@@ -24,13 +25,16 @@ object AsyncQueue {
  * @param maxPendingOffers optional limit on the number of pending `offers`.
  * The default is unbounded, but any other positive value can be used to limit
  * the max queue size. Note that `Int.MaxValue` is used to denote unbounded.
+ *
+ * @note thread safety is enforced via the intrinsic lock on `this` which must
+ *       be acquired for any subclasses which want to serialize operations.
  */
 class AsyncQueue[T](maxPendingOffers: Int) {
   import AsyncQueue._
 
   require(maxPendingOffers > 0)
 
-  // synchronize all access to state, offers, and waiters
+  // synchronize all access to state, offers, and pollers
   private[this] var state: State = Idle
 
   // these aren't part of the state machine for performance
@@ -47,7 +51,7 @@ class AsyncQueue[T](maxPendingOffers: Int) {
   /**
    * Returns the current number of pending elements.
    */
-  def size: Int = synchronized {
+  final def size: Int = synchronized {
     offers.size
   }
 
@@ -87,7 +91,7 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    *
    * @return `true` if the item was successfully added, `false` otherwise.
    */
-  final def offer(elem: T): Boolean = {
+  def offer(elem: T): Boolean = {
     var waiter: Promise[T] = null
     val result = synchronized {
       state match {
@@ -114,8 +118,7 @@ class AsyncQueue[T](maxPendingOffers: Int) {
       }
     }
     // we do this to avoid satisfaction while synchronized, which could lead to
-    // lock contention if closures on the promise are slow or there are a lot of
-    // them
+    // deadlock if there are interleaved queue operations in the waiter closure.
     if (waiter != null)
       waiter.setValue(elem)
     result
@@ -163,7 +166,7 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    *
    * No new elements are admitted to the queue after it has been failed.
    */
-  final def fail(exc: Throwable, discard: Boolean): Unit = {
+  def fail(exc: Throwable, discard: Boolean): Unit = {
     var q: Queue[Promise[T]] = null
     synchronized {
       state match {

@@ -24,6 +24,9 @@ API Changes:
   * util: util-zk-commons was removed, since it was only a connector between
     util and commons, which was not widely used.  ``RB_Id=910721``
 
+  * util-core: AsyncQueue's `size` method is now final while `offer` and `fail`
+    are no longer final. ``RB_ID=914191``
+
 6.42.0  2017-03-10
 
 New Features:
