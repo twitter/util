@@ -16,7 +16,7 @@ class FutureNonLocalReturnControl(cause: NonLocalReturnControl[_]) extends Excep
 
 /**
  * @see [[Futures]] for Java-friendly APIs.
- * @see The [[http://twitter.github.io/finagle/guide/Futures.html user guide]]
+ * @see The [[https://twitter.github.io/finagle/guide/Futures.html user guide]]
  *      on concurrent programming with Futures.
  */
 object Future {
@@ -770,7 +770,7 @@ class FutureCancelledException
  * A Java friendly API for handling side-effects for a `Future`.
  *
  * If you want a Java API to
- * [[http://twitter.github.io/finagle/guide/Futures.html#sequential-composition sequence]]
+ * [[https://twitter.github.io/finagle/guide/Futures.html#sequential-composition sequence]]
  * the work you can use a [[FutureTransformer]].
  *
  * @see [[Future.respond]] which is the equivalent Scala API for further details.
@@ -842,7 +842,7 @@ abstract class FutureTransformer[-A, +B] {
 /**
  * Represents an asynchronous value.
  *
- * See the [[http://twitter.github.io/finagle/guide/Futures.html user guide]]
+ * See the [[https://twitter.github.io/finagle/guide/Futures.html user guide]]
  * on concurrent programming with `Futures` to better understand how they
  * work and can be used.
  *
@@ -854,7 +854,7 @@ abstract class FutureTransformer[-A, +B] {
  * This definition of `Future` does not assume any concrete implementation;
  * in particular, it does not couple the user to a specific executor or event loop.
  *
- * @see The [[http://twitter.github.io/finagle/guide/Futures.html user guide]]
+ * @see The [[https://twitter.github.io/finagle/guide/Futures.html user guide]]
  *      on concurrent programming with Futures.
  * @see [[Futures]] for Java-friendly APIs.
  */
@@ -1457,7 +1457,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   // instead of executing the `k` immediately and inline.
   // The first is that this allows us to unwind the stack and thus do Future
   // "recursion". See
-  // http://twitter.github.io/util/guide/util-cookbook/futures.html#future-recursion
+  // https://twitter.github.io/util/guide/util-cookbook/futures.html#future-recursion
   // for details. The second is that this keeps the execution order consistent
   // with `Promise`.
   def respond(k: Try[A] => Unit): Future[A] = {

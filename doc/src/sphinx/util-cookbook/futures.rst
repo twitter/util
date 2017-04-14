@@ -2,15 +2,15 @@ Futures
 =======
 
 .. NOTE::
-   See the Finagle `user guide <http://twitter.github.io/finagle/guide/Futures.html>`_
-   and the `section on futures <http://twitter.github.io/effectivescala/#Twitter's%20standard%20libraries-Futures>`_
+   See the Finagle `user guide <https://twitter.github.io/finagle/guide/Futures.html>`_
+   and the `section on futures <https://twitter.github.io/effectivescala/#Twitter's%20standard%20libraries-Futures>`_
    in Effective Scala for details on concurrent programming with futures.
 
 Conversions between Twitter's Future and Scala's Future
 -------------------------------------------------------
 
 Twitter's ``com.twitter.util.Future`` is similar to, but
-`predates <http://twitter.github.io/finagle/guide/Futures.html#futures>`_,
+`predates <https://twitter.github.io/finagle/guide/Futures.html#futures>`_,
 `Scala's <http://docs.scala-lang.org/overviews/core/futures.html>`_
 ``scala.concurrent.Future`` and as such they are not directly compatible
 (e.g. support for continuation-local variables and interruptibility).
