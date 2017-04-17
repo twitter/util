@@ -34,7 +34,7 @@ import scala.collection.JavaConverters._
  *
  * {{{
  * object Foo {
- *   def parse(v: String: Foo = {
+ *   def parse(v: String): Foo = {
  *      ...
  *   }
  *
