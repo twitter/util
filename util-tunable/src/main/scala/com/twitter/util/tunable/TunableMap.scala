@@ -3,7 +3,7 @@ package com.twitter.util.tunable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiFunction
 import scala.annotation.varargs
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 /**
@@ -270,7 +270,7 @@ private[twitter] object TunableMap {
     }
 
     def entries: Iterator[TunableMap.Entry[_]] = {
-      val entryOpts: Iterator[Option[TunableMap.Entry[_]]] = tunables.iterator.map {
+      val entryOpts: Iterator[Option[TunableMap.Entry[_]]] = tunables.asScala.iterator.map {
         case (id, TypeAndTunable(tunableType, tunable)) => tunable().map { value =>
           TunableMap.Entry(TunableMap.Key(id, tunableType), value, toString)
         }
