@@ -8,6 +8,10 @@ Next Version
 
 Runtime Behavior Changes:
 
+  * util-core: `Closable.all(..)` will now catch synchronous exceptions thrown
+    by any `Closable.close(..)` invocations, and wrap them in a failed Future.
+    ``RB_ID=914859``
+
   * util-stats: InMemoryStatsReceiver's `gauges` member is now safe for
     concurrent iteration but now holds strong references to gauge instances.
     ``RB_ID=911951``

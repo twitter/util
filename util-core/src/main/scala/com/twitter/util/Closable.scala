@@ -68,7 +68,10 @@ object Closable {
    */
   def all(closables: Closable*): Closable = new Closable {
     def close(deadline: Time): Future[Unit] = {
-      val fs = closables.map(_.close(deadline))
+      val fs = closables.map { closable =>
+        try closable.close(deadline)
+        catch { case NonFatal(ex) => Future.exception(ex) }
+      }
       for (f <- fs) {
         f.poll match {
           case Some(Return(_)) =>

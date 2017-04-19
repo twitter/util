@@ -1,11 +1,10 @@
 package com.twitter.util
 
+import com.twitter.util.TimeConversions.intToTimeableNumber
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
-
-import com.twitter.util.TimeConversions.intToTimeableNumber
 
 @RunWith(classOf[JUnitRunner])
 class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
@@ -54,6 +53,24 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
     assert(!f.isDone)
     p2.setDone()
     assert(f.isDone)
+  }
+
+  test("Closable.all with exceptions") {
+    val throwing = Closable.make(_ => sys.error("lolz"))
+    val tracking = new Closable {
+      @volatile
+      var calledClose = false
+      override def close(deadline: Time): Future[Unit] = {
+        calledClose = true
+        Future.Done
+      }
+    }
+
+    val f = Closable.all(throwing, tracking).close()
+    intercept[Exception] {
+      Await.result(f, 5.seconds)
+    }
+    assert(tracking.calledClose)
   }
   
   test("Closable.sequence") {
