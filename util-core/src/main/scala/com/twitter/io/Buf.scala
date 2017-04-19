@@ -933,6 +933,8 @@ object Buf {
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @note See `com.twitter.io.Bufs.UTF_8` for a Java-friendly API.
    */
   object Utf8 extends StringCoder(JChar.UTF_8)
 
@@ -941,6 +943,8 @@ object Buf {
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @note See `com.twitter.io.Bufs.UTF_16` for a Java-friendly API.
    */
   object Utf16 extends StringCoder(JChar.UTF_16)
 
@@ -950,6 +954,8 @@ object Buf {
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @note See `com.twitter.io.Bufs.UTF_16BE` for a Java-friendly API.
    */
   object Utf16BE extends StringCoder(JChar.UTF_16BE)
 
@@ -959,6 +965,8 @@ object Buf {
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @note See `com.twitter.io.Bufs.UTF_16LE` for a Java-friendly API.
    */
   object Utf16LE extends StringCoder(JChar.UTF_16LE)
 
@@ -968,6 +976,8 @@ object Buf {
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @note See `com.twitter.io.Bufs.ISO_8859_1` for a Java-friendly API.
    */
   object Iso8859_1 extends StringCoder(JChar.ISO_8859_1)
 
@@ -978,15 +988,21 @@ object Buf {
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @note See `com.twitter.io.Bufs.US_ASCII` for a Java-friendly API.
    */
   object UsAscii extends StringCoder(JChar.US_ASCII)
 
   /**
-   * a StringCoder for a given [[java.nio.charset.Charset]] provides an
-   * encoder: String -> Buf and an extractor: Buf -> Option[String].
+   * A [[StringCoder]] for a given [[java.nio.charset.Charset]] provides an
+   * [[apply(String) encoder]]: `String` to [[Buf]]
+   * and an [[unapply(Buf) extractor]]: [[Buf]] to `Option[String]`.
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *
+   * @see [[Utf8]] for UTF-8 encoding and decoding, and `Bufs.UTF8` for
+   *      Java users. Constants exist for other standard charsets as well.
    */
   abstract class StringCoder(charset: Charset) {
 

@@ -132,4 +132,22 @@ public final class Bufs {
     return Buf.Utf8$.MODULE$.apply(s);
   }
 
+  /** @see Buf.Utf8 */
+  public static final Buf.StringCoder UTF_8 = Buf.Utf8$.MODULE$;
+
+  /** @see Buf.Utf16 */
+  public static final Buf.StringCoder UTF_16 = Buf.Utf16$.MODULE$;
+
+  /** @see Buf.Utf16BE */
+  public static final Buf.StringCoder UTF_16BE = Buf.Utf16BE$.MODULE$;
+
+  /** @see Buf.Utf16LE */
+  public static final Buf.StringCoder UTF_16LE = Buf.Utf16LE$.MODULE$;
+
+  /** @see Buf.Iso8859_1 */
+  public static final Buf.StringCoder ISO_8859_1 = Buf.Iso8859_1$.MODULE$;
+
+  /** @see Buf.UsAscii */
+  public static final Buf.StringCoder US_ASCII = Buf.UsAscii$.MODULE$;
+
 }

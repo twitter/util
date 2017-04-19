@@ -110,6 +110,15 @@ public class BufCompilationTest {
   }
 
   @Test
+  public void testStringCoderConstants() throws Exception {
+    byte bytes[] = "abc".getBytes("UTF-8");
+    Buf buf = Bufs.ownedBuf(bytes);
+    Buf.StringCoder coder = Bufs.UTF_8;
+    Assert.assertEquals(buf, coder.apply("abc"));
+    Assert.assertEquals("abc", coder.unapply(buf).get());
+  }
+
+  @Test
   public void testExtractByteBuffer() {
     byte bytes[] = new byte[] { 0x1, 0x2, 0x3, 0x4 };
     Buf a = Bufs.ownedBuf(bytes);
