@@ -6,6 +6,8 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+6.43.0  2017-04-20
+
 Runtime Behavior Changes:
 
   * util-core: `Closable.all(..)` will now catch synchronous exceptions thrown
