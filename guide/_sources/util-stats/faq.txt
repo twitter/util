@@ -4,9 +4,9 @@ FAQ
 Why are util-stats in the com.twitter.finagle.stats package?
 ------------------------------------------------------------
 This is a historical artifact that reflects how the code was
-originally written as part of `Finagle <http://twitter.github.io/finagle/>`_
+originally written as part of `Finagle <https://twitter.github.io/finagle/>`_
 but turned out to not actually depend on anything Finagle-specific.
-The code was moved to `util <http://twitter.github.io/util/>`_
+The code was moved to `util <https://twitter.github.io/util/>`_
 in order to allow usage without depending on finagle-core.
 To ease the transition, the package namespace was left as is.
 

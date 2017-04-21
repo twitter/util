@@ -320,7 +320,8 @@ protocol:">
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing <a href="#offer(elem:T):Boolean" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
 and <a href="#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be <a href="#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">&quot;failed&quot;</a>, flushing current
 pollers.
-</p></div><div class="toggleContainer block">
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>thread safety is enforced via the intrinsic lock on <code>this</code> which must
+      be acquired for any subclasses which want to serialize operations.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -562,7 +563,7 @@ Otherwise, return a <code>Return(Queue)</code> of the pending elements.
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier">final </span>
+        <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -716,7 +717,7 @@ with the given exception; any outstanding messages are discarded.</p>
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier">final </span>
+        <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -750,7 +751,7 @@ returned future when the element is available.</p>
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">

@@ -718,7 +718,8 @@ mutex.acquireAndRun() {
       <p class="shortcomment cmt">An asynchronous FIFO queue.</p><div class="fullcomment"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing <a href="AsyncQueue.html#offer(elem:T):Boolean" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
 and <a href="AsyncQueue.html#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be <a href="AsyncQueue.html#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">&quot;failed&quot;</a>, flushing current
 pollers.
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>thread safety is enforced via the intrinsic lock on <code>this</code> which must
+      be acquired for any subclasses which want to serialize operations.</p></span></dd></dl></div>
     </li><li name="com.twitter.concurrent.AsyncSemaphore" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AsyncSemaphoreextendsAnyRef"></a><a id="AsyncSemaphore:AsyncSemaphore"></a>
       <span class="permalink">

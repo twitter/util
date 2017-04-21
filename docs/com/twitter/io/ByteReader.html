@@ -172,9 +172,9 @@ positional access.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="ByteReader$.html" title=""></a>
-                        <a class="trait" href="ByteReader.html" title="A ByteReader provides a stateful API to extract bytes from an
+                        <a class="trait" href="" title="A ByteReader provides a stateful API to extract bytes from an
 underlying buffer, which in most cases is a Buf."></a>
-                        <a href="ByteReader.html" title="A ByteReader provides a stateful API to extract bytes from an
+                        <a href="" title="A ByteReader provides a stateful API to extract bytes from an
 underlying buffer, which in most cases is a Buf.">
                           ByteReader
                         </a>
@@ -200,8 +200,8 @@ underlying buffer, which in most cases is a Buf.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="InputStreamReader$.html" title=""></a>
-                        <a class="class" href="" title="Provides the Reader API for an InputStream."></a>
-                        <a href="" title="Provides the Reader API for an InputStream.">
+                        <a class="class" href="InputStreamReader.html" title="Provides the Reader API for an InputStream."></a>
+                        <a href="InputStreamReader.html" title="Provides the Reader API for an InputStream.">
                           InputStreamReader
                         </a>
                       </li><li class="current-entities indented3">
@@ -253,38 +253,41 @@ a convenient interface for the producer of such streams.">
             </div>
           </div>
           <div id="content">
-            <body class="class type">
+            <body class="trait type">
       <div id="definition">
-        <a href="InputStreamReader$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <a href="ByteReader$.html" title="See companion object"><div class="big-circle trait-companion-object">t</div></a>
         <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.io">io</a></p>
-        <h1><a href="InputStreamReader$.html" title="See companion object">InputStreamReader</a><span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html" title="Permalink">
+        <h1><a href="ByteReader$.html" title="See companion object">ByteReader</a><span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
         <h3><span class="morelinks"><div>
-            Companion <a href="InputStreamReader$.html" title="See companion object">object InputStreamReader</a>
+            Companion <a href="ByteReader$.html" title="See companion object">object ByteReader</a>
           </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">InputStreamReader</span><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
+        <span class="name">ByteReader</span><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
-reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> provides a stateful API to extract bytes from an
+underlying buffer, which in most cases is a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>. This conveniently
+allows codec implementations to decode frames, specifically when they need
+to decode and interpret the bytes as a numeric value. Unless otherwise
+stated, <a href="" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> implementations are not thread safe.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -310,7 +313,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.io.InputStreamReader"><span>InputStreamReader</span></li><li class="in" name="com.twitter.util.CloseAwaitably"><span>CloseAwaitably</span></li><li class="in" name="com.twitter.util.CloseAwaitably0"><span>CloseAwaitably0</span></li><li class="in" name="com.twitter.util.Awaitable"><span>Awaitable</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="com.twitter.io.Reader"><span>Reader</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.io.ByteReader"><span>ByteReader</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -328,38 +331,434 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.io.InputStreamReader#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(inputStream:java.io.InputStream,maxBufferSize:Int):com.twitter.io.InputStreamReader"></a><a id="&lt;init&gt;:InputStreamReader"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#&lt;init&gt;(inputStream:java.io.InputStream,maxBufferSize:Int):com.twitter.io.InputStreamReader" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">InputStreamReader</span><span class="params">(<span name="inputStream">inputStream: <span class="extype" name="java.io.InputStream">InputStream</span></span>, <span name="maxBufferSize">maxBufferSize: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span>
-      </span>
-      
-      
-    </li></ol>
-            </div>
-
         
 
         
 
         <div class="values members">
-              <h3>Value Members</h3>
+              <h3>Abstract Value Members</h3>
+              <ol><li name="com.twitter.io.ByteReader#readAll" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="readAll():com.twitter.io.Buf"></a><a id="readAll():Buf"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readAll():com.twitter.io.Buf" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readAll</span><span class="params">()</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Like <code>read</code>, but extracts the remainder of bytes from cursor
+to the length.</p><div class="fullcomment"><div class="comment cmt"><p>Like <code>read</code>, but extracts the remainder of bytes from cursor
+to the length. Note, this advances the cursor to the end of
+the buf.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteReader#readByte" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readByte():Byte"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readByte():Byte" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readByte</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 8 bits and interpret as a signed integer, advancing the byte cursor by 1.</p>
+    </li><li name="com.twitter.io.ByteReader#readBytes" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="readBytes(n:Int):com.twitter.io.Buf"></a><a id="readBytes(Int):Buf"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readBytes(n:Int):com.twitter.io.Buf" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readBytes</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns a new buffer representing a slice of this buffer, delimited
+by the indices <code>[cursor, remaining)</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new buffer representing a slice of this buffer, delimited
+by the indices <code>[cursor, remaining)</code>. Out of bounds indices are truncated.
+Negative indices are not accepted.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteReader#readDoubleBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readDoubleBE():Double"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readDoubleBE():Double" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readDoubleBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 64 bits and interpret as a big endian floating point, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readDoubleLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readDoubleLE():Double"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readDoubleLE():Double" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readDoubleLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 64 bits and interpret as a little endian floating point, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readFloatBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readFloatBE():Float"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readFloatBE():Float" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readFloatBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 32 bits and interpret as a big endian floating point, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readFloatLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readFloatLE():Float"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readFloatLE():Float" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readFloatLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 32 bits and interpret as a little endian floating point, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readIntBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readIntBE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readIntBE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readIntBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 32 bits and interpret as a big endian integer, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readIntLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readIntLE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readIntLE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readIntLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 32 bits and interpret as a little endian int, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readLongBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readLongBE():Long"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readLongBE():Long" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readLongBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 64 bits and interpret as a big endian integer, advancing the byte cursor by 8.</p>
+    </li><li name="com.twitter.io.ByteReader#readLongLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readLongLE():Long"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readLongLE():Long" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readLongLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 64 bits and interpret as a little endian integer, advancing the byte cursor by 8.</p>
+    </li><li name="com.twitter.io.ByteReader#readMediumBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readMediumBE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readMediumBE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readMediumBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 24 bits and interpret as a big endian integer, advancing the byte cursor by 3.</p>
+    </li><li name="com.twitter.io.ByteReader#readMediumLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readMediumLE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readMediumLE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readMediumLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 24 bits and interpret as a little endian integer, advancing the byte cursor by 3.</p>
+    </li><li name="com.twitter.io.ByteReader#readShortBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readShortBE():Short"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readShortBE():Short" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readShortBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Short" class="extype" target="_top">Short</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 16 bits and interpret as a big endian integer, advancing the byte cursor by 2.</p>
+    </li><li name="com.twitter.io.ByteReader#readShortLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readShortLE():Short"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readShortLE():Short" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readShortLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Short" class="extype" target="_top">Short</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 16 bits and interpret as a little endian integer, advancing the byte cursor by 2.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedByte" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedByte():Short"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedByte():Short" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedByte</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Short" class="extype" target="_top">Short</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 8 bits and interpret as an unsigned integer, advancing the byte cursor by 1.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedIntBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedIntBE():Long"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedIntBE():Long" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedIntBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 32 bits and interpret as a big endian unsigned integer, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedIntLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedIntLE():Long"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedIntLE():Long" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedIntLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 32 bits and interpret as a little endian unsigned integer, advancing the byte cursor by 4.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedMediumBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedMediumBE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedMediumBE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedMediumBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 24 bits and interpret as a big endian unsigned integer, advancing the byte cursor by 3.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedMediumLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedMediumLE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedMediumLE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedMediumLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 24 bits and interpret as a little endian unsigned integer, advancing the byte cursor by 3.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedShortBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedShortBE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedShortBE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedShortBE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 16 bits and interpret as a big endian unsigned integer, advancing the byte cursor by 2.</p>
+    </li><li name="com.twitter.io.ByteReader#readUnsignedShortLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="readUnsignedShortLE():Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readUnsignedShortLE():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readUnsignedShortLE</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract 16 bits and interpret as a little endian unsigned integer, advancing the byte cursor by 2.</p>
+    </li><li name="com.twitter.io.ByteReader#remaining" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="remaining:Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#remaining:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">remaining</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The remainder of bytes that the reader is capable of reading.</p>
+    </li><li name="com.twitter.io.ByteReader#remainingUntil" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="remainingUntil(byte:Byte):Int"></a><a id="remainingUntil(Byte):Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#remainingUntil(byte:Byte):Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">remainingUntil</span><span class="params">(<span name="byte">byte: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The remainder of bytes until the first occurrence of <code>byte</code> (exclusive).</p><div class="fullcomment"><div class="comment cmt"><p>The remainder of bytes until the first occurrence of <code>byte</code> (exclusive).
+Returns <code>-1</code> when <code>byte</code> is not found on the underlying resource.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>All util and finagle <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> implementations will not copy onto
+      the heap, but for other implementations, it may trigger a copy.</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.ByteReader#skip" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="skip(n:Int):Unit"></a><a id="skip(Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#skip(n:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">skip</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Skip over the next <code>n</code> bytes.</p><div class="fullcomment"><div class="comment cmt"><p>Skip over the next <code>n</code> bytes.
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="UnderflowException"><code>UnderflowException</code></span> if there are &lt; <code>n</code> bytes available</p></span></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members">
+              <h3>Concrete Value Members</h3>
               <ol>
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -375,7 +774,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html###():Int" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -391,7 +790,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -407,7 +806,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -423,7 +822,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#clone():Object" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -442,101 +841,10 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.io.InputStreamReader#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]"></a><a id="close(Time):Future[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">close</span><span class="params">(<span name="deadline">deadline: <a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Discards this <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and closes the underlying <code>InputStream</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>Discards this <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and closes the underlying <code>InputStream</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
-    </li><li name="com.twitter.util.Closable#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="close(after:com.twitter.util.Duration):com.twitter.util.Future[Unit]"></a><a id="close(Duration):Future[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#close(after:com.twitter.util.Duration):com.twitter.util.Future[Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">close</span><span class="params">(<span name="after">after: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Close the resource with the given timeout.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given timeout. This timeout is advisory,
-giving the callee some leeway, for example to drain clients or finish
-up other tasks.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
-    </li><li name="com.twitter.util.Closable#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="close():com.twitter.util.Future[Unit]"></a><a id="close():Future[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#close():com.twitter.util.Future[Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">close</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Close the resource.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource. The returned Future is completed when
-the resource has been fully relinquished.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#closeAwaitably" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="closeAwaitably(f:=&gt;com.twitter.util.Future[U]):com.twitter.util.Future[U]"></a><a id="closeAwaitably(⇒Future[Unit]):Future[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#closeAwaitably(f:=&gt;com.twitter.util.Future[U]):com.twitter.util.Future[U]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">closeAwaitably</span><span class="params">(<span name="f">f: ⇒ <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">closeAwaitably is intended to be used as a wrapper for
-<code>close</code>.</p><div class="fullcomment"><div class="comment cmt"><p>closeAwaitably is intended to be used as a wrapper for
-<code>close</code>. The underlying <code>f</code> will be called at most once.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>CloseAwaitably0</dd></dl></div>
-    </li><li name="com.twitter.io.InputStreamReader#discard" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="discard():Unit"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#discard():Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">discard</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this reader: its output is no longer required.</p><p>This closes the underlying <code>InputStream</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -552,7 +860,7 @@ the resource has been fully relinquished.
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -568,7 +876,7 @@ the resource has been fully relinquished.
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#finalize():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -590,7 +898,7 @@ the resource has been fully relinquished.
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -606,7 +914,7 @@ the resource has been fully relinquished.
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#hashCode():Int" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -622,7 +930,7 @@ the resource has been fully relinquished.
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -635,30 +943,10 @@ the resource has been fully relinquished.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#isReady" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isReady(implicitpermit:com.twitter.util.Awaitable.CanAwait):Boolean"></a><a id="isReady(CanAwait):Boolean"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#isReady(implicitpermit:com.twitter.util.Awaitable.CanAwait):Boolean" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">isReady</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="../util/Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Is this Awaitable ready? In other words: would calling
-<a href="../util/Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
-</p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
-<a href="../util/Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -674,7 +962,7 @@ the resource has been fully relinquished.
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#notify():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -690,7 +978,7 @@ the resource has been fully relinquished.
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -703,69 +991,10 @@ the resource has been fully relinquished.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.io.InputStreamReader#read" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]"></a><a id="read(Int):Future[Option[Buf]]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">read</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
-the <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
-the <code>InputStream</code>. The returned <span class="extype" name="Future">Future</span> represents the results of
-the read operation.  Any failure indicates an error; an empty buffer
-indicates that the stream has completed.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>the underlying <code>InputStream</code> is closed on read of EOF.</p></span></dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#ready" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):CloseAwaitably0.this.type"></a><a id="ready(Duration)(CanAwait):InputStreamReader.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):CloseAwaitably0.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ready</span><span class="params">(<span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="../util/Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Support for <code>Await.ready</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.ready</code>. The use of the implicit permit is an
-access control mechanism: only <code>Await.ready</code> may call this
-method.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#result" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):U"></a><a id="result(Duration)(CanAwait):Unit"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):U" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">result</span><span class="params">(<span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="permit">permit: <a href="../util/Awaitable$$CanAwait.html" class="extype" name="com.twitter.util.Awaitable.CanAwait">CanAwait</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Support for <code>Await.result</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.result</code>. The use of the implicit permit is an
-access control mechanism: only <code>Await.result</code> may call this
-method.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -781,7 +1010,7 @@ method.
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#toString():String" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -797,7 +1026,7 @@ method.
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#wait():Unit" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -819,7 +1048,7 @@ method.
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -841,7 +1070,7 @@ method.
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/InputStreamReader.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -870,17 +1099,7 @@ method.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.util.CloseAwaitably">
-              <h3>Inherited from <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></h3>
-            </div><div class="parent" name="com.twitter.util.CloseAwaitably0">
-              <h3>Inherited from <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</h3>
-            </div><div class="parent" name="com.twitter.util.Awaitable">
-              <h3>Inherited from <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</h3>
-            </div><div class="parent" name="com.twitter.util.Closable">
-              <h3>Inherited from <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
-            </div><div class="parent" name="com.twitter.io.Reader">
-              <h3>Inherited from <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>

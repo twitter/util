@@ -31,7 +31,7 @@ Measuring the latency of operations
 -----------------------------------
 A common need for clients is to capture the latency distribution, often of
 asynchronous calls such as those returning
-`Futures <http://twitter.github.io/finagle/guide/Futures.html>`_.
+`Futures <https://twitter.github.io/finagle/guide/Futures.html>`_.
 This can be done easily via the `Stat.time <https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala>`_
 and `Stat.timeFuture <https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala>`_
 methods.

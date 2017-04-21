@@ -17,28 +17,36 @@ team as to whether it was a good idea to use them. The ``com.twitter.util``
 versions of these work perfectly well and should be used instead of those.
 
 There are also construction methods on the ``Function`` object such as ``func``
-which improves interop with Java 8 as well as ``ofCallable`` and ``ofRunnable``.
+which improves interop with Java 8's lambdas as well as ``ofCallable`` and
+``ofRunnable``.
 
 .. code-block:: java
 
+    import com.twitter.util.Future;
     import com.twitter.util.Function;
     import com.twitter.util.Function0;
+    import static com.twitter.util.Function.func;
+    import static com.twitter.util.Function.func0;
+    import static com.twitter.util.Function.cons;
     import scala.runtime.BoxedUnit;
 
-    Function0<BoxedUnit> fn0 = new Function0<BoxedUnit>() {
-      @Override
-      public BoxedUnit apply() {
-        println("this function is on fleek");
-        return BoxedUnit.UNIT;
-      }
-    };
+    // use a static import of func0 and lambdas for interop with
+    // Scala's Function0 and call-by-name method arguments.
+    Function0<String> fn0 = func0(() -> "example");
+    // and used inline:
+    Future<String> fs = Future.apply(func0(() -> "example"));
 
-    Function<Integer, String> fn1 = new Function<Integer, String>() {
-      @Override
-      public String apply(Integer i) {
-        return Integer.toString(i);
-      }
-    };
+    // use a static import of func and lambdas for interop with
+    // Scala's Function1.
+    Function<String, Integer> fn = func(s -> s.length());
+    // and used inline, with method references:
+    Future<Integer> fi = fs.map(func(String::length()));
+
+    // use a static import of cons and lambdas for interop with
+    // Scala Function1's that return Unit.
+    Function<String, BoxedUnit> consumer = cons(s -> System.out.println(s));
+    // and used inline, with method references:
+    Future<String> f2 = fs.onSuccess(cons(System.out::println));
 
 Compatibility APIs
 ------------------

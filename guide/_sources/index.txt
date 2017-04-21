@@ -18,7 +18,7 @@ Guides
 Documentation
 -------------
 
-View the `API Documentation <http://twitter.github.io/util/docs>`_.
+View the `API Documentation <https://twitter.github.io/util/docs>`_.
 
 Contact
 -------

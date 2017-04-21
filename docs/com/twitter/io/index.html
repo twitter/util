@@ -331,6 +331,20 @@ positional access.">
                           Bufs
                         </a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="ByteReader$.html" title=""></a>
+                        <a class="trait" href="ByteReader.html" title="A ByteReader provides a stateful API to extract bytes from an
+underlying buffer, which in most cases is a Buf."></a>
+                        <a href="ByteReader.html" title="A ByteReader provides a stateful API to extract bytes from an
+underlying buffer, which in most cases is a Buf.">
+                          ByteReader
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="ByteWriter$.html" title=""></a>
+                        <a class="class" href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer."></a>
+                        <a href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer.">
+                          ByteWriter
+                        </a>
+                      </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="Charsets$.html" title="A set of java.nio.charset.Charset utilities."></a>
                         <a href="Charsets$.html" title="A set of java.nio.charset.Charset utilities.">
@@ -608,6 +622,57 @@ and thus be used to implement bytestreams.
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of the <code><a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a></code> companion object.</p>
+    </li><li name="com.twitter.io.ByteReader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ByteReaderextendsAnyRef"></a><a id="ByteReader:ByteReader"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#ByteReaderextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="A ByteReader provides a stateful API to extract bytes from an
+underlying buffer, which in most cases is a Buf." href="ByteReader.html">
+              <span class="name">ByteReader</span>
+            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> provides a stateful API to extract bytes from an
+underlying buffer, which in most cases is a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> provides a stateful API to extract bytes from an
+underlying buffer, which in most cases is a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>. This conveniently
+allows codec implementations to decode frames, specifically when they need
+to decode and interpret the bytes as a numeric value. Unless otherwise
+stated, <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> implementations are not thread safe.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ByteWriterextendsAnyRef"></a><a id="ByteWriter:ByteWriter"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#ByteWriterextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="ByteWriters allow efficient construction of a buffer." href="ByteWriter.html">
+              <span class="name">ByteWriter</span>
+            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt"><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer.</p><div class="fullcomment"><div class="comment cmt"><p><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer. Concatenating
+<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>s together is a common pattern for codecs (especially on the encode
+path), but using the <code>concat</code> method on <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> results in a suboptimal
+representation.  In many cases, a <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> not only allows for a more
+optimal representation (i.e., sequential accessible out regions), but also
+allows for writes to avoid allocations.  What this means in practice is that
+builders are stateful and keep track of a writer index. Assume that the
+builder implementations are *not* threadsafe unless otherwise noted.
+</p></div></div>
     </li><li name="com.twitter.io.InputStreamReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a><a id="InputStreamReader:InputStreamReader"></a>
       <span class="permalink">
@@ -754,6 +819,42 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
       <span class="symbol">
         <a title="" href="BufReader$.html">
               <span class="name">BufReader</span>
+            </a>
+      </span>
+      
+      
+    </li><li name="com.twitter.io.ByteReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ByteReader"></a><a id="ByteReader:ByteReader"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#ByteReader" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ByteReader$.html">
+              <span class="name">ByteReader</span>
+            </a>
+      </span>
+      
+      
+    </li><li name="com.twitter.io.ByteWriter" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ByteWriter"></a><a id="ByteWriter:ByteWriter"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#ByteWriter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ByteWriter$.html">
+              <span class="name">ByteWriter</span>
             </a>
       </span>
       

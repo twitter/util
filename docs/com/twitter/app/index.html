@@ -700,7 +700,7 @@ instance, to make a hypothetical type called <code>Foo</code> flaggable:</p><pre
   }
 }</pre><p>For simple implicit definitions based on existing <code>String =&gt; T</code> functions,
 use the <code>Flaggable.mandatory</code> function:</p><pre><span class="kw">object</span> Foo {
-  <span class="kw">def</span> parse(v: <span class="std">String</span>: Foo = {
+  <span class="kw">def</span> parse(v: <span class="std">String</span>): Foo = {
      ...
   }
 
