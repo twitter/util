@@ -5,6 +5,9 @@ import org.junit.Test;
 
 import scala.runtime.BoxedUnit;
 
+import static com.twitter.util.Function.func;
+import static com.twitter.util.Function.func0;
+
 public class TimeCompilationTest {
 
   @Test
@@ -114,23 +117,17 @@ public class TimeCompilationTest {
   @Test
   public void testWithTimeAt() {
     Time time = Time.fromMilliseconds(123456L);
-    Time.withTimeAt(time, new Function<TimeControl, BoxedUnit>() {
-      public BoxedUnit apply(TimeControl timeControl) {
-        // Time.now() == time
+    Time.withTimeAt(time, func(timeControl -> {
+      Assert.assertEquals(Time.now(), time);
 
-        // you can control time via the `TimeControl` instance.
-        timeControl.advance(Duration.fromSeconds(2));
-        FuturePools.unboundedPool().apply(
-          new Function0<BoxedUnit>() {
-            public BoxedUnit apply() {
-              // Time.now() == time + 2.seconds
-              return BoxedUnit.UNIT;
-            }
-          }
-        );
-        return null;
-      }
-    });
+      // you can control time via the `TimeControl` instance.
+      timeControl.advance(Duration.fromSeconds(2));
+      FuturePools.unboundedPool().apply(func0(() -> {
+        assert(Time.now().equals(time.plus(Duration.fromSeconds(2))));
+        return BoxedUnit.UNIT;
+      }));
+      return null;
+    }));
   }
 
 }

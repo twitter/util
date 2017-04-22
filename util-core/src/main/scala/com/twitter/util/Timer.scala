@@ -22,6 +22,8 @@ trait TimerTask extends Closable {
  * @note Scheduling tasks with [[Timer]]s should rarely
  * be done directly; for example, when programming
  * with [[Future]]s, prefer using [[Future.sleep]].
+ *
+ * @see [[MockTimer]] for use in tests that require determinism.
  */
 trait Timer {
   /**
@@ -326,6 +328,9 @@ class ScheduledThreadPoolTimer(
  * over a [[Timer]]. This is due to it playing well with the [[Time]]
  * manipulation methods such as [[Time.withTimeAt]], [[Time.withCurrentTimeFrozen]],
  * and so on.
+ *
+ * @see See the [[https://twitter.github.io/util/guide/util-cookbook/basics.html#controlling-timers cookbook]]
+ *      for examples.
  */
 class MockTimer extends Timer {
   // These are weird semantics admittedly, but there may
