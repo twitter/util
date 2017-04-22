@@ -26,10 +26,9 @@ import java.util.Random
 import java.util.jar.JarFile
 import scala.collection.mutable
 import scala.io.Source
-import scala.reflect.internal.util.{BatchSourceFile, Position}
-import scala.tools.nsc.interpreter.AbstractFileClassLoader
+import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, Position}
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
-import scala.tools.nsc.reporters.{Reporter, AbstractReporter}
+import scala.tools.nsc.reporters.{AbstractReporter, Reporter}
 import scala.tools.nsc.{Global, Settings}
 import scala.util.matching.Regex
 
@@ -494,7 +493,7 @@ class Eval(target: Option[File]) {
           }
         messages += (severityName + lineMessage + ": " + message) ::
           (if (pos.isDefined) {
-            pos.inUltimateSource(pos.source).lineContent.stripLineEnd ::
+            pos.finalPosition.lineContent.stripLineEnd ::
               (" " * (pos.column - 1) + "^") ::
               Nil
           } else {
