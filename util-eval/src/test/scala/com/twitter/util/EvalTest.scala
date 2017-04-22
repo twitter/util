@@ -245,5 +245,12 @@ class EvalTest extends WordSpec {
         assert(eval.errors.isEmpty)
       }
     }
+
+    "eval with overriden classloader" in {
+      val eval = new Eval{
+        override def classLoader = this.getClass.getClassLoader
+      }
+      assert(eval.apply[Int]("1 + 1") == 2)
+    }
   }
 }
