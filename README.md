@@ -13,9 +13,7 @@ See the Scaladoc [here](https://twitter.github.com/util).
 ## Status
 
 This project is used in production at Twitter (and many other organizations),
-and is being actively developed and maintained. Please note that some
-sub-projects (including `util-eval`), classes, and methods may be deprecated,
-however.
+and is being actively developed and maintained.
 
 ## Releases
 

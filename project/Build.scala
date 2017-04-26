@@ -107,7 +107,7 @@ object Util extends Build {
   ).aggregate(
     utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
     utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
-    utilZkTest, utilClassPreloader, utilBenchmark, utilApp, utilEvents, utilSecurity, utilStats, utilEval, utilTunable
+    utilZkTest, utilClassPreloader, utilBenchmark, utilApp, utilEvents, utilSecurity, utilStats, utilTunable
   )
 
   lazy val utilApp = Project(
@@ -204,18 +204,6 @@ object Util extends Build {
       scalacOptions in doc <++= version.map(v => Seq("-doc-title", "Util", "-doc-version", v)),
       includeFilter in Sphinx := ("*.html" | "*.png" | "*.svg" | "*.js" | "*.css" | "*.gif" | "*.txt")
   ))
-
-  lazy val utilEval = Project(
-    id = "util-eval",
-    base = file("util-eval"),
-    settings = Defaults.coreDefaultSettings ++
-      sharedSettings
-  ).settings(
-    name := "util-eval",
-    libraryDependencies <+= scalaVersion {
-      "org.scala-lang" % "scala-compiler" % _ % "compile"
-    }
-  ).dependsOn(utilCore)
 
   lazy val utilEvents = Project(
     id = "util-events",

@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-eval: Removed from the project. ``RB_ID=915430``
+    https://finagle.github.io/blog/2017/04/06/announce-removals/
+
 6.43.0  2017-04-20
 
 Runtime Behavior Changes:
@@ -28,7 +33,7 @@ New Features:
 API Changes:
 
   * util: util-zk-commons was removed, since it was only a connector between
-    util and commons, which was not widely used.  ``RB_Id=910721``
+    util and commons, which was not widely used.  ``RB_ID=910721``
 
   * util-core: AsyncQueue's `size` method is now final while `offer` and `fail`
     are no longer final. ``RB_ID=914191``
