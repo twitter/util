@@ -8,10 +8,7 @@ Finagle uses util-stats heavily throughout and it is important for
 a well-run service to have this wired up properly. Finagle uses
 `LoadService <https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala>`_
 in order to discover implementations on the classpath. The standard
-implementations come via `finagle-stats <https://github.com/twitter/finagle/tree/master/finagle-stats>`_,
-`finagle-ostrich4 <https://github.com/twitter/finagle/tree/master/finagle-ostrich4>`_
-and `finagle-commons-stats <https://github.com/twitter/finagle/tree/master/finagle-commons-stats>`_
-which correspond to Commons Metrics, Ostrich and Commons Stats respectively.
+implementation comes via `finagle-stats <https://github.com/twitter/finagle/tree/master/finagle-stats>`_.
 
 If multiple implementations are found, metrics are reported to
 **all** of the implementations via a
@@ -143,4 +140,4 @@ Viewing per-node metrics
 This is possible, however the mechanism varies depending on which
 “application” framework you are using.
 
-- Via TwitterServer/Commons Metrics — the `HTTP admin interface <https://twitter.github.io/twitter-server/Features.html#http-admin-interface>`_ responds with json at ``/admin/metrics.json`` and there is a web UI for watching them in real-time at ``/admin/metrics``.
+- Via TwitterServer/finagle-stats — the `HTTP admin interface <https://twitter.github.io/twitter-server/Features.html#http-admin-interface>`_ responds with json at ``/admin/metrics.json`` and there is a web UI for watching them in real-time at ``/admin/metrics``.
