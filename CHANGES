@@ -7,6 +7,14 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 Next Version
 
 API Changes:
+  
+  * util-core: Removed deprecated `c.t.u.LongOverflowException`. Use
+    `java.lang.ArithmeticException` instead. Removed deprecated
+    `c.t.u.LongOverflowArith` and all methods on it:
+        - `add`; use Java 8's `Math.addExact` instead
+        - `sub`; use Java 8's `Math.subtractExact` instead
+        - `mul`; use Java 8's `Math.multiplyExact` instead
+    ``RB_ID=915545``
 
   * util-eval: Removed from the project. ``RB_ID=915430``
     https://finagle.github.io/blog/2017/04/06/announce-removals/
