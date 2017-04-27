@@ -16,6 +16,9 @@ API Changes:
         - `mul`; use Java 8's `Math.multiplyExact` instead
     ``RB_ID=915545``
 
+  * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use
+    `scala.collection.JavaConverters` instead. ``RB_ID=915544``
+
   * util-eval: Removed from the project. ``RB_ID=915430``
     https://finagle.github.io/blog/2017/04/06/announce-removals/
 

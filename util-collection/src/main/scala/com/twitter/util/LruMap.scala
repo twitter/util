@@ -33,11 +33,6 @@ trait JMapWrapperLike[A, B, +Repr <: MapLike[A, B, Repr] with Map[A, B]] extends
   override def iterator = underlying.asScala.iterator
 }
 
-@deprecated("use scala.collection.JavaConverters instead", "2014/12/2")
-case class JMapWrapper[A, B](underlying : ju.Map[A, B]) extends JMapWrapperLike[A, B, JMapWrapper[A, B]] {
-  override def empty = JMapWrapper(new ju.HashMap[A, B])
-}
-
 object LruMap {
 
   // initial capacity and load factor are the normal defaults for LinkedHashMap
