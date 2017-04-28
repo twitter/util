@@ -7,6 +7,17 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 Next Version
 
 API Changes:
+
+  * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use
+    `scala.collection.JavaConverters` instead. ``RB_ID=915544``
+
+  * util-core: Removed deprecated methods from `c.t.u.Future`:
+      - `rawException`; use `exception` instead
+      - `cancel`; use `raise` instead
+
+    Removed deprecated `c.t.u.Futures.select`; use `Future.select` instead.
+    Remove deprecated `flatten` method on `c.t.u.Future`; use `Futures.flatten` instead.
+    ``RB_ID=915500``
   
   * util-core: Removed deprecated `c.t.u.LongOverflowException`. Use
     `java.lang.ArithmeticException` instead. Removed deprecated
@@ -15,9 +26,6 @@ API Changes:
         - `sub`; use Java 8's `Math.subtractExact` instead
         - `mul`; use Java 8's `Math.multiplyExact` instead
     ``RB_ID=915545``
-
-  * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use
-    `scala.collection.JavaConverters` instead. ``RB_ID=915544``
 
   * util-eval: Removed from the project. ``RB_ID=915430``
     https://finagle.github.io/blog/2017/04/06/announce-removals/

@@ -120,14 +120,6 @@ object Future {
   def exception[A](e: Throwable): Future[A] = const[A](Throw(e))
 
   /**
-   * Creates a failed satisfied `Future`.
-   *
-   * An alias for [[exception]] which should be used instead of this.
-   */
-  @deprecated("Use `exception` instead", "2016-02-10")
-  def rawException[A](e: Throwable): Future[A] = const[A](Throw(e))
-
-  /**
    * A `Future` that can never be satisfied.
    */
   val never: Future[Nothing] = new NoFuture
@@ -216,12 +208,6 @@ object Future {
       }
     }
   }
-
-  /**
-   * Flattens a nested future.  Same as ffa.flatten, but easier to call from Java.
-   */
-  @deprecated("Use Futures.flatten instead", "6.20.1")
-  def flatten[A](ffa: Future[Future[A]]): Future[A] = ffa.flatten
 
   /**
    * Creates a `Future` that is satisfied when all futures in `fs`
@@ -933,10 +919,7 @@ abstract class Future[+A] extends Awaitable[A] {
    * whatever reason given in the passed Throwable).
    */
   def raise(interrupt: Throwable): Unit
-
-  @deprecated("Provided for API compatibility; use raise() instead.", "6.0.0")
-  def cancel() { raise(new FutureCancelledException) }
-
+  
   /**
    * Returns a new Future that fails if this Future does not return in time.
    *
@@ -1679,15 +1662,6 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @return a Future[Unit] whose value is populated when all of the fs return.
    */
   def join[A](fs: JList[Future[A]]): Future[Unit] = Future.join(fs.asScala)
-
-  /**
-   * "Select" off the first future to be satisfied.  Return this as a
-   * result, with the remainder of the Futures as a sequence.
-   *
-   * @param fs a scala.collection.Seq
-   */
-  @deprecated("Use Futures.select(java.util.List) and JavaConversions instead.", "2014-12-03")
-  def select[A](fs: Seq[Future[A]]): Future[(Try[A], Seq[Future[A]])] = Future.select(fs)
 
   /**
    * "Select" off the first future to be satisfied.  Return this as a
