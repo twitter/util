@@ -92,6 +92,14 @@ class NetUtilTest extends WordSpec {
       assert(NetUtil.isInetAddressInBlock(InetAddress.getByName("192.169.0.1"), block)     == false)
     }
 
+    "isInetAddressInBlock" in {
+      val block =  NetUtil.cidrToIpBlock("192.168.0.0/16")
+
+      assert(NetUtil.isInetAddressInBlock(InetAddress.getByName("192.168.0.1"),     block) === true)
+      assert(NetUtil.isInetAddressInBlock(InetAddress.getByName("192.168.255.254"), block) === true)
+      assert(NetUtil.isInetAddressInBlock(InetAddress.getByName("192.169.0.1"), block)     === false)
+    }
+
     "isIpInBlocks" in {
       val blocks = Seq(NetUtil.cidrToIpBlock("127"),
                        NetUtil.cidrToIpBlock("10.1.1.0/24"),
