@@ -3,39 +3,41 @@ package com.twitter.io
 import java.io.InputStream
 
 class BufInputStream(val buf: Buf) extends InputStream {
-  /**
-   * The slice of `buf` that hasn't been consumed.
-   */
-  private[this] var rest: Buf = buf
+
+  private[this] val length = buf.length
 
   /**
-   * A saved version of `rest`
+   * The index of the next byte to be read.
    */
-  private[this] var mrk: Buf = buf
+  private[this] var index: Int = 0
+
+  /**
+   * A saved version of `index`
+   */
+  private[this] var mrk: Int = 0
 
   // Returns an estimate of the number of bytes that can be read (or
   // skipped over) from this input stream without blocking by the next
   // invocation of a method for this input stream.
-  override def available(): Int = synchronized { rest.length }
+  override def available(): Int = synchronized { length - index }
 
   // Closing a BufInputStream has no effect.
   override def close() {}
 
   // Marks the current position in this input stream.
-  override def mark(readlimit: Int) = synchronized { mrk = rest }
+  override def mark(readlimit: Int) = synchronized { mrk = index }
 
   // Tests if this input stream supports the mark and reset methods.
   override def markSupported(): Boolean = true
 
   // Reads the next byte of data from the input stream.
   def read(): Int = synchronized {
-    if (rest.length <= 0)
-      return -1
-
-    val b = new Array[Byte](1)
-    rest.slice(0, 1).write(b, 0)
-    rest = rest.slice(1, rest.length)
-    b(0) & 0xFF
+    if (index >= length) -1
+    else {
+      val b = buf.get(index)
+      index += 1
+      b & 0xFF
+    }
   }
 
   /**
@@ -43,33 +45,38 @@ class BufInputStream(val buf: Buf) extends InputStream {
    *  array of bytes.
    */
   override def read(b: Array[Byte], off: Int, len: Int): Int = synchronized {
-    if (rest.length <= 0)
-      return -1
+    if (off < 0)
+      throw new IllegalArgumentException("Offset must not be negative")
+    else if (len < 0)
+      throw new IllegalArgumentException("Length must not be negative")
+    else if (len > b.length - off)
+      throw new IllegalArgumentException("Length must not exceed the destination array size - offset")
 
-    if (len == 0)
-      return 0
-
-    val n = len min rest.length
-    rest.slice(0, n).write(b, off)
-    rest = rest.slice(n, rest.length)
-    n
+    if (index >= length) -1
+    else if (len == 0)  0
+    else {
+      val n = math.min(len, available)
+      buf.slice(index, index + n).write(b, off)
+      index += n
+      n
+    }
   }
 
   /**
    * Repositions this stream to the position at the time the mark
    * method was last called on this input stream.
    */
-  override def reset() = synchronized { rest = mrk }
+  override def reset() = synchronized { index = mrk }
 
   /**
    * Skips over and discards n bytes of data from this input stream.
    */
   override def skip(n: Long): Long = synchronized {
-    if (n <= 0)
-      return 0
-
-    val skipped = n min rest.length
-    rest = rest.slice(skipped.toInt, rest.length)
-    skipped
+    if (n <= 0L) 0L
+    else {
+      val skipped = math.min(n, available)
+      index += skipped.toInt
+      skipped
+    }
   }
 }
