@@ -30,6 +30,11 @@ API Changes:
   * util-eval: Removed from the project. ``RB_ID=915430``
     https://finagle.github.io/blog/2017/04/06/announce-removals/
 
+Runtime Behavior Changes:
+
+  * util-core: All `Timers` now handle negative or undefined times/durations in uniform way:
+    treat them as zeros (i.e., `Time.epoch`, `Duration.Zero`). ``RB_ID=916008``
+
 6.43.0  2017-04-20
 
 Runtime Behavior Changes:

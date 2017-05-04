@@ -172,16 +172,6 @@ class TimerTest extends FunSuite
     timer.stop()
   }
 
-  test("JavaTimer should schedule(pre-epoch)") {
-    val timer = new JavaTimer
-    val counter = new AtomicInteger(0)
-    timer.schedule(Time.Bottom) {
-      counter.incrementAndGet()
-    }
-    eventually { assert(counter.get() == 1) }
-    timer.stop()
-  }
-
   test("JavaTimer should cancel schedule(when)") {
     val timer = new JavaTimer
     val counter = new AtomicInteger(0)
@@ -270,6 +260,24 @@ class TimerTest extends FunSuite
       }
     }
   }
+
+  test("Timer should schedule(pre-epoch, negative-period)") {
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      val counter = new AtomicInteger(0)
+
+      timer.schedule(Time.Bottom, Duration.Bottom)(counter.incrementAndGet())
+
+      ctl.advance(1.millis)
+      timer.tick()
+      assert(counter.get() == 1)
+
+      ctl.advance(1.millis)
+      timer.tick()
+      assert(counter.get() == 2)
+    }
+  }
+
 
   test("Timer should schedule(when)") {
     Time.withCurrentTimeFrozen { ctl =>

@@ -26,12 +26,15 @@ trait TimerTask extends Closable {
  * @see [[MockTimer]] for use in tests that require determinism.
  */
 trait Timer {
+
   /**
    * Run `f` at time `when`.
+   *
+   * @note If `when` is negative or undefined, it will be treated as [[Time.epoch]].
    */
   final def schedule(when: Time)(f: => Unit): TimerTask = {
     val locals = Local.save()
-    scheduleOnce(when) {
+    scheduleOnce(when.max(Time.epoch)) {
       Local.let(locals)(Monitor.get(f))
     }
   }
@@ -39,12 +42,16 @@ trait Timer {
   protected def scheduleOnce(when: Time)(f: => Unit): TimerTask
 
   /**
-   * Run `f` at time `when`; subsequently run `f` at every
-   * elapsed `period`.
+   * Run `f` at time `when`; subsequently run `f` at every elapsed `period`.
+   *
+   * @note If `period` is negative or undefined, the timer task will be rescheduled
+   *       immediately (i.e., `period` will be treated as [[Duration.Zero]]).
+   *
+   * @note If `when` is negative or undefined, it will be treated as [[Time.epoch]].
    */
   final def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
     val locals = Local.save()
-    schedulePeriodically(when, period) {
+    schedulePeriodically(when.max(Time.epoch), period.max(Duration.Zero)) {
       Local.let(locals)(Monitor.get(f))
     }
   }
@@ -222,13 +229,13 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
 
   protected def scheduleOnce(when: Time)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(try f catch catcher)
-    underlying.schedule(task, safeTime(when).toDate)
+    underlying.schedule(task, when.toDate)
     toTimerTask(task)
   }
 
   protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask = {
     val task = toJavaTimerTask(try f catch catcher)
-    underlying.schedule(task, safeTime(when).toDate, period.inMillis)
+    underlying.schedule(task, when.toDate, period.inMillis)
     toTimerTask(task)
   }
 
@@ -246,18 +253,11 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
     t.printStackTrace(System.err)
   }
 
-  // Make sure Time is on or after the epoch.  j.u.Timer throws an
-  // IllegalArgumentException if the value is negative.  To allow `when` to be
-  // before the epoch (e.g. Time.Bottom), move any pre-epoch times to the epoch.
-  private[this] def safeTime(time: Time): Time = {
-    time.max(Time.epoch)
-  }
-
-  private[this] def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
+  private[this] final def toJavaTimerTask(f: => Unit) = new java.util.TimerTask {
     def run(): Unit = f
   }
 
-  private[this] def toTimerTask(task: java.util.TimerTask) = new TimerTask {
+  private[this] final def toTimerTask(task: java.util.TimerTask) = new TimerTask {
     def cancel(): Unit = task.cancel()
   }
 }
