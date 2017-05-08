@@ -8,6 +8,11 @@ Next Version
 
 API Changes:
 
+  * util-core: ByteReader extends the AutoClosable interface to provide
+    a notion of resource management. Users should ensure that instances
+    of the ByteReader interface are closed after they are no longer
+    needed. ``RB_ID=916086``
+
   * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use
     `scala.collection.JavaConverters` instead. ``RB_ID=915544``
 

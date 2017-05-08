@@ -6,10 +6,11 @@ import java.lang.{Double => JDouble, Float => JFloat}
  * A [[ByteReader]] provides a stateful API to extract bytes from an
  * underlying buffer, which in most cases is a [[Buf]]. This conveniently
  * allows codec implementations to decode frames, specifically when they need
- * to decode and interpret the bytes as a numeric value. Unless otherwise
- * stated, [[ByteReader]] implementations are not thread safe.
+ * to decode and interpret the bytes as a numeric value.
+ *
+ * @note Unless otherwise stated, [[ByteReader]] implementations are not thread safe.
  */
-trait ByteReader {
+trait ByteReader extends AutoCloseable {
 
   /**
    * The remainder of bytes that the reader is capable of reading.
@@ -199,12 +200,17 @@ private[twitter] trait ProxyByteReader extends ByteReader {
   def skip(n: Int): Unit = reader.skip(n)
 
   def readAll(): Buf = reader.readAll()
+
+  def close(): Unit = reader.close()
 }
 
 object ByteReader {
 
   /**
    * Creates a [[ByteReader]].
+   *
+   * @note the created `ByteReader` assumes an immutable representation of the underlying
+   *       `Buf` and as such, the `close()` method is a no-op.
    */
   def apply(buf: Buf): ByteReader =
     new ByteReaderImpl(buf)
@@ -410,4 +416,6 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
     pos = len
     ret
   }
+
+  def close(): Unit = () // Does nothing.
 }
