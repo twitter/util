@@ -128,4 +128,37 @@ class AppTest extends FunSuite {
       assert(f.isDefined)
     }
   }
+
+  test("App: closes all closables that were added by closeOnExit") {
+    val app = new TestApp(() => ())
+
+    @volatile var closed = false
+    val closable = Closable.make { _ =>
+      closed = true
+      Future.Done
+    }
+
+    app.closeOnExit(closable)
+
+    assert(!closed)
+    app.main(Array.empty)
+    assert(closed)
+  }
+
+  test("App: closes all closables that were added by closeOnExit after app exited") {
+    val app = new TestApp(() => ())
+
+    @volatile var closed = false
+    val closable = Closable.make { _ =>
+      closed = true
+      Future.Done
+    }
+
+    assert(!closed)
+    app.main(Array.empty)
+    assert(!closed)
+
+    app.closeOnExit(closable)
+    assert(closed)
+  }
 }

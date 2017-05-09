@@ -105,7 +105,16 @@ trait App extends Closable with CloseAwaitably {
   /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
    */
-  final def closeOnExit(closable: Closable): Unit = exits.add(closable)
+  final def closeOnExit(closable: Closable): Unit = {
+    exits.add(closable)
+
+    // We check `closeDeadline` here to ensure that `closable` was added to
+    // `exits` prior to `close()` getting called. If `close()` has already been
+    // called, we should just close `closable` here.
+    if (closeDeadline != Time.Top) {
+      closable.close(closeDeadline)
+    }
+  }
 
   /**
    * Register a `closable` to be closed on application shutdown after those registered
@@ -118,7 +127,13 @@ trait App extends Closable with CloseAwaitably {
    *
    *       In all cases, the close deadline is enforced.
    */
-  final def closeOnExitLast(closable: Closable): Unit = lastExits.add(closable)
+  final def closeOnExitLast(closable: Closable): Unit = {
+    lastExits.add(closable)
+
+    if (closeDeadline != Time.Top) {
+      closable.close(closeDeadline)
+    }
+  }
 
   /**
    * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
