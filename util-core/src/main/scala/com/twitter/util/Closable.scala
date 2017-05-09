@@ -4,6 +4,7 @@ import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
 import java.util.HashMap
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.{Level, Logger}
+import scala.util.control.{NonFatal => NF}
 
 /**
  * Closable is a mixin trait to describe a closable ``resource``.
@@ -70,7 +71,7 @@ object Closable {
     def close(deadline: Time): Future[Unit] = {
       val fs = closables.map { closable =>
         try closable.close(deadline)
-        catch { case NonFatal(ex) => Future.exception(ex) }
+        catch { case NF(ex) => Future.exception(ex) }
       }
       for (f <- fs) {
         f.poll match {
@@ -137,7 +138,7 @@ object Closable {
             logger.log(Level.FINE,
               "com.twitter.util.Closable collector thread caught InterruptedException")
 
-          case NonFatal(exc) =>
+          case NF(exc) =>
             logger.log(Level.SEVERE,
               "com.twitter.util.Closable collector thread caught exception", exc)
 

@@ -6,6 +6,12 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-app: Optional resource shutdown sequencing for registered closables
+    via `c.t.app.App#closeOnExitLast`. See longer note there for usage.
+    ``RB_ID=916120``
+
 API Changes:
 
   * util-core: ByteReader extends the AutoClosable interface to provide

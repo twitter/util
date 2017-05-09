@@ -67,7 +67,11 @@ trait App extends Closable with CloseAwaitably {
   private val inits: mutable.Buffer[() => Unit] = mutable.Buffer.empty
   private val premains: mutable.Buffer[() => Unit] = mutable.Buffer.empty
   private val exits: ConcurrentLinkedQueue[Closable] = new ConcurrentLinkedQueue
+  private val lastExits: ConcurrentLinkedQueue[Closable] = new ConcurrentLinkedQueue
   private val postmains: ConcurrentLinkedQueue[() => Unit] = new ConcurrentLinkedQueue
+
+  // finagle isn't available here, so no DefaultTimer
+  protected lazy val shutdownTimer: Timer = new JavaTimer(isDaemon = true)
 
   /**
    * Invoke `f` before anything else (including flag parsing).
@@ -101,9 +105,20 @@ trait App extends Closable with CloseAwaitably {
   /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
    */
-  final def closeOnExit(closable: Closable): Unit = {
-    exits.add(closable)
-  }
+  final def closeOnExit(closable: Closable): Unit = exits.add(closable)
+
+  /**
+   * Register a `closable` to be closed on application shutdown after those registered
+   * via `clostOnExit`.
+   *
+   * @note Application shutdown occurs in two sequential phases to allow explicit
+   *       encoding of resource lifecycle relationships. Concretely this is useful
+   *       for encoding that a monitoring resource should outlive a monitored
+   *       resource.
+   *
+   *       In all cases, the close deadline is enforced.
+   */
+  final def closeOnExitLast(closable: Closable): Unit = lastExits.add(closable)
 
   /**
    * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
@@ -113,9 +128,7 @@ trait App extends Closable with CloseAwaitably {
   protected final def onExit(f: => Unit): Unit = {
     closeOnExit {
       Closable.make { deadline => // close() ensures that this deadline is sane
-        // finagle isn't available here, so no DefaultTimer
-        val exitTimer = new JavaTimer(isDaemon = true)
-        FuturePool.unboundedPool(f).by(exitTimer, deadline)
+        FuturePool.unboundedPool(f).by(shutdownTimer, deadline)
       }
     }
   }
@@ -132,8 +145,12 @@ trait App extends Closable with CloseAwaitably {
    * Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
    */
   final def close(deadline: Time): Future[Unit] = closeAwaitably {
-    closeDeadline = deadline max (Time.now + MinGrace)
-    Closable.all(exits.asScala.toSeq: _*).close(closeDeadline)
+    closeDeadline = deadline.max(Time.now + MinGrace)
+    val firstPhase = Closable.all(exits.asScala.toSeq: _*)
+      .close(closeDeadline)
+      .by(shutdownTimer, closeDeadline)
+
+    firstPhase.transform { _ => Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline) }
   }
 
   final def main(args: Array[String]): Unit = {

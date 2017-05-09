@@ -1,5 +1,7 @@
 package com.twitter.app
 
+import com.twitter.conversions.time._
+import com.twitter.util.{Closable, Future, MockTimer, Promise, Time}
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
@@ -77,5 +79,53 @@ class AppTest extends FunSuite {
     }
     new Test1().main(Array.empty)
     assert(q.toArray.toSeq == Seq(0, 1, 2, 3, 4))
+  }
+
+  test("App: sequenced exits") {
+    val a = new App { def main() = () }
+    val p = new Promise[Unit]
+    var n1, n2 = 0
+    val c1 = Closable.make{_ => n1 += 1; p}
+    val c2 = Closable.make{_ => n2 += 1; Future.Done}
+    a.closeOnExitLast(c2)
+    a.closeOnExit(c1)
+    val f = a.close()
+
+    assert(n1 == 1)
+    // c2 hasn't been closed yet
+    assert(n2 == 0)
+    assert(!f.isDefined)
+
+    p.setDone
+    assert(n2 == 1)
+    assert(f.isDefined)
+  }
+
+  test("App: sequenced exits respect deadline") {
+    val t = new MockTimer
+    val a = new App {
+      override lazy val shutdownTimer = t
+      def main() = ()
+    }
+
+    Time.withCurrentTimeFrozen { ctl =>
+      var n1, n2 = 0
+      val c1 = Closable.make { _ => n1 += 1; Future.never }
+      val c2 = Closable.make { _ => n2 += 1; Future.Done }
+      a.closeOnExitLast(c2)
+      a.closeOnExit(c1)
+      val f = a.close(Time.now + 1.second)
+
+      assert(n1 == 1)
+      // c2 hasn't been closed yet
+      assert(n2 == 0)
+      assert(!f.isDefined)
+
+      ctl.advance(2.seconds)
+      t.tick()
+
+      assert(n2 == 1)
+      assert(f.isDefined)
+    }
   }
 }
