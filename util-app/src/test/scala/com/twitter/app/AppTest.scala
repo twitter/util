@@ -129,10 +129,54 @@ class AppTest extends FunSuite {
     }
   }
 
+  test("App: sequenced exits respect deadline when closeOnExit and closeOnExitLast called after close") {
+    val t = new MockTimer
+    val a = new App {
+      override lazy val shutdownTimer = t
+      def main() = ()
+    }
+
+    Time.withCurrentTimeFrozen { ctl =>
+      var n1, n2, n3, n4 = 0
+      val c1 = Closable.make { _ => n1 += 1; Future.never } // Exit
+      val c2 = Closable.make { _ => n2 += 1; Future.Done }  // ExitLast
+      val c3 = Closable.make { _ => n3 += 1; Future.Done }  // Late Exit
+      val c4 = Closable.make { _ => n4 += 1; Future.Done }  // Late ExitLast
+      a.closeOnExitLast(c2)
+      a.closeOnExit(c1)
+      val f = a.close(Time.now + 1.second)
+
+      assert(n1 == 1)
+      assert(n2 == 0)
+      assert(n3 == 0)
+      assert(n4 == 0)
+
+      assert(!f.isDefined)
+
+      a.closeOnExitLast(c4)
+      a.closeOnExit(c3)
+
+      assert(n1 == 1)
+      assert(n2 == 0)
+      assert(n3 == 1)
+      assert(n4 == 0)
+
+      ctl.advance(2.seconds)
+      t.tick()
+
+      assert(n1 == 1)
+      assert(n2 == 1)
+      assert(n3 == 1)
+      assert(n4 == 1)
+
+      assert(f.isDefined)
+    }
+  }
+
   test("App: closes all closables that were added by closeOnExit") {
     val app = new TestApp(() => ())
 
-    @volatile var closed = false
+    var closed = false
     val closable = Closable.make { _ =>
       closed = true
       Future.Done
@@ -148,7 +192,7 @@ class AppTest extends FunSuite {
   test("App: closes all closables that were added by closeOnExit after app exited") {
     val app = new TestApp(() => ())
 
-    @volatile var closed = false
+    var closed = false
     val closable = Closable.make { _ =>
       closed = true
       Future.Done
