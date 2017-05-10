@@ -138,7 +138,7 @@ trait App extends Closable with CloseAwaitably {
     } else {
       // `close()` already called, we need to close this here, but only
       // after `close()` completes and `closing` is satisfied
-      closing.transform {_ => closable.close(closeDeadline) }
+      closing.transform { _ => closable.close(closeDeadline) }
     }
   }
 
