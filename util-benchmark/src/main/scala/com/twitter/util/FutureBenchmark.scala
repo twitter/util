@@ -169,8 +169,6 @@ object FutureBenchmark {
 
   private val RespondFn: Try[Unit] => Unit = { _ => () }
 
-  private val NumToSelect = 5
-
   @State(Scope.Benchmark)
   class RunqState {
     @Param(Array("1", "2", "3", "10", "20"))
@@ -181,7 +179,7 @@ object FutureBenchmark {
 
   @State(Scope.Thread)
   class CollectState {
-    @Param(Array("0", "100"))
+    @Param(Array("0", "1", "10", "100"))
     var size: Int = 0
 
     var futures: List[Future[Int]] = _
@@ -263,16 +261,29 @@ object FutureBenchmark {
 
   @State(Scope.Benchmark)
   class SelectState {
+
+    @Param(Array("0", "1", "10", "100"))
+    var numToSelect = 0
+
     val p = new Promise[Unit]
     val futures: Seq[Future[Unit]] =
-      Seq.fill(NumToSelect - 1) { p } :+ Future.Done
+      if (numToSelect == 0)
+        IndexedSeq.empty
+      else
+        IndexedSeq.fill(numToSelect - 1) { p } :+ Future.Done
   }
 
   @State(Scope.Benchmark)
   class SelectIndexState {
+
+    @Param(Array("0", "1", "10", "100"))
+    var numToSelect = 0
+
     val p = new Promise[Unit]
     val futures: IndexedSeq[Future[Unit]] =
-      IndexedSeq.fill(NumToSelect - 1) { p } :+ Future.Done
+      if (numToSelect == 0)
+        IndexedSeq.empty
+      else
+        IndexedSeq.fill(numToSelect - 1) { p } :+ Future.Done
   }
-
 }
