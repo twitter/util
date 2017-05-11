@@ -104,7 +104,6 @@ trait App extends Closable with CloseAwaitably {
 
   /**
    * This is satisfied when all members of `exits` and `lastExits` have closed.
-   * Note
    *
    * @note Access needs to be mediated via the intrinsic lock.
    */
