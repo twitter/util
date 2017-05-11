@@ -104,6 +104,9 @@ trait App extends Closable with CloseAwaitably {
 
   /**
    * This is satisfied when all members of `exits` and `lastExits` have closed.
+   * Note
+   *
+   * @note Access needs to be mediated via the intrinsic lock.
    */
   @volatile private[this] var closing: Future[Unit] = Future.never
 
@@ -138,7 +141,9 @@ trait App extends Closable with CloseAwaitably {
     } else {
       // `close()` already called, we need to close this here, but only
       // after `close()` completes and `closing` is satisfied
-      closing.transform { _ => closable.close(closeDeadline) }
+      closing
+        .transform { _ => closable.close(closeDeadline) }
+        .by(shutdownTimer, closeDeadline)
     }
   }
 
@@ -173,7 +178,9 @@ trait App extends Closable with CloseAwaitably {
         .close(closeDeadline)
         .by(shutdownTimer, closeDeadline)
 
-      firstPhase.transform { _ => Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline) }
+      firstPhase
+        .transform { _ => Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline) }
+        .by(shutdownTimer, closeDeadline)
     }
 
     closing
