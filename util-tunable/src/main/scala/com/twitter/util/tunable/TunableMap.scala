@@ -18,6 +18,19 @@ private[twitter] abstract class TunableMap { self =>
   def apply[T](key: TunableMap.Key[T]): Tunable[T]
 
   /**
+   * Returns a String representation of a [[TunableMap]], in the form:
+   * TunableMap(id1 -> value1, id2 -> value2)
+   *
+   * Entries are sorted alphabetically by id.
+   */
+  def contentString: String = {
+    val contents = entries.toSeq.sortBy(_.key.id).map { case TunableMap.Entry(key, value, _) =>
+      s"${key.id} -> $value"
+    }.mkString(", ")
+    s"TunableMap($contents)"
+  }
+
+  /**
    * Returns an Iterator over [[TunableMap.Entry]] for each [[Tunable]] in the map with a value.
    */
   private[twitter] def entries: Iterator[TunableMap.Entry[_]]

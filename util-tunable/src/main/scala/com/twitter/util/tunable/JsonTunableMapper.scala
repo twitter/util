@@ -142,7 +142,7 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
   /**
    * Parse the contents of the given file URL `url` into a [[TunableMap]]
    */
-  private[this] def parse(url: URL): Try[TunableMap] = Try {
+  private[tunable] def parse(url: URL): Try[TunableMap] = Try {
     jsonTunablesToTunableMap(mapper.readValue(url, classOf[JsonTunables]), url.toString)
   }
 

@@ -42,6 +42,14 @@ class MutableTest extends FunSuite {
     assert(tunable().isInstanceOf[Option[Animal]])
   }
 
+  test("contentString") {
+    val map = TunableMap.newMutable()
+    val key1 = map.put("id1", "value1")
+    val key2 = map.put("id2", "value2")
+    val expected = """TunableMap(id1 -> value1, id2 -> value2)"""
+    assert(map.contentString == expected)
+  }
+
   test("Can create keys to retrieve tunables") {
     val id = "key"
     val value = 5

@@ -1,17 +1,22 @@
-scala_library(name='scala',
-  provides = scala_artifact(
-    org = 'com.twitter',
-    name = 'util-tunable',
-    repo = artifactory,
-  ),
-   dependencies=[
+scala_library(
+  name='scala',
+  dependencies=[
     '3rdparty/jvm/com/fasterxml/jackson/core:jackson-core',
     '3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind',
     '3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala',
     'util/util-app/src/main/scala',
     'util/util-core/src/main/scala:scala',
+    'util/util-tunable/src/main/scala:scala',
+  ],
+  sources=rglobs('*.scala'),
+)
+
+jvm_binary(
+  name='configuration-linter',
+  main='com.twitter.util.tunable.linter.ConfigurationLinter',
+  dependencies=[
+    ':scala',
   ],
   strict_deps=True,
   fatal_warnings=True,
-  sources=rglobs('*.scala', exclude=[rglobs('util/tunable/linter/*')]),
 )

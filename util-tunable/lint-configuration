@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -euo pipefail
+
+usage() {
+cat 1>&2 <<EOF
+usage: `basename $0` [full-path-to-configuration-file ...]
+EOF
+}
+
+while [ $# -gt 0 ]
+do
+  case "$1" in
+    -h)
+      usage
+      exit 0
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo
+      break
+  esac
+done
+
+args=$(for x in "$@"; do echo "$x"; done)
+./pants run --quiet util/util-tunable/src/main/scala/com/twitter/util/tunable/linter:configuration-linter -- $args
