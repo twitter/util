@@ -159,6 +159,37 @@ object Future {
 
   def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 
+  // The thread-safety for `outer` is guaranteed by synchronizing on `this`.
+  private[this] final class MonitoredPromise[A](private[this] var outer: Promise[A])
+    extends Monitor with (Try[A] => Unit) {
+
+    // We're serializing access to the underlying promise such that whatever (failure, success)
+    // runs it first also nulls it out. We have to stop referencing `outer` from this monitor
+    // given it might be captured by one of the pending promises.
+    private[this] def run(): Promise[A] = synchronized {
+      val p = outer
+      outer = null
+      p
+    }
+
+    // Function1.apply
+    def apply(ta: Try[A]): Unit = {
+      val p = run()
+      if (p != null) p.update(ta)
+    }
+
+    // Monitor.handle
+    def handle(t: Throwable): Boolean = {
+      val p = run()
+      if (p == null) false
+      else {
+        p.raise(t)
+        p.setException(t)
+        true
+      }
+    }
+  }
+
   /**
    * Run the computation `mkFuture` while installing a [[Monitor]] that
    * translates any exception thrown into an encoded one.  If an
@@ -173,40 +204,21 @@ object Future {
    * onSuccess g; f0 }` will cancel f0 so that f0 never hangs.
    */
   def monitored[A](mkFuture: => Future[A]): Future[A] = {
-    val p = new Promise[A]()
-    val monitored = new Monitored[A](p)
-    monitored {
+    val p = new Promise[A]
+    val monitored = new MonitoredPromise(p)
+
+    // This essentially simulates MonitoredPromise.apply { ... } but w/o closure allocations.
+    val saved = Monitor.get
+    try {
+      Monitor.set(monitored)
       val f = mkFuture
       p.forwardInterruptsTo(f)
-      f.respond(monitored.setTo)
-    }
+      f.respond(monitored)
+    } catch {
+      case t: Throwable => if (!monitored.handle(t)) throw t
+    } finally { Monitor.set(saved) }
+
     p
-  }
-
-  private[this] class Monitored[A](private[this] var p: Promise[A]) extends Monitor {
-    private[this] def getAndSetNull(): Promise[A] = synchronized {
-      val prev = p
-      if (p != null)
-        p = null
-      prev
-    }
-
-    def setTo(r: Try[A]): Unit = {
-      val prev = getAndSetNull()
-      if (prev != null)
-        prev.update(r)
-    }
-
-    def handle(exc: Throwable): Boolean = {
-      val prev = getAndSetNull()
-      if (prev == null) {
-        false
-      } else {
-        prev.raise(exc)
-        prev.setException(exc)
-        true
-      }
-    }
   }
 
   /**

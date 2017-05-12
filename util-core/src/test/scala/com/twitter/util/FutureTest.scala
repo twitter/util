@@ -893,7 +893,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             val f = Future.monitored { inner2.ensure(()); inner1 }
             val s = "."*1024
             val sSize = ObjectSizeCalculator.getObjectSize(s)
-            inner1.setValue("."*1024)
+            inner1.setValue(s)
             val inner2Size = ObjectSizeCalculator.getObjectSize(inner2)
             assert(inner2Size < sSize)
           }
