@@ -6,6 +6,17 @@ class FutureBenchmark extends StdBenchAnnotations {
   import FutureBenchmark._
 
   @Benchmark
+  def timePromise(): Future[Unit] =
+    new Promise[Unit]
+
+  @Benchmark
+  def timeBy(state: ByState): Future[Unit] = {
+    import state._
+
+    new Promise[Unit].by(timer, now, exc)
+  }
+
+  @Benchmark
   @OperationsPerInvocation(N)
   def timeCallback(state: CallbackState) {
     import state._
@@ -168,6 +179,13 @@ object FutureBenchmark {
   final val N = 10
 
   private val RespondFn: Try[Unit] => Unit = { _ => () }
+
+  @State(Scope.Benchmark)
+  class ByState {
+    val timer = Timer.Nil
+    val now: Time = Time.now
+    val exc =  new TimeoutException("")
+  }
 
   @State(Scope.Benchmark)
   class RunqState {
