@@ -35,10 +35,19 @@ class PromiseBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def interrupts(state: PromiseBenchmark.InterruptsState): Promise[String] = {
-    Promise.interrupts(state.futures: _*)
+  def interrupts1(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+    Promise.interrupts(state.a)
   }
 
+  @Benchmark
+  def interrupts2(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+    Promise.interrupts(state.a, state.b)
+  }
+
+  @Benchmark
+  def interruptsN(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+    Promise.interrupts(state.futures: _*)
+  }
 }
 
 object PromiseBenchmark {
@@ -60,15 +69,10 @@ object PromiseBenchmark {
     }
   }
 
-  @State(Scope.Thread)
+  @State(Scope.Benchmark)
   class InterruptsState {
-    var futures: List[Future[Int]] = _
-
-    @Setup
-    def prepare(): Unit = {
-      futures = (0 until 100).map { i =>
-        Future.value(i)
-      }.toList
-    }
+    val futures: List[Future[Int]] = (0 until 100).map(i => Future.value(i)).toList
+    val a: Future[String] = Future.value("a")
+    val b: Future[String] = Future.value("b")
   }
 }

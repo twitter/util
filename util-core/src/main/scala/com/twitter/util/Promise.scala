@@ -282,27 +282,53 @@ object Promise {
   def apply[A](): Promise[A] = new Promise[A]
 
   /**
-   * Create a promise that interrupts all of ''fs''. In particular:
-   * the returned promise handles an interrupt when any of ''fs'' do.
+   * Single-arg version to avoid object creation and take advantage of `forwardInterruptsTo`.
+   *
+   * @see [[interrupts(Future, Future)]]
+   * @see [[interrupts(Future*)]]
    */
-  def interrupts[A](fs: Future[_]*): Promise[A] = {
-    val handler: PartialFunction[Throwable, Unit] = {
-      case intr =>
-        val iterator = fs.iterator
-        while (iterator.hasNext)
-          iterator.next().raise(intr)
-    }
-    new Promise[A](handler)
+  def interrupts[A](f: Future[_]): Promise[A] = new Promise[A] {
+    forwardInterruptsTo(f)
   }
 
   /**
-   * Single-arg version to avoid object creation and take advantage of `forwardInterruptsTo`.
+   * Create a promise that interrupts `a` and `b` futures. In particular:
+   * the returned promise handles an interrupt when either `a` or `b` does.
+   *
+   * @see [[interrupts(Future)]]
+   * @see [[interrupts(Future*)]]
    */
-  def interrupts[A](f: Future[_]): Promise[A] = {
-    val p = new Promise[A]
-    p.forwardInterruptsTo(f)
-    p
-  }
+  def interrupts[A](a: Future[_], b: Future[_]): Promise[A] =
+    new Promise[A] with PartialFunction[Throwable, Unit] {
+      def isDefinedAt(t: Throwable): Boolean = true
+      def apply(t: Throwable): Unit = {
+        a.raise(t)
+        b.raise(t)
+      }
+
+      setInterruptHandler(this)
+    }
+
+  /**
+   * Create a promise that interrupts all of `fs`. In particular:
+   * the returned promise handles an interrupt when any of `fs` do.
+   *
+   * @see [[interrupts(Future)]]
+   * @see [[interrupts(Future, Future)]]
+   */
+  def interrupts[A](fs: Future[_]*): Promise[A] =
+    new Promise[A] with PartialFunction[Throwable, Unit] {
+      def isDefinedAt(t: Throwable): Boolean = true
+
+      def apply(t: Throwable): Unit = {
+        val it = fs.iterator
+        while (it.hasNext) {
+          it.next().raise(t)
+        }
+      }
+
+      setInterruptHandler(this)
+    }
 
   /**
    * Create a derivative promise that will be satisfied with the result of the

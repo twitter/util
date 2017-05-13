@@ -3,6 +3,7 @@ package com.twitter.util
 import org.openjdk.jmh.annotations._
 
 class FutureBenchmark extends StdBenchAnnotations {
+
   import FutureBenchmark._
 
   @Benchmark
@@ -28,7 +29,7 @@ class FutureBenchmark extends StdBenchAnnotations {
       if (n > 0) p.respond(RespondFn)
       if (n > 1) p.respond(RespondFn)
       if (n > 2) p.respond(RespondFn)
-      j+=1
+      j += 1
     }
   }
 
@@ -144,7 +145,9 @@ class FutureBenchmark extends StdBenchAnnotations {
     var sum = 0
     var i = 0
     while (i < state.depth) {
-      next = next.ensure { sum += 1 }
+      next = next.ensure {
+        sum += 1
+      }
       i += 1
     }
     p
@@ -172,7 +175,6 @@ class FutureBenchmark extends StdBenchAnnotations {
     }
     Await.result(f)
   }
-
 }
 
 object FutureBenchmark {
