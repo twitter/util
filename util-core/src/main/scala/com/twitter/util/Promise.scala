@@ -1,12 +1,15 @@
 package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
-import java.util.concurrent.TimeUnit
 import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.runtime.NonLocalReturnControl
 
 object Promise {
+
+  private class ReleaseOnApplyCDL[A] extends java.util.concurrent.CountDownLatch(1)
+    with (Try[A] => Unit) { def apply(ta: Try[A]): Unit = countDown() }
+
   /**
    * A continuation stored from a promise.
    */
@@ -652,8 +655,8 @@ class Promise[A]
       case res: Try[A] /* Done */ =>
         this
       case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
-        val condition = new java.util.concurrent.CountDownLatch(1)
-        respond { _ => condition.countDown() }
+        val condition = new ReleaseOnApplyCDL[A]
+        respond(condition)
 
         // we need to `flush` pending tasks to give ourselves a chance
         // to complete. As a succinct example, this hangs without the `flush`:
@@ -664,7 +667,7 @@ class Promise[A]
         //
         Scheduler.flush()
 
-        if (condition.await(timeout.inNanoseconds, TimeUnit.NANOSECONDS)) this
+        if (condition.await(timeout.inNanoseconds, java.util.concurrent.TimeUnit.NANOSECONDS)) this
         else throw new TimeoutException(timeout.toString)
     }
 
