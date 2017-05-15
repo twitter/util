@@ -67,44 +67,38 @@ trait Timer {
   /**
    * Performs an operation after the specified delay.  Interrupting the Future
    * will cancel the scheduled timer task, if not too late.
+   *
+   * @note Interrupts from returned [[Future]] will be translated into a task
+   *       cancellation if and only if this [[Timer]] honors cancellations in
+   *       `schedule(Time)(f)`.
    */
-  def doLater[A](delay: Duration)(f: => A): Future[A] = {
+  def doLater[A](delay: Duration)(f: => A): Future[A] =
     doAt(Time.now + delay)(f)
-  }
 
   /**
    * Performs an operation at the specified time.  Interrupting the Future
    * will cancel the scheduled timer task, if not too late.
+   *
+   * @note Interrupts from returned [[Future]] will be translated into a task
+   *       cancellation if and only if this [[Timer]] honors cancellations in
+   *       `schedule(Time)(f)`.
    */
-  def doAt[A](time: Time)(f: => A): Future[A] = {
-    var pending = true
-    val p = new Promise[A]()
-
-    def isFirst(): Boolean = p.synchronized {
-      if (pending) {
-        pending = false
-        true
-      } else {
-        false
+  def doAt[A](time: Time)(f: => A): Future[A] =
+    new Promise[A] with PartialFunction[Throwable, Unit] {
+      private[this] val task = schedule(time) {
+        updateIfEmpty(Try(f))
       }
-    }
 
-    val task = schedule(time) {
-      if (isFirst())
-        p.update(Try(f))
-    }
+      def isDefinedAt(t: Throwable): Boolean = true
 
-    p.setInterruptHandler { case cause =>
-      if (isFirst()) {
+      // Interrupt handler.
+      def apply(t: Throwable): Unit = {
         task.cancel()
-
-        val exc = new CancellationException
-        exc.initCause(cause)
-        p.setException(exc)
+        updateIfEmpty(Throw(new CancellationException().initCause(t)))
       }
+
+      setInterruptHandler(this)
     }
-    p
-  }
 
   /**
    * Stop the timer. Pending tasks are cancelled.
