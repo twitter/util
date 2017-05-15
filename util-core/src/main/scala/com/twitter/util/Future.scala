@@ -856,7 +856,7 @@ abstract class FutureTransformer[-A, +B] {
  *      on concurrent programming with Futures.
  * @see [[Futures]] for Java-friendly APIs.
  */
-abstract class Future[+A] extends Awaitable[A] {
+abstract class Future[+A] extends Awaitable[A] { self =>
 
   /**
    * When the computation completes, invoke the given callback
@@ -1029,14 +1029,21 @@ abstract class Future[+A] extends Awaitable[A] {
     if (when == Time.Top || isDefined)
       return this
 
-    val p = Promise.interrupts[A](this)
-    val task = timer.schedule(when) {
-      p.updateIfEmpty(Throw(exc))
+    // Mix in Fn1 so that we can avoid an allocation below when calling respond
+    val p = new Promise[A] with Function1[Try[A], Unit] {
+      this.forwardInterruptsTo(self)
+
+      private[this] val task = timer.schedule(when) {
+        this.updateIfEmpty(Throw(exc))
+      }
+
+      def apply(value: Try[A]) : Unit = {
+        task.cancel()
+        this.updateIfEmpty(value)
+      }
     }
-    respond { r =>
-      task.cancel()
-      p.updateIfEmpty(r)
-    }
+
+    respond(p)
     p
   }
 
