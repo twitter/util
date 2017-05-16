@@ -7,6 +7,44 @@ import scala.runtime.NonLocalReturnControl
 
 object Promise {
 
+  /**
+   * Embeds an "interrupt handler" into a [[Promise]].
+   *
+   * This is a total handler such that it's defined on any [[Throwable]]. Use
+   * [[Promise.setInterruptHandler()]] if you need to leave an interrupt handler
+   * undefined for certain types of exceptions.
+   *
+   * Example: (`p` and `q` are equivalent, but `p` allocates less):
+   *
+   * {{{
+   *   import com.twitter.util.Promise
+   *
+   *   val p = new Promise[A] with Promise.InterruptHandler {
+   *     def onInterrupt(t: Throwable): Unit = setException(t)
+   *   }
+   *
+   *   val q = new Promise[A]
+   *   q.setInterruptHandler { case t: Throwable => q.setException(t) }
+   * }}}
+   *
+   * @note Later calls to `setInterruptHandler` on a promise mixing in this
+   *       trait will replace the embedded handler.
+   */
+  trait InterruptHandler extends PartialFunction[Throwable, Unit] { self: Promise[_] =>
+
+    // An interrupt handler is defined on each throwable. It's a total function.
+    final def isDefinedAt(x: Throwable): Boolean = true
+    final def apply(t: Throwable): Unit = onInterrupt(t)
+
+    /**
+     * Triggered on any interrupt (even [[scala.util.control.NonFatal a fatal one]]).
+     */
+    protected def onInterrupt(t: Throwable): Unit
+
+    // Register ourselves as the interrupt handler.
+    self.setInterruptHandler(this)
+  }
+
   private class ReleaseOnApplyCDL[A] extends java.util.concurrent.CountDownLatch(1)
     with (Try[A] => Unit) { def apply(ta: Try[A]): Unit = countDown() }
 
@@ -299,14 +337,11 @@ object Promise {
    * @see [[interrupts(Future*)]]
    */
   def interrupts[A](a: Future[_], b: Future[_]): Promise[A] =
-    new Promise[A] with PartialFunction[Throwable, Unit] {
-      def isDefinedAt(t: Throwable): Boolean = true
-      def apply(t: Throwable): Unit = {
+    new Promise[A] with InterruptHandler {
+      protected def onInterrupt(t: Throwable): Unit = {
         a.raise(t)
         b.raise(t)
       }
-
-      setInterruptHandler(this)
     }
 
   /**
@@ -317,17 +352,13 @@ object Promise {
    * @see [[interrupts(Future, Future)]]
    */
   def interrupts[A](fs: Future[_]*): Promise[A] =
-    new Promise[A] with PartialFunction[Throwable, Unit] {
-      def isDefinedAt(t: Throwable): Boolean = true
-
-      def apply(t: Throwable): Unit = {
+    new Promise[A] with InterruptHandler {
+      protected def onInterrupt(t: Throwable): Unit = {
         val it = fs.iterator
         while (it.hasNext) {
           it.next().raise(t)
         }
       }
-
-      setInterruptHandler(this)
     }
 
   /**

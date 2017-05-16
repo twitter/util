@@ -84,20 +84,15 @@ trait Timer {
    *       `schedule(Time)(f)`.
    */
   def doAt[A](time: Time)(f: => A): Future[A] =
-    new Promise[A] with PartialFunction[Throwable, Unit] {
+    new Promise[A] with Promise.InterruptHandler {
       private[this] val task = schedule(time) {
         updateIfEmpty(Try(f))
       }
 
-      def isDefinedAt(t: Throwable): Boolean = true
-
-      // Interrupt handler.
-      def apply(t: Throwable): Unit = {
+      protected def onInterrupt(t: Throwable): Unit = {
         task.cancel()
         updateIfEmpty(Throw(new CancellationException().initCause(t)))
       }
-
-      setInterruptHandler(this)
     }
 
   /**
