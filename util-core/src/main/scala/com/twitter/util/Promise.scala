@@ -75,12 +75,12 @@ object Promise {
   }
 
   /**
-   * A detachable [[com.twitter.util.Promise]].
+   * A detachable [[Promise]] created from a [[Promise]].
    */
   private class DetachablePromise[A](underlying: Promise[_ <: A])
-    extends Promise[A] with Promise.K[A] with Detachable
-  {
-    underlying.continue(this)
+    extends Promise[A]
+    with K[A]
+    with Detachable {
 
     def detach(): Boolean = underlying.detach(this)
 
@@ -88,9 +88,19 @@ object Promise {
     def apply(result: Try[A]): Unit = {
       update(result)
     }
+
+    // Register continuation.
+    underlying.continue(this)
   }
 
-  private class DetachableFuture[A] extends Promise[A] with Promise.Detachable {
+  /**
+   * A detachable [[Promise]] created from a [[Future]].
+   */
+  private class DetachableFuture[A](underlying: Future[A])
+    extends Promise[A]
+    with Detachable
+    with (Try[A] => Unit) {
+
     private[this] var detached: Boolean = false
 
     def detach(): Boolean = synchronized {
@@ -101,6 +111,11 @@ object Promise {
         true
       }
     }
+
+    def apply(result: Try[A]): Unit = if (detach()) update(result)
+
+    // Register handler.
+    underlying.respond(this)
   }
 
   /**
@@ -387,11 +402,7 @@ object Promise {
     case p: Promise[_] =>
       new DetachablePromise[A](p.asInstanceOf[Promise[A]])
     case _ =>
-      val p = new DetachableFuture[A]()
-      parent.respond { t =>
-        if (p.detach()) p.update(t)
-      }
-      p
+      new DetachableFuture[A](parent)
   }
 }
 
