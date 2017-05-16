@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import com.twitter.concurrent.{Offer, Scheduler, Tx}
-import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReferenceArray}
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList, Map => JMap}
 import scala.collection.JavaConverters.{
@@ -435,12 +435,38 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @return a `Future[Seq[B]]` containing the results of `f` being applied to every item in `as`
    */
   def traverseSequentially[A,B](as: Seq[A])(f: A => Future[B]): Future[Seq[B]] =
-    as.foldLeft(Future.value(Vector.empty[B])) { (resultsFuture, nextItem) =>
+    as.foldLeft(emptySeq[B]) { (resultsFuture, nextItem) =>
       for {
         results    <- resultsFuture
         nextResult <- f(nextItem)
       } yield results :+ nextResult
     }
+
+  private[this] final class CollectPromise[A](fs: Seq[Future[A]])
+    extends Promise[Seq[A]] with Promise.InterruptHandler {
+
+    private[this] val results = new mutable.ArraySeq[A](fs.size)
+    private[this] val count = new AtomicInteger(results.size)
+
+    // Respond handler. It's safe to write into different array cells concurrently.
+    // We guarantee the thread writing a last value will observe all previous writes
+    // (from other threads) given the happens-before relation between them (through
+    // the atomic counter).
+    def collectTo(index: Int): Try[A] => Unit = {
+      case Return(a) =>
+        results(index) = a
+        if (count.decrementAndGet() == 0) setValue(results)
+      case t @ Throw(_) =>
+        updateIfEmpty(t.cast[Seq[A]])
+    }
+
+    protected def onInterrupt(t: Throwable): Unit = {
+      val it = fs.iterator
+      while (it.hasNext) {
+        it.next().raise(t)
+      }
+    }
+  }
 
   /**
    * Collect the results from the given futures into a new future of
@@ -455,39 +481,20 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @see [[join]] if you are not interested in the results of the individual
    *     `Futures`, only when they are complete.
    */
-  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
-    if (fs.isEmpty) {
-      emptySeq
-    } else {
-      val fsSize = fs.size
-      val results = new AtomicReferenceArray[A](fsSize)
-      val count = new AtomicInteger(fsSize)
-      val p = Promise.interrupts[Seq[A]](fs:_*)
-
+  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] =
+    if (fs.isEmpty) emptySeq
+    else {
+      val result = new CollectPromise[A](fs)
       var i = 0
-      val iterator = fs.iterator
-      while (iterator.hasNext) {
-        val ii = i
-        iterator.next().respond {
-          case Return(x) =>
-            results.set(ii, x)
-            if (count.decrementAndGet() == 0) {
-              val resultsArray = new mutable.ArraySeq[A](fsSize)
-              var j = 0
-              while (j < fsSize) {
-                resultsArray(j) = results.get(j)
-                j += 1
-              }
-              p.setValue(resultsArray)
-            }
-          case Throw(cause) =>
-            p.updateIfEmpty(Throw(cause))
-        }
+      val it = fs.iterator
+
+      while (it.hasNext) {
+        it.next().respond(result.collectTo(i))
         i += 1
       }
-      p
+
+      result
     }
-  }
 
   /**
    * Collect the results from the given map `fs` of futures into a new future
