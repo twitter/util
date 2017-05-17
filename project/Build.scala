@@ -87,9 +87,9 @@ object Util extends Build {
           <url>https://www.twitter.com/</url>
         </developer>
       </developers>,
-    publishTo <<= version { (v: String) =>
+    publishTo := {
       val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT"))
+      if (version.value.trim.endsWith("SNAPSHOT"))
         Some("snapshots" at nexus + "content/repositories/snapshots")
       else
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
@@ -186,22 +186,22 @@ object Util extends Build {
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
     ),
-    resourceGenerators in Compile <+=
-      (resourceManaged in Compile, name, version) map { (dir, name, ver) =>
-        val file = dir / "com" / "twitter" / name / "build.properties"
-        val buildRev = Process("git" :: "rev-parse" :: "HEAD" :: Nil).!!.trim
-        val buildName = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss").format(new java.util.Date)
-        val contents = s"name=$name\nversion=$ver\nbuild_revision=$buildRev\nbuild_name=$buildName"
-        IO.write(file, contents)
-        Seq(file)
-      }
+    resourceGenerators in Compile += Def.task {
+      val projectName = name.value
+      val file = resourceManaged.value / "com" / "twitter" / projectName / "build.properties"
+      val buildRev = Process("git" :: "rev-parse" :: "HEAD" :: Nil).!!.trim
+      val buildName = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss").format(new java.util.Date)
+      val contents = s"name=$projectName\nversion=${version.value}\nbuild_revision=$buildRev\nbuild_name=$buildName"
+      IO.write(file, contents)
+      Seq(file)
+    }.taskValue
   ).dependsOn(utilFunction)
 
   lazy val utilDoc = Project(
     id = "util-doc",
     base = file("doc"),
     settings = Defaults.coreDefaultSettings ++ site.settings ++ site.sphinxSupport() ++ sharedSettings ++ Seq(
-      scalacOptions in doc <++= version.map(v => Seq("-doc-title", "Util", "-doc-version", v)),
+      scalacOptions in doc ++= Seq("-doc-title", "Util", "-doc-version", version.value),
       includeFilter in Sphinx := ("*.html" | "*.png" | "*.svg" | "*.js" | "*.css" | "*.gif" | "*.txt")
   ))
 
