@@ -103,9 +103,24 @@ trait App extends Closable with CloseAwaitably {
   @volatile private[this] var closeDeadline = Time.Top
 
   /**
+   * This is satisfied when all members of `exits` and `lastExits` have closed.
+   *
+   * @note Access needs to be mediated via the intrinsic lock.
+   */
+  private[this] var closing: Future[Unit] = Future.never
+
+  /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
    */
-  final def closeOnExit(closable: Closable): Unit = exits.add(closable)
+  final def closeOnExit(closable: Closable): Unit = synchronized {
+    if (closing == Future.never) {
+      // `close()` not yet called, safe to add it
+      exits.add(closable)
+    } else {
+      // `close()` already called, we need to close this here, immediately.
+      closable.close(closeDeadline)
+    }
+  }
 
   /**
    * Register a `closable` to be closed on application shutdown after those registered
@@ -118,7 +133,18 @@ trait App extends Closable with CloseAwaitably {
    *
    *       In all cases, the close deadline is enforced.
    */
-  final def closeOnExitLast(closable: Closable): Unit = lastExits.add(closable)
+  final def closeOnExitLast(closable: Closable): Unit = synchronized {
+    if (closing == Future.never) {
+      // `close()` not yet called, safe to add it
+      lastExits.add(closable)
+    } else {
+      // `close()` already called, we need to close this here, but only
+      // after `close()` completes and `closing` is satisfied
+      closing
+        .transform { _ => closable.close(closeDeadline) }
+        .by(shutdownTimer, closeDeadline)
+    }
+  }
 
   /**
    * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
@@ -144,13 +170,19 @@ trait App extends Closable with CloseAwaitably {
    * Notify the application that it may stop running.
    * Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
    */
-  final def close(deadline: Time): Future[Unit] = closeAwaitably {
-    closeDeadline = deadline.max(Time.now + MinGrace)
-    val firstPhase = Closable.all(exits.asScala.toSeq: _*)
-      .close(closeDeadline)
-      .by(shutdownTimer, closeDeadline)
+  final def close(deadline: Time): Future[Unit] = synchronized {
+    closing = closeAwaitably {
+      closeDeadline = deadline.max(Time.now + MinGrace)
+      val firstPhase = Closable.all(exits.asScala.toSeq: _*)
+        .close(closeDeadline)
+        .by(shutdownTimer, closeDeadline)
 
-    firstPhase.transform { _ => Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline) }
+      firstPhase
+        .transform { _ => Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline) }
+        .by(shutdownTimer, closeDeadline)
+    }
+
+    closing
   }
 
   final def main(args: Array[String]): Unit = {
