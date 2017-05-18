@@ -221,6 +221,37 @@ object Future {
     p
   }
 
+  // Used by `Future.join`.
+  // We would like to be able to mix in both PartialFunction[Throwable, Unit]
+  // for the interrupt and handler and Function1[Try[A], Unit] for the respond handler,
+  // but because these are both Function1 of different types, this cannot be done. Because
+  // the respond handler is invoked for each Future in the sequence, and the interrupt handler is
+  // only set once, we prefer to mix in Function1.
+  private[this] class JoinPromise[A](
+      fs: Seq[Future[A]],
+      size: Int)
+    extends Promise[Unit]
+    with Function1[Try[A], Unit] {
+
+    private[this] val count = new AtomicInteger(size)
+
+    // Handler for `Future.respond`, invoked in `Future.join`
+    def apply(value: Try[A]): Unit = value match {
+      case Return(_) =>
+        if (count.decrementAndGet() == 0)
+          update(Return.Unit)
+      case t@Throw(_) =>
+        updateIfEmpty(t.cast[Unit])
+    }
+
+    setInterruptHandler { case t: Throwable =>
+      val it = fs.iterator
+      while (it.hasNext) {
+        it.next().raise(t)
+      }
+    }
+  }
+
   /**
    * Creates a `Future` that is satisfied when all futures in `fs`
    * are successfully satisfied. If any of the futures in `fs` fail,
@@ -234,20 +265,19 @@ object Future {
    *     `Future` regardless of if they succeed or fail.
    */
   def join[A](fs: Seq[Future[A]]): Future[Unit] = {
-    if (fs.isEmpty) Unit else {
-      val count = new AtomicInteger(fs.size)
-      val p = Promise.interrupts[Unit](fs:_*)
-      val update: Try[A] => Unit = {
-        case Return(_) =>
-          if (count.decrementAndGet() == 0)
-            p.update(Return.Unit)
-        case t@Throw(_) =>
-          p.updateIfEmpty(t.cast[Unit])
+    if (fs.isEmpty) {
+      Future.Unit
+    } else {
+      val size = fs.size
+      if (size == 1) {
+        fs(0).unit
+      } else {
+        val p = new JoinPromise[A](fs, size)
+        val iterator = fs.iterator
+        while (iterator.hasNext)
+          iterator.next().respond(p)
+        p
       }
-      val iterator = fs.iterator
-      while (iterator.hasNext)
-        iterator.next().respond(update)
-      p
     }
   }
 
