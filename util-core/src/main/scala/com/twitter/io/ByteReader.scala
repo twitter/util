@@ -401,14 +401,14 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
   def readUnsignedLongBE(): BigInt = {
     checkRemaining(8)
     val ret =
-        (buf.get(pos + 7) & 0xff).toLong        |
-        (buf.get(pos + 6) & 0xff).toLong <<  8  |
-        (buf.get(pos + 5) & 0xff).toLong << 16  |
-        (buf.get(pos + 4) & 0xff).toLong << 24  |
-        (buf.get(pos + 3) & 0xff).toLong << 32  |
-        (buf.get(pos + 2) & 0xff).toLong << 40  |
-        (buf.get(pos + 1) & 0xff).toLong << 48  |
-        BigInt((buf.get(pos) & 0xff).toLong) << 56
+      (buf.get(pos + 7) & 0xff).toLong        |
+      (buf.get(pos + 6) & 0xff).toLong <<  8  |
+      (buf.get(pos + 5) & 0xff).toLong << 16  |
+      (buf.get(pos + 4) & 0xff).toLong << 24  |
+      (buf.get(pos + 3) & 0xff).toLong << 32  |
+      (buf.get(pos + 2) & 0xff).toLong << 40  |
+      (buf.get(pos + 1) & 0xff).toLong << 48  |
+      BigInt((buf.get(pos) & 0xff).toLong) << 56
     pos += 8
 
     ret
@@ -417,14 +417,14 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
   def readUnsignedLongLE(): BigInt = {
     checkRemaining(8)
     val ret =
-            (buf.get(pos    ) & 0xff).toLong       |
-            (buf.get(pos + 1) & 0xff).toLong <<  8 |
-            (buf.get(pos + 2) & 0xff).toLong << 16 |
-            (buf.get(pos + 3) & 0xff).toLong << 24 |
-            (buf.get(pos + 4) & 0xff).toLong << 32 |
-            (buf.get(pos + 5) & 0xff).toLong << 40 |
-            (buf.get(pos + 6) & 0xff).toLong << 48 |
-            BigInt(buf.get(pos + 7) & 0xff) << 56
+      (buf.get(pos    ) & 0xff).toLong       |
+      (buf.get(pos + 1) & 0xff).toLong <<  8 |
+      (buf.get(pos + 2) & 0xff).toLong << 16 |
+      (buf.get(pos + 3) & 0xff).toLong << 24 |
+      (buf.get(pos + 4) & 0xff).toLong << 32 |
+      (buf.get(pos + 5) & 0xff).toLong << 40 |
+      (buf.get(pos + 6) & 0xff).toLong << 48 |
+      BigInt(buf.get(pos + 7) & 0xff) << 56
     pos += 8
 
     ret
