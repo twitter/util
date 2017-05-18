@@ -107,6 +107,16 @@ trait ByteReader extends AutoCloseable {
   def readLongLE(): Long
 
   /**
+    * Extract 64 bits and interpret as a big endian unsigned integer, advancing the byte cursor by 8.
+    */
+  def readUnsignedLongBE(): BigInt
+
+  /**
+    * Extract 64 bits and interpret as a little endian unsigned integer, advancing the byte cursor by 8.
+    */
+  def readUnsignedLongLE(): BigInt
+
+  /**
    * Extract 32 bits and interpret as a big endian floating point, advancing the byte cursor by 4.
    */
   def readFloatBE(): Float
@@ -186,6 +196,10 @@ private[twitter] trait ProxyByteReader extends ByteReader {
   def readLongBE(): Long = reader.readLongBE()
 
   def readLongLE(): Long = reader.readLongLE()
+
+  def readUnsignedLongBE(): BigInt = reader.readUnsignedLongBE()
+
+  def readUnsignedLongLE(): BigInt = reader.readUnsignedLongLE()
 
   def readFloatBE(): Float = reader.readFloatBE()
 
@@ -383,6 +397,31 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
     pos += 8
     ret
   }
+
+  private val unsignedLongMaxValue: BigInt = BigInt("18446744073709551615")
+
+  def readUnsignedLongBE(): BigInt = {
+    val arr = Array.ofDim[Byte](8)
+
+    for (i <- 0 until 8) {
+      val b = readByte()
+      arr(i) = b
+    }
+
+    BigInt(arr) & unsignedLongMaxValue
+  }
+
+  def readUnsignedLongLE(): BigInt = {
+    val arr = Array.ofDim[Byte](8)
+
+    for (i <- 0 until 8) {
+      val b = readByte()
+      arr(7 - i) = b
+    }
+
+    BigInt(arr) & unsignedLongMaxValue
+  }
+
 
   // - Floating Point -
   def readFloatBE(): Float = JFloat.intBitsToFloat(readIntBE())
