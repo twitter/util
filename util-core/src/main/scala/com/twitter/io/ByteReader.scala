@@ -398,8 +398,6 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
     ret
   }
 
-  private val unsignedLongMaxValue: BigInt = BigInt("18446744073709551615")
-
   def readUnsignedLongBE(): BigInt = {
     checkRemaining(8)
     val ret =
@@ -413,7 +411,7 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
         BigInt((buf.get(pos) & 0xff).toLong) << 56
     pos += 8
 
-    ret & unsignedLongMaxValue
+    ret
   }
 
   def readUnsignedLongLE(): BigInt = {
@@ -429,7 +427,7 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
             BigInt(buf.get(pos + 7) & 0xff) << 56
     pos += 8
 
-    ret & unsignedLongMaxValue
+    ret
   }
 
 
