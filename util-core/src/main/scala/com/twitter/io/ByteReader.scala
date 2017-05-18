@@ -401,25 +401,35 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
   private val unsignedLongMaxValue: BigInt = BigInt("18446744073709551615")
 
   def readUnsignedLongBE(): BigInt = {
-    val arr = Array.ofDim[Byte](8)
+    checkRemaining(8)
+    val ret =
+      BigInt(buf.get(pos    ) & 0xff) << 56 |
+      BigInt(buf.get(pos + 1) & 0xff) << 48 |
+      BigInt(buf.get(pos + 2) & 0xff) << 40 |
+      BigInt(buf.get(pos + 3) & 0xff) << 32 |
+      BigInt(buf.get(pos + 4) & 0xff) << 24 |
+      BigInt(buf.get(pos + 5) & 0xff) << 16 |
+      BigInt(buf.get(pos + 6) & 0xff) <<  8 |
+      BigInt(buf.get(pos + 7) & 0xff)
+    pos += 8
 
-    for (i <- 0 until 8) {
-      val b = readByte()
-      arr(i) = b
-    }
-
-    BigInt(arr) & unsignedLongMaxValue
+    ret & unsignedLongMaxValue
   }
 
   def readUnsignedLongLE(): BigInt = {
-    val arr = Array.ofDim[Byte](8)
+    checkRemaining(8)
+    val ret =
+      BigInt(buf.get(pos    ) & 0xff)       |
+      BigInt(buf.get(pos + 1) & 0xff) <<  8 |
+      BigInt(buf.get(pos + 2) & 0xff) << 16 |
+      BigInt(buf.get(pos + 3) & 0xff) << 24 |
+      BigInt(buf.get(pos + 4) & 0xff) << 32 |
+      BigInt(buf.get(pos + 5) & 0xff) << 40 |
+      BigInt(buf.get(pos + 6) & 0xff) << 48 |
+      BigInt(buf.get(pos + 7) & 0xff) << 56
+    pos += 8
 
-    for (i <- 0 until 8) {
-      val b = readByte()
-      arr(7 - i) = b
-    }
-
-    BigInt(arr) & unsignedLongMaxValue
+    ret & unsignedLongMaxValue
   }
 
 
