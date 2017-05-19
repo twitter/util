@@ -139,6 +139,22 @@ class FutureBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
+  def timeUnit(state: PromiseUnitState): Unit = {
+    import state._
+    val unit = promise.unit
+    promise.setDone()
+    Await.result(unit)
+  }
+
+  @Benchmark
+  def timeVoided(state: PromiseUnitState): Void = {
+    import state._
+    val voided = promise.voided
+    promise.setDone()
+    Await.result(voided)
+  }
+
+  @Benchmark
   def runqBaseline(state: RunqState): Promise[Int] = {
     val p = new Promise[Int]()
     var next: Future[Int] = p
@@ -181,7 +197,7 @@ object FutureBenchmark {
   final val N = 10
 
   private val RespondFn: Try[Unit] => Unit = { _ => () }
-
+  
   @State(Scope.Benchmark)
   class ByState {
     val timer = Timer.Nil
