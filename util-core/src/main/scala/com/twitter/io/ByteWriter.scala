@@ -41,6 +41,17 @@ abstract class ByteWriter {
   }
 
   /**
+   * Write all the bytes from `buf` into the running buffer.
+   */
+  def writeBytes(buf: Buf): this.type = {
+    val len = buf.length
+    val arr = arrayToWrite(numBytes = len)
+    val index = getAndIncrementIndex(numBytes = len)
+    buf.write(arr, index)
+    this
+  }
+
+  /**
    * Write 8 bits of `b`. The remaining 24 bits are ignored.
    */
   def writeByte(b: Int): this.type = {

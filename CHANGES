@@ -12,6 +12,9 @@ New Features:
     via `c.t.app.App#closeOnExitLast`. See longer note there for usage.
     ``RB_ID=916120``
 
+  * util-core: Added `writeBytes(Buf)` to the ByteWriter abstract class to allow
+    for efficient writing of the `c.t.io.Buf` type. ``RB_ID=917094``
+
 API Changes:
 
   * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use

@@ -180,12 +180,39 @@ final class ByteWriterTest extends FunSuite with GeneratorDrivenPropertyChecks {
   testWriteFloat("fixed", () => ByteWriter.fixed(4), overflowOK = false)
   testWriteDouble("fixed", () => ByteWriter.fixed(8), overflowOK = false)
 
-  test("fixed: writeBytes") (forAll { bytes: Array[Byte] =>
+  test("fixed: writeBytes(Array[Byte])") (forAll { bytes: Array[Byte] =>
     val bw = ByteWriter.fixed(bytes.length)
     val buf = bw.writeBytes(bytes).owned()
     intercept[OverflowException] { bw.writeByte(0xff) }
     assert(buf == Buf.ByteArray.Owned(bytes))
     assert(bw.index == bytes.length)
+  })
+
+  test("fixed: writeBytes(Array[Byte]) 2 times") (forAll { bytes: Array[Byte] =>
+    val bw = ByteWriter.fixed(bytes.length * 2)
+    val buf = bw.writeBytes(bytes).writeBytes(bytes).owned()
+    intercept[OverflowException] { bw.writeByte(0xff) }
+
+    assert(buf == Buf.ByteArray.Owned(bytes ++ bytes))
+    assert(bw.index == bytes.length * 2)
+  })
+
+  test("fixed: writeBytes(Buf)") (forAll { arr: Array[Byte] =>
+    val bytes = Buf.ByteArray.Owned(arr)
+    val bw = ByteWriter.fixed(bytes.length)
+    val buf = bw.writeBytes(bytes).owned()
+    intercept[OverflowException] { bw.writeByte(0xff) }
+    assert(buf == bytes)
+    assert(bw.index == bytes.length)
+  })
+
+  test("fixed: writeBytes(Buf) 2 times") (forAll { arr: Array[Byte] =>
+    val bytes = Buf.ByteArray.Owned(arr)
+    val bw = ByteWriter.fixed(bytes.length * 2)
+    val buf = bw.writeBytes(bytes).writeBytes(bytes).owned()
+    intercept[OverflowException] { bw.writeByte(0xff) }
+    assert(buf == bytes.concat(bytes))
+    assert(bw.index == bytes.length * 2)
   })
 
   // DYNAMIC
@@ -202,19 +229,36 @@ final class ByteWriterTest extends FunSuite with GeneratorDrivenPropertyChecks {
   testWriteDouble("dynamic", () => ByteWriter.dynamic(), overflowOK = true)
   testWriteLong("dynamic, must grow multiple times", () => ByteWriter.dynamic(1), overflowOK = true)
 
-  test("dynamic: writeBytes") (forAll { bytes: Array[Byte] =>
+  test("dynamic: writeBytes(Array[Byte])") (forAll { bytes: Array[Byte] =>
     val bw = ByteWriter.dynamic()
     val buf = bw.writeBytes(bytes).owned()
     assert(buf == Buf.ByteArray.Owned(bytes))
   })
 
-  test("dynamic: Write 3 times") (forAll { bytes: Array[Byte] =>
+  test("dynamic: writeBytes(Buf)") (forAll { arr: Array[Byte] =>
+    val bytes = Buf.ByteArray.Owned(arr)
+    val bw = ByteWriter.dynamic()
+    val buf = bw.writeBytes(bytes).owned()
+    assert(buf == bytes)
+  })
+
+  test("dynamic: writeBytes(Array[Byte]) 3 times") (forAll { bytes: Array[Byte] =>
     val bw = ByteWriter.dynamic()
     val buf = bw.writeBytes(bytes)
       .writeBytes(bytes)
       .writeBytes(bytes)
       .owned()
     assert(buf == Buf.ByteArray.Owned(bytes ++ bytes ++ bytes))
+  })
+
+  test("dynamic: writeBytes(Buf) 3 times") (forAll { arr: Array[Byte] =>
+    val bytes = Buf.ByteArray.Owned(arr)
+    val bw = ByteWriter.dynamic()
+    val buf = bw.writeBytes(bytes)
+      .writeBytes(bytes)
+      .writeBytes(bytes)
+      .owned()
+    assert(buf == bytes.concat(bytes).concat(bytes))
   })
 
   // Requires additional heap space to run.
