@@ -54,8 +54,14 @@ object Future {
   private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
   private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied)
-  private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
-  private val toVoid: Any => Future[Void] = scala.Function.const(Void)
+  private val toUnit: Try[Any] => Future[Unit] = {
+    case Return(_) => Future.Unit
+    case t => Future.const(t.asInstanceOf[Try[Unit]])
+  }
+  private val toVoid: Try[Any] => Future[Void] = {
+    case Return(_) => Future.Void
+    case t => Future.const(t.asInstanceOf[Try[Void]])
+  }
   private val AlwaysMasked: PartialFunction[Throwable, Boolean] = { case _ => true }
 
   private val toTuple2Instance: (Any, Any) => (Any, Any) = Tuple2.apply
@@ -1338,14 +1344,14 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @note failed futures will remain as is.
    */
-  def unit: Future[Unit] = flatMap(Future.toUnit)
+  def unit: Future[Unit] = transform(Future.toUnit)
 
   /**
    * Convert this `Future[A]` to a `Future[Void]` by discarding the result.
    *
    * @note failed futures will remain as is.
    */
-  def voided: Future[Void] = flatMap(Future.toVoid)
+  def voided: Future[Void] = transform(Future.toVoid)
 
   /**
    * Send updates from this Future to the other.
