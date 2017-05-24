@@ -1,7 +1,9 @@
 package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
+
 import org.junit.runner.RunWith
+import org.scalacheck.Gen
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
@@ -152,6 +154,39 @@ class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("readUnsignedIntLE") (forAll { i: Int =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntLE() = i }
     assert(br.readUnsignedIntLE() == (i & 0xffffffffl))
+  })
+
+
+  val uInt64s: Gen[BigInt] = Gen.chooseNum(Long.MinValue,Long.MaxValue)
+    .map(x => BigInt(x) + BigInt(2).pow(63))
+
+  test("readUnsignedLongBE") (forAll(uInt64s) { bi: BigInt =>
+    val br = readerWith(
+      ((bi >> 56) & 0xff).toByte,
+      ((bi >> 48) & 0xff).toByte,
+      ((bi >> 40) & 0xff).toByte,
+      ((bi >> 32) & 0xff).toByte,
+      ((bi >> 24) & 0xff).toByte,
+      ((bi >> 16) & 0xff).toByte,
+      ((bi >>  8) & 0xff).toByte,
+      ((bi      ) & 0xff).toByte)
+    assert(br.readUnsignedLongBE() == bi)
+    val exc = intercept[UnderflowException] { br.readByte() }
+  })
+
+  test("readUnsignedLongLE") (forAll(uInt64s) { bi1: BigInt =>
+    val bi = bi1.abs
+    val br = readerWith(
+      ((bi      ) & 0xff).toByte,
+      ((bi >>  8) & 0xff).toByte,
+      ((bi >> 16) & 0xff).toByte,
+      ((bi >> 24) & 0xff).toByte,
+      ((bi >> 32) & 0xff).toByte,
+      ((bi >> 40) & 0xff).toByte,
+      ((bi >> 48) & 0xff).toByte,
+      ((bi >> 56) & 0xff).toByte)
+    assert(br.readUnsignedLongLE() == bi)
+    val exc = intercept[UnderflowException] { br.readByte() }
   })
 
   // .equals is required to handle NaN

@@ -15,6 +15,9 @@ New Features:
   * util-core: Added `writeBytes(Buf)` to the ByteWriter abstract class to allow
     for efficient writing of the `c.t.io.Buf` type. ``RB_ID=917094``
 
+  * util-core: Added `ByteReader.readUnsignedLongBE` and `ByteReader.readUnsignedLongLE`.
+    ``RB_ID=917289``
+
 API Changes:
 
   * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use
