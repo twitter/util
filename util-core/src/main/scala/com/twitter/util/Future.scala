@@ -1068,27 +1068,24 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * @param when indicates when to stop waiting for the result to be available.
    * @param exc exception to throw.
    */
-  def by(timer: Timer, when: Time, exc: => Throwable): Future[A] = {
-    if (when == Time.Top || isDefined)
-      return this
+  def by(timer: Timer, when: Time, exc: => Throwable): Future[A] =
+    if (when == Time.Top || isDefined) self
+    else new Promise[A] with (Try[A] => Unit) with (() => Unit) { other =>
+      private[this] val task = timer.schedule(when)(other())
 
-    // Mix in Fn1 so that we can avoid an allocation below when calling respond
-    val p = new Promise[A] with Function1[Try[A], Unit] {
-      this.forwardInterruptsTo(self)
+      // Timer task.
+      def apply(): Unit = updateIfEmpty(Throw(exc))
 
-      private[this] val task = timer.schedule(when) {
-        this.updateIfEmpty(Throw(exc))
-      }
-
-      def apply(value: Try[A]) : Unit = {
+      // Respond handler.
+      def apply(value: Try[A]): Unit = {
         task.cancel()
-        this.updateIfEmpty(value)
+        updateIfEmpty(value)
       }
-    }
 
-    respond(p)
-    p
-  }
+      // Register ourselves as interrupt and respond handlers.
+      forwardInterruptsTo(self)
+      self.respond(other)
+    }
 
   /**
    * Delay the completion of this Future for at least
