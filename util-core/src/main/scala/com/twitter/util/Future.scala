@@ -1094,14 +1094,14 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * Delay the completion of this Future for at least
    * `howlong` from now.
    */
-  def delayed(howlong: Duration)(implicit timer: Timer): Future[A] = {
-    if (howlong == Duration.Zero)
-      return this
+  def delayed(howlong: Duration)(implicit timer: Timer): Future[A] =
+    if (howlong == Duration.Zero) this
+    else new Promise[A] with (() => Unit) { other =>
+      def apply(): Unit = become(self)
 
-    val p = Promise.interrupts[A](this)
-    timer.schedule(howlong.fromNow) { p.become(this) }
-    p
-  }
+      timer.schedule(howlong.fromNow)(other())
+      forwardInterruptsTo(self)
+    }
 
   /**
    * When this future completes, run `f` on that completed result

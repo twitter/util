@@ -191,6 +191,9 @@ class FutureBenchmark extends StdBenchAnnotations {
     }
     Await.result(f)
   }
+
+  @Benchmark
+  def timeDelayed(): Future[Unit] = Future.Done.delayed(Duration.Top)(Timer.Nil)
 }
 
 object FutureBenchmark {
