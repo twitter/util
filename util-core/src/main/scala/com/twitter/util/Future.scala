@@ -133,19 +133,17 @@ object Future {
   /**
    * A `Unit`-typed `Future` that is satisfied after `howlong`.
    */
-  def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] = {
-    if (howlong <= Duration.Zero)
-      return Future.Done
+  def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] =
+    if (howlong <= Duration.Zero) Future.Done
+    else new Promise[Unit] with Promise.InterruptHandler with (() => Unit) {
+      private[this] val task = timer.schedule(howlong.fromNow)(this())
 
-    val p = new Promise[Unit]
-    val task = timer.schedule(howlong.fromNow) { p.setDone() }
-    p.setInterruptHandler {
-      case e =>
-        if (p.updateIfEmpty(Throw(e)))
-          task.cancel()
+      // Timer task.
+      def apply(): Unit = setDone()
+
+      protected def onInterrupt(t: Throwable): Unit =
+        if (updateIfEmpty(Throw(t))) task.cancel()
     }
-    p
-  }
 
   /**
    * Creates a satisfied `Future` from the result of running `a`.

@@ -194,6 +194,9 @@ class FutureBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def timeDelayed(): Future[Unit] = Future.Done.delayed(Duration.Top)(Timer.Nil)
+
+  @Benchmark
+  def timeSleep(): Future[Unit] = Future.sleep(Duration.Top)(Timer.Nil)
 }
 
 object FutureBenchmark {
