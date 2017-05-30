@@ -49,11 +49,72 @@ object Promise {
     with (Try[A] => Unit) { def apply(ta: Try[A]): Unit = countDown() }
 
   /**
-   * A continuation stored from a promise.
+   * A persistent queue of continuations (i.e., `K`).
    */
-  private[util] trait K[-A] extends (Try[A] => Unit) {
+  private[util] sealed trait WaitQueue[-A] {
+    def first: K[A]
+    def rest: WaitQueue[A]
+
+    final def size: Int = {
+      @tailrec
+      def loop(wq: WaitQueue[_], result: Int): Int =
+        if (wq eq WaitQueue.Empty) result
+        else loop(wq.rest, result + 1)
+
+      loop(this, 0)
+    }
+
+    @tailrec
+    final def contains(k: K[_]): Boolean =
+      if (this eq WaitQueue.Empty) false
+      else (first eq k) || rest.contains(k)
+
+    final def remove(k: K[_]): WaitQueue[A] = {
+      @tailrec
+      def loop(from: WaitQueue[A], to: WaitQueue[A]): WaitQueue[A] =
+        if (from eq WaitQueue.Empty) to
+        else if (from.first eq k) loop(from.rest, to)
+        else loop(from.rest, WaitQueue(from.first, to))
+
+      loop(this, WaitQueue.empty)
+    }
+
+    final override def toString: String = s"WaitQueue(size=$size)"
+  }
+
+  private[util] object WaitQueue {
+
+    val Empty: WaitQueue[Nothing] = new WaitQueue[Nothing] {
+      final def first: K[Nothing] =
+        throw new IllegalStateException("WaitQueue.Empty")
+
+      final def rest: WaitQueue[Nothing] =
+        throw new IllegalStateException("WaitQueue.Empty")
+    }
+
+    def empty[A]: WaitQueue[A] = Empty.asInstanceOf[WaitQueue[A]]
+
+    def apply[A](f: K[A], r: WaitQueue[A]): WaitQueue[A] =
+      if (r eq Empty) f else new WaitQueue[A] {
+        final def first: K[A] = f
+        final def rest: WaitQueue[A] = r
+      }
+  }
+
+  /**
+   * A continuation stored from a promise. Also represents a `WaitQueue` with
+   * one element.
+   *
+   * @note At this point, it's **not possible** to have `Promise` extending `K` given
+   *       it will make "Linked" and "Waiting" state cases ambiguous. This, however,
+   *       may change following the further performance improvements.
+   */
+  private[util] trait K[-A] extends (Try[A] => Unit) with WaitQueue[A] {
     /** Depth tag used for scheduling */
     protected[util] def depth: Short
+
+    final def first: K[A] = this
+    final def rest: WaitQueue[A] = WaitQueue.empty
   }
 
   private object K {
@@ -79,18 +140,20 @@ object Promise {
    */
   private class DetachablePromise[A](underlying: Promise[_ <: A])
     extends Promise[A]
-    with K[A]
-    with Detachable {
+    with Detachable { self =>
 
-    def detach(): Boolean = underlying.detach(this)
-
-    // This is only called after the parent has been successfully satisfied
-    def apply(result: Try[A]): Unit = {
-      update(result)
+    // It's not possible (yet) to embed K[A] into Promise because
+    // Promise[A] (Linked) and WaitQueue (Waiting) states become ambiguous.
+    private[this] val k = new K[A] {
+      protected[util] def depth: Short = underlying.depth
+      // This is only called after the parent has been successfully satisfied
+      def apply(result: Try[A]): Unit = self.update(result)
     }
 
+    def detach(): Boolean = underlying.detach(k)
+
     // Register continuation.
-    underlying.continue(this)
+    underlying.continue(k)
   }
 
   /**
@@ -211,40 +274,27 @@ object Promise {
    */
 
   /**
-   * The initial state of a Promise. `first` (which may be null)
-   * and `rest` are the continuations that should be run once it
-   * is satisfied.
-   */
-  private case class Waiting(first: K[Nothing], rest: List[K[Nothing]])
-
-  /**
    * An unsatisfied Promise which has an interrupt handler attached to it.
    * `waitq` represents the continuations that should be run once it
    * is satisfied.
-   *
-   * @note `waitq` will always be a `List[K[A]]`
    */
   private case class Interruptible(
-      waitq: List[K[Nothing]],
+      waitq: WaitQueue[Nothing],
       handler: PartialFunction[Throwable, Unit])
 
   /**
    * An unsatisfied Promise which forwards interrupts to `other`.
    * `waitq` represents the continuations that should be run once it
    * is satisfied.
-   *
-   * @note `waitq` will always be a `List[K[A]]`
    */
-  private case class Transforming(waitq: List[K[Nothing]], other: Future[_])
+  private case class Transforming(waitq: WaitQueue[Nothing], other: Future[_])
 
   /**
-   * An unsatisified Promise that has been interrupted by `signal`.
+   * An unsatisfied Promise that has been interrupted by `signal`.
    * `waitq` represents the continuations that should be run once it
    * is satisfied.
-   *
-   * @note `waitq` will always be a `List[K[A]]`
    */
-  private case class Interrupted(waitq: List[K[Nothing]], signal: Throwable)
+  private case class Interrupted(waitq: WaitQueue[Nothing], signal: Throwable)
 
   /**
    * A Promise that has been satisfied with `result`.
@@ -258,11 +308,9 @@ object Promise {
    */
   // private case class Linked[A](p: Promise[A])
 
-  private[this] val emptyState: Waiting = Waiting(null, Nil)
-  private def initState: Waiting = emptyState
   private val unsafe: sun.misc.Unsafe = Unsafe()
   private val stateOff: Long = unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
-  private val AlwaysUnit: Any => Unit = scala.Function.const(()) _
+  private val AlwaysUnit: Any => Unit = _ => ()
 
   sealed trait Responder[A] { this: Future[A] =>
     protected[util] def depth: Short
@@ -447,13 +495,17 @@ class Promise[A]
   protected final def parent: Promise[A] = this
 
   // Note: this will always be one of:
-  // Waiting, Interrupted, Interruptible, `Try[A]` (Done), `Promise[A]` (Linked)
-  @volatile private[this] var state: Any = initState
+  // - WaitQueue (Waiting)
+  // - Interrupted
+  // - Interruptible
+  // - Try[A] (Done)
+  // - Promise[A] (Linked)
+  @volatile private[this] var state: Any = WaitQueue.Empty
   private def theState(): Any = state
 
   def this(handleInterrupt: PartialFunction[Throwable, Unit]) {
     this()
-    this.state = Interruptible(Nil, handleInterrupt)
+    this.state = Interruptible(WaitQueue.Empty, handleInterrupt)
   }
 
   def this(result: Try[A]) {
@@ -465,6 +517,7 @@ class Promise[A]
     val theState = state match {
       case p: Promise[A] /* Linked */ => s"Linked(${p.toString})"
       case res: Try[A] /* Done */ => s"Done($res)"
+      case waitq: WaitQueue[A] /* Waiting */ => s"Waiting($waitq)"
       case s => s.toString
     }
     s"Promise@$hashCode(state=$theState)"
@@ -473,26 +526,21 @@ class Promise[A]
   @inline private[this] def cas(oldState: Any, newState: Any): Boolean =
     unsafe.compareAndSwapObject(this, stateOff, oldState, newState)
 
-  private[this] def runq(first: K[A], rest: List[K[A]], result: Try[A]) = Scheduler.submit(
+  private[this] def runq(waitq: WaitQueue[A], result: Try[A]) = Scheduler.submit(
     new Runnable {
       def run(): Unit = {
-        // It's always safe to run `first` ahead of everything else
-        // since the only way to get a chainer is to register a
-        // callback (which would always have depth 0).
-        if (first ne null)
-          first(result)
         var k: K[A] = null
         var moreDepth = false
 
         // Depth 0, about 77% only at this depth
-        var ks = rest
-        while (ks ne Nil) {
-          k = ks.head
+        var ks = waitq
+        while (ks ne WaitQueue.Empty) {
+          k = ks.first
           if (k.depth == 0)
             k(result)
           else
             moreDepth = true
-          ks = ks.tail
+          ks = ks.rest
         }
 
         // depth >= 1, about 23%
@@ -500,22 +548,22 @@ class Promise[A]
           return
 
         var maxDepth = 1
-        ks = rest
-        while (ks ne Nil) {
-          k = ks.head
+        ks = waitq
+        while (ks ne WaitQueue.Empty) {
+          k = ks.first
           if (k.depth == 1)
             k(result)
           else if (k.depth > maxDepth)
             maxDepth = k.depth
-          ks = ks.tail
+          ks = ks.rest
         }
         // Depth > 1, about 7%
         if (maxDepth > 1)
-          runDepth2Plus(rest, result, maxDepth)
+          runDepth2Plus(waitq, result, maxDepth)
       }
 
       private[this] def runDepth2Plus(
-        rest: List[K[A]],
+        waitq: WaitQueue[A],
         result: Try[A],
         maxDepth: Int
       ): Unit = {
@@ -527,15 +575,15 @@ class Promise[A]
         // shallow distributions, this number should likely be higher.
         // that said, this number is empirically large and should be a
         // rare run code path.
-        val size = rest.size
+        val size = waitq.size
         if (size > 13) {
           var rem = new mutable.ArrayBuffer[K[A]](size)
-          var ks = rest
-          while (ks ne Nil) {
-            val k = ks.head
+          var ks = waitq
+          while (ks ne WaitQueue.Empty) {
+            val k = ks.first
             if (k.depth > 1)
               rem += k
-            ks = ks.tail
+            ks = ks.rest
           }
 
           val sorted = rem.sortBy(K.depthOfK)
@@ -547,12 +595,12 @@ class Promise[A]
         } else {
           var depth = 2
           while (depth <= maxDepth) {
-            var ks = rest
-            while (ks ne Nil) {
-              val k = ks.head
+            var ks = waitq
+            while (ks ne WaitQueue.Empty) {
+              val k = ks.first
               if (k.depth == depth)
                 k(result)
-              ks = ks.tail
+              ks = ks.rest
             }
             depth += 1
           }
@@ -571,9 +619,8 @@ class Promise[A]
     state match {
       case p: Promise[A] /* Linked */ => p.setInterruptHandler(f)
 
-      case s@Waiting(first, rest) =>
-        val waitq = if (first eq null) rest else first :: rest
-        if (!cas(s, Interruptible(waitq, f)))
+      case waitq: WaitQueue[A] =>
+        if (!cas(waitq, Interruptible(waitq, f)))
           setInterruptHandler(f)
 
       case s@Interruptible(waitq, _) =>
@@ -593,11 +640,10 @@ class Promise[A]
 
   // Useful for debugging waitq.
   private[util] def waitqLength: Int = state match {
-    case Waiting(first, rest) if first == null => rest.length
-    case Waiting(first, rest) => rest.length + 1
-    case Interruptible(waitq, _) => waitq.length
-    case Transforming(waitq, _) => waitq.length
-    case Interrupted(waitq, _) => waitq.length
+    case waitq: WaitQueue[A] => waitq.size
+    case Interruptible(waitq, _) => waitq.size
+    case Transforming(waitq, _) => waitq.size
+    case Interrupted(waitq, _) => waitq.size
     case _: Promise[A] /* Linked */ => 0
     case _: Try[A] /* Done */ => 0
   }
@@ -617,9 +663,8 @@ class Promise[A]
     state match {
       case p: Promise[A] /* Linked */ => p.forwardInterruptsTo(other)
 
-      case s@Waiting(first, rest) =>
-        val waitq = if (first eq null) rest else first :: rest
-        if (!cas(s, Transforming(waitq, other)))
+      case waitq: WaitQueue[A] =>
+        if (!cas(waitq, Transforming(waitq, other)))
           forwardInterruptsTo(other)
 
       case s@Interruptible(waitq, _) =>
@@ -655,58 +700,41 @@ class Promise[A]
       if (!cas(s, Interrupted(waitq, intr)))
         raise(intr)
 
-    case s@Waiting(first, rest)  =>
-      val waitq = if (first eq null) rest else first :: rest
-      if (!cas(s, Interrupted(waitq, intr)))
+    case waitq: WaitQueue[A] =>
+      if (!cas(waitq, Interrupted(waitq, intr)))
         raise(intr)
 
-    case _: Try[A] /* Done */ => () // nothing to do, as its already satisified.
+    case _: Try[A] /* Done */ => () // nothing to do, as its already satisfied.
   }
 
   @tailrec protected[Promise] final def detach(k: K[A]): Boolean = {
-
-    def remove(list: List[K[Nothing]], k: K[_]): List[K[Nothing]] = {
-      var res: List[K[Nothing]] = Nil
-      var ls = list
-      while (ls != Nil) {
-        val h = ls.head
-        ls = ls.tail
-        if (h ne k) res = h :: res
-      }
-
-      res
-    }
-
     state match {
       case p: Promise[A] /* Linked */ =>
         p.detach(k)
 
       case s@Interruptible(waitq, handler) =>
-        if (!cas(s, Interruptible(remove(waitq, k), handler)))
+        if (!cas(s, Interruptible(waitq.remove(k), handler)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Transforming(waitq, other) =>
-        if (!cas(s, Transforming(remove(waitq, k), other)))
+        if (!cas(s, Transforming(waitq.remove(k), other)))
           detach(k)
         else
           waitq.contains(k)
 
       case s@Interrupted(waitq, intr) =>
-        if (!cas(s, Interrupted(remove(waitq, k), intr)))
+        if (!cas(s, Interrupted(waitq.remove(k), intr)))
           detach(k)
         else
           waitq.contains(k)
 
-      case s@Waiting(first, rest)  =>
-        val waitq = if (first eq null) rest else first :: rest
-        val next = remove(waitq, k) match {
-          case Nil => initState
-          case head :: tail => Waiting(head, tail)
-        }
-        if (!cas(s, next)) detach(k)
-        else waitq.contains(k)
+      case waitq: WaitQueue[A]  =>
+        if (!cas(waitq, waitq.remove(k)))
+          detach(k)
+        else
+          waitq.contains(k)
 
       case _: Try[A] /* Done */ => false
     }
@@ -722,7 +750,7 @@ class Promise[A]
         this
       case res: Try[A] /* Done */ =>
         this
-      case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
+      case  _: WaitQueue[A] | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) =>
         val condition = new ReleaseOnApplyCDL[A]
         respond(condition)
 
@@ -737,6 +765,7 @@ class Promise[A]
 
         if (condition.await(timeout.inNanoseconds, java.util.concurrent.TimeUnit.NANOSECONDS)) this
         else throw new TimeoutException(timeout.toString)
+
     }
 
   @throws(classOf[Exception])
@@ -754,7 +783,7 @@ class Promise[A]
   def isInterrupted: Option[Throwable] = state match {
     case p: Promise[A] /* Linked */ => p.isInterrupted
     case Interrupted(_, intr) => Some(intr)
-    case Waiting(_, _) | Interruptible(_, _) | Transforming(_, _) => None
+    case _: WaitQueue[A] | Interruptible(_, _) | Transforming(_, _) => None
     case _: Try[A] /* Done */ => None
   }
 
@@ -862,24 +891,24 @@ class Promise[A]
   @tailrec
   final def updateIfEmpty(result: Try[A]): Boolean = state match {
     case _: Try[A] /* Done */ => false
-    case s@Waiting(first, rest) =>
-      if (!cas(s, result)) updateIfEmpty(result) else {
-        runq(first.asInstanceOf[K[A]], rest.asInstanceOf[List[K[A]]], result)
+    case waitq: WaitQueue[A] =>
+      if (!cas(waitq, result)) updateIfEmpty(result) else {
+        runq(waitq, result)
         true
       }
     case s@Interruptible(waitq, _) =>
       if (!cas(s, result)) updateIfEmpty(result) else {
-        runq(null, waitq.asInstanceOf[List[K[A]]], result)
+        runq(waitq.asInstanceOf[WaitQueue[A]], result)
         true
       }
     case s@Transforming(waitq, _) =>
       if (!cas(s, result)) updateIfEmpty(result) else {
-        runq(null, waitq.asInstanceOf[List[K[A]]], result)
+        runq(waitq.asInstanceOf[WaitQueue[A]], result)
         true
       }
     case s@Interrupted(waitq, _) =>
       if (!cas(s, result)) updateIfEmpty(result) else {
-        runq(null, waitq.asInstanceOf[List[K[A]]], result)
+        runq(waitq.asInstanceOf[WaitQueue[A]], result)
         true
       }
     case p: Promise[A] /* Linked */ => p.updateIfEmpty(result)
@@ -894,20 +923,17 @@ class Promise[A]
             k(v)
           }
         })
-      case s@Waiting(first, rest) if first == null =>
-        if (!cas(s, Waiting(k, rest)))
-          continue(k)
-      case s@Waiting(first, rest) =>
-        if (!cas(s, Waiting(first, k :: rest)))
+      case waitq: WaitQueue[A] =>
+        if (!cas(waitq, WaitQueue(k, waitq)))
           continue(k)
       case s@Interruptible(waitq, handler) =>
-        if (!cas(s, Interruptible(k :: waitq, handler)))
+        if (!cas(s, Interruptible(WaitQueue[Nothing](k, waitq), handler)))
           continue(k)
       case s@Transforming(waitq, other) =>
-        if (!cas(s, Transforming(k :: waitq, other)))
+        if (!cas(s, Transforming(WaitQueue[Nothing](k, waitq), other)))
           continue(k)
       case s@Interrupted(waitq, signal) =>
-        if (!cas(s, Interrupted(k :: waitq, signal)))
+        if (!cas(s, Interrupted(WaitQueue[Nothing](k, waitq), signal)))
           continue(k)
       case p: Promise[A] /* Linked */ =>
         p.continue(k)
@@ -946,23 +972,21 @@ class Promise[A]
             "Cannot link two Done Promises with differing values")
         }
 
-      case s@Waiting(first, rest) =>
-        if (!cas(s, target)) link(target) else {
-          if (first != null)
-            target.continue(first.asInstanceOf[K[A]])
-          var ks = rest
-          while (ks ne Nil) {
-            target.continue(ks.head.asInstanceOf[K[A]])
-            ks = ks.tail
+      case waitq: WaitQueue[A] =>
+        if (!cas(waitq, target)) link(target) else {
+          var ks = waitq
+          while (ks ne WaitQueue.Empty) {
+            target.continue(ks.first)
+            ks = ks.rest
           }
         }
 
       case s@Interruptible(waitq, handler) =>
         if (!cas(s, target)) link(target) else {
           var ks = waitq
-          while (ks ne Nil) {
-            target.continue(ks.head.asInstanceOf[K[A]])
-            ks = ks.tail
+          while (ks ne WaitQueue.Empty) {
+            target.continue(ks.first.asInstanceOf[K[A]])
+            ks = ks.rest
           }
           target.setInterruptHandler(handler)
         }
@@ -970,9 +994,9 @@ class Promise[A]
       case s@Transforming(waitq, other) =>
         if (!cas(s, target)) link(target) else {
           var ks = waitq
-          while (ks ne Nil) {
-            target.continue(ks.head.asInstanceOf[K[A]])
-            ks = ks.tail
+          while (ks ne WaitQueue.Empty) {
+            target.continue(ks.first.asInstanceOf[K[A]])
+            ks = ks.rest
           }
           target.forwardInterruptsTo(other)
         }
@@ -980,9 +1004,9 @@ class Promise[A]
       case s@Interrupted(waitq, signal) =>
         if (!cas(s, target)) link(target) else {
           var ks = waitq
-          while (ks ne Nil) {
-            target.continue(ks.head.asInstanceOf[K[A]])
-            ks = ks.tail
+          while (ks ne WaitQueue.Empty) {
+            target.continue(ks.first.asInstanceOf[K[A]])
+            ks = ks.rest
           }
           target.raise(signal)
         }
@@ -992,14 +1016,14 @@ class Promise[A]
   def poll: Option[Try[A]] = state match {
     case p: Promise[A] /* Linked */ => p.poll
     case res: Try[A] /* Done */ => Some(res)
-    case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => None
+    case _: WaitQueue[A] | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => None
   }
 
   override def isDefined: Boolean = state match {
     // Note: the basic implementation is the same as `poll()`, but we want to avoid doing
     // object allocations for `Some`s when the caller does not need the result.
     case p: Promise[A] /* Linked */ => p.isDefined
-    case res: Try[A] /* Done */ => true
-    case Waiting(_, _) | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => false
+    case _: Try[A] /* Done */ => true
+    case _: WaitQueue[A] | Interruptible(_, _) | Interrupted(_, _) | Transforming(_, _) => false
   }
 }
