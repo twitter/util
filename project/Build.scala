@@ -33,7 +33,7 @@ object Util extends Build {
     version := libVersion,
     organization := "com.twitter",
     scalaVersion := "2.12.1",
-    crossScalaVersions := Seq("2.11.8", "2.12.1"),
+    crossScalaVersions := Seq("2.11.11", "2.12.1"),
     // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
     libraryDependencies ++= Seq(
