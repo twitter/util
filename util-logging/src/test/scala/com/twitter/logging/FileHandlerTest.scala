@@ -24,7 +24,7 @@ import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import com.twitter.conversions.storage._
 import com.twitter.conversions.time._
-import com.twitter.util.{TempFolder, Time}
+import com.twitter.util.{StorageUnit, TempFolder, Time}
 
 
 @RunWith(classOf[JUnitRunner])
