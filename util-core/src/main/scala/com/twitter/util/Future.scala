@@ -990,7 +990,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * ''Note'': On timeout, the underlying future is interrupted.
    */
-  def raiseWithin(timeout: Duration, exc: Throwable)(implicit timer: Timer): Future[A] =
+  def raiseWithin(timeout: Duration, exc: => Throwable)(implicit timer: Timer): Future[A] =
     raiseWithin(timer, timeout, exc)
 
   /**
@@ -998,7 +998,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * ''Note'': On timeout, the underlying future is interrupted.
    */
-  def raiseWithin(timer: Timer, timeout: Duration, exc: Throwable): Future[A] = {
+  def raiseWithin(timer: Timer, timeout: Duration, exc: => Throwable): Future[A] = {
     if (timeout == Duration.Top || isDefined)
       return this
 
