@@ -6,6 +6,8 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+6.45.0  2017-06-06
+
 New Features:
 
   * util-app: Optional resource shutdown sequencing for registered closables
