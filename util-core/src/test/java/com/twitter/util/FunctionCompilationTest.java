@@ -9,6 +9,8 @@ import static com.twitter.util.Function.func;
 import static com.twitter.util.Function.func0;
 import static com.twitter.util.Function.excons;
 import static com.twitter.util.Function.exfunc;
+import static com.twitter.util.Function.exfunc0;
+
 
 public class FunctionCompilationTest {
 
@@ -53,6 +55,14 @@ public class FunctionCompilationTest {
     ExceptionalFunction<String,String> fun =
       exfunc(str -> { throw new Exception("Expected"); });
     fun.apply("test");
+  }
+
+  @Test(expected = Exception.class)
+  public void testMakeExceptionalFunction0FromLambda() {
+    ExceptionalFunction0<String> fun = exfunc0(() -> {
+      throw new Exception("expected");
+    });
+    fun.apply();
   }
 
   @Test

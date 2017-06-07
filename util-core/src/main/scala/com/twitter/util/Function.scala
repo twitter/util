@@ -66,6 +66,7 @@ object Function {
    *
    * @see [[exfunc]] if your function throws checked exceptions.
    * @see [[func0]] if you have a function which takes no input.
+   * @see [[exfunc0]] if your function throws checked exceptions and takes no input.
    * @see [[cons]] if you have a side-effecting function (return type is `Unit` or `void`)
    */
   def func[T, R](f: JavaFunction[T, R]): Function[T, R] = new Function[T, R] {
@@ -157,6 +158,26 @@ object Function {
     new ExceptionalFunction[T, Unit] {
       @throws(classOf[Throwable])
       def applyE(value: T): Unit = f(value)
+    }
+
+  /**
+    * Creates an [[ExceptionalFunction0]] to `T` from an [[ExceptionalSupplier]].
+    *
+    * Allows for better interop with Scala from Java 8 using lambdas.
+    *
+    * For example:
+    * {{{
+    * import com.twitter.util.Future;
+    * import static com.twitter.util.Function.exRunnable;
+    *
+    * FuturePool futurePool = FuturePools.immediatePool();
+    * Future<Unit> fu = futurePool.apply(exfunc0(() -> { throw new Exception("blah"); }));
+    * }}}
+    */
+  def exfunc0[T](f: ExceptionalSupplier[T]): ExceptionalFunction0[T] =
+    new ExceptionalFunction0[T] {
+      @throws(classOf[Throwable])
+      def applyE(): T = f()
     }
 }
 
