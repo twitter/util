@@ -125,93 +125,63 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
-    </li><li name="com.twitter.util.Eval" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="EvalextendsAnyRef"></a><a id="Eval:Eval"></a>
+    </li><li name="com.twitter.util.Promise" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Promise"></a><a id="Promise:Promise"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#EvalextendsAnyRef" title="Permalink">
+      <a href="../../../com/twitter/util/index.html#Promise" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="Evaluates files, strings, or input streams as Scala code, and returns the result." href="Eval.html">
-              <span class="name">Eval</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="Promise$.html">
+              <span class="name">Promise</span>
+            </a>
       </span>
       
-      <p class="shortcomment cmt">Evaluates files, strings, or input streams as Scala code, and returns the result.</p><div class="fullcomment"><div class="comment cmt"><p>Evaluates files, strings, or input streams as Scala code, and returns the result.</p><p>If <code>target</code> is <code>None</code>, the results are compiled to memory (and are therefore ephemeral). If
-<code>target</code> is <code>Some(path)</code>, the path must point to a directory, and classes will be saved into
-that directory.</p><p>Eval also supports a limited set of preprocessors. Currently, &quot;limited&quot; means &quot;exactly one&quot;:
-directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of evaluation is:
-- extract a string of code from the file, string, or input stream
-- run preprocessors on that string
-- wrap processed code in an <code>apply</code> method in a generated class
-- compile the class
-- contruct an instance of that class
-- return the result of <code>apply()</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">
-                          ClassScopedResolver
+                        <a class="trait" href="Promise$$Detachable.html" title="A template trait for Promises that are derived
+and capable of being detached from other Promises."></a>
+                        <a href="Promise$$Detachable.html" title="A template trait for Promises that are derived
+and capable of being detached from other Promises.">
+                          Detachable
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="Eval$CompilerException.html" title=""></a>
-                        <a href="Eval$CompilerException.html" title="">
-                          CompilerException
+                        <a class="class" href="Promise$$ImmutableResult.html" title="Indicates that an attempt to satisfy a com.twitter.util.Promise was made
+after that promise had already been satisfied."></a>
+                        <a href="Promise$$ImmutableResult.html" title="Indicates that an attempt to satisfy a com.twitter.util.Promise was made
+after that promise had already been satisfied.">
+                          ImmutableResult
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="Eval$EvalSettings.html" title=""></a>
-                        <a href="Eval$EvalSettings.html" title="">
-                          EvalSettings
+                        <a class="trait" href="" title="Embeds an &quot;interrupt handler&quot; into a Promise."></a>
+                        <a href="" title="Embeds an &quot;interrupt handler&quot; into a Promise.">
+                          InterruptHandler
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="Eval$FilesystemResolver.html" title=""></a>
-                        <a href="Eval$FilesystemResolver.html" title="">
-                          FilesystemResolver
-                        </a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="class" href="Eval$IncludePreprocessor.html" title=""></a>
-                        <a href="Eval$IncludePreprocessor.html" title="">
-                          IncludePreprocessor
-                        </a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="trait" href="Eval$Preprocessor.html" title=""></a>
-                        <a href="Eval$Preprocessor.html" title="">
-                          Preprocessor
-                        </a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="class" href="Eval$ResolutionFailedException.html" title=""></a>
-                        <a href="Eval$ResolutionFailedException.html" title="">
-                          ResolutionFailedException
-                        </a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="trait" href="Eval$Resolver.html" title=""></a>
-                        <a href="Eval$Resolver.html" title="">
-                          Resolver
+                        <a class="trait" href="Promise$$Responder.html" title=""></a>
+                        <a href="Promise$$Responder.html" title="">
+                          Responder
                         </a>
                       </li>
               </ul>
             </div>
           </div>
           <div id="content">
-            <body class="class type">
+            <body class="trait type">
       <div id="definition">
-        <div class="big-circle class">c</div>
-        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.util">util</a>.<a href="Eval.html" class="extype" name="com.twitter.util.Eval">Eval</a></p>
-        <h1>ClassScopedResolver<span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html" title="Permalink">
+        <div class="big-circle trait">t</div>
+        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.util">util</a>.<a href="Promise$.html" class="extype" name="com.twitter.util.Promise">Promise</a></p>
+        <h1>InterruptHandler<span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -221,19 +191,29 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">ClassScopedResolver</span><span class="result"> extends <a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a></span>
+        <span class="name">InterruptHandler</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><p>This is a total handler such that it's defined on any <span class="extype" name="Throwable">Throwable</span>. Use
+<span class="extype" name="Promise.setInterruptHandler()">Promise.setInterruptHandler()</span> if you need to leave an interrupt handler
+undefined for certain types of exceptions.</p><p>Example: (<code>p</code> and <code>q</code> are equivalent, but <code>p</code> allocates less):</p><pre><span class="kw">import</span> com.twitter.util.Promise
+
+<span class="kw">val</span> p = <span class="kw">new</span> Promise[A] <span class="kw">with</span> Promise.InterruptHandler {
+  <span class="kw">def</span> onInterrupt(t: Throwable): <span class="std">Unit</span> = setException(t)
+}
+
+<span class="kw">val</span> q = <span class="kw">new</span> Promise[A]
+q.setInterruptHandler { <span class="kw">case</span> t: Throwable <span class="kw">=&gt;</span> q.setException(t) }</pre></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.util.Promise.InterruptHandler">InterruptHandler</a> with <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[_]</dd><dt>Note</dt><dd><span class="cmt"><p>Later calls to <code>setInterruptHandler</code> on a promise mixing in this
+      trait will replace the embedded handler.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], (<span class="extype" name="scala.Throwable">Throwable</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -259,7 +239,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.util.Eval.ClassScopedResolver"><span>ClassScopedResolver</span></li><li class="in" name="com.twitter.util.Eval.Resolver"><span>Resolver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.util.Promise.InterruptHandler"><span>InterruptHandler</span></li><li class="in" name="scala.PartialFunction"><span>PartialFunction</span></li><li class="in" name="scala.Function1"><span>Function1</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -277,38 +257,39 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.util.Eval.ClassScopedResolver#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(clazz:Class[_]):Eval.this.ClassScopedResolver"></a><a id="&lt;init&gt;:ClassScopedResolver"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#&lt;init&gt;(clazz:Class[_]):Eval.this.ClassScopedResolver" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ClassScopedResolver</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span>
-      </span>
-      
-      
-    </li></ol>
-            </div>
-
         
 
         
 
         <div class="values members">
-              <h3>Value Members</h3>
+              <h3>Abstract Value Members</h3>
+              <ol><li name="com.twitter.util.Promise.InterruptHandler#onInterrupt" visbl="prt" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="onInterrupt(t:Throwable):Unit"></a><a id="onInterrupt(Throwable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#onInterrupt(t:Throwable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onInterrupt</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Triggered on any interrupt (even <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.util.control.NonFatal$" class="extype" target="_top">a fatal one</a>).</p><div class="fullcomment"><div class="comment cmt"><p>Triggered on any interrupt (even <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.util.control.NonFatal$" class="extype" target="_top">a fatal one</a>).
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div class="values members">
+              <h3>Concrete Value Members</h3>
               <ol>
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -324,7 +305,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html###():Int" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -340,7 +321,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -353,10 +334,58 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.PartialFunction#andThen" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="andThen[C](k:B=&gt;C):PartialFunction[A,C]"></a><a id="andThen[C]((Unit)⇒C):PartialFunction[Throwable,C]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#andThen[C](k:B=&gt;C):PartialFunction[A,C]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">andThen</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="k">k: (<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>) ⇒ <span class="extype" name="scala.PartialFunction.andThen.C">C</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <span class="extype" name="scala.PartialFunction.andThen.C">C</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction → Function1</dd></dl></div>
+    </li><li name="com.twitter.util.Promise.InterruptHandler#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(t:Throwable):Unit"></a><a id="apply(Throwable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#apply(t:Throwable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Promise.InterruptHandler">InterruptHandler</a> → Function1</dd></dl></div>
+    </li><li name="scala.PartialFunction#applyOrElse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="applyOrElse[A1&lt;:A,B1&gt;:B](x:A1,default:A1=&gt;B1):B1"></a><a id="applyOrElse[A1&lt;:Throwable,B1&gt;:Unit](A1,(A1)⇒B1):B1"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#applyOrElse[A1&lt;:A,B1&gt;:B](x:A1,default:A1=&gt;B1):B1" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">applyOrElse</span><span class="tparams">[<span name="A1">A1 &lt;: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="B1">B1 &gt;: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>]</span><span class="params">(<span name="x">x: <span class="extype" name="scala.PartialFunction.applyOrElse.A1">A1</span></span>, <span name="default">default: (<span class="extype" name="scala.PartialFunction.applyOrElse.A1">A1</span>) ⇒ <span class="extype" name="scala.PartialFunction.applyOrElse.B1">B1</span></span>)</span><span class="result">: <span class="extype" name="scala.PartialFunction.applyOrElse.B1">B1</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -372,7 +401,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#clone():Object" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -381,7 +410,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -391,10 +420,29 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="scala.Function1#compose" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compose[A](g:A=&gt;T1):A=&gt;R"></a><a id="compose[A]((A)⇒Throwable):(A)⇒Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#compose[A](g:A=&gt;T1):A=&gt;R" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">compose</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="g">g: (<span class="extype" name="scala.Function1.compose.A">A</span>) ⇒ <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: (<span class="extype" name="scala.Function1.compose.A">A</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1</dd><dt>Annotations</dt><dd>
+                <span class="name">@unspecialized</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -403,14 +451,14 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -426,7 +474,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#finalize():Unit" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -445,26 +493,10 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Eval.ClassScopedResolver#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="get(path:String):java.io.InputStream"></a><a id="get(String):InputStream"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#get(path:String):java.io.InputStream" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.io.InputStream">InputStream</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Eval.ClassScopedResolver">ClassScopedResolver</a> → <a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -480,7 +512,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#hashCode():Int" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -493,10 +525,26 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Promise.InterruptHandler#isDefinedAt" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isDefinedAt(x:Throwable):Boolean"></a><a id="isDefinedAt(Throwable):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#isDefinedAt(x:Throwable):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isDefinedAt</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Promise.InterruptHandler">InterruptHandler</a> → PartialFunction</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -509,10 +557,26 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.PartialFunction#lift" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="lift:A=&gt;Option[B]"></a><a id="lift:(Throwable)⇒Option[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#lift:A=&gt;Option[B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lift</span><span class="result">: (<span class="extype" name="scala.Throwable">Throwable</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -521,14 +585,14 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#notify():Unit" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -544,7 +608,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -557,10 +621,10 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.util.Eval.ClassScopedResolver#resolvable" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="resolvable(path:String):Boolean"></a><a id="resolvable(String):Boolean"></a>
+    </li><li name="scala.PartialFunction#orElse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="orElse[A1&lt;:A,B1&gt;:B](that:PartialFunction[A1,B1]):PartialFunction[A1,B1]"></a><a id="orElse[A1&lt;:Throwable,B1&gt;:Unit](PartialFunction[A1,B1]):PartialFunction[A1,B1]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#resolvable(path:String):Boolean" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#orElse[A1&lt;:A,B1&gt;:B](that:PartialFunction[A1,B1]):PartialFunction[A1,B1]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -569,14 +633,30 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">resolvable</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">orElse</span><span class="tparams">[<span name="A1">A1 &lt;: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="B1">B1 &gt;: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>]</span><span class="params">(<span name="that">that: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.PartialFunction.orElse.A1">A1</span>, <span class="extype" name="scala.PartialFunction.orElse.B1">B1</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.PartialFunction.orElse.A1">A1</span>, <span class="extype" name="scala.PartialFunction.orElse.B1">B1</span>]</span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.Eval.ClassScopedResolver">ClassScopedResolver</a> → <a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
+    </li><li name="scala.PartialFunction#runWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="runWith[U](action:B=&gt;U):A=&gt;Boolean"></a><a id="runWith[U]((Unit)⇒U):(Throwable)⇒Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#runWith[U](action:B=&gt;U):A=&gt;Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">runWith</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="action">action: (<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>) ⇒ <span class="extype" name="scala.PartialFunction.runWith.U">U</span></span>)</span><span class="result">: (<span class="extype" name="scala.Throwable">Throwable</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PartialFunction</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -589,10 +669,10 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.Function1#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#toString():String" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -604,11 +684,11 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1 → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#wait():Unit" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -630,7 +710,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -652,7 +732,7 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Eval$ClassScopedResolver.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../com/twitter/util/Promise$$InterruptHandler.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -681,10 +761,12 @@ directives of the form <code>#include &lt;file&gt;</code>.</p><p>The flow of eva
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.util.Eval.Resolver">
-              <h3>Inherited from <a href="Eval$Resolver.html" class="extype" name="com.twitter.util.Eval.Resolver">Resolver</a></h3>
+        <div class="parent" name="scala.PartialFunction">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.PartialFunction" class="extype" target="_top">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>]</h3>
+            </div><div class="parent" name="scala.Function1">
+              <h3>Inherited from (<span class="extype" name="scala.Throwable">Throwable</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>

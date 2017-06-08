@@ -200,7 +200,7 @@ sent to allow for analysis.">
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Sink</span><span class="result"> extends <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">Sink</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4>
 
@@ -215,7 +215,7 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">
               Known Subclasses
@@ -282,7 +282,7 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">event</span><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="longVal">longVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoLong</a></span></span></span>, <span name="objectVal">objectVal: <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoObject</a></span></span></span>, <span name="doubleVal">doubleVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoDouble</a></span></span></span>, <span name="traceIdVal">traceIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoTraceId</a></span></span></span>, <span name="spanIdVal">spanIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoSpanId</a></span></span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">event</span><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="longVal">longVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoLong</a></span></span></span>, <span name="objectVal">objectVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoObject</a></span></span></span>, <span name="doubleVal">doubleVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoDouble</a></span></span></span>, <span name="traceIdVal">traceIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoTraceId</a></span></span></span>, <span name="spanIdVal">spanIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoSpanId</a></span></span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Event input is captured as individual fields in service of
@@ -303,7 +303,7 @@ into this method:</p><pre><span class="kw">if</span> (sink.recording) {
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">events</span><span class="result">: <a href="../../../../scala/index.html#Iterator[+A]=Iterator[A]" class="extmbr" name="scala.Iterator">Iterator</a>[<a href="Event.html" class="extype" name="com.twitter.util.events.Event">Event</a>]</span>
+        <span class="name">events</span><span class="result">: <span class="extype" name="scala.Iterator">Iterator</span>[<a href="Event.html" class="extype" name="com.twitter.util.events.Event">Event</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns all currently available events.</p><div class="fullcomment"><div class="comment cmt"><p>Returns all currently available events.</p><p><b>Note:</b> the events are not returned in any particular order.
@@ -390,7 +390,7 @@ into this method:</p><pre><span class="kw">if</span> (sink.recording) {
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -412,7 +412,7 @@ into this method:</p><pre><span class="kw">if</span> (sink.recording) {
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -514,7 +514,7 @@ into this method:</p><pre><span class="kw">if</span> (sink.recording) {
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -712,7 +712,7 @@ there is some expense in capturing the data sent to that call.</p><p>The expecta
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>

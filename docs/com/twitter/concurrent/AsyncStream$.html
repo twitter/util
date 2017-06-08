@@ -321,7 +321,7 @@ protocol:">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
         
 
@@ -383,7 +383,7 @@ protocol:">
       <span class="symbol">
         <a title="" href="AsyncStream$$Ops.html">
               <span class="name">Ops</span>
-            </a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       
@@ -490,7 +490,7 @@ more recent scala version so we will revisit this soon.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -528,7 +528,7 @@ more recent scala version so we will revisit this soon.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -560,7 +560,7 @@ more recent scala version so we will revisit this soon.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.exception.A">A</span>]</span>
+        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.exception.A">A</span>]</span>
       </span>
       
       <p class="shortcomment cmt">A failed AsyncStream
@@ -647,7 +647,7 @@ more recent scala version so we will revisit this soon.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromReader</span><span class="params">(<span name="r">r: <a href="../io/Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="chunkSize">chunkSize: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol"><span class="name"><a href="../../../scala/index.html">Int.MaxValue</a></span></span></span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="../io/Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
+        <span class="name">fromReader</span><span class="params">(<span name="r">r: <a href="../io/Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="chunkSize">chunkSize: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">Int.MaxValue</span></span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="../io/Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Transformation (or lift) from <span class="extype" name="Reader">Reader</span> into <code>AsyncStream[Buf]</code>, where each <span class="extype" name="Buf">Buf</span>
@@ -664,7 +664,7 @@ has size up to <code>chunkSize</code>.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.fromSeq.A">A</span>]</span>
+        <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.concurrent.AsyncStream.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.fromSeq.A">A</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Transformation (or lift) from <span class="extype" name="Seq">Seq</span> into <code>AsyncStream</code>.</p>
@@ -768,7 +768,7 @@ is failed
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -947,7 +947,7 @@ is failed
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>

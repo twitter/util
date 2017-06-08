@@ -576,7 +576,7 @@ a convenient interface for the producer of such streams.">
         <a title="Buf represents a fixed, immutable byte buffer with efficient
 positional access." href="Buf.html">
               <span class="name">Buf</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Buf represents a fixed, immutable byte buffer with efficient
@@ -618,14 +618,14 @@ and thus be used to implement bytestreams.
       <span class="symbol">
         <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html">
               <span class="name">Bufs</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of the <code><a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a></code> companion object.</p>
     </li><li name="com.twitter.io.ByteReader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ByteReaderextendsAnyRef"></a><a id="ByteReader:ByteReader"></a>
+      <a id="ByteReaderextendsAutoCloseable"></a><a id="ByteReader:ByteReader"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/index.html#ByteReaderextendsAnyRef" title="Permalink">
+      <a href="../../../com/twitter/io/index.html#ByteReaderextendsAutoCloseable" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -637,16 +637,15 @@ and thus be used to implement bytestreams.
         <a title="A ByteReader provides a stateful API to extract bytes from an
 underlying buffer, which in most cases is a Buf." href="ByteReader.html">
               <span class="name">ByteReader</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span></span>
       </span>
       
       <p class="shortcomment cmt">A <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> provides a stateful API to extract bytes from an
 underlying buffer, which in most cases is a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> provides a stateful API to extract bytes from an
 underlying buffer, which in most cases is a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>. This conveniently
 allows codec implementations to decode frames, specifically when they need
-to decode and interpret the bytes as a numeric value. Unless otherwise
-stated, <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> implementations are not thread safe.
-</p></div></div>
+to decode and interpret the bytes as a numeric value.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Unless otherwise stated, <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> implementations are not thread safe.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.ByteWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="ByteWriterextendsAnyRef"></a><a id="ByteWriter:ByteWriter"></a>
       <span class="permalink">
@@ -661,7 +660,7 @@ stated, <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader
       <span class="symbol">
         <a title="ByteWriters allow efficient construction of a buffer." href="ByteWriter.html">
               <span class="name">ByteWriter</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer.</p><div class="fullcomment"><div class="comment cmt"><p><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer. Concatenating
@@ -707,7 +706,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
       <span class="symbol">
         <a title="A Reader represents a stream of bytes, read in discrete chunks." href="Reader.html">
               <span class="name">Reader</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Reader represents a stream of bytes, read in discrete chunks.</p><div class="fullcomment"><div class="comment cmt"><p>A Reader represents a stream of bytes, read in discrete chunks.
@@ -727,7 +726,7 @@ Readers permit at most one outstanding read.
       <span class="symbol">
         <a title="Java APIs for Reader." href="Readers.html">
               <span class="name">Readers</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Reader.
@@ -747,7 +746,7 @@ Readers permit at most one outstanding read.
         <a title="A Writer represents a sink for a stream of bytes, providing
 a convenient interface for the producer of such streams." href="Writer.html">
               <span class="name">Writer</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Writer represents a sink for a stream of bytes, providing
@@ -766,7 +765,7 @@ a convenient interface for the producer of such streams.</p>
       <span class="symbol">
         <a title="Java APIs for Writer." href="Writers.html">
               <span class="name">Writers</span>
-            </a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Writer.

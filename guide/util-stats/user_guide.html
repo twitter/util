@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &#8212; Util 6.43.0 documentation</title>
+    <title>User Guide &#8212; Util 6.45.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.43.0',
+        VERSION:     '6.45.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 6.43.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 6.45.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -79,10 +79,7 @@
 a well-run service to have this wired up properly. Finagle uses
 <a class="reference external" href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala">LoadService</a>
 in order to discover implementations on the classpath. The standard
-implementations come via <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">finagle-stats</a>,
-<a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-ostrich4">finagle-ostrich4</a>
-and <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-commons-stats">finagle-commons-stats</a>
-which correspond to Commons Metrics, Ostrich and Commons Stats respectively.</p>
+implementation comes via <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">finagle-stats</a>.</p>
 <p>If multiple implementations are found, metrics are reported to
 <strong>all</strong> of the implementations via a
 <a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a>.
@@ -206,7 +203,7 @@ These are initialized via Finagle’s <code class="docutils literal"><span class
 <p>This is possible, however the mechanism varies depending on which
 “application” framework you are using.</p>
 <ul class="simple">
-<li>Via TwitterServer/Commons Metrics — the <a class="reference external" href="https://twitter.github.io/twitter-server/Features.html#http-admin-interface">HTTP admin interface</a> responds with json at <code class="docutils literal"><span class="pre">/admin/metrics.json</span></code> and there is a web UI for watching them in real-time at <code class="docutils literal"><span class="pre">/admin/metrics</span></code>.</li>
+<li>Via TwitterServer/finagle-stats — the <a class="reference external" href="https://twitter.github.io/twitter-server/Features.html#http-admin-interface">HTTP admin interface</a> responds with json at <code class="docutils literal"><span class="pre">/admin/metrics.json</span></code> and there is a web UI for watching them in real-time at <code class="docutils literal"><span class="pre">/admin/metrics</span></code>.</li>
 </ul>
 </div>
 </div>

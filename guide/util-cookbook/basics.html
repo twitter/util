@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &#8212; Util 6.43.0 documentation</title>
+    <title>Basics &#8212; Util 6.45.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.43.0',
+        VERSION:     '6.45.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 6.43.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 6.45.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Futures" href="futures.html" />
     <link rel="prev" title="Util Cookbook" href="index.html" />
@@ -104,9 +104,9 @@ less obvious from Java.</p>
 </div>
 <div class="section" id="conversions-between-twitter-s-try-and-scala-s-try">
 <h2>Conversions between Twitter&#8217;s Try and Scala&#8217;s Try<a class="headerlink" href="#conversions-between-twitter-s-try-and-scala-s-try" title="Permalink to this headline">¶</a></h2>
-<p>Scala&#8217;s <cite>scala.util.Try</cite>, <cite>scala.util.Success</cite>, and <cite>scala.util.Failure</cite>
-were based on Twitter&#8217;s <cite>com.twitter.util.Try</cite>, <cite>com.twitter.util.Return</cite>
-and <cite>com.twitter.util.Throw</cite> and converting to and from them is sometimes
+<p>Scala&#8217;s <code class="docutils literal"><span class="pre">scala.util.Try</span></code>, <code class="docutils literal"><span class="pre">scala.util.Success</span></code>, and <code class="docutils literal"><span class="pre">scala.util.Failure</span></code>
+were based on Twitter&#8217;s <code class="docutils literal"><span class="pre">com.twitter.util.Try</span></code>, <code class="docutils literal"><span class="pre">com.twitter.util.Return</span></code>
+and <code class="docutils literal"><span class="pre">com.twitter.util.Throw</span></code> and converting to and from them is sometimes
 necessary.</p>
 <p>Scala:</p>
 <div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Try</span> <span class="k">=&gt;</span> <span class="nc">TwitterTry</span><span class="o">}</span>
@@ -131,6 +131,112 @@ necessary.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="controlling-time-for-tests">
+<h2>Controlling Time for tests<a class="headerlink" href="#controlling-time-for-tests" title="Permalink to this headline">¶</a></h2>
+<p>The current time, <code class="docutils literal"><span class="pre">com.twitter.util.Time.now</span></code>, can be manipulated for
+writing deterministic tests with <code class="docutils literal"><span class="pre">Time.withTimeAt</span></code>, <code class="docutils literal"><span class="pre">Time.withCurrentTimeFrozen</span></code>,
+<code class="docutils literal"><span class="pre">Time.withTimeFunction</span></code>, and <code class="docutils literal"><span class="pre">Time.sleep</span></code>.</p>
+<p>While <code class="docutils literal"><span class="pre">Time.now</span></code> is not a &#8220;global&#8221;, it is properly propagated through
+to other code via the standard usage of <code class="docutils literal"><span class="pre">Locals</span></code> throughout <cite>util</cite>.
+Specifically, code using <code class="docutils literal"><span class="pre">Future</span></code>s, <code class="docutils literal"><span class="pre">FuturePool</span></code>s, and <code class="docutils literal"><span class="pre">MockTimer</span></code>s
+will see the manipulated <code class="docutils literal"><span class="pre">Time.now</span></code>.</p>
+<p>Scala:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
+<span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">FuturePool</span><span class="o">,</span> <span class="nc">Time</span><span class="o">}</span>
+
+<span class="k">val</span> <span class="n">time</span> <span class="k">=</span> <span class="nc">Time</span><span class="o">.</span><span class="n">fromMilliseconds</span><span class="o">(</span><span class="mi">123456L</span><span class="o">)</span>
+<span class="nc">Time</span><span class="o">.</span><span class="n">withTimeAt</span><span class="o">(</span><span class="n">time</span><span class="o">)</span> <span class="o">{</span> <span class="n">timeControl</span> <span class="k">=&gt;</span>
+  <span class="n">assert</span><span class="o">(</span><span class="nc">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">==</span> <span class="n">time</span><span class="o">)</span>
+
+  <span class="c1">// you can control time via the `TimeControl` instance.</span>
+  <span class="n">timeControl</span><span class="o">.</span><span class="n">advance</span><span class="o">(</span><span class="mf">2.</span><span class="n">seconds</span><span class="o">)</span>
+  <span class="nc">FuturePool</span><span class="o">.</span><span class="n">unboundedPool</span> <span class="o">{</span>
+    <span class="n">assert</span><span class="o">(</span><span class="nc">Time</span><span class="o">.</span><span class="n">now</span> <span class="o">==</span> <span class="n">time</span> <span class="o">+</span> <span class="mf">2.</span><span class="n">seconds</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Java:</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Time</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func0</span><span class="o">;</span>
+
+<span class="n">Time</span> <span class="n">time</span> <span class="o">=</span> <span class="n">Time</span><span class="o">.</span><span class="na">fromMilliseconds</span><span class="o">(</span><span class="mi">123456L</span><span class="o">);</span>
+<span class="n">Time</span><span class="o">.</span><span class="na">withTimeAt</span><span class="o">(</span><span class="n">time</span><span class="o">,</span> <span class="n">func</span><span class="o">(</span><span class="n">timeControl</span> <span class="o">-&gt;</span> <span class="o">{</span>
+  <span class="k">assert</span><span class="o">(</span><span class="n">Time</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">time</span><span class="o">));</span>
+
+  <span class="c1">// you can control time via the `TimeControl` instance.</span>
+  <span class="n">timeControl</span><span class="o">.</span><span class="na">advance</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">fromSeconds</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span>
+  <span class="n">FuturePools</span><span class="o">.</span><span class="na">unboundedPool</span><span class="o">().</span><span class="na">apply</span><span class="o">(</span><span class="n">func0</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="k">assert</span><span class="o">(</span><span class="n">Time</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="n">time</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">fromSeconds</span><span class="o">(</span><span class="mi">2</span><span class="o">))));</span>
+    <span class="k">return</span> <span class="n">BoxedUnit</span><span class="o">.</span><span class="na">UNIT</span><span class="o">;</span>
+  <span class="o">}));</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}));</span>
+</pre></div>
+</div>
+<div class="section" id="controlling-timers">
+<h3>Controlling Timers<a class="headerlink" href="#controlling-timers" title="Permalink to this headline">¶</a></h3>
+<p>For the same reasons you would want to control <code class="docutils literal"><span class="pre">Time</span></code> deterministically,
+you may have code that relies on a <code class="docutils literal"><span class="pre">Timer</span></code> and need the same abilities.
+Enter <code class="docutils literal"><span class="pre">com.twitter.util.MockTimer</span></code>, which plays well with the <code class="docutils literal"><span class="pre">Time</span></code>
+manipulation methods discussed above. It adds a method to <code class="docutils literal"><span class="pre">Timer</span></code>, <code class="docutils literal"><span class="pre">tick()</span></code>,
+which runs all <code class="docutils literal"><span class="pre">TimerTasks</span></code> that are past their deadline.</p>
+<p>Scala:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
+<span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span><span class="o">,</span> <span class="nc">MockTimer</span><span class="o">,</span> <span class="nc">Time</span><span class="o">}</span>
+
+<span class="nc">Time</span><span class="o">.</span><span class="n">withWithCurrentTimeFrozen</span> <span class="o">{</span> <span class="n">timeControl</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="n">timer</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MockTimer</span><span class="o">()</span>
+  <span class="c1">// schedule some work for later</span>
+  <span class="k">val</span> <span class="n">f</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">doLater</span><span class="o">(</span><span class="mf">1.</span><span class="n">millisecond</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// some work, and return a status string</span>
+    <span class="s">&quot;done&quot;</span>
+  <span class="o">}</span>
+  <span class="c1">// the task will not execute until we say so.</span>
+  <span class="n">assert</span><span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="n">isDefined</span><span class="o">)</span>
+
+  <span class="c1">// move time forward, past when the task should be done</span>
+  <span class="n">timeControl</span><span class="o">.</span><span class="n">advance</span><span class="o">(</span><span class="mf">2.</span><span class="n">milliseconds</span><span class="o">)</span>
+  <span class="c1">// the task will not execute until we `Timer.tick()`</span>
+  <span class="n">assert</span><span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="n">isDefined</span><span class="o">)</span>
+
+  <span class="c1">// let the Timer run and the task will run</span>
+  <span class="n">timer</span><span class="o">.</span><span class="n">tick</span><span class="o">()</span>
+  <span class="n">assert</span><span class="o">(</span><span class="n">f</span><span class="o">.</span><span class="n">isDefined</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.MockTimer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Time</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func0</span><span class="o">;</span>
+
+<span class="n">Time</span><span class="o">.</span><span class="na">withCurrentTimeFrozen</span><span class="o">(</span><span class="n">func</span><span class="o">(</span><span class="n">timeControl</span> <span class="o">-&gt;</span> <span class="o">{</span>
+  <span class="n">MockTimer</span> <span class="n">timer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockTimer</span><span class="o">();</span>
+  <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="na">doLater</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">fromMilliseconds</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span>
+    <span class="n">func0</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="s">&quot;done&quot;</span><span class="o">));</span>
+  <span class="c1">// the task will not execute until we say so.</span>
+  <span class="k">assert</span><span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="na">isDefined</span><span class="o">());</span>
+
+  <span class="c1">// move time forward, past when the task should be done</span>
+  <span class="n">timeControl</span><span class="o">.</span><span class="na">advance</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">fromMilliseconds</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span>
+  <span class="c1">// the task will not execute until we `Timer.tick()`</span>
+  <span class="k">assert</span><span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="na">isDefined</span><span class="o">());</span>
+
+  <span class="c1">// let the Timer run and the task will run</span>
+  <span class="n">timer</span><span class="o">.</span><span class="na">tick</span><span class="o">();</span>
+  <span class="k">assert</span><span class="o">(!</span><span class="n">f</span><span class="o">.</span><span class="na">isDefined</span><span class="o">());</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}));</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -153,6 +259,10 @@ necessary.</p>
 <li><a class="reference internal" href="#">Basics</a><ul>
 <li><a class="reference internal" href="#getting-the-result-out-of-a-try">Getting the result out of a Try</a></li>
 <li><a class="reference internal" href="#conversions-between-twitter-s-try-and-scala-s-try">Conversions between Twitter&#8217;s Try and Scala&#8217;s Try</a></li>
+<li><a class="reference internal" href="#controlling-time-for-tests">Controlling Time for tests</a><ul>
+<li><a class="reference internal" href="#controlling-timers">Controlling Timers</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -251,8 +251,13 @@ does not require defining a custom <code>main</code> method.
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div></div>
+          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">
+              Known Subclasses
+            </span>
+            <div class="subClasses hiddenContent"><a href="../util/tunable/linter/ConfigurationLinter$.html" class="extype" name="com.twitter.util.tunable.linter.ConfigurationLinter">ConfigurationLinter</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -428,7 +433,7 @@ does not require defining a custom <code>main</code> method.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -529,6 +534,29 @@ the resource has been fully relinquished.
       
       <p class="shortcomment cmt">Close <code>closable</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Close <code>closable</code> when shutdown is requested. Closables are closed in parallel.
 </p></div></div>
+    </li><li name="com.twitter.app.App#closeOnExitLast" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="closeOnExitLast(closable:com.twitter.util.Closable):Unit"></a><a id="closeOnExitLast(Closable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/App.html#closeOnExitLast(closable:com.twitter.util.Closable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closeOnExitLast</span><span class="params">(<span name="closable">closable: <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Register a <code>closable</code> to be closed on application shutdown after those registered
+via <code>clostOnExit</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Register a <code>closable</code> to be closed on application shutdown after those registered
+via <code>clostOnExit</code>.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Application shutdown occurs in two sequential phases to allow explicit
+      encoding of resource lifecycle relationships. Concretely this is useful
+      for encoding that a monitoring resource should outlive a monitored
+      resource.
+      In all cases, the close deadline is enforced.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#defaultCloseGracePeriod" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="defaultCloseGracePeriod:com.twitter.util.Duration"></a><a id="defaultCloseGracePeriod:Duration"></a>
       <span class="permalink">
@@ -560,7 +588,7 @@ provides a default value to be passed as <code>close(grace)</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -785,7 +813,7 @@ breaking existing users, it was introduced using <code>false</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -928,6 +956,22 @@ method.
 access control mechanism: only <code>Await.result</code> may call this
 method.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#shutdownTimer" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="shutdownTimer:com.twitter.util.Timer"></a><a id="shutdownTimer:Timer"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/App.html#shutdownTimer:com.twitter.util.Timer" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">lazy val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">shutdownTimer</span><span class="result">: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -1045,7 +1089,7 @@ method.
             </div><div class="parent" name="com.twitter.util.Closable">
               <h3>Inherited from <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>

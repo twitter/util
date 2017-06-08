@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>FAQ &#8212; Util 6.43.0 documentation</title>
+    <title>FAQ &#8212; Util 6.45.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.43.0',
+        VERSION:     '6.45.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 6.43.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 6.45.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="Filter Stats" href="filter_stats.html" />
     <link rel="prev" title="User Guide" href="user_guide.html" />
@@ -82,22 +82,22 @@ The code was moved to <a class="reference external" href="https://twitter.github
 in order to allow usage without depending on finagle-core.
 To ease the transition, the package namespace was left as is.</p>
 </div>
-<div class="section" id="why-are-there-three-different-implementations">
-<h2>Why are there three(!) different implementations?<a class="headerlink" href="#why-are-there-three-different-implementations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="why-were-there-three-different-implementations">
+<h2>Why were there three(!) different implementations?<a class="headerlink" href="#why-were-there-three-different-implementations" title="Permalink to this headline">¶</a></h2>
 <p>This is somewhat historical, as early on in Twitter, Commons Stats
 was created for Java developers and Ostrich was created for Scala developers.
 Code initially was written directly to the implementations and there were
 (and still are) some subtle differences in their behavior.
 <code class="docutils literal"><span class="pre">StatsReceiver</span></code> was written in order to bridge the gap between the
-two implementations. Commons Metrics was written quite a bit later in order to
+two implementations. <cite>finagle-stats</cite> was written quite a bit later in order to
 improve upon both of these implementations in terms of
 allocation efficiency and histogram precision.</p>
 </div>
-<div class="section" id="why-migrate-to-commons-metrics">
-<h2>Why migrate to Commons Metrics?<a class="headerlink" href="#why-migrate-to-commons-metrics" title="Permalink to this headline">¶</a></h2>
-<p>The Commons Metrics library is designed to replace the other two libraries
-supported by Twitter: Ostrich and Commons Stats. The comparison table below
-illustrates the advantages of Commons Metrics over the older libraries.</p>
+<div class="section" id="why-migrate-to-finagle-stats">
+<h2>Why migrate to finagle-stats?<a class="headerlink" href="#why-migrate-to-finagle-stats" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>finagle-stats</cite> library is designed to replace the other two libraries
+formerly supported by Twitter: Ostrich and Commons Stats. The comparison table below
+illustrates the advantages of <cite>finagle-stats</cite> over the older libraries.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="42%" />
@@ -109,7 +109,7 @@ illustrates the advantages of Commons Metrics over the older libraries.</p>
 <tr class="row-odd"><th class="head">&nbsp;</th>
 <th class="head">Commons Stats</th>
 <th class="head">Ostrich</th>
-<th class="head">Commons Metrics</th>
+<th class="head">finagle-stats</th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -152,8 +152,8 @@ illustrates the advantages of Commons Metrics over the older libraries.</p>
   <ul>
 <li><a class="reference internal" href="#">FAQ</a><ul>
 <li><a class="reference internal" href="#why-are-util-stats-in-the-com-twitter-finagle-stats-package">Why are util-stats in the com.twitter.finagle.stats package?</a></li>
-<li><a class="reference internal" href="#why-are-there-three-different-implementations">Why are there three(!) different implementations?</a></li>
-<li><a class="reference internal" href="#why-migrate-to-commons-metrics">Why migrate to Commons Metrics?</a></li>
+<li><a class="reference internal" href="#why-were-there-three-different-implementations">Why were there three(!) different implementations?</a></li>
+<li><a class="reference internal" href="#why-migrate-to-finagle-stats">Why migrate to finagle-stats?</a></li>
 </ul>
 </li>
 </ul>
