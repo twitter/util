@@ -9,6 +9,10 @@ scala_library(
     'util/util-core/src/main/scala',
     'util/util-registry/src/main/scala',
   ],
+  strict_deps=True,
+  exports=[
+    'util/util-core/src/main/scala',
+  ],
   fatal_warnings=True,
   sources=rglobs('*.scala'),
 )
