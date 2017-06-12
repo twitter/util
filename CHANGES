@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+API Changes:
+
+  * util-core: ByteWriter has been transformed into a true trait which can now
+    be implemented outside of the com.twitter.io package. ``PHAB_ID=D59996``
+
 6.45.0  2017-06-06
 
 New Features:

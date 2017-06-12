@@ -12,7 +12,132 @@ import java.lang.{Double => JDouble, Float => JFloat}
  * builders are stateful and keep track of a writer index. Assume that the
  * builder implementations are *not* threadsafe unless otherwise noted.
  */
-abstract class ByteWriter {
+trait ByteWriter {
+
+  /**
+   * Write all the bytes from `bs` into the running buffer.
+   */
+  def writeBytes(bs: Array[Byte]): this.type
+
+  /**
+   * Write all the bytes from `buf` into the running buffer.
+   */
+  def writeBytes(buf: Buf): this.type
+
+  /**
+   * Write 8 bits of `b`. The remaining 24 bits are ignored.
+   */
+  def writeByte(b: Int): this.type
+
+  /**
+   * Write 16 bits from `s` in big-endian order. The remaining
+   * 16 bits are ignored.
+   */
+  def writeShortBE(s: Int): this.type
+
+  /**
+   * Write 16 bits from `s` in little-endian order. The remaining
+   * 16 bits are ignored.
+   */
+  def writeShortLE(s: Int): this.type
+
+  /**
+   * Write 24 bits from `m` in big-endian order. The remaining
+   * 8 bits are ignored.
+   */
+  def writeMediumBE(m: Int): this.type
+
+  /**
+   * Write 24 bits from `m` in little-endian order. The remaining
+   * 8 bits are ignored.
+   */
+  def writeMediumLE(m: Int): this.type
+
+  /**
+   * Write 32 bits from `i` in big-endian order.
+   */
+  def writeIntBE(i: Long): this.type
+
+  /**
+   * Write 32 bits from `i` in little-endian order.
+   */
+  def writeIntLE(i: Long): this.type
+
+  /**
+   * Write 64 bits from `l` in big-endian order.
+   */
+  def writeLongBE(l: Long): this.type
+
+  /**
+   * Write 64 bits from `l` in little-endian order.
+   */
+  def writeLongLE(l: Long): this.type
+
+  /**
+   * Write 32 bits from `f` in big-endian order.
+   */
+  def writeFloatBE(f: Float): this.type
+
+  /**
+   * Write 32 bits from `f` in little-endian order.
+   */
+  def writeFloatLE(f: Float): this.type
+
+  /**
+   * Write 64 bits from `d` in big-endian order.
+   */
+  def writeDoubleBE(d: Double): this.type
+
+  /**
+   * Write 64 bits from `d` in little-endian order.
+   */
+  def writeDoubleLE(d: Double): this.type
+
+  /**
+   * In keeping with [[Buf]] terminology, creates a potential zero-copy [[Buf]]
+   * which has a reference to the same region as the [[ByteWriter]]. That is, if
+   * any methods called on the builder are propagated to the returned [[Buf]].
+   * By definition, the builder owns the region it is writing to so this is
+   * the natural way to coerce a builder to a [[Buf]].
+   */
+  def owned(): Buf
+}
+
+/**
+ * An abstract implementation that implements the floating point methods
+ * in terms of integer methods.
+ */
+abstract class AbstractByteWriter extends ByteWriter {
+  /**
+   * Write 32 bits from `f` in big-endian order.
+   */
+  def writeFloatBE(f: Float): this.type =
+    writeIntBE(JFloat.floatToIntBits(f).toLong)
+
+  /**
+   * Write 32 bits from `f` in little-endian order.
+   */
+  def writeFloatLE(f: Float): this.type =
+    writeIntLE(JFloat.floatToIntBits(f).toLong)
+
+  /**
+   * Write 64 bits from `d` in big-endian order.
+   */
+  def writeDoubleBE(d: Double): this.type =
+    writeLongBE(JDouble.doubleToLongBits(d))
+
+  /**
+   * Write 64 bits from `d` in little-endian order.
+   */
+  def writeDoubleLE(d: Double): this.type =
+    writeLongLE(JDouble.doubleToLongBits(d))
+}
+
+/**
+ * Abstract implementation of the ByteWriter that is specialized to write to an
+ * underlying Array[Byte].
+ */
+private abstract class AbstractByteWriterImpl extends AbstractByteWriter {
 
   /**
    * Returns the array to write `numBytes` bytes into. Subclasses should
@@ -29,6 +154,11 @@ abstract class ByteWriter {
    * are expected to update the index according to numBytes.
    */
   private[io] def getAndIncrementIndex(numBytes: Int): Int
+
+  /**
+   * Offset in bytes of next write. Visible for testing only.
+   */
+  private[io] def index: Int
 
   /**
    * Write all the bytes from `bs` into the running buffer.
@@ -170,56 +300,6 @@ abstract class ByteWriter {
     arr(index + 7) = ((l >> 56) & 0xff).toByte
     this
   }
-
-  /**
-   * Write 32 bits from `f` in big-endian order.
-   */
-  def writeFloatBE(f: Float): this.type =
-    writeIntBE(JFloat.floatToIntBits(f).toLong)
-
-  /**
-   * Write 32 bits from `f` in little-endian order.
-   */
-  def writeFloatLE(f: Float): this.type =
-    writeIntLE(JFloat.floatToIntBits(f).toLong)
-
-  /**
-   * Write 64 bits from `d` in big-endian order.
-   */
-  def writeDoubleBE(d: Double): this.type =
-    writeLongBE(JDouble.doubleToLongBits(d))
-
-  /**
-   * Write 64 bits from `d` in little-endian order.
-   */
-  def writeDoubleLE(d: Double): this.type =
-    writeLongLE(JDouble.doubleToLongBits(d))
-
-  /**
-   * In keeping with [[Buf]] terminology, creates a potential zero-copy [[Buf]]
-   * which has a reference to the same region as the [[ByteWriter]]. That is, if
-   * any methods called on the builder are propagated to the returned [[Buf]].
-   * By definition, the builder owns the region it is writing to so this is
-   * the natural way to coerce a builder to a [[Buf]].
-   */
-  def owned(): Buf
-
-  /**
-   * Offset in bytes of next write. Visible for testing only.
-   */
-  private[io] def index: Int
-}
-
-private[twitter] trait ProxyByteWriter extends ByteWriter {
-  protected def writer: ByteWriter
-
-  private[io] def arrayToWrite(numBytes: Int): Array[Byte] = writer.arrayToWrite(numBytes)
-
-  private[io] def getAndIncrementIndex(numBytes: Int): Int = writer.getAndIncrementIndex(numBytes)
-
-  private[io] def index: Int = writer.index
-
-  def owned(): Buf = writer.owned()
 }
 
 object ByteWriter {
@@ -236,7 +316,7 @@ object ByteWriter {
    */
   def fixed(size: Int): ByteWriter = {
     require(size >= 0)
-    new FixedByteWriter(new Array[Byte](size))
+    apply(new Array[Byte](size))
   }
 
   /**
@@ -261,7 +341,7 @@ object ByteWriter {
 /**
  * A fixed size [[ByteWriter]].
  */
-private class FixedByteWriter(arr: Array[Byte], private[io] var index: Int = 0) extends ByteWriter {
+private class FixedByteWriter(arr: Array[Byte], private[io] var index: Int = 0) extends AbstractByteWriterImpl {
   import ByteWriter.OverflowException
 
   require(index >= 0)
@@ -301,7 +381,7 @@ private object DynamicByteWriter {
   val MaxBufferSize: Int = Int.MaxValue - 2
 }
 
-private class DynamicByteWriter(arr: Array[Byte]) extends ByteWriter {
+private class DynamicByteWriter(arr: Array[Byte]) extends AbstractByteWriterImpl {
   import ByteWriter.OverflowException
   import DynamicByteWriter._
 
