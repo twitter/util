@@ -22,10 +22,9 @@ import scala.collection.JavaConverters._
  * assert(isr.counters(Seq("a", "b", "bar") == 0)) // fail
  * }}}
  **/
-class InMemoryStatsReceiver
-  extends WithHistogramDetails
-  with StatsReceiver {
-  val repr = this
+class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
+
+  def repr: InMemoryStatsReceiver = this
 
   val counters: mutable.Map[Seq[String], Int] =
     new ConcurrentHashMap[Seq[String], Int]().asScala

@@ -16,6 +16,11 @@ API Changes:
     writer methods in order to make it easier to target different buffer representations.
     ``PHAB_ID=D61215``
 
+  * util-stats: ``PHAB_ID=D59762``
+
+   - `ProxyStatsReceiver.self` is now protected (was public before).
+   - `StatsReceiver.repr` is now `def` (was `val` before).
+
 6.45.0  2017-06-06
 
 New Features:

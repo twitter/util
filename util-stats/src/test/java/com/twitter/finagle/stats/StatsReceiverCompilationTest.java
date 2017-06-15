@@ -1,6 +1,5 @@
 package com.twitter.finagle.stats;
 
-import com.twitter.util.Future$;
 import com.twitter.util.Future;
 
 import org.junit.Test;

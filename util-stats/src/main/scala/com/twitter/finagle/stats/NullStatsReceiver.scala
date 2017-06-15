@@ -5,21 +5,21 @@ object NullStatsReceiver extends NullStatsReceiver {
 }
 
 /**
- * A no-op StatsReceiver. Metrics are not recorded, making this receiver useful
+ * A no-op [[StatsReceiver]]. Metrics are not recorded, making this receiver useful
  * in unit tests and as defaults in situations where metrics are not strictly
  * required.
  */
 class NullStatsReceiver extends StatsReceiver {
-  val repr = this
-  override def isNull = true
 
-  private[this] val NullCounter = new Counter { def incr(delta: Int) {} }
-  private[this] val NullStat = new Stat { def add(value: Float) {}}
-  private[this] val NullGauge = new Gauge { def remove() {} }
+  def repr: NullStatsReceiver = this
 
-  def counter(name: String*) = NullCounter
-  def stat(name: String*) = NullStat
-  def addGauge(name: String*)(f: => Float) = NullGauge
+  private[this] val NullCounter = new Counter { def incr(delta: Int): Unit = () }
+  private[this] val NullStat = new Stat { def add(value: Float): Unit = () }
+  private[this] val NullGauge = new Gauge { def remove(): Unit = () }
+
+  def counter(name: String*): Counter = NullCounter
+  def stat(name: String*): Stat = NullStat
+  def addGauge(name: String*)(f: => Float): Gauge = NullGauge
 
   override def provideGauge(name: String*)(f: => Float): Unit = ()
 
@@ -27,5 +27,7 @@ class NullStatsReceiver extends StatsReceiver {
 
   override def scopeSuffix(suffix: String): StatsReceiver = this
 
-  override def toString = "NullStatsReceiver"
+  override def isNull: Boolean = true
+
+  override def toString: String = "NullStatsReceiver"
 }

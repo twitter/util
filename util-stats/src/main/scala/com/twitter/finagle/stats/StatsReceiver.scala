@@ -46,13 +46,14 @@ object StatsReceivers {
  *
  * @see [[StatsReceivers]] for a Java-friendly API.
  */
-trait StatsReceiver { self =>
+trait StatsReceiver {
+
   /**
    * Specifies the representative receiver.  This is in order to
    * expose an object we can use for comparison so that global stats
    * are only reported once per receiver.
    */
-  val repr: AnyRef
+  def repr: AnyRef
 
   /**
    * Accurately indicates if this is a [[NullStatsReceiver]].
@@ -127,19 +128,19 @@ trait StatsReceiver { self =>
    * Prepend `namespace` to the names of the returned [[StatsReceiver]].
    *
    * For example:
+   *
    * {{{
-   * statsReceiver.scope("client").counter("adds")
-   * statsReceiver.scope("client").scope("backend").counter("adds")
+   *   statsReceiver.scope("client").counter("adds")
+   *   statsReceiver.scope("client").scope("backend").counter("adds")
    * }}}
-   * will generate [[Counter counters]] named `/client/adds`
-   * and `/client/backend/adds`.
+   *
+   * will generate [[Counter counters]] named `/client/adds` and `/client/backend/adds`.
    */
   def scope(namespace: String): StatsReceiver = {
     if (namespace == "") this
     else {
       new NameTranslatingStatsReceiver(this, namespace) {
-        protected[this] def translate(name: Seq[String]): Seq[String] =
-          namespace +: name
+        protected def translate(name: Seq[String]): Seq[String] = namespace +: name
       }
     }
   }
@@ -148,9 +149,11 @@ trait StatsReceiver { self =>
    * Prepend `namespace` and `namespaces` to the names of the returned [[StatsReceiver]].
    *
    * For example:
+   *
    * {{{
-   * statsReceiver.scope("client", "backend", "pool").counter("adds")
+   *   statsReceiver.scope("client", "backend", "pool").counter("adds")
    * }}}
+   *
    * will generate a [[Counter counter]] named `/client/backend/pool/adds`.
    */
   @varargs
@@ -161,34 +164,21 @@ trait StatsReceiver { self =>
    * Prepend a suffix value to the next scope.
    *
    * For example:
+   *
    * {{{
-   * statsReceiver.scopeSuffix("toto").scope("client").counter("adds")
+   *   statsReceiver.scopeSuffix("toto").scope("client").counter("adds")
    * }}}
+   *
    * will generate a [[Counter counter]] named `/client/toto/adds`.
    */
   def scopeSuffix(suffix: String): StatsReceiver = {
     if (suffix == "") this
-    else {
-      new StatsReceiver {
-        val repr = self.repr
-
-        override def toString: String = s"$self/$suffix"
-
-        def counter(names: String*): Counter = self.counter(names: _*)
-
-        def stat(names: String*): Stat = self.stat(names: _*)
-
-        def addGauge(names: String*)(f: => Float): Gauge =
-          self.addGauge(names: _*)(f)
-
-        override def scope(namespace: String): StatsReceiver =
-          self.scope(namespace).scope(suffix)
-      }
+    else new StatsReceiverProxy {
+      protected def self: StatsReceiver = StatsReceiver.this
+      override def toString: String = s"$self/$suffix"
+      override def scope(namespace: String): StatsReceiver = self.scope(namespace).scope(suffix)
     }
   }
 }
 
-/**
- * For Java clients that want to implement a [[StatsReceiver]].
- */
 abstract class AbstractStatsReceiver extends StatsReceiver
