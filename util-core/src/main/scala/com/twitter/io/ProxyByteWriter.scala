@@ -60,6 +60,4 @@ private[twitter] abstract class ProxyByteWriter(underlying: ByteWriter) extends 
     underlying.writeLongLE(l)
     this
   }
-
-  def owned(): Buf = underlying.owned()
 }
