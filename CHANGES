@@ -6,6 +6,13 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+Runtime Behavior Changes:
+
+  * util-core: `c.t.util.Closable.sequence` now continues processing
+    the `Closables` should any of their closes result in a failed `Future`
+    and will return the first failure. Synchronous exceptions are now
+    handled by lifting them into failed `Futures`. ``PHAB_ID=D62418``
+
 API Changes:
 
   * util-core: ByteWriter has been transformed into a true trait which can now

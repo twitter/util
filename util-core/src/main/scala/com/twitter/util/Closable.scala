@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
-import java.util.HashMap
+import java.{util => ju}
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.{Level, Logger}
 import scala.util.control.{NonFatal => NF}
@@ -63,16 +63,17 @@ object Closable {
     case _ => Future.Done
   }
 
+  private[this] def safeClose(closable: Closable, deadline: Time): Future[Unit] =
+    try closable.close(deadline)
+    catch { case NF(ex) => Future.exception(ex) }
+
   /**
    * Concurrent composition: creates a new closable which, when
    * closed, closes all of the underlying resources simultaneously.
    */
   def all(closables: Closable*): Closable = new Closable {
     def close(deadline: Time): Future[Unit] = {
-      val fs = closables.map { closable =>
-        try closable.close(deadline)
-        catch { case NF(ex) => Future.exception(ex) }
-      }
+      val fs = closables.map { closable => safeClose(closable, deadline) }
       for (f <- fs) {
         f.poll match {
           case Some(Return(_)) =>
@@ -88,37 +89,63 @@ object Closable {
    * Sequential composition: create a new Closable which, when
    * closed, closes all of the underlying ones in sequence: that is,
    * resource ''n+1'' is not closed until resource ''n'' is.
+   *
+   * @return the first failed [[Future]] should any of the `Closables`
+   *         result in a failed [[Future]].
+   *
+   * @note as with all `Closables`, the `deadline` passed to `close`
+   *       is advisory.
    */
   def sequence(closables: Closable*): Closable = new Closable {
-    private final def closeSeq(deadline: Time, closables: Seq[Closable]): Future[Unit] =
-      closables match {
-        case Seq() => Future.Done
-        case Seq(hd, tl@_*) =>
-          val f = hd.close(deadline)
-          f.poll match {
-            case Some(Return.Unit) => closeSeq(deadline, tl)
-            case _ => f before closeSeq(deadline, tl)
+    private final def closeSeq(
+      deadline: Time,
+      closables: Seq[Closable],
+      firstFailure: Option[Future[Unit]]
+    ): Future[Unit] = closables match {
+      case Seq() =>
+        firstFailure match {
+          case Some(f) => f
+          case None => Future.Done
+        }
+      case Seq(hd, tl@_*) =>
+        def onTry(_try: Try[Unit]): Future[Unit] = {
+          val failure = _try match {
+            case Return(_) => firstFailure
+            case t@Throw(_) => firstFailure match {
+              case Some(_) => firstFailure
+              case None => Some(Future.const(t))
+            }
           }
-      }
+          closeSeq(deadline, tl, failure)
+        }
 
-    def close(deadline: Time) = closeSeq(deadline, closables)
+        val firstClose = safeClose(hd, deadline)
+        // eagerness is needed by `Var`, see RB_ID=557464
+        firstClose.poll match {
+          case Some(t) => onTry(t)
+          case None => firstClose.transform(onTry)
+        }
+    }
+
+    def close(deadline: Time): Future[Unit] =
+      closeSeq(deadline, closables, None)
   }
 
-  /** A Closable that does nothing immediately. */
+  /** A [[Closable]] that does nothing — `close` returns `Future.Done` */
   val nop: Closable = new Closable {
-    def close(deadline: Time) = Future.Done
+    def close(deadline: Time): Future[Unit] = Future.Done
   }
 
-  /** Make a new Closable whose close method invokes f. */
+  /** Make a new [[Closable]] whose `close` method invokes f. */
   def make(f: Time => Future[Unit]): Closable = new Closable {
-    def close(deadline: Time) = f(deadline)
+    def close(deadline: Time): Future[Unit] = f(deadline)
   }
 
   def ref(r: AtomicReference[Closable]): Closable = new Closable {
-    def close(deadline: Time) = r.getAndSet(nop).close(deadline)
+    def close(deadline: Time): Future[Unit] = r.getAndSet(nop).close(deadline)
   }
 
-  private val refs = new HashMap[Reference[Object], Closable]
+  private val refs = new ju.HashMap[Reference[Object], Closable]
   private val refq = new ReferenceQueue[Object]
 
   private val collectorThread = new Thread("CollectClosables") {

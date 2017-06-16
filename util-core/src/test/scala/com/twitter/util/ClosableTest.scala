@@ -17,7 +17,7 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
       }
       val dur = 1.minute
       c.close(dur)
-      assert(time == Some(Time.now + dur))
+      assert(time.contains(Time.now + dur))
     }
   }
 
@@ -72,7 +72,12 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
     }
     assert(tracking.calledClose)
   }
-  
+
+  test("Closable.all is eager") {
+    assert(Future.value(1).map(_ =>
+      Closable.all(Closable.nop, Closable.nop).close().isDone).poll.contains(Return.True))
+  }
+
   test("Closable.sequence") {
     val p1, p2 = new Promise[Unit]
     var n1, n2 = 0
@@ -99,10 +104,69 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
     assert(f.isDone)
   }
 
-  test("Closable.all,sequence are eager") {
-    assert((Future.value(1).map(_ =>
-      Closable.sequence(Closable.nop, Closable.nop).close().isDone)).poll == Some(Return(true)))
-    assert((Future.value(1).map(_ =>
-      Closable.all(Closable.nop, Closable.nop).close().isDone)).poll == Some(Return(true)))
+  test("Closable.sequence is resilient to failed closes") {
+    var n1, n2 = 0
+    val c1 = Closable.make { _ =>
+      n1 += 1
+      Future.exception(new RuntimeException(s"n1=$n1"))
+    }
+    val c2 = Closable.make { _ =>
+      n2 += 1
+      Future.Done
+    }
+
+    // test with a failed close first
+    val f1 = Closable.sequence(c1, c2).close()
+    assert(n1 == 1)
+    assert(n2 == 1)
+    val x1 = intercept[RuntimeException] {
+      Await.result(f1, 5.seconds)
+    }
+    assert(x1.getMessage.contains("n1=1"))
+
+    // then test in reverse order, failed close last
+    val f2 = Closable.sequence(c2, c1).close()
+    assert(n1 == 2)
+    assert(n2 == 2)
+    val x2 = intercept[RuntimeException] {
+      Await.result(f2, 5.seconds)
+    }
+    assert(x2.getMessage.contains("n1=2"))
+
+    // multiple failures, returns the first failure
+    val f3 = Closable.sequence(c1, c1).close()
+    assert(n1 == 4)
+    val x3 = intercept[RuntimeException] {
+      Await.result(f3, 5.seconds)
+    }
+    assert(x3.getMessage.contains("n1=3"))
+
+    // verify that first failure is returned, but only after the
+    // last closable is satisfied
+    val p = new Promise[Unit]()
+    val c3 = Closable.make(_ => p)
+    val f4 = Closable.sequence(c1, c3).close()
+    assert(n1 == 5)
+    assert(!f4.isDefined)
+    p.setDone()
+    val x4 = intercept[RuntimeException] {
+      Await.result(f4, 5.seconds)
+    }
+    assert(x4.getMessage.contains("n1=5"))
   }
+
+  test("Closable.sequence lifts synchronous exceptions") {
+    val throwing = Closable.make(_ => sys.error("lolz"))
+    val f = Closable.sequence(Closable.nop, throwing).close()
+    val ex = intercept[Exception] {
+      Await.result(f, 5.seconds)
+    }
+    assert(ex.getMessage.contains("lolz"))
+  }
+
+  test("Closable.sequence is eager") {
+    assert(Future.value(1).map(_ =>
+      Closable.sequence(Closable.nop, Closable.nop).close().isDone).poll.contains(Return.True))
+  }
+
 }
