@@ -28,6 +28,14 @@ API Changes:
    - `ProxyStatsReceiver.self` is now protected (was public before).
    - `StatsReceiver.repr` is now `def` (was `val` before).
 
+Deprecations:
+
+  * util-stats: ``PHAB_ID=D62611``
+
+    - `StatsReceiver.counter0` is deprecated in favour of vararg `StatsReceiver.counter`
+    - `StatsReceiver.stat0` is deprecated in favour of vararg `StatsReceiver.stat`
+
+
 6.45.0  2017-06-06
 
 New Features:

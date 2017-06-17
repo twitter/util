@@ -16,6 +16,7 @@ object StatsReceivers {
    * Java compatible version of [[StatsReceiver.counter]].
    */
   @varargs
+  @deprecated("Use vararg StatsReceiver.counter() instead", "2017-6-16")
   def counter(statsReceiver: StatsReceiver, name: String*): Counter = statsReceiver.counter(name: _*)
 
   /**
@@ -36,6 +37,7 @@ object StatsReceivers {
    * Java compatible version of [[StatsReceiver.stat]].
    */
   @varargs
+  @deprecated("Use vararg StatsReceiver.stat() instead", "2017-6-16")
   def stat(statsReceiver: StatsReceiver, name: String*): Stat = statsReceiver.stat(name: _*)
 }
 
@@ -65,6 +67,7 @@ trait StatsReceiver {
   /**
    * Get a [[Counter counter]] with the given `name`.
    */
+  @varargs
   def counter(name: String*): Counter
 
   /**
@@ -73,11 +76,13 @@ trait StatsReceiver {
    * This method is a convenience for Java programs, but is no longer needed because
    * [[StatsReceivers.counter]] is usable from java.
    */
+  @deprecated("Use vararg counter() instead", "2017-6-16")
   def counter0(name: String): Counter = counter(name)
 
   /**
    * Get a [[Stat stat]] with the given name.
    */
+  @varargs
   def stat(name: String*): Stat
 
   /**
@@ -85,6 +90,7 @@ trait StatsReceiver {
    * programs, but is no longer needed because [[StatsReceivers.counter]] is
    * usable from java.
    */
+  @deprecated("Use vararg stat() instead", "2017-6-16")
   def stat0(name: String): Stat = stat(name)
 
   /**
@@ -122,6 +128,7 @@ trait StatsReceiver {
    *
    * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
+  @varargs
   def addGauge(name: String*)(f: => Float): Gauge
 
   /**
