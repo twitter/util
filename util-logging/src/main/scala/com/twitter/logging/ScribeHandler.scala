@@ -440,7 +440,7 @@ class ScribeHandler(
           val dropped = droppedRecords.getAndSet(0)
           val failed = connectionFailure.getAndSet(0)
           val skipped = connectionSkipped.getAndSet(0)
-          ScribeHandler.log.info("sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
+          ScribeHandler.log.debug("sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
             sent, sent / period.inSeconds, dropped, failed, skipped)
 
           _lastLogStats = Time.now
