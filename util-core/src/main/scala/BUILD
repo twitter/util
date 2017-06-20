@@ -10,5 +10,6 @@ scala_library(
     'util/util-function/src/main/java',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
 )

@@ -1,5 +1,6 @@
 scala_library(
   dependencies=[
+    '3rdparty/jvm/com/github/ben-manes/caffeine:caffeine',
     '3rdparty/jvm/org/openjdk/jmh:jmh-core',
     '3rdparty/jvm/org/scala-lang:scala-library',
     'util/util-core/src/main/scala',
@@ -7,7 +8,8 @@ scala_library(
     'util/util-stats/src/main/scala',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
 )
 
 jvm_binary(name='jmh',

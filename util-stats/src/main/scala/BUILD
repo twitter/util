@@ -11,5 +11,6 @@ scala_library(
     'util/util-lint/src/main/scala',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
 )

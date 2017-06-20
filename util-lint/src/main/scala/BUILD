@@ -5,5 +5,6 @@ scala_library(
     repo = artifactory,
   ),
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
 )

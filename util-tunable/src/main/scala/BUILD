@@ -4,7 +4,7 @@ scala_library(name='scala',
     name = 'util-tunable',
     repo = artifactory,
   ),
-   dependencies=[
+  dependencies=[
     '3rdparty/jvm/com/fasterxml/jackson/core:jackson-core',
     '3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind',
     '3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala',
