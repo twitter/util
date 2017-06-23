@@ -5,6 +5,7 @@ import com.twitter.util.events.Event.Type
 import java.util.concurrent.atomic.AtomicLong
 import scala.collection.mutable.ArrayBuffer
 
+@deprecated("Will be removed in an upcoming release", "2017-06-21")
 object SizedSink {
 
   // use the next largest power of two for performance reasons.
@@ -62,6 +63,7 @@ object SizedSink {
  * @param milliTime gets the current time in millis from the epoch.
  *          This is exposed to allow for more control in tests.
  */
+@deprecated("Will be removed in an upcoming release", "2017-06-21")
 class SizedSink private[events](
     capacity: Int,
     milliTime: () => Long)

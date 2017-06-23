@@ -13,6 +13,9 @@ Runtime Behavior Changes:
     and will return the first failure. Synchronous exceptions are now
     handled by lifting them into failed `Futures`. ``PHAB_ID=D62418``
 
+  * util-events: `com.twitter.util.events.sinkEnabled` now defaults to false
+    in preparation for removal in an upcoming release. ``PHAB_ID=D64437``
+
 API Changes:
 
   * util-core: ByteWriter has been transformed into a true trait which can now
@@ -29,6 +32,9 @@ API Changes:
    - `StatsReceiver.repr` is now `def` (was `val` before).
 
 Deprecations:
+
+  * util-events: This module is deprecated and will be removed in an upcoming
+    release. ``PHAB_ID=D64437``
 
   * util-stats: ``PHAB_ID=D62611``
 

@@ -7,7 +7,7 @@ import com.twitter.util.events.Event.Type
 // to ensure that their values are available very early in the application's
 // lifecycle.
 private[events] object sinkEnabled extends GlobalFlag[Boolean](
-  true,
+  false,
   "Whether or not event capture is enabled. Prefer setting via System properties.")
 
 private[events] object approxNumEvents extends GlobalFlag[Int](
@@ -29,6 +29,7 @@ private[events] object approxNumEvents extends GlobalFlag[Int](
  *  - `event` is expected to be called many orders of magnitude
  *    more frequently than `events`.
  */
+@deprecated("Will be removed in an upcoming release", "2017-06-21")
 trait Sink {
 
   /**
@@ -94,6 +95,7 @@ trait Sink {
 /**
  * Note: There is a Java-friendly API for this object: [[com.twitter.util.events.Sinks]].
  */
+@deprecated("Will be removed in an upcoming release", "2017-06-21")
 object Sink {
 
   /**

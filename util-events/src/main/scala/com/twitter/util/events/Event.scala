@@ -6,6 +6,7 @@ import com.twitter.io.Buf
 /**
  * Note: There is a Java-friendly API for this object: [[com.twitter.util.events.Events]].
  */
+@deprecated("Will be removed in an upcoming release", "2017-06-21")
 object Event {
 
   val NoObject: AnyRef = new Object()
@@ -65,6 +66,7 @@ object Event {
  * @param traceIdVal should be `Event.NoTraceId` if there is no supplied value.
  * @param spanIdVal should be `Event.NoSpanId` if there is no supplied value.
  */
+@deprecated("Will be removed in an upcoming release", "2017-06-21")
 case class Event(
     etype: Event.Type,
     when: Time,

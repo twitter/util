@@ -3,6 +3,7 @@ package com.twitter.util.events;
 /**
  * Java friendly API for {@link com.twitter.util.events.Event}.
  */
+@Deprecated
 public final class Events {
   private Events() { }
 
