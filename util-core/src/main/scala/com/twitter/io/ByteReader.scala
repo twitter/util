@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
+import java.nio.charset.Charset
 
 /**
  * A [[ByteReader]] provides a stateful API to extract bytes from an
@@ -144,6 +145,12 @@ trait ByteReader extends AutoCloseable {
   def readBytes(n: Int): Buf
 
   /**
+   * Extract exactly the specified number of bytes into a `String` using the
+   * specified `Charset`, advancing the byte cursor by `bytes`.
+   */
+  def readString(bytes: Int, charset: Charset): String
+
+  /**
    * Skip over the next `n` bytes.
    *
    * @throws UnderflowException if there are < `n` bytes available
@@ -210,6 +217,8 @@ private[twitter] trait ProxyByteReader extends ByteReader {
   def readDoubleLE(): Double = reader.readDoubleLE()
 
   def readBytes(n: Int): Buf = reader.readBytes(n)
+
+  def readString(bytes: Int, charset: Charset): String = reader.readString(bytes, charset)
 
   def skip(n: Int): Unit = reader.skip(n)
 
@@ -448,6 +457,12 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
       pos += n
       ret
     }
+  }
+
+  def readString(bytes: Int, charset: Charset): String = {
+    val buf = readBytes(bytes)
+    // We use the string name instead of the Charset itself for performance reasons
+    new String(Buf.ByteArray.Owned.extract(buf), charset.name)
   }
 
   def skip(n: Int): Unit = {

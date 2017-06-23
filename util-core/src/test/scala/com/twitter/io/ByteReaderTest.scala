@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
-
+import java.nio.charset.StandardCharsets
 import org.junit.runner.RunWith
 import org.scalacheck.Gen
 import org.scalatest.FunSuite
@@ -15,6 +15,15 @@ class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
   def readerWith(bytes: Byte*): ByteReader = ByteReader(Buf.ByteArray.Owned(bytes.toArray))
 
   def maskMedium(i: Int) = i & 0x00ffffff
+
+  test("readString") ( forAll { (str1: String, str2: String) =>
+    val bytes1 = str1.getBytes(StandardCharsets.UTF_8)
+    val bytes2 = str2.getBytes(StandardCharsets.UTF_8)
+    val br = readerWith(bytes1 ++ bytes2:_*)
+    assert(br.readString(bytes1.length, StandardCharsets.UTF_8) == str1)
+    assert(br.readString(bytes2.length, StandardCharsets.UTF_8) == str2)
+    intercept[UnderflowException] { br.readByte() }
+  })
 
   test("readByte") (forAll { byte: Byte =>
     val br = readerWith(byte)

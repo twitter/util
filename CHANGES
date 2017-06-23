@@ -47,6 +47,10 @@ New Features:
   * util-core: Added `writeBytes(Buf)` to the ByteWriter abstract class to allow
     for efficient writing of the `c.t.io.Buf` type. ``RB_ID=917094``
 
+  * util-core: Added `writeString(CharSequence, Charset)` and readString(Int, Charset)`
+    to ByteWriter and ByteReader respectively to facilitate for more efficient String
+    encoding and decoding. ``PHAB_ID=D63987``
+
   * util-core: Added `ByteReader.readUnsignedLongBE` and `ByteReader.readUnsignedLongLE`.
     ``RB_ID=917289``
 

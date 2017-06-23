@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
+import java.nio.charset.StandardCharsets
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -13,6 +14,25 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
   private[this] def assertIndex(bw: ByteWriter, index: Int): Unit = bw match {
     case bw: AbstractBufByteWriterImpl => assert(bw.index == index)
     case other => fail(s"Unexpected ByteWriter representation: $other")
+  }
+
+  def testWriteString(name: String, bwFactory: Int => BufByteWriter, overflowOK: Boolean): Unit = {
+    test(s"$name: writeString") (forAll { (str1: String, str2: String) =>
+      val byteCount1 = str1.getBytes(StandardCharsets.UTF_8).length
+      val byteCount2 = str2.getBytes(StandardCharsets.UTF_8).length
+
+      val bw = bwFactory(byteCount1 + byteCount2)
+      val buf =
+        bw.writeString(str1, StandardCharsets.UTF_8)
+          .writeString(str2, StandardCharsets.UTF_8)
+          .owned()
+
+      if (!overflowOK) intercept[OverflowException] { bw.writeByte(0xff) }
+
+      val result = Buf.Utf8.unapply(buf)
+      assert(result == Some(str1 + str2))
+      assertIndex(bw, byteCount1 + byteCount2)
+    })
   }
 
   def testWriteByte(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
@@ -177,6 +197,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     assertIndex(BufByteWriter.fixed(1), 0)
   }
 
+  testWriteString("fixed", size => BufByteWriter.fixed(size), overflowOK = false)
   testWriteByte("fixed", () => BufByteWriter.fixed(1), overflowOK = false)
   testWriteShort("fixed", () => BufByteWriter.fixed(2), overflowOK = false)
   testWriteMedium("fixed", () => BufByteWriter.fixed(3), overflowOK = false)
@@ -225,6 +246,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     intercept[IllegalArgumentException]{ BufByteWriter.dynamic(0) }
   }
 
+  testWriteString("dynamic", _ => BufByteWriter.dynamic(1), overflowOK = true)
   testWriteByte("dynamic", () => BufByteWriter.dynamic(1), overflowOK = true)
   testWriteShort("dynamic", () => BufByteWriter.dynamic(1), overflowOK = true)
   testWriteMedium("dynamic", () => BufByteWriter.dynamic(2), overflowOK = true)

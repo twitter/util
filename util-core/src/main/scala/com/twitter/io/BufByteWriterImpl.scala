@@ -1,10 +1,14 @@
 package com.twitter.io
 
+import com.twitter.io.ByteWriter.OverflowException
+import java.nio.{ByteBuffer, CharBuffer}
+import java.nio.charset.{Charset, CoderResult, CodingErrorAction}
+
 /**
  * Abstract implementation of the `BufByteWriter` that is specialized to write to an
  * underlying Array[Byte].
  */
-private abstract class AbstractBufByteWriterImpl
+private sealed abstract class AbstractBufByteWriterImpl
   extends AbstractByteWriter with BufByteWriter {
 
   /**
@@ -47,6 +51,44 @@ private abstract class AbstractBufByteWriterImpl
     val index = getAndIncrementIndex(numBytes = len)
     buf.write(arr, index)
     this
+  }
+
+  final def writeString(string: CharSequence, charset: Charset): this.type = {
+    val charsetEncoder = charset.newEncoder()
+    charsetEncoder.onMalformedInput(CodingErrorAction.REPLACE)
+      .onUnmappableCharacter(CodingErrorAction.REPLACE)
+      .reset()
+
+    // If we are a fixed size buffer we get the rest of the array and try to fill it.
+    // If we are a resizing buffer make sure we have room for the largest possible representation.
+    val bufferLength = this match {
+      case fixed: FixedBufByteWriter =>
+        fixed.remaining
+
+      case _: DynamicBufByteWriter =>
+        math.ceil(string.length * charsetEncoder.maxBytesPerChar()).toInt
+    }
+
+    val arr = arrayToWrite(bufferLength)
+    val bb = ByteBuffer.wrap(arr, index, bufferLength)
+    val startPosition = bb.position()
+
+    // Write the string
+    checkCoderResult(string, charsetEncoder.encode(CharBuffer.wrap(string), bb, true))
+    // Flush the coder
+    checkCoderResult(string, charsetEncoder.flush(bb))
+
+    // increment our writer index
+    getAndIncrementIndex(bb.position() - startPosition)
+    this
+  }
+
+  private[this] def checkCoderResult(string: CharSequence, result: CoderResult): Unit = {
+    if (result.isOverflow)
+      throw new OverflowException(
+        s"insufficient space to write ${string.length} length string")
+    else if (!result.isUnderflow())
+      result.throwException()
   }
 
   /**
@@ -173,7 +215,7 @@ private abstract class AbstractBufByteWriterImpl
 /**
  * A fixed size [[BufByteWriter]].
  */
-private class FixedBufByteWriter(
+private final class FixedBufByteWriter(
     arr: Array[Byte],
     private[io] var index: Int = 0)
   extends AbstractBufByteWriterImpl {
@@ -216,7 +258,7 @@ private object DynamicBufByteWriter {
   val MaxBufferSize: Int = Int.MaxValue - 2
 }
 
-private class DynamicBufByteWriter(arr: Array[Byte]) extends AbstractBufByteWriterImpl {
+private final class DynamicBufByteWriter(arr: Array[Byte]) extends AbstractBufByteWriterImpl {
   import ByteWriter.OverflowException
   import DynamicBufByteWriter._
 

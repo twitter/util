@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
+import java.nio.charset.Charset
 
 object ByteWriter {
   /**
@@ -21,6 +22,12 @@ object ByteWriter {
  * threadsafe unless otherwise noted.
  */
 trait ByteWriter {
+
+  /**
+   * Write the byte representation of `string`, encoded using the specified `Charset`
+   * into the running buffer.
+   */
+  def writeString(string: CharSequence, charset: Charset): this.type
 
   /**
    * Write all the bytes from `bs` into the running buffer.
