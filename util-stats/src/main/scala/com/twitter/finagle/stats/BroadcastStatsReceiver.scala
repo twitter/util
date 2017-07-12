@@ -77,18 +77,18 @@ object BroadcastCounter {
   }
 
   private object NullCounter extends Counter {
-    def incr(delta: Int): Unit = ()
+    def incr(delta: Long): Unit = ()
   }
 
   private[stats] class Two(a: Counter, b: Counter) extends Counter {
-    def incr(delta: Int): Unit = {
+    def incr(delta: Long): Unit = {
       a.incr(delta)
       b.incr(delta)
     }
   }
 
   private class Three(a: Counter, b: Counter, c: Counter) extends Counter {
-    def incr(delta: Int): Unit = {
+    def incr(delta: Long): Unit = {
       a.incr(delta)
       b.incr(delta)
       c.incr(delta)
@@ -96,7 +96,7 @@ object BroadcastCounter {
   }
 
   private class Four(a: Counter, b: Counter, c: Counter, d: Counter) extends Counter {
-    def incr(delta: Int): Unit = {
+    def incr(delta: Long): Unit = {
       a.incr(delta)
       b.incr(delta)
       c.incr(delta)
@@ -105,7 +105,7 @@ object BroadcastCounter {
   }
 
   private class N(counters: Seq[Counter]) extends Counter {
-    def incr(delta: Int): Unit = { counters.foreach(_.incr(delta)) }
+    def incr(delta: Long): Unit = { counters.foreach(_.incr(delta)) }
   }
 }
 

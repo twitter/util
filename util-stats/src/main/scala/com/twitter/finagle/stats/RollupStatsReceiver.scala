@@ -26,7 +26,7 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
     private[this] val allCounters = BroadcastCounter(
       tails(names) map (self.counter(_: _*))
     )
-    def incr(delta: Int): Unit = allCounters.incr(delta)
+    def incr(delta: Long): Unit = allCounters.incr(delta)
   }
 
   override def stat(names: String*): Stat = new Stat {

@@ -5,6 +5,6 @@ package com.twitter.finagle.stats
  * Counter is "number of requests served".
  */
 trait Counter {
-  def incr(delta: Int)
-  def incr() { incr(1) }
+  def incr(delta: Long): Unit
+  final def incr(): Unit = { incr(1) }
 }

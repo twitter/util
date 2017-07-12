@@ -31,6 +31,9 @@ API Changes:
    - `ProxyStatsReceiver.self` is now protected (was public before).
    - `StatsReceiver.repr` is now `def` (was `val` before).
 
+  * util-stats: Counter#add now takes a `Long` instead of an `Integer` as an argument.
+    ``PHAB_ID=D69064``
+
 Deprecations:
 
   * util-events: This module is deprecated and will be removed in an upcoming

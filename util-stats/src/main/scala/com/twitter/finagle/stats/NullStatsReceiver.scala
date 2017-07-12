@@ -10,10 +10,9 @@ object NullStatsReceiver extends NullStatsReceiver {
  * required.
  */
 class NullStatsReceiver extends StatsReceiver {
-
   def repr: NullStatsReceiver = this
 
-  private[this] val NullCounter = new Counter { def incr(delta: Int): Unit = () }
+  private[this] val NullCounter = new Counter { def incr(delta: Long): Unit = () }
   private[this] val NullStat = new Stat { def add(value: Float): Unit = () }
   private[this] val NullGauge = new Gauge { def remove(): Unit = () }
 

@@ -26,8 +26,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
 
   def repr: InMemoryStatsReceiver = this
 
-  val counters: mutable.Map[Seq[String], Int] =
-    new ConcurrentHashMap[Seq[String], Int]().asScala
+  val counters: mutable.Map[Seq[String], Long] =
+    new ConcurrentHashMap[Seq[String], Long]().asScala
 
   val stats: mutable.Map[Seq[String], Seq[Float]] =
     new ConcurrentHashMap[Seq[String], Seq[Float]]().asScala
@@ -41,11 +41,11 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   def counter(name: String*): ReadableCounter =
     new ReadableCounter {
 
-      def incr(delta: Int): Unit = counters.synchronized {
+      def incr(delta: Long): Unit = counters.synchronized {
         val oldValue = apply()
         counters(name) = oldValue + delta
       }
-      def apply(): Int = counters.getOrElse(name, 0)
+      def apply(): Long = counters.getOrElse(name, 0)
 
       override def toString: String =
         s"Counter(${name.mkString("/")}=${apply()})"
@@ -103,7 +103,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
    */
   def print(p: PrintStream): Unit = {
     for ((k, v) <- counters)
-      p.printf("%s %d\n", k.mkString("/"), v: java.lang.Integer)
+      p.printf("%s %d\n", k.mkString("/"), v: java.lang.Long)
     for ((k, g) <- gauges)
       p.printf("%s %f\n", k.mkString("/"), g(): java.lang.Float)
     for ((k, s) <- stats if s.size > 0)
@@ -148,7 +148,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
  * A variation of [[Counter]] that also supports reading of the current value via the `apply` method.
  */
 trait ReadableCounter extends Counter {
-  def apply(): Int
+  def apply(): Long
 }
 
 /**

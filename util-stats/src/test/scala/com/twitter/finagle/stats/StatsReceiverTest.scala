@@ -29,8 +29,8 @@ class StatsReceiverTest extends FunSuite {
 
   test("Broadcast Counter/Stat") {
     class MemCounter extends Counter {
-      var c = 0
-      def incr(delta: Int) { c += delta }
+      var c: Long = 0
+      def incr(delta: Long): Unit = { c += delta }
     }
     val c1 = new MemCounter
     val c2 = new MemCounter
