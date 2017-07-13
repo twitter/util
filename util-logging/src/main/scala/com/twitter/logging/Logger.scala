@@ -217,6 +217,23 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   def ifTrace(thrown: Throwable, message: => AnyRef) = logLazy(Level.TRACE, thrown, message)
 
   /**
+   * Lazily logs a throwable. If the throwable contains a log level (via [[HasLogLevel]]), it
+   * will log at the stored level, otherwise it will log at `defaultLevel`.
+   */
+  def throwable(thrown: Throwable, message: => AnyRef, defaultLevel: Level): Unit =
+    thrown match {
+      case HasLogLevel(level) => logLazy(level, thrown, message)
+      case _ => logLazy(defaultLevel, thrown, message)
+    }
+
+  /**
+   * Lazily logs a throwable. If the throwable contains a log level (via [[HasLogLevel]]), it
+   * will log at the stored level, otherwise it will log at `Level.ERROR`.
+   */
+  def throwable(thrown: Throwable, message: => AnyRef): Unit =
+    throwable(thrown, message, Level.ERROR)
+
+  /**
    * Remove all existing log handlers.
    */
   def clearHandlers() = {

@@ -80,6 +80,10 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     assert(logLines().filter { _ contains substring }.size > 0)
   }
 
+  def mustNotLog(substring: String) = {
+    assert(logLines().filter { _ contains substring }.size == 0)
+  }
+
 
   class LoggerSpecHelper {
     var myHandler: Handler = null
@@ -99,6 +103,8 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       rv.toList
     }
   }
+
+  case class WithLogLevel(logLevel: Level) extends Exception("") with HasLogLevel
 
   "Logger" should {
     val h = new LoggerSpecHelper
@@ -176,6 +182,22 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       traceLogger(Level.INFO)
       Logger.get("").info("angry duck")
       mustLog("duck")
+    }
+
+    "log & trace a throwable with a log level" in {
+      traceLogger(Level.WARNING)
+      Logger.get("").throwable(WithLogLevel(Level.WARNING), "bananas")
+      Logger.get("").throwable(WithLogLevel(Level.INFO), "apples")
+      mustLog("bananas")
+      mustNotLog("apples")
+    }
+
+    "log & trace a throwable with a default log level" in {
+      traceLogger(Level.ERROR)
+      Logger.get("").throwable(new Exception(), "angry duck")
+      Logger.get("").throwable(new Exception(), "invisible", defaultLevel = Level.INFO)
+      mustLog("duck")
+      mustNotLog("invisible")
     }
 
     "log & trace a message with percent signs" in {
