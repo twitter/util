@@ -449,9 +449,9 @@ object Promise {
  *
  * =Implementation details=
  *
- * A Promise is in one of five states: `Waiting`, `Interruptible`,
- * `Interrupted`, `Done` and `Linked` where `Interruptible` and
- * `Interrupted` are variants of `Waiting` to deal with future
+ * A Promise is in one of six states: `Waiting`, `Interruptible`,
+ * `Interrupted`, `Transforming`, Done` and `Linked` where `Interruptible`,
+ * `Interrupted`, and `Transforming` are variants of `Waiting` to deal with future
  * interrupts. Promises are concurrency-safe, using lock-free operations
  * throughout. Callback dispatch is scheduled with
  * [[com.twitter.concurrent.Scheduler]].
@@ -486,6 +486,7 @@ class Promise[A]
   // - WaitQueue (Waiting)
   // - Interrupted
   // - Interruptible
+  // - Transforming
   // - Try[A] (Done)
   // - Promise[A]
   @volatile private[this] var state: Any = WaitQueue.empty[A]
