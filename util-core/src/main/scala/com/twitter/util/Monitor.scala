@@ -176,8 +176,7 @@ object NullMonitor extends Monitor {
 
 object RootMonitor extends Monitor {
   private[this] val log = Logger.getLogger("monitor")
-
-  def handle(exc: Throwable): Boolean = exc match {
+  private[this] val root = Monitor.mk {
     case NonFatal(e) =>
       log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
       true /* Never propagate non fatal exception */
@@ -194,5 +193,18 @@ object RootMonitor extends Monitor {
       false
   }
 
+  @volatile private[this] var monitor: Monitor = root
+
+  def handle(exc: Throwable): Boolean = monitor.handle(exc)
+
+  /**
+   * Set a custom monitor `m` as the root monitor. If `m` doesn't handle an exception,
+   * it'll fallback to the original root monitor.
+   */
+  def set(m: Monitor): Unit = monitor = m.andThen(root)
+
+  /**
+   * Java-friendly API to get this instance
+   */
   def getInstance: Monitor = this
 }

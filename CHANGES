@@ -6,6 +6,11 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
+New Features:
+
+  * util-core: Introduced RootMonitor#set to set custom Monitor to RootMonitor.
+    ``PHAB_ID=D70876``
+
 Runtime Behavior Changes:
 
   * util-core: `c.t.util.Closable.sequence` now continues processing
