@@ -8,6 +8,9 @@ Next Version
 
 New Features:
 
+  * util-core: Added `c.t.util.SlowProbeProxyTimer` for monitoring the duration
+    of execution for timer tasks. ``PHAB_ID=D70279``
+
   * util-core: Introduced RootMonitor#set to set custom Monitor to RootMonitor.
     ``PHAB_ID=D70876``
 
