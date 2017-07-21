@@ -28,6 +28,42 @@ trait ByteReader extends AutoCloseable {
   def remainingUntil(byte: Byte): Int
 
   /**
+   * Process the underlying buffer 1-byte at a time using the given
+   * [[Buf.Processor]], starting at index `0` of the underlying buffer until
+   * index `length` of the underlying buffer. Processing will halt if the processor
+   * returns `false` or after processing the final byte.
+   *
+   * @return -1 if the processor processed all bytes or
+   *         the last processed index if the processor returns
+   *         `false`.
+   *
+   * @note this does not advance the byte cursor.
+   */
+  def process(processor: Buf.Processor): Int
+
+  /**
+   * Process the underlying buffer 1-byte at a time using the given
+   * [[Buf.Processor]], starting at index `from` of the underlying buffer until
+   * index `until` of the underlying buffer. Processing will halt if the processor
+   * returns `false` or after processing the final byte.
+   *
+   * @return -1 if the processor processed all bytes or
+   *         the last processed index if the processor returns
+   *         `false`.
+   *         Will return -1 if `from` is greater than or equal to
+   *         `until` or `length` of the underlying buffer.
+   *         Will return -1 if `until` is greater than or equal to
+   *         `length` of the underlying buffer.
+   *
+   * @param from the starting index, inclusive. Must be non-negative.
+   *
+   * @param until the ending index, exclusive. Must be non-negative.
+   *
+   * @note this does not advance the byte cursor.
+   */
+  def process(from: Int, until: Int, processor: Buf.Processor): Int
+
+  /**
    * Extract 8 bits and interpret as a signed integer, advancing the byte cursor by 1.
    */
   def readByte(): Byte
@@ -224,6 +260,12 @@ private[twitter] trait ProxyByteReader extends ByteReader {
 
   def readAll(): Buf = reader.readAll()
 
+  def process(from: Int, until: Int, processor: Buf.Processor): Int =
+    reader.process(from, until, processor)
+
+  def process(processor: Buf.Processor): Int =
+    reader.process(processor)
+
   def close(): Unit = reader.close()
 }
 
@@ -277,6 +319,14 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
       if (index == -1) -1
       else index - pos
     }
+
+  def process(from: Int, until: Int, processor: Buf.Processor): Int = {
+    val processed = buf.process(pos + from, pos + until, processor)
+    if (processed == -1) -1 else processed - pos
+  }
+
+  def process(processor: Buf.Processor): Int =
+    process(0, remaining, processor)
 
   def readByte(): Byte = {
     checkRemaining(1)

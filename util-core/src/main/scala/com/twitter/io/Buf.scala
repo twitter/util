@@ -78,7 +78,7 @@ abstract class Buf { outer =>
    * by the indices `from` inclusive and `until` exclusive: `[from, until)`.
    * Out of bounds indices are truncated. Negative indices are not accepted.
    *
-   * @note [[Buf]] implementors should use the helpers [[checkSliceArgs]],
+   * @note [[Buf]] implementors should use the helpers [[Buf.checkSliceArgs]],
    *       [[isSliceEmpty]], and [[isSliceIdentity]].
    */
   def slice(from: Int, until: Int): Buf
@@ -191,14 +191,6 @@ abstract class Buf { outer =>
     bytes
   }
 
-  /** Helps implementations validate the arguments to [[slice]]. */
-  protected[this] def checkSliceArgs(from: Int, until: Int): Unit = {
-    if (from < 0)
-      throw new IllegalArgumentException(s"'from' must be non-negative: $from")
-    if (until < 0)
-      throw new IllegalArgumentException(s"'until' must be non-negative: $until")
-  }
-
   /** Helps implementations of [[slice]]. */
   protected[this] def isSliceEmpty(from: Int, until: Int): Boolean =
     until <= from || from >= length
@@ -306,6 +298,14 @@ object Buf {
       filtered.head
     else
       new Composite.Impl(filtered, length)
+  }
+
+  /** Helps Buf implementations validate the arguments to slicing functions. */
+  def checkSliceArgs(from: Int, until: Int): Unit = {
+    if (from < 0)
+      throw new IllegalArgumentException(s"'from' must be non-negative: $from")
+    if (until < 0)
+      throw new IllegalArgumentException(s"'until' must be non-negative: $until")
   }
 
   /**
