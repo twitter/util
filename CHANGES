@@ -6,8 +6,6 @@ Note that ``RB_ID=#`` correspond to associated messages in commits.
 
 Next Version
 
-7.0.0  2017-07-17
-
 New Features:
 
   * util-core: Added `c.t.util.SlowProbeProxyTimer` for monitoring the duration
