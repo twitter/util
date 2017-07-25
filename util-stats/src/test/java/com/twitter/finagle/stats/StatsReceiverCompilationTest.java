@@ -90,17 +90,17 @@ public final class StatsReceiverCompilationTest {
       }
 
       @Override
-      public Counter counter(Seq<String> name) {
+      public Counter counter(Verbosity verbosity, Seq<String> name) {
         return nullSr.counter(name);
       }
 
       @Override
-      public Stat stat(Seq<String> name) {
+      public Stat stat(Verbosity verbosity, Seq<String> name) {
         return nullSr.stat(name);
       }
 
       @Override
-      public Gauge addGauge(Seq<String> name, Function0<Object> f) {
+      public Gauge addGauge(Verbosity verbosity, Seq<String> name, Function0<Object> f) {
         return nullSr.addGauge(name, f);
       }
     };

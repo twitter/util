@@ -14,6 +14,9 @@ New Features:
   * util-core: Introduced RootMonitor#set to set custom Monitor to RootMonitor.
     ``PHAB_ID=D70876``
 
+  * util-stats: Introducing Verbosity Levels for StatsReceivers (see docs on `StatsReceiver`
+    for more info). ``PHAB_ID=D70112``
+
 Runtime Behavior Changes:
 
   * util-core: `c.t.util.Closable.sequence` now continues processing
@@ -39,8 +42,12 @@ API Changes:
    - `ProxyStatsReceiver.self` is now protected (was public before).
    - `StatsReceiver.repr` is now `def` (was `val` before).
 
-  * util-stats: Counter#add now takes a `Long` instead of an `Integer` as an argument.
+  * util-stats: `Counter#add` now takes a `Long` instead of an `Integer` as an argument.
     ``PHAB_ID=D69064``
+
+  * util-stats: `StatsReceiver#counter`, `StatsReceiver#stat`, and `StatsReceiver.addGauge`
+    now may optionally take `c.t.f.stats.Verbosity` as a first argument. ``PHAB_ID=D70112``
+
 
 Deprecations:
 

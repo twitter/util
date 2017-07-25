@@ -127,16 +127,16 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
    * The StatsReceiver implements these. They provide the cumulated
    * gauges.
    */
-  protected[this] def registerGauge(name: Seq[String], f: => Float): Unit
+  protected[this] def registerGauge(verbosity: Verbosity, name: Seq[String], f: => Float): Unit
   protected[this] def deregisterGauge(name: Seq[String]): Unit
 
-  private[this] val gaugeFn: JFunction[Seq[String], CumulativeGauge] =
+  private[this] def whenNotPresent(verbosity: Verbosity): JFunction[Seq[String], CumulativeGauge] =
     new JFunction[Seq[String], CumulativeGauge] {
       // the gauge's state machine only goes Alive => Dead to simplify trickiness
       // around garbage collection and races
       def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
 
-        self.registerGauge(key, getValue)
+        self.registerGauge(verbosity, key, getValue)
 
         // we grab the read lock on increment and decrement, which can race each
         // other.  we only grab the write lock when we tear down the cumulative
@@ -182,10 +182,10 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
       }
     }
 
-  def addGauge(name: String*)(f: => Float): Gauge = {
+  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
     var gauge: Gauge = null
     while (gauge == null) {
-      var cumulativeGauge = gauges.computeIfAbsent(name, gaugeFn)
+      val cumulativeGauge = gauges.computeIfAbsent(name, whenNotPresent(verbosity))
       gauge = cumulativeGauge.addGauge(f)
     }
     gauge

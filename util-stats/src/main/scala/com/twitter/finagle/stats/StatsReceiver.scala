@@ -4,6 +4,24 @@ import java.lang.{Float => JFloat}
 import java.util.concurrent.Callable
 import scala.annotation.varargs
 
+/**
+ * Represent a verbosity level for a given metric.
+ */
+final class Verbosity private (override val toString: String)
+
+object Verbosity {
+
+  /**
+   * Indicates that a given metric is for standard operations.
+   */
+  val Default: Verbosity = new Verbosity("Verbosity(default)")
+
+  /**
+   * Indicates that a given metric may only be useful for a debugging/troubleshooting purposes.
+   */
+  val Debug: Verbosity = new Verbosity("Verbosity(debug)")
+}
+
 object StatsReceiver {
   private[StatsReceiver] var immortalGauges: List[Gauge] = Nil
 }
@@ -42,9 +60,17 @@ object StatsReceivers {
 }
 
 /**
- * An interface for recording metrics. Named
- * [[Counter Counters]], [[Stat Stats]], and [[Gauge Gauges]] can be accessed
- * through the corresponding methods of this class.
+ * An interface for recording metrics. Named [[Counter Counters]], [[Stat Stats]],
+ * and [[Gauge Gauges]] can be accessed through the corresponding methods of this class.
+ *
+ * =Verbosity Levels=
+ *
+ * Each metric created via a stats receiver has a [[Verbosity verbosity level]] attached to it.
+ * Distinguishing verbosity levels for metrics is optional and is up to a concrete implementation.
+ * Doing this, however, helps to separate [[Verbosity.Debug debug metrics]] (only helpful in
+ * troubleshooting) from their [[Verbosity.Default operationally-required counterparts]] (provide
+ * a corresponding degree of visibility into a healthy process) thus potentially reducing the
+ * observability cost.
  *
  * @see [[StatsReceivers]] for a Java-friendly API.
  */
@@ -68,7 +94,13 @@ trait StatsReceiver {
    * Get a [[Counter counter]] with the given `name`.
    */
   @varargs
-  def counter(name: String*): Counter
+  def counter(name: String*): Counter = counter(Verbosity.Default, name: _*)
+
+  /**
+   * Get a [[Counter counter]] with the given `name`.
+   */
+  @varargs
+  def counter(verbosity: Verbosity, name: String*): Counter
 
   /**
    * Get a [[Counter counter]] with the given `name`.
@@ -83,7 +115,13 @@ trait StatsReceiver {
    * Get a [[Stat stat]] with the given name.
    */
   @varargs
-  def stat(name: String*): Stat
+  def stat(name: String*): Stat = stat(Verbosity.Default, name: _*)
+
+  /**
+   * Get a [[Stat stat]] with the given name.
+   */
+  @varargs
+  def stat(verbosity: Verbosity, name: String*): Stat
 
   /**
    * Get a [[Stat stat]] with the given name. This method is a convenience for Java
@@ -129,7 +167,27 @@ trait StatsReceiver {
    * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   @varargs
-  def addGauge(name: String*)(f: => Float): Gauge
+  def addGauge(name: String*)(f: => Float): Gauge = addGauge(Verbosity.Default, name: _*)(f)
+
+  /**
+   * Add the function `f` as a [[Gauge gauge]] with the given name.
+   *
+   * The returned [[Gauge gauge]] value is only weakly referenced by the
+   * [[StatsReceiver]], and if garbage collected will eventually cease to
+   * be a part of this measurement: thus, it needs to be retained by the
+   * caller. Or put another way, the measurement is only guaranteed to exist
+   * as long as there exists a strong reference to the returned
+   * [[Gauge gauge]] and typically should be stored in a member variable.
+   *
+   * Measurements under the same name are added together.
+   *
+   * @see [[StatsReceiver.provideGauge]] when there is not a good location
+   *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
+   *
+   * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
+   */
+  @varargs
+  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge
 
   /**
    * Prepend `namespace` to the names of the returned [[StatsReceiver]].

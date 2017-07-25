@@ -14,14 +14,14 @@ class BlacklistStatsReceiver(
     blacklisted: Seq[String] => Boolean)
   extends StatsReceiverProxy {
 
-  override def counter(name: String*): Counter =
-    getStatsReceiver(name).counter(name: _*)
+  override def counter(verbosity: Verbosity, name: String*): Counter =
+    getStatsReceiver(name).counter(verbosity, name: _*)
 
-  override def stat(name: String*): Stat =
-    getStatsReceiver(name).stat(name: _*)
+  override def stat(verbosity: Verbosity, name: String*): Stat =
+    getStatsReceiver(name).stat(verbosity, name: _*)
 
-  override def addGauge(name: String*)(f: => Float): Gauge =
-    getStatsReceiver(name).addGauge(name: _*)(f)
+  override def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
+    getStatsReceiver(name).addGauge(verbosity, name: _*)(f)
 
   private[this] def getStatsReceiver(name: Seq[String]): StatsReceiver =
     if (blacklisted(name)) NullStatsReceiver else self

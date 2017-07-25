@@ -17,14 +17,14 @@ abstract class NameTranslatingStatsReceiver(
 
   protected def translate(name: Seq[String]): Seq[String]
 
-  override def counter(name: String*): Counter =
-    self.counter(translate(name): _*)
+  override def counter(verbosity: Verbosity, name: String*): Counter =
+    self.counter(verbosity, translate(name): _*)
 
-  override def stat(name: String*): Stat =
-    self.stat(translate(name): _*)
+  override def stat(verbosity: Verbosity, name: String*): Stat =
+    self.stat(verbosity, translate(name): _*)
 
-  override def addGauge(name: String*)(f: => Float): Gauge =
-    self.addGauge(translate(name): _*)(f)
+  override def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
+    self.addGauge(verbosity, translate(name): _*)(f)
 
   override def toString: String = s"$self/$namespacePrefix"
 }

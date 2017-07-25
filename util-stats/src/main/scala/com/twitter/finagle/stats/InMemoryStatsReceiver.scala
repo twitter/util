@@ -35,10 +35,14 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val gauges: mutable.Map[Seq[String], () => Float] =
     new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
+
+  override def counter(name: String*): ReadableCounter =
+    counter(Verbosity.Default, name: _*)
+
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
    */
-  def counter(name: String*): ReadableCounter =
+  def counter(verbosity: Verbosity, name: String*): ReadableCounter =
     new ReadableCounter {
 
       def incr(delta: Long): Unit = counters.synchronized {
@@ -51,10 +55,12 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         s"Counter(${name.mkString("/")}=${apply()})"
     }
 
+  override def stat(name: String*): ReadableStat = stat(Verbosity.Default, name: _*)
+
   /**
    * Creates a [[ReadableStat]] of the given `name`.
    */
-  def stat(name: String*): ReadableStat =
+  def stat(verbosity: Verbosity, name: String*): ReadableStat =
     new ReadableStat {
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()
@@ -77,7 +83,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Creates a [[Gauge]] of the given `name`.
    */
-  def addGauge(name: String*)(f: => Float): Gauge = {
+  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
     val gauge = new Gauge {
       def remove(): Unit = {
         gauges -= name

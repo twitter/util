@@ -22,22 +22,22 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
     }
   }
 
-  override def counter(names: String*): Counter = new Counter {
+  override def counter(verbosity: Verbosity, names: String*): Counter = new Counter {
     private[this] val allCounters = BroadcastCounter(
-      tails(names) map (self.counter(_: _*))
+      tails(names).map(n => self.counter(verbosity, n: _*))
     )
     def incr(delta: Long): Unit = allCounters.incr(delta)
   }
 
-  override def stat(names: String*): Stat = new Stat {
+  override def stat(verbosity: Verbosity, names: String*): Stat = new Stat {
     private[this] val allStats = BroadcastStat(
-      tails(names) map (self.stat(_: _*))
+      tails(names).map(n => self.stat(verbosity, n: _*))
     )
     def add(value: Float): Unit = allStats.add(value)
   }
 
-  override def addGauge(names: String*)(f: => Float): Gauge = new Gauge {
-    private[this] val underlying = tails(names) map { self.addGauge(_: _*)(f) }
-    def remove(): Unit = underlying foreach { _.remove() }
+  override def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
+    private[this] val underlying = tails(names).map(n => self.addGauge(verbosity, n: _*)(f))
+    def remove(): Unit = underlying.foreach(_.remove())
   }
 }

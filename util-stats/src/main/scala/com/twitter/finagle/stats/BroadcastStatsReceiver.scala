@@ -17,15 +17,16 @@ object BroadcastStatsReceiver {
   {
     val repr = this
 
-    def counter(names: String*): Counter =
-      new BroadcastCounter.Two(first.counter(names:_*), second.counter(names:_*))
+    def counter(verbosity: Verbosity, names: String*): Counter = new BroadcastCounter.Two(
+      first.counter(verbosity, names:_*), second.counter(verbosity, names:_*)
+    )
 
-    def stat(names: String*): Stat =
-      new BroadcastStat.Two(first.stat(names:_*), second.stat(names:_*))
+    def stat(verbosity: Verbosity, names: String*): Stat =
+      new BroadcastStat.Two(first.stat(verbosity, names:_*), second.stat(verbosity, names:_*))
 
-    def addGauge(names: String*)(f: => Float): Gauge = new Gauge {
-      val firstGauge = first.addGauge(names:_*)(f)
-      val secondGauge = second.addGauge(names:_*)(f)
+    def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
+      val firstGauge = first.addGauge(verbosity, names:_*)(f)
+      val secondGauge = second.addGauge(verbosity, names:_*)(f)
       def remove(): Unit = {
         firstGauge.remove()
         secondGauge.remove()
@@ -43,14 +44,14 @@ object BroadcastStatsReceiver {
   {
     val repr = this
 
-    def counter(names: String*): Counter =
-      BroadcastCounter(srs.map { _.counter(names:_*) })
+    def counter(verbosity: Verbosity, names: String*): Counter =
+      BroadcastCounter(srs.map { _.counter(verbosity, names:_*) })
 
-    def stat(names: String*): Stat =
-      BroadcastStat(srs.map { _.stat(names:_*) })
+    def stat(verbosity: Verbosity, names: String*): Stat =
+      BroadcastStat(srs.map { _.stat(verbosity, names:_*) })
 
-    def addGauge(names: String*)(f: => Float): Gauge = new Gauge {
-      val gauges = srs.map { _.addGauge(names:_*)(f) }
+    def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
+      val gauges = srs.map { _.addGauge(verbosity, names:_*)(f) }
       def remove(): Unit = gauges.foreach { _.remove() }
     }
 
