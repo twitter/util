@@ -54,13 +54,15 @@ object ServerCnxnFactory {
   def apply(sockAddr: InetSocketAddress, maxClients: java.lang.Integer): ServerCnxnFactory = {
     val factory = {
       try {
-        val inst = java.lang.Class.forName("org.apache.zookeeper.server.NIOServerCnxnFactory").newInstance
+        val inst =
+          java.lang.Class.forName("org.apache.zookeeper.server.NIOServerCnxnFactory").newInstance
         val call = inst.getClass.getMethod("configure", sockAddr.getClass, Integer.TYPE)
         call.invoke(inst, sockAddr, maxClients)
         inst
       } catch {
         case t: ClassNotFoundException =>
-          val constructor = java.lang.Class.forName("org.apache.zookeeper.server.NIOServerCnxn$Factory")
+          val constructor = java.lang.Class
+            .forName("org.apache.zookeeper.server.NIOServerCnxn$Factory")
             .getConstructor(sockAddr.getClass, Integer.TYPE)
           constructor.newInstance(sockAddr, maxClients)
       }
