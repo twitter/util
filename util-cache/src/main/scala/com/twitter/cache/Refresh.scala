@@ -47,7 +47,7 @@ object Refresh {
   def every[T](ttl: Duration)(provider: => Future[T]): () => Future[T] = {
     val ref = new AtomicReference[(Future[T], Time)](empty)
     def result(): Future[T] = ref.get match {
-      case tuple@(cachedValue, lastRetrieved) =>
+      case tuple @ (cachedValue, lastRetrieved) =>
         val now = Time.now
         // interruptible allows the promise to be interrupted safely
         if (now < lastRetrieved + ttl) cachedValue.interruptible()
@@ -61,8 +61,7 @@ object Refresh {
             }
             nextResult.proxyTo(p)
             p.interruptible() // interruptible allows the promise to be interrupted safely
-          }
-          else result()
+          } else result()
         }
     }
     // Return result, which is a no-arg function that returns a future

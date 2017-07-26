@@ -14,7 +14,7 @@ import scala.util.control.NonFatal
  * @param cause The underlying [[java.lang.Throwable]] that caused this exception.
  */
 case class FlagParseException(message: String, cause: Throwable = null)
-  extends Exception(message, cause)
+    extends Exception(message, cause)
 
 case class FlagUsageError(usage: String) extends Exception(usage)
 
@@ -93,7 +93,6 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
   // Add a help flag by default
   private[this] val helpFlag = this("help", false, "Show this help")
 
-
   def reset(): Unit = synchronized {
     flags.foreach { case (_, f) => f.reset() }
   }
@@ -135,7 +134,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
         remaining ++= args.slice(i, args.length)
         i = args.length
       } else if (a startsWith "-") {
-        a drop 1 split("=", 2) match {
+        a drop 1 split ("=", 2) match {
           // There seems to be a bug Scala's pattern matching
           // optimizer that leaves `v' dangling in the last case if
           // we make this a wildcard (Array(k, _@_*))
@@ -151,9 +150,10 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
           case Array(k, _) if !hasFlag(k) =>
             if (allowUndefinedFlags)
               remaining += a
-            else return Error(
-              "Error parsing flag \"%s\": %s\n%s".format(k, FlagUndefinedMessage, usage)
-            )
+            else
+              return Error(
+                "Error parsing flag \"%s\": %s\n%s".format(k, FlagUndefinedMessage, usage)
+              )
 
           // Optional argument without a value
           case Array(k) if flag(k).noArgumentOk =>
@@ -168,18 +168,22 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
           // Mandatory argument with another argument
           case Array(k) =>
             i += 1
-            try flag(k).parse(args(i-1)) catch {
-              case NonFatal(e) => return Error(
-                "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
-              )
+            try flag(k).parse(args(i - 1))
+            catch {
+              case NonFatal(e) =>
+                return Error(
+                  "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
+                )
             }
 
           // Mandatory k=v
           case Array(k, v) =>
-            try flag(k).parse(v) catch {
-              case e: Throwable => return Error(
-                "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
-              )
+            try flag(k).parse(v)
+            catch {
+              case e: Throwable =>
+                return Error(
+                  "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
+                )
             }
         }
       } else {
@@ -296,7 +300,12 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param help the help text explaining the purpose of the flag
    * @param usage a string describing the type of the flag, i.e.: Integer
    */
-  def createMandatory[T](name: String, help: String, usage: String, flaggable: Flaggable[T]): Flag[T] = {
+  def createMandatory[T](
+    name: String,
+    help: String,
+    usage: String,
+    flaggable: Flaggable[T]
+  ): Flag[T] = {
     implicit val impl = flaggable
     val f = new Flag[T](name, help, usage, failFastUntilParsed)
     add(f)
@@ -314,19 +323,22 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
   def usage: String = synchronized {
     val lines =
       for (k <- flags.keys.toArray.sorted)
-      yield flags(k).usageString
-    val globalLines = if (!includeGlobal) Seq.empty else {
-      GlobalFlag.getAllOrEmptyArray(getClass.getClassLoader).map(_.usageString).sorted
-    }
+        yield flags(k).usageString
+    val globalLines =
+      if (!includeGlobal) Seq.empty
+      else {
+        GlobalFlag.getAllOrEmptyArray(getClass.getClassLoader).map(_.usageString).sorted
+      }
 
-    val cmd = if (cmdUsage.nonEmpty) cmdUsage+"\n" else "usage: "
+    val cmd = if (cmdUsage.nonEmpty) cmdUsage + "\n" else "usage: "
 
-    cmd+argv0+" [<flag>...]\n"+
-    "flags:\n"+
-    (lines mkString "\n")+(
-      if (globalLines.isEmpty) "" else {
-        "\nglobal flags:\n"+
-        (globalLines mkString "\n")
+    cmd + argv0 + " [<flag>...]\n" +
+      "flags:\n" +
+      (lines mkString "\n") + (
+      if (globalLines.isEmpty) ""
+      else {
+        "\nglobal flags:\n" +
+          (globalLines mkString "\n")
       }
     )
   }

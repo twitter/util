@@ -47,8 +47,10 @@ object Slf4jBridgeUtility extends Logging {
       Class.forName("org.slf4j.impl.JDK14LoggerFactory", false, this.getClass.getClassLoader)
       LoggerFactory
         .getLogger(this.getClass)
-        .warn("Detected [org.slf4j.impl.JDK14LoggerFactory] on classpath. " +
-          "SLF4JBridgeHandler cannot be installed, see: http://www.slf4j.org/legacy.html#julRecursion")
+        .warn(
+          "Detected [org.slf4j.impl.JDK14LoggerFactory] on classpath. " +
+            "SLF4JBridgeHandler cannot be installed, see: http://www.slf4j.org/legacy.html#julRecursion"
+        )
       false
     } catch {
       case e: ClassNotFoundException =>

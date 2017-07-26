@@ -34,14 +34,17 @@ import scala.collection.mutable
  * does not require defining a custom `main` method.
  */
 trait App extends Closable with CloseAwaitably {
+
   /** The name of the application, based on the classname */
   val name: String = getClass.getName.stripSuffix("$")
+
   /** The [[com.twitter.app.Flags]] instance associated with this application */
   //failfastOnFlagsNotParsed is called in the ctor of App.scala here which is a bad idea
   //as things like this can happen http://stackoverflow.com/questions/18138397/calling-method-from-constructor
   val flag: Flags = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
 
   private var _args = Array[String]()
+
   /** The remaining, unparsed arguments */
   def args: Array[String] = _args
 
@@ -141,7 +144,9 @@ trait App extends Closable with CloseAwaitably {
       // `close()` already called, we need to close this here, but only
       // after `close()` completes and `closing` is satisfied
       closing
-        .transform { _ => closable.close(closeDeadline) }
+        .transform { _ =>
+          closable.close(closeDeadline)
+        }
         .by(shutdownTimer, closeDeadline)
     }
   }
@@ -173,12 +178,15 @@ trait App extends Closable with CloseAwaitably {
   final def close(deadline: Time): Future[Unit] = synchronized {
     closing = closeAwaitably {
       closeDeadline = deadline.max(Time.now + MinGrace)
-      val firstPhase = Closable.all(exits.asScala.toSeq: _*)
+      val firstPhase = Closable
+        .all(exits.asScala.toSeq: _*)
         .close(closeDeadline)
         .by(shutdownTimer, closeDeadline)
 
       firstPhase
-        .transform { _ => Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline) }
+        .transform { _ =>
+          Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline)
+        }
         .by(shutdownTimer, closeDeadline)
     }
 
@@ -252,6 +260,7 @@ object App {
   private[app] def register(app: App): Unit =
     ref.getAndSet(Some(app)).foreach { existing =>
       log.warning(
-        s"Multiple com.twitter.app.App main methods called. ${existing.name}, then ${app.name}")
+        s"Multiple com.twitter.app.App main methods called. ${existing.name}, then ${app.name}"
+      )
     }
 }

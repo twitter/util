@@ -56,4 +56,3 @@ private object X509CertificateFile {
 
   private val log = Logger.get("com.twitter.util.security")
 }
-

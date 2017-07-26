@@ -4,7 +4,6 @@ import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.JavaConverters._
 
-
 /**
  * Wait for the result of some action. Awaitable is not used
  * directly, but through the `Await` object.
@@ -66,6 +65,7 @@ object Awaitable {
   }
 
   sealed trait CanAwait {
+
     /**
      * Should time spent in blocking operations be tracked.
      */

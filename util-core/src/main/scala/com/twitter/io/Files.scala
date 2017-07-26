@@ -6,6 +6,7 @@ import java.io.{ByteArrayOutputStream, File, FileInputStream}
  * Utilities for working with `java.io.File`s
  */
 object Files {
+
   /**
    * Read a file fully into a byte array.
    *
@@ -13,7 +14,7 @@ object Files {
    * @param limit number of bytes to read, default 4MB
    * @return array of bytes
    */
-  def readBytes(file: File, limit: Int = 1024 * 1024 * 4): Array[Byte]= {
+  def readBytes(file: File, limit: Int = 1024 * 1024 * 4): Array[Byte] = {
     require(file.length() < limit, "File '%s' is too big".format(file.getAbsolutePath()))
     val buf = new ByteArrayOutputStream(math.min(limit, file.length().intValue()))
     val in = new FileInputStream(file)

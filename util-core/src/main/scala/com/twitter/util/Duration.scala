@@ -8,7 +8,8 @@ object Duration extends TimeLikeOps[Duration] {
   def fromNanoseconds(nanoseconds: Long): Duration = new Duration(nanoseconds)
 
   // This is needed for Java compatibility.
-  override def fromFractionalSeconds(seconds: Double): Duration = super.fromFractionalSeconds(seconds)
+  override def fromFractionalSeconds(seconds: Double): Duration =
+    super.fromFractionalSeconds(seconds)
   override def fromSeconds(seconds: Int): Duration = super.fromSeconds(seconds)
   override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)
@@ -183,14 +184,18 @@ object Duration extends TimeLikeOps[Duration] {
     TimeUnit.SECONDS,
     TimeUnit.MILLISECONDS,
     TimeUnit.MICROSECONDS,
-    TimeUnit.NANOSECONDS)
+    TimeUnit.NANOSECONDS
+  )
 
   private val nameToUnit: Map[String, TimeUnit] =
-    TimeUnit.values().flatMap { u =>
-      val pluralK = u.toString.toLowerCase
-      val singularK = pluralK dropRight 1
-      Seq(pluralK -> u, singularK -> u)
-    }.toMap
+    TimeUnit
+      .values()
+      .flatMap { u =>
+        val pluralK = u.toString.toLowerCase
+        val singularK = pluralK dropRight 1
+        Seq(pluralK -> u, singularK -> u)
+      }
+      .toMap
 
   private val SingleDurationRegex =
     """\s*([+-]?)\s*(?:([0-9]+)\.([a-z]+)|duration\.(top|bottom|undefined))""".r
@@ -223,29 +228,29 @@ object Duration extends TimeLikeOps[Duration] {
           case (m, i) =>
             val List(signStr, numStr, unitStr, special) = m.subgroups
             val absDuration = special match {
-              case "top"       => Top
-              case "bottom"    => Bottom
+              case "top" => Top
+              case "bottom" => Bottom
               case "undefined" => Undefined
-              case _           =>
+              case _ =>
                 val u = nameToUnit.get(unitStr) match {
                   case Some(t) => t
-                  case None    => throw new NumberFormatException("Invalid unit: " + unitStr)
+                  case None => throw new NumberFormatException("Invalid unit: " + unitStr)
                 }
                 Duration(numStr.toLong, u)
             }
 
             signStr match {
-              case "-"         => -absDuration
+              case "-" => -absDuration
 
               // It's only OK to omit the sign for the first duration.
               case "" if i > 0 =>
                 throw new NumberFormatException("Expected a sign between durations")
 
-              case _           => absDuration
+              case _ => absDuration
             }
 
-        // It's OK to use reduce because the regex ensures that there is
-        // at least one element
+          // It's OK to use reduce because the regex ensures that there is
+          // at least one element
         } reduce { _ + _ }
       case _ => throw new NumberFormatException("Invalid duration: " + s)
     }
@@ -408,7 +413,7 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
    */
   def /(x: Double): Duration =
     if (x == 0.0) this / 0
-    else this * (1.0/x)
+    else this * (1.0 / x)
 
   /**
    * Scales this `Duration` by modding by `x`.

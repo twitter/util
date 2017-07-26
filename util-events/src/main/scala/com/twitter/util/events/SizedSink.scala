@@ -34,18 +34,26 @@ object SizedSink {
   }
 
   private class MutableEvent(
-      var etype: Type,
-      var whenMillis: Long,
-      var longVal: Long,
-      var objectVal: Object,
-      var doubleVal: Double,
-      var traceIdVal: Long,
-      var spanIdVal: Long)
-  {
+    var etype: Type,
+    var whenMillis: Long,
+    var longVal: Long,
+    var objectVal: Object,
+    var doubleVal: Double,
+    var traceIdVal: Long,
+    var spanIdVal: Long
+  ) {
     def isDefined: Boolean = etype != null
 
     def toEvent: Event =
-      Event(etype, Time.fromMilliseconds(whenMillis), longVal, objectVal, doubleVal, traceIdVal, spanIdVal)
+      Event(
+        etype,
+        Time.fromMilliseconds(whenMillis),
+        longVal,
+        objectVal,
+        doubleVal,
+        traceIdVal,
+        spanIdVal
+      )
   }
 
 }
@@ -64,11 +72,7 @@ object SizedSink {
  *          This is exposed to allow for more control in tests.
  */
 @deprecated("Will be removed in an upcoming release", "2017-06-21")
-class SizedSink private[events](
-    capacity: Int,
-    milliTime: () => Long)
-  extends Sink
-{
+class SizedSink private[events] (capacity: Int, milliTime: () => Long) extends Sink {
   import SizedSink._
 
   require(capacity > 0, s"capacity must be positive: $capacity")

@@ -9,10 +9,8 @@ package com.twitter.finagle.stats
  * @param blacklisted a predicate that reads a name and returns true to
  *        blacklist, and false to let it pass through
  */
-class BlacklistStatsReceiver(
-    protected val self: StatsReceiver,
-    blacklisted: Seq[String] => Boolean)
-  extends StatsReceiverProxy {
+class BlacklistStatsReceiver(protected val self: StatsReceiver, blacklisted: Seq[String] => Boolean)
+    extends StatsReceiverProxy {
 
   override def counter(verbosity: Verbosity, name: String*): Counter =
     getStatsReceiver(name).counter(verbosity, name: _*)

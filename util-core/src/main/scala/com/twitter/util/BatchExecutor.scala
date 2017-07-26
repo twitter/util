@@ -77,7 +77,7 @@ private[util] class BatchExecutor[In, Out](
   def newBufThreshold =
     math.round(currentBufPercentile * sizeThreshold) match {
       case tooLow if tooLow < 1 => 1
-      case size =>  math.min(size, sizeThreshold)
+      case size => math.min(size, sizeThreshold)
     }
 
   def apply(t: In): Future[Out] = enqueue(t)
@@ -90,7 +90,8 @@ private[util] class BatchExecutor[In, Out](
         flushBatch()
       else {
         scheduleFlushIfNecessary()
-        () => ()
+        () =>
+          ()
       }
     }
 
@@ -120,25 +121,27 @@ private[util] class BatchExecutor[In, Out](
 
     scheduled foreach { _.cancel() }
     scheduled = scala.None
-    currentBufThreshold = newBufThreshold  // set the next batch's size
+    currentBufThreshold = newBufThreshold // set the next batch's size
 
-    () => try {
-      executeBatch(prevBatch)
-    } catch {
-      case e: Throwable =>
-        log.log(WARNING, "unhandled exception caught in Future.batched: %s".format(e.toString), e)
-    }
+    () =>
+      try {
+        executeBatch(prevBatch)
+      } catch {
+        case e: Throwable =>
+          log.log(WARNING, "unhandled exception caught in Future.batched: %s".format(e.toString), e)
+      }
   }
 
   def executeBatch(batch: Seq[(In, Promise[Out])]) {
-    val uncancelled = batch filter { case (in, p) =>
-      p.isInterrupted match {
-        case Some(_cause) =>
-          p.setException(new CancellationException)
-          false
+    val uncancelled = batch filter {
+      case (in, p) =>
+        p.isInterrupted match {
+          case Some(_cause) =>
+            p.setException(new CancellationException)
+            false
 
-        case scala.None => true
-      }
+          case scala.None => true
+        }
     }
 
     val ins = uncancelled map { case (in, _) => in }
@@ -149,8 +152,9 @@ private[util] class BatchExecutor[In, Out](
 
     f(ins) respond {
       case Return(outs) =>
-        (outs zip promises) foreach { case (out, p) =>
-          p() = Return(out)
+        (outs zip promises) foreach {
+          case (out, p) =>
+            p() = Return(out)
         }
 
       case Throw(e) =>

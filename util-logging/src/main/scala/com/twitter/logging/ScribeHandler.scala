@@ -74,17 +74,19 @@ object ScribeHandler {
     level: Option[Level] = None,
     statsReceiver: StatsReceiver = NullStatsReceiver
   ) =
-    () => new ScribeHandler(
-      hostname,
-      port,
-      category,
-      bufferTime,
-      connectBackoff,
-      maxMessagesPerTransaction,
-      maxMessagesToBuffer,
-      formatter,
-      level,
-      statsReceiver)
+    () =>
+      new ScribeHandler(
+        hostname,
+        port,
+        category,
+        bufferTime,
+        connectBackoff,
+        maxMessagesPerTransaction,
+        maxMessagesToBuffer,
+        formatter,
+        level,
+        statsReceiver
+    )
 
   def apply(
     hostname: String,
@@ -96,7 +98,8 @@ object ScribeHandler {
     maxMessagesToBuffer: Int,
     formatter: Formatter,
     level: Option[Level]
-  ): () => ScribeHandler = apply(
+  ): () => ScribeHandler =
+    apply(
       hostname,
       port,
       category,
@@ -106,7 +109,8 @@ object ScribeHandler {
       maxMessagesToBuffer,
       formatter,
       level,
-      NullStatsReceiver)
+      NullStatsReceiver
+    )
 
 }
 
@@ -116,17 +120,17 @@ object ScribeHandler {
  * which emit plain-text messages into the log, will corrupt the resulting data.
  */
 class ScribeHandler(
-    hostname: String,
-    port: Int,
-    category: String,
-    bufferTime: Duration,
-    connectBackoff: Duration,
-    maxMessagesPerTransaction: Int,
-    maxMessagesToBuffer: Int,
-    formatter: Formatter,
-    level: Option[Level],
-    statsReceiver: StatsReceiver)
-  extends Handler(formatter, level) {
+  hostname: String,
+  port: Int,
+  category: String,
+  bufferTime: Duration,
+  connectBackoff: Duration,
+  maxMessagesPerTransaction: Int,
+  maxMessagesToBuffer: Int,
+  formatter: Formatter,
+  level: Option[Level],
+  statsReceiver: StatsReceiver
+) extends Handler(formatter, level) {
   import ScribeHandler._
 
   def this(
@@ -139,8 +143,19 @@ class ScribeHandler(
     maxMessagesToBuffer: Int,
     formatter: Formatter,
     level: Option[Level]
-  ) = this(hostname, port, category, bufferTime, connectBackoff,
-    maxMessagesPerTransaction, maxMessagesToBuffer, formatter, level, NullStatsReceiver)
+  ) =
+    this(
+      hostname,
+      port,
+      category,
+      bufferTime,
+      connectBackoff,
+      maxMessagesPerTransaction,
+      maxMessagesToBuffer,
+      formatter,
+      level,
+      NullStatsReceiver
+    )
 
   private[this] val stats = new ScribeHandlerStats(statsReceiver)
 
@@ -257,8 +272,14 @@ class ScribeHandler(
             } catch {
               case e: Exception =>
                 stats.incrDroppedRecords(count)
-                log.error(e, "Failed to send %s %d log entries to scribe server at %s:%d",
-                          category, count, hostname, port)
+                log.error(
+                  e,
+                  "Failed to send %s %d log entries to scribe server at %s:%d",
+                  category,
+                  count,
+                  hostname,
+                  port
+                )
                 closeSocket()
             }
           }
@@ -287,7 +308,7 @@ class ScribeHandler(
       }
     }
 
-    flusher.execute( new Runnable {
+    flusher.execute(new Runnable {
       def run() { sendBatch() }
     })
   }
@@ -357,35 +378,116 @@ class ScribeHandler(
 
   override def toString = {
     ("<%s level=%s hostname=%s port=%d scribe_buffer=%s " +
-     "scribe_backoff=%s scribe_max_packet_size=%d formatter=%s>").format(getClass.getName, getLevel,
-      hostname, port, bufferTime, connectBackoff, maxMessagesPerTransaction, formatter.toString)
+      "scribe_backoff=%s scribe_max_packet_size=%d formatter=%s>").format(
+      getClass.getName,
+      getLevel,
+      hostname,
+      port,
+      bufferTime,
+      connectBackoff,
+      maxMessagesPerTransaction,
+      formatter.toString
+    )
   }
 
   private[this] val SCRIBE_PREFIX: Array[Byte] = Array[Byte](
     // version 1, call, "Log", reqid=0
-    0x80.toByte, 1, 0, 1, 0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 0, 0, 0, 0,
+    0x80.toByte,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    3,
+    'L'.toByte,
+    'o'.toByte,
+    'g'.toByte,
+    0,
+    0,
+    0,
+    0,
     // list of structs
-    15, 0, 1, 12
+    15,
+    0,
+    1,
+    12
   )
   private[this] val OLD_SCRIBE_PREFIX: Array[Byte] = Array[Byte](
     // (no version), "Log", reply, reqid=0
-    0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 1, 0, 0, 0, 0,
+    0,
+    0,
+    0,
+    3,
+    'L'.toByte,
+    'o'.toByte,
+    'g'.toByte,
+    1,
+    0,
+    0,
+    0,
+    0,
     // list of structs
-    15, 0, 1, 12
+    15,
+    0,
+    1,
+    12
   )
 
   private[this] val SCRIBE_REPLY: Array[Byte] = Array[Byte](
     // version 1, reply, "Log", reqid=0
-    0x80.toByte, 1, 0, 2, 0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 0, 0, 0, 0,
+    0x80.toByte,
+    1,
+    0,
+    2,
+    0,
+    0,
+    0,
+    3,
+    'L'.toByte,
+    'o'.toByte,
+    'g'.toByte,
+    0,
+    0,
+    0,
+    0,
     // int, fid 0, 0=ok
-    8, 0, 0, 0, 0, 0, 0, 0
+    8,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   )
   private[this] val OLD_SCRIBE_REPLY: Array[Byte] = Array[Byte](
-    0, 0, 0, 20,
+    0,
+    0,
+    0,
+    20,
     // (no version), "Log", reply, reqid=0
-    0, 0, 0, 3, 'L'.toByte, 'o'.toByte, 'g'.toByte, 2, 0, 0, 0, 0,
+    0,
+    0,
+    0,
+    3,
+    'L'.toByte,
+    'o'.toByte,
+    'g'.toByte,
+    2,
+    0,
+    0,
+    0,
+    0,
     // int, fid 0, 0=ok
-    8, 0, 0, 0, 0, 0, 0, 0
+    8,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   )
 
   private class ScribeHandlerStats(statsReceiver: StatsReceiver) {
@@ -440,8 +542,14 @@ class ScribeHandler(
           val dropped = droppedRecords.getAndSet(0)
           val failed = connectionFailure.getAndSet(0)
           val skipped = connectionSkipped.getAndSet(0)
-          ScribeHandler.log.debug("sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
-            sent, sent / period.inSeconds, dropped, failed, skipped)
+          ScribeHandler.log.debug(
+            "sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
+            sent,
+            sent / period.inSeconds,
+            dropped,
+            failed,
+            skipped
+          )
 
           _lastLogStats = Time.now
         }

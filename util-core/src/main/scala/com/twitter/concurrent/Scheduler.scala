@@ -11,6 +11,7 @@ import scala.collection.mutable
  * An interface for scheduling [[java.lang.Runnable]] tasks.
  */
 trait Scheduler {
+
   /**
    * Schedule `r` to be run at some time in the future.
    */
@@ -129,11 +130,9 @@ private[concurrent] object LocalScheduler {
    * and thus at most only one Thread updating local state, but
    * there can be multiple Threads reading state.
    */
-  class Activation(
-      lifo: Boolean,
-      sampleBlockingFraction: Double)
-    extends Scheduler
-    with Iterator[Runnable] {
+  class Activation(lifo: Boolean, sampleBlockingFraction: Double)
+      extends Scheduler
+      with Iterator[Runnable] {
 
     private[this] var r0, r1, r2: Runnable = null
     private[this] val rs = new ArrayDeque[Runnable]
@@ -196,8 +195,7 @@ private[concurrent] object LocalScheduler {
       val save = running
       running = true
       try {
-        while (hasNext)
-          next().run()
+        while (hasNext) next().run()
       } finally {
         running = save
       }
@@ -211,9 +209,11 @@ private[concurrent] object LocalScheduler {
         blockingNanos += elapsedNs
         if (ThreadLocalRandom.current().nextDouble() < sampleBlockingFraction) {
           val micros = TimeUnit.NANOSECONDS.toMicros(elapsedNs)
-          log.log(Level.INFO,
+          log.log(
+            Level.INFO,
             s"Scheduler blocked for $micros micros via the following stacktrace",
-            new BlockingHere())
+            new BlockingHere()
+          )
         }
         value
       } else {
@@ -244,8 +244,10 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
       case _: NumberFormatException => 0.0
     }
 
-  assert(sampleBlockingFraction >= 0.0 && sampleBlockingFraction <= 1.0,
-    s"sampleBlockingFraction must be between 0 and 1, inclusive: $sampleBlockingFraction")
+  assert(
+    sampleBlockingFraction >= 0.0 && sampleBlockingFraction <= 1.0,
+    s"sampleBlockingFraction must be between 0 and 1, inclusive: $sampleBlockingFraction"
+  )
 
   override def toString: String = s"LocalScheduler(${System.identityHashCode(this)})"
 
@@ -310,7 +312,7 @@ trait ExecutorScheduler { self: Scheduler =>
     // We add 2x slop here because it's inherently racy to enumerate
     // threads. Since this is used only for monitoring purposes, we
     // don't try too hard.
-    val threads = new Array[Thread](threadGroup.activeCount*2)
+    val threads = new Array[Thread](threadGroup.activeCount * 2)
     val n = threadGroup.enumerate(threads)
     threads.take(n)
   }
@@ -336,7 +338,8 @@ trait ExecutorScheduler { self: Scheduler =>
 class ThreadPoolScheduler(
   val name: String,
   val executorFactory: ThreadFactory => ExecutorService
-) extends Scheduler with ExecutorScheduler {
+) extends Scheduler
+    with ExecutorScheduler {
   def this(name: String) = this(name, Executors.newCachedThreadPool(_))
 }
 
@@ -352,7 +355,8 @@ class ThreadPoolScheduler(
 class BridgedThreadPoolScheduler(
   val name: String,
   val executorFactory: ThreadFactory => ExecutorService
-) extends Scheduler with ExecutorScheduler {
+) extends Scheduler
+    with ExecutorScheduler {
   private[this] val local = new LocalScheduler
 
   def this(name: String) = this(name, Executors.newCachedThreadPool(_))
@@ -361,12 +365,11 @@ class BridgedThreadPoolScheduler(
     if (Thread.currentThread.getThreadGroup == threadGroup)
       local.submit(r)
     else
-      try
-        executor.execute(new Runnable {
-          def run() {
-            BridgedThreadPoolScheduler.this.submit(r)
-          }
-        })
+      try executor.execute(new Runnable {
+        def run() {
+          BridgedThreadPoolScheduler.this.submit(r)
+        }
+      })
       catch {
         case _: RejectedExecutionException => local.submit(r)
       }

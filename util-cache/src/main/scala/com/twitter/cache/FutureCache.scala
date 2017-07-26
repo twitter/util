@@ -62,7 +62,8 @@ abstract class FutureCache[K, V] {
 abstract class FutureCacheProxy[K, V](underlying: FutureCache[K, V]) extends FutureCache[K, V] {
   def get(key: K): Option[Future[V]] = underlying.get(key)
 
-  def getOrElseUpdate(key: K)(compute: => Future[V]): Future[V] = underlying.getOrElseUpdate(key)(compute)
+  def getOrElseUpdate(key: K)(compute: => Future[V]): Future[V] =
+    underlying.getOrElseUpdate(key)(compute)
 
   def set(key: K, value: Future[V]): Unit = underlying.set(key, value)
 
@@ -85,6 +86,7 @@ abstract class FutureCacheProxy[K, V](underlying: FutureCache[K, V]) extends Fut
  * The object is called [[com.twitter.cache.guava.Guava$]].
  */
 object FutureCache {
+
   /**
    * A [[com.twitter.cache.FutureCache]] backed by a
    * [[java.util.concurrent.ConcurrentMap]].
@@ -106,7 +108,9 @@ object FutureCache {
    * @see [[standard]] for the equivalent Java API.
    */
   def default[K, V](fn: K => Future[V], cache: FutureCache[K, V]): K => Future[V] =
-    AsyncMemoize(fn, new EvictingCache(cache)) andThen { f: Future[V] => f.interruptible() }
+    AsyncMemoize(fn, new EvictingCache(cache)) andThen { f: Future[V] =>
+      f.interruptible()
+    }
 
   /**
    * Alias for [[default]] which can be called from Java.

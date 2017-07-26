@@ -20,10 +20,10 @@ class KetamaDistributor[A](
    * Extract a little-endian integer from a given byte array starting at `offset`.
    */
   @inline private[hashing] def byteArrayToLE(bytes: Array[Byte], offset: Int): Int =
-     bytes(3 + offset) << 24 |
-    (bytes(2 + offset) & 0xff) << 16 |
-    (bytes(1 + offset) & 0xff) << 8 |
-     bytes(0 + offset) & 0xff
+    bytes(3 + offset) << 24 |
+      (bytes(2 + offset) & 0xff) << 16 |
+      (bytes(1 + offset) & 0xff) << 8 |
+      bytes(0 + offset) & 0xff
 
   /**
    * Feeds a given integer `i` into a [[MessageDigest]] in the way close to

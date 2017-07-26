@@ -16,8 +16,10 @@ import javax.net.ssl.{TrustManager, TrustManagerFactory}
 class X509TrustManagerFactory(certsFile: File) {
 
   private[this] def logException(ex: Throwable): Unit =
-    log.warning(s"X509TrustManagerFactory (${certsFile.getName()}) " +
-      s"failed to create trust manager: ${ex.getMessage()}.")
+    log.warning(
+      s"X509TrustManagerFactory (${certsFile.getName()}) " +
+        s"failed to create trust manager: ${ex.getMessage()}."
+    )
 
   private[this] def setCertificateEntry(ks: KeyStore)(cert: X509Certificate): Unit = {
     val alias: String = UUID.randomUUID().toString()

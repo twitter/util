@@ -35,11 +35,11 @@ package com.twitter.logging
  * nodes.
  */
 case class LoggerFactory(
-    node: String = "",
-    level: Option[Level] = None,
-    handlers: List[HandlerFactory] = Nil,
-    useParents: Boolean = true)
-  extends (() => Logger) {
+  node: String = "",
+  level: Option[Level] = None,
+  handlers: List[HandlerFactory] = Nil,
+  useParents: Boolean = true
+) extends (() => Logger) {
 
   /**
    * Registers new handlers and setting with the logger at `node`
@@ -48,8 +48,12 @@ case class LoggerFactory(
   def apply(): Logger = {
     val logger = Logger.get(node)
     logger.clearHandlers()
-    level.foreach { x => logger.setLevel(x) }
-    handlers.foreach { h => logger.addHandler(h()) }
+    level.foreach { x =>
+      logger.setLevel(x)
+    }
+    handlers.foreach { h =>
+      logger.addHandler(h())
+    }
     logger.setUseParentHandlers(useParents)
     logger
   }
@@ -58,7 +62,7 @@ case class LoggerFactory(
 /**
  * Shim for java compatibility.  Make a new LoggerFactoryBuilder with `LoggerFactory#newBuilder()`.
  */
-class LoggerFactoryBuilder private[logging](factory: LoggerFactory) {
+class LoggerFactoryBuilder private[logging] (factory: LoggerFactory) {
   def node(_node: String): LoggerFactoryBuilder =
     new LoggerFactoryBuilder(factory.copy(node = _node))
 

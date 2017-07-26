@@ -12,8 +12,17 @@ import scala.io.Source
 private[app] object ClassPath {
 
   val IgnoredPackages = Set(
-    "apple/", "ch/epfl/", "com/apple/", "com/oracle/",
-    "com/sun/", "java/", "javax/", "scala/", "sun/", "sunw/")
+    "apple/",
+    "ch/epfl/",
+    "com/apple/",
+    "com/oracle/",
+    "com/sun/",
+    "java/",
+    "javax/",
+    "scala/",
+    "sun/",
+    "sunw/"
+  )
 
   sealed abstract class Info(path: String)
 
@@ -26,11 +35,7 @@ private[app] object ClassPath {
     }
   }
 
-  case class LoadServiceInfo(
-      path: String,
-      iface: String,
-      lines: Seq[String])
-    extends Info(path)
+  case class LoadServiceInfo(path: String, iface: String, lines: Seq[String]) extends Info(path)
 
 }
 
@@ -128,8 +133,9 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     buf: mutable.Buffer[CpInfo],
     seenUris: mutable.Set[URI]
   ): Unit = {
-    val jarFile = try new JarFile(file) catch {
-      case _: IOException => return  // not a Jar file
+    val jarFile = try new JarFile(file)
+    catch {
+      case _: IOException => return // not a Jar file
     }
 
     try {
@@ -147,7 +153,8 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
         processJarEntry(jarFile, e, buf)
       }
     } finally {
-      try jarFile.close() catch {
+      try jarFile.close()
+      catch {
         case _: IOException =>
       }
     }
@@ -159,22 +166,24 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     buf: mutable.Buffer[CpInfo]
   ): Unit
 
-  private def jarClasspath(jarFile: File, manifest: java.util.jar.Manifest): Seq[URI] = for {
-    m <- Option(manifest).toSeq
-    attr <- Option(m.getMainAttributes.getValue("Class-Path")).toSeq
-    el <- attr.split(" ")
-    uri <- uriFromJarClasspath(jarFile, el)
-  } yield uri
+  private def jarClasspath(jarFile: File, manifest: java.util.jar.Manifest): Seq[URI] =
+    for {
+      m <- Option(manifest).toSeq
+      attr <- Option(m.getMainAttributes.getValue("Class-Path")).toSeq
+      el <- attr.split(" ")
+      uri <- uriFromJarClasspath(jarFile, el)
+    } yield uri
 
-  private def uriFromJarClasspath(jarFile: File, path: String): Option[URI] = try {
-    val uri = new URI(path)
-    if (uri.isAbsolute)
-      Some(uri)
-    else
-      Some(new File(jarFile.getParentFile, path.replace('/', File.separatorChar)).toURI)
-  } catch {
-    case _: URISyntaxException => None
-  }
+  private def uriFromJarClasspath(jarFile: File, path: String): Option[URI] =
+    try {
+      val uri = new URI(path)
+      if (uri.isAbsolute)
+        Some(uri)
+      else
+        Some(new File(jarFile.getParentFile, path.replace('/', File.separatorChar)).toURI)
+    } catch {
+      case _: URISyntaxException => None
+    }
 
 }
 
@@ -217,10 +226,11 @@ private[app] class LoadServiceClassPath extends ClassPath[ClassPath.LoadServiceI
 
   private[this] def ifaceOfName(name: String): Option[String] =
     if (!name.contains("META-INF")) None
-    else name.split("/").takeRight(3) match {
-     case Array("META-INF", "services", iface) => Some(iface)
-     case _ => None
-    }
+    else
+      name.split("/").takeRight(3) match {
+        case Array("META-INF", "services", iface) => Some(iface)
+        case _ => None
+      }
 
   private[app] def readLines(source: Source): Seq[String] = {
     try {

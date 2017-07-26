@@ -42,7 +42,7 @@ import java.io.EOFException
 sealed trait Spool[+A] {
   // NB: Spools are always lazy internally in order to provide the expected behavior
   // during concatenation of two Spools, regardless of how they were constructed
-  import Spool.{LazyCons,empty}
+  import Spool.{LazyCons, empty}
 
   def isEmpty: Boolean
 
@@ -67,7 +67,7 @@ sealed trait Spool[+A] {
    * Apply {{f}} for each item in the spool, until the end.  {{f}} is
    * applied as the items become available.
    */
-  def foreach[B](f: A => B) = foreachElem (_ foreach f)
+  def foreach[B](f: A => B) = foreachElem(_ foreach f)
 
   /**
    * A version of {{foreach}} that wraps each element in an
@@ -104,21 +104,23 @@ sealed trait Spool[+A] {
 
   /**
    * Zips two [[Spool Spools]] returning a Spool of Tuple2s.
-   * 
+   *
    * If one Spool is shorter, excess elements of the longer
    * Spool are discarded.
-   * 
+   *
    * c.f. scala.collection.immutable.Stream#zip
    */
-  def zip[B](that: Spool[B]): Spool[(A,B)] =
-    if (isEmpty) empty[(A,B)]
-    else if (that.isEmpty) empty[(A,B)]
-    else new LazyCons(
-      (head, that.head),
-      Future.join(tail, that.tail).map { case (thisTail, thatTail) =>
-        thisTail.zip(thatTail)
-      }
-    )
+  def zip[B](that: Spool[B]): Spool[(A, B)] =
+    if (isEmpty) empty[(A, B)]
+    else if (that.isEmpty) empty[(A, B)]
+    else
+      new LazyCons(
+        (head, that.head),
+        Future.join(tail, that.tail).map {
+          case (thisTail, thatTail) =>
+            thisTail.zip(thatTail)
+        }
+      )
 
   /**
    * The standard Scala collect, in order to implement map & filter.
@@ -260,14 +262,20 @@ sealed trait Spool[+A] {
    */
   def toSeq: Future[Seq[A]] = {
     val as = new ArrayBuffer[A]
-    foreach { a => as += a } map { _ => as }
+    foreach { a =>
+      as += a
+    } map { _ =>
+      as
+    }
   }
 
   /**
    * Eagerly executes all computation represented by this Spool (presumably for
    * side-effects), and returns a Future representing its completion.
    */
-  def force: Future[Unit] = foreach { _ => () }
+  def force: Future[Unit] = foreach { _ =>
+    ()
+  }
 }
 
 /**
@@ -282,16 +290,12 @@ abstract class AbstractSpool[A] extends Spool[A]
  * Note: There is a Java-friendly API for this object: [[com.twitter.concurrent.Spools]].
  */
 object Spool {
-  case class Cons[A](head: A, tail: Future[Spool[A]])
-    extends Spool[A]
-  {
+  case class Cons[A](head: A, tail: Future[Spool[A]]) extends Spool[A] {
     def isEmpty = false
     override def toString = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
   }
 
-  private class LazyCons[A](val head: A, next: => Future[Spool[A]])
-    extends Spool[A]
-  {
+  private class LazyCons[A](val head: A, next: => Future[Spool[A]]) extends Spool[A] {
     def isEmpty = false
     lazy val tail = next
     // NB: not touching tail, to avoid forcing unnecessarily
@@ -329,7 +333,6 @@ object Spool {
    * *:: constructs and deconstructs deferred tails
    * **:: constructs and deconstructs eager tails
    */
-
   class Syntax[A](tail: => Future[Spool[A]]) {
     def *::(head: A): Spool[A] = new LazyCons(head, tail)
   }
@@ -344,6 +347,7 @@ object Spool {
   }
 
   class Syntax1[A](tail: Spool[A]) {
+
     /**
      * @deprecated Deprecated in favor of {{*::}}. This will eventually be removed.
      */

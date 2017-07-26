@@ -3,6 +3,7 @@ package com.twitter.io
 import java.io.File
 
 object TempDirectory {
+
   /**
    * Create a new temporary directory which is optionally registered to be deleted upon the exit
    * of the VM.
@@ -14,11 +15,13 @@ object TempDirectory {
     val path = java.nio.file.Files.createTempDirectory("TempDirectory")
 
     if (deleteAtExit)
-      Runtime.getRuntime().addShutdownHook(new Thread {
-        override def run() {
-          Files.delete(path.toFile)
-        }
-      })
+      Runtime
+        .getRuntime()
+        .addShutdownHook(new Thread {
+          override def run() {
+            Files.delete(path.toFile)
+          }
+        })
 
     path.toFile
   }

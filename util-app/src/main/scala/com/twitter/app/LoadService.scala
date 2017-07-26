@@ -52,8 +52,7 @@ object LoadService {
     } yield line
 
     val buffer = mutable.ListBuffer.empty[String]
-    val result = (classNames ++ classNamesFromResources)
-      .distinct
+    val result = (classNames ++ classNamesFromResources).distinct
       .filterNot { className =>
         val isDenied = denied.contains(className)
         if (isDenied)

@@ -7,14 +7,15 @@ import scala.language.higherKinds
  * version of a data structure into agreement.
  */
 trait Diff[CC[_], T] {
+
   /**
    * Patch up the given collection so that it matches
    * its source.
    */
   def patch(coll: CC[T]): CC[T]
-  
+
   /**
-   * Map the values present in the diff. The following 
+   * Map the values present in the diff. The following
    * invariant must hold:
    *
    * {{{
@@ -32,10 +33,11 @@ trait Diff[CC[_], T] {
  * two versions of a collection `CC[T]`.
  */
 trait Diffable[CC[_]] {
+
   /**
    * Compute a [[Diff]] that may later be used to bring two
    * versions of a data structure into agreement; that is:
-   * 
+   *
    * {{{
    * Diffable.diff(a, b).patch(a) == b
    * }}}
@@ -51,7 +53,7 @@ trait Diffable[CC[_]] {
    * Behavior is undefined whenever `a != a'`.
    */
   def diff[T](left: CC[T], right: CC[T]): Diff[CC, T]
-  
+
   /**
    * The identity collection CC[T].
    */
@@ -71,7 +73,7 @@ object Diffable {
 
     override def toString = s"Diff(+$add, -$remove)"
   }
-  
+
   private case class SeqDiff[T](limit: Int, insert: Map[Int, T]) extends Diff[Seq, T] {
     def patch(coll: Seq[T]): Seq[T] = {
       val out = new Array[Any](limit)
@@ -88,7 +90,7 @@ object Diffable {
   }
 
   implicit val ofSet: Diffable[Set] = new Diffable[Set] {
-    def diff[T](left: Set[T], right: Set[T]) = SetDiff(right--left, left--right)
+    def diff[T](left: Set[T], right: Set[T]) = SetDiff(right -- left, left -- right)
     def empty[T] = Set.empty
   }
 
@@ -96,7 +98,9 @@ object Diffable {
     def diff[T](left: Seq[T], right: Seq[T]): SeqDiff[T] =
       if (left.length < right.length) {
         val SeqDiff(_, insert) = diff(left, right.take(left.length))
-        SeqDiff(right.length, insert ++ ((left.length until right.length) map { i => (i -> right(i)) }))
+        SeqDiff(right.length, insert ++ ((left.length until right.length) map { i =>
+          (i -> right(i))
+        }))
       } else if (left.length > right.length) {
         diff(left.take(right.length), right)
       } else {
@@ -111,12 +115,12 @@ object Diffable {
   /**
    * Compute a [[Diff]] that may later be used to bring two
    * versions of a data structure into agreement; that is:
-   * 
+   *
    * {{{
    * Diffable.diff(left, right).patch(left) == right
    * }}}
    */
-  def diff[CC[_]: Diffable, T](left: CC[T], right: CC[T]): Diff[CC, T] = 
+  def diff[CC[_]: Diffable, T](left: CC[T], right: CC[T]): Diff[CC, T] =
     implicitly[Diffable[CC]].diff(left, right)
 
   /**

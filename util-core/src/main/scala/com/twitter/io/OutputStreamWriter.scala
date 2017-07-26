@@ -9,8 +9,7 @@ import scala.annotation.tailrec
 /**
  * Construct a Writer from a given OutputStream.
  */
-private[io]
-class OutputStreamWriter(out: OutputStream, bufsize: Int) extends ClosableWriter {
+private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends ClosableWriter {
   import com.twitter.io.OutputStreamWriter._
 
   private[this] val done = new Promise[Unit]
@@ -21,7 +20,8 @@ class OutputStreamWriter(out: OutputStream, bufsize: Int) extends ClosableWriter
 
   @tailrec
   private[this] def drain(buf: Buf): Unit = {
-    if (buf.isEmpty) out.flush() else {
+    if (buf.isEmpty) out.flush()
+    else {
       // The source length is min(buf.length, bytes.length).
       val b = buf.slice(0, bytes.length)
       // Copy from the source to byte array.
@@ -33,22 +33,24 @@ class OutputStreamWriter(out: OutputStream, bufsize: Int) extends ClosableWriter
     }
   }
 
-  private[this] def doWrite: Buf => Future[Unit] = buf =>
-    FuturePool.interruptibleUnboundedPool { drain(buf) }
+  private[this] def doWrite: Buf => Future[Unit] =
+    buf => FuturePool.interruptibleUnboundedPool { drain(buf) }
 
   def write(buf: Buf): Future[Unit] =
-    if (done.isDefined) done else (
-      done or writeOp.getAndSet(_ => Future.exception(WriteExc))(buf)
-    ) transform {
-      case Return(_) =>
-        writeOp.set(doWrite)
-        Future.Done
+    if (done.isDefined) done
+    else
+      (
+        done or writeOp.getAndSet(_ => Future.exception(WriteExc))(buf)
+      ) transform {
+        case Return(_) =>
+          writeOp.set(doWrite)
+          Future.Done
 
-      case Throw(cause) =>
-        // We don't need to wait for the close, we care only that it is called.
-        if (cause != WriteExc) close()
-        Future.exception(cause)
-    }
+        case Throw(cause) =>
+          // We don't need to wait for the close, we care only that it is called.
+          if (cause != WriteExc) close()
+          Future.exception(cause)
+      }
 
   def fail(cause: Throwable): Unit =
     done.updateIfEmpty(Throw(cause))

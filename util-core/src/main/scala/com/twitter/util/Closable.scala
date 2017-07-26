@@ -73,7 +73,9 @@ object Closable {
    */
   def all(closables: Closable*): Closable = new Closable {
     def close(deadline: Time): Future[Unit] = {
-      val fs = closables.map { closable => safeClose(closable, deadline) }
+      val fs = closables.map { closable =>
+        safeClose(closable, deadline)
+      }
       for (f <- fs) {
         f.poll match {
           case Some(Return(_)) =>
@@ -107,14 +109,15 @@ object Closable {
           case Some(f) => f
           case None => Future.Done
         }
-      case Seq(hd, tl@_*) =>
+      case Seq(hd, tl @ _*) =>
         def onTry(_try: Try[Unit]): Future[Unit] = {
           val failure = _try match {
             case Return(_) => firstFailure
-            case t@Throw(_) => firstFailure match {
-              case Some(_) => firstFailure
-              case None => Some(Future.const(t))
-            }
+            case t @ Throw(_) =>
+              firstFailure match {
+                case Some(_) => firstFailure
+                case None => Some(Future.const(t))
+              }
           }
           closeSeq(deadline, tl, failure)
         }
@@ -150,7 +153,7 @@ object Closable {
 
   private val collectorThread = new Thread("CollectClosables") {
     override def run() {
-      while(true) {
+      while (true) {
         try {
           val ref = refq.remove()
           val closable = refs.synchronized(refs.remove(ref))
@@ -162,16 +165,24 @@ object Closable {
             // Thread interrupted while blocked on `refq.remove()`. Daemon
             // threads shouldn't be interrupted explicitly on `System.exit`, but
             // SBT does it anyway.
-            logger.log(Level.FINE,
-              "com.twitter.util.Closable collector thread caught InterruptedException")
+            logger.log(
+              Level.FINE,
+              "com.twitter.util.Closable collector thread caught InterruptedException"
+            )
 
           case NF(exc) =>
-            logger.log(Level.SEVERE,
-              "com.twitter.util.Closable collector thread caught exception", exc)
+            logger.log(
+              Level.SEVERE,
+              "com.twitter.util.Closable collector thread caught exception",
+              exc
+            )
 
           case fatal: Throwable =>
-            logger.log(Level.SEVERE,
-              "com.twitter.util.Closable collector thread threw fatal exception", fatal)
+            logger.log(
+              Level.SEVERE,
+              "com.twitter.util.Closable collector thread threw fatal exception",
+              fatal
+            )
             throw fatal
         }
       }

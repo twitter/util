@@ -2,7 +2,13 @@ package com.twitter.app
 
 import com.twitter.util.{Duration, StorageUnit, Time, TimeFormat}
 import java.io.File
-import java.lang.{Boolean => JBoolean, Double => JDouble, Float => JFloat, Integer => JInteger, Long => JLong}
+import java.lang.{
+  Boolean => JBoolean,
+  Double => JDouble,
+  Float => JFloat,
+  Integer => JInteger,
+  Long => JLong
+}
 import java.net.InetSocketAddress
 import java.util.{List => JList, Map => JMap, Set => JSet}
 import scala.collection.JavaConverters._
@@ -45,6 +51,7 @@ import scala.collection.JavaConverters._
  * [1] http://en.wikipedia.org/wiki/Type_class
  */
 abstract class Flaggable[T] {
+
   /**
    * Parse a string (i.e. a value set on the command line) into an object of
    * type `T`.
@@ -67,6 +74,7 @@ abstract class Flaggable[T] {
  * Default `Flaggable` implementations.
  */
 object Flaggable {
+
   /**
    * Create a `Flaggable[T]` according to a `String => T` conversion function.
    *
@@ -91,19 +99,27 @@ object Flaggable {
 
   implicit val ofInt: Flaggable[Int] = mandatory(_.toInt)
   implicit val ofJavaInteger: Flaggable[JInteger] =
-    mandatory { s: String => JInteger.valueOf(s.toInt) }
+    mandatory { s: String =>
+      JInteger.valueOf(s.toInt)
+    }
 
   implicit val ofLong: Flaggable[Long] = mandatory(_.toLong)
   implicit val ofJavaLong: Flaggable[JLong] =
-    mandatory { s: String => JLong.valueOf(s.toLong) }
+    mandatory { s: String =>
+      JLong.valueOf(s.toLong)
+    }
 
   implicit val ofFloat: Flaggable[Float] = mandatory(_.toFloat)
   implicit val ofJavaFloat: Flaggable[JFloat] =
-    mandatory { s: String => JFloat.valueOf(s.toFloat) }
+    mandatory { s: String =>
+      JFloat.valueOf(s.toFloat)
+    }
 
   implicit val ofDouble: Flaggable[Double] = mandatory(_.toDouble)
   implicit val ofJavaDouble: Flaggable[JDouble] =
-    mandatory { s: String => JDouble.valueOf(s.toDouble) }
+    mandatory { s: String =>
+      JDouble.valueOf(s.toDouble)
+    }
 
   // Conversions for common non-primitive types and collections.
   implicit val ofDuration: Flaggable[Duration] = mandatory(Duration.parse(_))
@@ -124,12 +140,10 @@ object Flaggable {
       }
 
       override def show(addr: InetSocketAddress): String =
-        "%s:%d".format(
-          Option(addr.getAddress) match {
-            case Some(a) if a.isAnyLocalAddress => ""
-            case _ => addr.getHostName
-          },
-          addr.getPort)
+        "%s:%d".format(Option(addr.getAddress) match {
+          case Some(a) if a.isAnyLocalAddress => ""
+          case _ => addr.getHostName
+        }, addr.getPort)
     }
 
   implicit val ofFile: Flaggable[File] = new Flaggable[File] {
@@ -151,7 +165,7 @@ object Flaggable {
 
     override def show(tup: (T, U)): String = {
       val (t, u) = tup
-      tflag.show(t)+","+uflag.show(u)
+      tflag.show(t) + "," + uflag.show(u)
     }
   }
 

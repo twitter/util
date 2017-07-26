@@ -8,7 +8,6 @@ import java.nio.charset.Charset
  */
 private[twitter] abstract class ProxyByteWriter(underlying: ByteWriter) extends AbstractByteWriter {
 
-
   def writeString(string: CharSequence, charset: Charset): ProxyByteWriter.this.type = {
     underlying.writeString(string, charset)
     this

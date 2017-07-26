@@ -165,14 +165,17 @@ object AsyncMeter {
  * }
  * }}}
  */
-class AsyncMeter private(
-    private[concurrent] val burstSize: Int,
-    burstDuration: Duration,
-    q: BlockingQueue[(Promise[Unit], Int)])(implicit timer: Timer) {
+class AsyncMeter private (
+  private[concurrent] val burstSize: Int,
+  burstDuration: Duration,
+  q: BlockingQueue[(Promise[Unit], Int)]
+)(implicit timer: Timer) {
 
   require(burstSize > 0, s"burst size of $burstSize, which is <= 0 doesn't make sense")
-  require(burstDuration > Duration.Zero,
-    s"burst duration of $burstDuration, which is <= 0 nanoseconds doesn't make sense")
+  require(
+    burstDuration > Duration.Zero,
+    s"burst duration of $burstDuration, which is <= 0 nanoseconds doesn't make sense"
+  )
 
   private[this] val period = Period.fromBurstiness(burstSize, burstDuration)
 
@@ -221,8 +224,11 @@ class AsyncMeter private(
    */
   def await(permits: Int): Future[Unit] = {
     if (permits > burstSize)
-      return Future.exception(new IllegalArgumentException(
-        s"Tried to await on $permits permits, but the maximum burst size was $burstSize"))
+      return Future.exception(
+        new IllegalArgumentException(
+          s"Tried to await on $permits permits, but the maximum burst size was $burstSize"
+        )
+      )
 
     // don't jump the queue-this is racy, but the race here is indistinguishable
     // from the synchronized behavior
@@ -238,26 +244,30 @@ class AsyncMeter private(
     val tup = (p, permits)
 
     if (q.offer(tup)) {
-      p.setInterruptHandler { case t: Throwable =>
-        // we synchronize removals, because we only want to satisfy when
-        // the tokenbucket has enough space to remove, but we can't know
-        // whether it has enough space or not without peeking.  after we
-        // peek, and successfully remove from the tokenbucket, if the
-        // promise is interrupted then there's a race between removing
-        // and polling-by synchronizing on peek/poll and remove, it's
-        // impossible to race.
-        val rem = synchronized { q.remove(tup) }
-        if (rem) {
-          val e = new CancellationException("Request for permits was cancelled.")
-          e.initCause(t)
-          p.setException(e)
-        }
+      p.setInterruptHandler {
+        case t: Throwable =>
+          // we synchronize removals, because we only want to satisfy when
+          // the tokenbucket has enough space to remove, but we can't know
+          // whether it has enough space or not without peeking.  after we
+          // peek, and successfully remove from the tokenbucket, if the
+          // promise is interrupted then there's a race between removing
+          // and polling-by synchronizing on peek/poll and remove, it's
+          // impossible to race.
+          val rem = synchronized { q.remove(tup) }
+          if (rem) {
+            val e = new CancellationException("Request for permits was cancelled.")
+            e.initCause(t)
+            p.setException(e)
+          }
       }
       restartTimerIfDead()
       p
     } else {
-      Future.exception(new RejectedExecutionException(
-        "Tried to wait when there were already the maximum number of waiters."))
+      Future.exception(
+        new RejectedExecutionException(
+          "Tried to wait when there were already the maximum number of waiters."
+        )
+      )
     }
   }
 

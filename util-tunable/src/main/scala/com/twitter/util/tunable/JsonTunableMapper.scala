@@ -13,12 +13,12 @@ private[twitter] object JsonTunableMapper {
   import com.twitter.util.tunable.json._
 
   private case class JsonTunable(
-      @JsonProperty(required = true) id: String,
-      @JsonProperty(value = "type", required = true) valueType: Class[Any],
-      @JsonProperty(required = true) value: Any)
+    @JsonProperty(required = true) id: String,
+    @JsonProperty(value = "type", required = true) valueType: Class[Any],
+    @JsonProperty(required = true) value: Any
+  )
 
-  private case class JsonTunables(
-      @JsonProperty(required = true) tunables: Seq[JsonTunable])
+  private case class JsonTunables(@JsonProperty(required = true) tunables: Seq[JsonTunable])
 
   /**
    * The Deserializers that [[JsonTunableMapper]] uses by default, in addition to Scala data type
@@ -107,8 +107,8 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
   import JsonTunableMapper._
 
   private[this] object DeserializationModule extends SimpleModule {
-    deserializers.foreach {
-      jd => addDeserializer(jd.handledType().asInstanceOf[Class[Any]], jd)
+    deserializers.foreach { jd =>
+      addDeserializer(jd.handledType().asInstanceOf[Class[Any]], jd)
     }
   }
 
@@ -123,8 +123,7 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
     val uniqueIds = ids.distinct
 
     if (ids.size != uniqueIds.size)
-      throw new IllegalArgumentException(
-        s"Duplicate Toggle ids found: ${ids.mkString(",")}")
+      throw new IllegalArgumentException(s"Duplicate Toggle ids found: ${ids.mkString(",")}")
 
     if (jsonTunables.tunables.isEmpty) {
       NullTunableMap
@@ -151,17 +150,20 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
     paths match {
       case Nil =>
         NullTunableMap
-      case path::Nil =>
+      case path :: Nil =>
         parse(path) match {
           case Throw(t) =>
             throw new IllegalArgumentException(
-              s"Failed to parse Tunable configuration file for $id, from $path", t)
+              s"Failed to parse Tunable configuration file for $id, from $path",
+              t
+            )
           case Return(tunableMap) =>
             tunableMap
         }
       case _ =>
         throw new IllegalArgumentException(
-          s"Found multiple Tunable configuration files for $id: ${paths.mkString(", ")}")
+          s"Found multiple Tunable configuration files for $id: ${paths.mkString(", ")}"
+        )
     }
 
   /**

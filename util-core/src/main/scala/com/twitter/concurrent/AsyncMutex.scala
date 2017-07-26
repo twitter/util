@@ -15,9 +15,8 @@ package com.twitter.concurrent
  *
  * @see [[AsyncSemaphore]] for a semaphore version.
  */
-class AsyncMutex private (maxWaiters: Option[Int])
-  extends AsyncSemaphore(1, maxWaiters)
-{
+class AsyncMutex private (maxWaiters: Option[Int]) extends AsyncSemaphore(1, maxWaiters) {
+
   /**
    * Constructs a mutex with no limit on the max number
    * of waiters for permits.

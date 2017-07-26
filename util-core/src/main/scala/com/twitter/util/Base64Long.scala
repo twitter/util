@@ -6,6 +6,7 @@ package com.twitter.util
  * This is intended for use in e.g. cache keys.
  */
 object Base64Long {
+
   /**
    * The bit width of a base-64 digit.
    */
@@ -33,10 +34,13 @@ object Base64Long {
   def alphabet(chars: Iterable[Char]): PartialFunction[Int, Char] = {
     require(
       chars.size == AlphabetSize,
-      s"base-64 alphabet must have exactly $AlphabetSize characters")
+      s"base-64 alphabet must have exactly $AlphabetSize characters"
+    )
     val result = chars.toArray
-    require(java.util.Arrays.equals(result.distinct, result),
-      s"base-64 alphabet must not repeat characters")
+    require(
+      java.util.Arrays.equals(result.distinct, result),
+      s"base-64 alphabet must not repeat characters"
+    )
     result
   }
 
@@ -105,7 +109,9 @@ object Base64Long {
       new PartialFunction[Char, Int] {
         private[this] val maxChar = chars.max
         private[this] val reverse = Array.fill[Byte](maxChar.toInt + 1)(-1)
-        0.until(AlphabetSize).foreach { i => reverse(forward(i)) = i.toByte }
+        0.until(AlphabetSize).foreach { i =>
+          reverse(forward(i)) = i.toByte
+        }
         def isDefinedAt(c: Char): Boolean = (c <= maxChar) && (reverse(c) != -1)
         def apply(c: Char): Int = reverse(c)
       }

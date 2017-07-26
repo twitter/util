@@ -85,18 +85,14 @@ object SyslogHandler {
   ) = () => new SyslogHandler(server, port, formatter, level)
 }
 
-class SyslogHandler(
-    val server: String,
-    val port: Int,
-    formatter: Formatter,
-    level: Option[Level])
-  extends Handler(formatter, level) {
+class SyslogHandler(val server: String, val port: Int, formatter: Formatter, level: Option[Level])
+    extends Handler(formatter, level) {
 
   private val socket = new DatagramSocket
   private[logging] val dest = new InetSocketAddress(server, port)
 
-  def flush() = { }
-  def close() = { }
+  def flush() = {}
+  def close() = {}
 
   def publish(record: javalog.LogRecord) = {
     val data = formatter.format(record).getBytes
@@ -136,25 +132,27 @@ class SyslogHandler(
  * Truncate stack traces in exception logging (line count).
  */
 class SyslogFormatter(
-    val hostname: String = NetUtil.getLocalHostName(),
-    val serverName: Option[String] = None,
-    val useIsoDateFormat: Boolean = true,
-    val priority: Int = SyslogHandler.PRIORITY_USER,
-    timezone: Option[String] = None,
-    truncateAt: Int = 0,
-    truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit)
-  extends Formatter(
-    timezone,
-    truncateAt,
-    truncateStackTracesAt,
-    useFullPackageNames = false,
-    prefix = "") {
+  val hostname: String = NetUtil.getLocalHostName(),
+  val serverName: Option[String] = None,
+  val useIsoDateFormat: Boolean = true,
+  val priority: Int = SyslogHandler.PRIORITY_USER,
+  timezone: Option[String] = None,
+  truncateAt: Int = 0,
+  truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit
+) extends Formatter(
+      timezone,
+      truncateAt,
+      truncateStackTracesAt,
+      useFullPackageNames = false,
+      prefix = ""
+    ) {
 
-  override def dateFormat = if (useIsoDateFormat) {
-    SyslogHandler.ISO_DATE_FORMAT
-  } else {
-    SyslogHandler.OLD_SYSLOG_DATE_FORMAT
-  }
+  override def dateFormat =
+    if (useIsoDateFormat) {
+      SyslogHandler.ISO_DATE_FORMAT
+    } else {
+      SyslogHandler.OLD_SYSLOG_DATE_FORMAT
+    }
 
   override def lineTerminator = ""
 
@@ -174,12 +172,14 @@ class SyslogFormatter(
 
 object SyslogFuture {
   private val executor = Executors.newSingleThreadExecutor(
-    new NamedPoolThreadFactory("TWITTER-UTIL-SYSLOG", true/*daemon*/))
+    new NamedPoolThreadFactory("TWITTER-UTIL-SYSLOG", true /*daemon*/ )
+  )
   private val noop = new Runnable { def run() {} }
 
-  def apply(action: => Unit) = executor.submit(new Runnable {
-    def run() { action }
-  })
+  def apply(action: => Unit) =
+    executor.submit(new Runnable {
+      def run() { action }
+    })
 
   def sync() {
     val f = executor.submit(noop)

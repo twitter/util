@@ -4,6 +4,7 @@ import java.lang.{Double => JDouble, Float => JFloat}
 import java.nio.charset.Charset
 
 object ByteWriter {
+
   /**
    * Indicates there isn't enough room to write into
    * a [[ByteWriter]].
@@ -114,6 +115,7 @@ trait ByteWriter {
  * in terms of integer methods.
  */
 abstract class AbstractByteWriter extends ByteWriter {
+
   /**
    * Write 32 bits from `f` in big-endian order.
    */

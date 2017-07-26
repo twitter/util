@@ -2,14 +2,14 @@ package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
 import com.twitter.util._
-import java.io.{
-  File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
+import java.io.{File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
 
 /**
  * A Reader represents a stream of bytes, read in discrete chunks.
  * Readers permit at most one outstanding read.
  */
 trait Reader {
+
   /**
    * Asynchronously read at most `n` bytes from the byte stream. The
    * returned future represents the results of the read request. If
@@ -51,8 +51,7 @@ object Reader {
    */
   def fromBuf(buf: Buf): Reader = BufReader(buf)
 
-  class ReaderDiscarded
-    extends Exception("This writer's reader has been discarded")
+  class ReaderDiscarded extends Exception("This writer's reader has been discarded")
 
   /**
    * A [[Reader]] that is linked with a [[Writer]] and `close`-ing
@@ -241,7 +240,7 @@ object Reader {
       val oldState = state
       oldState match {
         case Eof | Failing(_) =>
-          // do not update state to failing
+        // do not update state to failing
         case Idle =>
           state = Failing(cause)
         case Closing(reof) =>
@@ -373,13 +372,14 @@ object Reader {
  * a convenient interface for the producer of such streams.
  */
 trait Writer {
+
   /**
-    * Write a chunk. The returned future is completed
-    * when the chunk has been fully read by the sink.
-    *
-    * Only one outstanding `write` is permitted, thus
-    * backpressure is asserted.
-    */
+   * Write a chunk. The returned future is completed
+   * when the chunk has been fully read by the sink.
+   *
+   * Only one outstanding `write` is permitted, thus
+   * backpressure is asserted.
+   */
   def write(buf: Buf): Future[Unit]
 
   /**

@@ -24,9 +24,13 @@ private[twitter] abstract class TunableMap { self =>
    * Entries are sorted alphabetically by id.
    */
   def contentString: String = {
-    val contents = entries.toSeq.sortBy(_.key.id).map { case TunableMap.Entry(key, value, _) =>
-      s"${key.id} -> $value"
-    }.mkString(", ")
+    val contents = entries.toSeq
+      .sortBy(_.key.id)
+      .map {
+        case TunableMap.Entry(key, value, _) =>
+          s"${key.id} -> $value"
+      }
+      .mkString(", ")
     s"TunableMap($contents)"
   }
 
@@ -43,26 +47,29 @@ private[twitter] abstract class TunableMap { self =>
   def orElse(that: TunableMap): TunableMap = (self, that) match {
     case (NullTunableMap, map) => map
     case (map, NullTunableMap) => map
-    case _ => new TunableMap with TunableMap.Composite {
-      def apply[T](key: TunableMap.Key[T]): Tunable[T] =
-        self(key).orElse(that(key))
+    case _ =>
+      new TunableMap with TunableMap.Composite {
+        def apply[T](key: TunableMap.Key[T]): Tunable[T] =
+          self(key).orElse(that(key))
 
-      def entries: Iterator[TunableMap.Entry[_]] = {
-        val dedupedTunables = mutable.Map.empty[String, TunableMap.Entry[_]]
-        that.entries.foreach { case entry@TunableMap.Entry(key, _, _) =>
-          dedupedTunables.put(key.id, entry)
+        def entries: Iterator[TunableMap.Entry[_]] = {
+          val dedupedTunables = mutable.Map.empty[String, TunableMap.Entry[_]]
+          that.entries.foreach {
+            case entry @ TunableMap.Entry(key, _, _) =>
+              dedupedTunables.put(key.id, entry)
+          }
+
+          // entries in `self` take precedence.
+          self.entries.foreach {
+            case entry @ TunableMap.Entry(key, _, _) =>
+              dedupedTunables.put(key.id, entry)
+          }
+          dedupedTunables.valuesIterator
         }
 
-        // entries in `self` take precedence.
-        self.entries.foreach { case entry@TunableMap.Entry(key, _, _) =>
-          dedupedTunables.put(key.id, entry)
-        }
-        dedupedTunables.valuesIterator
+        def components: Seq[TunableMap] =
+          Seq(self, that)
       }
-
-      def components: Seq[TunableMap] =
-        Seq(self, that)
-    }
   }
 }
 
@@ -78,7 +85,7 @@ private[twitter] object TunableMap {
   /**
    * Get the component [[TunableMap]]s that make up `tunableMap`. For Composite [[TunableMap]]s,
    * this returns a Seq of the components. Otherwise, it returns a Seq of `tunableMap`.
-   * 
+   *
    * Used for testing.
    */
   def components(tunableMap: TunableMap): Seq[TunableMap] =
@@ -88,7 +95,7 @@ private[twitter] object TunableMap {
       case _ =>
         Seq(tunableMap)
     }
- 
+
   private case class TypeAndTunable[T](tunableType: Class[T], tunable: Tunable.Mutable[T])
 
   private[twitter] case class Entry[T](key: TunableMap.Key[T], value: T, source: String)
@@ -106,8 +113,9 @@ private[twitter] object TunableMap {
   @varargs
   def of(tunableMaps: TunableMap*): TunableMap = {
     val start: TunableMap = NullTunableMap
-    tunableMaps.foldLeft(start) { case (acc, tm) =>
-      acc.orElse(tm)
+    tunableMaps.foldLeft(start) {
+      case (acc, tm) =>
+        acc.orElse(tm)
     }
   }
 
@@ -128,7 +136,7 @@ private[twitter] object TunableMap {
     def apply[T](id: String)(implicit m: Manifest[T]): Key[T] =
       Key[T](id, m.runtimeClass.asInstanceOf[Class[T]])
   }
-  
+
   /**
    * A [[TunableMap]] that can be updated via `put` and `clear` operations. Putting
    * a value for a given `id` will update the current value for the `id`, or create
@@ -160,7 +168,7 @@ private[twitter] object TunableMap {
       }
 
       // add/update new tunable values
-      ++= (newMap)
+      ++=(newMap)
     }
 
     /**
@@ -169,8 +177,9 @@ private[twitter] object TunableMap {
      * is not atomic at the macro level.
      */
     private[twitter] def ++=(that: TunableMap): Unit =
-      that.entries.foreach { case TunableMap.Entry(key, value, _) =>
-        put(key.id, key.clazz, value)
+      that.entries.foreach {
+        case TunableMap.Entry(key, value, _) =>
+          put(key.id, key.clazz, value)
       }
 
     /**
@@ -178,7 +187,8 @@ private[twitter] object TunableMap {
      * [[Tunable]] in the map are atomic, but the change is not atomic at the macro level.
      */
     private[twitter] def --=(that: TunableMap): Unit =
-      that.entries.foreach { case TunableMap.Entry(key, _, _) =>
+      that.entries.foreach {
+        case TunableMap.Entry(key, _, _) =>
           clear(key)
       }
 
@@ -223,7 +233,9 @@ private[twitter] object TunableMap {
     // We use a ConcurrentHashMap to synchronize operations on non-thread-safe [[Tunable.Mutable]]s.
     private[this] val tunables = new ConcurrentHashMap[String, TypeAndTunable[_]]()
 
-    private[this] def clearTunable[T](key: Key[T]): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
+    private[this] def clearTunable[T](
+      key: Key[T]
+    ): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
       new BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] {
         def apply(id: String, curr: TypeAndTunable[_]): TypeAndTunable[_] = {
           if (curr != null) {
@@ -233,7 +245,9 @@ private[twitter] object TunableMap {
         }
       }
 
-    private[this] def getOrAdd[T](key: Key[T]): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
+    private[this] def getOrAdd[T](
+      key: Key[T]
+    ): BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] =
       new BiFunction[String, TypeAndTunable[_], TypeAndTunable[_]] {
         def apply(id: String, curr: TypeAndTunable[_]): TypeAndTunable[_] =
           if (curr != null) {
@@ -242,7 +256,8 @@ private[twitter] object TunableMap {
             } else {
               throw new ClassCastException(
                 s"Tried to retrieve a Tunable of type ${key.clazz}, but TunableMap contained a " +
-                s"Tunable of type ${curr.tunableType} for id ${key.id}")
+                  s"Tunable of type ${curr.tunableType} for id ${key.id}"
+              )
             }
           } else {
             TypeAndTunable(key.clazz, Tunable.emptyMutable[T](key.id))
@@ -262,7 +277,8 @@ private[twitter] object TunableMap {
             } else {
               throw new ClassCastException(
                 s"Tried to update a Tunable of type ${key.clazz}, but TunableMap contained a " +
-                s"Tunable of type ${curr.tunableType} for id ${key.id}")
+                  s"Tunable of type ${curr.tunableType} for id ${key.id}"
+              )
             }
           } else {
             TypeAndTunable(key.clazz, Tunable.mutable[T](id, value))
@@ -284,9 +300,10 @@ private[twitter] object TunableMap {
 
     def entries: Iterator[TunableMap.Entry[_]] = {
       val entryOpts: Iterator[Option[TunableMap.Entry[_]]] = tunables.asScala.iterator.map {
-        case (id, TypeAndTunable(tunableType, tunable)) => tunable().map { value =>
-          TunableMap.Entry(TunableMap.Key(id, tunableType), value, toString)
-        }
+        case (id, TypeAndTunable(tunableType, tunable)) =>
+          tunable().map { value =>
+            TunableMap.Entry(TunableMap.Key(id, tunableType), value, toString)
+          }
       }
       entryOpts.flatten
     }

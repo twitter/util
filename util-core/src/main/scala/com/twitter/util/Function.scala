@@ -7,13 +7,14 @@ import java.util.{function => juf}
 abstract class Function0[+R] extends (() => R)
 
 abstract class ExceptionalFunction0[+R] extends Function0[R] {
-   /**
-    * Implements apply in terms of abstract applyE, to allow Java code to throw checked exceptions.
-    */
-   final def apply(): R = applyE()
 
-   @throws(classOf[Throwable])
-   def applyE(): R
+  /**
+   * Implements apply in terms of abstract applyE, to allow Java code to throw checked exceptions.
+   */
+  final def apply(): R = applyE()
+
+  @throws(classOf[Throwable])
+  def applyE(): R
 }
 
 /**
@@ -31,6 +32,7 @@ abstract class Function[-T1, +R] extends PartialFunction[T1, R] {
 }
 
 object Function {
+
   /**
    * Compose a function with a monitor; all invocations of the
    * returned function are synchronized with the given monitor `m`.
@@ -161,19 +163,19 @@ object Function {
     }
 
   /**
-    * Creates an [[ExceptionalFunction0]] to `T` from an [[ExceptionalSupplier]].
-    *
-    * Allows for better interop with Scala from Java 8 using lambdas.
-    *
-    * For example:
-    * {{{
-    * import com.twitter.util.Future;
-    * import static com.twitter.util.Function.exRunnable;
-    *
-    * FuturePool futurePool = FuturePools.immediatePool();
-    * Future<Unit> fu = futurePool.apply(exfunc0(() -> { throw new Exception("blah"); }));
-    * }}}
-    */
+   * Creates an [[ExceptionalFunction0]] to `T` from an [[ExceptionalSupplier]].
+   *
+   * Allows for better interop with Scala from Java 8 using lambdas.
+   *
+   * For example:
+   * {{{
+   * import com.twitter.util.Future;
+   * import static com.twitter.util.Function.exRunnable;
+   *
+   * FuturePool futurePool = FuturePools.immediatePool();
+   * Future<Unit> fu = futurePool.apply(exfunc0(() -> { throw new Exception("blah"); }));
+   * }}}
+   */
   def exfunc0[T](f: ExceptionalSupplier[T]): ExceptionalFunction0[T] =
     new ExceptionalFunction0[T] {
       @throws(classOf[Throwable])
@@ -182,6 +184,7 @@ object Function {
 }
 
 abstract class ExceptionalFunction[-T1, +R] extends Function[T1, R] {
+
   /**
    * Implements apply in terms of abstract applyE, to allow Java code to throw checked exceptions.
    */

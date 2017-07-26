@@ -33,8 +33,9 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
         Some((requests.dequeue(), items.dequeue()))
       else
         None
-    } map { case (request, currItem) =>
-      currItem.respond(request() = _)
+    } map {
+      case (request, currItem) =>
+        currItem.respond(request() = _)
     }
   }
 }
@@ -53,14 +54,12 @@ abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
   protected def isHealthy(a: A): Boolean
 }
 
-private class HealthyQueue[A](
-  makeItem: () => Future[A],
-  numItems: Int,
-  isHealthy: A => Boolean)
-  extends mutable.Queue[Future[A]]
-{
+private class HealthyQueue[A](makeItem: () => Future[A], numItems: Int, isHealthy: A => Boolean)
+    extends mutable.Queue[Future[A]] {
 
-  0.until(numItems) foreach { _ => this += makeItem() }
+  0.until(numItems) foreach { _ =>
+    this += makeItem()
+  }
 
   override def +=(elem: Future[A]): HealthyQueue.this.type = synchronized {
     super.+=(elem)

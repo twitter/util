@@ -68,4 +68,3 @@ object BinaryCodec {
   def encode[T](t: T)(implicit enc: Codec[T, Array[Byte]]): Array[Byte] = enc.encode(t)
   def decode[T](a: Array[Byte])(implicit dec: Codec[T, Array[Byte]]): T = dec.decode(a)
 }
-

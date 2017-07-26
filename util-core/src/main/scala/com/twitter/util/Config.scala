@@ -149,9 +149,9 @@ trait Config[T] extends (() => T) {
           val name = method.getName
           val rt = method.getReturnType
           if (name != "required" &&
-              name != "optional" &&
-              !syntheticTermNames.contains(name) && // no loops, no compiler generated methods!
-              interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
+            name != "optional" &&
+            !syntheticTermNames.contains(name) && // no loops, no compiler generated methods!
+            interestingReturnTypes.exists(_.isAssignableFrom(rt))) {
             method.invoke(config) match {
               case Unspecified =>
                 buf += (prefix + name)

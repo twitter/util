@@ -11,7 +11,7 @@ import scala.collection.mutable.ArrayBuffer
  * missing boundary header or footer.
  */
 class InvalidPemFormatException(file: File, message: String)
-  extends IOException(s"PemFile (${file.getName}) failed to load: $message")
+    extends IOException(s"PemFile (${file.getName}) failed to load: $message")
 
 /**
  * An abstract representation of a PEM formatted file.
@@ -52,7 +52,10 @@ class PemFile(file: File) {
     else contents.head
   }
 
-  private[this] def readEncodedMessages(bufReader: BufferedReader, messageType: String): Seq[String] = {
+  private[this] def readEncodedMessages(
+    bufReader: BufferedReader,
+    messageType: String
+  ): Seq[String] = {
     val header = constructHeader(messageType)
     val footer = constructFooter(messageType)
 
@@ -112,8 +115,8 @@ class PemFile(file: File) {
    * only the first one will be returned.
    */
   def readMessage(messageType: String): Try[Array[Byte]] =
-    Try(openReader(file)).flatMap(reader =>
-      Try(readDecodedMessage(reader, messageType)).ensure(closeReader(reader)))
+    Try(openReader(file))
+      .flatMap(reader => Try(readDecodedMessage(reader, messageType)).ensure(closeReader(reader)))
 
   /**
    * This method attemps to read multiple PEM encoded messages
@@ -125,8 +128,8 @@ class PemFile(file: File) {
    * are ignored.
    */
   def readMessages(messageType: String): Try[Seq[Array[Byte]]] =
-    Try(openReader(file)).flatMap(reader =>
-      Try(readDecodedMessages(reader, messageType)).ensure(closeReader(reader)))
+    Try(openReader(file))
+      .flatMap(reader => Try(readDecodedMessages(reader, messageType)).ensure(closeReader(reader)))
 
 }
 
@@ -134,6 +137,7 @@ private object PemFile {
 
   private trait PemState
   private object PemState {
+
     /**
      * Begin indicates that no message headers have been seen yet.
      */

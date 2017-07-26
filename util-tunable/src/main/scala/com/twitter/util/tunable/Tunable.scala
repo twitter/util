@@ -1,6 +1,5 @@
 package com.twitter.util.tunable
 
-
 /**
  * A [[Tunable]] is an abstraction for an object that produces a Some(value) or None when applied.
  * Implementations may enable mutation, such that successive applications of the [[Tunable]]
@@ -82,10 +81,8 @@ private[twitter] object Tunable {
   /**
    * A [[Tunable]] whose value can be changed. Operations are thread-safe.
    */
-  final class Mutable[T] private[tunable](
-      id: String,
-      @volatile private var _value: Option[T])
-    extends Tunable[T](id) {
+  final class Mutable[T] private[tunable] (id: String, @volatile private var _value: Option[T])
+      extends Tunable[T](id) {
 
     /**
      * Set the value of the [[Tunable.Mutable]].

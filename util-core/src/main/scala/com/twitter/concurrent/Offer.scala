@@ -91,7 +91,9 @@ trait Offer[+T] { self =>
   /**
    * Like {{map}}, but to a constant (call-by-name).
    */
-  def const[U](f: => U): Offer[U] = map { _ => f }
+  def const[U](f: => U): Offer[U] = map { _ =>
+    f
+  }
 
   /**
    * Java-friendly analog of `const()`.
@@ -115,8 +117,11 @@ trait Offer[+T] { self =>
   def orElse[U >: T](other: Offer[U]): Offer[U] = new Offer[U] {
     def prepare() = {
       val ourTx = self.prepare()
-      if (ourTx.isDefined) ourTx else {
-        ourTx foreach { tx => tx.nack() }
+      if (ourTx.isDefined) ourTx
+      else {
+        ourTx foreach { tx =>
+          tx.nack()
+        }
         ourTx.raise(LostSynchronization)
         other.prepare()
       }
@@ -143,7 +148,9 @@ trait Offer[+T] { self =>
    * closure.  Convenient for loops.
    */
   def andThen(f: => Unit) {
-    sync() onSuccess { _ => f }
+    sync() onSuccess { _ =>
+      f
+    }
   }
 
   /**
@@ -174,6 +181,7 @@ abstract class AbstractOffer[T] extends Offer[T]
  * Note: There is a Java-friendly API for this object: [[com.twitter.concurrent.Offers]].
  */
 object Offer {
+
   /**
    * A constant offer: synchronizes the given value always. This is
    * call-by-name and a new value is produced for each `prepare()`.
@@ -215,67 +223,71 @@ object Offer {
    * Package-exposed for testing.
    */
   private[concurrent] def choose[T](random: Option[Random], evs: Seq[Offer[T]]): Offer[T] = {
-    if (evs.isEmpty) Offer.never else new Offer[T] {
-      def prepare(): Future[Tx[T]] = {
-        // to avoid unnecessary allocations we do a bunch of manual looping and shuffling
-        val inputSize = evs.size
-        val prepd = new Array[Future[Tx[T]]](inputSize)
-        val iter = evs.iterator
-        var i = 0
-        while (i < inputSize) {
-          prepd(i) = iter.next().prepare()
-          i += 1
-        }
-        // We use match instead of foreach to reduce allocations.
-        random match {
-          case None =>
-            // Shuffle only if random is defined
-          case Some(r) =>
-            while (i > 1) { // i starts at evs.size
-              val nextPos = r.nextInt(i)
-              val tmp = prepd(i - 1)
-              prepd(i - 1) = prepd(nextPos)
-              prepd(nextPos) = tmp
-              i -= 1
-            }
-        }
-        i = 0
-        var foundPos = -1
-        while (foundPos < 0 && i < prepd.length) {
-          val winner = prepd(i)
-          if (winner.isDefined) foundPos = i
-          i += 1
-        }
-
-        def updateLosers(winPos: Int, prepd: Array[Future[Tx[T]]]): Future[Tx[T]] = {
-          val winner = prepd(winPos)
-          var j = 0
-          while (j < prepd.length) {
-            val loser = prepd(j)
-            if (loser ne winner) {
-              loser onSuccess { tx => tx.nack() }
-              loser.raise(LostSynchronization)
-            }
-            j += 1
+    if (evs.isEmpty) Offer.never
+    else
+      new Offer[T] {
+        def prepare(): Future[Tx[T]] = {
+          // to avoid unnecessary allocations we do a bunch of manual looping and shuffling
+          val inputSize = evs.size
+          val prepd = new Array[Future[Tx[T]]](inputSize)
+          val iter = evs.iterator
+          var i = 0
+          while (i < inputSize) {
+            prepd(i) = iter.next().prepare()
+            i += 1
           }
-          winner
-        }
+          // We use match instead of foreach to reduce allocations.
+          random match {
+            case None =>
+            // Shuffle only if random is defined
+            case Some(r) =>
+              while (i > 1) { // i starts at evs.size
+                val nextPos = r.nextInt(i)
+                val tmp = prepd(i - 1)
+                prepd(i - 1) = prepd(nextPos)
+                prepd(nextPos) = tmp
+                i -= 1
+              }
+          }
+          i = 0
+          var foundPos = -1
+          while (foundPos < 0 && i < prepd.length) {
+            val winner = prepd(i)
+            if (winner.isDefined) foundPos = i
+            i += 1
+          }
 
-        if (foundPos >= 0) {
-          updateLosers(foundPos, prepd)
-        } else {
-          Future.selectIndex(prepd) flatMap { winPos =>
-            updateLosers(winPos, prepd)
+          def updateLosers(winPos: Int, prepd: Array[Future[Tx[T]]]): Future[Tx[T]] = {
+            val winner = prepd(winPos)
+            var j = 0
+            while (j < prepd.length) {
+              val loser = prepd(j)
+              if (loser ne winner) {
+                loser onSuccess { tx =>
+                  tx.nack()
+                }
+                loser.raise(LostSynchronization)
+              }
+              j += 1
+            }
+            winner
+          }
+
+          if (foundPos >= 0) {
+            updateLosers(foundPos, prepd)
+          } else {
+            Future.selectIndex(prepd) flatMap { winPos =>
+              updateLosers(winPos, prepd)
+            }
           }
         }
       }
-    }
   }
 
   /**
    * `Offer.choose()` and synchronize it.
    */
-  def select[T](ofs: Offer[T]*): Future[T] = choose(ofs:_*).sync()
+  def select[T](ofs: Offer[T]*): Future[T] = choose(ofs: _*).sync()
 
   private[this] val FutureTxUnit = Future.value(Tx.Unit)
 
@@ -286,7 +298,8 @@ object Offer {
     private[this] val deadline = timeout.fromNow
 
     def prepare() = {
-      if (deadline <= Time.now) FutureTxUnit else {
+      if (deadline <= Time.now) FutureTxUnit
+      else {
         val p = new Promise[Tx[Unit]]
         val task = timer.schedule(deadline) { p.setValue(Tx.Unit) }
         p.setInterruptHandler { case _cause => task.cancel() }

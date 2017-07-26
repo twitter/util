@@ -6,13 +6,17 @@ import com.twitter.util.events.Event.Type
 // Note: these flags should generally be specified via System properties
 // to ensure that their values are available very early in the application's
 // lifecycle.
-private[events] object sinkEnabled extends GlobalFlag[Boolean](
-  false,
-  "Whether or not event capture is enabled. Prefer setting via System properties.")
+private[events] object sinkEnabled
+    extends GlobalFlag[Boolean](
+      false,
+      "Whether or not event capture is enabled. Prefer setting via System properties."
+    )
 
-private[events] object approxNumEvents extends GlobalFlag[Int](
-  10000,
-  "Approximate number of events to keep in memory. Prefer setting via System properties.")
+private[events] object approxNumEvents
+    extends GlobalFlag[Int](
+      10000,
+      "Approximate number of events to keep in memory. Prefer setting via System properties."
+    )
 
 /**
  * Where runtime events such as logging, stats and tracing can be

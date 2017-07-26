@@ -12,6 +12,7 @@ import java.util.HashMap
  * An ActivitySource provides access to observerable named variables.
  */
 trait ActivitySource[+T] {
+
   /**
    * Returns an [[com.twitter.util.Activity]] for a named T-typed variable.
    */
@@ -28,6 +29,7 @@ trait ActivitySource[+T] {
 }
 
 object ActivitySource {
+
   /**
    * A Singleton exception to indicate that an ActivitySource failed to find
    * a named variable.
@@ -50,8 +52,9 @@ object ActivitySource {
     new CachingActivitySource(new ClassLoaderActivitySource(cl))
 
   private[ActivitySource] class OrElse[T, U >: T](
-      primary: ActivitySource[T], failover: ActivitySource[U])
-    extends ActivitySource[U] {
+    primary: ActivitySource[T],
+    failover: ActivitySource[U]
+  ) extends ActivitySource[U] {
     def get(name: String): Activity[U] = {
       primary.get(name) transform {
         case Activity.Failed(_) => failover.get(name)
@@ -108,10 +111,11 @@ class CachingActivitySource[T](underlying: ActivitySource[T]) extends ActivitySo
 /**
  * An ActivitySource for observing the contents of a file with periodic polling.
  */
-class FilePollingActivitySource private[exp](
+class FilePollingActivitySource private[exp] (
   period: Duration,
   pool: FuturePool
-)(implicit timer: Timer) extends ActivitySource[Buf] {
+)(implicit timer: Timer)
+    extends ActivitySource[Buf] {
 
   private[exp] def this(period: Duration)(implicit timer: Timer) =
     this(period, FuturePool.unboundedPool)
@@ -126,7 +130,10 @@ class FilePollingActivitySource private[exp](
         if (file.exists()) {
           pool {
             val reader = new InputStreamReader(
-              new FileInputStream(file), InputStreamReader.DefaultMaxBufferSize, pool)
+              new FileInputStream(file),
+              InputStreamReader.DefaultMaxBufferSize,
+              pool
+            )
             Reader.readAll(reader) respond {
               case Return(buf) =>
                 value() = Activity.Ok(buf)
@@ -154,8 +161,8 @@ class FilePollingActivitySource private[exp](
 /**
  * An ActivitySource for ClassLoader resources.
  */
-class ClassLoaderActivitySource private[exp](classLoader: ClassLoader, pool: FuturePool)
-  extends ActivitySource[Buf] {
+class ClassLoaderActivitySource private[exp] (classLoader: ClassLoader, pool: FuturePool)
+    extends ActivitySource[Buf] {
 
   import com.twitter.io.exp.ActivitySource._
 

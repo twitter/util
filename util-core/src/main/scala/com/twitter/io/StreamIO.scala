@@ -5,6 +5,7 @@ import java.io.{ByteArrayOutputStream, InputStream, OutputStream}
 import scala.annotation.tailrec
 
 object StreamIO {
+
   /**
    * Copy an InputStream to an OutputStream in chunks of the given
    * buffer size (default = 1KB).

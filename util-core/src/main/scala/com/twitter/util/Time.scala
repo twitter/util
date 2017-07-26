@@ -49,10 +49,13 @@ import java.util.{Date, Locale, TimeZone}
  * }}}
  */
 trait TimeLikeOps[This <: TimeLike[This]] {
+
   /** The top value is the greatest possible value. It is akin to an infinity. */
   val Top: This
+
   /** The bottom value is the smallest possible value. */
   val Bottom: This
+
   /** An undefined value: behaves like `Double.NaN` */
   val Undefined: This
 
@@ -141,16 +144,16 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
 
   def inMicroseconds: Long = inNanoseconds / Duration.NanosPerMicrosecond
   def inMilliseconds: Long = inNanoseconds / Duration.NanosPerMillisecond
-  def inLongSeconds: Long  = inNanoseconds / Duration.NanosPerSecond
-  def inSeconds: Int       =
+  def inLongSeconds: Long = inNanoseconds / Duration.NanosPerSecond
+  def inSeconds: Int =
     if (inLongSeconds > Int.MaxValue) Int.MaxValue
     else if (inLongSeconds < Int.MinValue) Int.MinValue
     else inLongSeconds.toInt
   // Units larger than seconds safely fit into 32-bits when converting from a 64-bit nanosecond basis
-  def inMinutes: Int       = (inNanoseconds / Duration.NanosPerMinute).toInt
-  def inHours: Int         = (inNanoseconds / Duration.NanosPerHour).toInt
-  def inDays: Int          = (inNanoseconds / Duration.NanosPerDay).toInt
-  def inMillis: Long       = inMilliseconds // (Backwards compatibility)
+  def inMinutes: Int = (inNanoseconds / Duration.NanosPerMinute).toInt
+  def inHours: Int = (inNanoseconds / Duration.NanosPerHour).toInt
+  def inDays: Int = (inNanoseconds / Duration.NanosPerDay).toInt
+  def inMillis: Long = inMilliseconds // (Backwards compatibility)
 
   /**
    * Returns a value/`TimeUnit` pair; attempting to return coarser
@@ -219,7 +222,7 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def floor(increment: Duration): This = (this, increment) match {
     case (Nanoseconds(0), Duration.Nanoseconds(0)) => Undefined
     case (Nanoseconds(num), Duration.Nanoseconds(0)) => if (num < 0) Bottom else Top
-    case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds((num/denom) * denom)
+    case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds((num / denom) * denom)
     case (self, Duration.Nanoseconds(_)) => self
     case (_, _) => Undefined
   }
@@ -304,7 +307,7 @@ object Time extends TimeLikeOps[Time] {
 
     override def +(delta: Duration) = delta match {
       case Duration.Bottom | Duration.Undefined => Undefined
-      case _ => this  // Top or finite.
+      case _ => this // Top or finite.
     }
 
     override def diff(that: Time) = that match {
@@ -388,7 +391,7 @@ object Time extends TimeLikeOps[Time] {
   /**
    * Note, this should only ever be updated by methods used for testing.
    */
-  private[util] val localGetTime = new Local[()=>Time]
+  private[util] val localGetTime = new Local[() => Time]
   private[util] val localGetTimer = new Local[MockTimer]
 
   /**
@@ -490,15 +493,17 @@ trait TimeControl {
  * The default timezone is UTC.
  */
 class TimeFormat(
-    pattern: String,
-    locale: Option[Locale],
-    timezone: TimeZone = TimeZone.getTimeZone("UTC")) {
+  pattern: String,
+  locale: Option[Locale],
+  timezone: TimeZone = TimeZone.getTimeZone("UTC")
+) {
 
   // jdk6 and jdk7 pick up the default locale differently in SimpleDateFormat,
   // so we can't rely on Locale.getDefault here.
   // Instead, we let SimpleDateFormat do the work for us above.
   /** Create a new TimeFormat with a given locale and the default timezone **/
-  def this(pattern: String, locale: Option[Locale]) = this(pattern, locale, TimeZone.getTimeZone("UTC"))
+  def this(pattern: String, locale: Option[Locale]) =
+    this(pattern, locale, TimeZone.getTimeZone("UTC"))
 
   /** Create a new TimeFormat with a given timezone and the default locale **/
   def this(pattern: String, timezone: TimeZone) = this(pattern, None, timezone)
@@ -506,7 +511,8 @@ class TimeFormat(
   /** Create a new TimeFormat with the default locale and timezone. **/
   def this(pattern: String) = this(pattern, None, TimeZone.getTimeZone("UTC"))
 
-  private[this] val format = locale.map(TwitterDateFormat(pattern, _))
+  private[this] val format = locale
+    .map(TwitterDateFormat(pattern, _))
     .getOrElse(TwitterDateFormat(pattern))
 
   format.setTimeZone(timezone)

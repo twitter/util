@@ -23,6 +23,7 @@ object Event {
    * of that type.
    */
   abstract class Type {
+
     /**
      * An identifier for this Type construction. These should be unique across
      * types for any given sink, though no efforts are made to ensure this.
@@ -68,13 +69,14 @@ object Event {
  */
 @deprecated("Will be removed in an upcoming release", "2017-06-21")
 case class Event(
-    etype: Event.Type,
-    when: Time,
-    longVal: Long = Event.NoLong,
-    objectVal: Object = Event.NoObject,
-    doubleVal: Double = Event.NoDouble,
-    traceIdVal: Long = Event.NoTraceId,
-    spanIdVal: Long = Event.NoSpanId) {
+  etype: Event.Type,
+  when: Time,
+  longVal: Long = Event.NoLong,
+  objectVal: Object = Event.NoObject,
+  doubleVal: Double = Event.NoDouble,
+  traceIdVal: Long = Event.NoTraceId,
+  spanIdVal: Long = Event.NoSpanId
+) {
 
   def getLong: Option[Long] =
     if (Event.NoLong == longVal) None else Some(longVal)

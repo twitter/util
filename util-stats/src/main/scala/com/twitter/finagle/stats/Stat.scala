@@ -67,6 +67,7 @@ object Stat {
  * Stat utility methods for ease of use from java.
  */
 object JStats {
+
   /**
    * Time a given `fn` using the given `unit`.
    */

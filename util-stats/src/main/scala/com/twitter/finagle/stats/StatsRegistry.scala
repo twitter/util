@@ -9,6 +9,7 @@ private[twitter] trait StatsRegistry {
 }
 
 private[twitter] trait StatEntry {
+
   /**
    * The delta since the entry was last sampled.
    * Note, this field is identical to `value` for

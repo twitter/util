@@ -17,8 +17,10 @@ import javax.net.ssl.{KeyManager, KeyManagerFactory}
 class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
 
   private[this] def logException(ex: Throwable): Unit =
-    log.warning(s"Pkcs8KeyManagerFactory (${certFile.getName()}, ${keyFile.getName()}) " +
-      s"failed to create key manager: ${ex.getMessage()}.")
+    log.warning(
+      s"Pkcs8KeyManagerFactory (${certFile.getName()}, ${keyFile.getName()}) " +
+        s"failed to create key manager: ${ex.getMessage()}."
+    )
 
   private[this] def keySpecToPrivateKey(keySpec: PKCS8EncodedKeySpec): PrivateKey = {
     val kf: KeyFactory = KeyFactory.getInstance("RSA")
@@ -47,7 +49,8 @@ class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
    */
   def getKeyManagers(): Try[Array[KeyManager]] = {
     val tryCert: Try[X509Certificate] = new X509CertificateFile(certFile).readX509Certificate()
-    val tryKeySpec: Try[PKCS8EncodedKeySpec] = new Pkcs8EncodedKeySpecFile(keyFile).readPkcs8EncodedKeySpec()
+    val tryKeySpec: Try[PKCS8EncodedKeySpec] =
+      new Pkcs8EncodedKeySpecFile(keyFile).readPkcs8EncodedKeySpec()
     val tryPrivateKey: Try[PrivateKey] = tryKeySpec.map(keySpecToPrivateKey)
 
     val tryCertKey: Try[(X509Certificate, PrivateKey)] = join(tryCert, tryPrivateKey)

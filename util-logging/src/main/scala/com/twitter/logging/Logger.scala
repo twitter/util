@@ -93,7 +93,7 @@ class LoggingException(reason: String) extends Exception(reason)
 /**
  * Scala wrapper for logging.
  */
-class Logger protected(val name: String, private val wrapped: javalog.Logger) {
+class Logger protected (val name: String, private val wrapped: javalog.Logger) {
   // wrapped methods:
   def addHandler(handler: javalog.Handler) = wrapped.addHandler(handler)
   def getFilter() = wrapped.getFilter()
@@ -109,8 +109,13 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   def setUseParentHandlers(use: Boolean) = wrapped.setUseParentHandlers(use)
 
   override def toString = {
-    "<%s name='%s' level=%s handlers=%s use_parent=%s>".format(getClass.getName, name, getLevel(),
-      getHandlers().toList.mkString("[", ", ", "]"), if (getUseParentHandlers()) "true" else "false")
+    "<%s name='%s' level=%s handlers=%s use_parent=%s>".format(
+      getClass.getName,
+      name,
+      getLevel(),
+      getHandlers().toList.mkString("[", ", ", "]"),
+      if (getUseParentHandlers()) "true" else "false"
+    )
   }
 
   /**
@@ -143,7 +148,8 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
 
   final def apply(level: Level, message: String, items: Any*) = log(level, message, items: _*)
 
-  final def apply(level: Level, thrown: Throwable, message: String, items: Any*) = log(level, thrown, message, items)
+  final def apply(level: Level, thrown: Throwable, message: String, items: Any*) =
+    log(level, thrown, message, items)
 
   // convenience methods:
   @varargs
@@ -153,7 +159,8 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   @varargs
   def critical(msg: String, items: Any*) = log(Level.CRITICAL, msg, items: _*)
   @varargs
-  def critical(thrown: Throwable, msg: String, items: Any*) = log(Level.CRITICAL, thrown, msg, items: _*)
+  def critical(thrown: Throwable, msg: String, items: Any*) =
+    log(Level.CRITICAL, thrown, msg, items: _*)
   @varargs
   def error(msg: String, items: Any*) = log(Level.ERROR, msg, items: _*)
   @varargs
@@ -161,7 +168,8 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   @varargs
   def warning(msg: String, items: Any*) = log(Level.WARNING, msg, items: _*)
   @varargs
-  def warning(thrown: Throwable, msg: String, items: Any*) = log(Level.WARNING, thrown, msg, items: _*)
+  def warning(thrown: Throwable, msg: String, items: Any*) =
+    log(Level.WARNING, thrown, msg, items: _*)
   @varargs
   def info(msg: String, items: Any*) = log(Level.INFO, msg, items: _*)
   @varargs
@@ -250,14 +258,14 @@ class Logger protected(val name: String, private val wrapped: javalog.Logger) {
   }
 }
 
-object NullLogger extends Logger(
-  "null",
-  {
-    val jLog = javalog.Logger.getLogger("null")
-    jLog.setLevel(Level.OFF)
-    jLog
-  }
-)
+object NullLogger
+    extends Logger(
+      "null", {
+        val jLog = javalog.Logger.getLogger("null")
+        jLog.setLevel(Level.OFF)
+        jLog
+      }
+    )
 
 object Logger extends Iterable[Logger] {
 
@@ -394,7 +402,8 @@ object Logger extends Iterable[Logger] {
   /** An alias for `get(name)` */
   def apply(name: String) = get(name)
 
-  private def get(depth: Int): Logger = getForClassName(new Throwable().getStackTrace()(depth).getClassName)
+  private def get(depth: Int): Logger =
+    getForClassName(new Throwable().getStackTrace()(depth).getClassName)
 
   /**
    * Return a logger for the class name of the class/object that called

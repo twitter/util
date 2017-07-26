@@ -50,10 +50,12 @@ class BufInputStream(val buf: Buf) extends InputStream {
     else if (len < 0)
       throw new IllegalArgumentException("Length must not be negative")
     else if (len > b.length - off)
-      throw new IllegalArgumentException("Length must not exceed the destination array size - offset")
+      throw new IllegalArgumentException(
+        "Length must not exceed the destination array size - offset"
+      )
 
     if (index >= length) -1
-    else if (len == 0)  0
+    else if (len == 0) 0
     else {
       val n = math.min(len, available)
       buf.slice(index, index + n).write(b, off)

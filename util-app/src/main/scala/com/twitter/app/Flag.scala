@@ -52,12 +52,12 @@ object Flag {
  *     the command line.
  * @see [[com.twitter.app.GlobalFlag]]
  */
-class Flag[T: Flaggable] private[app](
-    val name: String,
-    val help: String,
-    defaultOrUsage: Either[() => T, String],
-    failFastUntilParsed: Boolean)
-{
+class Flag[T: Flaggable] private[app] (
+  val name: String,
+  val help: String,
+  defaultOrUsage: Either[() => T, String],
+  failFastUntilParsed: Boolean
+) {
   import com.twitter.app.Flag._
   import java.util.logging._
 
@@ -87,9 +87,9 @@ class Flag[T: Flaggable] private[app](
   private[this] def setLocalValue(value: Option[T]): Unit = {
     val updatedMap: Map[Flag[_], Any] = (localFlagValues(), value) match {
       case (Some(map), Some(v)) => map + (this -> v)
-      case (Some(map), None)    => map - this
-      case (None, Some(v))      => Map(this -> v)
-      case (None, None)         => Map.empty[Flag[_], Any]
+      case (Some(map), None) => map - this
+      case (None, Some(v)) => Map(this -> v)
+      case (None, None) => Map.empty[Flag[_], Any]
     }
     if (updatedMap.isEmpty)
       localFlagValues.clear()
@@ -116,7 +116,7 @@ class Flag[T: Flaggable] private[app](
       register()
     }
     localValue match {
-      case lv@Some(_) => lv
+      case lv @ Some(_) => lv
       case None => value
     }
   }
@@ -131,12 +131,12 @@ class Flag[T: Flaggable] private[app](
         Some(d())
       } catch {
         case e: Throwable =>
-          throw new RuntimeException( s"Could not run default function for flag $name", e)
+          throw new RuntimeException(s"Could not run default function for flag $name", e)
       }
   }
 
   private def valueOrDefault: Option[T] = getValue match {
-    case v@Some(_) => v
+    case v @ Some(_) => v
     case None => default
   }
 
@@ -165,7 +165,8 @@ class Flag[T: Flaggable] private[app](
   private[this] def let(t: Option[T], f: => Unit): Unit = {
     val prev = localValue
     setLocalValue(t)
-    try f finally {
+    try f
+    finally {
       setLocalValue(prev)
     }
   }
@@ -224,9 +225,7 @@ class Flag[T: Flaggable] private[app](
       flaggable.show(default getOrElse { throw flagNotFound })
     } catch {
       case e: Throwable =>
-        log.log(Level.SEVERE,
-          s"Flag $name default cannot be read",
-          e)
+        log.log(Level.SEVERE, s"Flag $name default cannot be read", e)
         throw e
     }
   }

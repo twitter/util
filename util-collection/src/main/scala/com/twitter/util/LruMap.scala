@@ -10,7 +10,9 @@ import scala.collection.mutable.{Map, MapLike, SynchronizedMap}
  * This is useful if you want to have more specifically-typed wrapped objects instead
  * of the generic maps returned by JavaConverters
  */
-trait JMapWrapperLike[A, B, +Repr <: MapLike[A, B, Repr] with Map[A, B]] extends Map[A, B] with MapLike[A, B, Repr] {
+trait JMapWrapperLike[A, B, +Repr <: MapLike[A, B, Repr] with Map[A, B]]
+    extends Map[A, B]
+    with MapLike[A, B, Repr] {
   def underlying: ju.Map[A, B]
 
   override def size = underlying.size
@@ -36,23 +38,23 @@ trait JMapWrapperLike[A, B, +Repr <: MapLike[A, B, Repr] with Map[A, B]] extends
 object LruMap {
 
   // initial capacity and load factor are the normal defaults for LinkedHashMap
-  def makeUnderlying[K, V](maxSize: Int): ju.Map[K, V] = new LinkedHashMap[K, V](
-    16, /* initial capacity */
-    0.75f, /* load factor */
-    true /* access order (as opposed to insertion order) */
-  ) {
-    override protected def removeEldestEntry(eldest: ju.Map.Entry[K, V]): Boolean = {
-      this.size() > maxSize
+  def makeUnderlying[K, V](maxSize: Int): ju.Map[K, V] =
+    new LinkedHashMap[K, V](
+      16, /* initial capacity */
+      0.75f, /* load factor */
+      true /* access order (as opposed to insertion order) */
+    ) {
+      override protected def removeEldestEntry(eldest: ju.Map.Entry[K, V]): Boolean = {
+        this.size() > maxSize
+      }
     }
-  }
 }
 
 /**
  * A scala `Map` backed by a [[java.util.LinkedHashMap]]
  */
 class LruMap[K, V](val maxSize: Int, val underlying: ju.Map[K, V])
-  extends JMapWrapperLike[K, V, LruMap[K, V]]
-{
+    extends JMapWrapperLike[K, V, LruMap[K, V]] {
   override def empty: LruMap[K, V] = new LruMap[K, V](maxSize)
   def this(maxSize: Int) = this(maxSize, LruMap.makeUnderlying(maxSize))
 }
@@ -61,9 +63,8 @@ class LruMap[K, V](val maxSize: Int, val underlying: ju.Map[K, V])
  * A synchronized scala `Map` backed by an [[java.util.LinkedHashMap]]
  */
 class SynchronizedLruMap[K, V](maxSize: Int, underlying: ju.Map[K, V])
-  extends LruMap[K, V](maxSize, ju.Collections.synchronizedMap(underlying))
-  with SynchronizedMap[K, V]
-{
+    extends LruMap[K, V](maxSize, ju.Collections.synchronizedMap(underlying))
+    with SynchronizedMap[K, V] {
   override def empty: SynchronizedLruMap[K, V] = new SynchronizedLruMap[K, V](maxSize)
   def this(maxSize: Int) = this(maxSize, LruMap.makeUnderlying(maxSize))
 }

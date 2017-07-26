@@ -28,7 +28,7 @@ object ConfigurationLinter extends App {
       println("------------------------------------------------------------")
     }
 
-    if(allSucceeded) {
+    if (allSucceeded) {
       println("All configurations valid!")
     } else {
       exitOnError("One or more configurations failed to be parsed, see above for exceptions.")

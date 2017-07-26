@@ -30,12 +30,14 @@ object StatsReceiver {
  * [[StatsReceiver]] utility methods for ease of use from java.
  */
 object StatsReceivers {
+
   /**
    * Java compatible version of [[StatsReceiver.counter]].
    */
   @varargs
   @deprecated("Use vararg StatsReceiver.counter() instead", "2017-6-16")
-  def counter(statsReceiver: StatsReceiver, name: String*): Counter = statsReceiver.counter(name: _*)
+  def counter(statsReceiver: StatsReceiver, name: String*): Counter =
+    statsReceiver.counter(name: _*)
 
   /**
    * Java compatible version of [[StatsReceiver.addGauge]].
@@ -222,7 +224,7 @@ trait StatsReceiver {
    * will generate a [[Counter counter]] named `/client/backend/pool/adds`.
    */
   @varargs
-  final def scope(namespaces: String*): StatsReceiver = 
+  final def scope(namespaces: String*): StatsReceiver =
     namespaces.foldLeft(this)((statsReceiver, name) => statsReceiver.scope(name))
 
   /**
@@ -238,11 +240,12 @@ trait StatsReceiver {
    */
   def scopeSuffix(suffix: String): StatsReceiver = {
     if (suffix == "") this
-    else new StatsReceiverProxy {
-      protected def self: StatsReceiver = StatsReceiver.this
-      override def toString: String = s"$self/$suffix"
-      override def scope(namespace: String): StatsReceiver = self.scope(namespace).scope(suffix)
-    }
+    else
+      new StatsReceiverProxy {
+        protected def self: StatsReceiver = StatsReceiver.this
+        override def toString: String = s"$self/$suffix"
+        override def scope(namespace: String): StatsReceiver = self.scope(namespace).scope(suffix)
+      }
   }
 }
 

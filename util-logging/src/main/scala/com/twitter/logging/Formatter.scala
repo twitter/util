@@ -27,7 +27,9 @@ private[logging] object Formatter {
   private[logging] def formatStackTrace(t: Throwable, limit: Int): List[String] = {
     var out = new mutable.ListBuffer[String]
     if (limit > 0) {
-      out ++= t.getStackTrace.map { elem => "    at %s".format(elem.toString) }
+      out ++= t.getStackTrace.map { elem =>
+        "    at %s".format(elem.toString)
+      }
       if (out.length > limit) {
         out.trimEnd(out.length - limit)
         out += "    (...more...)"
@@ -84,16 +86,18 @@ private[logging] object Formatter {
  *     "ERR [20080315-18:39:05.033] jobs: "
  */
 class Formatter(
-    val timezone: Option[String] = None,
-    val truncateAt: Int = 0,
-    val truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit,
-    val useFullPackageNames: Boolean = false,
-    val prefix: String = Formatter.DefaultPrefix)
-  extends javalog.Formatter {
+  val timezone: Option[String] = None,
+  val truncateAt: Int = 0,
+  val truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit,
+  val useFullPackageNames: Boolean = false,
+  val prefix: String = Formatter.DefaultPrefix
+) extends javalog.Formatter {
 
   private val matcher = Formatter.DateFormatRegex.matcher(prefix)
 
-  private val DATE_FORMAT = TwitterDateFormat(if (matcher.find()) matcher.group(1) else "yyyyMMdd-HH:mm:ss.SSS")
+  private val DATE_FORMAT = TwitterDateFormat(
+    if (matcher.find()) matcher.group(1) else "yyyyMMdd-HH:mm:ss.SSS"
+  )
   private val FORMAT = matcher.replaceFirst("%3\\$s")
 
   /**

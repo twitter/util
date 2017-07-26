@@ -24,9 +24,12 @@ object StorageUnit {
   def fromKilobytes(kilobytes: Long): StorageUnit = new StorageUnit(kilobytes * 1024)
   def fromMegabytes(megabytes: Long): StorageUnit = new StorageUnit(megabytes * 1024 * 1024)
   def fromGigabytes(gigabytes: Long): StorageUnit = new StorageUnit(gigabytes * 1024 * 1024 * 1024)
-  def fromTerabytes(terabytes: Long): StorageUnit = new StorageUnit(terabytes * 1024 * 1024 * 1024 * 1024)
-  def fromPetabytes(petabytes: Long): StorageUnit = new StorageUnit(petabytes * 1024 * 1024 * 1024 * 1024 * 1024)
-  def fromExabytes(exabytes: Long): StorageUnit = new StorageUnit(exabytes * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+  def fromTerabytes(terabytes: Long): StorageUnit =
+    new StorageUnit(terabytes * 1024 * 1024 * 1024 * 1024)
+  def fromPetabytes(petabytes: Long): StorageUnit =
+    new StorageUnit(petabytes * 1024 * 1024 * 1024 * 1024 * 1024)
+  def fromExabytes(exabytes: Long): StorageUnit =
+    new StorageUnit(exabytes * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
 
   val infinite = new StorageUnit(Long.MaxValue)
   val zero = new StorageUnit(0)
@@ -38,14 +41,13 @@ object StorageUnit {
 
     lower match {
       case "byte" => 1L
-      case "kilobyte" => 1L<<10
-      case "megabyte" => 1L<<20
-      case "gigabyte" => 1L<<30
-      case "terabyte" => 1L<<40
-      case "petabyte" => 1L<<50
-      case "exabyte" => 1L<<60
-      case badUnit => throw new NumberFormatException(
-        "Unrecognized unit %s".format(badUnit))
+      case "kilobyte" => 1L << 10
+      case "megabyte" => 1L << 20
+      case "gigabyte" => 1L << 30
+      case "terabyte" => 1L << 40
+      case "petabyte" => 1L << 50
+      case "exabyte" => 1L << 60
+      case badUnit => throw new NumberFormatException("Unrecognized unit %s".format(badUnit))
     }
   }
 
@@ -90,12 +92,12 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def inMegabytes: Long = bytes / (1024L * 1024)
   def inGigabytes: Long = bytes / (1024L * 1024 * 1024)
   def inTerabytes: Long = bytes / (1024L * 1024 * 1024 * 1024)
-  def inPetabytes: Long  = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
-  def inExabytes: Long  = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
+  def inPetabytes: Long = bytes / (1024L * 1024 * 1024 * 1024 * 1024)
+  def inExabytes: Long = bytes / (1024L * 1024 * 1024 * 1024 * 1024 * 1024)
 
   def +(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes + that.bytes)
   def -(that: StorageUnit): StorageUnit = new StorageUnit(this.bytes - that.bytes)
-  def *(scalar: Double): StorageUnit = new StorageUnit((this.bytes.toDouble*scalar).toLong)
+  def *(scalar: Double): StorageUnit = new StorageUnit((this.bytes.toDouble * scalar).toLong)
   def *(scalar: Long): StorageUnit = new StorageUnit(this.bytes * scalar)
   def /(scalar: Long): StorageUnit = new StorageUnit(this.bytes / scalar)
 
@@ -137,7 +139,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
     if (prefixIndex < 0) {
       "%d B".format(bytes)
     } else {
-      "%.1f %ciB".formatLocal(Locale.ENGLISH, display*bytes.signum, prefix.charAt(prefixIndex))
+      "%.1f %ciB".formatLocal(Locale.ENGLISH, display * bytes.signum, prefix.charAt(prefixIndex))
     }
   }
 }

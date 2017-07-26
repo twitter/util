@@ -39,7 +39,8 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
    * @see [[cleanup()]] to allow for more predictable testing.
    */
   private[this] val refs: Cache[UnderlyingGauge, JBoolean] =
-    Caffeine.newBuilder()
+    Caffeine
+      .newBuilder()
       .executor(executor)
       .weakKeys()
       .removalListener(removals)
@@ -109,15 +110,17 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
         "of Gauges. Indicative of a leak or code registering the same gauge more " +
         s"often than expected. (For $toString)"
     ) {
-      val largeCgs = gauges.asScala.flatMap { case (ks, cg) =>
-        if (cg.totalSize >= 10000) Some(ks -> cg.totalSize)
-        else None
+      val largeCgs = gauges.asScala.flatMap {
+        case (ks, cg) =>
+          if (cg.totalSize >= 10000) Some(ks -> cg.totalSize)
+          else None
       }
       if (largeCgs.isEmpty) {
         Nil
       } else {
-        largeCgs.map { case (ks, size) =>
-          Issue(ks.mkString("/") + "=" + size)
+        largeCgs.map {
+          case (ks, size) =>
+            Issue(ks.mkString("/") + "=" + size)
         }.toSeq
       }
     }

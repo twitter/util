@@ -11,6 +11,7 @@ import scala.collection.immutable.{Iterable, List}
  * by [[GlobalRules.get]].
  */
 trait Rules {
+
   /**
    * Return all rules [[add added]].
    *

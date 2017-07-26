@@ -57,6 +57,7 @@ package com.twitter.util
  */
 trait Disposable[+T] {
   def get: T
+
   /**
    * Dispose of a resource by deadline given.
    */
@@ -70,7 +71,6 @@ object Disposable {
     def dispose(deadline: Time) = Future.value(())
   }
 }
-
 
 /**
  * `Managed[T]` is a resource of type `T` which lifetime is explicitly managed.
@@ -86,7 +86,8 @@ trait Managed[+T] { selfT =>
    */
   def foreach(f: T => Unit) {
     val r = this.make()
-    try f(r.get) finally r.dispose()
+    try f(r.get)
+    finally r.dispose()
   }
 
   /**
@@ -109,16 +110,19 @@ trait Managed[+T] { selfT =>
       def dispose(deadline: Time) = {
         u.dispose(deadline) transform {
           case Return(_) => t.dispose(deadline)
-          case Throw(outer) => t.dispose transform {
-            case Throw(inner) => Future.exception(new DoubleTrouble(outer, inner))
-            case Return(_) => Future.exception(outer)
-          }
+          case Throw(outer) =>
+            t.dispose transform {
+              case Throw(inner) => Future.exception(new DoubleTrouble(outer, inner))
+              case Return(_) => Future.exception(outer)
+            }
         }
       }
     }
   }
 
-  def map[U](f: T => U): Managed[U] = flatMap { t => Managed.const(f(t)) }
+  def map[U](f: T => U): Managed[U] = flatMap { t =>
+    Managed.const(f(t))
+  }
 
   /**
    * Builds a resource.
@@ -135,5 +139,7 @@ class DoubleTrouble(cause1: Throwable, cause2: Throwable) extends Exception {
   override def getStackTrace = cause1.getStackTrace
   override def getMessage =
     "Double failure while disposing composite resource: %s \n %s".format(
-      cause1.getMessage, cause2.getMessage)
+      cause1.getMessage,
+      cause2.getMessage
+    )
 }

@@ -20,10 +20,11 @@ class GcPredictor(pool: Pool, period: Duration, timer: Timer, estimator: Estimat
 
   def nextGcEstimate(): Time = {
     val e = synchronized(estimator.estimate).toLong
-    if (e == 0) Time.Top else {
+    if (e == 0) Time.Top
+    else {
       val PoolState(_, capacity, used) = pool.state()
       val r = (capacity - used).inBytes
-      Time.now + ((1000*r) / e).milliseconds
+      Time.now + ((1000 * r) / e).milliseconds
     }
   }
 }

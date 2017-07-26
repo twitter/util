@@ -20,6 +20,7 @@ import scala.language.higherKinds
  * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractEvent]].
  */
 trait Event[+T] { self =>
+
   /**
    * Register the given [[com.twitter.util.Witness Witness]] to
    * this Event. Witnesses are notified of new values until it is
@@ -67,10 +68,12 @@ trait Event[+T] { self =>
     def register(s: Witness[U]): Closable = {
       var a = z
       val mu = new Object()
-      self.respond { Function.synchronizeWith(mu) { t =>
-        a = f(a, t)
-        s.notify(a)
-      }}
+      self.respond {
+        Function.synchronizeWith(mu) { t =>
+          a = f(a, t)
+          s.notify(a)
+        }
+      }
     }
   }
 
@@ -111,7 +114,7 @@ trait Event[+T] { self =>
 
       Closable.make { deadline =>
         outer.close(deadline) before {
-          Closable.all(inners:_*).close(deadline)
+          Closable.all(inners: _*).close(deadline)
         }
       }
     }
@@ -122,8 +125,12 @@ trait Event[+T] { self =>
    */
   def select[U](other: Event[U]): Event[Either[T, U]] = new Event[Either[T, U]] {
     def register(s: Witness[Either[T, U]]): Closable = Closable.all(
-      self.register(s.comap { t => Left(t) }),
-      other.register(s.comap { u => Right(u) })
+      self.register(s.comap { t =>
+        Left(t)
+      }),
+      other.register(s.comap { u =>
+        Right(u)
+      })
     )
   }
 
@@ -141,31 +148,35 @@ trait Event[+T] { self =>
       val mu = new Object()
       var state: Option[Either[Queue[T], Queue[U]]] = None
 
-      val left = self.respond { Function.synchronizeWith(mu) { t =>
-        state match {
-          case None =>
-            state = Some(Left(Queue(t)))
-          case Some(Left(q)) =>
-            state = Some(Left(q enqueue t))
-          case Some(Right(Queue(u, rest@_*))) =>
-            if (rest.isEmpty) state = None
-            else state = Some(Right(Queue(rest:_*)))
-            s.notify((t, u))
+      val left = self.respond {
+        Function.synchronizeWith(mu) { t =>
+          state match {
+            case None =>
+              state = Some(Left(Queue(t)))
+            case Some(Left(q)) =>
+              state = Some(Left(q enqueue t))
+            case Some(Right(Queue(u, rest @ _*))) =>
+              if (rest.isEmpty) state = None
+              else state = Some(Right(Queue(rest: _*)))
+              s.notify((t, u))
+          }
         }
-      }}
+      }
 
-      val right = other.respond { Function.synchronizeWith(mu) { u =>
-        state match {
-          case None =>
-            state = Some(Right(Queue(u)))
-          case Some(Right(q)) =>
-            state = Some(Right(q enqueue u))
-          case Some(Left(Queue(t, rest@_*))) =>
-            if (rest.isEmpty) state = None
-            else state = Some(Left(Queue(rest:_*)))
-            s.notify((t, u))
+      val right = other.respond {
+        Function.synchronizeWith(mu) { u =>
+          state match {
+            case None =>
+              state = Some(Right(Queue(u)))
+            case Some(Right(q)) =>
+              state = Some(Right(q enqueue u))
+            case Some(Left(Queue(t, rest @ _*))) =>
+              if (rest.isEmpty) state = None
+              else state = Some(Left(Queue(rest: _*)))
+              s.notify((t, u))
+          }
         }
-      }}
+      }
 
       Closable.all(left, right)
     }
@@ -181,31 +192,35 @@ trait Event[+T] { self =>
       import JoinState._
       var state: JoinState[T, U] = Empty
       val mu = new Object()
-      val left = self.respond { Function.synchronizeWith(mu) { t =>
-        state match {
-          case Empty | LeftHalf(_) =>
-            state = LeftHalf(t)
-          case RightHalf(u) =>
-            state = Full(t, u)
-            s.notify((t, u))
-          case Full(_, u) =>
-            state = Full(t, u)
-            s.notify((t, u))
+      val left = self.respond {
+        Function.synchronizeWith(mu) { t =>
+          state match {
+            case Empty | LeftHalf(_) =>
+              state = LeftHalf(t)
+            case RightHalf(u) =>
+              state = Full(t, u)
+              s.notify((t, u))
+            case Full(_, u) =>
+              state = Full(t, u)
+              s.notify((t, u))
+          }
         }
-      }}
+      }
 
-      val right = other.respond { Function.synchronizeWith(mu) { u =>
-        state match {
-          case Empty | RightHalf(_) =>
-            state = RightHalf(u)
-          case LeftHalf(t) =>
-            state = Full(t, u)
-            s.notify((t, u))
-          case Full(t, _) =>
-            state = Full(t, u)
-            s.notify((t, u))
+      val right = other.respond {
+        Function.synchronizeWith(mu) { u =>
+          state match {
+            case Empty | RightHalf(_) =>
+              state = RightHalf(u)
+            case LeftHalf(t) =>
+              state = Full(t, u)
+              s.notify((t, u))
+            case Full(t, _) =>
+              state = Full(t, u)
+              s.notify((t, u))
+          }
         }
-      }}
+      }
 
       Closable.all(left, right)
     }
@@ -264,8 +279,9 @@ trait Event[+T] { self =>
   def toFuture(): Future[T] = {
     val p = new Promise[T]
     val c = register(Witness(p))
-    p.setInterruptHandler { case exc =>
-      p.updateIfEmpty(Throw(exc))
+    p.setInterruptHandler {
+      case exc =>
+        p.updateIfEmpty(Throw(exc))
     }
     p.ensure { c.close() }
   }
@@ -275,20 +291,20 @@ trait Event[+T] { self =>
    * updates to the parent event. This can be used to perform
    * incremental computation on large data structures.
    */
-  def diff[CC[_]: Diffable, U](implicit toCC: T <:< CC[U]): Event[Diff[CC, U]] = new Event[Diff[CC, U]] {
-    def register(s: Witness[Diff[CC, U]]): Closable = {
-      var left: CC[U] = Diffable.empty[CC, U]
-      self.respond { t =>
-        synchronized {
-          val right = toCC(t)
-          val diff = Diffable.diff(left, right)
-          left = right
-          s.notify(diff)
+  def diff[CC[_]: Diffable, U](implicit toCC: T <:< CC[U]): Event[Diff[CC, U]] =
+    new Event[Diff[CC, U]] {
+      def register(s: Witness[Diff[CC, U]]): Closable = {
+        var left: CC[U] = Diffable.empty[CC, U]
+        self.respond { t =>
+          synchronized {
+            val right = toCC(t)
+            val diff = Diffable.diff(left, right)
+            left = right
+            s.notify(diff)
+          }
         }
       }
     }
-  }
-
 
   /**
    * Patch up an [[Event]] of differences (like those produced by
@@ -323,7 +339,9 @@ trait Event[+T] { self =>
    * Builds a new Event by keeping only the Events where
    * the previous and current values are not `==` to each other.
    */
-  def dedup: Event[T] = dedupWith { (a, b) => a == b }
+  def dedup: Event[T] = dedupWith { (a, b) =>
+    a == b
+  }
 }
 
 /**
@@ -394,6 +412,7 @@ object Event {
  * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractWitness]].
  */
 trait Witness[-N] { self =>
+
   /**
    * Notify this Witness with the given note.
    */
@@ -413,6 +432,7 @@ abstract class AbstractWitness[T] extends Witness[T]
  * Note: There is Java-friendly API for this object: [[com.twitter.util.Witnesses]].
  */
 object Witness {
+
   /**
    * Create a [[Witness]] from an [[AtomicReference atomic reference]].
    */

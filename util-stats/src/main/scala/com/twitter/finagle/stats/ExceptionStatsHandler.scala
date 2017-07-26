@@ -65,11 +65,10 @@ trait ExceptionStatsHandler {
  * @param rollup whether to report chained exceptions like RollupStatsReceiver
  */
 class CategorizingExceptionStatsHandler(
-    categorizer: Throwable => Option[String] = _ => None,
-    sourceFunction: Throwable => Option[String] = _ => None,
-    rollup: Boolean = true)
-  extends ExceptionStatsHandler
-{
+  categorizer: Throwable => Option[String] = _ => None,
+  sourceFunction: Throwable => Option[String] = _ => None,
+  rollup: Boolean = true
+) extends ExceptionStatsHandler {
   import ExceptionStatsHandler._
 
   private[this] val underlying: ExceptionStatsHandler = {
@@ -129,12 +128,11 @@ class CategorizingExceptionStatsHandler(
  *
  */
 private[finagle] class MultiCategorizingExceptionStatsHandler(
-    mkLabel: Throwable => String = _ => ExceptionStatsHandler.Failures,
-    mkFlags: Throwable => Set[String] = _ => Set.empty,
-    mkSource: Throwable => Option[String] = _ => None,
-    rollup: Boolean = true)
-  extends ExceptionStatsHandler
-{
+  mkLabel: Throwable => String = _ => ExceptionStatsHandler.Failures,
+  mkFlags: Throwable => Set[String] = _ => Set.empty,
+  mkSource: Throwable => Option[String] = _ => None,
+  rollup: Boolean = true
+) extends ExceptionStatsHandler {
   import ExceptionStatsHandler._
 
   def record(statsReceiver: StatsReceiver, t: Throwable): Unit = {

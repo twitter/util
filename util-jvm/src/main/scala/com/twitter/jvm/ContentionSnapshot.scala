@@ -13,10 +13,7 @@ import java.lang.management.{ManagementFactory, ThreadInfo}
 class ContentionSnapshot {
   ManagementFactory.getThreadMXBean.setThreadContentionMonitoringEnabled(true)
 
-  case class Snapshot(
-    blockedThreads: Seq[String],
-    lockOwners: Seq[String],
-    deadlocks: Seq[String])
+  case class Snapshot(blockedThreads: Seq[String], lockOwners: Seq[String], deadlocks: Seq[String])
 
   private[this] object Blocked {
     def unapply(t: ThreadInfo): Option[ThreadInfo] = {
@@ -30,25 +27,31 @@ class ContentionSnapshot {
   def snap(): Snapshot = {
     val bean = ManagementFactory.getThreadMXBean
 
-    val blocked = bean.getThreadInfo(bean.getAllThreadIds, true, true)
-                      .filter(_ != null)
-                      .collect { case Blocked(info) => info }
+    val blocked = bean
+      .getThreadInfo(bean.getAllThreadIds, true, true)
+      .filter(_ != null)
+      .collect { case Blocked(info) => info }
 
-    val ownerIds = blocked map(_.getLockOwnerId) filter(_ != -1)
-    val owners = if (ownerIds.length == 0) Seq[String]() else
-      bean.getThreadInfo(ownerIds.toArray, true, true).map(_.toString).toSeq
+    val ownerIds = blocked map (_.getLockOwnerId) filter (_ != -1)
+    val owners =
+      if (ownerIds.length == 0) Seq[String]()
+      else
+        bean.getThreadInfo(ownerIds.toArray, true, true).map(_.toString).toSeq
 
     val deadlockThreadIds = bean.findDeadlockedThreads()
-    val deadlocks = if (deadlockThreadIds == null) Array.empty[ThreadInfo] else
-      deadlockThreadIds.flatMap { id =>
-        blocked.find { threadInfo =>
-          threadInfo.getThreadId() == id
+    val deadlocks =
+      if (deadlockThreadIds == null) Array.empty[ThreadInfo]
+      else
+        deadlockThreadIds.flatMap { id =>
+          blocked.find { threadInfo =>
+            threadInfo.getThreadId() == id
+          }
         }
-      }
 
     Snapshot(
       blockedThreads = blocked.map(_.toString).toSeq,
       lockOwners = owners,
-      deadlocks = deadlocks.map(_.toString).toSeq)
+      deadlocks = deadlocks.map(_.toString).toSeq
+    )
   }
 }

@@ -6,13 +6,11 @@ import java.util.logging.{Level, Logger}
  * Wraps an exception that happens when handling another exception in
  * a monitor.
  */
-case class MonitorException(
-    handlingExc: Throwable,
-    monitorExc: Throwable)
-  extends Exception(monitorExc) {
+case class MonitorException(handlingExc: Throwable, monitorExc: Throwable)
+    extends Exception(monitorExc) {
   override def getMessage: String =
-    "threw exception \""+monitorExc+"\" while handling "+
-    "another exception \""+handlingExc+"\""
+    "threw exception \"" + monitorExc + "\" while handling " +
+      "another exception \"" + handlingExc + "\""
 }
 
 /**
@@ -22,6 +20,7 @@ case class MonitorException(
  * exceptions that may require cleanup.
  */
 trait Monitor { self =>
+
   /**
    * Attempt to handle the exception `exc`.
    *
@@ -35,7 +34,8 @@ trait Monitor { self =>
    * monitor.
    */
   def apply(f: => Unit): Unit = Monitor.using(this) {
-    try f catch { case exc: Throwable => if (!handle(exc)) throw exc }
+    try f
+    catch { case exc: Throwable => if (!handle(exc)) throw exc }
   }
 
   /**
@@ -44,9 +44,13 @@ trait Monitor { self =>
    */
   def orElse(next: Monitor): Monitor = new Monitor {
     def handle(exc: Throwable): Boolean = {
-      self.tryHandle(exc).rescue { case exc1 =>
-        next.tryHandle(exc1)
-      }.isReturn
+      self
+        .tryHandle(exc)
+        .rescue {
+          case exc1 =>
+            next.tryHandle(exc1)
+        }
+        .isReturn
     }
   }
 
@@ -114,7 +118,8 @@ object Monitor extends Monitor {
   @inline
   def restoring[T](f: => T): T = {
     val saved = local()
-    try f finally local.set(saved)
+    try f
+    finally local.set(saved)
   }
 
   /**
@@ -132,7 +137,8 @@ object Monitor extends Monitor {
    * monitor.
    */
   override def apply(f: => Unit): Unit =
-    try f catch catcher
+    try f
+    catch catcher
 
   /**
    * Handle `exc` with the current [[Local]] monitor. If the
@@ -143,6 +149,7 @@ object Monitor extends Monitor {
     (get orElse RootMonitor).handle(exc)
 
   private[this] val AlwaysFalse = scala.Function.const(false) _
+
   /**
    * Create a new monitor from a partial function.
    */
@@ -186,7 +193,7 @@ object RootMonitor extends Monitor {
       System.err.println("VM error: %s".format(e.getMessage))
       e.printStackTrace(System.err)
       System.exit(1)
-      true  /*NOTREACHED*/
+      true /*NOTREACHED*/
 
     case e: Throwable =>
       log.log(Level.SEVERE, "Fatal exception propagated to the root monitor!", e)

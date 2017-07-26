@@ -11,7 +11,8 @@ import scala.collection.JavaConverters._
 import scala.language.reflectiveCalls
 
 class Hotspot extends Jvm {
-  private[this] val epoch = Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean().getStartTime())
+  private[this] val epoch =
+    Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean().getStartTime())
 
   private[this] type Counter = {
     def getName(): String
@@ -23,8 +24,8 @@ class Hotspot extends Jvm {
     def getInternalCounters(pat: String): java.util.List[Counter]
   }
 
-  private[this] val DiagnosticBean = ObjectName.getInstance(
-    "com.sun.management:type=HotSpotDiagnostic")
+  private[this] val DiagnosticBean =
+    ObjectName.getInstance("com.sun.management:type=HotSpotDiagnostic")
 
   private[this] val jvm: VMManagement = {
     val fld = try {
@@ -39,35 +40,37 @@ class Hotspot extends Jvm {
     fld.get(null).asInstanceOf[VMManagement]
   }
 
-  private[this] def opt(name: String) = try Some {
-    val o = ManagementFactory.getPlatformMBeanServer().invoke(
-      DiagnosticBean, "getVMOption",
-      Array(name), Array("java.lang.String"))
-    o.asInstanceOf[CompositeDataSupport].get("value").asInstanceOf[String]
-  } catch {
-    case _: IllegalArgumentException =>
-      None
-    case rbe: RuntimeMBeanException
-    if rbe.getCause.isInstanceOf[IllegalArgumentException] =>
-      None
-  }
+  private[this] def opt(name: String) =
+    try Some {
+      val o = ManagementFactory
+        .getPlatformMBeanServer()
+        .invoke(DiagnosticBean, "getVMOption", Array(name), Array("java.lang.String"))
+      o.asInstanceOf[CompositeDataSupport].get("value").asInstanceOf[String]
+    } catch {
+      case _: IllegalArgumentException =>
+        None
+      case rbe: RuntimeMBeanException if rbe.getCause.isInstanceOf[IllegalArgumentException] =>
+        None
+    }
 
   private[this] def long(c: Counter) = c.getValue().asInstanceOf[Long]
 
   private[this] def counters(pat: String) = {
     val cs = jvm.getInternalCounters(pat).asScala
-    cs.map { c => c.getName() -> c }.toMap
+    cs.map { c =>
+      c.getName() -> c
+    }.toMap
   }
 
   private[this] def counter(name: String): Option[Counter] =
     counters(name).get(name)
 
   object opts extends Opts {
-    def compileThresh = opt("CompileThreshold") map(_.toInt)
+    def compileThresh = opt("CompileThreshold") map (_.toInt)
   }
 
   private[this] def ticksToDuration(ticks: Long, freq: Long) =
-    (1000000*ticks/freq).microseconds
+    (1000000 * ticks / freq).microseconds
 
   private[this] def getGc(which: Int, cs: Map[String, Counter]) = {
     def get(what: String) = cs.get("sun.gc.collector.%d.%s".format(which, what))
@@ -81,7 +84,7 @@ class Hotspot extends Jvm {
       duration = ticksToDuration(time, freq)
       lastEntryTime = ticksToDuration(lastEntryTicks, freq)
       kind = "%d.%s".format(which, name)
-    } yield Gc(invocations, kind, epoch+lastEntryTime, duration)
+    } yield Gc(invocations, kind, epoch + lastEntryTime, duration)
   }
 
   def snap: Snapshot = {
@@ -91,7 +94,7 @@ class Hotspot extends Jvm {
       capacity <- cs.get("sun.gc.generation.0.space.0.capacity").map(long)
       used <- cs.get("sun.gc.generation.0.space.0.used").map(long)
     } yield {
-      val allocated = invocations*capacity + used
+      val allocated = invocations * capacity + used
       // This is a somewhat poor estimate, since for example the
       // capacity can change over time.
 
@@ -109,13 +112,14 @@ class Hotspot extends Jvm {
     val timestamp = for {
       freq <- cs.get("sun.os.hrt.frequency").map(long)
       ticks <- cs.get("sun.os.hrt.ticks").map(long)
-    } yield epoch+ticksToDuration(ticks, freq)
+    } yield epoch + ticksToDuration(ticks, freq)
 
     // TODO: include causes for GCs?
     Snapshot(
       timestamp.getOrElse(Time.epoch),
       heap.getOrElse(Heap(0, 0, Seq())),
-      getGc(0, cs).toSeq ++ getGc(1, cs).toSeq)
+      getGc(0, cs).toSeq ++ getGc(1, cs).toSeq
+    )
   }
 
   private[this] object NilSafepointBean {
@@ -127,24 +131,29 @@ class Hotspot extends Jvm {
   private val log = Logger.getLogger(getClass.getName)
 
   private[this] val safepointBean = {
-    val runtimeBean = 
-      try { 
-        Class.forName("sun.management.ManagementFactory")
+    val runtimeBean =
+      try {
+        Class
+          .forName("sun.management.ManagementFactory")
           .getMethod("getHotspotRuntimeMBean")
           .invoke(null)
-          // jdk 6 has HotspotRuntimeMBean in the ManagementFactory class
+        // jdk 6 has HotspotRuntimeMBean in the ManagementFactory class
       } catch {
-        case _: Throwable => 
-          Class.forName("sun.management.ManagementFactoryHelper")
+        case _: Throwable =>
+          Class
+            .forName("sun.management.ManagementFactoryHelper")
             .getMethod("getHotspotRuntimeMBean")
             .invoke(null)
-            // jdks 7 and 8 have HotspotRuntimeMBean in the ManagementFactoryHelper class
+        // jdks 7 and 8 have HotspotRuntimeMBean in the ManagementFactoryHelper class
       }
-    
-    def asSafepointBean(x: AnyRef) = { x.asInstanceOf[{
-      def getSafepointSyncTime: Long; 
-      def getTotalSafepointTime: Long;
-      def getSafepointCount: Long}]
+
+    def asSafepointBean(x: AnyRef) = {
+      x.asInstanceOf[{
+          def getSafepointSyncTime: Long;
+          def getTotalSafepointTime: Long;
+          def getSafepointCount: Long
+        }
+      ]
     }
     try {
       asSafepointBean(runtimeBean)
@@ -153,14 +162,14 @@ class Hotspot extends Jvm {
       case t: Throwable =>
         log.log(Level.WARNING, "failed to get runtimeBean", t)
         asSafepointBean(NilSafepointBean)
-    } 
+    }
   }
 
   def safepoint: Safepoint = {
     val syncTime = safepointBean.getSafepointSyncTime
     val totalTime = safepointBean.getTotalSafepointTime
     val safepointsReached = safepointBean.getSafepointCount
-    Safepoint(syncTimeMillis=syncTime, totalTimeMillis=totalTime, count=safepointsReached)
+    Safepoint(syncTimeMillis = syncTime, totalTimeMillis = totalTime, count = safepointsReached)
   }
 
   val edenPool: Pool = new Pool {
@@ -190,7 +199,7 @@ class Hotspot extends Jvm {
   def tenuringThreshold: Long = counter("sun.gc.policy.tenuringThreshold").map(long).getOrElse(0L)
 
   def snapCounters: Map[String, String] =
-    counters("") mapValues(_.getValue().toString)
+    counters("") mapValues (_.getValue().toString)
 
   def forceGc(): Unit = System.gc()
 }
@@ -505,4 +514,4 @@ sun.gc.tlab.maxSlowWaste = 116
 sun.gc.tlab.slowAlloc = 4
 sun.gc.tlab.slowWaste = 116
 
-*/
+ */

@@ -89,23 +89,24 @@ abstract class Buf { outer =>
   final def concat(right: Buf): Buf = {
     if (this.isEmpty) right
     else if (right.isEmpty) this
-    else this match {
-      // This could be much cleaner as a Tuple match, but we want to avoid the allocation.
-      case left: Buf.Composite.Impl =>
-        right match {
-          case right: Buf.Composite.Impl => // (Composite, Composite)
-            new Buf.Composite.Impl(Buf.fastConcat(left.bs, right.bs), left.length + right.length)
-          case _ => // (Composite, Buf)
-            new Buf.Composite.Impl(left.bs :+ right, left.length + right.length)
-        }
-      case left =>
-        right match {
-          case right: Buf.Composite.Impl => // (Buf, Composite)
-            new Buf.Composite.Impl(left +: right.bs, left.length + right.length)
-          case _ => // (Buf, Buf)
-            new Buf.Composite.Impl(Vector(left, right), left.length + right.length)
-        }
-    }
+    else
+      this match {
+        // This could be much cleaner as a Tuple match, but we want to avoid the allocation.
+        case left: Buf.Composite.Impl =>
+          right match {
+            case right: Buf.Composite.Impl => // (Composite, Composite)
+              new Buf.Composite.Impl(Buf.fastConcat(left.bs, right.bs), left.length + right.length)
+            case _ => // (Composite, Buf)
+              new Buf.Composite.Impl(left.bs :+ right, left.length + right.length)
+          }
+        case left =>
+          right match {
+            case right: Buf.Composite.Impl => // (Buf, Composite)
+              new Buf.Composite.Impl(left +: right.bs, left.length + right.length)
+            case _ => // (Buf, Buf)
+              new Buf.Composite.Impl(Vector(left, right), left.length + right.length)
+          }
+      }
   }
 
   /**
@@ -209,7 +210,8 @@ abstract class Buf { outer =>
     val len = length
     if (len > outputLen - outputOff)
       throw new IllegalArgumentException(
-        s"Output too small, capacity=${outputLen-outputOff}, need=$len")
+        s"Output too small, capacity=${outputLen - outputOff}, need=$len"
+      )
   }
 
 }
@@ -382,7 +384,8 @@ object Buf {
           else untrimmedFirst.slice(startBegin, startEnd)
         Buf(
           if (first == null) bufs.slice(start, length)
-          else first +: bufs.slice(start + 1, length))
+          else first +: bufs.slice(start + 1, length)
+        )
       } else {
         val untrimmedFirst = bufs(start)
         val first: Buf =
@@ -398,7 +401,8 @@ object Buf {
           if (first == null && last == null) bufs.slice(start, finish + 1)
           else if (first == null) bufs.slice(start, finish) :+ last
           else if (last == null) first +: bufs.slice(start + 1, finish + 1)
-          else first +: bufs.slice(start + 1, finish) :+ last)
+          else first +: bufs.slice(start + 1, finish) :+ last
+        )
       }
     }
 
@@ -472,10 +476,8 @@ object Buf {
       Some(buf.bufs)
 
     /** Basic implementation of a [[Buf]] created from n-`Bufs`. */
-    private[Buf] final class Impl(
-        val bs: Vector[Buf],
-        protected val computedLength: Int)
-      extends Buf.Composite {
+    private[Buf] final class Impl(val bs: Vector[Buf], protected val computedLength: Int)
+        extends Buf.Composite {
       // ensure there is a need for a `Composite`
       if (bs.length <= 1)
         throw new IllegalArgumentException(s"Must have 2 or more bufs: $bs")
@@ -543,10 +545,10 @@ object Buf {
    * A buffer representing an array of bytes.
    */
   class ByteArray(
-      private[Buf] val bytes: Array[Byte],
-      private[Buf] val begin: Int,
-      private[Buf] val end: Int)
-    extends Buf {
+    private[Buf] val bytes: Array[Byte],
+    private[Buf] val begin: Int,
+    private[Buf] val end: Int
+  ) extends Buf {
 
     def get(index: Int): Byte = {
       val off = begin + index
@@ -588,7 +590,7 @@ object Buf {
       else if (isSliceIdentity(from, until)) this
       else {
         val cap = math.min(until, length)
-        ByteArray.Owned(bytes, begin+from, math.min(begin+cap, end))
+        ByteArray.Owned(bytes, begin + from, math.min(begin + cap, end))
       }
     }
 
@@ -599,7 +601,7 @@ object Buf {
     private[this] def equalsBytes(other: Array[Byte], offset: Int): Boolean = {
       var i = 0
       while (i < length) {
-        if (bytes(begin+i) != other(offset+i)) {
+        if (bytes(begin + i) != other(offset + i)) {
           return false
         }
         i += 1
@@ -652,12 +654,13 @@ object Buf {
      */
     def coerce(buf: Buf): Buf.ByteArray = buf match {
       case buf: Buf.ByteArray => buf
-      case _ => buf.unsafeByteArrayBuf match {
-        case Some(b) => b
-        case None =>
-          val bytes = buf.copiedByteArray
-          new ByteArray(bytes, 0, bytes.length)
-      }
+      case _ =>
+        buf.unsafeByteArrayBuf match {
+          case Some(b) => b
+          case None =>
+            val bytes = buf.copiedByteArray
+            new ByteArray(bytes, 0, bytes.length)
+        }
     }
 
     /** Owned non-copying constructors/extractors for Buf.ByteArray. */
@@ -700,8 +703,8 @@ object Buf {
       def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
         if (begin == end) Buf.Empty
         else {
-          val copy = java.util.Arrays.copyOfRange(bytes, begin, end-begin)
-          new ByteArray(copy, 0, end-begin)
+          val copy = java.util.Arrays.copyOfRange(bytes, begin, end - begin)
+          new ByteArray(copy, 0, end - begin)
         }
 
       /** Construct a buffer representing a copy of the entire byte array. */
@@ -800,7 +803,7 @@ object Buf {
       case _ =>
         val bb = buf.unsafeByteArrayBuf match {
           case Some(ByteArray.Owned(bytes, begin, end)) =>
-            java.nio.ByteBuffer.wrap(bytes, begin, end-begin)
+            java.nio.ByteBuffer.wrap(bytes, begin, end - begin)
           case None =>
             java.nio.ByteBuffer.wrap(buf.copiedByteArray)
         }
@@ -1037,25 +1040,26 @@ object Buf {
       val arr = new Array[Byte](4)
       arr(0) = ((i >> 24) & 0xff).toByte
       arr(1) = ((i >> 16) & 0xff).toByte
-      arr(2) = ((i >>  8) & 0xff).toByte
-      arr(3) = ( i        & 0xff).toByte
+      arr(2) = ((i >> 8) & 0xff).toByte
+      arr(3) = (i & 0xff).toByte
       ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Int, Buf)] =
-      if (buf.length < 4) None else {
+      if (buf.length < 4) None
+      else {
         val arr = new Array[Byte](4)
         buf.slice(0, 4).write(arr, 0)
         val rem = buf.slice(4, buf.length)
 
         val value =
           ((arr(0) & 0xff) << 24) |
-          ((arr(1) & 0xff) << 16) |
-          ((arr(2) & 0xff) <<  8) |
-           (arr(3) & 0xff       )
+            ((arr(1) & 0xff) << 16) |
+            ((arr(2) & 0xff) << 8) |
+            (arr(3) & 0xff)
         Some((value, rem))
       }
-    }
+  }
 
   /**
    * Create and deconstruct unsigned 64-bit
@@ -1073,29 +1077,30 @@ object Buf {
       arr(3) = ((l >> 32) & 0xff).toByte
       arr(4) = ((l >> 24) & 0xff).toByte
       arr(5) = ((l >> 16) & 0xff).toByte
-      arr(6) = ((l >>  8) & 0xff).toByte
-      arr(7) = ( l        & 0xff).toByte
+      arr(6) = ((l >> 8) & 0xff).toByte
+      arr(7) = (l & 0xff).toByte
       ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Long, Buf)] =
-      if (buf.length < 8) None else {
+      if (buf.length < 8) None
+      else {
         val arr = new Array[Byte](8)
         buf.slice(0, 8).write(arr, 0)
         val rem = buf.slice(8, buf.length)
 
         val value =
           ((arr(0) & 0xff).toLong << 56) |
-          ((arr(1) & 0xff).toLong << 48) |
-          ((arr(2) & 0xff).toLong << 40) |
-          ((arr(3) & 0xff).toLong << 32) |
-          ((arr(4) & 0xff).toLong << 24) |
-          ((arr(5) & 0xff).toLong << 16) |
-          ((arr(6) & 0xff).toLong <<  8) |
-           (arr(7) & 0xff).toLong
+            ((arr(1) & 0xff).toLong << 48) |
+            ((arr(2) & 0xff).toLong << 40) |
+            ((arr(3) & 0xff).toLong << 32) |
+            ((arr(4) & 0xff).toLong << 24) |
+            ((arr(5) & 0xff).toLong << 16) |
+            ((arr(6) & 0xff).toLong << 8) |
+            (arr(7) & 0xff).toLong
         Some((value, rem))
       }
-    }
+  }
 
   /**
    * Create and deconstruct unsigned 32-bit
@@ -1107,27 +1112,28 @@ object Buf {
   object U32LE {
     def apply(i: Int): Buf = {
       val arr = new Array[Byte](4)
-      arr(0) = ( i        & 0xff).toByte
-      arr(1) = ((i >>  8) & 0xff).toByte
+      arr(0) = (i & 0xff).toByte
+      arr(1) = ((i >> 8) & 0xff).toByte
       arr(2) = ((i >> 16) & 0xff).toByte
       arr(3) = ((i >> 24) & 0xff).toByte
       ByteArray.Owned(arr)
     }
 
     def unapply(buf: Buf): Option[(Int, Buf)] =
-      if (buf.length < 4) None else {
+      if (buf.length < 4) None
+      else {
         val arr = new Array[Byte](4)
         buf.slice(0, 4).write(arr, 0)
         val rem = buf.slice(4, buf.length)
 
         val value =
-          ( arr(0) & 0xff      ) |
-          ((arr(1) & 0xff) <<  8) |
-          ((arr(2) & 0xff) << 16) |
-          ((arr(3) & 0xff) << 24)
+          (arr(0) & 0xff) |
+            ((arr(1) & 0xff) << 8) |
+            ((arr(2) & 0xff) << 16) |
+            ((arr(3) & 0xff) << 24)
         Some((value, rem))
       }
-    }
+  }
 
   /**
    * Create and deconstruct unsigned 64-bit
@@ -1139,8 +1145,8 @@ object Buf {
   object U64LE {
     def apply(l: Long): Buf = {
       val arr = new Array[Byte](8)
-      arr(0) = ( l        & 0xff).toByte
-      arr(1) = ((l >>  8) & 0xff).toByte
+      arr(0) = (l & 0xff).toByte
+      arr(1) = ((l >> 8) & 0xff).toByte
       arr(2) = ((l >> 16) & 0xff).toByte
       arr(3) = ((l >> 24) & 0xff).toByte
       arr(4) = ((l >> 32) & 0xff).toByte
@@ -1151,20 +1157,21 @@ object Buf {
     }
 
     def unapply(buf: Buf): Option[(Long, Buf)] =
-      if (buf.length < 8) None else {
+      if (buf.length < 8) None
+      else {
         val arr = new Array[Byte](8)
         buf.slice(0, 8).write(arr, 0)
         val rem = buf.slice(8, buf.length)
 
         val value =
-           (arr(0) & 0xff).toLong        |
-          ((arr(1) & 0xff).toLong <<  8) |
-          ((arr(2) & 0xff).toLong << 16) |
-          ((arr(3) & 0xff).toLong << 24) |
-          ((arr(4) & 0xff).toLong << 32) |
-          ((arr(5) & 0xff).toLong << 40) |
-          ((arr(6) & 0xff).toLong << 48) |
-          ((arr(7) & 0xff).toLong << 56)
+          (arr(0) & 0xff).toLong |
+            ((arr(1) & 0xff).toLong << 8) |
+            ((arr(2) & 0xff).toLong << 16) |
+            ((arr(3) & 0xff).toLong << 24) |
+            ((arr(4) & 0xff).toLong << 32) |
+            ((arr(5) & 0xff).toLong << 40) |
+            ((arr(6) & 0xff).toLong << 48) |
+            ((arr(7) & 0xff).toLong << 56)
         Some((value, rem))
       }
   }
@@ -1195,9 +1202,9 @@ object Buf {
     } else {
       val builder = new VectorBuilder[Buf]
       val headIt = head.iterator
-      while(headIt.hasNext) builder += headIt.next()
+      while (headIt.hasNext) builder += headIt.next()
       val tailIt = tail.iterator
-      while(tailIt.hasNext) builder += tailIt.next()
+      while (tailIt.hasNext) builder += tailIt.next()
       builder.result()
     }
   }

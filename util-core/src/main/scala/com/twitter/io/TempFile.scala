@@ -3,6 +3,7 @@ package com.twitter.io
 import java.io._
 
 object TempFile {
+
   /**
    * Create a temporary file from the given (resource) path. The
    * tempfile is deleted on JVM exit.
@@ -49,7 +50,6 @@ object TempFile {
   def fromSystemResourcePath(path: String): File =
     fromStream(path, ClassLoader.getSystemResourceAsStream(path))
 
-
   private[this] def fromStream(path: String, stream: InputStream): File =
     stream match {
       case null =>
@@ -58,7 +58,7 @@ object TempFile {
         val (basename, ext) = parsePath(path)
         val file = File.createTempFile(basename, "." + ext)
         file.deleteOnExit()
-        val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
+        val fos = new BufferedOutputStream(new FileOutputStream(file), 1 << 20)
         StreamIO.copy(stream, fos)
         fos.flush()
         fos.close()
@@ -69,7 +69,7 @@ object TempFile {
   private[this] def parsePath(path: String) =
     path.split(File.separatorChar).last.split('.').reverse match {
       case Array(basename) => (basename, "")
-      case Array(ext, base@_*) => (base.reverse.mkString("."), ext)
+      case Array(ext, base @ _*) => (base.reverse.mkString("."), ext)
     }
 
 }

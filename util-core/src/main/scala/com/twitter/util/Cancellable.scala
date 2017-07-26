@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * guarantee the cancellation of the computation; rather it is a hint
  * that the provider of the computation may choose to ignore.
  */
-
 trait Cancellable {
   def isCancelled: Boolean
 

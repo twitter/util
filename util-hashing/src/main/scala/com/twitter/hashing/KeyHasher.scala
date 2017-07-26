@@ -15,11 +15,11 @@ trait KeyHasher {
  * @see [[KeyHashers]] for Java compatible forwarders.
  */
 object KeyHasher {
-  def fromHashableInt(hashable: Hashable[Array[Byte],Int]): KeyHasher = new KeyHasher {
+  def fromHashableInt(hashable: Hashable[Array[Byte], Int]): KeyHasher = new KeyHasher {
     def hashKey(key: Array[Byte]) = hashable(key).toLong
     override def toString = hashable.toString
   }
-  def fromHashableLong(hashable: Hashable[Array[Byte],Long]): KeyHasher = new KeyHasher {
+  def fromHashableLong(hashable: Hashable[Array[Byte], Long]): KeyHasher = new KeyHasher {
     def hashKey(key: Array[Byte]) = hashable(key)
     override def toString = hashable.toString
   }
@@ -28,6 +28,7 @@ object KeyHasher {
   val FNV1A_32 = fromHashableInt(Hashable.FNV1A_32)
   val FNV1_64 = fromHashableLong(Hashable.FNV1_64)
   val FNV1A_64 = fromHashableLong(Hashable.FNV1A_64)
+
   /**
    * Ketama's default hash algorithm: the first 4 bytes of the MD5 as a little-endian int.
    * Wow, really? Who thought that was a good way to do it? :(

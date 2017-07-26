@@ -31,7 +31,6 @@ import com.twitter.util.{Await, Future, Promise}
  * BUGS: the implementation would be much simpler in the absence of
  * cancellation.
  */
-
 class Broker[T] {
   private[this] sealed trait State
   private[this] case object Quiet extends State
@@ -43,13 +42,13 @@ class Broker[T] {
   @tailrec
   private[this] def rmElem(elem: AnyRef) {
     state.get match {
-      case s@Sending(q) =>
+      case s @ Sending(q) =>
         val nextq = q filter { _ ne elem }
         val nextState = if (nextq.isEmpty) Quiet else Sending(nextq)
         if (!state.compareAndSet(s, nextState))
           rmElem(elem)
 
-      case s@Receiving(q) =>
+      case s @ Receiving(q) =>
         val nextq = q filter { _ ne elem }
         val nextState = if (nextq.isEmpty) Quiet else Receiving(nextq)
         if (!state.compareAndSet(s, nextState))
@@ -63,17 +62,18 @@ class Broker[T] {
     @tailrec
     def prepare() = {
       state.get match {
-        case s@Receiving(rq) =>
+        case s @ Receiving(rq) =>
           if (rq.isEmpty) throw new IllegalStateException()
           val (recvp, newq) = rq.dequeue
           val nextState = if (newq.isEmpty) Quiet else Receiving(newq)
-          if (!state.compareAndSet(s, nextState)) prepare() else {
+          if (!state.compareAndSet(s, nextState)) prepare()
+          else {
             val (sendTx, recvTx) = Tx.twoParty(msg)
             recvp.setValue(recvTx)
             Future.value(sendTx)
           }
 
-        case s@(Quiet | Sending(_)) =>
+        case s @ (Quiet | Sending(_)) =>
           val p = new Promise[Tx[Unit]]
           val elem: (Promise[Tx[Unit]], T) = (p, msg)
           p.setInterruptHandler {
@@ -94,17 +94,18 @@ class Broker[T] {
     @tailrec
     def prepare() =
       state.get match {
-        case s@Sending(sq) =>
+        case s @ Sending(sq) =>
           if (sq.isEmpty) throw new IllegalStateException()
           val ((sendp, msg), newq) = sq.dequeue
           val nextState = if (newq.isEmpty) Quiet else Sending(newq)
-          if (!state.compareAndSet(s, nextState)) prepare() else {
+          if (!state.compareAndSet(s, nextState)) prepare()
+          else {
             val (sendTx, recvTx) = Tx.twoParty(msg)
             sendp.setValue(sendTx)
             Future.value(recvTx)
           }
 
-        case s@(Quiet | Receiving(_)) =>
+        case s @ (Quiet | Receiving(_)) =>
           val p = new Promise[Tx[T]]
           p.setInterruptHandler { case _ => rmElem(p) }
           val nextState = s match {

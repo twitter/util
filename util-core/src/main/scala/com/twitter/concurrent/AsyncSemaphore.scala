@@ -56,6 +56,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) { 
   private[this] var availablePermits = initialPermits
 
   private[this] val semaphorePermit = new Permit {
+
     /**
      * Indicate that you are done with your Permit.
      */
@@ -114,11 +115,12 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) { 
           MaxWaitersExceededException
         case _ =>
           val promise = new Promise[Permit]
-          promise.setInterruptHandler { case t: Throwable =>
-            self.synchronized {
-              if (promise.updateIfEmpty(Throw(t)))
-                waitq.remove(promise)
-            }
+          promise.setInterruptHandler {
+            case t: Throwable =>
+              self.synchronized {
+                if (promise.updateIfEmpty(Throw(t)))
+                  waitq.remove(promise)
+              }
           }
           waitq.addLast(promise)
           promise
@@ -138,7 +140,8 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) { 
    */
   def acquireAndRun[T](func: => Future[T]): Future[T] =
     acquire().flatMap { permit =>
-      val f = try func catch {
+      val f = try func
+      catch {
         case NonFatal(e) =>
           Future.exception(e)
         case e: Throwable =>
@@ -166,7 +169,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) { 
         permit.release()
       }
     }
-  }
+}
 
 object AsyncSemaphore {
   private val MaxWaitersExceededException =

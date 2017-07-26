@@ -21,10 +21,12 @@ import com.twitter.app
  *       flag began its life in Finagle and in order to keep backwards compatibility
  *       it remains in that package.
  */
-object loadServiceDenied extends app.GlobalFlag[Set[String]](
-  Set.empty[String],
-  "A deny list of implementations to ignore. Keys are the fully qualified class names. " +
-    "Any other implementations that are found via `LoadService.apply` are eligible to be used.")
+object loadServiceDenied
+    extends app.GlobalFlag[Set[String]](
+      Set.empty[String],
+      "A deny list of implementations to ignore. Keys are the fully qualified class names. " +
+        "Any other implementations that are found via `LoadService.apply` are eligible to be used."
+    )
 
 /**
  * A set of paths for [[com.twitter.app.LoadService]] to ignore
@@ -37,7 +39,8 @@ object loadServiceDenied extends app.GlobalFlag[Set[String]](
  *       flag began its life in Finagle and in order to keep backwards compatibility
  *       it remains in that package.
  */
-object loadServiceIgnoredPaths extends app.GlobalFlag[Seq[String]](
-  Seq.empty[String],
-  "Additional packages to be excluded from recursive directory scan")
-
+object loadServiceIgnoredPaths
+    extends app.GlobalFlag[Seq[String]](
+      Seq.empty[String],
+      "Additional packages to be excluded from recursive directory scan"
+    )

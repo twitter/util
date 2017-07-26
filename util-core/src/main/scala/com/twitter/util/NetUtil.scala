@@ -18,7 +18,7 @@ object NetUtil {
         else if (addr(0) == 192.toByte && addr(1) == 168.toByte) // 192.168/16
           true
         else
-            false
+          false
       case _ =>
         false
     }
@@ -93,9 +93,9 @@ object NetUtil {
       case inetAddress: Inet4Address =>
         val addr = inetAddress.getAddress
         ((addr(0) & 0xff) << 24) |
-        ((addr(1) & 0xff) << 16) |
-        ((addr(2) & 0xff) <<  8) |
-         (addr(3) & 0xff)
+          ((addr(1) & 0xff) << 16) |
+          ((addr(2) & 0xff) << 8) |
+          (addr(3) & 0xff)
       case _ =>
         throw new IllegalArgumentException("non-Inet4Address cannot be converted to an Int")
     }
@@ -131,7 +131,9 @@ object NetUtil {
     isIpInBlock(inetAddressToInt(inetAddress), ipBlock)
 
   def isIpInBlocks(ip: Int, ipBlocks: Iterable[(Int, Int)]): Boolean = {
-    ipBlocks exists { ipBlock => isIpInBlock(ip, ipBlock) }
+    ipBlocks exists { ipBlock =>
+      isIpInBlock(ip, ipBlock)
+    }
   }
 
   def isIpInBlocks(ip: String, ipBlocks: Iterable[(Int, Int)]): Boolean = {

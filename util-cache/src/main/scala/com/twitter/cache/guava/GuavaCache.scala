@@ -34,7 +34,9 @@ class GuavaCache[K, V](cache: GCache[K, Future[V]]) extends ConcurrentMapCache[K
  * an asynchronous function with a guava LoadingCache can be found at
  * [[GuavaCache$.fromLoadingCache]].
  */
-class LoadingFutureCache[K, V](cache: LoadingCache[K, Future[V]]) extends GuavaCache[K, V](cache) with (K => Future[V]) {
+class LoadingFutureCache[K, V](cache: LoadingCache[K, Future[V]])
+    extends GuavaCache[K, V](cache)
+    with (K => Future[V]) {
   // the contract for LoadingCache is that it can't return null from get.
   def apply(key: K): Future[V] = cache.get(key)
 
@@ -42,13 +44,16 @@ class LoadingFutureCache[K, V](cache: LoadingCache[K, Future[V]]) extends GuavaC
 }
 
 object GuavaCache {
+
   /**
    * Creates a function which properly handles the asynchronous behavior of
    * [[com.google.common.cache.LoadingCache]].
    */
   def fromLoadingCache[K, V](cache: LoadingCache[K, Future[V]]): K => Future[V] = {
     val evicting = EvictingCache.lazily(new LoadingFutureCache(cache));
-    { key: K => evicting.get(key).get.interruptible() }
+    { key: K =>
+      evicting.get(key).get.interruptible()
+    }
   }
 
   /**

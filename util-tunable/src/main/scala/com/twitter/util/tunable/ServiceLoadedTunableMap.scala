@@ -34,7 +34,8 @@ private[twitter] object ServiceLoadedTunableMap {
         tunableMap
       case _ =>
         throw new IllegalStateException(
-          s"Found multiple `ServiceLoadedTunableMap`s for $id: ${tunableMaps.mkString(", ")}")
+          s"Found multiple `ServiceLoadedTunableMap`s for $id: ${tunableMaps.mkString(", ")}"
+        )
     }
   }
 }

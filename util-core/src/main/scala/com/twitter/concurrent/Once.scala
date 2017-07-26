@@ -1,6 +1,7 @@
 package com.twitter.concurrent
 
 object Once {
+
   /**
    * Returns a function that runs `fn` the first time it's called and then never
    * again.  If the returned function is invoked while another thread is running

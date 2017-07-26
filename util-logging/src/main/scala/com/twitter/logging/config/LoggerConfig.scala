@@ -22,6 +22,7 @@ import com.twitter.util.{Config, Duration, NetUtil}
 
 @deprecated("use LoggerFactory", "6.12.1")
 class LoggerConfig extends Config[Logger] {
+
   /**
    * Name of the logging node. The default ("") is the top-level logger.
    */
@@ -46,8 +47,12 @@ class LoggerConfig extends Config[Logger] {
 
   def apply(): Logger = {
     val logger = Logger.get(node)
-    level.foreach { x => logger.setLevel(x) }
-    handlers.foreach { h => logger.addHandler(h()) }
+    level.foreach { x =>
+      logger.setLevel(x)
+    }
+    handlers.foreach { h =>
+      logger.addHandler(h())
+    }
     logger.setUseParentHandlers(useParents)
     logger
   }
@@ -55,6 +60,7 @@ class LoggerConfig extends Config[Logger] {
 
 @deprecated("use Formatter directly", "6.12.1")
 class FormatterConfig extends Config[Formatter] {
+
   /**
    * Should dates in log messages be reported in a different time zone rather than local time?
    * If set, the time zone name must be one known by the java `TimeZone` class.
@@ -96,8 +102,8 @@ class FormatterConfig extends Config[Formatter] {
    */
   var prefix: String = "%.3s [<yyyyMMdd-HH:mm:ss.SSS>] %s: "
 
-  def apply() = new Formatter(timezone, truncateAt, truncateStackTracesAt, useFullPackageNames,
-    prefix)
+  def apply() =
+    new Formatter(timezone, truncateAt, truncateStackTracesAt, useFullPackageNames, prefix)
 }
 
 @deprecated("use BareFormatter directly", "6.12.1")
@@ -107,6 +113,7 @@ object BareFormatterConfig extends FormatterConfig {
 
 @deprecated("use SyslogFormatter directly", "6.12.1")
 class SyslogFormatterConfig extends FormatterConfig {
+
   /**
    * Hostname to prepend to log lines.
    */
@@ -129,8 +136,16 @@ class SyslogFormatterConfig extends FormatterConfig {
 
   def serverName_=(name: String) { serverName = Some(name) }
 
-  override def apply() = new SyslogFormatter(hostname, serverName, useIsoDateFormat, priority,
-    timezone, truncateAt, truncateStackTracesAt)
+  override def apply() =
+    new SyslogFormatter(
+      hostname,
+      serverName,
+      useIsoDateFormat,
+      priority,
+      timezone,
+      truncateAt,
+      truncateStackTracesAt
+    )
 }
 
 @deprecated("use Formatter directly", "6.12.1")
@@ -147,6 +162,7 @@ class ConsoleHandlerConfig extends HandlerConfig {
 
 @deprecated("use HandlerFactory", "6.12.1")
 class ThrottledHandlerConfig extends HandlerConfig {
+
   /**
    * Timespan to consider duplicates. After this amount of time, duplicate entries will be logged
    * again.
@@ -183,6 +199,7 @@ class QueuingHandlerConfig extends HandlerConfig {
 
 @deprecated("use HandlerFactory", "6.12.1")
 class FileHandlerConfig extends HandlerConfig {
+
   /**
    * Filename to log to.
    */
@@ -208,6 +225,7 @@ class FileHandlerConfig extends HandlerConfig {
 
 @deprecated("use HandlerFactory", "6.12.1")
 class SyslogHandlerConfig extends HandlerConfig {
+
   /**
    * Syslog server hostname.
    */
@@ -236,6 +254,16 @@ class ScribeHandlerConfig extends HandlerConfig {
   var port = 1463
   var category = "scala"
 
-  def apply() = new ScribeHandler(hostname, port, category, bufferTime,
-    connectBackoff, maxMessagesPerTransaction, maxMessagesToBuffer, formatter(), level)
+  def apply() =
+    new ScribeHandler(
+      hostname,
+      port,
+      category,
+      bufferTime,
+      connectBackoff,
+      maxMessagesPerTransaction,
+      maxMessagesToBuffer,
+      formatter(),
+      level
+    )
 }

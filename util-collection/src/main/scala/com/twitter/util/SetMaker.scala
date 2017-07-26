@@ -22,8 +22,7 @@ object SetMaker {
     def concurrencyLevel(level: Int) = { mapMaker.concurrencyLevel(level); this }
     def initialCapacity(capacity: Int) = { mapMaker.initialCapacity(capacity); this }
 
-    def apply() = new MapToSetAdapter[A](
-      mapMaker.makeMap[A, A]().asScala)
+    def apply() = new MapToSetAdapter[A](mapMaker.makeMap[A, A]().asScala)
   }
 }
 

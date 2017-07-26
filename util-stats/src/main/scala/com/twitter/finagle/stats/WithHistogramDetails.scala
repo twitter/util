@@ -12,7 +12,8 @@ trait WithHistogramDetails {
 /**
  * Aggregates [[WithHistogramDetails]], merging their `histogramDetails`.
  */
-private[stats] class AggregateWithHistogramDetails(underlying: Seq[WithHistogramDetails]) extends WithHistogramDetails {
+private[stats] class AggregateWithHistogramDetails(underlying: Seq[WithHistogramDetails])
+    extends WithHistogramDetails {
 
   /**
    * Merges the resulting `histogramDetails` of the underlying sequence.  Where
@@ -20,8 +21,9 @@ private[stats] class AggregateWithHistogramDetails(underlying: Seq[WithHistogram
    * `histogramDetails`, it chooses the first implementations.
    */
   def histogramDetails: Map[String, HistogramDetail] =
-    underlying.foldLeft[Map[String, HistogramDetail]](Map.empty[String, HistogramDetail]) { (acc, cur) =>
-      cur.histogramDetails ++ acc
+    underlying.foldLeft[Map[String, HistogramDetail]](Map.empty[String, HistogramDetail]) {
+      (acc, cur) =>
+        cur.histogramDetails ++ acc
     }
 }
 

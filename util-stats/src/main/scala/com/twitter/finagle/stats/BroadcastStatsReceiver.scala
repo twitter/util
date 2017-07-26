@@ -12,21 +12,22 @@ object BroadcastStatsReceiver {
     case more => new N(more)
   }
 
-  private class Two(first: StatsReceiver, second: StatsReceiver) extends StatsReceiver
-    with DelegatingStatsReceiver
-  {
+  private class Two(first: StatsReceiver, second: StatsReceiver)
+      extends StatsReceiver
+      with DelegatingStatsReceiver {
     val repr = this
 
     def counter(verbosity: Verbosity, names: String*): Counter = new BroadcastCounter.Two(
-      first.counter(verbosity, names:_*), second.counter(verbosity, names:_*)
+      first.counter(verbosity, names: _*),
+      second.counter(verbosity, names: _*)
     )
 
     def stat(verbosity: Verbosity, names: String*): Stat =
-      new BroadcastStat.Two(first.stat(verbosity, names:_*), second.stat(verbosity, names:_*))
+      new BroadcastStat.Two(first.stat(verbosity, names: _*), second.stat(verbosity, names: _*))
 
     def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
-      val firstGauge = first.addGauge(verbosity, names:_*)(f)
-      val secondGauge = second.addGauge(verbosity, names:_*)(f)
+      val firstGauge = first.addGauge(verbosity, names: _*)(f)
+      val secondGauge = second.addGauge(verbosity, names: _*)(f)
       def remove(): Unit = {
         firstGauge.remove()
         secondGauge.remove()
@@ -39,19 +40,17 @@ object BroadcastStatsReceiver {
       s"Broadcast($first, $second)"
   }
 
-  private class N(srs: Seq[StatsReceiver]) extends StatsReceiver
-    with DelegatingStatsReceiver
-  {
+  private class N(srs: Seq[StatsReceiver]) extends StatsReceiver with DelegatingStatsReceiver {
     val repr = this
 
     def counter(verbosity: Verbosity, names: String*): Counter =
-      BroadcastCounter(srs.map { _.counter(verbosity, names:_*) })
+      BroadcastCounter(srs.map { _.counter(verbosity, names: _*) })
 
     def stat(verbosity: Verbosity, names: String*): Stat =
-      BroadcastStat(srs.map { _.stat(verbosity, names:_*) })
+      BroadcastStat(srs.map { _.stat(verbosity, names: _*) })
 
     def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
-      val gauges = srs.map { _.addGauge(verbosity, names:_*)(f) }
+      val gauges = srs.map { _.addGauge(verbosity, names: _*)(f) }
       def remove(): Unit = gauges.foreach { _.remove() }
     }
 

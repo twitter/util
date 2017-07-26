@@ -10,13 +10,10 @@ import java.io.InputStream
  * The given `InputStream` will be closed when [[Reader.read]]
  * reaches the EOF or a call to [[discard()]] or [[close()]].
  */
-class InputStreamReader private[io] (
-    inputStream: InputStream,
-    maxBufferSize: Int,
-    pool: FuturePool)
-  extends Reader
-  with Closable
-  with CloseAwaitably {
+class InputStreamReader private[io] (inputStream: InputStream, maxBufferSize: Int, pool: FuturePool)
+    extends Reader
+    with Closable
+    with CloseAwaitably {
   private[this] val mutex = new AsyncMutex()
   @volatile private[this] var discarded = false
 
@@ -51,9 +48,10 @@ class InputStreamReader private[io] (
           } else {
             Some(Buf.ByteArray.Owned(buffer, 0, c))
           }
-        } catch { case exc: InterruptedException =>
-          discard()
-          throw exc
+        } catch {
+          case exc: InterruptedException =>
+            discard()
+            throw exc
         }
       }.ensure {
         permit.release()

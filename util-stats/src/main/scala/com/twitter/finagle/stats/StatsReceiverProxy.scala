@@ -9,8 +9,8 @@ trait StatsReceiverProxy extends StatsReceiver with DelegatingStatsReceiver {
 
   def repr: AnyRef = self.repr
 
-  def counter(verbosity: Verbosity, names: String*): Counter = self.counter(verbosity, names:_*)
-  def stat(verbosity: Verbosity, names: String*): Stat = self.stat(verbosity, names:_*)
+  def counter(verbosity: Verbosity, names: String*): Counter = self.counter(verbosity, names: _*)
+  def stat(verbosity: Verbosity, names: String*): Stat = self.stat(verbosity, names: _*)
   def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge =
     self.addGauge(verbosity, names: _*)(f)
 

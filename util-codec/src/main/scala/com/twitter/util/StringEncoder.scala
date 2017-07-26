@@ -6,22 +6,22 @@ import java.nio.charset.{StandardCharsets => Charsets}
 import java.util.Base64
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 
-
 trait StringEncoder {
   def encode(bytes: Array[Byte]): String = new String(bytes)
   def decode(str: String): Array[Byte] = str.getBytes
 }
 
 /**
-  * A utility for encoding strings and byte arrays to a MIME base64 string, and
-  * decoding from strings encoded in MIME base64 to byte arrays.
-  *
-  * The encoding for strings is UTF-8.
-  */
+ * A utility for encoding strings and byte arrays to a MIME base64 string, and
+ * decoding from strings encoded in MIME base64 to byte arrays.
+ *
+ * The encoding for strings is UTF-8.
+ */
 trait Base64StringEncoder extends StringEncoder {
   private[this] val encoder = Base64.getMimeEncoder(0, "\r\n".getBytes(Charsets.UTF_8))
   private[this] val decoder = Base64.getMimeDecoder
-  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.UTF_8)
+  override def encode(bytes: Array[Byte]): String =
+    new String(encoder.encode(bytes), Charsets.UTF_8)
   override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.UTF_8))
 }
 
@@ -35,7 +35,8 @@ trait Base64UrlSafeStringEncoder extends StringEncoder {
   private[this] val encoder = Base64.getUrlEncoder.withoutPadding
   private[this] val decoder = Base64.getUrlDecoder
 
-  override def encode(bytes: Array[Byte]): String = new String(encoder.encode(bytes), Charsets.UTF_8)
+  override def encode(bytes: Array[Byte]): String =
+    new String(encoder.encode(bytes), Charsets.UTF_8)
   override def decode(str: String): Array[Byte] = decoder.decode(str.getBytes(Charsets.UTF_8))
 }
 

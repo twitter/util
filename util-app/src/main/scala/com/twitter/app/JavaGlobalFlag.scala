@@ -35,10 +35,10 @@ package com.twitter.app
  * }}}
  */
 abstract class JavaGlobalFlag[T] private (
-    defaultOrUsage: Either[() => T, String],
-    help: String,
-    flaggable: Flaggable[T])
-  extends GlobalFlag[T](defaultOrUsage, help)(flaggable) {
+  defaultOrUsage: Either[() => T, String],
+  help: String,
+  flaggable: Flaggable[T]
+) extends GlobalFlag[T](defaultOrUsage, help)(flaggable) {
 
   /**
    * A flag with a default value.

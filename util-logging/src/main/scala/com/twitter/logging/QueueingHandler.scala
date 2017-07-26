@@ -25,7 +25,8 @@ import java.util.{logging => javalog}
 object QueueingHandler {
 
   private[this] val executor = Executors.newCachedThreadPool(
-    new NamedPoolThreadFactory("QueueingHandlerPool", makeDaemons = true))
+    new NamedPoolThreadFactory("QueueingHandlerPool", makeDaemons = true)
+  )
 
   private val DefaultFuturePool = new ExecutorServiceFuturePool(executor)
 
@@ -80,7 +81,7 @@ object QueueingHandler {
  * logging by getting the stack trace synchronously.
  */
 class QueueingHandler(handler: Handler, val maxQueueSize: Int, inferClassNames: Boolean)
-  extends ProxyHandler(handler) {
+    extends ProxyHandler(handler) {
 
   import QueueingHandler._
 
@@ -155,7 +156,8 @@ class QueueingHandler(handler: Handler, val maxQueueSize: Int, inferClassNames: 
    * Called when record dropped.  Default is to log to console.
    */
   protected def onOverflow(record: javalog.LogRecord): Unit = {
-    Console.err.println(String.format("[%s] log queue overflow - record dropped", Time.now.toString))
+    Console.err.println(
+      String.format("[%s] log queue overflow - record dropped", Time.now.toString)
+    )
   }
 }
-

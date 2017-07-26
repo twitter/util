@@ -5,7 +5,11 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList, Map => JMap}
 import scala.collection.JavaConverters.{
-  asScalaBufferConverter, mapAsJavaMapConverter, mapAsScalaMapConverter, seqAsJavaListConverter}
+  asScalaBufferConverter,
+  mapAsJavaMapConverter,
+  mapAsScalaMapConverter,
+  seqAsJavaListConverter
+}
 import scala.collection.mutable
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NoStackTrace
@@ -49,7 +53,8 @@ object Future {
   /**
    * A failed `Future` analogous to `Predef.???`.
    */
-  val ??? : Future[Nothing] = Future.exception(new NotImplementedError("an implementation is missing"))
+  val ??? : Future[Nothing] =
+    Future.exception(new NotImplementedError("an implementation is missing"))
 
   private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
@@ -135,15 +140,16 @@ object Future {
    */
   def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] =
     if (howlong <= Duration.Zero) Future.Done
-    else new Promise[Unit] with Promise.InterruptHandler with (() => Unit) {
-      private[this] val task = timer.schedule(howlong.fromNow)(this())
+    else
+      new Promise[Unit] with Promise.InterruptHandler with (() => Unit) {
+        private[this] val task = timer.schedule(howlong.fromNow)(this())
 
-      // Timer task.
-      def apply(): Unit = setDone()
+        // Timer task.
+        def apply(): Unit = setDone()
 
-      protected def onInterrupt(t: Throwable): Unit =
-        if (updateIfEmpty(Throw(t))) task.cancel()
-    }
+        protected def onInterrupt(t: Throwable): Unit =
+          if (updateIfEmpty(Throw(t))) task.cancel()
+      }
 
   /**
    * Creates a satisfied `Future` from the result of running `a`.
@@ -155,17 +161,19 @@ object Future {
    * @note that `a` is executed in the calling thread and as such
    *       some care must be taken with blocking code.
    */
-  def apply[A](a: => A): Future[A] = try {
-    const(Try(a))
-  } catch {
-    case nlrc: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(nlrc))
-  }
+  def apply[A](a: => A): Future[A] =
+    try {
+      const(Try(a))
+    } catch {
+      case nlrc: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(nlrc))
+    }
 
   def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
 
   // The thread-safety for `outer` is guaranteed by synchronizing on `this`.
   private[this] final class MonitoredPromise[A](private[this] var outer: Promise[A])
-    extends Monitor with (Try[A] => Unit) {
+      extends Monitor
+      with (Try[A] => Unit) {
 
     // We're serializing access to the underlying promise such that whatever (failure, success)
     // runs it first also nulls it out. We have to stop referencing `outer` from this monitor
@@ -231,11 +239,9 @@ object Future {
   // but because these are both Function1 of different types, this cannot be done. Because
   // the respond handler is invoked for each Future in the sequence, and the interrupt handler is
   // only set once, we prefer to mix in Function1.
-  private[this] class JoinPromise[A](
-      fs: Seq[Future[A]],
-      size: Int)
-    extends Promise[Unit]
-    with Function1[Try[A], Unit] {
+  private[this] class JoinPromise[A](fs: Seq[Future[A]], size: Int)
+      extends Promise[Unit]
+      with Function1[Try[A], Unit] {
 
     private[this] val count = new AtomicInteger(size)
 
@@ -244,15 +250,16 @@ object Future {
       case Return(_) =>
         if (count.decrementAndGet() == 0)
           update(Return.Unit)
-      case t@Throw(_) =>
+      case t @ Throw(_) =>
         updateIfEmpty(t.cast[Unit])
     }
 
-    setInterruptHandler { case t: Throwable =>
-      val it = fs.iterator
-      while (it.hasNext) {
-        it.next().raise(t)
-      }
+    setInterruptHandler {
+      case t: Throwable =>
+        val it = fs.iterator
+        while (it.hasNext) {
+          it.next().raise(t)
+        }
     }
   }
 
@@ -278,8 +285,7 @@ object Future {
       } else {
         val p = new JoinPromise[A](fs, size)
         val iterator = fs.iterator
-        while (iterator.hasNext)
-          iterator.next().respond(p)
+        while (iterator.hasNext) iterator.next().respond(p)
         p
       }
     }
@@ -289,10 +295,10 @@ object Future {
   scala -e '
   val meths = for (end <- ''b'' to ''v''; ps = ''a'' to end) yield
       """/**
- * Join %d futures. The returned future is complete when all
- * underlying futures complete. It fails immediately if any of them
- * do.
- */
+   * Join %d futures. The returned future is complete when all
+   * underlying futures complete. It fails immediately if any of them
+   * do.
+   */
 def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
         ps.size,
         ps map (_.toUpper) mkString ",",
@@ -304,134 +310,730 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
   meths foreach println
   '
-  */
+   */
 
   /**
    * Join 2 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B](a: Future[A],b: Future[B]): Future[(A,B)] = join(Seq(a,b)) map { _ => (Await.result(a),Await.result(b)) }
+  def join[A, B](a: Future[A], b: Future[B]): Future[(A, B)] = join(Seq(a, b)) map { _ =>
+    (Await.result(a), Await.result(b))
+  }
+
   /**
    * Join 3 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C](a: Future[A],b: Future[B],c: Future[C]): Future[(A,B,C)] = join(Seq(a,b,c)) map { _ => (Await.result(a),Await.result(b),Await.result(c)) }
+  def join[A, B, C](a: Future[A], b: Future[B], c: Future[C]): Future[(A, B, C)] =
+    join(Seq(a, b, c)) map { _ =>
+      (Await.result(a), Await.result(b), Await.result(c))
+    }
+
   /**
    * Join 4 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D](a: Future[A],b: Future[B],c: Future[C],d: Future[D]): Future[(A,B,C,D)] = join(Seq(a,b,c,d)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d)) }
+  def join[A, B, C, D](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D]
+  ): Future[(A, B, C, D)] = join(Seq(a, b, c, d)) map { _ =>
+    (Await.result(a), Await.result(b), Await.result(c), Await.result(d))
+  }
+
   /**
    * Join 5 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E]): Future[(A,B,C,D,E)] = join(Seq(a,b,c,d,e)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e)) }
+  def join[A, B, C, D, E](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E]
+  ): Future[(A, B, C, D, E)] = join(Seq(a, b, c, d, e)) map { _ =>
+    (Await.result(a), Await.result(b), Await.result(c), Await.result(d), Await.result(e))
+  }
+
   /**
    * Join 6 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F]): Future[(A,B,C,D,E,F)] = join(Seq(a,b,c,d,e,f)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f)) }
+  def join[A, B, C, D, E, F](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F]
+  ): Future[(A, B, C, D, E, F)] = join(Seq(a, b, c, d, e, f)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f)
+    )
+  }
+
   /**
    * Join 7 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G]): Future[(A,B,C,D,E,F,G)] = join(Seq(a,b,c,d,e,f,g)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g)) }
+  def join[A, B, C, D, E, F, G](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G]
+  ): Future[(A, B, C, D, E, F, G)] = join(Seq(a, b, c, d, e, f, g)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g)
+    )
+  }
+
   /**
    * Join 8 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H]): Future[(A,B,C,D,E,F,G,H)] = join(Seq(a,b,c,d,e,f,g,h)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h)) }
+  def join[A, B, C, D, E, F, G, H](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H]
+  ): Future[(A, B, C, D, E, F, G, H)] = join(Seq(a, b, c, d, e, f, g, h)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g),
+      Await.result(h)
+    )
+  }
+
   /**
    * Join 9 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I]): Future[(A,B,C,D,E,F,G,H,I)] = join(Seq(a,b,c,d,e,f,g,h,i)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i)) }
+  def join[A, B, C, D, E, F, G, H, I](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I]
+  ): Future[(A, B, C, D, E, F, G, H, I)] = join(Seq(a, b, c, d, e, f, g, h, i)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g),
+      Await.result(h),
+      Await.result(i)
+    )
+  }
+
   /**
    * Join 10 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J]): Future[(A,B,C,D,E,F,G,H,I,J)] = join(Seq(a,b,c,d,e,f,g,h,i,j)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j)) }
+  def join[A, B, C, D, E, F, G, H, I, J](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J]
+  ): Future[(A, B, C, D, E, F, G, H, I, J)] = join(Seq(a, b, c, d, e, f, g, h, i, j)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g),
+      Await.result(h),
+      Await.result(i),
+      Await.result(j)
+    )
+  }
+
   /**
    * Join 11 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K]): Future[(A,B,C,D,E,F,G,H,I,J,K)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K)] = join(Seq(a, b, c, d, e, f, g, h, i, j, k)) map {
+    _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k)
+      )
+  }
+
   /**
    * Join 12 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L]): Future[(A,B,C,D,E,F,G,H,I,J,K,L)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l)
+      )
+    }
+
   /**
    * Join 13 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m)
+      )
+    }
+
   /**
    * Join 14 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n)
+      )
+    }
+
   /**
    * Join 15 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o)
+      )
+    }
+
   /**
    * Join 16 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p)
+      )
+    }
+
   /**
    * Join 17 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q)
+      )
+    }
+
   /**
    * Join 18 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r)
+      )
+    }
+
   /**
    * Join 19 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s)
+      )
+    }
+
   /**
    * Join 20 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S],
+    t: Future[T]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s),
+        Await.result(t)
+      )
+    }
+
   /**
    * Join 21 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T],u: Future[U]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t),Await.result(u)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S],
+    t: Future[T],
+    u: Future[U]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s),
+        Await.result(t),
+        Await.result(u)
+      )
+    }
+
   /**
    * Join 22 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T],u: Future[U],v: Future[V]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)] = join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t),Await.result(u),Await.result(v)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S],
+    t: Future[T],
+    u: Future[U],
+    v: Future[V]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V)] =
+    join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s),
+        Await.result(t),
+        Await.result(u),
+        Await.result(v)
+      )
+    }
 
   /**
    * Creates a `Future` that is satisfied when all futures in `fs`
@@ -468,16 +1070,17 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * @param `as` a sequence of `A` that will have `f` applied to each item sequentially
    * @return a `Future[Seq[B]]` containing the results of `f` being applied to every item in `as`
    */
-  def traverseSequentially[A,B](as: Seq[A])(f: A => Future[B]): Future[Seq[B]] =
+  def traverseSequentially[A, B](as: Seq[A])(f: A => Future[B]): Future[Seq[B]] =
     as.foldLeft(emptySeq[B]) { (resultsFuture, nextItem) =>
       for {
-        results    <- resultsFuture
+        results <- resultsFuture
         nextResult <- f(nextItem)
       } yield results :+ nextResult
     }
 
   private[this] final class CollectPromise[A](fs: Seq[Future[A]])
-    extends Promise[Seq[A]] with Promise.InterruptHandler {
+      extends Promise[Seq[A]]
+      with Promise.InterruptHandler {
 
     private[this] val results = new mutable.ArraySeq[A](fs.size)
     private[this] val count = new AtomicInteger(results.size)
@@ -572,8 +1175,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     Future.collect {
       val seq = new mutable.ArrayBuffer[Future[Try[A]]](fs.size)
       val iterator = fs.iterator
-      while (iterator.hasNext)
-        seq += iterator.next().liftToTry
+      while (iterator.hasNext) seq += iterator.next().liftToTry
       seq
     }
 
@@ -599,7 +1201,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     if (fs.isEmpty) {
       Future.exception(new IllegalArgumentException("empty future list"))
     } else {
-      val p = Promise.interrupts[(Try[A], Seq[Future[A]])](fs:_*)
+      val p = Promise.interrupts[(Try[A], Seq[Future[A]])](fs: _*)
       val size = fs.size
 
       val as = {
@@ -657,7 +1259,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     if (fs.isEmpty) {
       Future.exception(new IllegalArgumentException("empty future list"))
     } else {
-      val p = Promise.interrupts[Int](fs:_*)
+      val p = Promise.interrupts[Int](fs: _*)
       val size = fs.size
       val as = {
         val array = new Array[Promise[A] with Promise.Detachable](size)
@@ -719,15 +1321,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    */
   def whileDo[A](p: => Boolean)(f: => Future[A]): Future[Unit] = {
     def loop(): Future[Unit] = {
-      if (p) f flatMap { _ => loop() }
-      else Future.Unit
+      if (p) f flatMap { _ =>
+        loop()
+      } else Future.Unit
     }
 
     loop()
   }
 
   case class NextThrewException(cause: Throwable)
-    extends IllegalArgumentException("'next' threw an exception", cause)
+      extends IllegalArgumentException("'next' threw an exception", cause)
 
   /**
    * Produce values from `next` until it fails, synchronously
@@ -736,8 +1339,9 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    */
   def each[A](next: => Future[A])(body: A => Unit): Future[Nothing] = {
     def go(): Future[Nothing] =
-      try next flatMap { a => body(a); go() }
-      catch {
+      try next flatMap { a =>
+        body(a); go()
+      } catch {
         case NonFatal(exc) =>
           Future.exception(NextThrewException(exc))
       }
@@ -798,12 +1402,13 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   )(
     implicit timer: Timer
   ): Batcher[In, Out] = {
-    new Batcher[In, Out](new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f))
+    new Batcher[In, Out](
+      new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f)
+    )
   }
 }
 
-class FutureCancelledException
-  extends Exception("The future was cancelled with Future.cancel")
+class FutureCancelledException extends Exception("The future was cancelled with Future.cancel")
 
 /**
  * A Java friendly API for handling side-effects for a `Future`.
@@ -817,6 +1422,7 @@ class FutureCancelledException
  * @see [[FutureTransformer]] for a Java API for transforming the results of Futures.
  */
 trait FutureEventListener[T] {
+
   /**
    * A side-effect which is invoked if the computation completes successfully.
    */
@@ -850,6 +1456,7 @@ trait FutureEventListener[T] {
  * @see [[FutureEventListener]] for a Java API for side-effects.
  */
 abstract class FutureTransformer[-A, +B] {
+
   /**
    * Invoked if the computation completes successfully. Returns the
    * new transformed value in a Future.
@@ -938,7 +1545,9 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * @see [[respond]] if you need the result of the computation for
    *     usage in the side-effect.
    */
-  def ensure(f: => Unit): Future[A] = respond { _ => f }
+  def ensure(f: => Unit): Future[A] = respond { _ =>
+    f
+  }
 
   /**
    * Is the result of the Future available yet?
@@ -972,7 +1581,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * whatever reason given in the passed Throwable).
    */
   def raise(interrupt: Throwable): Unit
-  
+
   /**
    * Returns a new Future that fails if this Future does not return in time.
    *
@@ -1068,22 +1677,23 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    */
   def by(timer: Timer, when: Time, exc: => Throwable): Future[A] =
     if (when == Time.Top || isDefined) self
-    else new Promise[A] with (Try[A] => Unit) with (() => Unit) { other =>
-      private[this] val task = timer.schedule(when)(other())
+    else
+      new Promise[A] with (Try[A] => Unit) with (() => Unit) { other =>
+        private[this] val task = timer.schedule(when)(other())
 
-      // Timer task.
-      def apply(): Unit = updateIfEmpty(Throw(exc))
+        // Timer task.
+        def apply(): Unit = updateIfEmpty(Throw(exc))
 
-      // Respond handler.
-      def apply(value: Try[A]): Unit = {
-        task.cancel()
-        updateIfEmpty(value)
+        // Respond handler.
+        def apply(value: Try[A]): Unit = {
+          task.cancel()
+          updateIfEmpty(value)
+        }
+
+        // Register ourselves as interrupt and respond handlers.
+        forwardInterruptsTo(self)
+        self.respond(other)
       }
-
-      // Register ourselves as interrupt and respond handlers.
-      forwardInterruptsTo(self)
-      self.respond(other)
-    }
 
   /**
    * Delay the completion of this Future for at least
@@ -1091,12 +1701,13 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    */
   def delayed(howlong: Duration)(implicit timer: Timer): Future[A] =
     if (howlong == Duration.Zero) this
-    else new Promise[A] with (() => Unit) { other =>
-      def apply(): Unit = become(self)
+    else
+      new Promise[A] with (() => Unit) { other =>
+        def apply(): Unit = become(self)
 
-      timer.schedule(howlong.fromNow)(other())
-      forwardInterruptsTo(self)
-    }
+        timer.schedule(howlong.fromNow)(other())
+        forwardInterruptsTo(self)
+      }
 
   /**
    * When this future completes, run `f` on that completed result
@@ -1154,12 +1765,13 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    */
   def rescue[B >: A](
     rescueException: PartialFunction[Throwable, Future[B]]
-  ): Future[B] = transform({
-    case Throw(t) =>
-      val result = rescueException.applyOrElse(t, Future.AlwaysNotApplied)
-      if (result eq Future.NotApplied) this else result
-    case _ => this
-  })
+  ): Future[B] =
+    transform({
+      case Throw(t) =>
+        val result = rescueException.applyOrElse(t, Future.AlwaysNotApplied)
+        if (result eq Future.NotApplied) this else result
+      case _ => this
+    })
 
   /**
    * Invoke the callback only if the Future returns successfully. Useful for Scala `for`
@@ -1186,7 +1798,9 @@ abstract class Future[+A] extends Awaitable[A] { self =>
       case t: Throw[_] => Future.const[B](t.cast[B])
     }
 
-  def filter(p: A => Boolean): Future[A] = transform { x: Try[A] => Future.const(x.filter(p)) }
+  def filter(p: A => Boolean): Future[A] = transform { x: Try[A] =>
+    Future.const(x.filter(p))
+  }
 
   def withFilter(p: A => Boolean): Future[A] = filter(p)
 
@@ -1240,7 +1854,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *     a new `Future` from the result of a computation.
    */
   def addEventListener(listener: FutureEventListener[_ >: A]): Future[A] = respond {
-    case Throw(cause)  => listener.onFailure(cause)
+    case Throw(cause) => listener.onFailure(cause)
     case Return(value) => listener.onSuccess(value)
   }
 
@@ -1261,7 +1875,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
   def transformedBy[B](transformer: FutureTransformer[A, B]): Future[B] =
     transform {
       case Return(v) => transformer.flatMap(v)
-      case Throw(t)  => transformer.rescue(t)
+      case Throw(t) => transformer.rescue(t)
     }
 
   /**
@@ -1277,7 +1891,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    */
   def handle[B >: A](rescueException: PartialFunction[Throwable, B]): Future[B] = rescue {
     case e: Throwable if rescueException.isDefinedAt(e) => Future(rescueException(e))
-    case e: Throwable                                   => this
+    case e: Throwable => this
   }
 
   /**
@@ -1290,8 +1904,12 @@ abstract class Future[+A] extends Awaitable[A] { self =>
     val p = Promise.interrupts[U](other, this)
     val a = Promise.attached(other)
     val b = Promise.attached(this)
-    a respond { t => if (p.updateIfEmpty(t)) b.detach() }
-    b respond { t => if (p.updateIfEmpty(t)) a.detach() }
+    a respond { t =>
+      if (p.updateIfEmpty(t)) b.detach()
+    }
+    b respond { t =>
+      if (p.updateIfEmpty(t)) a.detach()
+    }
     p
   }
 
@@ -1326,10 +1944,11 @@ abstract class Future[+A] extends Awaitable[A] { self =>
     val p = Promise.interrupts[C](this, other)
     this.respond {
       case Throw(t) => p.update(Throw(t))
-      case Return(a) => other.respond {
-        case Throw(t) => p.update(Throw(t))
-        case Return(b) => p.update(Return(fn(a, b)))
-      }
+      case Return(a) =>
+        other.respond {
+          case Throw(t) => p.update(Throw(t))
+          case Return(b) => p.update(Return(fn(a, b)))
+        }
     }
     p
   }
@@ -1363,7 +1982,8 @@ abstract class Future[+A] extends Awaitable[A] { self =>
   def proxyTo[B >: A](other: Promise[B]) {
     if (other.isDefined) {
       throw new IllegalStateException(
-        s"Cannot call proxyTo on an already satisfied Promise: ${Await.result(other.liftToTry)}")
+        s"Cannot call proxyTo on an already satisfied Promise: ${Await.result(other.liftToTry)}"
+      )
     }
     respond { other() = _ }
   }
@@ -1478,9 +2098,10 @@ abstract class Future[+A] extends Awaitable[A] { self =>
     if (isDefined) return this
 
     val p = Promise.attached(this)
-    p setInterruptHandler { case t: Throwable =>
-      if (p.detach())
-        p.setException(t)
+    p setInterruptHandler {
+      case t: Throwable =>
+        if (p.detach())
+          p.setException(t)
     }
     p
   }
@@ -1531,8 +2152,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
           case t: Throwable =>
             Monitor.handle(t)
             throw t
-        }
-        finally Local.restore(current)
+        } finally Local.restore(current)
         p.become(computed)
       }
     })
@@ -1566,10 +2186,10 @@ object Futures {
   scala -e '
   val meths = for (end <- ''b'' to ''v''; ps = ''a'' to end) yield
       """/**
- * Join %d futures. The returned future is complete when all
- * underlying futures complete. It fails immediately if any of them
- * do.
- */
+   * Join %d futures. The returned future is complete when all
+   * underlying futures complete. It fails immediately if any of them
+   * do.
+   */
 def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
         ps.size,
         ps map (_.toUpper) mkString ",",
@@ -1581,134 +2201,731 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
 
   meths foreach println
   '
-  */
+   */
 
   /**
    * Join 2 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B](a: Future[A],b: Future[B]): Future[(A,B)] = Future.join(Seq(a,b)) map { _ => (Await.result(a),Await.result(b)) }
+  def join[A, B](a: Future[A], b: Future[B]): Future[(A, B)] = Future.join(Seq(a, b)) map { _ =>
+    (Await.result(a), Await.result(b))
+  }
+
   /**
    * Join 3 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C](a: Future[A],b: Future[B],c: Future[C]): Future[(A,B,C)] = Future.join(Seq(a,b,c)) map { _ => (Await.result(a),Await.result(b),Await.result(c)) }
+  def join[A, B, C](a: Future[A], b: Future[B], c: Future[C]): Future[(A, B, C)] =
+    Future.join(Seq(a, b, c)) map { _ =>
+      (Await.result(a), Await.result(b), Await.result(c))
+    }
+
   /**
    * Join 4 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D](a: Future[A],b: Future[B],c: Future[C],d: Future[D]): Future[(A,B,C,D)] = Future.join(Seq(a,b,c,d)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d)) }
+  def join[A, B, C, D](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D]
+  ): Future[(A, B, C, D)] = Future.join(Seq(a, b, c, d)) map { _ =>
+    (Await.result(a), Await.result(b), Await.result(c), Await.result(d))
+  }
+
   /**
    * Join 5 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E]): Future[(A,B,C,D,E)] = Future.join(Seq(a,b,c,d,e)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e)) }
+  def join[A, B, C, D, E](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E]
+  ): Future[(A, B, C, D, E)] = Future.join(Seq(a, b, c, d, e)) map { _ =>
+    (Await.result(a), Await.result(b), Await.result(c), Await.result(d), Await.result(e))
+  }
+
   /**
    * Join 6 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F]): Future[(A,B,C,D,E,F)] = Future.join(Seq(a,b,c,d,e,f)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f)) }
+  def join[A, B, C, D, E, F](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F]
+  ): Future[(A, B, C, D, E, F)] = Future.join(Seq(a, b, c, d, e, f)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f)
+    )
+  }
+
   /**
    * Join 7 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G]): Future[(A,B,C,D,E,F,G)] = Future.join(Seq(a,b,c,d,e,f,g)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g)) }
+  def join[A, B, C, D, E, F, G](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G]
+  ): Future[(A, B, C, D, E, F, G)] = Future.join(Seq(a, b, c, d, e, f, g)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g)
+    )
+  }
+
   /**
    * Join 8 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H]): Future[(A,B,C,D,E,F,G,H)] = Future.join(Seq(a,b,c,d,e,f,g,h)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h)) }
+  def join[A, B, C, D, E, F, G, H](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H]
+  ): Future[(A, B, C, D, E, F, G, H)] = Future.join(Seq(a, b, c, d, e, f, g, h)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g),
+      Await.result(h)
+    )
+  }
+
   /**
    * Join 9 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I]): Future[(A,B,C,D,E,F,G,H,I)] = Future.join(Seq(a,b,c,d,e,f,g,h,i)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i)) }
+  def join[A, B, C, D, E, F, G, H, I](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I]
+  ): Future[(A, B, C, D, E, F, G, H, I)] = Future.join(Seq(a, b, c, d, e, f, g, h, i)) map { _ =>
+    (
+      Await.result(a),
+      Await.result(b),
+      Await.result(c),
+      Await.result(d),
+      Await.result(e),
+      Await.result(f),
+      Await.result(g),
+      Await.result(h),
+      Await.result(i)
+    )
+  }
+
   /**
    * Join 10 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J]): Future[(A,B,C,D,E,F,G,H,I,J)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j)) }
+  def join[A, B, C, D, E, F, G, H, I, J](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J]
+  ): Future[(A, B, C, D, E, F, G, H, I, J)] = Future.join(Seq(a, b, c, d, e, f, g, h, i, j)) map {
+    _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j)
+      )
+  }
+
   /**
    * Join 11 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K]): Future[(A,B,C,D,E,F,G,H,I,J,K)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k)
+      )
+    }
+
   /**
    * Join 12 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L]): Future[(A,B,C,D,E,F,G,H,I,J,K,L)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l)
+      )
+    }
+
   /**
    * Join 13 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m)
+      )
+    }
+
   /**
    * Join 14 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n)
+      )
+    }
+
   /**
    * Join 15 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o)
+      )
+    }
+
   /**
    * Join 16 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p)
+      )
+    }
+
   /**
    * Join 17 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q)
+      )
+    }
+
   /**
    * Join 18 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r)
+      )
+    }
+
   /**
    * Join 19 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s)
+      )
+    }
+
   /**
    * Join 20 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S],
+    t: Future[T]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s),
+        Await.result(t)
+      )
+    }
+
   /**
    * Join 21 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T],u: Future[U]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t),Await.result(u)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S],
+    t: Future[T],
+    u: Future[U]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s),
+        Await.result(t),
+        Await.result(u)
+      )
+    }
+
   /**
    * Join 22 futures. The returned future is complete when all
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H],i: Future[I],j: Future[J],k: Future[K],l: Future[L],m: Future[M],n: Future[N],o: Future[O],p: Future[P],q: Future[Q],r: Future[R],s: Future[S],t: Future[T],u: Future[U],v: Future[V]): Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)] = Future.join(Seq(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h),Await.result(i),Await.result(j),Await.result(k),Await.result(l),Await.result(m),Await.result(n),Await.result(o),Await.result(p),Await.result(q),Await.result(r),Await.result(s),Await.result(t),Await.result(u),Await.result(v)) }
+  def join[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V](
+    a: Future[A],
+    b: Future[B],
+    c: Future[C],
+    d: Future[D],
+    e: Future[E],
+    f: Future[F],
+    g: Future[G],
+    h: Future[H],
+    i: Future[I],
+    j: Future[J],
+    k: Future[K],
+    l: Future[L],
+    m: Future[M],
+    n: Future[N],
+    o: Future[O],
+    p: Future[P],
+    q: Future[Q],
+    r: Future[R],
+    s: Future[S],
+    t: Future[T],
+    u: Future[U],
+    v: Future[V]
+  ): Future[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V)] =
+    Future.join(Seq(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v)) map { _ =>
+      (
+        Await.result(a),
+        Await.result(b),
+        Await.result(c),
+        Await.result(d),
+        Await.result(e),
+        Await.result(f),
+        Await.result(g),
+        Await.result(h),
+        Await.result(i),
+        Await.result(j),
+        Await.result(k),
+        Await.result(l),
+        Await.result(m),
+        Await.result(n),
+        Await.result(o),
+        Await.result(p),
+        Await.result(q),
+        Await.result(r),
+        Await.result(s),
+        Await.result(t),
+        Await.result(u),
+        Await.result(v)
+      )
+    }
 
   /**
    * Take a sequence of Futures, wait till they all complete
@@ -1729,8 +2946,9 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
    * to be satisfied and the rest of the futures.
    */
   def select[A](fs: JList[Future[A]]): Future[(Try[A], JList[Future[A]])] =
-    Future.select(fs.asScala) map { case (first, rest) =>
-      (first, rest.asJava)
+    Future.select(fs.asScala) map {
+      case (first, rest) =>
+        (first, rest.asJava)
     }
 
   /**

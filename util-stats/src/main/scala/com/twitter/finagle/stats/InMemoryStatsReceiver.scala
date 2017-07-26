@@ -35,7 +35,6 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val gauges: mutable.Map[Seq[String], () => Float] =
     new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
-
   override def counter(name: String*): ReadableCounter =
     counter(Verbosity.Default, name: _*)
 
@@ -132,20 +131,23 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       else if (f >= Int.MaxValue) Int.MaxValue - 1
       else f.toInt
     }
-    
+
     new HistogramDetail {
-      def counts = { 
+      def counts = {
         addedValues
-          .map { x => nearestPosInt(x) }
+          .map { x =>
+            nearestPosInt(x)
+          }
           .groupBy(identity)
           .mapValues(_.size)
-          .toSeq.sortWith(_._1 < _._1)
+          .toSeq
+          .sortWith(_._1 < _._1)
           .map { case (k, v) => BucketAndCount(k, k + 1, v) }
       }
     }
   }
 
-  def histogramDetails: Map[String, HistogramDetail] = stats.toMap.map { 
+  def histogramDetails: Map[String, HistogramDetail] = stats.toMap.map {
     case (k, v) => (k.mkString("/"), toHistogramDetail(v))
   }
 }

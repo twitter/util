@@ -8,7 +8,7 @@ object Logging {
       if (Logger.levelNames contains s)
         Logger.levelNames(s)
       else
-        throw new Exception("Invalid log level: "+s)
+        throw new Exception("Invalid log level: " + s)
   }
 
   implicit object PolicyFlaggable extends Flaggable[Policy] {
@@ -33,8 +33,11 @@ trait Logging { self: App =>
   def defaultAppend: Boolean = true
   def defaultRotateCount: Int = -1
 
-  protected[this] val inferClassNamesFlag = flag("log.async.inferClassNames", false,
-    "Infer class and method names synchronously. See com.twitter.logging.QueueingHandler")
+  protected[this] val inferClassNamesFlag = flag(
+    "log.async.inferClassNames",
+    false,
+    "Infer class and method names synchronously. See com.twitter.logging.QueueingHandler"
+  )
   protected[this] val outputFlag = flag("log.output", defaultOutput, "Output file")
   protected[this] val levelFlag = flag("log.level", defaultLogLevel, "Log level")
 
@@ -44,12 +47,18 @@ trait Logging { self: App =>
     flag("log.async.maxsize", 4096, "Max queue size for async logging")
 
   // FileHandler-related flags are ignored if outputFlag is not overridden.
-  protected[this] val rollPolicyFlag = flag("log.rollPolicy", defaultRollPolicy,
+  protected[this] val rollPolicyFlag = flag(
+    "log.rollPolicy",
+    defaultRollPolicy,
     "When or how frequently to roll the logfile. " +
       "See com.twitter.logging.Policy#parse documentation for DSL details."
   )
   protected[this] val appendFlag =
-    flag("log.append", defaultAppend, "If true, appends to existing logfile. Otherwise, file is truncated.")
+    flag(
+      "log.append",
+      defaultAppend,
+      "If true, appends to existing logfile. Otherwise, file is truncated."
+    )
   protected[this] val rotateCountFlag =
     flag("log.rotateCount", defaultRotateCount, "How many rotated logfiles to keep around")
 
@@ -91,10 +100,10 @@ trait Logging { self: App =>
   }
 
   /**
-   * Configuration of the Logger Factories removes any other configured 
+   * Configuration of the Logger Factories removes any other configured
    * loggers. Override if you do not want the default LoggerFactories
    * to be configured. This is generally when you want to ensure that
-   * any handlers already installed are not removed or replaced. 
+   * any handlers already installed are not removed or replaced.
    */
   protected def configureLoggerFactories(): Unit = {
     Logger.configure(loggerFactories)

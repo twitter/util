@@ -44,22 +44,22 @@ import scala.util.control.NonFatal
  * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
  */
 @GlobalFlagVisible
-abstract class GlobalFlag[T] private[app](
-    defaultOrUsage: Either[() => T, String],
-    help: String)
-    (implicit _f: Flaggable[T])
-  extends Flag[T](null, help, defaultOrUsage, false) {
+abstract class GlobalFlag[T] private[app] (defaultOrUsage: Either[() => T, String], help: String)(
+  implicit _f: Flaggable[T]
+) extends Flag[T](null, help, defaultOrUsage, false) {
 
   override protected[this] def parsingDone: Boolean = true
 
   private[this] lazy val propertyValue =
     Option(System.getProperty(name)).flatMap { p =>
-      try Some(flaggable.parse(p)) catch {
+      try Some(flaggable.parse(p))
+      catch {
         case NonFatal(exc) =>
           GlobalFlag.log.log(
             java.util.logging.Level.SEVERE,
-            "Failed to parse system property "+name+" as flag",
-            exc)
+            "Failed to parse system property " + name + " as flag",
+            exc
+          )
           None
       }
     }
@@ -92,7 +92,7 @@ abstract class GlobalFlag[T] private[app](
   override val name: String = getClass.getName.stripSuffix("$")
 
   protected override def getValue: Option[T] = super.getValue match {
-    case v@Some(_) => v
+    case v @ Some(_) => v
     case _ => propertyValue
   }
 
@@ -129,9 +129,8 @@ object GlobalFlag {
         else
           None
       } catch {
-        case _: ClassNotFoundException
-          | _: NoSuchMethodException
-          | _: IllegalArgumentException => None
+        case _: ClassNotFoundException | _: NoSuchMethodException | _: IllegalArgumentException =>
+          None
       }
 
     tryMethod(f, "getGlobalFlag").orElse {
@@ -149,9 +148,7 @@ object GlobalFlag {
       //NOTE: We catch Throwable as ExceptionInInitializerError and any errors really so that
       //we don't hide the real issue that a developer just added an unparseable arg.
       case e: Throwable =>
-        log.log(java.util.logging.Level.SEVERE,
-          "failure reading in flags",
-          e)
+        log.log(java.util.logging.Level.SEVERE, "failure reading in flags", e)
         new ArrayBuffer[Flag[_]]
     }
   }
@@ -179,9 +176,7 @@ object GlobalFlag {
           }
         }
       } catch {
-        case _: IllegalStateException
-             | _: NoClassDefFoundError
-             | _: ClassNotFoundException =>
+        case _: IllegalStateException | _: NoClassDefFoundError | _: ClassNotFoundException =>
       }
     }
     flags

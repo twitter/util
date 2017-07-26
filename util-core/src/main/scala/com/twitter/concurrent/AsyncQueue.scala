@@ -16,7 +16,6 @@ object AsyncQueue {
   private val UnboundedCapacity = Int.MaxValue
 }
 
-
 /**
  * An asynchronous FIFO queue. In addition to providing [[offer]]
  * and [[poll]], the queue can be [[fail "failed"]], flushing current

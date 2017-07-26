@@ -17,7 +17,8 @@ object Memoize {
     def await(): Unit = {
       if (Thread.currentThread eq owner) {
         throw new IllegalStateException(
-          s"${owner}: Attempted to wait on a value this thread is currently computing")
+          s"${owner}: Attempted to wait on a value this thread is currently computing"
+        )
       }
       underlying.await()
     }
@@ -29,6 +30,7 @@ object Memoize {
    * can be obtained.
    */
   trait Snappable[A, B] extends (A => B) {
+
     /**
      * Produces a snapshot of the currently memoized computations, as a
      * [[scala.collection.immutable.Map]]
@@ -146,7 +148,7 @@ object Memoize {
         // is absent, call missing() to determine what to do.
         memo.get(a) match {
           case Some(Right(b)) => b
-          case _              => missing(a)
+          case _ => missing(a)
         }
     }
 }

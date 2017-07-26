@@ -33,7 +33,8 @@ object Try {
    * errors.
    */
   def withFatals[R](r: => R)(f: PartialFunction[Throwable, Try[R]]): Try[R] =
-    try Try(r) catch {
+    try Try(r)
+    catch {
       case e: Throwable if f.isDefinedAt(e) => f(e)
     }
 
@@ -42,7 +43,13 @@ object Try {
    * the argument Trys are Throws. The first Throw in the Seq is the one which is surfaced.
    */
   def collect[A](ts: Seq[Try[A]]): Try[Seq[A]] = {
-    if (ts.isEmpty) Return(Seq.empty[A]) else Try { ts map { t => t() } }
+    if (ts.isEmpty) Return(Seq.empty[A])
+    else
+      Try {
+        ts map { t =>
+          t()
+        }
+      }
   }
 
   /**
@@ -60,14 +67,15 @@ object Try {
    * @param failure a function that returns the Throwable that should be
    * returned if the option is None
    */
-  def orThrow[A](o: Option[A])(failure: () => Throwable): Try[A] = try {
-    o match {
-      case Some(item) => Return(item)
-      case None => Throw(failure())
+  def orThrow[A](o: Option[A])(failure: () => Throwable): Try[A] =
+    try {
+      o match {
+        case Some(item) => Return(item)
+        case None => Throw(failure())
+      }
+    } catch {
+      case NonFatal(e) => Throw(e)
     }
-  } catch {
-    case NonFatal(e) => Throw(e)
-  }
 
   implicit class OrThrow[A](val option: Option[A]) extends AnyVal {
     def orThrow(failure: => Throwable): Try[A] = Try.orThrow(option)(() => failure)
@@ -79,6 +87,7 @@ object Try {
  * concrete implementations, Return (for success) and Throw (for failure)
  */
 sealed abstract class Try[+R] {
+
   /**
    * Convert to a scala.util.Try
    */
@@ -187,7 +196,9 @@ sealed abstract class Try[+R] {
    * chained `this` as in `respond`.
    */
   def ensure(f: => Unit): Try[R] =
-    respond { _ => f }
+    respond { _ =>
+      f
+    }
 
   /**
    * Returns None if this is a Throw or a Some containing the value if this is a Return
@@ -280,12 +291,14 @@ final case class Return[+R](r: R) extends Try[R] {
   def apply(): R = r
 
   def flatMap[R2](f: R => Try[R2]): Try[R2] =
-    try f(r) catch { case NonFatal(e) => Throw(e) }
+    try f(r)
+    catch { case NonFatal(e) => Throw(e) }
 
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
 
   def map[X](f: R => X): Try[X] =
-    try Return(f(r)) catch { case NonFatal(e) => Throw(e) }
+    try Return(f(r))
+    catch { case NonFatal(e) => Throw(e) }
 
   def exists(p: R => Boolean): Boolean = p(r)
 

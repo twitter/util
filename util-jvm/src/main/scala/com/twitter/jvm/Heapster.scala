@@ -25,7 +25,7 @@ import com.twitter.util.Duration
  */
 class Heapster(klass: Class[_]) {
   private val startM = klass.getDeclaredMethod("start")
-  private val stopM  = klass.getDeclaredMethod("stop")
+  private val stopM = klass.getDeclaredMethod("stop")
   private val dumpProfileM =
     klass.getDeclaredMethod("dumpProfile", classOf[java.lang.Boolean])
   private val clearProfileM = klass.getDeclaredMethod("clearProfile")
@@ -39,7 +39,7 @@ class Heapster(klass: Class[_]) {
   def dumpProfile(forceGC: java.lang.Boolean): Array[Byte] =
     dumpProfileM.invoke(null, forceGC).asInstanceOf[Array[Byte]]
 
-  def profile(howlong: Duration, samplingPeriod: Int = 10<<19, forceGC: Boolean = true) = {
+  def profile(howlong: Duration, samplingPeriod: Int = 10 << 19, forceGC: Boolean = true) = {
     clearProfile()
     setSamplingPeriod(samplingPeriod)
 
@@ -61,4 +61,3 @@ object Heapster {
     }
   }
 }
-

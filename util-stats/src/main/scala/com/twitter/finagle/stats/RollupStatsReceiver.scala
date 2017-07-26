@@ -14,11 +14,13 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
 
   private[this] def tails[A](s: Seq[A]): Seq[Seq[A]] = {
     s match {
-      case s@Seq(_) =>
+      case s @ Seq(_) =>
         Seq(s)
 
-      case Seq(hd, tl@_*) =>
-        Seq(Seq(hd)) ++ (tails(tl) map { t => Seq(hd) ++ t })
+      case Seq(hd, tl @ _*) =>
+        Seq(Seq(hd)) ++ (tails(tl) map { t =>
+          Seq(hd) ++ t
+        })
     }
   }
 

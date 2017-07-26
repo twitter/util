@@ -63,7 +63,9 @@ trait Var[+T] { self =>
   def flatMap[U](f: T => Var[U]): Var[U] = new Var[U] {
     def observe(depth: Int, obs: Observer[U]) = {
       val inner = new AtomicReference(Closable.nop)
-      val outer = self.observe(depth, Observer(t => {
+      val outer = self.observe(
+        depth,
+        Observer(t => {
           // TODO: Right now we rely on synchronous propagation; and
           // thus also synchronous closes. We should instead perform
           // asynchronous propagation so that it is is safe &
@@ -75,10 +77,10 @@ trait Var[+T] { self =>
           // we control all Var implementations, and also all Closable
           // combinators have been modified to evaluate their respective
           // Futures eagerly.
-          val done = inner.getAndSet(f(t).observe(depth+1, obs)).close()
+          val done = inner.getAndSet(f(t).observe(depth + 1, obs)).close()
           assert(done.isDone)
-        }
-      ))
+        })
+      )
 
       Closable.sequence(outer, Closable.ref(inner))
     }
@@ -96,7 +98,9 @@ trait Var[+T] { self =>
    */
   lazy val changes: Event[T] = new Event[T] {
     def register(s: Witness[T]) =
-      self.observe { newv => s.notify(newv) }
+      self.observe { newv =>
+        s.notify(newv)
+      }
   }
 
   /**
@@ -118,6 +122,7 @@ abstract class AbstractVar[T] extends Var[T]
  * Note: There is a Java-friendly API for this object: [[com.twitter.util.Vars]].
  */
 object Var {
+
   /**
    * A Var observer. Observers are owned by exactly one producer,
    * enforced by a leasing mechanism.
@@ -256,21 +261,21 @@ object Var {
    *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
    * }}}
    */
-  def collect[T: ClassTag, CC[X] <: Traversable[X]](vars: CC[Var[T]])
-      (implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]])
-      : Var[CC[T]] = {
+  def collect[T: ClassTag, CC[X] <: Traversable[X]](
+    vars: CC[Var[T]]
+  )(implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]): Var[CC[T]] = {
     val vs = vars.toArray
 
     def tree(begin: Int, end: Int): Var[Seq[T]] =
       if (begin == end) Var(Seq.empty)
-      else if (begin == end-1) vs(begin).map(t => Seq(t))
+      else if (begin == end - 1) vs(begin).map(t => Seq(t))
       else {
-        val n = (end-begin)/2
+        val n = (end - begin) / 2
 
         for {
-          left <- tree(begin, begin+n)
-          right <- tree(begin+n, end)
-        } yield left++right
+          left <- tree(begin, begin + n)
+          right <- tree(begin + n, end)
+        } yield left ++ right
       }
 
     tree(0, vs.length).map { ts =>
@@ -306,7 +311,7 @@ object Var {
     vars: CC[Var[T]]
   )(
     implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]
-  ) : Var[CC[T]] =
+  ): Var[CC[T]] =
     async(newBuilder().result()) { v =>
       val N = vars.size
       val cur = new AtomicReferenceArray[T](N)
@@ -337,8 +342,8 @@ object Var {
       filling = false
       v() = build()
 
-      Closable.all(closes:_*)
-  }
+      Closable.all(closes: _*)
+    }
 
   /**
    * Collect a List of Vars into a new Var of List.
@@ -394,7 +399,7 @@ object Var {
             c.close(deadline)
             Future.Done
           case Observing(n, v, c) =>
-            state = Observing(n-1, v, c)
+            state = Observing(n - 1, v, c)
             Future.Done
         }
       }
@@ -409,7 +414,7 @@ object Var {
             state = Observing(1, v, c)
             v
           case Observing(n, v, c) =>
-            state = Observing(n+1, v, c)
+            state = Observing(n + 1, v, c)
             v
         }
       }
@@ -428,9 +433,9 @@ private object UpdatableVar {
   }
 
   case class State[T](value: T, version: Long, parties: immutable.SortedSet[Party[T]]) {
-    def -(p: Party[T]) = copy(parties=parties-p)
-    def +(p: Party[T]) = copy(parties=parties+p)
-    def :=(newv: T) = copy(value=newv, version=version+1)
+    def -(p: Party[T]) = copy(parties = parties - p)
+    def +(p: Party[T]) = copy(parties = parties + p)
+    def :=(newv: T) = copy(value = newv, version = version + 1)
   }
 
   implicit def order[T] = new Ordering[Party[T]] {
@@ -444,16 +449,12 @@ private object UpdatableVar {
   }
 }
 
-private[util] class UpdatableVar[T](init: T)
-    extends Var[T]
-    with Updatable[T]
-    with Extractable[T] {
+private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] with Extractable[T] {
   import UpdatableVar._
   import Var.Observer
 
   private[this] val n = new AtomicLong(0)
-  private[this] val state = new AtomicReference(
-    State[T](init, 0, immutable.SortedSet.empty))
+  private[this] val state = new AtomicReference(State[T](init, 0, immutable.SortedSet.empty))
 
   @tailrec
   private[this] def cas(next: State[T] => State[T]): State[T] = {
@@ -466,7 +467,7 @@ private[util] class UpdatableVar[T](init: T)
 
   def update(newv: T): Unit = synchronized {
     val State(value, version, parties) = cas(_ := newv)
-    for (p@Party(obs, _, _) <- parties) {
+    for (p @ Party(obs, _, _) <- parties) {
       // An antecedent update may have closed the current
       // party (e.g. flatMap does this); we need to check that
       // the party is active here in order to prevent stale updates.
@@ -490,11 +491,10 @@ private[util] class UpdatableVar[T](init: T)
     }
   }
 
-  override def toString = "Var("+state.get.value+")@"+hashCode
+  override def toString = "Var(" + state.get.value + ")@" + hashCode
 }
 
 /**
  * Java adaptation of `Var[T] with Updatable[T] with Extractable[T]`.
  */
 class ReadWriteVar[T](init: T) extends UpdatableVar[T](init)
-

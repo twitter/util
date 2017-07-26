@@ -5,6 +5,7 @@ package com.twitter.util
  * processes: one fills the bucket, another empties it.
  */
 abstract class TokenBucket {
+
   /**
    * Put `n` tokens into the bucket.
    *
@@ -82,34 +83,35 @@ object TokenBucket {
 
    * @param nowMs The current time in milliseconds
    */
-  def newLeakyBucket(ttl: Duration, reserve: Int, nowMs: () => Long): TokenBucket = new TokenBucket {
-    private[this] val w = WindowedAdder(ttl.inMilliseconds, 10, nowMs)
+  def newLeakyBucket(ttl: Duration, reserve: Int, nowMs: () => Long): TokenBucket =
+    new TokenBucket {
+      private[this] val w = WindowedAdder(ttl.inMilliseconds, 10, nowMs)
 
-    def put(n: Int): Unit = {
-      require(n >= 0)
-      w.add(n)
-    }
-
-    def tryGet(n: Int): Boolean = {
-      require(n >= 0)
-
-      synchronized {
-        // Note that this is a bit sloppy: the answer to w.sum
-        // can change before we're able to decrement it. That's
-        // ok, though, because the debit will simply roll over to
-        // the next window.
-        //
-        // We could also add sloppiness here: any sum > 0 we
-        // can debit, but the sum just rolls over.
-        val ok = count >= n
-        if (ok)
-          w.add(-n)
-        ok
+      def put(n: Int): Unit = {
+        require(n >= 0)
+        w.add(n)
       }
-    }
 
-    def count: Long = w.sum() + reserve
-  }
+      def tryGet(n: Int): Boolean = {
+        require(n >= 0)
+
+        synchronized {
+          // Note that this is a bit sloppy: the answer to w.sum
+          // can change before we're able to decrement it. That's
+          // ok, though, because the debit will simply roll over to
+          // the next window.
+          //
+          // We could also add sloppiness here: any sum > 0 we
+          // can debit, but the sum just rolls over.
+          val ok = count >= n
+          if (ok)
+            w.add(-n)
+          ok
+        }
+      }
+
+      def count: Long = w.sum() + reserve
+    }
 
   /**
    * A leaky bucket expires tokens after approximately `ttl` time.

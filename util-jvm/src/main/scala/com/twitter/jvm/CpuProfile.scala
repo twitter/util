@@ -13,15 +13,15 @@ import com.twitter.util.{Duration, Future, Promise, Stopwatch, Time}
  * A CPU profile.
  */
 case class CpuProfile(
-    // Counts of each observed stack.
-    counts: Map[Seq[StackTraceElement], Long],
-    // The amount of time over which the sample was taken.
-    duration: Duration,
-    // The number of samples taken.
-    count: Int,
-    // The number of samples missed.
-    missed: Int
-  ) {
+  // Counts of each observed stack.
+  counts: Map[Seq[StackTraceElement], Long],
+  // The amount of time over which the sample was taken.
+  duration: Duration,
+  // The number of samples taken.
+  count: Int,
+  // The number of samples missed.
+  missed: Int
+) {
 
   /**
    * Write a Google pprof-compatible profile to `out`. The format is
@@ -119,7 +119,7 @@ object CpuProfile {
     val bean = ManagementFactory.getThreadMXBean()
     val elapsed = Stopwatch.start()
     val end = howlong.fromNow
-    val period = (1000000/frequency).microseconds
+    val period = (1000000 / frequency).microseconds
     val myId = Thread.currentThread().getId()
     var next = Time.now
 
@@ -128,7 +128,7 @@ object CpuProfile {
 
     while (Time.now < end) {
       for (thread <- bean.dumpAllThreads(false, false)
-          if thread.getThreadState() == state
+        if thread.getThreadState() == state
           && thread.getThreadId() != myId) {
         val s = thread.getStackTrace().toSeq
         if (s.nonEmpty) {

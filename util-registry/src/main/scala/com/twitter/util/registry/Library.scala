@@ -29,8 +29,9 @@ object Library {
         log.warning(s"""Tried to register a second library named "$name"""")
         None
       case None =>
-        params.foreach { case (key, value) =>
-          registry.put(prefix :+ key, value)
+        params.foreach {
+          case (key, value) =>
+            registry.put(prefix :+ key, value)
         }
         Some(new Roster(prefix, params.keySet, log))
     }
@@ -41,7 +42,7 @@ object Library {
  * Can change the value of params that were already set in the registry, but cannot
  * add new ones.
  */
-class Roster private[registry](scope: Seq[String], keys: Set[String], log: Logger) {
+class Roster private[registry] (scope: Seq[String], keys: Set[String], log: Logger) {
   private[this] val registry = GlobalRegistry.get
 
   /**
@@ -62,7 +63,8 @@ class Roster private[registry](scope: Seq[String], keys: Set[String], log: Logge
       if (result.isEmpty) {
         val serialized = s""""(${newKey.mkString(",")})""""
         log.warning(
-          s"expected there to be a value at key $serialized in registry but it was empty.")
+          s"expected there to be a value at key $serialized in registry but it was empty."
+        )
       }
       result.isDefined
     }

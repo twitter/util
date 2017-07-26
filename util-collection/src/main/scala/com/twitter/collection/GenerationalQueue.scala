@@ -21,7 +21,7 @@ trait GenerationalQueue[A] {
  */
 class ExactGenerationalQueue[A] extends GenerationalQueue[A] {
   private[this] val container = mutable.HashMap.empty[A, Time]
-  private[this] implicit val ordering = Ordering.by[(A, Time), Time]{ case (_, ts) => ts }
+  private[this] implicit val ordering = Ordering.by[(A, Time), Time] { case (_, ts) => ts }
 
   /**
    * touch insert the element if it is not yet present
@@ -47,7 +47,6 @@ class ExactGenerationalQueue[A] extends GenerationalQueue[A] {
   }
 }
 
-
 /**
  * Improved GenerationalQueue: using a list of buckets responsible for containing elements belonging
  * to a slice of time.
@@ -60,8 +59,7 @@ class ExactGenerationalQueue[A] extends GenerationalQueue[A] {
  * we consider the worst case and then we can miss some expired elements by never find elements
  * that aren't expired.
  */
-class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
-{
+class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A] {
   object TimeBucket {
     def empty[B] = new TimeBucket[B](Time.now, timeSlice)
   }
@@ -80,7 +78,10 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
     }
 
     override def toString() = "TimeBucket(origin=%d, size=%d, age=%s, count=%d)".format(
-      origin.inMilliseconds, span.inMilliseconds, age().toString, super.size
+      origin.inMilliseconds,
+      span.inMilliseconds,
+      age().toString,
+      super.size
     )
   }
 
@@ -89,9 +90,11 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
 
   private[this] def maybeGrowChain() = {
     // NB: age of youngest element is negative when bucket isn't expired
-    val growChain = buckets.headOption.map((bucket) => {
-      bucket.age() > Duration.Zero
-    }).getOrElse(true)
+    val growChain = buckets.headOption
+      .map((bucket) => {
+        bucket.age() > Duration.Zero
+      })
+      .getOrElse(true)
 
     if (growChain)
       buckets = TimeBucket.empty[A] :: buckets
@@ -152,6 +155,6 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
   }
 
   def collectAll(d: Duration): Iterable[A] = synchronized {
-    (buckets dropWhile(_.age() < d)).flatten
+    (buckets dropWhile (_.age() < d)).flatten
   }
 }

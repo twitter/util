@@ -49,18 +49,24 @@ class SunSignalHandler extends SignalHandler {
   private val nameMethod = signalClass.getMethod("getName")
 
   def handle(signal: String, handlers: Map[String, Set[String => Unit]]) {
-    val sunSignal = signalClass.getConstructor(classOf[String]).newInstance(signal).asInstanceOf[Object]
-    val proxy = Proxy.newProxyInstance(signalHandlerClass.getClassLoader, Array[Class[_]](signalHandlerClass),
-      new InvocationHandler {
-        def invoke(proxy: Object, method: Method, args: Array[Object]) = {
-          if (method.getName() == "handle") {
-            handlers(signal).foreach { x =>
-              x(nameMethod.invoke(args(0)).asInstanceOf[String])
+    val sunSignal =
+      signalClass.getConstructor(classOf[String]).newInstance(signal).asInstanceOf[Object]
+    val proxy = Proxy
+      .newProxyInstance(
+        signalHandlerClass.getClassLoader,
+        Array[Class[_]](signalHandlerClass),
+        new InvocationHandler {
+          def invoke(proxy: Object, method: Method, args: Array[Object]) = {
+            if (method.getName() == "handle") {
+              handlers(signal).foreach { x =>
+                x(nameMethod.invoke(args(0)).asInstanceOf[String])
+              }
             }
+            null
           }
-          null
         }
-      }).asInstanceOf[Object]
+      )
+      .asInstanceOf[Object]
 
     handleMethod.invoke(null, sunSignal, proxy)
   }

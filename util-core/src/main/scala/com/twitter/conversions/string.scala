@@ -21,6 +21,7 @@ import scala.util.matching.Regex
 
 object string {
   final class RichString(wrapped: String) {
+
     /**
      * For every section of a string that matches a regular expression, call
      * a function to determine a replacement (as in python's
@@ -84,9 +85,9 @@ object string {
           case '\\' => "\\\\"
           case c =>
             if (c <= 255) {
-                "\\x%02x".format(c.asInstanceOf[Int])
+              "\\x%02x".format(c.asInstanceOf[Int])
             } else {
-                "\\u%04x" format c.asInstanceOf[Int]
+              "\\u%04x" format c.asInstanceOf[Int]
             }
         }
       }
@@ -108,8 +109,10 @@ object string {
       regexSub(UNQUOTE_RE) { m =>
         val ch = m.group(1).charAt(0) match {
           // holy crap! this is terrible:
-          case 'u' => Character.valueOf(Integer.valueOf(m.group(1).substring(1), 16).asInstanceOf[Int].toChar)
-          case 'x' => Character.valueOf(Integer.valueOf(m.group(1).substring(1), 16).asInstanceOf[Int].toChar)
+          case 'u' =>
+            Character.valueOf(Integer.valueOf(m.group(1).substring(1), 16).asInstanceOf[Int].toChar)
+          case 'x' =>
+            Character.valueOf(Integer.valueOf(m.group(1).substring(1), 16).asInstanceOf[Int].toChar)
           case 'r' => '\r'
           case 'n' => '\n'
           case 't' => '\t'
@@ -125,8 +128,9 @@ object string {
      */
     def unhexlify(): Array[Byte] = {
       val buffer = new Array[Byte]((wrapped.length + 1) / 2)
-      wrapped.grouped(2).toSeq.zipWithIndex.foreach { case (substr, i) =>
-        buffer(i) = Integer.parseInt(substr, 16).toByte
+      wrapped.grouped(2).toSeq.zipWithIndex.foreach {
+        case (substr, i) =>
+          buffer(i) = Integer.parseInt(substr, 16).toByte
       }
       buffer
     }
@@ -146,6 +150,7 @@ object string {
   }
 
   final class RichByteArray(wrapped: Array[Byte]) {
+
     /**
      * Turn an `Array[Byte]` into a string of hex digits.
      */

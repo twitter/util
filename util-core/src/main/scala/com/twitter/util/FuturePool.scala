@@ -10,6 +10,7 @@ import scala.runtime.NonLocalReturnControl
  * of worker threads.
  */
 trait FuturePool {
+
   /**
    * Execute `f`, returning a [[Future]] that represents the outcome.
    */
@@ -44,6 +45,7 @@ trait FuturePool {
  * Note: There is a Java-friendly API for this object: [[com.twitter.util.FuturePools]].
  */
 object FuturePool {
+
   /**
    * Creates a [[FuturePool]] backed by an `java.util.concurrent.ExecutorService`.
    */
@@ -104,9 +106,8 @@ object FuturePool {
  * A [[FuturePool]] backed by a `java.util.concurrent.ExecutorService`
  * that supports cancellation.
  */
-class InterruptibleExecutorServiceFuturePool(
-    executor: ExecutorService)
-  extends ExecutorServiceFuturePool(executor, true)
+class InterruptibleExecutorServiceFuturePool(executor: ExecutorService)
+    extends ExecutorServiceFuturePool(executor, true)
 
 /**
  * A [[FuturePool]] implementation backed by an `java.util.concurrent.ExecutorService`.
@@ -115,11 +116,10 @@ class InterruptibleExecutorServiceFuturePool(
  * cancellation unless `interruptible` is true. If you want to propagate cancellation,
  * use an [[InterruptibleExecutorServiceFuturePool]].
  */
-class ExecutorServiceFuturePool protected[this](
-   val executor: ExecutorService,
-   val interruptible: Boolean)
-  extends FuturePool
-{
+class ExecutorServiceFuturePool protected[this] (
+  val executor: ExecutorService,
+  val interruptible: Boolean
+) extends FuturePool {
   def this(executor: ExecutorService) = this(executor, false)
 
   def apply[T](f: => T): Future[T] = {
@@ -137,8 +137,7 @@ class ExecutorServiceFuturePool protected[this](
         val current = Local.save()
         Local.restore(saved)
 
-        try
-          p.updateIfEmpty(Try(f))
+        try p.updateIfEmpty(Try(f))
         catch {
           case nlrc: NonLocalReturnControl[_] =>
             val fnlrc = new FutureNonLocalReturnControl(nlrc)
@@ -151,11 +150,11 @@ class ExecutorServiceFuturePool protected[this](
       }
     }
 
-
     // This is safe: the only thing that can call task.run() is
     // executor, the only thing that can raise an interrupt is the
     // receiver of this value, which will then be fully initialized.
-    val javaFuture = try executor.submit(task) catch {
+    val javaFuture = try executor.submit(task)
+    catch {
       case e: RejectedExecutionException =>
         runOk.set(false)
         p.setException(e)

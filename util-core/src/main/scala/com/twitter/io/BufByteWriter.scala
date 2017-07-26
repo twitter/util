@@ -4,6 +4,7 @@ package com.twitter.io
  * A `ByteWriter` that results in an owned `Buf`
  */
 trait BufByteWriter extends ByteWriter {
+
   /**
    * In keeping with [[Buf]] terminology, creates a potential zero-copy [[Buf]]
    * which has a reference to the same region as the [[ByteWriter]]. That is, if
@@ -15,6 +16,7 @@ trait BufByteWriter extends ByteWriter {
 }
 
 object BufByteWriter {
+
   /**
    * Creates a fixed sized [[BufByteWriter]] that writes to `bytes`
    */

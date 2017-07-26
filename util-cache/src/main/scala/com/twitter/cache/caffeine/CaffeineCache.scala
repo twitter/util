@@ -16,7 +16,8 @@ import java.util.function.Function
  * an asynchronous function with a caffeine Cache can be found at
  * [[CaffeineCache$.fromCache]].
  */
-class CaffeineCache[K, V](cache: Cache[K, Future[V]]) extends ConcurrentMapCache[K, V](cache.asMap) {
+class CaffeineCache[K, V](cache: Cache[K, Future[V]])
+    extends ConcurrentMapCache[K, V](cache.asMap) {
   override def getOrElseUpdate(k: K)(v: => Future[V]): Future[V] =
     cache.get(k, new Function[K, Future[V]] {
       def apply(k: K): Future[V] = v
@@ -34,9 +35,9 @@ class CaffeineCache[K, V](cache: Cache[K, Future[V]]) extends ConcurrentMapCache
  * an asynchronous function with a caffeine LoadingCache can be found at
  * [[CaffeineCache$.fromLoadingCache]].
  */
-class LoadingFutureCache[K, V](
-    cache: LoadingCache[K, Future[V]])
-  extends CaffeineCache[K, V](cache) with (K => Future[V]) {
+class LoadingFutureCache[K, V](cache: LoadingCache[K, Future[V]])
+    extends CaffeineCache[K, V](cache)
+    with (K => Future[V]) {
   // the contract for LoadingCache is that it can't return null from get.
   def apply(key: K): Future[V] = cache.get(key)
 
@@ -44,13 +45,16 @@ class LoadingFutureCache[K, V](
 }
 
 object CaffeineCache {
+
   /**
    * Creates a function which properly handles the asynchronous behavior of
    * `com.github.benmanes.caffeine.cache.LoadingCache`.
    */
   def fromLoadingCache[K, V](cache: LoadingCache[K, Future[V]]): K => Future[V] = {
     val evicting = EvictingCache.lazily(new LoadingFutureCache(cache));
-    { key: K => evicting.get(key).get.interruptible() }
+    { key: K =>
+      evicting.get(key).get.interruptible()
+    }
   }
 
   /**

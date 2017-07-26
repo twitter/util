@@ -33,7 +33,6 @@ object Policy {
   case object SigHup extends Policy
   case class MaxSize(size: StorageUnit) extends Policy
 
-
   private[this] val singletonPolicyNames: Map[String, Policy] =
     Map("never" -> Never, "hourly" -> Hourly, "daily" -> Daily, "sighup" -> SigHup)
 
@@ -93,13 +92,13 @@ object FileHandler {
  * at a requested interval (hourly, daily, or weekly).
  */
 class FileHandler(
-    path: String,
-    rollPolicy: Policy,
-    val append: Boolean,
-    rotateCount: Int,
-    formatter: Formatter,
-    level: Option[Level])
-  extends Handler(formatter, level) {
+  path: String,
+  rollPolicy: Policy,
+  val append: Boolean,
+  rotateCount: Int,
+  formatter: Formatter,
+  level: Option[Level]
+) extends Handler(formatter, level) {
 
   // This converts relative paths to absolute paths, as expected
   val (filename, name) = {
@@ -211,7 +210,6 @@ class FileHandler(
       n
     }
 
-
     val rv = rollPolicy match {
       case Policy.MaxSize(_) | Policy.Never | Policy.SigHup => None
       case Policy.Hourly => {
@@ -244,12 +242,15 @@ class FileHandler(
       // collect files which are not `filename`, but which share the prefix/suffix
       val prefixName = new File(filenamePrefix).getName
       val rotatedFiles =
-        new File(filename).getParentFile().listFiles(
-          new FilenameFilter {
-            def accept(f: File, fname: String): Boolean =
-              fname != name && fname.startsWith(prefixName) && fname.endsWith(filenameSuffix)
-          }
-        ).sortBy(_.getName)
+        new File(filename)
+          .getParentFile()
+          .listFiles(
+            new FilenameFilter {
+              def accept(f: File, fname: String): Boolean =
+                fname != name && fname.startsWith(prefixName) && fname.endsWith(filenameSuffix)
+            }
+          )
+          .sortBy(_.getName)
 
       val toDeleteCount = math.max(0, rotatedFiles.length - rotateCount)
       rotatedFiles.take(toDeleteCount).foreach(_.delete())

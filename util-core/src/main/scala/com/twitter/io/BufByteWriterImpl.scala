@@ -9,7 +9,8 @@ import java.nio.charset.{Charset, CoderResult, CodingErrorAction}
  * underlying Array[Byte].
  */
 private sealed abstract class AbstractBufByteWriterImpl
-  extends AbstractByteWriter with BufByteWriter {
+    extends AbstractByteWriter
+    with BufByteWriter {
 
   /**
    * Returns the array to write `numBytes` bytes into. Subclasses should
@@ -55,7 +56,8 @@ private sealed abstract class AbstractBufByteWriterImpl
 
   final def writeString(string: CharSequence, charset: Charset): this.type = {
     val charsetEncoder = charset.newEncoder()
-    charsetEncoder.onMalformedInput(CodingErrorAction.REPLACE)
+    charsetEncoder
+      .onMalformedInput(CodingErrorAction.REPLACE)
       .onUnmappableCharacter(CodingErrorAction.REPLACE)
       .reset()
 
@@ -85,8 +87,7 @@ private sealed abstract class AbstractBufByteWriterImpl
 
   private[this] def checkCoderResult(string: CharSequence, result: CoderResult): Unit = {
     if (result.isOverflow)
-      throw new OverflowException(
-        s"insufficient space to write ${string.length} length string")
+      throw new OverflowException(s"insufficient space to write ${string.length} length string")
     else if (!result.isUnderflow())
       result.throwException()
   }
@@ -108,8 +109,8 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeShortBE(s: Int): this.type = {
     val arr = arrayToWrite(numBytes = 2)
     val index = getAndIncrementIndex(numBytes = 2)
-    arr(index)     = ((s >>  8) & 0xff).toByte
-    arr(index + 1) = ((s      ) & 0xff).toByte
+    arr(index) = ((s >> 8) & 0xff).toByte
+    arr(index + 1) = ((s) & 0xff).toByte
     this
   }
 
@@ -120,8 +121,8 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeShortLE(s: Int): this.type = {
     val arr = arrayToWrite(numBytes = 2)
     val index = getAndIncrementIndex(numBytes = 2)
-    arr(index)     = ((s      ) & 0xff).toByte
-    arr(index + 1) = ((s >>  8) & 0xff).toByte
+    arr(index) = ((s) & 0xff).toByte
+    arr(index + 1) = ((s >> 8) & 0xff).toByte
     this
   }
 
@@ -132,9 +133,9 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeMediumBE(m: Int): this.type = {
     val arr = arrayToWrite(numBytes = 3)
     val index = getAndIncrementIndex(numBytes = 3)
-    arr(index)     = ((m >> 16) & 0xff).toByte
-    arr(index + 1) = ((m >>  8) & 0xff).toByte
-    arr(index + 2) = ((m      ) & 0xff).toByte
+    arr(index) = ((m >> 16) & 0xff).toByte
+    arr(index + 1) = ((m >> 8) & 0xff).toByte
+    arr(index + 2) = ((m) & 0xff).toByte
     this
   }
 
@@ -145,9 +146,9 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeMediumLE(m: Int): this.type = {
     val arr = arrayToWrite(numBytes = 3)
     val index = getAndIncrementIndex(numBytes = 3)
-    arr(index)     =  ((m      ) & 0xff).toByte
-    arr(index + 1) =  ((m >>  8) & 0xff).toByte
-    arr(index + 2) =  ((m >> 16) & 0xff).toByte
+    arr(index) = ((m) & 0xff).toByte
+    arr(index + 1) = ((m >> 8) & 0xff).toByte
+    arr(index + 2) = ((m >> 16) & 0xff).toByte
     this
   }
 
@@ -157,10 +158,10 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeIntBE(i: Long): this.type = {
     val arr = arrayToWrite(numBytes = 4)
     val index = getAndIncrementIndex(numBytes = 4)
-    arr(index)     = ((i >> 24) & 0xff).toByte
+    arr(index) = ((i >> 24) & 0xff).toByte
     arr(index + 1) = ((i >> 16) & 0xff).toByte
-    arr(index + 2) = ((i >>  8) & 0xff).toByte
-    arr(index + 3) = ((i      ) & 0xff).toByte
+    arr(index + 2) = ((i >> 8) & 0xff).toByte
+    arr(index + 3) = ((i) & 0xff).toByte
     this
   }
 
@@ -170,8 +171,8 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeIntLE(i: Long): this.type = {
     val arr = arrayToWrite(numBytes = 4)
     val index = getAndIncrementIndex(numBytes = 4)
-    arr(index)     = ((i      ) & 0xff).toByte
-    arr(index + 1) = ((i >>  8) & 0xff).toByte
+    arr(index) = ((i) & 0xff).toByte
+    arr(index + 1) = ((i >> 8) & 0xff).toByte
     arr(index + 2) = ((i >> 16) & 0xff).toByte
     arr(index + 3) = ((i >> 24) & 0xff).toByte
     this
@@ -183,14 +184,14 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeLongBE(l: Long): this.type = {
     val arr = arrayToWrite(numBytes = 8)
     val index = getAndIncrementIndex(numBytes = 8)
-    arr(index)     = ((l >> 56) & 0xff).toByte
+    arr(index) = ((l >> 56) & 0xff).toByte
     arr(index + 1) = ((l >> 48) & 0xff).toByte
     arr(index + 2) = ((l >> 40) & 0xff).toByte
     arr(index + 3) = ((l >> 32) & 0xff).toByte
     arr(index + 4) = ((l >> 24) & 0xff).toByte
     arr(index + 5) = ((l >> 16) & 0xff).toByte
-    arr(index + 6) = ((l >>  8) & 0xff).toByte
-    arr(index + 7) = ((l      ) & 0xff).toByte
+    arr(index + 6) = ((l >> 8) & 0xff).toByte
+    arr(index + 7) = ((l) & 0xff).toByte
     this
   }
 
@@ -200,8 +201,8 @@ private sealed abstract class AbstractBufByteWriterImpl
   def writeLongLE(l: Long): this.type = {
     val arr = arrayToWrite(numBytes = 8)
     val index = getAndIncrementIndex(numBytes = 8)
-    arr(index)     = ((l      ) & 0xff).toByte
-    arr(index + 1) = ((l >>  8) & 0xff).toByte
+    arr(index) = ((l) & 0xff).toByte
+    arr(index + 1) = ((l >> 8) & 0xff).toByte
     arr(index + 2) = ((l >> 16) & 0xff).toByte
     arr(index + 3) = ((l >> 24) & 0xff).toByte
     arr(index + 4) = ((l >> 32) & 0xff).toByte
@@ -215,10 +216,8 @@ private sealed abstract class AbstractBufByteWriterImpl
 /**
  * A fixed size [[BufByteWriter]].
  */
-private final class FixedBufByteWriter(
-    arr: Array[Byte],
-    private[io] var index: Int = 0)
-  extends AbstractBufByteWriterImpl {
+private final class FixedBufByteWriter(arr: Array[Byte], private[io] var index: Int = 0)
+    extends AbstractBufByteWriterImpl {
   import ByteWriter.OverflowException
 
   require(index >= 0)
@@ -285,8 +284,10 @@ private final class DynamicBufByteWriter(arr: Array[Byte]) extends AbstractBufBy
 
       // Check to make sure we won't exceed max buffer size
       if (requiredSize < 0 || requiredSize > MaxBufferSize)
-        throw new OverflowException(s"maximum dynamic buffer size is $MaxBufferSize." +
-          s" Insufficient space to write $requiredRemainingBytes bytes")
+        throw new OverflowException(
+          s"maximum dynamic buffer size is $MaxBufferSize." +
+            s" Insufficient space to write $requiredRemainingBytes bytes"
+        )
 
       // Increase size of the buffer by 50% until it can contain `requiredBytes`
       while (requiredSize > size && size > 0) {

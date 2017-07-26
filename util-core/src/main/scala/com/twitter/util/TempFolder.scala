@@ -45,7 +45,7 @@ trait TempFolder {
     var folder: File = null
     do {
       folder = new File(tempFolder, "scala-test-" + System.currentTimeMillis)
-    } while (! folder.mkdir())
+    } while (!folder.mkdir())
     _folderName.set(folder)
 
     try {
