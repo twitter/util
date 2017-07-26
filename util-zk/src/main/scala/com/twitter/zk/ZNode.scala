@@ -14,6 +14,7 @@ import com.twitter.util.{Future, Return, Throw, Try}
  * A handle to a ZNode attached to a ZkClient
  */
 trait ZNode {
+
   /** Absolute path of ZNode */
   val path: String
 
@@ -44,7 +45,8 @@ trait ZNode {
   def apply(stat: Stat): ZNode.Exists = ZNode.Exists(this, stat)
 
   /** Build a ZNode with its metadata and children. */
-  def apply(stat: Stat, children: Seq[String]): ZNode.Children = ZNode.Children(this, stat, children)
+  def apply(stat: Stat, children: Seq[String]): ZNode.Children =
+    ZNode.Children(this, stat, children)
 
   /** Build a ZNode with its metadata and data. */
   def apply(stat: Stat, bytes: Array[Byte]): ZNode.Data = ZNode.Data(this, stat, bytes)
@@ -79,15 +81,18 @@ trait ZNode {
    * Create this ZNode; or if a child name is specified create that child.
    */
   def create(
-      data: Array[Byte] = Array.empty[Byte],
-      acls: Seq[ACL]    = zkClient.acl,
-      mode: CreateMode  = zkClient.mode,
-      child: Option[String] = None): Future[ZNode] = {
+    data: Array[Byte] = Array.empty[Byte],
+    acls: Seq[ACL] = zkClient.acl,
+    mode: CreateMode = zkClient.mode,
+    child: Option[String] = None
+  ): Future[ZNode] = {
     val creatingPath = child map { "%s/%s".format(path, _) } getOrElse path
     zkClient.retrying { zk =>
       val result = new StringCallbackPromise
       zk.create(creatingPath, data, acls.asJava, mode, result, null)
-      result map { newPath => zkClient(newPath) }
+      result map { newPath =>
+        zkClient(newPath)
+      }
     }
   }
 
@@ -95,7 +100,9 @@ trait ZNode {
   def delete(version: Int = 0): Future[ZNode] = zkClient.retrying { zk =>
     val result = new UnitCallbackPromise
     zk.delete(path, version, result, null)
-    result map { _ => this }
+    result map { _ =>
+      this
+    }
   }
 
   /** Returns a Future that is satisfied with this ZNode with its metadata and data */
@@ -109,7 +116,9 @@ trait ZNode {
   def sync(): Future[ZNode] = zkClient.retrying { zk =>
     val result = new UnitCallbackPromise
     zk.sync(path, result, null)
-    result map { _ => this }
+    result map { _ =>
+      this
+    }
   }
 
   /** Provides access to this node's children. */
@@ -202,10 +211,14 @@ trait ZNode {
    */
   def monitorTree(): Offer[ZNode.TreeUpdate] = {
     val broker = new Broker[ZNode.TreeUpdate]
+
     /** Pipe events from a subtree's monitor to this broker. */
     def pipeSubTreeUpdates(next: Offer[ZNode.TreeUpdate]) {
-      next.sync().flatMap(broker ! _).onSuccess { _ => pipeSubTreeUpdates(next) }
+      next.sync().flatMap(broker ! _).onSuccess { _ =>
+        pipeSubTreeUpdates(next)
+      }
     }
+
     /** Monitor a watch on this node. */
     def monitorWatch(watch: Future[ZNode.Watch[ZNode.Children]], knownChildren: Set[ZNode]) {
       log.debug("monitoring %s with %d known children", path, knownChildren.size)
@@ -217,11 +230,13 @@ trait ZNode {
         // monitoring
         case ZNode.Watch(Return(zparent), eventUpdate) => {
           val children = zparent.children.toSet
-          val treeUpdate = ZNode.TreeUpdate(zparent,
-              added = children -- knownChildren,
-              removed = knownChildren -- children)
+          val treeUpdate = ZNode.TreeUpdate(
+            zparent,
+            added = children -- knownChildren,
+            removed = knownChildren -- children
+          )
           log.debug("updating %s with %d children", path, treeUpdate.added.size)
-          broker send(treeUpdate) sync() onSuccess { _ =>
+          broker send (treeUpdate) sync () onSuccess { _ =>
             log.debug("updated %s with %d children", path, treeUpdate.added.size)
             treeUpdate.added foreach { z =>
               pipeSubTreeUpdates(z.monitorTree())
@@ -238,7 +253,7 @@ trait ZNode {
           // Tell the broker about the children we lost; otherwise, if there were no children,
           // this deletion should be reflected in a watch on the parent node, if one exists.
           if (knownChildren.size > 0) {
-            broker send(ZNode.TreeUpdate(this, removed = knownChildren)) sync()
+            broker send (ZNode.TreeUpdate(this, removed = knownChildren)) sync ()
           } else {
             Future.Done
           } onSuccess { _ =>
@@ -269,6 +284,7 @@ trait ZNode {
  * ZNode utilities and return types.
  */
 object ZNode {
+
   /** Build a ZNode */
   def apply(zk: ZkClient, _path: String) = new ZNode {
     PathUtils.validatePath(_path)
@@ -354,13 +370,15 @@ object ZNode {
   }
 
   case class Watch[T <: Exists](result: Try[T], update: Future[WatchedEvent]) {
+
     /** Map this Watch to one of another type. */
     def map[V <: Exists](toV: T => V): Watch[V] = new Watch(result.map(toV), update)
   }
 
   /** Describes an update to a node's children. */
   case class TreeUpdate(
-      parent: ZNode,
-      added: Set[ZNode] = Set.empty[ZNode],
-      removed: Set[ZNode] = Set.empty[ZNode])
+    parent: ZNode,
+    added: Set[ZNode] = Set.empty[ZNode],
+    removed: Set[ZNode] = Set.empty[ZNode]
+  )
 }

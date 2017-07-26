@@ -13,6 +13,7 @@ protected[zk] object LiftableFuture {
  * KeepereException.NoNodeExceptions for ZOp.watch().
  */
 protected[zk] class LiftableFuture[T](f: Future[T]) {
+
   /** Lift a value to a Return. */
   def liftSuccess = f map { Return(_) }
 

@@ -61,8 +61,12 @@ object StateEvent {
       case KeeperState.Expired => Expired
       case KeeperState.ConnectedReadOnly => ConnectedReadOnly
       case KeeperState.SaslAuthenticated => SaslAuthenticated
-      case KeeperState.Unknown => throw new IllegalArgumentException("Can't convert deprecated state to StateEvent: Unknown")
-      case KeeperState.NoSyncConnected => throw new IllegalArgumentException("Can't convert deprecated state to StateEvent: NoSyncConnected")
+      case KeeperState.Unknown =>
+        throw new IllegalArgumentException("Can't convert deprecated state to StateEvent: Unknown")
+      case KeeperState.NoSyncConnected =>
+        throw new IllegalArgumentException(
+          "Can't convert deprecated state to StateEvent: NoSyncConnected"
+        )
     }
   }
 }

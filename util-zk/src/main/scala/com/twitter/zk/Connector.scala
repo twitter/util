@@ -65,13 +65,13 @@ object Connector {
     private[this] var index = 0
     protected[this] def nextConnector() = {
       val i = synchronized {
-        if (index == Int.MaxValue ) {
+        if (index == Int.MaxValue) {
           index = 0
         }
         index = index + 1
         index % connectors.length
       }
-      log.trace("connector %d of %d", i+1, connectors.length)
+      log.trace("connector %d of %d", i + 1, connectors.length)
       connectors(i)
     }
 

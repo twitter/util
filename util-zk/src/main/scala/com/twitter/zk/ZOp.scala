@@ -5,6 +5,7 @@ import com.twitter.util.{Future, Try}
 
 /** A ZNode-read operation. */
 trait ZOp[T <: ZNode.Exists] {
+
   /** Returns a Future that is satisfied when the operation is complete. */
   def apply(): Future[T]
 
@@ -20,10 +21,13 @@ trait ZOp[T <: ZNode.Exists] {
     val broker = new Broker[Try[T]]
     // Set the watch, send the result to the broker, and repeat this when an event occurs
     def setWatch() {
-      watch() onSuccess { case ZNode.Watch(result, update) =>
-        broker ! result onSuccess { _ =>
-          update onSuccess { _ => setWatch() }
-        }
+      watch() onSuccess {
+        case ZNode.Watch(result, update) =>
+          broker ! result onSuccess { _ =>
+            update onSuccess { _ =>
+              setWatch()
+            }
+          }
       }
     }
     setWatch()

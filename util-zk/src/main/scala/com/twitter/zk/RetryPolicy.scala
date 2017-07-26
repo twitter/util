@@ -22,12 +22,14 @@ object KeeperConnectionException {
 }
 
 object RetryPolicy {
+
   /** Retries an operation a fixed number of times without back-off. */
   case class Basic(retries: Int) extends RetryPolicy {
     def apply[T](op: => Future[T]): Future[T] = {
       def retry(tries: Int): Future[T] = {
-        op rescue { case KeeperConnectionException(_) if (tries > 0) =>
-          retry(tries - 1)
+        op rescue {
+          case KeeperConnectionException(_) if (tries > 0) =>
+            retry(tries - 1)
         }
       }
       retry(retries)
@@ -44,16 +46,20 @@ object RetryPolicy {
     base: Duration,
     factor: Double = 2.0,
     maximum: Duration = 30.seconds
-  )(implicit timer: Timer) extends RetryPolicy {
+  )(implicit timer: Timer)
+      extends RetryPolicy {
     require(base > 0.seconds)
     require(factor >= 1)
 
     def apply[T](op: => Future[T]): Future[T] = {
       def retry(delay: Duration): Future[T] = {
-        op rescue { case KeeperConnectionException(_) =>
-          timer.doLater(delay) {
-            retry((delay.inNanoseconds * factor).toLong.nanoseconds min maximum)
-          }.flatten
+        op rescue {
+          case KeeperConnectionException(_) =>
+            timer
+              .doLater(delay) {
+                retry((delay.inNanoseconds * factor).toLong.nanoseconds min maximum)
+              }
+              .flatten
         }
       }
       retry(base)

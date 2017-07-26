@@ -11,6 +11,7 @@ import com.twitter.util.{Promise, Return, Throw}
 
 /** Mix-in to make an AsyncCallback a Promise */
 trait AsyncCallbackPromise[T] extends Promise[T] {
+
   /** Process result iff rc is OK; otherwise throw a KeeperException. */
   protected def process(rc: Int, path: String)(result: => T) {
     KeeperException.Code.get(rc) match {
@@ -32,7 +33,8 @@ class UnitCallbackPromise extends AsyncCallbackPromise[Unit] with AsyncCallback.
   }
 }
 
-class ExistsCallbackPromise(znode: ZNode) extends AsyncCallbackPromise[ZNode.Exists]
+class ExistsCallbackPromise(znode: ZNode)
+    extends AsyncCallbackPromise[ZNode.Exists]
     with AsyncCallback.StatCallback {
   def processResult(rc: Int, path: String, ctx: AnyRef, stat: Stat) {
     process(rc, path) {
@@ -41,7 +43,8 @@ class ExistsCallbackPromise(znode: ZNode) extends AsyncCallbackPromise[ZNode.Exi
   }
 }
 
-class ChildrenCallbackPromise(znode: ZNode) extends AsyncCallbackPromise[ZNode.Children]
+class ChildrenCallbackPromise(znode: ZNode)
+    extends AsyncCallbackPromise[ZNode.Children]
     with AsyncCallback.Children2Callback {
   def processResult(rc: Int, path: String, ctx: AnyRef, children: JList[String], stat: Stat) {
     process(rc, path) {
@@ -50,7 +53,8 @@ class ChildrenCallbackPromise(znode: ZNode) extends AsyncCallbackPromise[ZNode.C
   }
 }
 
-class DataCallbackPromise(znode: ZNode) extends AsyncCallbackPromise[ZNode.Data]
+class DataCallbackPromise(znode: ZNode)
+    extends AsyncCallbackPromise[ZNode.Data]
     with AsyncCallback.DataCallback {
   def processResult(rc: Int, path: String, ctx: AnyRef, bytes: Array[Byte], stat: Stat) {
     process(rc, path) {
@@ -58,4 +62,3 @@ class DataCallbackPromise(znode: ZNode) extends AsyncCallbackPromise[ZNode.Data]
     }
   }
 }
-

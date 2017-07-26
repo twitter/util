@@ -6,12 +6,16 @@ import org.apache.zookeeper.{CreateMode, KeeperException}
 
 import com.twitter.concurrent.Permit
 import com.twitter.util.Future
-import com.twitter.zk.coordination.ZkAsyncSemaphore.{LackOfConsensusException, PermitMismatchException, PermitNodeException}
+import com.twitter.zk.coordination.ZkAsyncSemaphore.{
+  LackOfConsensusException,
+  PermitMismatchException,
+  PermitNodeException
+}
 import com.twitter.zk.{ZNode, ZkClient}
 
-
 object ShardCoordinator {
-  case class SemaphoreError(err: Throwable) extends Exception("Exception from underlying semaphore.", err)
+  case class SemaphoreError(err: Throwable)
+      extends Exception("Exception from underlying semaphore.", err)
 }
 
 /**
@@ -53,23 +57,28 @@ class ShardCoordinator(zk: ZkClient, path: String, numShards: Int) {
   def acquire(): Future[ShardPermit] = {
     semaphore.acquire flatMap { permit =>
       shardNodes() map { nodes =>
-        nodes map { node => shardIdOf(node.path) }
+        nodes map { node =>
+          shardIdOf(node.path)
+        }
       } map { ids =>
         (0 until numShards) filterNot { ids contains _ }
       } flatMap { availableIds =>
         // Iteratively (brute force) attempt to create a node for the next lowest available ID until
         // a Shard is successfully created (race resolution).
-        availableIds.tail.foldLeft(createShardNode(availableIds.head, permit)) { (futureShardOption, id) =>
-          futureShardOption flatMap { shardOption =>
-            shardOption match {
-              case Some(shard) => Future.value(shardOption)
-              case None => createShardNode(id, permit)
+        availableIds.tail.foldLeft(createShardNode(availableIds.head, permit)) {
+          (futureShardOption, id) =>
+            futureShardOption flatMap { shardOption =>
+              shardOption match {
+                case Some(shard) => Future.value(shardOption)
+                case None => createShardNode(id, permit)
+              }
             }
-          }
         }
       } flatMap { shardOption =>
         shardOption map { Future.value(_) } getOrElse {
-          Future.exception(new RejectedExecutionException("Could not get a shard, polluted zk tree?"))
+          Future.exception(
+            new RejectedExecutionException("Could not get a shard, polluted zk tree?")
+          )
         }
       } rescue {
         case err: LackOfConsensusException => Future.exception(SemaphoreError(err))
@@ -93,7 +102,7 @@ class ShardCoordinator(zk: ZkClient, path: String, numShards: Int) {
     zk(path).getChildren() map { zop =>
       zop.children filter { child =>
         child.path.startsWith(shardPathPrefix)
-      } sortBy(child => shardIdOf(child.path))
+      } sortBy (child => shardIdOf(child.path))
     }
   }
 
@@ -110,8 +119,7 @@ sealed trait ShardPermit {
   def release(): Unit
 }
 
-case class Shard(id: Int, private val node: ZNode, private val permit: Permit)
-  extends ShardPermit {
+case class Shard(id: Int, private val node: ZNode, private val permit: Permit) extends ShardPermit {
 
   def release() = {
     node.delete() ensure { permit.release() }
