@@ -20,12 +20,12 @@ import java.util.{logging => jlogging}
 
 import org.scalatest.{BeforeAndAfter, WordSpec}
 
-
 /**
  * Specify logging during unit tests via system property, defaulting to FATAL only.
  */
 trait TestLogging extends BeforeAndAfter { self: WordSpec =>
-  val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
+  val logLevel =
+    Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
   private val logger = Logger.get("")
   private var oldLevel: jlogging.Level = _
