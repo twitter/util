@@ -104,4 +104,15 @@ class InMemoryStatsReceiverTest extends FunSuite
     assert(stats.histogramDetails("a/c").counts == 
       Seq(BucketAndCount(0, 1, 1), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 1)))
   }
+
+  test("keeps track of verbosity") {
+    val stats = new InMemoryStatsReceiver()
+    stats.stat(Verbosity.Debug, "foo")
+    stats.counter(Verbosity.Default, "bar")
+    stats.addGauge(Verbosity.Debug, "baz") { 0f }
+
+    assert(stats.verbosity(Seq("foo")) == Verbosity.Debug)
+    assert(stats.verbosity(Seq("bar")) == Verbosity.Default)
+    assert(stats.verbosity(Seq("baz")) == Verbosity.Debug)
+  }
 }

@@ -74,6 +74,9 @@ object StatsReceivers {
  * a corresponding degree of visibility into a healthy process) thus potentially reducing the
  * observability cost.
  *
+ * Metrics created w/o an explicitly specified [[Verbosity]] level, will use [[Verbosity.Default]].
+ * Use [[VerbosityAdjustingStatsReceiver]] to adjust this behaviour.
+ *
  * @see [[StatsReceivers]] for a Java-friendly API.
  */
 trait StatsReceiver {

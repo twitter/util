@@ -26,6 +26,9 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
 
   def repr: InMemoryStatsReceiver = this
 
+  val verbosity: mutable.Map[Seq[String], Verbosity] =
+    new ConcurrentHashMap[Seq[String], Verbosity]().asScala
+
   val counters: mutable.Map[Seq[String], Long] =
     new ConcurrentHashMap[Seq[String], Long]().asScala
 
@@ -41,13 +44,16 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
    */
-  def counter(verbosity: Verbosity, name: String*): ReadableCounter =
+  def counter(v: Verbosity, name: String*): ReadableCounter =
     new ReadableCounter {
+
+      verbosity += name -> v
 
       def incr(delta: Long): Unit = counters.synchronized {
         val oldValue = apply()
         counters(name) = oldValue + delta
       }
+
       def apply(): Long = counters.getOrElse(name, 0)
 
       override def toString: String =
@@ -59,8 +65,11 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Creates a [[ReadableStat]] of the given `name`.
    */
-  def stat(verbosity: Verbosity, name: String*): ReadableStat =
+  def stat(v: Verbosity, name: String*): ReadableStat =
     new ReadableStat {
+
+      verbosity += name -> v
+
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()
         stats(name) = oldValue :+ value
@@ -82,8 +91,12 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Creates a [[Gauge]] of the given `name`.
    */
-  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
-    val gauge = new Gauge {
+  def addGauge(v: Verbosity, name: String*)(f: => Float): Gauge =
+    new Gauge {
+
+      gauges += name -> (() => f)
+      verbosity += name -> v
+
       def remove(): Unit = {
         gauges -= name
       }
@@ -97,9 +110,6 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         s"Gauge(${name.mkString("/")}=$current)"
       }
     }
-    gauges += name -> (() => f)
-    gauge
-  }
 
   override def toString: String = "InMemoryStatsReceiver"
 
