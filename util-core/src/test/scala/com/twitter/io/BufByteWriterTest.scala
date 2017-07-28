@@ -17,7 +17,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   def testWriteString(name: String, bwFactory: Int => BufByteWriter, overflowOK: Boolean): Unit = {
-    test(s"$name: writeString") (forAll { (str1: String, str2: String) =>
+    test(s"$name: writeString")(forAll { (str1: String, str2: String) =>
       val byteCount1 = str1.getBytes(StandardCharsets.UTF_8).length
       val byteCount2 = str2.getBytes(StandardCharsets.UTF_8).length
 
@@ -36,7 +36,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
   }
 
   def testWriteByte(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeByte") (forAll { byte: Byte =>
+    test(s"$name: writeByte")(forAll { byte: Byte =>
       val bw = bwFactory()
       val buf = bw.writeByte(byte).owned()
 
@@ -46,7 +46,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     })
 
   def testWriteShort(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeShort{BE,LE}") (forAll { s: Short =>
+    test(s"$name: writeShort{BE,LE}")(forAll { s: Short =>
       val be = bwFactory().writeShortBE(s)
       val le = bwFactory().writeShortLE(s)
 
@@ -56,8 +56,8 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
       }
 
       val arr = Array[Byte](
-      ((s >>  8) & 0xff).toByte,
-      ((s      ) & 0xff).toByte
+        ((s >> 8) & 0xff).toByte,
+        ((s) & 0xff).toByte
       )
 
       assert(be.owned() == Buf.ByteArray.Owned(arr))
@@ -67,7 +67,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     })
 
   def testWriteMedium(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeMedium{BE,LE}") (forAll { m: Int =>
+    test(s"$name: writeMedium{BE,LE}")(forAll { m: Int =>
       val be = bwFactory().writeMediumBE(m)
       val le = bwFactory().writeMediumLE(m)
 
@@ -78,8 +78,8 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
 
       val arr = Array[Byte](
         ((m >> 16) & 0xff).toByte,
-        ((m >>  8) & 0xff).toByte,
-        ((m      ) & 0xff).toByte
+        ((m >> 8) & 0xff).toByte,
+        ((m) & 0xff).toByte
       )
 
       assert(be.owned() == Buf.ByteArray.Owned(arr))
@@ -112,7 +112,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     })
 
   def testWriteLong(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeLong{BE,LE}") (forAll { l: Long =>
+    test(s"$name: writeLong{BE,LE}")(forAll { l: Long =>
       val be = bwFactory().writeLongBE(l)
       val le = bwFactory().writeLongLE(l)
 
@@ -128,8 +128,8 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
         ((l >> 32) & 0xff).toByte,
         ((l >> 24) & 0xff).toByte,
         ((l >> 16) & 0xff).toByte,
-        ((l >>  8) & 0xff).toByte,
-        ((l      ) & 0xff).toByte
+        ((l >> 8) & 0xff).toByte,
+        ((l) & 0xff).toByte
       )
 
       assert(be.owned() == Buf.ByteArray.Owned(arr))
@@ -139,7 +139,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     })
 
   def testWriteFloat(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeFloat{BE,LE}") (forAll { f: Float =>
+    test(s"$name: writeFloat{BE,LE}")(forAll { f: Float =>
       val be = bwFactory().writeFloatBE(f)
       val le = bwFactory().writeFloatLE(f)
 
@@ -153,8 +153,8 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
       val arr = Array[Byte](
         ((i >> 24) & 0xff).toByte,
         ((i >> 16) & 0xff).toByte,
-        ((i >>  8) & 0xff).toByte,
-        ((i      ) & 0xff).toByte
+        ((i >> 8) & 0xff).toByte,
+        ((i) & 0xff).toByte
       )
 
       assert(be.owned() == Buf.ByteArray.Owned(arr))
@@ -164,33 +164,33 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     })
 
   def testWriteDouble(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-  test(s"$name: writeDouble{BE,LE}") (forAll { d: Double =>
-    val be = bwFactory().writeDoubleBE(d)
-    val le = bwFactory().writeDoubleLE(d)
+    test(s"$name: writeDouble{BE,LE}")(forAll { d: Double =>
+      val be = bwFactory().writeDoubleBE(d)
+      val le = bwFactory().writeDoubleLE(d)
 
-    if (!overflowOK) {
-      intercept[OverflowException] { be.writeByte(0xff) }
-      intercept[OverflowException] { be.writeByte(0xff) }
-    }
+      if (!overflowOK) {
+        intercept[OverflowException] { be.writeByte(0xff) }
+        intercept[OverflowException] { be.writeByte(0xff) }
+      }
 
-    val l = JDouble.doubleToLongBits(d)
+      val l = JDouble.doubleToLongBits(d)
 
-    val arr = Array[Byte](
-      ((l >> 56) & 0xff).toByte,
-      ((l >> 48) & 0xff).toByte,
-      ((l >> 40) & 0xff).toByte,
-      ((l >> 32) & 0xff).toByte,
-      ((l >> 24) & 0xff).toByte,
-      ((l >> 16) & 0xff).toByte,
-      ((l >>  8) & 0xff).toByte,
-      ((l      ) & 0xff).toByte
-    )
+      val arr = Array[Byte](
+        ((l >> 56) & 0xff).toByte,
+        ((l >> 48) & 0xff).toByte,
+        ((l >> 40) & 0xff).toByte,
+        ((l >> 32) & 0xff).toByte,
+        ((l >> 24) & 0xff).toByte,
+        ((l >> 16) & 0xff).toByte,
+        ((l >> 8) & 0xff).toByte,
+        ((l) & 0xff).toByte
+      )
 
-    assert(be.owned() == Buf.ByteArray.Owned(arr))
-    assert(le.owned() == Buf.ByteArray.Owned(arr.reverse))
-    assertIndex(be, 8)
-    assertIndex(le, 8)
-  })
+      assert(be.owned() == Buf.ByteArray.Owned(arr))
+      assert(le.owned() == Buf.ByteArray.Owned(arr.reverse))
+      assertIndex(be, 8)
+      assertIndex(le, 8)
+    })
 
   // FIXED
   test("index initialized to zero") {
@@ -206,7 +206,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
   testWriteFloat("fixed", () => BufByteWriter.fixed(4), overflowOK = false)
   testWriteDouble("fixed", () => BufByteWriter.fixed(8), overflowOK = false)
 
-  test("fixed: writeBytes(Array[Byte])") (forAll { bytes: Array[Byte] =>
+  test("fixed: writeBytes(Array[Byte])")(forAll { bytes: Array[Byte] =>
     val bw = BufByteWriter.fixed(bytes.length)
     val buf = bw.writeBytes(bytes).owned()
     intercept[OverflowException] { bw.writeByte(0xff) }
@@ -214,7 +214,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     assertIndex(bw, bytes.length)
   })
 
-  test("fixed: writeBytes(Array[Byte]) 2 times") (forAll { bytes: Array[Byte] =>
+  test("fixed: writeBytes(Array[Byte]) 2 times")(forAll { bytes: Array[Byte] =>
     val bw = BufByteWriter.fixed(bytes.length * 2)
     val buf = bw.writeBytes(bytes).writeBytes(bytes).owned()
     intercept[OverflowException] { bw.writeByte(0xff) }
@@ -223,7 +223,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     assertIndex(bw, bytes.length * 2)
   })
 
-  test("fixed: writeBytes(Buf)") (forAll { arr: Array[Byte] =>
+  test("fixed: writeBytes(Buf)")(forAll { arr: Array[Byte] =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.fixed(bytes.length)
     val buf = bw.writeBytes(bytes).owned()
@@ -232,7 +232,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     assertIndex(bw, bytes.length)
   })
 
-  test("fixed: writeBytes(Buf) 2 times") (forAll { arr: Array[Byte] =>
+  test("fixed: writeBytes(Buf) 2 times")(forAll { arr: Array[Byte] =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.fixed(bytes.length * 2)
     val buf = bw.writeBytes(bytes).writeBytes(bytes).owned()
@@ -243,7 +243,7 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
 
   // DYNAMIC
   test("dynamic: writeByte with initial size 0 should throw exception") {
-    intercept[IllegalArgumentException]{ BufByteWriter.dynamic(0) }
+    intercept[IllegalArgumentException] { BufByteWriter.dynamic(0) }
   }
 
   testWriteString("dynamic", _ => BufByteWriter.dynamic(1), overflowOK = true)
@@ -254,34 +254,40 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
   testWriteLong("dynamic", () => BufByteWriter.dynamic(20), overflowOK = true)
   testWriteFloat("dynamic", () => BufByteWriter.dynamic(4), overflowOK = true)
   testWriteDouble("dynamic", () => BufByteWriter.dynamic(), overflowOK = true)
-  testWriteLong("dynamic, must grow multiple times", () => BufByteWriter.dynamic(1), overflowOK = true)
+  testWriteLong(
+    "dynamic, must grow multiple times",
+    () => BufByteWriter.dynamic(1),
+    overflowOK = true
+  )
 
-  test("dynamic: writeBytes(Array[Byte])") (forAll { bytes: Array[Byte] =>
+  test("dynamic: writeBytes(Array[Byte])")(forAll { bytes: Array[Byte] =>
     val bw = BufByteWriter.dynamic()
     val buf = bw.writeBytes(bytes).owned()
     assert(buf == Buf.ByteArray.Owned(bytes))
   })
 
-  test("dynamic: writeBytes(Buf)") (forAll { arr: Array[Byte] =>
+  test("dynamic: writeBytes(Buf)")(forAll { arr: Array[Byte] =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.dynamic()
     val buf = bw.writeBytes(bytes).owned()
     assert(buf == bytes)
   })
 
-  test("dynamic: writeBytes(Array[Byte]) 3 times") (forAll { bytes: Array[Byte] =>
+  test("dynamic: writeBytes(Array[Byte]) 3 times")(forAll { bytes: Array[Byte] =>
     val bw = BufByteWriter.dynamic()
-    val buf = bw.writeBytes(bytes)
+    val buf = bw
+      .writeBytes(bytes)
       .writeBytes(bytes)
       .writeBytes(bytes)
       .owned()
     assert(buf == Buf.ByteArray.Owned(bytes ++ bytes ++ bytes))
   })
 
-  test("dynamic: writeBytes(Buf) 3 times") (forAll { arr: Array[Byte] =>
+  test("dynamic: writeBytes(Buf) 3 times")(forAll { arr: Array[Byte] =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.dynamic()
-    val buf = bw.writeBytes(bytes)
+    val buf = bw
+      .writeBytes(bytes)
       .writeBytes(bytes)
       .writeBytes(bytes)
       .owned()
@@ -297,4 +303,3 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
     intercept[OverflowException] { bw.writeByte(0xff) }
   }*/
 }
-

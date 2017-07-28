@@ -13,11 +13,12 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FunSuite, Matchers}
 
 @RunWith(classOf[JUnitRunner])
-class ReaderTest extends FunSuite
-  with GeneratorDrivenPropertyChecks
-  with Matchers
-  with Eventually
-  with IntegrationPatience {
+class ReaderTest
+    extends FunSuite
+    with GeneratorDrivenPropertyChecks
+    with Matchers
+    with Eventually
+    with IntegrationPatience {
 
   private def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   private def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
@@ -31,7 +32,7 @@ class ReaderTest extends FunSuite
   }
 
   def assertRead(r: Reader, i: Int, j: Int): Unit = {
-    val n = j-i
+    val n = j - i
     val f = r.read(n)
     assertRead(f, i, j)
   }
@@ -276,7 +277,6 @@ class ReaderTest extends FunSuite
     assertReadEofAndClosed(rw)
   }
 
-
   test("Reader.writable - write after fail") {
     val rw = Reader.writable()
     rw.fail(failedEx)
@@ -418,7 +418,9 @@ class ReaderTest extends FunSuite
   test("Reader.writable - close not satisfied until reads are fulfilled") {
     val rw = Reader.writable()
     val rf = rw.read(6)
-    val cf = rf.flatMap { _ => rw.close() }
+    val cf = rf.flatMap { _ =>
+      rw.close()
+    }
     assert(!rf.isDefined)
     assert(!cf.isDone)
 
@@ -482,7 +484,9 @@ class ReaderTest extends FunSuite
 
   test("Reader.concat") {
     forAll { (ss: List[String]) =>
-      val readers = ss.map { s => BufReader(Buf.Utf8(s)) }
+      val readers = ss.map { s =>
+        BufReader(Buf.Utf8(s))
+      }
       val buf = Reader.readAll(Reader.concat(AsyncStream.fromSeq(readers)))
       Await.result(buf) should equal(Buf.Utf8(ss.mkString))
     }

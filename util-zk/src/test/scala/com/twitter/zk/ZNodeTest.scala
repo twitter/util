@@ -3,8 +3,6 @@ package com.twitter.zk
 /**
  * @author ver@twitter.com
  */
-
-
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
@@ -23,7 +21,7 @@ class ZNodeTest extends WordSpec with MockitoSugar {
       val znode = ZNode(zk, path)
       path should {
         "parentPath" in { assert(znode.parentPath == parent) }
-        "name"       in { assert(znode.name       == name  ) }
+        "name" in { assert(znode.name == name) }
       }
     }
 
@@ -35,7 +33,9 @@ class ZNodeTest extends WordSpec with MockitoSugar {
       val h = new ZNodeSpecHelper
       import h._
 
-      val zs = (0 to 1) map { _ => ZNode(zk, "/some/path") }
+      val zs = (0 to 1) map { _ =>
+        ZNode(zk, "/some/path")
+      }
       val table = Map(zs(0) -> true)
       assert(table.keys.toList.contains(zs(0)))
       assert(table.keys.toList.contains(zs(1)))

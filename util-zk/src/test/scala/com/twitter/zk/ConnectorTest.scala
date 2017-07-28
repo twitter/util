@@ -26,7 +26,9 @@ class ConnectorTest extends WordSpec with MockitoSugar {
           connector
         }
         val nConnectors = 3
-        val connectors = 1 to nConnectors map { _ => mockConnector }
+        val connectors = 1 to nConnectors map { _ =>
+          mockConnector
+        }
         val connector = Connector.RoundRobin(connectors: _*)
       }
 

@@ -15,7 +15,7 @@ class CpuProfileTest extends FunSuite {
     val times: Stream[Int] = (0 #:: Stream.from(0)).flatMap(x => List(x, x, x))
     val iter = times.iterator
     val start = Time.now
-    def nextTime: Time = start + iter.next().milliseconds*10
+    def nextTime: Time = start + iter.next().milliseconds * 10
 
     val t = new Thread("CpuProfileTest") {
       override def run() {

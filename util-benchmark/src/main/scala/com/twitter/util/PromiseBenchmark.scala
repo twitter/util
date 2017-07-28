@@ -21,7 +21,6 @@ class PromiseBenchmark extends StdBenchAnnotations {
     promise.detach()
   }
 
-
   // used to isolate the work in the `updateIfEmpty` benchmark
   @Benchmark
   def newUnsatisfiedPromise(): Promise[String] = {

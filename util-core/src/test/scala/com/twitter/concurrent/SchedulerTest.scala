@@ -9,12 +9,12 @@ import org.scalatest.{FunSuite, Matchers}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 
-abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite
-  with Matchers {
+abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite with Matchers {
   private val scheduler = new LocalScheduler(lifo)
-  def submit(f: => Unit): Unit = scheduler.submit(new Runnable {
-    def run(): Unit = f
-  })
+  def submit(f: => Unit): Unit =
+    scheduler.submit(new Runnable {
+      def run(): Unit = f
+    })
 
   val N = 100
 

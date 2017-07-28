@@ -9,9 +9,7 @@ import org.scalatest._
 import org.scalatest.mock.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
-class RefreshTest
-  extends FunSuite
-  with MockitoSugar {
+class RefreshTest extends FunSuite with MockitoSugar {
 
   class Ctx {
     val provider = mock[() => Future[Int]]

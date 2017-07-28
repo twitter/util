@@ -68,7 +68,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     eventually { assert(executor.getCompletedTaskCount == 2) }
 
     assert(runCount.get() == 1)
-    assert(Await.result(result1)  == 1)
+    assert(Await.result(result1) == 1)
     intercept[CancellationException] { Await.result(result2) }
   }
 
@@ -131,8 +131,9 @@ class FuturePoolTest extends FunSuite with Eventually {
         while (true) {
           Thread.sleep(Long.MaxValue)
         }
-      } catch { case _: InterruptedException =>
-        interrupted.setDone()
+      } catch {
+        case _: InterruptedException =>
+          interrupted.setDone()
       }
     }
 

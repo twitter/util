@@ -47,7 +47,8 @@ class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyC
     private[this] def broadcastStatsReceiver(depth: Int): Gen[StatsReceiver] =
       if (depth > 3) inMemoryStatsReceiver
       else {
-        Gen.nonEmptyListOf(statsReceiverTopology(depth))
+        Gen
+          .nonEmptyListOf(statsReceiverTopology(depth))
           .flatMap {
             case Nil => statsReceiverTopology(depth)
             case srs => Gen.const(BroadcastStatsReceiver(srs))

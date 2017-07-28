@@ -32,11 +32,13 @@ class FlagsTest extends FunSuite {
       flag.finishParsing()
       assert(fooFlag() == 973)
       assert(barFlag() == "hello there")
-      assert(naive.toSet == Set(
-        Entry(Seq("flags", "foo"), "973"),
-        Entry(Seq("flags", "bar"), "hello there"),
-        Entry(Seq("flags", "help"), "false")
-      ))
+      assert(
+        naive.toSet == Set(
+          Entry(Seq("flags", "foo"), "973"),
+          Entry(Seq("flags", "bar"), "hello there"),
+          Entry(Seq("flags", "help"), "false")
+        )
+      )
     }
   }
 
@@ -52,10 +54,12 @@ class FlagsTest extends FunSuite {
       intercept[IllegalArgumentException] {
         bazFlag()
       }
-      assert(naive.toSet == Set(
-        Entry(Seq("flags", "baz"), Flag.EmptyRequired),
-        Entry(Seq("flags", "help"), "false")
-      ))
+      assert(
+        naive.toSet == Set(
+          Entry(Seq("flags", "baz"), Flag.EmptyRequired),
+          Entry(Seq("flags", "help"), "false")
+        )
+      )
     }
   }
 
@@ -67,10 +71,12 @@ class FlagsTest extends FunSuite {
       assert(flag.parseArgs(Array()) == Flags.Ok(Nil))
       flag.finishParsing()
       assert(fooFlag() == 123)
-      assert(naive.toSet == Set(
-        Entry(Seq("flags", "foo"), "123"),
-        Entry(Seq("flags", "help"), "false")
-      ))
+      assert(
+        naive.toSet == Set(
+          Entry(Seq("flags", "foo"), "123"),
+          Entry(Seq("flags", "help"), "false")
+        )
+      )
     }
   }
 
@@ -130,7 +136,9 @@ class FlagsTest extends FunSuite {
   test("Flag: stop parsing at '--'") {
     val ctx = new Ctx
     import ctx._
-    assert(flag.parseArgs(Array("arg0", "--", "-foo", "333")) == Flags.Ok(Seq("arg0", "-foo", "333")))
+    assert(
+      flag.parseArgs(Array("arg0", "--", "-foo", "333")) == Flags.Ok(Seq("arg0", "-foo", "333"))
+    )
   }
 
   test("Flag: give nice parse errors") {
@@ -155,7 +163,9 @@ class FlagsTest extends FunSuite {
     val ctx = new Ctx
     import ctx._
     assert(flag.parseArgs(Array("-undefined")).isInstanceOf[Flags.Error])
-    assert(flag.parseArgs(Array("-undefined"), allowUndefinedFlags = true) == Flags.Ok(Seq("-undefined")))
+    assert(
+      flag.parseArgs(Array("-undefined"), allowUndefinedFlags = true) == Flags.Ok(Seq("-undefined"))
+    )
   }
 
   test("formatFlagValues") {
@@ -171,7 +181,6 @@ class FlagsTest extends FunSuite {
     flagWithoutGlobal("set.local.flag", "a flag!", "this is a local flag")
     flagWithoutGlobal("flag.with.single.quote", "i'm so cool", "why would you do this?")
     flagWithoutGlobal.parseArgs(Array("-set.local.flag=hi"))
-
 
     val localOnly =
       """|Set flags:
@@ -244,13 +253,16 @@ class FlagsTest extends FunSuite {
   }
 
   test("Flag has failFast from Flags when added") {
-    val somethingIdFlag = new Flag[Int]("something.id", "bar", Left(() => 3), failFastUntilParsed = false)
+    val somethingIdFlag =
+      new Flag[Int]("something.id", "bar", Left(() => 3), failFastUntilParsed = false)
     assert(somethingIdFlag() == 3) // this logs a message in SEVERE and we get the default value
 
     val testFlags = new Flags("failFastTest", includeGlobal = false, failFastUntilParsed = true) // added flags will inherit this value
     testFlags.add(somethingIdFlag)
     intercept[IllegalStateException] {
-      testFlags.getAll().foreach(flag => if (flag.name == "something.id") flag.apply()) // this should fail, since all added flags should now fail fast.
+      testFlags
+        .getAll()
+        .foreach(flag => if (flag.name == "something.id") flag.apply()) // this should fail, since all added flags should now fail fast.
     }
 
     // now parse and apply

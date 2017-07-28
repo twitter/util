@@ -193,7 +193,7 @@ class AsyncMeterTest extends FunSuite {
   test("AsyncMeter should reject greedy awaiters") {
     val timer = new MockTimer
     val meter = newMeter(2, 1.second, 100)(timer)
-    val greedy= meter.await(3)
+    val greedy = meter.await(3)
     assert(greedy.isDefined)
     intercept[IllegalArgumentException] {
       Await.result(greedy, 5.seconds)

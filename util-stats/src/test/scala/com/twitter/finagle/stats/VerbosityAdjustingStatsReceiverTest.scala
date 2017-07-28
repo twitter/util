@@ -20,7 +20,7 @@ class VerbosityAdjustingStatsReceiverTest extends FunSuite with OneInstancePerTe
   test("prefers explicit verbosity") {
     verbose.counter(Verbosity.Default, "foo")
     verbose.stat(Verbosity.Default, "bar")
-    verbose.addGauge(Verbosity.Default,"baz")(0f)
+    verbose.addGauge(Verbosity.Default, "baz")(0f)
 
     assert(inMemory.verbosity(Seq("foo")) == Verbosity.Default)
     assert(inMemory.verbosity(Seq("bar")) == Verbosity.Default)

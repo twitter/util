@@ -5,8 +5,6 @@ import java.util.concurrent.CountDownLatch
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-
-
 @RunWith(classOf[JUnitRunner])
 class SerializedTest extends WordSpec with Serialized {
   "Serialized" should {

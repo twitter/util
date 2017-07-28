@@ -43,7 +43,8 @@ class X500PrincipalInfoTest extends FunSuite {
   }
 
   test("RFC 1779 style") {
-    val name = "EMAILADDRESS=ryano@twitter.com, CN=localhost.twitter.com, OU=Core Systems Libraries, O=Twitter, L=San Francisco, ST=California, C=US"
+    val name =
+      "EMAILADDRESS=ryano@twitter.com, CN=localhost.twitter.com, OU=Core Systems Libraries, O=Twitter, L=San Francisco, ST=California, C=US"
     val principal = new X500Principal(name)
     val info = new X500PrincipalInfo(principal)
     assert(info.countryName == Some("US"))

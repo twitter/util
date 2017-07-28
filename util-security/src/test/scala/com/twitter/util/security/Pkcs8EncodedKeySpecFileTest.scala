@@ -34,7 +34,9 @@ class Pkcs8EncodedKeySpecFileTest extends FunSuite {
 
   test("File isn't a key spec") {
     PemFileTestUtils.testEmptyFile[InvalidPemFormatException, PKCS8EncodedKeySpec](
-      "PKCS8EncodedKeySpec", readKeySpecFromFile)
+      "PKCS8EncodedKeySpec",
+      readKeySpecFromFile
+    )
   }
 
   /**

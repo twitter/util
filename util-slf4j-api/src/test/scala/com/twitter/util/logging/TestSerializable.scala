@@ -1,9 +1,7 @@
 package com.twitter.util.logging
 
 @SerialVersionUID(1L)
-class TestSerializable(val left: Int, val right: Int)
-  extends Serializable
-  with Logging {
+class TestSerializable(val left: Int, val right: Int) extends Serializable with Logging {
 
   def total = {
     info(s"Adding $left + $right")

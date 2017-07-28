@@ -7,11 +7,9 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class HasLogLevelTest extends FunSuite {
 
-  private class WithLogLevel(
-      val logLevel: Level,
-      cause: Throwable = null)
-    extends Exception(cause)
-    with HasLogLevel
+  private class WithLogLevel(val logLevel: Level, cause: Throwable = null)
+      extends Exception(cause)
+      with HasLogLevel
 
   test("unapply returns None when there are no HasLogLevels") {
     assert(HasLogLevel.unapply(new RuntimeException()).isEmpty)

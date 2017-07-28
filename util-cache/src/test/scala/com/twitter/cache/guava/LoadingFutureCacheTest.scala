@@ -20,7 +20,7 @@ class LoadingFutureCacheTest extends AbstractLoadingFutureCacheTest {
       CacheBuilder
         .newBuilder()
         .build(
-          new CacheLoader[String,Future[Int]] {
+          new CacheLoader[String, Future[Int]] {
             override def load(k: String): Future[Int] = {
               cacheLoaderCount += 1
               Future.value(k.hashCode)

@@ -86,4 +86,3 @@ class StringConcatenationBenchmark extends StdBenchAnnotations {
     new String(chars)
   }
 }
-

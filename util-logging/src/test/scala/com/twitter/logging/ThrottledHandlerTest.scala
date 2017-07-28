@@ -22,8 +22,6 @@ import org.scalatest.{BeforeAndAfter, WordSpec}
 
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
-
-
 @RunWith(classOf[JUnitRunner])
 class ThrottledHandlerTest extends WordSpec with BeforeAndAfter with TempFolder {
   private var handler: StringHandler = null
@@ -54,7 +52,17 @@ class ThrottledHandlerTest extends WordSpec with BeforeAndAfter with TempFolder 
         timeCtrl.advance(2.seconds)
         log.error("apple: %s", "done.")
 
-        assert(handler.get.split("\n").toList == List("apple: help!", "apple: help 2!", "orange: orange!", "orange: orange!", "apple: help 3!", "(swallowed 2 repeating messages)", "apple: done."))
+        assert(
+          handler.get.split("\n").toList == List(
+            "apple: help!",
+            "apple: help 2!",
+            "orange: orange!",
+            "orange: orange!",
+            "apple: help 3!",
+            "(swallowed 2 repeating messages)",
+            "apple: done."
+          )
+        )
       }
     }
 
@@ -72,7 +80,15 @@ class ThrottledHandlerTest extends WordSpec with BeforeAndAfter with TempFolder 
         time.advance(2.seconds)
         log.error("hello.")
 
-        assert(handler.get.split("\n").toList == List("apple: help!", "apple: help!", "apple: help!", "(swallowed 2 repeating messages)", "hello."))
+        assert(
+          handler.get.split("\n").toList == List(
+            "apple: help!",
+            "apple: help!",
+            "apple: help!",
+            "(swallowed 2 repeating messages)",
+            "hello."
+          )
+        )
       }
     }
   }

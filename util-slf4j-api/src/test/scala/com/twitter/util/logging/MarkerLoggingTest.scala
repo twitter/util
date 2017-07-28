@@ -8,10 +8,7 @@ import org.slf4j
 import org.slf4j.Marker
 import scala.language.reflectiveCalls
 
-class MarkerLoggingTest
-  extends FunSuite
-  with Matchers
-  with MockitoSugar {
+class MarkerLoggingTest extends FunSuite with Matchers with MockitoSugar {
 
   test("Marker Logging#trace enabled") {
     val f = fixture(_.isTraceEnabled, isEnabled = true)
@@ -62,7 +59,6 @@ class MarkerLoggingTest
     f.logger.traceWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
     verify(f.underlying, never).trace(f.marker, f.message, f.arg1, f.arg2, f.arg3)
   }
-
 
   /* Debug */
 
@@ -116,7 +112,6 @@ class MarkerLoggingTest
     verify(f.underlying, never).debug(f.marker, f.message, f.arg1, f.arg2, f.arg3)
   }
 
-
   /* Info */
 
   test("Marker Logging#info enabled") {
@@ -169,7 +164,6 @@ class MarkerLoggingTest
     verify(f.underlying, never).info(f.marker, f.message, f.arg1, f.arg2, f.arg3)
   }
 
-
   /* Warn */
 
   test("Marker Logging#warn enabled") {
@@ -221,7 +215,6 @@ class MarkerLoggingTest
     f.logger.warnWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
     verify(f.underlying, never).warn(f.marker, f.message, f.arg1, f.arg2, f.arg3)
   }
-
 
   /* Error */
 

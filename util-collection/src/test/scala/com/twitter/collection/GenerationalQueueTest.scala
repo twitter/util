@@ -16,7 +16,7 @@ class GenerationalQueueTest extends FunSuite {
     timeout: Duration
   ) {
 
-    test("%s: Don't collect fresh data".format(name))  {
+    test("%s: Don't collect fresh data".format(name)) {
       Time.withCurrentTimeFrozen { _ =>
         val queue = newQueue()
         queue.add("foo")
@@ -26,7 +26,7 @@ class GenerationalQueueTest extends FunSuite {
       }
     }
 
-    test("%s: Don't collect old data recently refreshed".format(name))  {
+    test("%s: Don't collect old data recently refreshed".format(name)) {
       var t = Time.now
       Time.withTimeFunction(t) { _ =>
         val queue = newQueue()
@@ -42,7 +42,7 @@ class GenerationalQueueTest extends FunSuite {
       }
     }
 
-    test("%s: collect one old data".format(name))  {
+    test("%s: collect one old data".format(name)) {
       var t = Time.now
       Time.withTimeFunction(t) { _ =>
         val queue = newQueue()
@@ -59,7 +59,7 @@ class GenerationalQueueTest extends FunSuite {
       }
     }
 
-    test("%s: collectAll old data".format(name))  {
+    test("%s: collectAll old data".format(name)) {
       var t = Time.now
       Time.withTimeFunction(t) { _ =>
         val queue = newQueue()
@@ -78,7 +78,7 @@ class GenerationalQueueTest extends FunSuite {
       }
     }
 
-    test("%s: generate a long chain of bucket (if applicable)".format(name))  {
+    test("%s: generate a long chain of bucket (if applicable)".format(name)) {
       var t = Time.now
       Time.withTimeFunction(t) { _ =>
         val queue = newQueue()
@@ -111,15 +111,11 @@ class GenerationalQueueTest extends FunSuite {
   }
 
   val generationalQueue = () => new ExactGenerationalQueue[String]()
-  genericGenerationalQueueTest(
-    "ExactGenerationalQueue",
-    generationalQueue, 100.milliseconds)
+  genericGenerationalQueueTest("ExactGenerationalQueue", generationalQueue, 100.milliseconds)
 
   val timeout = 100.milliseconds
   val bucketQueue = () => new BucketGenerationalQueue[String](timeout)
-  genericGenerationalQueueTest(
-    "BucketGenerationalQueue",
-    bucketQueue, timeout)
+  genericGenerationalQueueTest("BucketGenerationalQueue", bucketQueue, timeout)
 
   test("BucketGenerationalQueue check removals") {
     var t = Time.now

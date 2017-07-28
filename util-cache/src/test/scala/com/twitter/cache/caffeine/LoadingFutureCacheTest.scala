@@ -15,12 +15,12 @@ class LoadingFutureCacheTest extends AbstractLoadingFutureCacheTest {
   // loading cache semantics are sufficiently unique
   // to merit distinct tests.
 
-  def mkCtx: Ctx = new Ctx  {
+  def mkCtx: Ctx = new Ctx {
     val cache = new LoadingFutureCache(
       Caffeine
         .newBuilder()
         .build(
-          new CacheLoader[String,Future[Int]] {
+          new CacheLoader[String, Future[Int]] {
             override def load(k: String): Future[Int] = {
               cacheLoaderCount += 1
               Future.value(k.hashCode)

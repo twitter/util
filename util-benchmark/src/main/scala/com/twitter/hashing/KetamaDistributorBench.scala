@@ -16,8 +16,12 @@ class KetamaDistributorBench extends StdBenchAnnotations {
   val numReps = 640
   val numHosts = 310
 
-  val hosts = 0.until(numHosts).map { i => "abcd-zzz-" + i + "-ab2.qwer.twitter.com" }
-  val nodes = hosts map { h => KetamaNode[String](h + ":12021", 1, h) }
+  val hosts = 0.until(numHosts).map { i =>
+    "abcd-zzz-" + i + "-ab2.qwer.twitter.com"
+  }
+  val nodes = hosts map { h =>
+    KetamaNode[String](h + ":12021", 1, h)
+  }
 
   @Benchmark
   def ketama(): KetamaDistributor[String] = new KetamaDistributor(nodes, numReps, false)

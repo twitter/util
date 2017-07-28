@@ -30,7 +30,7 @@ class CaffeineCacheTest extends AbstractFutureCacheTest {
   }
 
   test("CaffeineCache#fromCache is interrupt safe") {
-    val fCache = CaffeineCache.fromCache((_:String) => new Promise[Int], mkCache())
+    val fCache = CaffeineCache.fromCache((_: String) => new Promise[Int], mkCache())
     interruptSafe(fCache)
   }
 }

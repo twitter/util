@@ -114,7 +114,7 @@ class LocalTest extends FunSuite {
     val local = new Local[Int]
 
     local() = 123
-    Local.save()  // to trigger caching
+    Local.save() // to trigger caching
     local.clear()
     Local.restore(Local.save())
     assert(local() == None)
@@ -152,7 +152,7 @@ class LocalTest extends FunSuite {
     val l = new Local[Int]
     l() = 1
     val adder: () => Int = { () =>
-      val rv = 100+l().get
+      val rv = 100 + l().get
       l() = 10000
       rv
     }

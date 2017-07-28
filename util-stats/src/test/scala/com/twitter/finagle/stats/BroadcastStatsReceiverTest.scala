@@ -7,9 +7,7 @@ import org.scalatest.{Matchers, FunSuite}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class BroadcastStatsReceiverTest extends FunSuite
-  with Matchers
-{
+class BroadcastStatsReceiverTest extends FunSuite with Matchers {
 
   test("counter") {
     val recv1 = new InMemoryStatsReceiver

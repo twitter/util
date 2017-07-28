@@ -13,10 +13,10 @@ class BoundedStackTest extends WordSpec {
       assert(buf.size == 0)
       assert(buf.isEmpty == true)
       intercept[IndexOutOfBoundsException] {
-      buf(0)
+        buf(0)
       }
       intercept[NoSuchElementException] {
-      buf.pop
+        buf.pop
       }
       assert(buf.iterator.hasNext == false)
     }

@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 class KeyHasherTest extends WordSpec {
   def readResource(name: String) = {
     var lines = new ListBuffer[String]()
-    val src = scala.io.Source.fromFile(TempFile.fromResourcePath(getClass, "/"+name))
+    val src = scala.io.Source.fromFile(TempFile.fromResourcePath(getClass, "/" + name))
     src.getLines
   }
 
@@ -24,9 +24,10 @@ class KeyHasherTest extends WordSpec {
     val hashes = readResource(name + "_hashes")
     assert(sources.size > 0)
 
-    sources zip hashes foreach { case (source, hashAsString) =>
-      val hash = BigInt(hashAsString).toLong
-      assert(hasher.hashKey(source) == hash)
+    sources zip hashes foreach {
+      case (source, hashAsString) =>
+        val hash = BigInt(hashAsString).toLong
+        assert(hasher.hashKey(source) == hash)
     }
   }
 

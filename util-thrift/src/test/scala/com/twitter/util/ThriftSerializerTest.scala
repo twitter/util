@@ -26,12 +26,10 @@ class ThriftSerializerTest extends WordSpec {
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)
   val json = """{"aString":"%s","aNumber":%d}""".format(aString, aNumber)
-  val encodedBinary  = Some("CwABAAAAIm1lIGd1c3RhbiBsb3MgdGFjb3MgeSBsb3MgYnVycml0b3MIAAIAAAAqAA==")
+  val encodedBinary = Some("CwABAAAAIm1lIGd1c3RhbiBsb3MgdGFjb3MgeSBsb3MgYnVycml0b3MIAAIAAAAqAA==")
   val encodedCompact = Some("GCJtZSBndXN0YW4gbG9zIHRhY29zIHkgbG9zIGJ1cnJpdG9zFVQA")
 
-  def testSerializer(
-      serializer: ThriftSerializer,
-      stringVersion:    Option[String] = None) = {
+  def testSerializer(serializer: ThriftSerializer, stringVersion: Option[String] = None) = {
     val bytes = serializer.toBytes(original)
     var obj = new TestThriftStructure()
     serializer.fromBytes(obj, bytes)
@@ -46,10 +44,9 @@ class ThriftSerializerTest extends WordSpec {
         serializer.fromString(obj, str)
         assert(obj.aString == original.aString)
         assert(obj.aNumber == original.aNumber)
-      }
+    }
     true
   }
-
 
   "ThriftSerializer" should {
     "encode and decode json" in {

@@ -16,7 +16,8 @@ class BufConcatBenchmark extends StdBenchAnnotations {
 
   val byteArrayBuf = Buf.ByteArray.Owned(bytes)
   val byteBufferBuf = Buf.ByteBuffer.Owned(ByteBuffer.wrap(bytes))
-  val compositeBuf = byteArrayBuf.slice(0, bytes.length / 2)
+  val compositeBuf = byteArrayBuf
+    .slice(0, bytes.length / 2)
     .concat(byteArrayBuf.slice(bytes.length / 2, bytes.length))
 
   private[this] def concatN(n: Int, buf: Buf): Buf = {

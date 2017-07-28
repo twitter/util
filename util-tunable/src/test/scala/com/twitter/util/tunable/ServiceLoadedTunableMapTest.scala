@@ -38,8 +38,10 @@ class ServiceLoadedTunableMapTest extends FunSuite {
     assert(tunableMap(TunableMap.Key[Int]("tunableId2"))() == Some(5))
   }
 
-  test("IllegalArgumentException thrown when there is more than one ServiceLoadedTunableMap " +
-    "for a given serviceName/id") {
+  test(
+    "IllegalArgumentException thrown when there is more than one ServiceLoadedTunableMap " +
+      "for a given serviceName/id"
+  ) {
 
     intercept[IllegalStateException] {
       ServiceLoadedTunableMap("client2")

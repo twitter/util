@@ -65,9 +65,14 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     val simple = new SimpleRegistry
     GlobalRegistry.withRegistry(simple) {
       assert(LoadService[LoadServiceRandomInterface]().nonEmpty)
-      assert(GlobalRegistry.get.toSet == Set(
-        Entry(Seq("loadservice", "com.twitter.app.LoadServiceRandomInterface"), "com.twitter.app.LoadServiceRandomInterfaceImpl")
-      ))
+      assert(
+        GlobalRegistry.get.toSet == Set(
+          Entry(
+            Seq("loadservice", "com.twitter.app.LoadServiceRandomInterface"),
+            "com.twitter.app.LoadServiceRandomInterfaceImpl"
+          )
+        )
+      )
     }
   }
 
@@ -85,9 +90,14 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     val simple = new SimpleRegistry
     GlobalRegistry.withRegistry(simple) {
       LoadService[LoadServiceMaybeInterface]()
-      assert(GlobalRegistry.get.toSet == Set(
-        Entry(Seq("loadservice", "com.twitter.app.LoadServiceMaybeInterface"), "com.twitter.app.LoadServiceGoodClass")
-      ))
+      assert(
+        GlobalRegistry.get.toSet == Set(
+          Entry(
+            Seq("loadservice", "com.twitter.app.LoadServiceMaybeInterface"),
+            "com.twitter.app.LoadServiceGoodClass"
+          )
+        )
+      )
     }
   }
 
@@ -139,7 +149,8 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
 
     // Get the result
     val impls: Seq[Any] = future.get()
-    assert(impls.exists(_.getClass.getName.endsWith("LoadServiceRandomInterfaceIgnored")),
+    assert(
+      impls.exists(_.getClass.getName.endsWith("LoadServiceRandomInterfaceIgnored")),
       "Non-URLClassloader found announcer was not discovered"
     )
     executor.shutdown()
@@ -228,7 +239,7 @@ class LoadServiceCallable extends Callable[Seq[Any]] {
 
 class MetaInfCodedClassloader(parent: ClassLoader) extends ClassLoader(parent) {
   override def loadClass(name: String): Class[_] = {
-    if (name.startsWith("com.twitter.app" )) {
+    if (name.startsWith("com.twitter.app")) {
       try {
         val path = name.replaceAll("\\.", "/") + ".class"
         val is: InputStream = getClass.getClassLoader.getResourceAsStream(path)

@@ -6,9 +6,7 @@ import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class InMemoryStatsReceiverTest extends FunSuite
-  with Eventually
-  with IntegrationPatience {
+class InMemoryStatsReceiverTest extends FunSuite with Eventually with IntegrationPatience {
 
   test("clear") {
     val inMemoryStatsReceiver = new InMemoryStatsReceiver
@@ -99,10 +97,14 @@ class InMemoryStatsReceiverTest extends FunSuite
     // test other edges cases
     s2.add(-5)
     s2.add(Long.MaxValue)
-    assert(stats.histogramDetails("a/b").counts == 
-      Seq(BucketAndCount(0, 1, 2), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 2)))
-    assert(stats.histogramDetails("a/c").counts == 
-      Seq(BucketAndCount(0, 1, 1), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 1)))
+    assert(
+      stats.histogramDetails("a/b").counts ==
+        Seq(BucketAndCount(0, 1, 2), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 2))
+    )
+    assert(
+      stats.histogramDetails("a/c").counts ==
+        Seq(BucketAndCount(0, 1, 1), BucketAndCount(Int.MaxValue - 1, Int.MaxValue, 1))
+    )
   }
 
   test("keeps track of verbosity") {

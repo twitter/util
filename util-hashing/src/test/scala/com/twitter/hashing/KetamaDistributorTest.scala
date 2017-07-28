@@ -26,7 +26,8 @@ class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks 
 
     // 160 is the hard coded value for libmemcached, which was this input data is from
     val ketamaDistributor = new KetamaDistributor(nodes, 160)
-    val ketamaDistributorInoldLibMemcachedVersionComplianceMode = new KetamaDistributor(nodes, 160, true)
+    val ketamaDistributorInoldLibMemcachedVersionComplianceMode =
+      new KetamaDistributor(nodes, 160, true)
     "pick the correct node with ketama hash function" in {
       // Test from Smile's KetamaNodeLocatorSpec.scala
 
@@ -46,7 +47,9 @@ class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks 
       assert(expected.size == 99)
 
       // Test that ketamaClient.clientOf(key) == expected IP
-      val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
+      val handleToIp = nodes.map { n =>
+        n.handle -> n.identifier
+      }.toMap
       for (testcase <- expected) {
         val hash = KeyHasher.KETAMA.hashKey(testcase(0).getBytes)
 
@@ -68,9 +71,10 @@ class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks 
         -9515121512312L -> 5
       )
 
-      knownGoodValues foreach { case (key, node) =>
-        val handle = ketamaDistributor.nodeForHash(key)
-        assert(handle == node)
+      knownGoodValues foreach {
+        case (key, node) =>
+          val handle = ketamaDistributor.nodeForHash(key)
+          assert(handle == node)
       }
     }
 

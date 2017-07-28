@@ -4,12 +4,12 @@ import com.twitter.util.TempFolder
 import java.io._
 import org.scalatest.FunSuite
 
-class SerializableLoggingTest
-  extends FunSuite
-  with TempFolder {
+class SerializableLoggingTest extends FunSuite with TempFolder {
 
   def read[T](filename: String): T = {
-    new ObjectInputStream(new FileInputStream(new File(folderName, filename))).readObject().asInstanceOf[T]
+    new ObjectInputStream(new FileInputStream(new File(folderName, filename)))
+      .readObject()
+      .asInstanceOf[T]
   }
 
   def write(filename: String, obj: Object): Unit = {

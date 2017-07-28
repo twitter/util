@@ -11,25 +11,16 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.mockito.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
-class MinimumThroughputTest
-  extends FunSuite
-  with MockitoSugar
-{
+class MinimumThroughputTest extends FunSuite with MockitoSugar {
   test("Reader - negative minBps") {
     intercept[AssertionError] {
-      MinimumThroughput.reader(
-        mock[Reader],
-        -1,
-        Timer.Nil)
+      MinimumThroughput.reader(mock[Reader], -1, Timer.Nil)
     }
   }
 
   test("Reader - faster than min") {
     val buf = Buf.UsAscii("soylent green is made of...") // 27 bytes
-    val reader = MinimumThroughput.reader(
-      BufReader(buf),
-      0d,
-      Timer.Nil)
+    val reader = MinimumThroughput.reader(BufReader(buf), 0d, Timer.Nil)
 
     // read from the beginning
     Await.result(reader.read(13)) match {
@@ -79,7 +70,8 @@ class MinimumThroughputTest
       val reader = MinimumThroughput.reader(
         underlying,
         1d, // min bytes per second
-        Timer.Nil)
+        Timer.Nil
+      )
 
       // do a read of 1 byte in 0 time — which is ok.
       Await.result(reader.read(1)) match {
@@ -106,7 +98,8 @@ class MinimumThroughputTest
     val reader = MinimumThroughput.reader(
       underlying,
       1d, // min bytes per second
-      timer)
+      timer
+    )
 
     Time.withCurrentTimeFrozen { tc =>
       val f = reader.read(1)
@@ -131,7 +124,8 @@ class MinimumThroughputTest
     val reader = MinimumThroughput.reader(
       underlying,
       1d, // min bytes per second
-      Timer.Nil)
+      Timer.Nil
+    )
 
     val thrown = intercept[RuntimeException] {
       Await.result(reader.read(1))
@@ -143,7 +137,8 @@ class MinimumThroughputTest
     val reader = MinimumThroughput.reader(
       Reader.Null,
       1d, // min bytes per second
-      Timer.Nil)
+      Timer.Nil
+    )
 
     Await.result(reader.read(1)) match {
       case None =>
@@ -153,10 +148,7 @@ class MinimumThroughputTest
 
   test("Reader - discard is passed through to underlying") {
     val underlying = mock[Reader]
-    val reader = MinimumThroughput.reader(
-      underlying,
-      1,
-      Timer.Nil)
+    val reader = MinimumThroughput.reader(underlying, 1, Timer.Nil)
 
     reader.discard()
     verify(underlying).discard()
@@ -165,10 +157,8 @@ class MinimumThroughputTest
   test("Writer - faster than min") {
     val buf = Buf.UsAscii("0")
 
-    val writer = MinimumThroughput.writer(
-      Writer.fromOutputStream(new ByteArrayOutputStream()),
-      0d,
-      Timer.Nil)
+    val writer =
+      MinimumThroughput.writer(Writer.fromOutputStream(new ByteArrayOutputStream()), 0d, Timer.Nil)
 
     val w1 = writer.write(buf)
     Await.ready(w1)
@@ -202,7 +192,8 @@ class MinimumThroughputTest
       val writer = MinimumThroughput.writer(
         underlying,
         1d, // min bytes per second
-        Timer.Nil)
+        Timer.Nil
+      )
 
       // do a write of 1 byte in 0 time — which is ok.
       val w1 = writer.write(buf)
@@ -226,10 +217,7 @@ class MinimumThroughputTest
       .thenReturn(Future.never)
 
     val timer = new MockTimer()
-    val writer = MinimumThroughput.writer(
-      underlying,
-      1d,
-      timer)
+    val writer = MinimumThroughput.writer(underlying, 1d, timer)
 
     Time.withCurrentTimeFrozen { tc =>
       val f = writer.write(buf)
@@ -252,10 +240,7 @@ class MinimumThroughputTest
     when(underlying.write(buf))
       .thenReturn(Future.exception(ex))
 
-    val writer = MinimumThroughput.writer(
-      underlying,
-      1d,
-      Timer.Nil)
+    val writer = MinimumThroughput.writer(underlying, 1d, Timer.Nil)
 
     val thrown = intercept[RuntimeException] {
       Await.result(writer.write(buf))
@@ -266,10 +251,7 @@ class MinimumThroughputTest
   test("Writer - fail is passed through to underlying") {
     val underlying = mock[Writer]
 
-    val writer = MinimumThroughput.writer(
-      underlying,
-      1d,
-      Timer.Nil)
+    val writer = MinimumThroughput.writer(underlying, 1d, Timer.Nil)
 
     val ex = new RuntimeException()
     writer.fail(ex)

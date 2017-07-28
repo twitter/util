@@ -5,7 +5,6 @@ import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 
-
 object ProxySpec {
   trait TestInterface {
     def foo: String
@@ -44,12 +43,14 @@ class ProxyTest extends WordSpec {
     "generate a factory for an interface" in {
       var called = 0
 
-      val f1  = new ProxyFactory[TestInterface]({ m => called += 1; m() })
+      val f1 = new ProxyFactory[TestInterface]({ m =>
+        called += 1; m()
+      })
       val obj = new TestImpl
 
       val proxied = f1(obj)
 
-      assert(proxied.foo    == "foo")
+      assert(proxied.foo == "foo")
       assert(proxied.bar(2) == Some(2L))
 
       assert(called == 2)
@@ -58,7 +59,9 @@ class ProxyTest extends WordSpec {
     "generate a factory for a class with a default constructor" in {
       var called = 0
 
-      val f2  = new ProxyFactory[TestClass]({ m => called += 1; m() })
+      val f2 = new ProxyFactory[TestClass]({ m =>
+        called += 1; m()
+      })
       val obj = new TestClass
 
       val proxied = f2(obj)
@@ -70,7 +73,7 @@ class ProxyTest extends WordSpec {
     }
 
     "must not throw UndeclaredThrowableException" in {
-      val pf      = new ProxyFactory[TestImpl](_())
+      val pf = new ProxyFactory[TestImpl](_())
       val proxied = pf(new TestImpl)
 
       intercept[RuntimeException] {
@@ -128,14 +131,14 @@ class ProxyTest extends WordSpec {
 
     "MethodCall can be invoked with alternate target" in {
       val alt = new TestImpl { override def foo = "alt foo" }
-      val pf  = new ProxyFactory[TestImpl](m => m(alt))
+      val pf = new ProxyFactory[TestImpl](m => m(alt))
       val targetless = pf()
 
       assert(targetless.foo == "alt foo")
     }
 
     "MethodCall can be invoked with alternate arguments" in {
-      val pf      = new ProxyFactory[TestInterface](m => m(Array(3.asInstanceOf[AnyRef])))
+      val pf = new ProxyFactory[TestInterface](m => m(Array(3.asInstanceOf[AnyRef])))
       val proxied = pf(new TestImpl)
 
       assert(proxied.bar(2) == Some(3L))
@@ -143,7 +146,7 @@ class ProxyTest extends WordSpec {
 
     "MethodCall can be invoked with alternate target and arguments" in {
       val alt = new TestImpl { override def bar(i: Int) = Some(i.toLong * 10) }
-      val pf  = new ProxyFactory[TestImpl](m => m(alt, Array(3.asInstanceOf[AnyRef])))
+      val pf = new ProxyFactory[TestImpl](m => m(alt, Array(3.asInstanceOf[AnyRef])))
       val targetless = pf()
 
       assert(targetless.bar(2) == Some(30L))
@@ -161,12 +164,16 @@ class ProxyTest extends WordSpec {
       //println(results)
 
       // drop the top and bottom then average
-      results.sortWith( (a,b) => a > b ).slice(2,5).sum / 3
+      results.sortWith((a, b) => a > b).slice(2, 5).sum / 3
     }
 
-    val reflectConstructor = {() => new ReferenceProxyFactory[TestInterface](_()) }
-    val cglibConstructor   = {() => new ProxyFactory[TestInterface](_()) }
-/*
+    val reflectConstructor = { () =>
+      new ReferenceProxyFactory[TestInterface](_())
+    }
+    val cglibConstructor = { () =>
+      new ProxyFactory[TestInterface](_())
+    }
+    /*
     "maintains proxy creation speed" in {
       val repTimes = 40000
 
@@ -183,7 +190,7 @@ class ProxyTest extends WordSpec {
 
       t2 should beLessThan(200L)
     }
-*/
+     */
     "maintains invocation speed" ignore {
       val repTimes = 1500000
 
@@ -208,26 +215,27 @@ class ProxyTest extends WordSpec {
     }
   }
 
-
-  class ReferenceProxyFactory[I <: AnyRef : Manifest](f: (() => AnyRef) => AnyRef) {
+  class ReferenceProxyFactory[I <: AnyRef: Manifest](f: (() => AnyRef) => AnyRef) {
     import java.lang.reflect
 
     protected val interface = implicitly[Manifest[I]].runtimeClass
 
     private val proxyConstructor = {
       reflect.Proxy
-      .getProxyClass(interface.getClassLoader, interface)
-      .getConstructor(classOf[reflect.InvocationHandler])
+        .getProxyClass(interface.getClassLoader, interface)
+        .getConstructor(classOf[reflect.InvocationHandler])
     }
 
     def apply[T <: I](instance: T) = {
-      proxyConstructor.newInstance(new reflect.InvocationHandler {
-        def invoke(p: AnyRef, method: reflect.Method, args: Array[AnyRef]) = {
-          try {
-            f.apply(() => method.invoke(instance, args: _*))
-          } catch { case e: reflect.InvocationTargetException => throw e.getCause }
-        }
-      }).asInstanceOf[I]
+      proxyConstructor
+        .newInstance(new reflect.InvocationHandler {
+          def invoke(p: AnyRef, method: reflect.Method, args: Array[AnyRef]) = {
+            try {
+              f.apply(() => method.invoke(instance, args: _*))
+            } catch { case e: reflect.InvocationTargetException => throw e.getCause }
+          }
+        })
+        .asInstanceOf[I]
     }
   }
 }

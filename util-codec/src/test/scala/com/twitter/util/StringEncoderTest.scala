@@ -24,8 +24,10 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class StringEncoderTest extends WordSpec {
-  val longString = "A string that is really really really really really really long and has more than 76 characters"
-  val result = "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
+  val longString =
+    "A string that is really really really really really really long and has more than 76 characters"
+  val result =
+    "QSBzdHJpbmcgdGhhdCBpcyByZWFsbHkgcmVhbGx5IHJlYWxseSByZWFsbHkgcmVhbGx5IHJlYWxseSBsb25nIGFuZCBoYXMgbW9yZSB0aGFuIDc2IGNoYXJhY3RlcnM="
 
   "strip new lines" in {
     assert(Base64StringEncoder.encode(longString.getBytes) == result)
@@ -40,7 +42,7 @@ class StringEncoderTest extends WordSpec {
 class Base64StringEncoderTest extends WordSpec {
   val urlUnsafeBytes = Array(-1.toByte, -32.toByte)
   val resultUnsafe = "/+A"
-  val resultSafe   = "_-A"
+  val resultSafe = "_-A"
 
   "encode / as _ and encode + as - to maintain url safe strings" in {
     assert(Base64UrlSafeStringEncoder.encode(urlUnsafeBytes) == resultSafe)

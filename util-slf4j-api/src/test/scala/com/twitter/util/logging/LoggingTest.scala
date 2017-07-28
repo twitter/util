@@ -8,10 +8,7 @@ import org.slf4j
 import org.slf4j.LoggerFactory
 import scala.language.reflectiveCalls
 
-class LoggingTest
-  extends FunSuite
-  with Matchers
-  with MockitoSugar {
+class LoggingTest extends FunSuite with Matchers with MockitoSugar {
 
   /* Trace */
 
@@ -116,7 +113,6 @@ class LoggingTest
     f.logger.debugWith(f.message, f.arg1, f.arg2, f.arg3)
     verify(f.underlying, never).debug(f.message, f.arg1, f.arg2, f.arg3)
   }
-
 
   /* Info */
 
@@ -305,7 +301,7 @@ class LoggingTest
 
   test("Logging#extended class extends Logging") {
     val item = new Item("product1", "A shiny widget", -2)
-    val subItem = new ExtendedItem("product1 reissue",  "Another shiny widget", 3)
+    val subItem = new ExtendedItem("product1 reissue", "Another shiny widget", 3)
 
     item.dimension
     subItem.dimension
@@ -346,7 +342,7 @@ class LoggingTest
     logger3.info("Logger3 name = " + logger3.name)
 
     val logger4 = Logger[Item] // has companion object
-    logger4.info("Logger4 name = "+ logger4.name)
+    logger4.info("Logger4 name = " + logger4.name)
 
     val logger5 = Logger(ObjectWithLogging.getClass) // object
     logger5.info("Logger5 name = " + logger5.name)
@@ -354,9 +350,7 @@ class LoggingTest
 
   /* Private */
 
-  private def fixture(
-    isEnabledFn: slf4j.Logger => Boolean,
-    isEnabled: Boolean) = {
+  private def fixture(isEnabledFn: slf4j.Logger => Boolean, isEnabled: Boolean) = {
     new {
       val message = "msg"
       val cause = new RuntimeException("TEST EXCEPTION")
@@ -369,4 +363,3 @@ class LoggingTest
     }
   }
 }
-

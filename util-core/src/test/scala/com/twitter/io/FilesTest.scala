@@ -1,6 +1,5 @@
 package com.twitter.io
 
-
 import java.io.File
 
 import org.junit.runner.RunWith
@@ -26,7 +25,9 @@ class FilesTest extends WordSpec with TempFolder {
       assert(subfile.createNewFile() == true)
 
       assert(Files.delete(tempFolder) == true)
-      Seq(file, subfile, folder, tempFolder).foreach { x => assert(!x.exists) }
+      Seq(file, subfile, folder, tempFolder).foreach { x =>
+        assert(!x.exists)
+      }
     }
 
   }

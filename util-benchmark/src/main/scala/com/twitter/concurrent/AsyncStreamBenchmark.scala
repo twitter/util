@@ -63,5 +63,5 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def ++(): Int =
-    Await.result((longs ++ as).foldLeft(0)(_+_))
+    Await.result((longs ++ as).foldLeft(0)(_ + _))
 }

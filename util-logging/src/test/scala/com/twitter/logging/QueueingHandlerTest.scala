@@ -24,10 +24,7 @@ import org.scalatest.concurrent.{IntegrationPatience, Eventually}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class QueueingHandlerTest extends WordSpec
-  with Eventually
-  with IntegrationPatience
-{
+class QueueingHandlerTest extends WordSpec with Eventually with IntegrationPatience {
 
   class MockHandler extends Handler(BareFormatter, None) {
     def publish(record: javalog.LogRecord) = ()
@@ -61,8 +58,8 @@ class QueueingHandlerTest extends WordSpec
       val logger = freshLogger()
       val local = new Local[String]
       val formatter = new Formatter {
-         override def format(record: javalog.LogRecord) =
-            local().getOrElse("MISSING!") + ":" + formatText(record) + lineTerminator
+        override def format(record: javalog.LogRecord) =
+          local().getOrElse("MISSING!") + ":" + formatText(record) + lineTerminator
       }
       val stringHandler = new StringHandler(formatter, Some(Logger.INFO))
       logger.addHandler(new QueueingHandler(stringHandler))
@@ -70,9 +67,9 @@ class QueueingHandlerTest extends WordSpec
       local() = "foo"
       logger.warning("oh noes!")
 
-       eventually {
-         assert(stringHandler.get == "foo:oh noes!\n")
-       }
+      eventually {
+        assert(stringHandler.get == "foo:oh noes!\n")
+      }
     }
 
     "publish, drop on overflow" in {
@@ -161,8 +158,7 @@ class QueueingHandlerTest extends WordSpec
     }
 
     "forward formatter to the underlying handler" in {
-      val handler = new MockHandler {
-      }
+      val handler = new MockHandler {}
 
       val queueHandler = new QueueingHandler(handler)
       val formatter = new Formatter()

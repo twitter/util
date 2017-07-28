@@ -11,7 +11,7 @@ abstract class AbstractLoadingFutureCacheTest extends FunSuite {
 
   def name: String
 
-  trait Ctx  {
+  trait Ctx {
     var cacheLoaderCount = 0
     val cache: FutureCache[String, Int] with (String => Future[Int])
   }

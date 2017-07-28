@@ -4,7 +4,6 @@ import com.twitter.conversions.time._
 import org.scalatest.FunSuite
 import scala.collection.mutable
 
-
 class SlowProbeProxyTimerTest extends FunSuite {
 
   private type Task = () => Unit

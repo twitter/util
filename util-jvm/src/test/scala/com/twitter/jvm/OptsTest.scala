@@ -8,7 +8,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class OptsTest extends FunSuite  {
+class OptsTest extends FunSuite {
   test("Opts") {
     if (System.getProperty("java.vm.name").contains("HotSpot")) {
       val DiagnosticName =
@@ -16,10 +16,9 @@ class OptsTest extends FunSuite  {
 
       val originalValue: String = Opt("MaxHeapFreeRatio").getOrElse("100")
 
-      val option = ManagementFactory.getPlatformMBeanServer().invoke(
-        DiagnosticName, "getVMOption",
-        Array("MaxHeapFreeRatio"),
-        Array("java.lang.String"))
+      val option = ManagementFactory
+        .getPlatformMBeanServer()
+        .invoke(DiagnosticName, "getVMOption", Array("MaxHeapFreeRatio"), Array("java.lang.String"))
 
       val writable = option.getClass match {
         case clazz: Class[_] if clazz.getCanonicalName == "com.sun.management.VMOption" =>
@@ -31,17 +30,25 @@ class OptsTest extends FunSuite  {
       }
 
       if (writable) {
-        ManagementFactory.getPlatformMBeanServer().invoke(
-          DiagnosticName, "setVMOption",
-          Array("MaxHeapFreeRatio", "99"),
-          Array("java.lang.String", "java.lang.String"))
+        ManagementFactory
+          .getPlatformMBeanServer()
+          .invoke(
+            DiagnosticName,
+            "setVMOption",
+            Array("MaxHeapFreeRatio", "99"),
+            Array("java.lang.String", "java.lang.String")
+          )
 
         assert(Opt("MaxHeapFreeRatio") == Some("99"))
 
-        ManagementFactory.getPlatformMBeanServer().invoke(
-          DiagnosticName, "setVMOption",
-          Array("MaxHeapFreeRatio", originalValue),
-          Array("java.lang.String", "java.lang.String"))
+        ManagementFactory
+          .getPlatformMBeanServer()
+          .invoke(
+            DiagnosticName,
+            "setVMOption",
+            Array("MaxHeapFreeRatio", originalValue),
+            Array("java.lang.String", "java.lang.String")
+          )
 
         assert(Opt("MaxHeapFreeRatio") == Some(originalValue))
 

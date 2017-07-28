@@ -29,10 +29,10 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
         implicit val timer = new JavaTimer(true)
         val connector = NativeConnector(connectString, 5.seconds, 10.minutes)
         val zk = ZkClient(connector)
-            .withRetryPolicy(RetryPolicy.Basic(3))
-            .withAcl(OPEN_ACL_UNSAFE.asScala)
+          .withRetryPolicy(RetryPolicy.Basic(3))
+          .withAcl(OPEN_ACL_UNSAFE.asScala)
 
-        Await.result( Future { f(zk) } ensure { zk.release } )
+        Await.result(Future { f(zk) } ensure { zk.release })
       }
 
       def acquire(sem: ZkAsyncSemaphore) = {
@@ -54,13 +54,13 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
           }
 
           "execute immediately while permits are available" in {
-            Await.result(acquire(sem1) within(new JavaTimer(true), 2.second))
+            Await.result(acquire(sem1) within (new JavaTimer(true), 2.second))
             assert(sem1.numPermitsAvailable == 1)
             assert(sem1.numWaiters == 0)
             assert(sem2.numPermitsAvailable == 1)
             assert(sem2.numWaiters == 0)
 
-            Await.result(acquire(sem2) within(new JavaTimer(true), 2.second))
+            Await.result(acquire(sem2) within (new JavaTimer(true), 2.second))
             assert(sem1.numPermitsAvailable == 0)
             assert(sem1.numWaiters == 0)
             assert(sem2.numPermitsAvailable == 0)
@@ -72,7 +72,10 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
 
           "queue waiters when no permits are available" in {
             implicit val config =
-              PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
+              PatienceConfig(
+                timeout = scaled(Span(1, Seconds)),
+                interval = scaled(Span(100, Millis))
+              )
 
             awaiting1 = acquire(sem1)
             assert(awaiting1.poll == (None))
@@ -97,12 +100,15 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
 
           "have correct gauges as permit holders release" in {
             implicit val config =
-              PatienceConfig(timeout = scaled(Span(1, Seconds)), interval = scaled(Span(100, Millis)))
+              PatienceConfig(
+                timeout = scaled(Span(1, Seconds)),
+                interval = scaled(Span(100, Millis))
+              )
 
             assert(permits.size == (2))
 
             permits.poll().release()
-            Await.result(awaiting1 within(new JavaTimer(true), 2.second))
+            Await.result(awaiting1 within (new JavaTimer(true), 2.second))
 
             eventually {
               assert(sem1.numPermitsAvailable == 0)
@@ -112,7 +118,7 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
             }
 
             permits.poll().release()
-            Await.result(awaiting2 within(new JavaTimer(true), 2.second))
+            Await.result(awaiting2 within (new JavaTimer(true), 2.second))
 
             eventually {
               assert(sem1.numPermitsAvailable == 0)
@@ -147,7 +153,10 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
           withClient { zk =>
             val sem = new ZkAsyncSemaphore(zk, "/aoeu/aoeu", 2)
             val znode = ZNode(zk, "/testing/twitter/node_with_data_7")
-            Await.result(znode.delete().rescue{ case e: NoNodeException => Future.value(0) }, 5.seconds)
+            Await.result(
+              znode.delete().rescue { case e: NoNodeException => Future.value(0) },
+              5.seconds
+            )
             Await.result(znode.create("7".getBytes), 5.seconds)
             val permits: Future[Int] = sem.numPermitsOf(znode)
             assert(Await.result(permits, 5.seconds) == 7)
@@ -157,11 +166,12 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
         "not error on NoNode" in {
           withClient { zk =>
             val sem = new ZkAsyncSemaphore(zk, "/aoeu/aoeu", 2)
-            val permits: Future[Int] = sem.numPermitsOf(ZNode(zk, "/aoeu/aoeu/node_that_does_not_exist"))
+            val permits: Future[Int] =
+              sem.numPermitsOf(ZNode(zk, "/aoeu/aoeu/node_that_does_not_exist"))
             Await.result(permits, 5.seconds)
           }
         }
       }
     }
- }
+  }
 }

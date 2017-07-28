@@ -6,7 +6,8 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class BufInputStreamTest extends FunSuite {
-  private[this] val fileString = "Test_All_Tests\nTest_java_io_BufferedInputStream\nTest_java_io_BufferedOutputStream\nTest_ByteArrayInputStream\nTest_java_io_ByteArrayOutputStream\nTest_java_io_DataInputStream\n"
+  private[this] val fileString =
+    "Test_All_Tests\nTest_java_io_BufferedInputStream\nTest_java_io_BufferedOutputStream\nTest_ByteArrayInputStream\nTest_java_io_ByteArrayOutputStream\nTest_java_io_DataInputStream\n"
   private[this] val fileBuf = Buf.ByteArray.Owned(fileString.getBytes)
 
   test("Constructor") {
@@ -55,7 +56,10 @@ class BufInputStreamTest extends FunSuite {
     val is = new BufInputStream(fileBuf)
     val c = is.read()
     is.reset()
-    assert(c == fileString.charAt(0), "read returned incorrect char %s %s".format(c, fileString.charAt(0)))
+    assert(
+      c == fileString.charAt(0),
+      "read returned incorrect char %s %s".format(c, fileString.charAt(0))
+    )
   }
 
   test("read") {
@@ -82,7 +86,7 @@ class BufInputStreamTest extends FunSuite {
     val array = new Array[Byte](20)
 
     intercept[IllegalArgumentException] {
-      is.read(array , -1, 1)
+      is.read(array, -1, 1)
     }
   }
 
@@ -91,7 +95,7 @@ class BufInputStreamTest extends FunSuite {
     val array = new Array[Byte](20)
 
     intercept[IllegalArgumentException] {
-      is.read(array , 1, -1)
+      is.read(array, 1, -1)
     }
   }
 

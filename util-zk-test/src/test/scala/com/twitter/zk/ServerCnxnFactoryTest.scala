@@ -9,7 +9,7 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ServerCnxnFactoryTest extends FunSuite with BeforeAndAfter  {
+class ServerCnxnFactoryTest extends FunSuite with BeforeAndAfter {
   val addr = InetAddress.getLocalHost
 
   var testServer: ZooKeeperServer = null

@@ -23,8 +23,7 @@ object VeryBadApp extends App {
     throw new RuntimeException("this is a bad app")
   }
 
-  def main() = {
-  }
+  def main() = {}
 }
 
 @RunWith(classOf[JUnitRunner])
@@ -85,8 +84,12 @@ class AppTest extends FunSuite {
     val a = new App { def main() = () }
     val p = new Promise[Unit]
     var n1, n2 = 0
-    val c1 = Closable.make{_ => n1 += 1; p}
-    val c2 = Closable.make{_ => n2 += 1; Future.Done}
+    val c1 = Closable.make { _ =>
+      n1 += 1; p
+    }
+    val c2 = Closable.make { _ =>
+      n2 += 1; Future.Done
+    }
     a.closeOnExitLast(c2)
     a.closeOnExit(c1)
     val f = a.close()
@@ -110,8 +113,12 @@ class AppTest extends FunSuite {
 
     Time.withCurrentTimeFrozen { ctl =>
       var n1, n2 = 0
-      val c1 = Closable.make { _ => n1 += 1; Future.never }
-      val c2 = Closable.make { _ => n2 += 1; Future.never }
+      val c1 = Closable.make { _ =>
+        n1 += 1; Future.never
+      }
+      val c2 = Closable.make { _ =>
+        n2 += 1; Future.never
+      }
       a.closeOnExitLast(c2)
       a.closeOnExit(c1)
       val f = a.close(Time.now + 1.second)
@@ -129,7 +136,9 @@ class AppTest extends FunSuite {
     }
   }
 
-  test("App: sequenced exits respect deadline when closeOnExit and closeOnExitLast called after close") {
+  test(
+    "App: sequenced exits respect deadline when closeOnExit and closeOnExitLast called after close"
+  ) {
     val t = new MockTimer
     val a = new App {
       override lazy val shutdownTimer = t
@@ -138,10 +147,18 @@ class AppTest extends FunSuite {
 
     Time.withCurrentTimeFrozen { ctl =>
       var n1, n2, n3, n4 = 0
-      val c1 = Closable.make { _ => n1 += 1; Future.never } // Exit
-      val c2 = Closable.make { _ => n2 += 1; Future.Done }  // ExitLast
-      val c3 = Closable.make { _ => n3 += 1; Future.Done }  // Late Exit
-      val c4 = Closable.make { _ => n4 += 1; Future.Done }  // Late ExitLast
+      val c1 = Closable.make { _ =>
+        n1 += 1; Future.never
+      } // Exit
+      val c2 = Closable.make { _ =>
+        n2 += 1; Future.Done
+      } // ExitLast
+      val c3 = Closable.make { _ =>
+        n3 += 1; Future.Done
+      } // Late Exit
+      val c4 = Closable.make { _ =>
+        n4 += 1; Future.Done
+      } // Late ExitLast
       a.closeOnExitLast(c2)
       a.closeOnExit(c1)
       val f = a.close(Time.now + 1.second)
@@ -181,10 +198,18 @@ class AppTest extends FunSuite {
 
     Time.withCurrentTimeFrozen { ctl =>
       var n1, n2, n3, n4 = 0
-      val c1 = Closable.make { _ => n1 += 1; Future.never } // Exit
-      val c2 = Closable.make { _ => n2 += 1; Future.never } // ExitLast
-      val c3 = Closable.make { _ => n3 += 1; Future.never } // Late Exit
-      val c4 = Closable.make { _ => n4 += 1; Future.never } // Late ExitLast
+      val c1 = Closable.make { _ =>
+        n1 += 1; Future.never
+      } // Exit
+      val c2 = Closable.make { _ =>
+        n2 += 1; Future.never
+      } // ExitLast
+      val c3 = Closable.make { _ =>
+        n3 += 1; Future.never
+      } // Late Exit
+      val c4 = Closable.make { _ =>
+        n4 += 1; Future.never
+      } // Late ExitLast
       a.closeOnExitLast(c2)
       a.closeOnExit(c1)
       val f = a.close(Time.now + 1.second)

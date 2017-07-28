@@ -28,7 +28,8 @@ import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
 class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
-  val logLevel = Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
+  val logLevel =
+    Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
   private val logger = Logger.get("")
   private var oldLevel: javalog.Level = _
@@ -43,7 +44,6 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     logger.clearHandlers()
     logger.setLevel(oldLevel)
   }
-
 
   private var traceHandler = new StringHandler(BareFormatter, None)
 
@@ -84,7 +84,6 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     assert(logLines().filter { _ contains substring }.size == 0)
   }
 
-
   class LoggerSpecHelper {
     var myHandler: Handler = null
     var log: Logger = null
@@ -124,7 +123,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       var executed = false
       def function() = {
         executed = true
-        "asdf"+executed+" hi there"
+        "asdf" + executed + " hi there"
       }
 
       logger.debugLazy(function)
@@ -137,7 +136,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       var executed = false
       def function() = {
         executed = true
-        "asdf"+executed+" hi there"
+        "asdf" + executed + " hi there"
       }
       logger.debugLazy(function)
       assert(executed)
@@ -147,30 +146,36 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       //in some cases, if debugLazy definition was changed, the below would no longer compile
       val logger = Logger.get("lazyTest3")
       val executed = true
-      logger.debugLazy("hi there"+executed+"cool")
+      logger.debugLazy("hi there" + executed + "cool")
     }
 
     "provide level name and value maps" in {
-      assert(Logger.levels == Map(
-        Level.ALL.value -> Level.ALL,
-        Level.TRACE.value -> Level.TRACE,
-        Level.DEBUG.value -> Level.DEBUG,
-        Level.INFO.value -> Level.INFO,
-        Level.WARNING.value -> Level.WARNING,
-        Level.ERROR.value -> Level.ERROR,
-        Level.CRITICAL.value -> Level.CRITICAL,
-        Level.FATAL.value -> Level.FATAL,
-        Level.OFF.value -> Level.OFF))
-      assert(Logger.levelNames == Map(
-        "ALL" -> Level.ALL,
-        "TRACE" -> Level.TRACE,
-        "DEBUG" -> Level.DEBUG,
-        "INFO" -> Level.INFO,
-        "WARNING" -> Level.WARNING,
-        "ERROR" -> Level.ERROR,
-        "CRITICAL" -> Level.CRITICAL,
-        "FATAL" -> Level.FATAL,
-        "OFF" -> Level.OFF))
+      assert(
+        Logger.levels == Map(
+          Level.ALL.value -> Level.ALL,
+          Level.TRACE.value -> Level.TRACE,
+          Level.DEBUG.value -> Level.DEBUG,
+          Level.INFO.value -> Level.INFO,
+          Level.WARNING.value -> Level.WARNING,
+          Level.ERROR.value -> Level.ERROR,
+          Level.CRITICAL.value -> Level.CRITICAL,
+          Level.FATAL.value -> Level.FATAL,
+          Level.OFF.value -> Level.OFF
+        )
+      )
+      assert(
+        Logger.levelNames == Map(
+          "ALL" -> Level.ALL,
+          "TRACE" -> Level.TRACE,
+          "DEBUG" -> Level.DEBUG,
+          "INFO" -> Level.INFO,
+          "WARNING" -> Level.WARNING,
+          "ERROR" -> Level.ERROR,
+          "CRITICAL" -> Level.CRITICAL,
+          "FATAL" -> Level.FATAL,
+          "OFF" -> Level.OFF
+        )
+      )
     }
 
     "figure out package names" in {
@@ -295,7 +300,9 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
           assert(handler.append == false)
           assert(handler.getLevel == Level.INFO)
           val formatter = handler.formatter
-          assert(formatter.formatPrefix(javalog.Level.WARNING, "10:55", "hello") == "WARNING 10:55 hello")
+          assert(
+            formatter.formatPrefix(javalog.Level.WARNING, "10:55", "hello") == "WARNING 10:55 hello"
+          )
           assert(log.name == "com.twitter")
           assert(formatter.truncateAt == 1024)
           assert(formatter.useFullPackageNames == true)
@@ -370,12 +377,17 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
           assert(Logger.get("stats").getLevel == Level.INFO)
           assert(Logger.get("bad_jobs").getLevel == Level.INFO)
           try {
-          Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler]
+            Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler]
           } catch {
             case _: ClassCastException => fail("not a ThrottledHandler")
           }
           try {
-            Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler].handler.asInstanceOf[FileHandler]
+            Logger
+              .get("")
+              .getHandlers()(0)
+              .asInstanceOf[ThrottledHandler]
+              .handler
+              .asInstanceOf[FileHandler]
           } catch {
             case _: ClassCastException => fail("not a FileHandler")
           }
@@ -423,7 +435,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       // logging in scala uses the %s format and not the Java MessageFormat
       "compare scala logging format" in {
         before()
-        Logger.get("").info("V1{0}=%s","A")
+        Logger.get("").info("V1{0}=%s", "A")
         mustLog("V1{0}=A")
       }
     }

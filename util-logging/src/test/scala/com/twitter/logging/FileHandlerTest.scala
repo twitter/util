@@ -25,8 +25,6 @@ import org.scalatest.junit.JUnitRunner
 import com.twitter.conversions.storage._
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
-
-
 @RunWith(classOf[JUnitRunner])
 class FileHandlerTest extends WordSpec with TempFolder {
   def reader(filename: String) = {
@@ -151,7 +149,8 @@ class FileHandlerTest extends WordSpec with TempFolder {
     // verify that at the proper time, the log file rolls and resets.
     "roll logs into new files" in {
       withTempFolder {
-        val handler = new FileHandler(folderName + "/test.log", Policy.Hourly, true, -1, BareFormatter, None)
+        val handler =
+          new FileHandler(folderName + "/test.log", Policy.Hourly, true, -1, BareFormatter, None)
         Time.withCurrentTimeFrozen { time =>
           handler.publish(record1)
           val date = new Date(Time.now.inMilliseconds)
@@ -219,7 +218,9 @@ class FileHandlerTest extends WordSpec with TempFolder {
         }
 
         // the target, 1 rotated file, and the short file should all remain
-        (1 to 5).foreach { _ => flush() }
+        (1 to 5).foreach { _ =>
+          flush()
+        }
         val fileSet = new File(folderName).list().toSet
         assert(fileSet.contains(name) == true)
         assert(fileSet.contains(namePrefix) == true)
@@ -254,8 +255,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
           handler.publish(record1)
           assert(new File(folderName).list().length == 2)
           handler.close()
-        }
-        finally {
+        } finally {
           // restore user.dir to its original configuration
           System.setProperty("user.dir", wdir)
         }
@@ -303,10 +303,10 @@ class FileHandlerTest extends WordSpec with TempFolder {
     }
 
     /**
-      * This test mimics the scenario that, if log file exists, FileHandler should pick up it's size
-      * and roll over at the set limit, in order to prevent the file size from growing.
-      * The test succeeds if the roll over takes place as desired else fails.
-      */
+     * This test mimics the scenario that, if log file exists, FileHandler should pick up it's size
+     * and roll over at the set limit, in order to prevent the file size from growing.
+     * The test succeeds if the roll over takes place as desired else fails.
+     */
     withTempFolder {
       "rollover at set limit when test is restarted, execution" in {
         val logLevel = Level.INFO
@@ -324,13 +324,13 @@ class FileHandlerTest extends WordSpec with TempFolder {
         }
         handler.close()
 
-        val handler2 = FileHandler(filename,rollPolicy, append, rotateCount, formatter).apply()
+        val handler2 = FileHandler(filename, rollPolicy, append, rotateCount, formatter).apply()
         for (a <- 1 to 20000) {
           handler2.publish(record1)
         }
         handler2.close()
 
-        def listLogFiles(dir: String):List[File] = {
+        def listLogFiles(dir: String): List[File] = {
           val d = new File(dir)
           if (d.exists && d.isDirectory) {
             d.listFiles.filter(_.isFile).toList

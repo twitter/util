@@ -1,6 +1,5 @@
 package com.twitter.concurrent
 
-
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
@@ -17,12 +16,12 @@ class FutureOfferTest extends WordSpec with MockitoSugar {
       assert(o.prepare().poll == None)
       p() = Return(123)
       assert(o.prepare().poll match {
-         case Some(Return(tx)) =>
-           tx.ack().poll match {
-             case Some(Return(Tx.Commit(Return(123)))) => true
-             case _ => false
-           }
-         case _ => false
+        case Some(Return(tx)) =>
+          tx.ack().poll match {
+            case Some(Return(Tx.Commit(Return(123)))) => true
+            case _ => false
+          }
+        case _ => false
       })
     }
   }

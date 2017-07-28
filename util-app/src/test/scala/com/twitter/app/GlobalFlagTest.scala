@@ -40,8 +40,10 @@ class GlobalFlagTest extends FunSuite {
   }
 
   test("GlobalFlag: no default usage") {
-    assert(MyGlobalFlagNoDefault.usageString ==
-      "  -com.twitter.app.MyGlobalFlagNoDefault='Int': a global test flag with no default")
+    assert(
+      MyGlobalFlagNoDefault.usageString ==
+        "  -com.twitter.app.MyGlobalFlagNoDefault='Int': a global test flag with no default"
+    )
   }
 
   test("GlobalFlag: implicit value of true for booleans") {

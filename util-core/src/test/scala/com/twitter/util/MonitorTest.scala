@@ -1,6 +1,5 @@
 package com.twitter.util
 
-
 import org.junit.runner.RunWith
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -21,7 +20,9 @@ class MonitorTest extends WordSpec with MockitoSugar {
   "Monitor#orElse" should {
     class MonitorOrElseHelper {
       val m0, m1, m2 = spy(new MockMonitor)
-      Seq(m0, m1, m2) foreach { m => when(m.handle(any[Throwable])).thenReturn(true) }
+      Seq(m0, m1, m2) foreach { m =>
+        when(m.handle(any[Throwable])).thenReturn(true)
+      }
       val exc = new Exception
       val m = m0 orElse m1 orElse m2
     }
@@ -48,9 +49,13 @@ class MonitorTest extends WordSpec with MockitoSugar {
       val h = new MonitorOrElseHelper
       import h._
 
-      Seq(m0, m1, m2) foreach { m => when(m.handle(any[Throwable]))thenReturn(false) }
+      Seq(m0, m1, m2) foreach { m =>
+        when(m.handle(any[Throwable])) thenReturn (false)
+      }
       assert(m.handle(exc) == false)
-      Seq(m0, m1, m2) foreach { m => verify(m).handle(exc) }
+      Seq(m0, m1, m2) foreach { m =>
+        verify(m).handle(exc)
+      }
     }
 
     "wrap Monitor exceptions and pass them on" in {

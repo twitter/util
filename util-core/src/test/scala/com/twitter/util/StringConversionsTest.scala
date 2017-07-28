@@ -1,5 +1,5 @@
 /*
-* Copyright 2010 Twitter, Inc.
+ * Copyright 2010 Twitter, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -27,14 +27,18 @@ class StringConversionsTest extends WordSpec {
   "string" should {
     "quoteC" in {
       assert("nothing".quoteC == "nothing")
-      assert("name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC == "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac")
+      assert(
+        "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC == "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
+      )
       assert("she said \"hello\"".quoteC == "she said \\\"hello\\\"")
-      assert("\\backslash".quoteC  == "\\\\backslash")
+      assert("\\backslash".quoteC == "\\\\backslash")
     }
 
     "unquoteC" in {
       assert("nothing".unquoteC == "nothing")
-      assert("name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC  == "name\tvalue\t\u20acb\u00fcllet?\u20ac")
+      assert(
+        "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC == "name\tvalue\t\u20acb\u00fcllet?\u20ac"
+      )
       assert("she said \\\"hello\\\"".unquoteC == "she said \"hello\"")
       assert("\\\\backslash".unquoteC == "\\backslash")
       assert("real\\$dollar".unquoteC == "real\\$dollar")

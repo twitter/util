@@ -42,7 +42,9 @@ class X509CertificateFileTest extends FunSuite {
 
   test("File isn't a certificate") {
     PemFileTestUtils.testEmptyFile[InvalidPemFormatException, X509Certificate](
-      "X509Certificate", readCertFromFile)
+      "X509Certificate",
+      readCertFromFile
+    )
   }
 
   test("File is garbage") {

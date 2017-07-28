@@ -13,11 +13,12 @@ import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 import scala.collection.mutable
 
 @RunWith(classOf[JUnitRunner])
-class BufTest extends FunSuite
-  with MockitoSugar
-  with GeneratorDrivenPropertyChecks
-  with Checkers
-  with AssertionsForJUnit {
+class BufTest
+    extends FunSuite
+    with MockitoSugar
+    with GeneratorDrivenPropertyChecks
+    with Checkers
+    with AssertionsForJUnit {
 
   val AllCharsets = Seq(
     JChar.ISO_8859_1,
@@ -131,7 +132,7 @@ class BufTest extends FunSuite
     val arr = Array.range(0, 16).map(_.toByte)
     val buf = Buf.ByteArray.Owned(arr)
     for (i <- 0 until arr.length; j <- i until arr.length) {
-      val w = new Array[Byte](j-i)
+      val w = new Array[Byte](j - i)
       buf.slice(i, j).write(w, 0)
       assert(w.toSeq == arr.slice(i, j).toSeq)
     }
@@ -221,22 +222,14 @@ class BufTest extends FunSuite
 
     val byteArrayOffset = 3
     val byteArray = Buf.ByteArray.Owned(arr, 3, 8)
-    assertAllProcessed(
-      Array[Byte](5, 6, 7),
-      byteArray, 2, 5)
+    assertAllProcessed(Array[Byte](5, 6, 7), byteArray, 2, 5)
 
     val byteBuffer = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(arr))
-    assertAllProcessed(
-      Array[Byte](2, 3, 4),
-      byteBuffer, 2, 5)
+    assertAllProcessed(Array[Byte](2, 3, 4), byteBuffer, 2, 5)
 
     val composite = byteArray.concat(byteBuffer)
-    assertAllProcessed(
-      Array[Byte](7, 0, 1, 2),
-      composite, 4, 8)
-    assertAllProcessed(
-      Array[Byte](1, 2, 3),
-      composite, 6, 9)
+    assertAllProcessed(Array[Byte](7, 0, 1, 2), composite, 4, 8)
+    assertAllProcessed(Array[Byte](1, 2, 3), composite, 6, 9)
   }
 
   private def assertProcessReturns0WhenProcessorReturnsFalse(buf: Buf) =
@@ -265,8 +258,7 @@ class BufTest extends FunSuite
     assert(-1 == byteBuffer.process(0, 5, stopAt5))
 
     val composite =
-      Buf.ByteArray.Owned(arr, 0, 1).concat(
-        Buf.ByteArray.Owned(arr, 1, 10))
+      Buf.ByteArray.Owned(arr, 0, 1).concat(Buf.ByteArray.Owned(arr, 1, 10))
     assertProcessReturns0WhenProcessorReturnsFalse(composite)
     assert(5 == composite.process(stopAt5))
     assert(5 == composite.process(4, 6, stopAt5))
@@ -307,15 +299,15 @@ class BufTest extends FunSuite
   }
 
   test("Buf.concat") {
-    val a1 = Array[Byte](1,2,3)
-    val a2 = Array[Byte](4,5,6)
-    val a3 = Array[Byte](7,8,9)
+    val a1 = Array[Byte](1, 2, 3)
+    val a2 = Array[Byte](4, 5, 6)
+    val a3 = Array[Byte](7, 8, 9)
 
     val buf = Buf.ByteArray.Owned(a1) concat Buf.ByteArray.Owned(a2) concat Buf.ByteArray.Owned(a3)
     assert(buf.length == 9)
     val x = Array.fill(9) { 0.toByte }
     buf.write(x, 0)
-    assert(x.toSeq == (a1++a2++a3).toSeq)
+    assert(x.toSeq == (a1 ++ a2 ++ a3).toSeq)
   }
 
   test("Buf.concat.slice") {
@@ -326,7 +318,7 @@ class BufTest extends FunSuite
     val buf = Buf.ByteArray.Owned(a1) concat Buf.ByteArray.Owned(a2) concat Buf.ByteArray.Owned(a3)
 
     for (i <- 0 until arr.length; j <- i until arr.length) {
-      val w = new Array[Byte](j-i)
+      val w = new Array[Byte](j - i)
       buf.slice(i, j).write(w, 0)
       assert(w.toSeq == arr.slice(i, j).toSeq)
     }
@@ -385,8 +377,8 @@ class BufTest extends FunSuite
           buf.slice(1, 2).write(out, 0)
           assert(out(0) == buf.get(1))
 
-          buf.slice(buf.length-1, buf.length).write(out, 0)
-          assert(out(0) == buf.get(buf.length-1))
+          buf.slice(buf.length - 1, buf.length).write(out, 0)
+          assert(out(0) == buf.get(buf.length - 1))
         }
       }
   }
@@ -472,10 +464,8 @@ class BufTest extends FunSuite
     val bytes = new Array[Byte](21)
     buf.write(bytes, 0)
 
-    val expected = Array[Byte](
-      -17, -65, -68, -17, -65, -68, -17,
-      -65, -68, -17, -65, -68, -17, -65, -68,
-      -17, -65, -68, -17, -65, -68)
+    val expected = Array[Byte](-17, -65, -68, -17, -65, -68, -17, -65, -68, -17, -65, -68, -17, -65,
+      -68, -17, -65, -68, -17, -65, -68)
 
     assert(bytes.toSeq == expected.toSeq)
 
@@ -496,7 +486,7 @@ class BufTest extends FunSuite
       def slice(i: Int, j: Int): Buf = throw new Exception("not implemented")
       def length: Int = 12
       def write(output: Array[Byte], off: Int): Unit =
-        (off until off+length) foreach { i =>
+        (off until off + length) foreach { i =>
           output(i) = 'a'.toByte
         }
       def write(output: ByteBuffer): Unit = ???
@@ -510,7 +500,9 @@ class BufTest extends FunSuite
   }
 
   AllCharsets foreach { charset =>
-    test("Buf.StringCoder: decoding to %s does not modify underlying byte buffer".format(charset.name)) {
+    test(
+      "Buf.StringCoder: decoding to %s does not modify underlying byte buffer".format(charset.name)
+    ) {
       val coder = new Buf.StringCoder(charset) {}
       val hw = "Hello, world!"
       val bb = charset.encode(hw)
@@ -554,9 +546,9 @@ class BufTest extends FunSuite
     assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocate(0)) == Buf.Empty)
     assert(Buf.ByteBuffer.Owned(java.nio.ByteBuffer.allocateDirect(0)) == Buf.Empty)
 
-    val bytes2 = Array[Byte](1,2,3,4,5,6,7,8,9,0)
+    val bytes2 = Array[Byte](1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
     val buf2 = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes2, 3, 4))
-    assert(buf2 == Buf.ByteArray.Owned(Array[Byte](4,5,6,7)))
+    assert(buf2 == Buf.ByteArray.Owned(Array[Byte](4, 5, 6, 7)))
 
     val Buf.ByteBuffer.Owned(byteBuffer) = buf
     assert(byteBuffer == bb)
@@ -643,7 +635,7 @@ class BufTest extends FunSuite
 
     val shifted = new Array[Byte](bytes.length + 3)
     System.arraycopy(bytes, 0, shifted, 3, bytes.length)
-    ae(Buf.Utf8(string), Buf.ByteArray.Owned(shifted, 3, 3+bytes.length))
+    ae(Buf.Utf8(string), Buf.ByteArray.Owned(shifted, 3, 3 + bytes.length))
   }
 
   test("hash code memoization") {
@@ -724,12 +716,7 @@ class BufTest extends FunSuite
       .concat(Buf.U32LE(Int.MinValue))
       .concat(Buf.U64LE(Long.MinValue))
 
-    val Buf.U32BE(be32,
-        Buf.U64BE(be64,
-        Buf.U32LE(le32,
-        Buf.U64LE(le64,
-        rem
-    )))) = buf
+    val Buf.U32BE(be32, Buf.U64BE(be64, Buf.U32LE(le32, Buf.U64LE(le64, rem)))) = buf
 
     assert(be32 == Int.MaxValue)
     assert(be64 == Long.MaxValue)
@@ -752,7 +739,7 @@ class BufTest extends FunSuite
     val cbuf = cbuf1 concat cbuf2
 
     for (i <- 0 until arr.length; j <- i until arr.length) {
-      val w = new Array[Byte](j-i)
+      val w = new Array[Byte](j - i)
       cbuf.slice(i, j).write(w, 0)
       assert(w.toSeq == arr.slice(i, j).toSeq)
     }
@@ -788,7 +775,8 @@ class BufTest extends FunSuite
       Buf.Utf16BE.apply,
       Buf.Utf16LE.apply,
       s => Buf.ByteArray.Owned(s.getBytes("UTF-8")),
-      s => Buf.ByteBuffer.Owned(UTF_8.encode(CharBuffer.wrap(s))))
+      s => Buf.ByteBuffer.Owned(UTF_8.encode(CharBuffer.wrap(s)))
+    )
 
     Arbitrary(for {
       s <- Arbitrary.arbitrary[String]
@@ -804,16 +792,17 @@ class BufTest extends FunSuite
       k <- Gen.choose(j, b.length)
     } yield (b, i, j, k)
 
-    forAll(bufSplits) { case (buf, i, j, k) =>
-      // This `whenever` would be unnecessary if not for Shrinking, see:
-      // https://github.com/rickynils/scalacheck/issues/18.
-      whenever (i <= j && j <= k) {
-        val b1 = buf.slice(i, k)
-        val b2 = b1.slice(0, j - i)
+    forAll(bufSplits) {
+      case (buf, i, j, k) =>
+        // This `whenever` would be unnecessary if not for Shrinking, see:
+        // https://github.com/rickynils/scalacheck/issues/18.
+        whenever(i <= j && j <= k) {
+          val b1 = buf.slice(i, k)
+          val b2 = b1.slice(0, j - i)
 
-        assert(b1.length == k - i)
-        assert(b2.length == j - i)
-      }
+          assert(b1.length == k - i)
+          assert(b2.length == j - i)
+        }
     }
   }
 
@@ -826,8 +815,12 @@ class BufTest extends FunSuite
     } yield Buf(Seq.fill(n)(buf))
 
     forAll(Gen.listOf(bufGen)) { bufs: List[Buf] =>
-      val concatLeft = bufs.foldLeft(Buf.Empty) { (l, r) => l.concat(r) }
-      val concatRight = bufs.foldRight(Buf.Empty) { (l, r) => l.concat(r) }
+      val concatLeft = bufs.foldLeft(Buf.Empty) { (l, r) =>
+        l.concat(r)
+      }
+      val concatRight = bufs.foldRight(Buf.Empty) { (l, r) =>
+        l.concat(r)
+      }
       val constructor = Buf(bufs)
       assert(constructor == concatLeft)
       assert(constructor == concatRight)

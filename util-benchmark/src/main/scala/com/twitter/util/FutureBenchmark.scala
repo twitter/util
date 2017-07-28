@@ -202,13 +202,15 @@ class FutureBenchmark extends StdBenchAnnotations {
 object FutureBenchmark {
   final val N = 10
 
-  private val RespondFn: Try[Unit] => Unit = { _ => () }
-  
+  private val RespondFn: Try[Unit] => Unit = { _ =>
+    ()
+  }
+
   @State(Scope.Benchmark)
   class ByState {
     val timer = Timer.Nil
     val now: Time = Time.now
-    val exc =  new TimeoutException("")
+    val exc = new TimeoutException("")
   }
 
   @State(Scope.Benchmark)
@@ -236,8 +238,12 @@ object FutureBenchmark {
 
   @State(Scope.Thread)
   class PromiseUnitState {
-    val FlatMapFn = { _: Unit => Future.Unit }
-    val MapFn = { _: Unit => "hi" }
+    val FlatMapFn = { _: Unit =>
+      Future.Unit
+    }
+    val MapFn = { _: Unit =>
+      "hi"
+    }
 
     var promise: Promise[Unit] = _
 

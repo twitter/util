@@ -15,8 +15,10 @@ class MutableTest extends FunSuite {
     assert(tunable() == None)
   }
 
-  test("Putting an id and value and getting the tunable from the map returns the Tunable with " +
-    "that id and value") {
+  test(
+    "Putting an id and value and getting the tunable from the map returns the Tunable with " +
+      "that id and value"
+  ) {
     val id = "key"
     val value = "value"
 
@@ -26,8 +28,10 @@ class MutableTest extends FunSuite {
     assert(tunable() == Some(value))
   }
 
-  test("Getting a tunable with a Key whose subclass is that of the matching Tunable in the map " +
-    "produces the Tunable") {
+  test(
+    "Getting a tunable with a Key whose subclass is that of the matching Tunable in the map " +
+      "produces the Tunable"
+  ) {
 
     class Animal
     class Cat extends Animal
@@ -255,8 +259,10 @@ class MutableTest extends FunSuite {
     assert(tunable() == Some("hello1"))
   }
 
-  test("orElse: Combined map produces Tunable that gets updates from second map " +
-    "when first does not contain the key") {
+  test(
+    "orElse: Combined map produces Tunable that gets updates from second map " +
+      "when first does not contain the key"
+  ) {
     val id = "key"
     val map1 = TunableMap.newMutable()
     val map2 = TunableMap.newMutable()
@@ -270,8 +276,10 @@ class MutableTest extends FunSuite {
     assert(tunable() == Some("hello2"))
   }
 
-  test("orElse: Combined map produces Tunable that gets updates from second map " +
-    "when first removes the key") {
+  test(
+    "orElse: Combined map produces Tunable that gets updates from second map " +
+      "when first removes the key"
+  ) {
     val id = "key"
     val map1 = TunableMap.newMutable()
     val key = map1.put(id, "hello1")
@@ -290,8 +298,10 @@ class MutableTest extends FunSuite {
     assert(tunable() == Some("hello2"))
   }
 
-  test("orElse: Combined map produces Tunable that gets updates from first map when it removes " +
-    "and then adds a key") {
+  test(
+    "orElse: Combined map produces Tunable that gets updates from first map when it removes " +
+      "and then adds a key"
+  ) {
     val id = "key"
     val map1 = TunableMap.newMutable()
     val key = map1.put(id, "hello1")
@@ -326,7 +336,9 @@ class MutableTest extends FunSuite {
     map1.put("key2", 5)
 
     assert(combined.entries.size == 1)
-    assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 } )
+    assert(combined.entries.exists { entry =>
+      entry.key.id == "key2" && entry.value == 5
+    })
   }
 
   test("orElse: entries returns entries from both maps") {
@@ -341,8 +353,12 @@ class MutableTest extends FunSuite {
     map2.put("key2", 5)
 
     assert(combined.entries.size == 2)
-    assert(combined.entries.exists { entry => entry.key.id == "key1" && entry.value == "hello1" } )
-    assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 } )
+    assert(combined.entries.exists { entry =>
+      entry.key.id == "key1" && entry.value == "hello1"
+    })
+    assert(combined.entries.exists { entry =>
+      entry.key.id == "key2" && entry.value == 5
+    })
   }
 
   test("orElse on two NullTunableMaps produces NullTunableMap") {

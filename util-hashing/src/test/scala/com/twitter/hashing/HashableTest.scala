@@ -9,8 +9,14 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 class HashableTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   private[this] val algorithms = Seq(
-    Hashable.CRC32_ITU, Hashable.FNV1_32, Hashable.FNV1_64, Hashable.FNV1A_32,
-    Hashable.FNV1A_64, Hashable.HSIEH, Hashable.JENKINS, Hashable.MD5_LEInt
+    Hashable.CRC32_ITU,
+    Hashable.FNV1_32,
+    Hashable.FNV1_64,
+    Hashable.FNV1A_32,
+    Hashable.FNV1A_64,
+    Hashable.HSIEH,
+    Hashable.JENKINS,
+    Hashable.MD5_LEInt
   )
 
   def testConsistency[T](algo: Hashable[Array[Byte], T]) {

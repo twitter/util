@@ -30,15 +30,17 @@ object Base64LongTest {
   }
 
   private implicit val arbAlphabet =
-    Arbitrary[Alphabet](Gen.oneOf(
-      Gen.const(StandardBase64Alphabet),
-      // An alphabet that should trigger the general alphabet inversion
-      // code
-      genAlphabet(arbitrary[Char]),
-      // An alphabet that should trigger the specialized alphabet
-      // inversion code
-      genAlphabet(Gen.oneOf(0.toChar.until(128.toChar).filterNot(Character.isISOControl)))
-    ))
+    Arbitrary[Alphabet](
+      Gen.oneOf(
+        Gen.const(StandardBase64Alphabet),
+        // An alphabet that should trigger the general alphabet inversion
+        // code
+        genAlphabet(arbitrary[Char]),
+        // An alphabet that should trigger the specialized alphabet
+        // inversion code
+        genAlphabet(Gen.oneOf(0.toChar.until(128.toChar).filterNot(Character.isISOControl)))
+      )
+    )
 
   private def expectedLength(n: Long): Int = {
     var k = n

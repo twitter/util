@@ -22,7 +22,7 @@ class JsonTunableMapperTest extends FunSuite {
 
   test("parses valid json of no tunables into NullTunableMap") {
     val json = """{ "tunables": [ ] }"""
-      JsonTunableMapper().parse("""{ "tunables": [ ] }""") match {
+    JsonTunableMapper().parse("""{ "tunables": [ ] }""") match {
       case Return(map) =>
         assert(map eq NullTunableMap)
       case Throw(_) => fail()
@@ -191,8 +191,10 @@ class JsonTunableMapperTest extends FunSuite {
 
   test("loadJsonTunables returns a NullTunableMap when the file does not exist") {
 
-    assert(JsonTunableMapper().loadJsonTunables("IdForNonexistantFile", "mumbojumo")
-      == NullTunableMap)
+    assert(
+      JsonTunableMapper().loadJsonTunables("IdForNonexistantFile", "mumbojumo")
+        == NullTunableMap
+    )
   }
 
   test("loadJsonTunables returns an IllegalArgumentException when the file exists but is empty") {
@@ -200,8 +202,7 @@ class JsonTunableMapperTest extends FunSuite {
     val ex = intercept[IllegalArgumentException] {
       JsonTunableMapper().loadJsonTunables("IdForEmptyFile", path)
     }
-    assert(ex.getMessage.contains(
-      "Failed to parse Tunable configuration file for IdForEmptyFile"))
+    assert(ex.getMessage.contains("Failed to parse Tunable configuration file for IdForEmptyFile"))
   }
 
   test("loadJsonTunables throws an IllegalArgumentException if the file cannot be parsed") {
@@ -209,8 +210,9 @@ class JsonTunableMapperTest extends FunSuite {
     val ex = intercept[IllegalArgumentException] {
       JsonTunableMapper().loadJsonTunables("IdForInvalidJson", path)
     }
-    assert(ex.getMessage.contains(
-      "Failed to parse Tunable configuration file for IdForInvalidJson"))
+    assert(
+      ex.getMessage.contains("Failed to parse Tunable configuration file for IdForInvalidJson")
+    )
   }
 
   test("loadJsonTunables loads JSON tunables for a given client id when the JSON is valid") {
@@ -226,12 +228,16 @@ class JsonTunableMapperTest extends FunSuite {
   test("tunableMapForResources throws an Illegal argument exception when there are multiple paths") {
     val rsc = getClass.getClassLoader
       .getResources("com/twitter/tunables/IdForValidJson/instances.json")
-      .asScala.toSeq.head
+      .asScala
+      .toSeq
+      .head
 
     val ex = intercept[IllegalArgumentException] {
       JsonTunableMapper().tunableMapForResources("IdWithDuplicateResourceFiles", List(rsc, rsc))
     }
-    assert(ex.getMessage.contains(
-      "Found multiple Tunable configuration files for IdWithDuplicateResourceFiles"))
+    assert(
+      ex.getMessage
+        .contains("Found multiple Tunable configuration files for IdWithDuplicateResourceFiles")
+    )
   }
 }

@@ -50,7 +50,8 @@ class BlacklistStatsReceiverTest extends FunSuite {
 
   test("BlacklistStatsReceiver works scoped") {
     val inmemory = new InMemoryStatsReceiver()
-    val bsr = new BlacklistStatsReceiver(inmemory, { case seq => seq == Seq("foo", "bar") }).scope("foo")
+    val bsr =
+      new BlacklistStatsReceiver(inmemory, { case seq => seq == Seq("foo", "bar") }).scope("foo")
     val ctr = bsr.counter("foo", "bar")
     ctr.incr()
     val gauge = bsr.addGauge("foo", "baz") { 3.0f }

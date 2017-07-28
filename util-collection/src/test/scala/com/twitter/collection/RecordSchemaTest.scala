@@ -7,10 +7,10 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class RecordSchemaTest extends FunSuite {
 
-  val schema           = new RecordSchema
-  val field            = schema.newField[Object]()
+  val schema = new RecordSchema
+  val field = schema.newField[Object]()
   val fieldWithDefault = schema.newField[Object](new Object)
-  val fields           = Seq(field, fieldWithDefault)
+  val fields = Seq(field, fieldWithDefault)
 
   test("apply should throw IllegalStateException when field is uninitialized") {
     val record = schema.newRecord()

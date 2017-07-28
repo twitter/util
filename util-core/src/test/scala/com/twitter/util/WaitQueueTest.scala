@@ -15,9 +15,10 @@ class WaitQueueTest extends FunSuite with GeneratorDrivenPropertyChecks {
     if (n == 0) Promise.WaitQueue.empty[Unit]
     else Promise.WaitQueue(new EmptyK[Unit], genWaitQueueOf(n - 1))
 
-  def genWaitQueue: Gen[Promise.WaitQueue[Unit]] = for {
-    size <- Gen.choose(0, 100)
-  } yield genWaitQueueOf(size)
+  def genWaitQueue: Gen[Promise.WaitQueue[Unit]] =
+    for {
+      size <- Gen.choose(0, 100)
+    } yield genWaitQueueOf(size)
 
   test("size") {
     forAll(Gen.choose(0, 100)) { size =>

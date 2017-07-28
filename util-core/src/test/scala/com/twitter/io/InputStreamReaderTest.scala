@@ -23,7 +23,7 @@ class InputStreamReaderTest extends FunSuite {
   }
 
   test("InputStreamReader - read 0 bytes") {
-    val a = arr(0,25)
+    val a = arr(0, 25)
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 4096)
 
@@ -32,68 +32,68 @@ class InputStreamReaderTest extends FunSuite {
   }
 
   test("InputStreamReader - read positive bytes") {
-    val a = arr(0,25)
+    val a = arr(0, 25)
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 4096)
 
     val f1 = r.read(10)
-    assert(Await.result(f1, 5.seconds) == Some(buf(0,10)))
+    assert(Await.result(f1, 5.seconds) == Some(buf(0, 10)))
 
     val f2 = r.read(10)
-    assert(Await.result(f2, 5.seconds) == Some(buf(10,20)))
+    assert(Await.result(f2, 5.seconds) == Some(buf(10, 20)))
 
     val f3 = r.read(10)
-    assert(Await.result(f3, 5.seconds) == Some(buf(20,25)))
+    assert(Await.result(f3, 5.seconds) == Some(buf(20, 25)))
 
     val f4 = r.read(10)
     assert(Await.result(f4).isEmpty)
   }
 
   test("InputStreamReader - read up to maxBufferSize") {
-    val a = arr(0,250)
+    val a = arr(0, 250)
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 100)
 
     val f1 = r.read(1000)
-    assert(Await.result(f1, 5.seconds) == Some(buf(0,100)))
+    assert(Await.result(f1, 5.seconds) == Some(buf(0, 100)))
 
     val f2 = r.read(1000)
-    assert(Await.result(f2, 5.seconds) == Some(buf(100,200)))
+    assert(Await.result(f2, 5.seconds) == Some(buf(100, 200)))
 
     val f3 = r.read(1000)
-    assert(Await.result(f3, 5.seconds) == Some(buf(200,250)))
+    assert(Await.result(f3, 5.seconds) == Some(buf(200, 250)))
 
     val f4 = r.read(1000)
     assert(Await.result(f4, 5.seconds).isEmpty)
   }
 
   test("InputStreamReader - Reader.readAll") {
-    val a = arr(0,250)
+    val a = arr(0, 250)
     val s1 = new ByteArrayInputStream(a)
     val s2 = new ByteArrayInputStream(a)
     val r1 = new InputStreamReader(s1, 100)
     val r2 = new InputStreamReader(s2, 500)
 
     val f1 = Reader.readAll(r1)
-    assert(Await.result(f1, 5.seconds) == buf(0,250))
+    assert(Await.result(f1, 5.seconds) == buf(0, 250))
 
     val f2 = Reader.readAll(r1)
     assert(Await.result(f2, 5.seconds).isEmpty)
 
     val f3 = Reader.readAll(r2)
-    assert(Await.result(f3, 5.seconds) == buf(0,250))
+    assert(Await.result(f3, 5.seconds) == buf(0, 250))
 
     val f4 = Reader.readAll(r2)
     assert(Await.result(f4, 5.seconds).isEmpty)
   }
 
   test("InputStreamReader - discard") {
-    val a = arr(0,25)
+    val a = arr(0, 25)
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 4096)
 
     val f1 = r.read(10)
-    assert(Await.result(f1, 5.seconds) == Some(buf(0,10)))
+    assert(Await.result(f1, 5.seconds) == Some(buf(0, 10)))
 
     r.discard()
 
