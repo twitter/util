@@ -127,7 +127,7 @@ trait App extends Closable with CloseAwaitably {
 
   /**
    * Register a `closable` to be closed on application shutdown after those registered
-   * via `clostOnExit`.
+   * via `closeOnExit`.
    *
    * @note Application shutdown occurs in two sequential phases to allow explicit
    *       encoding of resource lifecycle relationships. Concretely this is useful
