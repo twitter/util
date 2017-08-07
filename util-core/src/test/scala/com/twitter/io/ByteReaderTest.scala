@@ -16,6 +16,19 @@ class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   def maskMedium(i: Int) = i & 0x00ffffff
 
+  test("readBytes increments position by the number of bytes returned") {
+    val br = readerWith()
+    assert(br.readBytes(4).length == 0)
+    assert(br.remaining == 0)
+  }
+
+  test("readString underflow") {
+    val br = readerWith()
+    intercept[UnderflowException] {
+      br.readString(1, StandardCharsets.UTF_8)
+    }
+  }
+
   test("readString")(forAll { (str1: String, str2: String) =>
     val bytes1 = str1.getBytes(StandardCharsets.UTF_8)
     val bytes2 = str2.getBytes(StandardCharsets.UTF_8)

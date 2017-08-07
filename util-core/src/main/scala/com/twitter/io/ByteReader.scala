@@ -183,6 +183,8 @@ trait ByteReader extends AutoCloseable {
   /**
    * Extract exactly the specified number of bytes into a `String` using the
    * specified `Charset`, advancing the byte cursor by `bytes`.
+   *
+   * @throws UnderflowException if there are < `bytes` bytes available
    */
   def readString(bytes: Int, charset: Charset): String
 
@@ -504,12 +506,13 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
       throw new IllegalArgumentException(s"'n' must be non-negative: $n")
     } else {
       val ret = buf.slice(pos, pos + n)
-      pos += n
+      pos += ret.length
       ret
     }
   }
 
   def readString(bytes: Int, charset: Charset): String = {
+    checkRemaining(bytes)
     val buf = readBytes(bytes)
     // We use the string name instead of the Charset itself for performance reasons
     new String(Buf.ByteArray.Owned.extract(buf), charset.name)
