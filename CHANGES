@@ -17,6 +17,14 @@ New Features:
   * util-stats: Introducing Verbosity Levels for StatsReceivers (see docs on `StatsReceiver`
     for more info). ``PHAB_ID=D70112``
 
+Bug Fixes:
+
+  * util-core: Fix some consistency issues with `c.t.util.ByteReaderImpl`. Advance its
+    cursor by the number of bytes consumed via `readBytes(Int)`, not the number specified
+    as a method argument. `readString` will now throw an UnderflowException if the number
+    of bytes specified exceeds the remaining buffer length instead of silently making due
+    with the rest of the buffer's contents. ``PHAB_ID=D78301``
+
 Runtime Behavior Changes:
 
   * util-core: `c.t.util.Closable.sequence` now continues processing
