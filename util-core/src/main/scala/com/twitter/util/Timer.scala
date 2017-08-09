@@ -3,6 +3,7 @@ package com.twitter.util
 import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent._
 import scala.collection.mutable.ArrayBuffer
+import scala.util.control
 
 /**
  * TimerTasks represent pending tasks scheduled by a [[Timer]].
@@ -189,6 +190,18 @@ class ReferenceCountingTimer(factory: () => Timer) extends ProxyTimer with Refer
 /**
  * A [[Timer]] that is implemented via a [[java.util.Timer]].
  *
+ * This timer has millisecond granularity.
+ *
+ * If your code has a reasonably high throughput of task scheduling
+ * and can trade off some precision of when tasks run,
+ * [[https://twitter.github.io/finagle/ Finagle]] has a higher throughput
+ * [[https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala
+ * hashed-wheel implementation]].
+ *
+ * @note Due to the implementation using a single `Thread`, be wary of
+ *       scheduling tasks that take a long time to execute (e.g. blocking IO)
+ *       as this blocks other tasks from running at their scheduled time.
+ *
  * @param isDaemon whether or not the associated [[Thread]] should run
  *   as a daemon.
  * @param name used as the name of the associated [[Thread]] when specified.
@@ -208,7 +221,7 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
   }
 
   private[this] val catcher: PartialFunction[Throwable, Unit] = {
-    case NonFatal(t) =>
+    case control.NonFatal(t) =>
       logError(t)
     case fatal: Throwable =>
       logError(fatal)
