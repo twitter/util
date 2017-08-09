@@ -1,16 +1,22 @@
 package com.twitter.finagle.stats
 
 /**
- * A [[StatsReceiver]] that adjusts the default [[Verbosity]] of an underlying stats receiver to
- * a given `verbosity`.
- *
- * @note An explicitly passed [[Verbosity]] will always take precedence over the `verbosity` this
- *       stats receiver adjusts to.
+ * A [[StatsReceiver]] that adjusts the passed [[Verbosity]] of an underlying stats receiver to
+ * a given `defaultVerbosity`.
  */
-class VerbosityAdjustingStatsReceiver(protected val self: StatsReceiver, verbosity: Verbosity)
-    extends StatsReceiverProxy {
+class VerbosityAdjustingStatsReceiver(
+  protected val self: StatsReceiver,
+  defaultVerbosity: Verbosity
+) extends StatsReceiverProxy {
 
-  override def counter(names: String*): Counter = self.counter(verbosity, names: _*)
-  override def stat(names: String*): Stat = self.stat(verbosity, names: _*)
-  override def addGauge(names: String*)(f: => Float): Gauge = self.addGauge(verbosity, names: _*)(f)
+  override def counter(verbosity: Verbosity, names: String*): Counter =
+    self.counter(defaultVerbosity, names: _*)
+
+  override def stat(verbosity: Verbosity, names: String*): Stat =
+    self.stat(defaultVerbosity, names: _*)
+
+  override def addGauge(
+    verbosity: Verbosity,
+    names: String*
+  )(f: => Float): Gauge = self.addGauge(defaultVerbosity, names: _*)(f)
 }
