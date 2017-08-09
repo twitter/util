@@ -192,7 +192,13 @@ lazy val utilCore = Project(
     val contents = s"name=$projectName\nversion=${version.value}\nbuild_revision=$buildRev\nbuild_name=$buildName"
     IO.write(file, contents)
     Seq(file)
-  }.taskValue
+  }.taskValue,
+  sources in (Compile, doc) := {
+    // Monitors.java causes "not found: type Monitor$" (CSL-5034)
+    // so exclude it from the sources used for scaladoc
+    val previous = (sources in (Compile, doc)).value
+    previous.filterNot(file => file.getName() == "Monitors.java")
+  }
 ).dependsOn(utilFunction)
 
 lazy val utilDoc = Project(
