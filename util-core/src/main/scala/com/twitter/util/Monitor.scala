@@ -80,11 +80,11 @@ trait Monitor { self =>
    * wrap it in a [[MonitorException]].
    */
   protected def tryHandle(exc: Throwable): Try[Unit] =
-    Try { self.handle(exc) } rescue {
-      case monitorExc => Throw(MonitorException(exc, monitorExc))
-    } flatMap { ok =>
-      if (ok) Return.Unit
-      else Throw(exc): Try[Unit]
+    try {
+      if (self.handle(exc)) Return.Unit
+      else Throw(exc)
+    } catch {
+      case monitorExc: Throwable => Throw(MonitorException(exc, monitorExc))
     }
 }
 
