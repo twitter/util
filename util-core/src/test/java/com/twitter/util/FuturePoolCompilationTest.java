@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 public class FuturePoolCompilationTest {
 
   @Test
-  public void tesFuturePools() {
+  public void testFuturePools() {
     ExecutorService executor = Executors.newSingleThreadExecutor();
     FuturePool a = FuturePools.IMMEDIATE_POOL;
     FuturePool b = FuturePools.unboundedPool();

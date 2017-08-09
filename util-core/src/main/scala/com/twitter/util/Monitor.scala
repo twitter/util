@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.util.logging.{Level, Logger}
+import scala.util.control
 
 /**
  * Wraps an exception that happens when handling another exception in
@@ -18,6 +19,8 @@ case class MonitorException(handlingExc: Throwable, monitorExc: Throwable)
  * position, divorced from the notion of a call stack.  Monitors do
  * not recover values from a failed computations: It handles only true
  * exceptions that may require cleanup.
+ *
+ * @see [[AbstractMonitor]] for an API friendly to creating instances from Java.
  */
 trait Monitor { self =>
 
@@ -86,8 +89,15 @@ trait Monitor { self =>
 }
 
 /**
+ * An API for creating [[Monitor]] instances in Java.
+ */
+abstract class AbstractMonitor extends Monitor
+
+/**
  * Defines the (Future)-`Local` monitor as well as some monitor
  * utilities.
+ *
+ * Java users should use the `Monitors` class.
  */
 object Monitor extends Monitor {
   private[this] val local = new Local[Monitor]
@@ -146,7 +156,7 @@ object Monitor extends Monitor {
    * the [[RootMonitor]].
    */
   def handle(exc: Throwable): Boolean =
-    (get orElse RootMonitor).handle(exc)
+    get.orElse(RootMonitor).handle(exc)
 
   private[this] val AlwaysFalse = scala.Function.const(false) _
 
@@ -184,7 +194,7 @@ object NullMonitor extends Monitor {
 object RootMonitor extends Monitor {
   private[this] val log = Logger.getLogger("monitor")
   private[this] val root = Monitor.mk {
-    case NonFatal(e) =>
+    case control.NonFatal(e) =>
       log.log(Level.SEVERE, "Exception propagated to the root monitor!", e)
       true /* Never propagate non fatal exception */
 
