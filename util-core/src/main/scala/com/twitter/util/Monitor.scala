@@ -31,14 +31,24 @@ trait Monitor { self =>
    */
   def handle(exc: Throwable): Boolean
 
+  private[this] val someSelf = Some(self)
+
   /**
    * Run `f` inside of the monitor context. If `f` throws
    * an exception - directly or not - it is handled by this
    * monitor.
    */
-  def apply(f: => Unit): Unit = Monitor.using(this) {
-    try f
-    catch { case exc: Throwable => if (!handle(exc)) throw exc }
+  def apply(f: => Unit): Unit = {
+    // Note: this inlines `Monitor.using` to avoid closure allocations.
+    val saved = Monitor.getOption
+    try {
+      Monitor.setOption(someSelf)
+      try f
+      catch {
+        case exc: Throwable =>
+          if (!handle(exc)) throw exc
+      }
+    } finally Monitor.setOption(saved)
   }
 
   /**
@@ -105,17 +115,56 @@ object Monitor extends Monitor {
   /**
    * Get the current [[Local]] monitor or a [[NullMonitor]]
    * if none has been [[set]].
+   *
+   * @see [[getOption]]
    */
   def get: Monitor = local() match {
     case Some(m) => m
     case None => NullMonitor
   }
 
-  /** Set the [[Local]] monitor */
+  /**
+   * Get the current [[Local]] monitor or `None`
+   * if none has been `set`.
+   *
+   * @see [[get]]
+   */
+  def getOption: Option[Monitor] = local()
+
+  private[this] def validateSetMonitor(monitor: Monitor): Unit = {
+    if (monitor eq this)
+      throw new IllegalArgumentException("Cannot set the monitor to the global Monitor")
+  }
+
+  /**
+   * Set the [[Local]] monitor.
+   *
+   * Note that the monitor may not be the `Monitor` companion object.
+   *
+   * @see [[getOption]]
+   */
   def set(m: Monitor): Unit = {
-    require(m ne this, "Cannot set the monitor to the global Monitor")
+    validateSetMonitor(m)
     local() = m
   }
+
+  /**
+   * Set the [[Local]] monitor.
+   *
+   * Note that the monitor may not be the `Monitor` companion object.
+   *
+   * If `None` is given, then the local is `clear`-ed.
+   *
+   * @see [[setOption]]
+   */
+  def setOption(monitor: Option[Monitor]): Unit =
+    monitor match {
+      case Some(m) =>
+        validateSetMonitor(m)
+        local.set(monitor)
+      case None =>
+        local.clear()
+    }
 
   /** Compute `f` with the [[Local]] monitor set to `m` */
   @inline

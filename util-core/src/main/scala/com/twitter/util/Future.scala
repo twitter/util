@@ -220,7 +220,7 @@ object Future {
     val monitored = new MonitoredPromise(p)
 
     // This essentially simulates MonitoredPromise.apply { ... } but w/o closure allocations.
-    val saved = Monitor.get
+    val saved = Monitor.getOption
     try {
       Monitor.set(monitored)
       val f = mkFuture
@@ -228,7 +228,7 @@ object Future {
       f.respond(monitored)
     } catch {
       case t: Throwable => if (!monitored.handle(t)) throw t
-    } finally { Monitor.set(saved) }
+    } finally { Monitor.setOption(saved) }
 
     p
   }
