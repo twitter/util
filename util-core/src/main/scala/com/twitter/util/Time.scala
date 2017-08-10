@@ -277,6 +277,10 @@ private[util] object TimeBox {
  * $now
  *
  * $nowusage
+ *
+ * @see [[Duration]] for intervals between two points in time.
+ * @see [[Stopwatch]] for measuring elapsed time.
+ * @see [[TimeFormat]] for converting to and from `String` representations.
  */
 object Time extends TimeLikeOps[Time] {
   def fromNanoseconds(nanoseconds: Long): Time = new Time(nanoseconds)
@@ -293,29 +297,29 @@ object Time extends TimeLikeOps[Time] {
    * representing a time infinitely far into the future.
    */
   val Top: Time = new Time(Long.MaxValue) {
-    override def toString = "Time.Top"
+    override def toString: String = "Time.Top"
 
-    override def compare(that: Time) =
+    override def compare(that: Time): Int =
       if (that eq Undefined) -1
       else if (that eq Top) 0
       else 1
 
-    override def equals(other: Any) = other match {
+    override def equals(other: Any): Boolean = other match {
       case t: Time => t eq this
       case _ => false
     }
 
-    override def +(delta: Duration) = delta match {
+    override def +(delta: Duration): Time = delta match {
       case Duration.Bottom | Duration.Undefined => Undefined
       case _ => this // Top or finite.
     }
 
-    override def diff(that: Time) = that match {
+    override def diff(that: Time): Duration = that match {
       case Top | Undefined => Duration.Undefined
       case other => Duration.Top
     }
 
-    override def isFinite = false
+    override def isFinite: Boolean = false
 
     private def writeReplace(): Object = TimeBox.Top()
   }
@@ -326,48 +330,53 @@ object Time extends TimeLikeOps[Time] {
    * time infinitely far in the past.
    */
   val Bottom: Time = new Time(Long.MinValue) {
-    override def toString = "Time.Bottom"
+    override def toString: String = "Time.Bottom"
 
-    override def compare(that: Time) = if (this eq that) 0 else -1
+    override def compare(that: Time): Int = if (this eq that) 0 else -1
 
-    override def equals(other: Any) = other match {
+    override def equals(other: Any): Boolean = other match {
       case t: Time => t eq this
       case _ => false
     }
 
-    override def +(delta: Duration) = delta match {
+    override def +(delta: Duration): Time = delta match {
       case Duration.Top | Duration.Undefined => Undefined
       case _ => this
     }
 
-    override def diff(that: Time) = that match {
+    override def diff(that: Time): Duration = that match {
       case Bottom | Undefined => Duration.Undefined
       case other => Duration.Bottom
     }
 
-    override def isFinite = false
+    override def isFinite: Boolean = false
 
     private def writeReplace(): Object = TimeBox.Bottom()
   }
 
   val Undefined: Time = new Time(0) {
-    override def toString = "Time.Undefined"
+    override def toString: String = "Time.Undefined"
 
-    override def equals(other: Any) = other match {
+    override def equals(other: Any): Boolean = other match {
       case t: Time => t eq this
       case _ => false
     }
 
-    override def compare(that: Time) = if (this eq that) 0 else 1
-    override def +(delta: Duration) = this
-    override def diff(that: Time) = Duration.Undefined
-    override def isFinite = false
+    override def compare(that: Time): Int = if (this eq that) 0 else 1
+    override def +(delta: Duration): Time = this
+    override def diff(that: Time): Duration = Duration.Undefined
+    override def isFinite: Boolean = false
 
     private def writeReplace(): Object = TimeBox.Undefined()
   }
 
   /**
    * Returns the current [[Time]].
+   *
+   * Note that returned values are '''not''' monotonic. This
+   * means it is not suitable for measuring durations where
+   * the clock cannot drift backwards. If monotonicity is desired
+   * prefer a monotonic [[Stopwatch]].
    *
    * $now
    */
@@ -383,7 +392,7 @@ object Time extends TimeLikeOps[Time] {
   /**
    * The unix epoch. Times are measured relative to this.
    */
-  val epoch = fromNanoseconds(0L)
+  val epoch: Time = fromNanoseconds(0L)
 
   private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
@@ -535,6 +544,10 @@ class TimeFormat(
 /**
  * An absolute point in time, represented as the number of
  * nanoseconds since the Unix epoch.
+ *
+ * @see [[Duration]] for intervals between two points in time.
+ * @see [[Stopwatch]] for measuring elapsed time.
+ * @see [[TimeFormat]] for converting to and from `String` representations.
  */
 sealed class Time private[util] (protected val nanos: Long) extends {
   protected val ops = Time
