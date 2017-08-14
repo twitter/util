@@ -395,6 +395,17 @@ trait Writer {
 object Writer {
 
   /**
+   * A [[ClosableWriter]] instance that will always fail. Useful for situations
+   * where writing to the [[Writer]] is nonsensical such as the [[Writer]] on the
+   * `Response` returned by the Finagle HTTP client.
+   */
+  val FailingWriter: ClosableWriter = new ClosableWriter {
+    def fail(cause: Throwable): Unit = ()
+    def write(buf: Buf): Future[Unit] = Future.exception(new IllegalStateException("NullWriter"))
+    def close(deadline: Time): Future[Unit] = Future.Done
+  }
+
+  /**
    * Represents a [[Writer]] which is [[Closable]].
    *
    * Exists primarily for Java compatibility.

@@ -1024,8 +1024,16 @@ object Buf {
      *       ("\uFFFD") in the returned String. This behavior may change
      *       in the future.
      */
-    def unapply(buf: Buf): Option[String] =
-      Some(new String(Buf.ByteArray.Owned.extract(buf), charset.name))
+    def unapply(buf: Buf): Option[String] = Some(decodeString(buf, charset))
+  }
+
+  /**
+   * Decode a `Buf` using the specified `Charset`
+   */
+  def decodeString(buf: Buf, charset: Charset): String = {
+    // Coercing to a `ByteArray` gives us to best chance of not copying the bytes.
+    val byteArray = Buf.ByteArray.coerce(buf)
+    new String(byteArray.bytes, byteArray.begin, byteArray.length, charset)
   }
 
   /**
