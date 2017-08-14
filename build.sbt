@@ -1,5 +1,3 @@
-import com.typesafe.sbt.SbtSite.site
-import com.typesafe.sbt.site.SphinxSupport.Sphinx
 import sbtunidoc.Plugin.UnidocKeys._
 import sbtunidoc.Plugin.{ScalaUnidoc, unidocSettings}
 import scoverage.ScoverageKeys
@@ -204,8 +202,10 @@ lazy val utilCore = Project(
 lazy val utilDoc = Project(
   id = "util-doc",
   base = file("doc")
+).enablePlugins(
+  SphinxPlugin
 ).settings(
-  site.settings ++ site.sphinxSupport() ++ sharedSettings ++ Seq(
+  sharedSettings ++ Seq(
     scalacOptions in doc ++= Seq("-doc-title", "Util", "-doc-version", version.value),
     includeFilter in Sphinx := ("*.html" | "*.png" | "*.svg" | "*.js" | "*.css" | "*.gif" | "*.txt")
   ))
