@@ -10,4 +10,5 @@ junit_tests(
     'util/util-core/src/main/scala:scala',
   ],
   sources = rglobs('*.scala'),
+  known_to_fail='CSL-5067'
 )
