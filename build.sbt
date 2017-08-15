@@ -260,7 +260,7 @@ lazy val utilJvm = Project(
   sharedSettings
 ).settings(
   name := "util-jvm"
-).dependsOn(utilApp, utilCore, utilTest % "test")
+).dependsOn(utilApp, utilCore, utilStats, utilTest % "test")
 
 lazy val utilLint = Project(
   id = "util-lint",

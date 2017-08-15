@@ -14,6 +14,10 @@ New Features:
   * util-core: Introduced RootMonitor#set to set custom Monitor to RootMonitor.
     ``PHAB_ID=D70876``
 
+  * util-jvm: `JvmStats` has been moved here from TwitterServer allowing broader
+    access to many metrics including GC, allocations, memory, and more.
+    ``PHAB_ID=D80883``
+
   * util-stats: Introducing Verbosity Levels for StatsReceivers (see docs on `StatsReceiver`
     for more info). ``PHAB_ID=D70112``
 
