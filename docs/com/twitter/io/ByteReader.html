@@ -144,6 +144,14 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.io">io</a></dd></dl></div>
     </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods."></a>
+                        <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods.">
+                          AbstractByteWriter
+                        </a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
 Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
@@ -151,6 +159,14 @@ positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
 positional access.">
                           Buf
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="BufByteWriter$.html" title=""></a>
+                        <a class="trait" href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+"></a>
+                        <a href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+">
+                          BufByteWriter
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
@@ -180,8 +196,8 @@ underlying buffer, which in most cases is a Buf.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="ByteWriter$.html" title=""></a>
-                        <a class="class" href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer."></a>
-                        <a href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer.">
+                        <a class="trait" href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer."></a>
+                        <a href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer.">
                           ByteWriter
                         </a>
                       </li><li class="current-entities indented3">
@@ -358,6 +374,58 @@ to decode and interpret the bytes as a numeric value.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.ByteReader#process" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="process(from:Int,until:Int,processor:com.twitter.io.Buf.Processor):Int"></a><a id="process(Int,Int,Processor):Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#process(from:Int,until:Int,processor:com.twitter.io.Buf.Processor):Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">process</span><span class="params">(<span name="from">from: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="until">until: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="processor">processor: <a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Processor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Process the underlying buffer 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>from</code> of the underlying buffer until
+index <code>until</code> of the underlying buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Process the underlying buffer 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>from</code> of the underlying buffer until
+index <code>until</code> of the underlying buffer. Processing will halt if the processor
+returns <code>false</code> or after processing the final byte.
+</p></div><dl class="paramcmts block"><dt class="param">from</dt><dd class="cmt"><p>the starting index, inclusive. Must be non-negative.</p></dd><dt class="param">until</dt><dd class="cmt"><p>the ending index, exclusive. Must be non-negative.</p></dd><dt>returns</dt><dd class="cmt"><p>-1 if the processor processed all bytes or
+        the last processed index if the processor returns
+        <code>false</code>.
+        Will return -1 if <code>from</code> is greater than or equal to
+        <code>until</code> or <code>length</code> of the underlying buffer.
+        Will return -1 if <code>until</code> is greater than or equal to
+        <code>length</code> of the underlying buffer.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this does not advance the byte cursor.</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.ByteReader#process" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="process(processor:com.twitter.io.Buf.Processor):Int"></a><a id="process(Processor):Int"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#process(processor:com.twitter.io.Buf.Processor):Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">process</span><span class="params">(<span name="processor">processor: <a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Processor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Process the underlying buffer 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>0</code> of the underlying buffer until
+index <code>length</code> of the underlying buffer.</p><div class="fullcomment"><div class="comment cmt"><p>Process the underlying buffer 1-byte at a time using the given
+<a href="Buf$$Processor.html" class="extype" name="com.twitter.io.Buf.Processor">Buf.Processor</a>, starting at index <code>0</code> of the underlying buffer until
+index <code>length</code> of the underlying buffer. Processing will halt if the processor
+returns <code>false</code> or after processing the final byte.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if the processor processed all bytes or
+        the last processed index if the processor returns
+        <code>false</code>.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this does not advance the byte cursor.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.ByteReader#readAll" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="readAll():com.twitter.io.Buf"></a><a id="readAll():Buf"></a>
       <span class="permalink">
@@ -606,6 +674,25 @@ Negative indices are not accepted.
       </span>
       
       <p class="shortcomment cmt">Extract 16 bits and interpret as a little endian integer, advancing the byte cursor by 2.</p>
+    </li><li name="com.twitter.io.ByteReader#readString" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="readString(bytes:Int,charset:java.nio.charset.Charset):String"></a><a id="readString(Int,Charset):String"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteReader.html#readString(bytes:Int,charset:java.nio.charset.Charset):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readString</span><span class="params">(<span name="bytes">bytes: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="charset">charset: <span class="extype" name="java.nio.charset.Charset">Charset</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Extract exactly the specified number of bytes into a <code>String</code> using the
+specified <code>Charset</code>, advancing the byte cursor by <code>bytes</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Extract exactly the specified number of bytes into a <code>String</code> using the
+specified <code>Charset</code>, advancing the byte cursor by <code>bytes</code>.
+</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="UnderflowException"><code>UnderflowException</code></span> if there are &lt; <code>bytes</code> bytes available</p></span></dd></dl></div>
     </li><li name="com.twitter.io.ByteReader#readUnsignedByte" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="readUnsignedByte():Short"></a>
       <span class="permalink">

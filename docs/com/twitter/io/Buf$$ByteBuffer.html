@@ -440,22 +440,6 @@ be immutable in practice.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.io.Buf#checkSliceArgs" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="checkSliceArgs(from:Int,until:Int):Unit"></a><a id="checkSliceArgs(Int,Int):Unit"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/Buf$$ByteBuffer.html#checkSliceArgs(from:Int,until:Int):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">checkSliceArgs</span><span class="params">(<span name="from">from: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="until">until: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Helps implementations validate the arguments to <a href="Buf.html#slice(from:Int,until:Int):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#slice">slice</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Helps implementations validate the arguments to <a href="Buf.html#slice(from:Int,until:Int):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#slice">slice</a>.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li name="com.twitter.io.Buf#checkWriteArgs" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="checkWriteArgs(outputLen:Int,outputOff:Int):Unit"></a><a id="checkWriteArgs(Int,Int):Unit"></a>
       <span class="permalink">
@@ -849,7 +833,7 @@ returns <code>false</code> or after processing the final byte.
 by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[from, until)</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new buffer representing a slice of this buffer, delimited
 by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[from, until)</code>.
 Out of bounds indices are truncated. Negative indices are not accepted.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Note</dt><dd><span class="cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> implementors should use the helpers <a href="#checkSliceArgs(from:Int,until:Int):Unit" class="extmbr" name="com.twitter.io.Buf.ByteBuffer#checkSliceArgs">checkSliceArgs</a>,
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Buf.ByteBuffer">ByteBuffer</a> → <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd><dt>Note</dt><dd><span class="cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> implementors should use the helpers <a href="Buf$.html#checkSliceArgs(from:Int,until:Int):Unit" class="extmbr" name="com.twitter.io.Buf#checkSliceArgs">Buf.checkSliceArgs</a>,
       <a href="#isSliceEmpty(from:Int,until:Int):Boolean" class="extmbr" name="com.twitter.io.Buf.ByteBuffer#isSliceEmpty">isSliceEmpty</a>, and <a href="#isSliceIdentity(from:Int,until:Int):Boolean" class="extmbr" name="com.twitter.io.Buf.ByteBuffer#isSliceIdentity">isSliceIdentity</a>.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>

@@ -307,6 +307,12 @@
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractMonitor.html" title="An API for creating Monitor instances in Java."></a>
+                        <a href="AbstractMonitor.html" title="An API for creating Monitor instances in Java.">
+                          AbstractMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractVar.html" title="Abstract Var class for Java compatibility."></a>
                         <a href="AbstractVar.html" title="Abstract Var class for Java compatibility.">
                           AbstractVar
@@ -791,6 +797,14 @@ a monitor.">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object."></a>
+                        <a href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object.">
+                          Monitors
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="NetUtil$.html" title=""></a>
                         <a href="NetUtil$.html" title="">
                           NetUtil
@@ -944,6 +958,16 @@ outputting a signed Long or a byte array.">
                         <a class="class" href="SimplePool.html" title=""></a>
                         <a href="SimplePool.html" title="">
                           SimplePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime."></a>
+                        <a href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.">
+                          SlowProbeProxyTimer
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="StateMachine$.html" title=""></a>
@@ -1415,6 +1439,26 @@ Future&lt;<span class="std">String</span>&gt; f2 = fs.onSuccess(excons(s -&gt; {
 
 Future&lt;<span class="std">String</span>&gt; fs = Future.value(<span class="lit">"example"</span>);
 Future&lt;Integer&gt; fi = fs.map(exfunc(s -&gt; { <span class="kw">throw</span> <span class="kw">new</span> Exception(s); }));</pre></div></div>
+    </li><li name="com.twitter.util.Function#exfunc0" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exfunc0[T](f:com.twitter.function.ExceptionalSupplier[T]):com.twitter.util.ExceptionalFunction0[T]"></a><a id="exfunc0[T](ExceptionalSupplier[T]):ExceptionalFunction0[T]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Function$.html#exfunc0[T](f:com.twitter.function.ExceptionalSupplier[T]):com.twitter.util.ExceptionalFunction0[T]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exfunc0</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: <a href="../function/ExceptionalSupplier.html" class="extype" name="com.twitter.function.ExceptionalSupplier">ExceptionalSupplier</a>[<span class="extype" name="com.twitter.util.Function.exfunc0.T">T</span>]</span>)</span><span class="result">: <a href="ExceptionalFunction0.html" class="extype" name="com.twitter.util.ExceptionalFunction0">ExceptionalFunction0</a>[<span class="extype" name="com.twitter.util.Function.exfunc0.T">T</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Creates an <a href="ExceptionalFunction0.html" class="extype" name="com.twitter.util.ExceptionalFunction0">ExceptionalFunction0</a> to <code>T</code> from an <span class="extype" name="ExceptionalSupplier">ExceptionalSupplier</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates an <a href="ExceptionalFunction0.html" class="extype" name="com.twitter.util.ExceptionalFunction0">ExceptionalFunction0</a> to <code>T</code> from an <span class="extype" name="ExceptionalSupplier">ExceptionalSupplier</span>.</p><p>Allows for better interop with Scala from Java 8 using lambdas.</p><p>For example:</p><pre><span class="kw">import</span> com.twitter.util.Future;
+<span class="kw">import</span> static com.twitter.util.<span class="std">Function</span>.exRunnable;
+
+FuturePool futurePool = FuturePools.immediatePool();
+Future&lt;<span class="std">Unit</span>&gt; fu = futurePool.apply(exfunc0(() -&gt; { <span class="kw">throw</span> <span class="kw">new</span> Exception(<span class="lit">"blah"</span>); }));</pre></div></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -1458,7 +1502,7 @@ Future&lt;Integer&gt; fi = fs.map(exfunc(s -&gt; { <span class="kw">throw</span>
 Future&lt;<span class="std">String</span>&gt; fs = Future.value(<span class="lit">"example"</span>);
 Future&lt;Integer&gt; fi = fs.map(func(s -&gt; s.length()));
 <span class="cmt">// or using method references:</span>
-Future&lt;Integer&gt; fi2 = fs.map(func(<span class="std">String</span>::length));</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#cons[T](f:com.twitter.function.JavaConsumer[T]):com.twitter.util.Function[T,Unit]" class="extmbr" name="com.twitter.util.Function#cons">cons</a> if you have a side-effecting function (return type is <code>Unit</code> or <code>void</code>)</p></span><span class="cmt"><p><a href="#func0[T](f:java.util.function.Supplier[T]):com.twitter.util.Function0[T]" class="extmbr" name="com.twitter.util.Function#func0">func0</a> if you have a function which takes no input.</p></span><span class="cmt"><p><a href="#exfunc[T,R](f:com.twitter.function.ExceptionalJavaFunction[T,R]):com.twitter.util.ExceptionalFunction[T,R]" class="extmbr" name="com.twitter.util.Function#exfunc">exfunc</a> if your function throws checked exceptions.</p></span></dd></dl></div>
+Future&lt;Integer&gt; fi2 = fs.map(func(<span class="std">String</span>::length));</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#cons[T](f:com.twitter.function.JavaConsumer[T]):com.twitter.util.Function[T,Unit]" class="extmbr" name="com.twitter.util.Function#cons">cons</a> if you have a side-effecting function (return type is <code>Unit</code> or <code>void</code>)</p></span><span class="cmt"><p><a href="#exfunc0[T](f:com.twitter.function.ExceptionalSupplier[T]):com.twitter.util.ExceptionalFunction0[T]" class="extmbr" name="com.twitter.util.Function#exfunc0">exfunc0</a> if your function throws checked exceptions and takes no input.</p></span><span class="cmt"><p><a href="#func0[T](f:java.util.function.Supplier[T]):com.twitter.util.Function0[T]" class="extmbr" name="com.twitter.util.Function#func0">func0</a> if you have a function which takes no input.</p></span><span class="cmt"><p><a href="#exfunc[T,R](f:com.twitter.function.ExceptionalJavaFunction[T,R]):com.twitter.util.ExceptionalFunction[T,R]" class="extmbr" name="com.twitter.util.Function#exfunc">exfunc</a> if your function throws checked exceptions.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Function#func0" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="func0[T](f:java.util.function.Supplier[T]):com.twitter.util.Function0[T]"></a><a id="func0[T](Supplier[T]):Function0[T]"></a>
       <span class="permalink">

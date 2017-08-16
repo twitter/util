@@ -307,6 +307,12 @@
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractMonitor.html" title="An API for creating Monitor instances in Java."></a>
+                        <a href="AbstractMonitor.html" title="An API for creating Monitor instances in Java.">
+                          AbstractMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractVar.html" title="Abstract Var class for Java compatibility."></a>
                         <a href="AbstractVar.html" title="Abstract Var class for Java compatibility.">
                           AbstractVar
@@ -791,6 +797,14 @@ a monitor.">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object."></a>
+                        <a href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object.">
+                          Monitors
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="NetUtil$.html" title=""></a>
                         <a href="NetUtil$.html" title="">
                           NetUtil
@@ -944,6 +958,16 @@ outputting a signed Long or a byte array.">
                         <a class="class" href="SimplePool.html" title=""></a>
                         <a href="SimplePool.html" title="">
                           SimplePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime."></a>
+                        <a href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.">
+                          SlowProbeProxyTimer
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="StateMachine$.html" title=""></a>
@@ -1179,7 +1203,7 @@ or return a success value."></a>
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Defines the (Future)-<code>Local</code> monitor as well as some monitor
-utilities.
+utilities.</p><p>Java users should use the <code>Monitors</code> class.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -1433,7 +1457,7 @@ the current monitor.</p>
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Monitor#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Monitor#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get:com.twitter.util.Monitor"></a><a id="get:Monitor"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/Monitor$.html#get:com.twitter.util.Monitor" title="Permalink">
@@ -1449,7 +1473,9 @@ the current monitor.</p>
       </span>
       
       <p class="shortcomment cmt">Get the current <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor or a <a href="NullMonitor$.html" class="extype" name="com.twitter.util.NullMonitor">NullMonitor</a>
-if none has been <a href="#set(m:com.twitter.util.Monitor):Unit" class="extmbr" name="com.twitter.util.Monitor#set">set</a>.</p>
+if none has been <a href="#set(m:com.twitter.util.Monitor):Unit" class="extmbr" name="com.twitter.util.Monitor#set">set</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Get the current <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor or a <a href="NullMonitor$.html" class="extype" name="com.twitter.util.NullMonitor">NullMonitor</a>
+if none has been <a href="#set(m:com.twitter.util.Monitor):Unit" class="extmbr" name="com.twitter.util.Monitor#set">set</a>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#getOption:Option[com.twitter.util.Monitor]" class="extmbr" name="com.twitter.util.Monitor#getOption">getOption</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -1466,6 +1492,25 @@ if none has been <a href="#set(m:com.twitter.util.Monitor):Unit" class="extmbr" 
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.util.Monitor#getOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getOption:Option[com.twitter.util.Monitor]"></a><a id="getOption:Option[Monitor]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Monitor$.html#getOption:Option[com.twitter.util.Monitor]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getOption</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get the current <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor or <code>None</code>
+if none has been <code>set</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get the current <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor or <code>None</code>
+if none has been <code>set</code>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#get:com.twitter.util.Monitor" class="extmbr" name="com.twitter.util.Monitor#get">get</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Monitor#handle" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="handle(exc:Throwable):Boolean"></a><a id="handle(Throwable):Boolean"></a>
       <span class="permalink">
@@ -1637,7 +1682,7 @@ attempts to let <code>next</code> handle it.
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.Monitor#set" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Monitor#set" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="set(m:com.twitter.util.Monitor):Unit"></a><a id="set(Monitor):Unit"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/Monitor$.html#set(m:com.twitter.util.Monitor):Unit" title="Permalink">
@@ -1652,7 +1697,25 @@ attempts to let <code>next</code> handle it.
         <span class="name">set</span><span class="params">(<span name="m">m: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Set the <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor</p>
+      <p class="shortcomment cmt">Set the <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Set the <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor.</p><p>Note that the monitor may not be the <code>Monitor</code> companion object.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#getOption:Option[com.twitter.util.Monitor]" class="extmbr" name="com.twitter.util.Monitor#getOption">getOption</a></p></span></dd></dl></div>
+    </li><li name="com.twitter.util.Monitor#setOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setOption(monitor:Option[com.twitter.util.Monitor]):Unit"></a><a id="setOption(Option[Monitor]):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Monitor$.html#setOption(monitor:Option[com.twitter.util.Monitor]):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setOption</span><span class="params">(<span name="monitor">monitor: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Set the <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Set the <a href="Local.html" class="extype" name="com.twitter.util.Local">Local</a> monitor.</p><p>Note that the monitor may not be the <code>Monitor</code> companion object.</p><p>If <code>None</code> is given, then the local is <code>clear</code>-ed.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#setOption(monitor:Option[com.twitter.util.Monitor]):Unit" class="extmbr" name="com.twitter.util.Monitor#setOption">setOption</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">

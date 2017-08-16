@@ -304,6 +304,14 @@
       
       
     </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods."></a>
+                        <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods.">
+                          AbstractByteWriter
+                        </a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
 Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
@@ -311,6 +319,14 @@ positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
 positional access.">
                           Buf
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="BufByteWriter$.html" title=""></a>
+                        <a class="trait" href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+"></a>
+                        <a href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+">
+                          BufByteWriter
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
@@ -340,8 +356,8 @@ underlying buffer, which in most cases is a Buf.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="ByteWriter$.html" title=""></a>
-                        <a class="class" href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer."></a>
-                        <a href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer.">
+                        <a class="trait" href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer."></a>
+                        <a href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer.">
                           ByteWriter
                         </a>
                       </li><li class="current-entities indented3">
@@ -561,7 +577,27 @@ a convenient interface for the producer of such streams.">
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.io.Buf" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+              <ol><li name="com.twitter.io.AbstractByteWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractByteWriterextendsByteWriter"></a><a id="AbstractByteWriter:AbstractByteWriter"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#AbstractByteWriterextendsByteWriter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="An abstract implementation that implements the floating point methods
+in terms of integer methods." href="AbstractByteWriter.html">
+              <span class="name">AbstractByteWriter</span>
+            </a><span class="result"> extends <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">An abstract implementation that implements the floating point methods
+in terms of integer methods.</p>
+    </li><li name="com.twitter.io.Buf" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="BufextendsAnyRef"></a><a id="Buf:Buf"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/index.html#BufextendsAnyRef" title="Permalink">
@@ -586,6 +622,26 @@ and thus be used to implement bytestreams.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Buf$.html#Empty:com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#Empty">com.twitter.io.Buf.Empty</a> for an empty <code>Buf</code>.</p></span><span class="cmt"><p><a href="Buf$.html#apply(bufs:Iterable[com.twitter.io.Buf]):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#apply">com.twitter.io.Buf.apply</a> for creating a <code>Buf</code> from other <code>Bufs</code></p></span><span class="cmt"><p><a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">com.twitter.io.Buf.ByteBuffer</a> for an <code>nio.ByteBuffer</code> backed
     implementation.</p></span><span class="cmt"><p><a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">com.twitter.io.Buf.ByteArray</a> for an <code>Array[Byte]</code> backed
     implementation.</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.BufByteWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BufByteWriterextendsByteWriter"></a><a id="BufByteWriter:BufByteWriter"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#BufByteWriterextendsByteWriter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="A ByteWriter that results in an owned Buf
+" href="BufByteWriter.html">
+              <span class="name">BufByteWriter</span>
+            </a><span class="result"> extends <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A <code>ByteWriter</code> that results in an owned <code>Buf</code>
+</p>
     </li><li name="com.twitter.io.BufInputStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BufInputStreamextendsInputStream"></a><a id="BufInputStream:BufInputStream"></a>
       <span class="permalink">
@@ -654,23 +710,23 @@ to decode and interpret the bytes as a numeric value.
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">class</span>
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="ByteWriters allow efficient construction of a buffer." href="ByteWriter.html">
+        <a title="ByteWriters allow efficient encoding to a buffer." href="ByteWriter.html">
               <span class="name">ByteWriter</span>
             </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt"><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer.</p><div class="fullcomment"><div class="comment cmt"><p><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer. Concatenating
+      <p class="shortcomment cmt"><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer.</p><div class="fullcomment"><div class="comment cmt"><p><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer. Concatenating
 <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>s together is a common pattern for codecs (especially on the encode
 path), but using the <code>concat</code> method on <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> results in a suboptimal
 representation.  In many cases, a <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> not only allows for a more
 optimal representation (i.e., sequential accessible out regions), but also
 allows for writes to avoid allocations.  What this means in practice is that
-builders are stateful and keep track of a writer index. Assume that the
-builder implementations are *not* threadsafe unless otherwise noted.
+builders are stateful. Assume that the builder implementations are &quot;&quot;not&quot;&quot;
+threadsafe unless otherwise noted.
 </p></div></div>
     </li><li name="com.twitter.io.InputStreamReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a><a id="InputStreamReader:InputStreamReader"></a>
@@ -804,6 +860,24 @@ immutability constraint. Users must take care to handle this data
 immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
 with the caller (at the cost of additional allocation).</p><p>Note: There are Java-friendly APIs for this object at <code>com.twitter.io.Bufs</code>.
 </p></div></div>
+    </li><li name="com.twitter.io.BufByteWriter" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BufByteWriter"></a><a id="BufByteWriter:BufByteWriter"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#BufByteWriter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="BufByteWriter$.html">
+              <span class="name">BufByteWriter</span>
+            </a>
+      </span>
+      
+      
     </li><li name="com.twitter.io.BufReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BufReader"></a><a id="BufReader:BufReader"></a>
       <span class="permalink">

@@ -539,6 +539,12 @@
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractMonitor.html" title="An API for creating Monitor instances in Java."></a>
+                        <a href="AbstractMonitor.html" title="An API for creating Monitor instances in Java.">
+                          AbstractMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractVar.html" title="Abstract Var class for Java compatibility."></a>
                         <a href="AbstractVar.html" title="Abstract Var class for Java compatibility.">
                           AbstractVar
@@ -1023,6 +1029,14 @@ a monitor.">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object."></a>
+                        <a href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object.">
+                          Monitors
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="NetUtil$.html" title=""></a>
                         <a href="NetUtil$.html" title="">
                           NetUtil
@@ -1176,6 +1190,16 @@ outputting a signed Long or a byte array.">
                         <a class="class" href="SimplePool.html" title=""></a>
                         <a href="SimplePool.html" title="">
                           SimplePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime."></a>
+                        <a href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.">
+                          SlowProbeProxyTimer
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="StateMachine$.html" title=""></a>
@@ -1545,6 +1569,24 @@ function in Scala version.</p><p>An example usage looks as follows.</p><p><pre>
       </span>
       
       <p class="shortcomment cmt">Abstract <code>Event</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.util.AbstractMonitor" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractMonitorextendsMonitor"></a><a id="AbstractMonitor:AbstractMonitor"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#AbstractMonitorextendsMonitor" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="An API for creating Monitor instances in Java." href="AbstractMonitor.html">
+              <span class="name">AbstractMonitor</span>
+            </a><span class="result"> extends <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">An API for creating <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a> instances in Java.</p>
     </li><li name="com.twitter.util.AbstractVar" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="AbstractVar[T]extendsVar[T]"></a><a id="AbstractVar[T]:AbstractVar[T]"></a>
       <span class="permalink">
@@ -2701,7 +2743,7 @@ of the generic maps returned by JavaConverters
       </span>
       
       <p class="shortcomment cmt">A mixin to allow scala objects to be used from java.</p>
-    </li><li name="com.twitter.util.JavaTimer" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.JavaTimer" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="JavaTimerextendsTimer"></a><a id="JavaTimer:JavaTimer"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/index.html#JavaTimerextendsTimer" title="Permalink">
@@ -2718,7 +2760,13 @@ of the generic maps returned by JavaConverters
             </a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       
-      <p class="shortcomment cmt">A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <span class="extype" name="java.util.Timer">java.util.Timer</span>.</p>
+      <p class="shortcomment cmt">A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <span class="extype" name="java.util.Timer">java.util.Timer</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <span class="extype" name="java.util.Timer">java.util.Timer</span>.</p><p>This timer has millisecond granularity.</p><p>If your code has a reasonably high throughput of task scheduling
+and can trade off some precision of when tasks run,
+<a href="https://twitter.github.io/finagle/" target="_blank">Finagle</a> has a higher throughput
+<a href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala" target="_blank">hashed-wheel implementation</a>.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Due to the implementation using a single <code>Thread</code>, be wary of
+      scheduling tasks that take a long time to execute (e.g. blocking IO)
+      as this blocks other tasks from running at their scheduled time.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.JsonThriftSerializer" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JsonThriftSerializerextendsThriftSerializer"></a><a id="JsonThriftSerializer:JsonThriftSerializer"></a>
       <span class="permalink">
@@ -2889,7 +2937,7 @@ and so on.
 position, divorced from the notion of a call stack.  Monitors do
 not recover values from a failed computations: It handles only true
 exceptions that may require cleanup.
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AbstractMonitor.html" class="extype" name="com.twitter.util.AbstractMonitor">AbstractMonitor</a> for an API friendly to creating instances from Java.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.MonitorException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MonitorExceptionextendsExceptionwithProductwithSerializable"></a><a id="MonitorException:MonitorException"></a>
       <span class="permalink">
@@ -2910,6 +2958,26 @@ a monitor." href="MonitorException.html">
       
       <p class="shortcomment cmt">Wraps an exception that happens when handling another exception in
 a monitor.</p>
+    </li><li name="com.twitter.util.Monitors" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MonitorsextendsObject"></a><a id="Monitors:Monitors"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#MonitorsextendsObject" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="Java friendly APIs for the com.twitter.util.Monitor companion
+object." href="Monitors.html">
+              <span class="name">Monitors</span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Java friendly APIs for the com.twitter.util.Monitor companion
+object.</p>
     </li><li name="com.twitter.util.NoFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="NoFutureextendsFuture[Nothing]"></a><a id="NoFuture:NoFuture"></a>
       <span class="permalink">
@@ -2989,12 +3057,12 @@ and inline.</p>
       
       <p class="shortcomment cmt">A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.</p><div class="fullcomment"><div class="comment cmt"><p>A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.
 Callbacks (responders) of Promises are scheduled with
-<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><h3>Implementation details</h3><p>A Promise is in one of five states: <code>Waiting</code>, <code>Interruptible</code>,
-<code>Interrupted</code>, <code>Done</code> and <code>Linked</code> where <code>Interruptible</code> and
-<code>Interrupted</code> are variants of <code>Waiting</code> to deal with future
+<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><h3>Implementation details</h3><p>A Promise is in one of six states: <code>Waiting</code>, <code>Interruptible</code>,
+<code>Interrupted</code>, <code>Transforming</code>, Done<code> and </code>Linked<code> where </code>Interruptible<code>,
+<code>Interrupted</code>, and </code>Transforming<code> are variants of </code>Waiting<code> to deal with future
 interrupts. Promises are concurrency-safe, using lock-free operations
 throughout. Callback dispatch is scheduled with
-<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><p>Waiters are stored as a <span class="extype" name="com.twitter.util.Promise.K">com.twitter.util.Promise.K</span>. <code>K</code>s
+<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</code></p><p>Waiters are stored as a <span class="extype" name="com.twitter.util.Promise.K">com.twitter.util.Promise.K</span>. <code>K</code>s
 (mnemonic: continuation) specifies a <code>depth</code>. This is used to
 implement Promise chaining: a callback with depth <code>d</code> is invoked only
 after all callbacks with depth &lt; <code>d</code> have already been invoked.</p><p><code>Promise.become</code> merges two promises: they are declared equivalent.
@@ -3211,6 +3279,39 @@ string</p></span></dd></dl></div>
       </span>
       
       
+    </li><li name="com.twitter.util.SlowProbeProxyTimer" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SlowProbeProxyTimerextendsProxyTimer"></a><a id="SlowProbeProxyTimer:SlowProbeProxyTimer"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#SlowProbeProxyTimerextendsProxyTimer" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime." href="SlowProbeProxyTimer.html">
+              <span class="name">SlowProbeProxyTimer</span>
+            </a><span class="result"> extends <a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">An abstract <a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a> that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.</p><div class="fullcomment"><div class="comment cmt"><p>An abstract <a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a> that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This makes assumptions that the underlying <code>Timer</code> will execute tasks
+      sequentially in order to catch slow running tasks during execution. If the
+      underlying <code>Timer</code> executes tasks in parallel the callback <code>slowTaskExecuting</code>
+      will become unreliable. However, the <code>slowTaskCompleted</code> callback will remain
+      reliable but must be a thread-safe implementation.</p></span>, <span class="cmt"><p>Observation of slow task execution is performed when scheduling more work to
+      avoid the overhead of another thread or timer checking on tasks. This results
+      in lower overhead but means that slow running tasks may not be observed while
+      executing. However, they will trigger a callback to the <code>slowTaskCompleted</code>
+      regardless of whether additional work is scheduled.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.StateMachine" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StateMachineextendsAnyRef"></a><a id="StateMachine:StateMachine"></a>
       <span class="permalink">
@@ -3421,7 +3522,7 @@ is effectively a thread-local global.
       </span>
       
       
-    </li><li name="com.twitter.util.Time" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Time" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="TimeextendsTimeLike[com.twitter.util.Time]withSerializable"></a><a id="Time:Time"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/index.html#TimeextendsTimeLike[com.twitter.util.Time]withSerializable" title="Permalink">
@@ -3440,7 +3541,9 @@ nanoseconds since the Unix epoch." href="Time.html">
       </span>
       
       <p class="shortcomment cmt">An absolute point in time, represented as the number of
-nanoseconds since the Unix epoch.</p>
+nanoseconds since the Unix epoch.</p><div class="fullcomment"><div class="comment cmt"><p>An absolute point in time, represented as the number of
+nanoseconds since the Unix epoch.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="TimeFormat.html" class="extype" name="com.twitter.util.TimeFormat">TimeFormat</a> for converting to and from <code>String</code> representations.</p></span><span class="cmt"><p><a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for measuring elapsed time.</p></span><span class="cmt"><p><a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a> for intervals between two points in time.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.TimeControl" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="TimeControlextendsAnyRef"></a><a id="TimeControl:TimeControl"></a>
       <span class="permalink">
@@ -4350,7 +4453,7 @@ Keys can be any word character or '-' and values can be any character except new
       </span>
       
       
-    </li><li name="com.twitter.util.Monitor" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Monitor" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Monitor"></a><a id="Monitor:Monitor"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/index.html#Monitor" title="Permalink">
@@ -4369,7 +4472,9 @@ utilities." href="Monitor$.html">
       </span>
       
       <p class="shortcomment cmt">Defines the (Future)-<code>Local</code> monitor as well as some monitor
-utilities.</p>
+utilities.</p><div class="fullcomment"><div class="comment cmt"><p>Defines the (Future)-<code>Local</code> monitor as well as some monitor
+utilities.</p><p>Java users should use the <code>Monitors</code> class.
+</p></div></div>
     </li><li name="com.twitter.util.NetUtil" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NetUtil"></a><a id="NetUtil:NetUtil"></a>
       <span class="permalink">
@@ -4770,7 +4875,7 @@ Time.withTimeAt(time) { timeControl <span class="kw">=&gt;</span>
   FuturePool.unboundedPool {
     assert(Time.now == time + <span class="num">2.</span>seconds)
   }
-}</pre></div></div>
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="TimeFormat.html" class="extype" name="com.twitter.util.TimeFormat">TimeFormat</a> for converting to and from <code>String</code> representations.</p></span><span class="cmt"><p><a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for measuring elapsed time.</p></span><span class="cmt"><p><a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a> for intervals between two points in time.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Timer" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Timer"></a><a id="Timer:Timer"></a>
       <span class="permalink">

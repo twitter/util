@@ -140,14 +140,11 @@
         <span class="name">stats</span>
       </span>
       
-      <p class="shortcomment cmt">These stats are scoped to <code>com.twitter.finagle.stats</code> for historical reasons.</p><div class="fullcomment"><div class="comment cmt"><p>These stats are scoped to <code>com.twitter.finagle.stats</code> for historical reasons.</p><p>They used to be in the <code>finagle-core</code> package, although we moved them
-because we found they didn't depend on anything finagle-specific.  To ease
-the transition, we kept the namespace.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="AbstractStatsReceiver.html" title="For Java clients that want to implement a StatsReceiver."></a>
-                        <a href="AbstractStatsReceiver.html" title="For Java clients that want to implement a StatsReceiver.">
+                        <a class="class" href="AbstractStatsReceiver.html" title=""></a>
+                        <a href="AbstractStatsReceiver.html" title="">
                           AbstractStatsReceiver
                         </a>
                       </li><li class="current-entities indented4">
@@ -292,8 +289,8 @@ names you pass.">
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="trait" href="StatsReceiverProxy.html" title=""></a>
-                        <a href="StatsReceiverProxy.html" title="">
+                        <a class="trait" href="StatsReceiverProxy.html" title="A proxy StatsReceiver that delegates all calls to the self stats receiver."></a>
+                        <a href="StatsReceiverProxy.html" title="A proxy StatsReceiver that delegates all calls to the self stats receiver.">
                           StatsReceiverProxy
                         </a>
                       </li><li class="current-entities indented4">
@@ -307,6 +304,20 @@ names you pass.">
                         <a class="object" href="StatsReceivers$.html" title="StatsReceiver utility methods for ease of use from java."></a>
                         <a href="StatsReceivers$.html" title="StatsReceiver utility methods for ease of use from java.">
                           StatsReceivers
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="Verbosity$.html" title=""></a>
+                        <a class="class" href="Verbosity.html" title="Represent a verbosity level for a given metric."></a>
+                        <a href="Verbosity.html" title="Represent a verbosity level for a given metric.">
+                          Verbosity
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="VerbosityAdjustingStatsReceiver.html" title="A StatsReceiver that adjusts the passed Verbosity of an underlying stats receiver to
+a given defaultVerbosity."></a>
+                        <a href="VerbosityAdjustingStatsReceiver.html" title="A StatsReceiver that adjusts the passed Verbosity of an underlying stats receiver to
+a given defaultVerbosity.">
+                          VerbosityAdjustingStatsReceiver
                         </a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
@@ -360,15 +371,7 @@ names you pass.">
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>These stats are scoped to <code>com.twitter.finagle.stats</code> for historical reasons.</p><p>They used to be in the <code>finagle-core</code> package, although we moved them
-because we found they didn't depend on anything finagle-specific.  To ease
-the transition, we kept the namespace.
-</p></div><div class="toggleContainer block">
-          <span class="toggle">
-            Linear Supertypes
-          </span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div></div>
+          <div id="comment" class="fullcommenttop"></div>
         
 
       <div id="mbrsel">
@@ -386,22 +389,10 @@ the transition, we kept the namespace.
             <ol>
               
               <li class="alpha in"><span>Alphabetic</span></li>
-              <li class="inherit out"><span>By Inheritance</span></li>
+              
             </ol>
           </div>
-          <div class="ancestors">
-                  <span class="filtertype">Inherited<br />
-                  </span>
-                  <ol id="linearization">
-                    <li class="in" name="com.twitter.finagle.stats"><span>stats</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
-                  </ol>
-                </div><div class="ancestors">
-              <span class="filtertype"></span>
-              <ol>
-                <li class="hideall out"><span>Hide All</span></li>
-                <li class="showall in"><span>Show All</span></li>
-              </ol>
-            </div>
+          
           <div id="visbl">
               <span class="filtertype">Visibility</span>
               <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -427,16 +418,16 @@ the transition, we kept the namespace.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="For Java clients that want to implement a StatsReceiver." href="AbstractStatsReceiver.html">
+        <a title="" href="AbstractStatsReceiver.html">
               <span class="name">AbstractStatsReceiver</span>
             </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       
-      <p class="shortcomment cmt">For Java clients that want to implement a <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p>
+      
     </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BlacklistStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver"></a><a id="BlacklistStatsReceiver:BlacklistStatsReceiver"></a>
+      <a id="BlacklistStatsReceiverextendsStatsReceiverProxy"></a><a id="BlacklistStatsReceiver:BlacklistStatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/index.html#BlacklistStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#BlacklistStatsReceiverextendsStatsReceiverProxy" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -447,7 +438,7 @@ the transition, we kept the namespace.
       <span class="symbol">
         <a title="A blacklisting StatsReceiver." href="BlacklistStatsReceiver.html">
               <span class="name">BlacklistStatsReceiver</span>
-            </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
+            </a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
       </span>
       
       <p class="shortcomment cmt">A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.  If the name for a metric is found to be
@@ -590,9 +581,9 @@ computed health metric.
       
       <p class="shortcomment cmt">Details of a histogram's data points.</p>
     </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="InMemoryStatsReceiverextendsWithHistogramDetailswithStatsReceiver"></a><a id="InMemoryStatsReceiver:InMemoryStatsReceiver"></a>
+      <a id="InMemoryStatsReceiverextendsStatsReceiverwithWithHistogramDetails"></a><a id="InMemoryStatsReceiver:InMemoryStatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/index.html#InMemoryStatsReceiverextendsWithHistogramDetailswithStatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#InMemoryStatsReceiverextendsStatsReceiverwithWithHistogramDetails" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -603,7 +594,7 @@ computed health metric.
       <span class="symbol">
         <a title="An in-memory implementation of StatsReceiver, which is mostly used for testing." href="InMemoryStatsReceiver.html">
               <span class="name">InMemoryStatsReceiver</span>
-            </a><span class="result"> extends <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a> with <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+            </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="WithHistogramDetails.html" class="extype" name="com.twitter.finagle.stats.WithHistogramDetails">WithHistogramDetails</a></span>
       </span>
       
       <p class="shortcomment cmt">An in-memory implementation of <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, which is mostly used for testing.</p><div class="fullcomment"><div class="comment cmt"><p>An in-memory implementation of <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, which is mostly used for testing.</p><p>Note that an <a href="InMemoryStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.InMemoryStatsReceiver">InMemoryStatsReceiver</a> does not conflate <code>Seq(&quot;a&quot;, &quot;b&quot;)</code> and <code>Seq(&quot;a/b&quot;)</code>
@@ -616,9 +607,9 @@ isr.print(<span class="std">Console</span>.out) <span class="cmt">// will print 
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"foo"</span>) == <span class="num">0</span>)) <span class="cmt">// ok</span>
 assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"b"</span>, <span class="lit">"bar"</span>) == <span class="num">0</span>)) <span class="cmt">// fail</span></pre></div></div>
     </li><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="NameTranslatingStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver"></a><a id="NameTranslatingStatsReceiver:NameTranslatingStatsReceiver"></a>
+      <a id="NameTranslatingStatsReceiverextendsStatsReceiverProxy"></a><a id="NameTranslatingStatsReceiver:NameTranslatingStatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/index.html#NameTranslatingStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#NameTranslatingStatsReceiverextendsStatsReceiverProxy" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -630,7 +621,7 @@ assert(isr.counters(<span class="std">Seq</span>(<span class="lit">"a"</span>, <
         <a title="A StatsReceiver receiver proxy that translates all counter, stat, and gauge
 names according to a translate function." href="NameTranslatingStatsReceiver.html">
               <span class="name">NameTranslatingStatsReceiver</span>
-            </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
+            </a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
       </span>
       
       <p class="shortcomment cmt">A StatsReceiver receiver proxy that translates all counter, stat, and gauge
@@ -652,7 +643,7 @@ names according to a <code>translate</code> function.</p>
             </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       
-      <p class="shortcomment cmt">A no-op StatsReceiver.</p><div class="fullcomment"><div class="comment cmt"><p>A no-op StatsReceiver. Metrics are not recorded, making this receiver useful
+      <p class="shortcomment cmt">A no-op <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A no-op <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>. Metrics are not recorded, making this receiver useful
 in unit tests and as defaults in situations where metrics are not strictly
 required.
 </p></div></div>
@@ -693,9 +684,9 @@ required.
       
       <p class="shortcomment cmt">A variation of <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a> that also supports reading of the current time series via the <code>apply</code> method.</p>
     </li><li name="com.twitter.finagle.stats.RollupStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="RollupStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiverwithProxy"></a><a id="RollupStatsReceiver:RollupStatsReceiver"></a>
+      <a id="RollupStatsReceiverextendsStatsReceiverProxy"></a><a id="RollupStatsReceiver:RollupStatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/index.html#RollupStatsReceiverextendsStatsReceiverwithDelegatingStatsReceiverwithProxy" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#RollupStatsReceiverextendsStatsReceiverProxy" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -707,7 +698,7 @@ required.
         <a title="A RollupStatsReceiver reports stats on multiple Counter/Stat/Gauge based on the sequence of
 names you pass." href="RollupStatsReceiver.html">
               <span class="name">RollupStatsReceiver</span>
-            </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a> with <span class="extype" name="scala.Proxy">Proxy</span></span>
+            </a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
       </span>
       
       <p class="shortcomment cmt">A RollupStatsReceiver reports stats on multiple Counter/Stat/Gauge based on the sequence of
@@ -759,9 +750,14 @@ execution are on the companion object (<span class="extype" name="Stat.time(Stat
             </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">An interface for recording metrics.</p><div class="fullcomment"><div class="comment cmt"><p>An interface for recording metrics. Named
-<a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counters</a>, <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stats</a>, and <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauges</a> can be accessed
-through the corresponding methods of this class.
+      <p class="shortcomment cmt">An interface for recording metrics.</p><div class="fullcomment"><div class="comment cmt"><p>An interface for recording metrics. Named <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counters</a>, <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stats</a>,
+and <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauges</a> can be accessed through the corresponding methods of this class.</p><h3>Verbosity Levels</h3><p>Each metric created via a stats receiver has a <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">verbosity level</a> attached to it.
+Distinguishing verbosity levels for metrics is optional and is up to a concrete implementation.
+Doing this, however, helps to separate <a href="Verbosity$.html#Debug:com.twitter.finagle.stats.Verbosity" class="extmbr" name="com.twitter.finagle.stats.Verbosity#Debug">debug metrics</a> (only helpful in
+troubleshooting) from their <a href="Verbosity$.html#Default:com.twitter.finagle.stats.Verbosity" class="extmbr" name="com.twitter.finagle.stats.Verbosity#Default">operationally-required counterparts</a> (provide
+a corresponding degree of visibility into a healthy process) thus potentially reducing the
+observability cost.</p><p>Metrics created w/o an explicitly specified <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">Verbosity</a> level, will use <a href="Verbosity$.html#Default:com.twitter.finagle.stats.Verbosity" class="extmbr" name="com.twitter.finagle.stats.Verbosity#Default">Verbosity.Default</a>.
+Use <a href="VerbosityAdjustingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.VerbosityAdjustingStatsReceiver">VerbosityAdjustingStatsReceiver</a> to adjust this behaviour.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceivers$.html" class="extype" name="com.twitter.finagle.stats.StatsReceivers">StatsReceivers</a> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StatsReceiverProxyextendsStatsReceiverwithDelegatingStatsReceiver"></a><a id="StatsReceiverProxy:StatsReceiverProxy"></a>
@@ -775,12 +771,12 @@ through the corresponding methods of this class.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="StatsReceiverProxy.html">
+        <a title="A proxy StatsReceiver that delegates all calls to the self stats receiver." href="StatsReceiverProxy.html">
               <span class="name">StatsReceiverProxy</span>
             </a><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> with <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></span>
       </span>
       
-      
+      <p class="shortcomment cmt">A proxy <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> that delegates all calls to the <code>self</code> stats receiver.</p>
     </li><li name="com.twitter.finagle.stats.StatsReceiverWithCumulativeGauges" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StatsReceiverWithCumulativeGaugesextendsStatsReceiver"></a><a id="StatsReceiverWithCumulativeGauges:StatsReceiverWithCumulativeGauges"></a>
       <span class="permalink">
@@ -799,6 +795,44 @@ through the corresponding methods of this class.
       </span>
       
       
+    </li><li name="com.twitter.finagle.stats.Verbosity" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="VerbosityextendsAnyRef"></a><a id="Verbosity:Verbosity"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#VerbosityextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="Represent a verbosity level for a given metric." href="Verbosity.html">
+              <span class="name">Verbosity</span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Represent a verbosity level for a given metric.</p>
+    </li><li name="com.twitter.finagle.stats.VerbosityAdjustingStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="VerbosityAdjustingStatsReceiverextendsStatsReceiverProxy"></a><a id="VerbosityAdjustingStatsReceiver:VerbosityAdjustingStatsReceiver"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#VerbosityAdjustingStatsReceiverextendsStatsReceiverProxy" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A StatsReceiver that adjusts the passed Verbosity of an underlying stats receiver to
+a given defaultVerbosity." href="VerbosityAdjustingStatsReceiver.html">
+              <span class="name">VerbosityAdjustingStatsReceiver</span>
+            </a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> that adjusts the passed <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">Verbosity</a> of an underlying stats receiver to
+a given <code>defaultVerbosity</code>.</p>
     </li><li name="com.twitter.finagle.stats.WithHistogramDetails" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="WithHistogramDetailsextendsAnyRef"></a><a id="WithHistogramDetails:WithHistogramDetails"></a>
       <span class="permalink">
@@ -1042,6 +1076,24 @@ errors separately so success rate can from valid non cancelled requests.
       </span>
       
       <p class="shortcomment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p>
+    </li><li name="com.twitter.finagle.stats.Verbosity" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Verbosity"></a><a id="Verbosity:Verbosity"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#Verbosity" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Verbosity$.html">
+              <span class="name">Verbosity</span>
+            </a>
+      </span>
+      
+      
     </li>
               </ol>
             </div>
@@ -1052,11 +1104,7 @@ errors separately so success rate can from valid non cancelled requests.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
-            </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
-            </div>
+        
         
         </div>
 

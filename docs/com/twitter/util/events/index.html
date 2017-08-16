@@ -380,26 +380,7 @@ sent to allow for analysis.">
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.util.events.Event" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="EventextendsProductwithSerializable"></a><a id="Event:Event"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/events/index.html#EventextendsProductwithSerializable" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a title="A somewhat flexible schema representing various event types." href="Event.html">
-              <span class="name">Event</span>
-            </a><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="when">when: <a href="../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="longVal">longVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoLong</a></span></span></span>, <span name="objectVal">objectVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoObject</a></span></span></span>, <span name="doubleVal">doubleVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoDouble</a></span></span></span>, <span name="traceIdVal">traceIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoTraceId</a></span></span></span>, <span name="spanIdVal">spanIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoSpanId</a></span></span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">A somewhat flexible schema representing various event types.</p><div class="fullcomment"><div class="comment cmt"><p>A somewhat flexible schema representing various event types.
-</p></div><dl class="paramcmts block"><dt class="param">when</dt><dd class="cmt"><p>when the event happened.</p></dd><dt class="param">longVal</dt><dd class="cmt"><p>should be <code>Event.NoLong</code> if there is no supplied value.</p></dd><dt class="param">objectVal</dt><dd class="cmt"><p>should be <code>Event.NoObject</code> if there is no supplied value.</p></dd><dt class="param">doubleVal</dt><dd class="cmt"><p>should be <code>Event.NoDouble</code> if there is no supplied value.</p></dd><dt class="param">traceIdVal</dt><dd class="cmt"><p>should be <code>Event.NoTraceId</code> if there is no supplied value.</p></dd><dt class="param">spanIdVal</dt><dd class="cmt"><p>should be <code>Event.NoSpanId</code> if there is no supplied value.</p></dd></dl></div>
-    </li><li name="com.twitter.util.events.Events" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.util.events.Events" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EventsextendsObject"></a><a id="Events:Events"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/events/index.html#EventsextendsObject" title="Permalink">
@@ -417,32 +398,6 @@ sent to allow for analysis.">
       </span>
       
       <p class="shortcomment cmt">Java friendly API for <code><a href="Event.html" class="extype" name="com.twitter.util.events.Event">com.twitter.util.events.Event</a></code>.</p>
-    </li><li name="com.twitter.util.events.Sink" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="SinkextendsAnyRef"></a><a id="Sink:Sink"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/events/index.html#SinkextendsAnyRef" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a title="Where runtime events such as logging, stats and tracing can be
-sent to allow for analysis." href="Sink.html">
-              <span class="name">Sink</span>
-            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Where runtime events such as logging, stats and tracing can be
-sent to allow for analysis.</p><div class="fullcomment"><div class="comment cmt"><p>Where runtime events such as logging, stats and tracing can be
-sent to allow for analysis.</p><p><b>Note:</b> while the API is public it should be considered as experimental
-and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be thread-safe.</li><li>Implementations should have very low runtime overhead such that as
-   many events as possible can be sent here. In particular, object
-   allocations should be kept to a minimum.</li><li><code>event</code> is expected to be called many orders of magnitude
-   more frequently than <code>events</code>.
-</li></ul></div></div>
     </li><li name="com.twitter.util.events.Sinks" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SinksextendsObject"></a><a id="Sinks:Sinks"></a>
       <span class="permalink">
@@ -461,6 +416,57 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
       </span>
       
       <p class="shortcomment cmt">Java friendly API for <code><a href="Sink.html" class="extype" name="com.twitter.util.events.Sink">com.twitter.util.events.Sink</a></code>.</p>
+    </li><li name="com.twitter.util.events.Event" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="EventextendsProductwithSerializable"></a><a id="Event:Event"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/events/index.html#EventextendsProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="A somewhat flexible schema representing various event types." href="Event.html">
+              <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">Event</span>
+            </a><span class="params">(<span name="etype">etype: <a href="Event$$Type.html" class="extype" name="com.twitter.util.events.Event.Type">Type</a></span>, <span name="when">when: <a href="../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="longVal">longVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoLong</a></span></span></span>, <span name="objectVal">objectVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoObject</a></span></span></span>, <span name="doubleVal">doubleVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoDouble</a></span></span></span>, <span name="traceIdVal">traceIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoTraceId</a></span></span></span>, <span name="spanIdVal">spanIdVal: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a> = <span class="symbol"><span class="name"><a href="Event$.html">Event.NoSpanId</a></span></span></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A somewhat flexible schema representing various event types.</p><div class="fullcomment"><div class="comment cmt"><p>A somewhat flexible schema representing various event types.
+</p></div><dl class="paramcmts block"><dt class="param">when</dt><dd class="cmt"><p>when the event happened.</p></dd><dt class="param">longVal</dt><dd class="cmt"><p>should be <code>Event.NoLong</code> if there is no supplied value.</p></dd><dt class="param">objectVal</dt><dd class="cmt"><p>should be <code>Event.NoObject</code> if there is no supplied value.</p></dd><dt class="param">doubleVal</dt><dd class="cmt"><p>should be <code>Event.NoDouble</code> if there is no supplied value.</p></dd><dt class="param">traceIdVal</dt><dd class="cmt"><p>should be <code>Event.NoTraceId</code> if there is no supplied value.</p></dd><dt class="param">spanIdVal</dt><dd class="cmt"><p>should be <code>Event.NoSpanId</code> if there is no supplied value.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl></div>
+    </li><li name="com.twitter.util.events.Sink" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SinkextendsAnyRef"></a><a id="Sink:Sink"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/events/index.html#SinkextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis." href="Sink.html">
+              <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">Sink</span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis.</p><div class="fullcomment"><div class="comment cmt"><p>Where runtime events such as logging, stats and tracing can be
+sent to allow for analysis.</p><p><b>Note:</b> while the API is public it should be considered as experimental
+and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be thread-safe.</li><li>Implementations should have very low runtime overhead such that as
+   many events as possible can be sent here. In particular, object
+   allocations should be kept to a minimum.</li><li><code>event</code> is expected to be called many orders of magnitude
+   more frequently than <code>events</code>.
+</li></ul></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl></div>
     </li><li name="com.twitter.util.events.SizedSink" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SizedSinkextendsSink"></a><a id="SizedSink:SizedSink"></a>
       <span class="permalink">
@@ -474,7 +480,7 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
       </span>
       <span class="symbol">
         <a title="An in-memory circular buffer of events." href="SizedSink.html">
-              <span class="name">SizedSink</span>
+              <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">SizedSink</span>
             </a><span class="result"> extends <a href="Sink.html" class="extype" name="com.twitter.util.events.Sink">Sink</a></span>
       </span>
       
@@ -482,16 +488,22 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
 new writes via <code>event</code> do not block, rather they overwrite the
 oldest event.</p><p>This class is thread-safe and effort is taken to
 keep object allocations from calls to <code>event</code> to a minimum.
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl></div>
     </li></ol>
             </div>
 
         
 
+        
+
+        
+
         <div class="values members">
-              <h3>Value Members</h3>
-              <ol>
-                <li name="com.twitter.util.events.Event" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.util.events.Event" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Event"></a><a id="Event:Event"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/events/index.html#Event" title="Permalink">
@@ -504,12 +516,16 @@ keep object allocations from calls to <code>event</code> to a minimum.
       </span>
       <span class="symbol">
         <a title="Note: There is a Java-friendly API for this object: com.twitter.util.events.Events." href="Event$.html">
-              <span class="name">Event</span>
+              <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">Event</span>
             </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       
-      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Events.html" class="extype" name="com.twitter.util.events.Events">com.twitter.util.events.Events</a>.</p>
-    </li><li name="com.twitter.util.events.Sink" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Events.html" class="extype" name="com.twitter.util.events.Events">com.twitter.util.events.Events</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Events.html" class="extype" name="com.twitter.util.events.Events">com.twitter.util.events.Events</a>.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl></div>
+    </li><li name="com.twitter.util.events.Sink" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Sink"></a><a id="Sink:Sink"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/events/index.html#Sink" title="Permalink">
@@ -522,12 +538,16 @@ keep object allocations from calls to <code>event</code> to a minimum.
       </span>
       <span class="symbol">
         <a title="Note: There is a Java-friendly API for this object: com.twitter.util.events.Sinks." href="Sink$.html">
-              <span class="name">Sink</span>
+              <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">Sink</span>
             </a>
       </span>
       
-      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Sinks.html" class="extype" name="com.twitter.util.events.Sinks">com.twitter.util.events.Sinks</a>.</p>
-    </li><li name="com.twitter.util.events.SizedSink" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Sinks.html" class="extype" name="com.twitter.util.events.Sinks">com.twitter.util.events.Sinks</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Note: There is a Java-friendly API for this object: <a href="Sinks.html" class="extype" name="com.twitter.util.events.Sinks">com.twitter.util.events.Sinks</a>.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl></div>
+    </li><li name="com.twitter.util.events.SizedSink" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SizedSink"></a><a id="SizedSink:SizedSink"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/events/index.html#SizedSink" title="Permalink">
@@ -540,18 +560,16 @@ keep object allocations from calls to <code>event</code> to a minimum.
       </span>
       <span class="symbol">
         <a title="" href="SizedSink$.html">
-              <span class="name">SizedSink</span>
+              <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">SizedSink</span>
             </a>
       </span>
       
-      
-    </li>
-              </ol>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl></div>
+    </li></ol>
             </div>
-
-        
-
-        
         </div>
 
         <div id="inheritedMembers">

@@ -307,6 +307,12 @@
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractMonitor.html" title="An API for creating Monitor instances in Java."></a>
+                        <a href="AbstractMonitor.html" title="An API for creating Monitor instances in Java.">
+                          AbstractMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractVar.html" title="Abstract Var class for Java compatibility."></a>
                         <a href="AbstractVar.html" title="Abstract Var class for Java compatibility.">
                           AbstractVar
@@ -791,6 +797,14 @@ a monitor.">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object."></a>
+                        <a href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object.">
+                          Monitors
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="NetUtil$.html" title=""></a>
                         <a href="NetUtil$.html" title="">
                           NetUtil
@@ -944,6 +958,16 @@ outputting a signed Long or a byte array.">
                         <a class="class" href="SimplePool.html" title=""></a>
                         <a href="SimplePool.html" title="">
                           SimplePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime."></a>
+                        <a href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.">
+                          SlowProbeProxyTimer
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="StateMachine$.html" title=""></a>
@@ -1180,12 +1204,12 @@ or return a success value."></a>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.
 Callbacks (responders) of Promises are scheduled with
-<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><h3>Implementation details</h3><p>A Promise is in one of five states: <code>Waiting</code>, <code>Interruptible</code>,
-<code>Interrupted</code>, <code>Done</code> and <code>Linked</code> where <code>Interruptible</code> and
-<code>Interrupted</code> are variants of <code>Waiting</code> to deal with future
+<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><h3>Implementation details</h3><p>A Promise is in one of six states: <code>Waiting</code>, <code>Interruptible</code>,
+<code>Interrupted</code>, <code>Transforming</code>, Done<code> and </code>Linked<code> where </code>Interruptible<code>,
+<code>Interrupted</code>, and </code>Transforming<code> are variants of </code>Waiting<code> to deal with future
 interrupts. Promises are concurrency-safe, using lock-free operations
 throughout. Callback dispatch is scheduled with
-<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><p>Waiters are stored as a <span class="extype" name="com.twitter.util.Promise.K">com.twitter.util.Promise.K</span>. <code>K</code>s
+<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</code></p><p>Waiters are stored as a <span class="extype" name="com.twitter.util.Promise.K">com.twitter.util.Promise.K</span>. <code>K</code>s
 (mnemonic: continuation) specifies a <code>depth</code>. This is used to
 implement Promise chaining: a callback with depth <code>d</code> is invoked only
 after all callbacks with depth &lt; <code>d</code> have already been invoked.</p><p><code>Promise.become</code> merges two promises: they are declared equivalent.

@@ -144,6 +144,14 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.io">io</a></dd></dl></div>
     </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods."></a>
+                        <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods.">
+                          AbstractByteWriter
+                        </a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
 Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
@@ -151,6 +159,14 @@ positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
 positional access.">
                           Buf
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="BufByteWriter$.html" title=""></a>
+                        <a class="trait" href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+"></a>
+                        <a href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+">
+                          BufByteWriter
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
@@ -180,8 +196,8 @@ underlying buffer, which in most cases is a Buf.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="ByteWriter$.html" title=""></a>
-                        <a class="class" href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer."></a>
-                        <a href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer.">
+                        <a class="trait" href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer."></a>
+                        <a href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer.">
                           ByteWriter
                         </a>
                       </li><li class="current-entities indented3">
@@ -551,6 +567,22 @@ and an <span class="extype" name="unapply(Buf)">extractor</span>: <a href="Buf.h
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.io.Buf#checkSliceArgs" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="checkSliceArgs(from:Int,until:Int):Unit"></a><a id="checkSliceArgs(Int,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$.html#checkSliceArgs(from:Int,until:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">checkSliceArgs</span><span class="params">(<span name="from">from: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="until">until: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Helps Buf implementations validate the arguments to slicing functions.</p>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -573,6 +605,23 @@ and an <span class="extype" name="unapply(Buf)">extractor</span>: <a href="Buf.h
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Buf#decodeString" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="decodeString(buf:com.twitter.io.Buf,charset:java.nio.charset.Charset):String"></a><a id="decodeString(Buf,Charset):String"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$.html#decodeString(buf:com.twitter.io.Buf,charset:java.nio.charset.Charset):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">decodeString</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>, <span name="charset">charset: <span class="extype" name="java.nio.charset.Charset">Charset</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Decode a <code>Buf</code> using the specified <code>Charset</code>
+</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

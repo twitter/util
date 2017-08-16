@@ -307,6 +307,12 @@
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractMonitor.html" title="An API for creating Monitor instances in Java."></a>
+                        <a href="AbstractMonitor.html" title="An API for creating Monitor instances in Java.">
+                          AbstractMonitor
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractVar.html" title="Abstract Var class for Java compatibility."></a>
                         <a href="AbstractVar.html" title="Abstract Var class for Java compatibility.">
                           AbstractVar
@@ -791,6 +797,14 @@ a monitor.">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object."></a>
+                        <a href="Monitors.html" title="Java friendly APIs for the com.twitter.util.Monitor companion
+object.">
+                          Monitors
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="NetUtil$.html" title=""></a>
                         <a href="NetUtil$.html" title="">
                           NetUtil
@@ -944,6 +958,16 @@ outputting a signed Long or a byte array.">
                         <a class="class" href="SimplePool.html" title=""></a>
                         <a href="SimplePool.html" title="">
                           SimplePool
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime."></a>
+                        <a href="SlowProbeProxyTimer.html" title="An abstract ProxyTimer that provides callback methods which are called when
+a task takes longer than the specified maximum runtime or if a task is observed
+to be taking longer than the specified maximum runtime.">
+                          SlowProbeProxyTimer
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="StateMachine$.html" title=""></a>
@@ -1443,7 +1467,8 @@ monitor.
         <span class="name">getInstance</span><span class="result">: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>
       </span>
       
-      
+      <p class="shortcomment cmt">Java-friendly API to get this instance
+</p>
     </li><li name="com.twitter.util.RootMonitor#handle" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="handle(exc:Throwable):Boolean"></a><a id="handle(Throwable):Boolean"></a>
       <span class="permalink">
@@ -1560,6 +1585,24 @@ monitor.
 attempts to let <code>next</code> handle it.</p><div class="fullcomment"><div class="comment cmt"><p>A new monitor which, if <code>this</code> fails to handle the exception,
 attempts to let <code>next</code> handle it.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></dd></dl></div>
+    </li><li name="com.twitter.util.RootMonitor#set" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="set(m:com.twitter.util.Monitor):Unit"></a><a id="set(Monitor):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/RootMonitor$.html#set(m:com.twitter.util.Monitor):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">set</span><span class="params">(<span name="m">m: <a href="Monitor.html" class="extype" name="com.twitter.util.Monitor">Monitor</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Set a custom monitor <code>m</code> as the root monitor.</p><div class="fullcomment"><div class="comment cmt"><p>Set a custom monitor <code>m</code> as the root monitor. If <code>m</code> doesn't handle an exception,
+it'll fallback to the original root monitor.
+</p></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">

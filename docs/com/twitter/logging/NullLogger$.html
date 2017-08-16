@@ -1418,6 +1418,42 @@ at the desired level.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.logging.Logger#throwable" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="throwable(thrown:Throwable,message:=&gt;AnyRef):Unit"></a><a id="throwable(Throwable,⇒AnyRef):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/logging/NullLogger$.html#throwable(thrown:Throwable,message:=&gt;AnyRef):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">throwable</span><span class="params">(<span name="thrown">thrown: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="message">message: ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Lazily logs a throwable.</p><div class="fullcomment"><div class="comment cmt"><p>Lazily logs a throwable. If the throwable contains a log level (via <a href="HasLogLevel.html" class="extype" name="com.twitter.logging.HasLogLevel">HasLogLevel</a>), it
+will log at the stored level, otherwise it will log at <code>Level.ERROR</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Logger.html" class="extype" name="com.twitter.logging.Logger">Logger</a></dd></dl></div>
+    </li><li name="com.twitter.logging.Logger#throwable" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="throwable(thrown:Throwable,message:=&gt;AnyRef,defaultLevel:com.twitter.logging.Level):Unit"></a><a id="throwable(Throwable,⇒AnyRef,Level):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/logging/NullLogger$.html#throwable(thrown:Throwable,message:=&gt;AnyRef,defaultLevel:com.twitter.logging.Level):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">throwable</span><span class="params">(<span name="thrown">thrown: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="message">message: ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>, <span name="defaultLevel">defaultLevel: <a href="Level.html" class="extype" name="com.twitter.logging.Level">Level</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Lazily logs a throwable.</p><div class="fullcomment"><div class="comment cmt"><p>Lazily logs a throwable. If the throwable contains a log level (via <a href="HasLogLevel.html" class="extype" name="com.twitter.logging.HasLogLevel">HasLogLevel</a>), it
+will log at the stored level, otherwise it will log at <code>defaultLevel</code>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Logger.html" class="extype" name="com.twitter.logging.Logger">Logger</a></dd></dl></div>
     </li><li name="com.twitter.logging.Logger#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">

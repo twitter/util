@@ -144,6 +144,14 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.io">io</a></dd></dl></div>
     </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods."></a>
+                        <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods.">
+                          AbstractByteWriter
+                        </a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
 Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
@@ -151,6 +159,14 @@ positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
 positional access.">
                           Buf
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="BufByteWriter$.html" title=""></a>
+                        <a class="trait" href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+"></a>
+                        <a href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+">
+                          BufByteWriter
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
@@ -180,8 +196,8 @@ underlying buffer, which in most cases is a Buf.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="ByteWriter$.html" title=""></a>
-                        <a class="class" href="" title="ByteWriters allow efficient construction of a buffer."></a>
-                        <a href="" title="ByteWriters allow efficient construction of a buffer.">
+                        <a class="trait" href="" title="ByteWriters allow efficient encoding to a buffer."></a>
+                        <a href="" title="ByteWriters allow efficient encoding to a buffer.">
                           ByteWriter
                         </a>
                       </li><li class="current-entities indented3">
@@ -253,9 +269,9 @@ a convenient interface for the producer of such streams.">
             </div>
           </div>
           <div id="content">
-            <body class="class type">
+            <body class="trait type">
       <div id="definition">
-        <a href="ByteWriter$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <a href="ByteWriter$.html" title="See companion object"><div class="big-circle trait-companion-object">t</div></a>
         <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.io">io</a></p>
         <h1><a href="ByteWriter$.html" title="See companion object">ByteWriter</a><span class="permalink">
       <a href="../../../com/twitter/io/ByteWriter.html" title="Permalink">
@@ -269,8 +285,8 @@ a convenient interface for the producer of such streams.">
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">class</span>
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
         <span class="name">ByteWriter</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
@@ -278,20 +294,25 @@ a convenient interface for the producer of such streams.">
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p><a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient construction of a buffer. Concatenating
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p><a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer. Concatenating
 <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>s together is a common pattern for codecs (especially on the encode
 path), but using the <code>concat</code> method on <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> results in a suboptimal
 representation.  In many cases, a <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> not only allows for a more
 optimal representation (i.e., sequential accessible out regions), but also
 allows for writes to avoid allocations.  What this means in practice is that
-builders are stateful and keep track of a writer index. Assume that the
-builder implementations are *not* threadsafe unless otherwise noted.
+builders are stateful. Assume that the builder implementations are &quot;&quot;not&quot;&quot;
+threadsafe unless otherwise noted.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">
+              Known Subclasses
+            </span>
+            <div class="subClasses hiddenContent"><a href="AbstractByteWriter.html" class="extype" name="com.twitter.io.AbstractByteWriter">AbstractByteWriter</a>, <a href="BufByteWriter.html" class="extype" name="com.twitter.io.BufByteWriter">BufByteWriter</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -334,35 +355,16 @@ builder implementations are *not* threadsafe unless otherwise noted.
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.io.ByteWriter#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():com.twitter.io.ByteWriter"></a><a id="&lt;init&gt;:ByteWriter"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#&lt;init&gt;():com.twitter.io.ByteWriter" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ByteWriter</span><span class="params">()</span>
-      </span>
-      
-      
-    </li></ol>
-            </div>
+        
 
         
 
         <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="com.twitter.io.ByteWriter#owned" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="owned():com.twitter.io.Buf"></a><a id="owned():Buf"></a>
+              <ol><li name="com.twitter.io.ByteWriter#writeByte" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="writeByte(b:Int):ByteWriter.this.type"></a><a id="writeByte(Int):ByteWriter.this.type"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#owned():com.twitter.io.Buf" title="Permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeByte(b:Int):ByteWriter.this.type" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -371,16 +373,260 @@ builder implementations are *not* threadsafe unless otherwise noted.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">owned</span><span class="params">()</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+        <span class="name">writeByte</span><span class="params">(<span name="b">b: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
       </span>
       
-      <p class="shortcomment cmt">In keeping with <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> terminology, creates a potential zero-copy <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
-which has a reference to the same region as the <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.</p><div class="fullcomment"><div class="comment cmt"><p>In keeping with <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> terminology, creates a potential zero-copy <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
-which has a reference to the same region as the <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>. That is, if
-any methods called on the builder are propagated to the returned <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>.
-By definition, the builder owns the region it is writing to so this is
-the natural way to coerce a builder to a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>.
+      <p class="shortcomment cmt">Write 8 bits of <code>b</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Write 8 bits of <code>b</code>. The remaining 24 bits are ignored.
 </p></div></div>
+    </li><li name="com.twitter.io.ByteWriter#writeBytes" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeBytes(buf:com.twitter.io.Buf):ByteWriter.this.type"></a><a id="writeBytes(Buf):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeBytes(buf:com.twitter.io.Buf):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeBytes</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write all the bytes from <code>buf</code> into the running buffer.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeBytes" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeBytes(bs:Array[Byte]):ByteWriter.this.type"></a><a id="writeBytes(Array[Byte]):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeBytes(bs:Array[Byte]):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeBytes</span><span class="params">(<span name="bs">bs: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write all the bytes from <code>bs</code> into the running buffer.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeDoubleBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeDoubleBE(d:Double):ByteWriter.this.type"></a><a id="writeDoubleBE(Double):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeDoubleBE(d:Double):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeDoubleBE</span><span class="params">(<span name="d">d: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 64 bits from <code>d</code> in big-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeDoubleLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeDoubleLE(d:Double):ByteWriter.this.type"></a><a id="writeDoubleLE(Double):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeDoubleLE(d:Double):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeDoubleLE</span><span class="params">(<span name="d">d: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 64 bits from <code>d</code> in little-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeFloatBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeFloatBE(f:Float):ByteWriter.this.type"></a><a id="writeFloatBE(Float):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeFloatBE(f:Float):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeFloatBE</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 32 bits from <code>f</code> in big-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeFloatLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeFloatLE(f:Float):ByteWriter.this.type"></a><a id="writeFloatLE(Float):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeFloatLE(f:Float):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeFloatLE</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 32 bits from <code>f</code> in little-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeIntBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeIntBE(i:Long):ByteWriter.this.type"></a><a id="writeIntBE(Long):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeIntBE(i:Long):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeIntBE</span><span class="params">(<span name="i">i: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 32 bits from <code>i</code> in big-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeIntLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeIntLE(i:Long):ByteWriter.this.type"></a><a id="writeIntLE(Long):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeIntLE(i:Long):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeIntLE</span><span class="params">(<span name="i">i: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 32 bits from <code>i</code> in little-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeLongBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeLongBE(l:Long):ByteWriter.this.type"></a><a id="writeLongBE(Long):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeLongBE(l:Long):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeLongBE</span><span class="params">(<span name="l">l: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 64 bits from <code>l</code> in big-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeLongLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeLongLE(l:Long):ByteWriter.this.type"></a><a id="writeLongLE(Long):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeLongLE(l:Long):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeLongLE</span><span class="params">(<span name="l">l: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 64 bits from <code>l</code> in little-endian order.</p>
+    </li><li name="com.twitter.io.ByteWriter#writeMediumBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="writeMediumBE(m:Int):ByteWriter.this.type"></a><a id="writeMediumBE(Int):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeMediumBE(m:Int):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeMediumBE</span><span class="params">(<span name="m">m: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 24 bits from <code>m</code> in big-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 24 bits from <code>m</code> in big-endian order. The remaining
+8 bits are ignored.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteWriter#writeMediumLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="writeMediumLE(m:Int):ByteWriter.this.type"></a><a id="writeMediumLE(Int):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeMediumLE(m:Int):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeMediumLE</span><span class="params">(<span name="m">m: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 24 bits from <code>m</code> in little-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 24 bits from <code>m</code> in little-endian order. The remaining
+8 bits are ignored.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteWriter#writeShortBE" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="writeShortBE(s:Int):ByteWriter.this.type"></a><a id="writeShortBE(Int):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeShortBE(s:Int):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeShortBE</span><span class="params">(<span name="s">s: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 16 bits from <code>s</code> in big-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 16 bits from <code>s</code> in big-endian order. The remaining
+16 bits are ignored.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteWriter#writeShortLE" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="writeShortLE(s:Int):ByteWriter.this.type"></a><a id="writeShortLE(Int):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeShortLE(s:Int):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeShortLE</span><span class="params">(<span name="s">s: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write 16 bits from <code>s</code> in little-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 16 bits from <code>s</code> in little-endian order. The remaining
+16 bits are ignored.
+</p></div></div>
+    </li><li name="com.twitter.io.ByteWriter#writeString" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="writeString(string:CharSequence,charset:java.nio.charset.Charset):ByteWriter.this.type"></a><a id="writeString(CharSequence,Charset):ByteWriter.this.type"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ByteWriter.html#writeString(string:CharSequence,charset:java.nio.charset.Charset):ByteWriter.this.type" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">writeString</span><span class="params">(<span name="string">string: <span class="extype" name="java.lang.CharSequence">CharSequence</span></span>, <span name="charset">charset: <span class="extype" name="java.nio.charset.Charset">Charset</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
+      </span>
+      
+      <p class="shortcomment cmt">Write the byte representation of <code>string</code>, encoded using the specified <code>Charset</code>
+into the running buffer.</p>
     </li></ol>
             </div>
 
@@ -721,255 +967,6 @@ the natural way to coerce a builder to a <a href="Buf.html" class="extype" name=
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.io.ByteWriter#writeByte" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="writeByte(b:Int):ByteWriter.this.type"></a><a id="writeByte(Int):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeByte(b:Int):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeByte</span><span class="params">(<span name="b">b: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 8 bits of <code>b</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Write 8 bits of <code>b</code>. The remaining 24 bits are ignored.
-</p></div></div>
-    </li><li name="com.twitter.io.ByteWriter#writeBytes" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeBytes(buf:com.twitter.io.Buf):ByteWriter.this.type"></a><a id="writeBytes(Buf):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeBytes(buf:com.twitter.io.Buf):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeBytes</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write all the bytes from <code>buf</code> into the running buffer.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeBytes" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeBytes(bs:Array[Byte]):ByteWriter.this.type"></a><a id="writeBytes(Array[Byte]):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeBytes(bs:Array[Byte]):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeBytes</span><span class="params">(<span name="bs">bs: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write all the bytes from <code>bs</code> into the running buffer.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeDoubleBE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeDoubleBE(d:Double):ByteWriter.this.type"></a><a id="writeDoubleBE(Double):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeDoubleBE(d:Double):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeDoubleBE</span><span class="params">(<span name="d">d: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 64 bits from <code>d</code> in big-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeDoubleLE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeDoubleLE(d:Double):ByteWriter.this.type"></a><a id="writeDoubleLE(Double):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeDoubleLE(d:Double):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeDoubleLE</span><span class="params">(<span name="d">d: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 64 bits from <code>d</code> in little-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeFloatBE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeFloatBE(f:Float):ByteWriter.this.type"></a><a id="writeFloatBE(Float):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeFloatBE(f:Float):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeFloatBE</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 32 bits from <code>f</code> in big-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeFloatLE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeFloatLE(f:Float):ByteWriter.this.type"></a><a id="writeFloatLE(Float):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeFloatLE(f:Float):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeFloatLE</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Float" class="extype" target="_top">Float</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 32 bits from <code>f</code> in little-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeIntBE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeIntBE(i:Long):ByteWriter.this.type"></a><a id="writeIntBE(Long):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeIntBE(i:Long):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeIntBE</span><span class="params">(<span name="i">i: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 32 bits from <code>i</code> in big-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeIntLE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeIntLE(i:Long):ByteWriter.this.type"></a><a id="writeIntLE(Long):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeIntLE(i:Long):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeIntLE</span><span class="params">(<span name="i">i: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 32 bits from <code>i</code> in little-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeLongBE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeLongBE(l:Long):ByteWriter.this.type"></a><a id="writeLongBE(Long):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeLongBE(l:Long):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeLongBE</span><span class="params">(<span name="l">l: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 64 bits from <code>l</code> in big-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeLongLE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="writeLongLE(l:Long):ByteWriter.this.type"></a><a id="writeLongLE(Long):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeLongLE(l:Long):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeLongLE</span><span class="params">(<span name="l">l: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 64 bits from <code>l</code> in little-endian order.</p>
-    </li><li name="com.twitter.io.ByteWriter#writeMediumBE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="writeMediumBE(m:Int):ByteWriter.this.type"></a><a id="writeMediumBE(Int):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeMediumBE(m:Int):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeMediumBE</span><span class="params">(<span name="m">m: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 24 bits from <code>m</code> in big-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 24 bits from <code>m</code> in big-endian order. The remaining
-8 bits are ignored.
-</p></div></div>
-    </li><li name="com.twitter.io.ByteWriter#writeMediumLE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="writeMediumLE(m:Int):ByteWriter.this.type"></a><a id="writeMediumLE(Int):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeMediumLE(m:Int):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeMediumLE</span><span class="params">(<span name="m">m: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 24 bits from <code>m</code> in little-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 24 bits from <code>m</code> in little-endian order. The remaining
-8 bits are ignored.
-</p></div></div>
-    </li><li name="com.twitter.io.ByteWriter#writeShortBE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="writeShortBE(s:Int):ByteWriter.this.type"></a><a id="writeShortBE(Int):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeShortBE(s:Int):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeShortBE</span><span class="params">(<span name="s">s: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 16 bits from <code>s</code> in big-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 16 bits from <code>s</code> in big-endian order. The remaining
-16 bits are ignored.
-</p></div></div>
-    </li><li name="com.twitter.io.ByteWriter#writeShortLE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="writeShortLE(s:Int):ByteWriter.this.type"></a><a id="writeShortLE(Int):ByteWriter.this.type"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter.html#writeShortLE(s:Int):ByteWriter.this.type" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">writeShortLE</span><span class="params">(<span name="s">s: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.this.type</span>
-      </span>
-      
-      <p class="shortcomment cmt">Write 16 bits from <code>s</code> in little-endian order.</p><div class="fullcomment"><div class="comment cmt"><p>Write 16 bits from <code>s</code> in little-endian order. The remaining
-16 bits are ignored.
-</p></div></div>
     </li>
               </ol>
             </div>

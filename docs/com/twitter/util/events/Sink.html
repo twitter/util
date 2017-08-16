@@ -200,7 +200,7 @@ sent to allow for analysis.">
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Sink</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 2017-06-21) Will be removed in an upcoming release">Sink</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4>
 
@@ -211,7 +211,10 @@ and subject to changes.</p><h5>Design notes</h5><ul><li>Implementations must be 
    many events as possible can be sent here. In particular, object
    allocations should be kept to a minimum.</li><li><code>event</code> is expected to be called many orders of magnitude
    more frequently than <code>events</code>.
-</li></ul></div><div class="toggleContainer block">
+</li></ul></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-06-21)</i> Will be removed in an upcoming release</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>

@@ -144,6 +144,14 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.io">io</a></dd></dl></div>
     </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods."></a>
+                        <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods
+in terms of integer methods.">
+                          AbstractByteWriter
+                        </a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
 Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
@@ -151,6 +159,14 @@ positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient
 positional access.">
                           Buf
+                        </a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="BufByteWriter$.html" title=""></a>
+                        <a class="trait" href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+"></a>
+                        <a href="BufByteWriter.html" title="A ByteWriter that results in an owned Buf
+">
+                          BufByteWriter
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
@@ -180,8 +196,8 @@ underlying buffer, which in most cases is a Buf.">
                         </a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="" title=""></a>
-                        <a class="class" href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer."></a>
-                        <a href="ByteWriter.html" title="ByteWriters allow efficient construction of a buffer.">
+                        <a class="trait" href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer."></a>
+                        <a href="ByteWriter.html" title="ByteWriters allow efficient encoding to a buffer.">
                           ByteWriter
                         </a>
                       </li><li class="current-entities indented3">
@@ -255,15 +271,15 @@ a convenient interface for the producer of such streams.">
           <div id="content">
             <body class="object value">
       <div id="definition">
-        <a href="ByteWriter.html" title="See companion class"><div class="big-circle object-companion-class">o</div></a>
+        <a href="ByteWriter.html" title="See companion trait"><div class="big-circle object-companion-trait">o</div></a>
         <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.io">io</a></p>
-        <h1><a href="ByteWriter.html" title="See companion class">ByteWriter</a><span class="permalink">
+        <h1><a href="ByteWriter.html" title="See companion trait">ByteWriter</a><span class="permalink">
       <a href="../../../com/twitter/io/ByteWriter$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
         <h3><span class="morelinks"><div>
-            Companion <a href="ByteWriter.html" title="See companion class">class ByteWriter</a>
+            Companion <a href="ByteWriter.html" title="See companion trait">trait ByteWriter</a>
           </div></span></h3>
       </div>
 
@@ -406,23 +422,6 @@ a <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">Byte
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.io.ByteWriter#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply(bytes:Array[Byte]):com.twitter.io.ByteWriter"></a><a id="apply(Array[Byte]):ByteWriter"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter$.html#apply(bytes:Array[Byte]):com.twitter.io.ByteWriter" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="bytes">bytes: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>)</span><span class="result">: <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Creates a fixed sized <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> that writes to <code>bytes</code>
-</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -461,25 +460,6 @@ a <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">Byte
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.io.ByteWriter#dynamic" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="dynamic(estimatedSize:Int):com.twitter.io.ByteWriter"></a><a id="dynamic(Int):ByteWriter"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter$.html#dynamic(estimatedSize:Int):com.twitter.io.ByteWriter" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">dynamic</span><span class="params">(<span name="estimatedSize">estimatedSize: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a> = <span class="symbol">256</span></span>)</span><span class="result">: <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Creates a <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> that grows as needed.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> that grows as needed.
-The maximum size is Int.MaxValue - 2 (maximum array size).
-</p></div><dl class="paramcmts block"><dt class="param">estimatedSize</dt><dd class="cmt"><p>the starting size of the backing buffer, in bytes.
-                     If no size is given, 256 bytes will be used.</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -534,22 +514,6 @@ The maximum size is Int.MaxValue - 2 (maximum array size).
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.io.ByteWriter#fixed" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="fixed(size:Int):com.twitter.io.ByteWriter"></a><a id="fixed(Int):ByteWriter"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/ByteWriter$.html#fixed(size:Int):com.twitter.io.ByteWriter" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">fixed</span><span class="params">(<span name="size">size: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Creates a fixed size <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
