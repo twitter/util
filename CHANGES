@@ -23,6 +23,12 @@ New Features:
   * util-stats: Introducing Verbosity Levels for StatsReceivers (see docs on `StatsReceiver`
     for more info). ``PHAB_ID=D70112``
 
+  * util-tunable: `c.t.u.tunable.Tunable`, `c.t.u.tunable.TunableMap`,
+    `c.t.u.tunable.JsonTunableMapper`, and `c.t.u.tunable.ServiceLoadedTunableMap` are now public.
+    This allows users to create and use Tunables, a mechanism for accessing dynamically
+    configured values. See https://twitter.github.io/finagle/guide/Configuration.html#tunables 
+    for details on how these can be used in Finagle. ``PHAB_ID=D80751``.
+
 Bug Fixes:
 
   * util-core: Fix some consistency issues with `c.t.util.ByteReaderImpl`. Advance its

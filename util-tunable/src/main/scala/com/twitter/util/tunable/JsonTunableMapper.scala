@@ -8,7 +8,7 @@ import com.twitter.util.{Return, Throw, Try}
 import java.net.URL
 import scala.collection.JavaConverters._
 
-private[twitter] object JsonTunableMapper {
+object JsonTunableMapper {
 
   import com.twitter.util.tunable.json._
 
@@ -102,7 +102,7 @@ private[twitter] object JsonTunableMapper {
  * If the JSON is invalid, or contains duplicate ids for [[Tunable]]s, `parse` will
  * return a [[Throw]]. Otherwise, `parse` returns [[Return[TunableMap]]
  */
-private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializer[_ <: Any]]) {
+final class JsonTunableMapper(deserializers: Seq[JsonDeserializer[_ <: Any]]) {
 
   import JsonTunableMapper._
 
@@ -173,7 +173,7 @@ private[twitter] final class JsonTunableMapper(deserializers: Seq[JsonDeserializ
    * If multiple configuration files exists, return [[IllegalArgumentException]]
    * If the configuration file cannot be parsed, return [[IllegalArgumentException]]
    */
-  private[twitter] def loadJsonTunables(id: String, path: String): TunableMap = {
+  def loadJsonTunables(id: String, path: String): TunableMap = {
     val classLoader = getClass.getClassLoader
     val files = classLoader.getResources(path).asScala.toList
     tunableMapForResources(id, files)

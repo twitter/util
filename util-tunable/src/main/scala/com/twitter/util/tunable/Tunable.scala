@@ -11,7 +11,7 @@ package com.twitter.util.tunable
  * @param id  id of this [[Tunable]], used in `toString`. Must not be empty and should be unique.
  * @tparam T  type of value this [[Tunable]] holds
  */
-private[twitter] sealed abstract class Tunable[T](val id: String) { self =>
+sealed abstract class Tunable[T](val id: String) { self =>
 
   // validate id is not empty
   if (id.trim.isEmpty)
@@ -43,7 +43,7 @@ private[twitter] sealed abstract class Tunable[T](val id: String) { self =>
     }
 }
 
-private[twitter] object Tunable {
+object Tunable {
 
   /**
    * A [[Tunable]] that always returns `value` when applied.

@@ -9,7 +9,7 @@ import scala.collection.mutable
 /**
  * A Map that can be used to access [[Tunable]]s using [[TunableMap.Key]]s.
  */
-private[twitter] abstract class TunableMap { self =>
+abstract class TunableMap { self =>
 
   /**
    * Returns a [[Tunable]] for the given `key.id` in the [[TunableMap]]. If the [[Tunable]] is not
@@ -37,7 +37,7 @@ private[twitter] abstract class TunableMap { self =>
   /**
    * Returns an Iterator over [[TunableMap.Entry]] for each [[Tunable]] in the map with a value.
    */
-  private[twitter] def entries: Iterator[TunableMap.Entry[_]]
+  def entries: Iterator[TunableMap.Entry[_]]
 
   /**
    * Compose this [[TunableMap]] with another [[TunableMap]]. [[Tunables]] retrieved from
@@ -73,7 +73,7 @@ private[twitter] abstract class TunableMap { self =>
   }
 }
 
-private[twitter] object TunableMap {
+object TunableMap {
 
   /**
    * A marker interface in support of [[components(TunableMap)]]
@@ -98,7 +98,7 @@ private[twitter] object TunableMap {
 
   private case class TypeAndTunable[T](tunableType: Class[T], tunable: Tunable.Mutable[T])
 
-  private[twitter] case class Entry[T](key: TunableMap.Key[T], value: T, source: String)
+  case class Entry[T](key: TunableMap.Key[T], value: T, source: String)
 
   /**
    * Class used to retrieve a [[Tunable]] with id `id` of type `T`.
@@ -122,7 +122,7 @@ private[twitter] object TunableMap {
   /**
    * A [[TunableMap]] that forwards all calls to `underlying`.
    */
-  private[twitter] trait Proxy extends TunableMap {
+  trait Proxy extends TunableMap {
 
     protected def underlying: TunableMap
 
@@ -176,7 +176,7 @@ private[twitter] object TunableMap {
      * this map are updated. Updates to each [[Tunable]] in the map are atomic, but the change
      * is not atomic at the macro level.
      */
-    private[twitter] def ++=(that: TunableMap): Unit =
+    def ++=(that: TunableMap): Unit =
       that.entries.foreach {
         case TunableMap.Entry(key, value, _) =>
           put(key.id, key.clazz, value)
@@ -186,7 +186,7 @@ private[twitter] object TunableMap {
      * Remove all entries by key in `that` [[TunableMap]] from this [[TunableMap]]. Removal of each
      * [[Tunable]] in the map are atomic, but the change is not atomic at the macro level.
      */
-    private[twitter] def --=(that: TunableMap): Unit =
+    def --=(that: TunableMap): Unit =
       that.entries.foreach {
         case TunableMap.Entry(key, _, _) =>
           clear(key)
@@ -313,7 +313,7 @@ private[twitter] object TunableMap {
 /**
  * A [[TunableMap]] that returns a [[Tunable.none]] for every [[TunableMap.Key]]
  */
-private[twitter] object NullTunableMap extends TunableMap {
+object NullTunableMap extends TunableMap {
 
   def apply[T](key: TunableMap.Key[T]): Tunable[T] =
     Tunable.none[T]

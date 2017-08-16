@@ -5,7 +5,7 @@ import com.twitter.app.LoadService
 /**
  * [[TunableMap]] loaded through `com.twitter.app.LoadService`.
  */
-private[twitter] trait ServiceLoadedTunableMap extends TunableMap {
+trait ServiceLoadedTunableMap extends TunableMap {
 
   /**
    * Unique identifier for this [[TunableMap]]. A service may have multiple
@@ -14,7 +14,7 @@ private[twitter] trait ServiceLoadedTunableMap extends TunableMap {
   def id: String
 }
 
-private[twitter] object ServiceLoadedTunableMap {
+object ServiceLoadedTunableMap {
 
   /**
    * Uses `com.twitter.app.LoadService` to load the [[TunableMap]] for a given `id`.
