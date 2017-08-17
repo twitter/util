@@ -1,6 +1,8 @@
 User Guide
 ==========
 
+.. _choosing_impl:
+
 Choosing the stats implementation to use for Finagle
 ----------------------------------------------------
 
@@ -70,7 +72,7 @@ ids in your metric names).
 .. _gauges_in_members:
 
 Store gauges in member variables
-----------------------------------
+--------------------------------
 While your application code is not likely to refer to the value returned from
 ``StatsReceiver.addGauge``, you should store it in a member variable. This is due to the common
 implementation of ``Gauge`` being ``CumulativeGauge``, which uses `java.lang.ref.WeakReference`_.
@@ -94,8 +96,8 @@ collection*, which would cause your metric to disappear unexpectedly at runtime.
       // size of the queue.
     }
 
-Prefer addGauge over provideGauge
-----------------------------------
+Prefer `addGauge` over `provideGauge`
+-------------------------------------
 ``StatsReceiver`` offers two similar methods, ``addGauge`` and ``provideGauge``, and whenever
 possible ``addGauge`` should be preferred. ``provideGauge`` is basically a call to ``addGauge``
 along with code that holds a strong reference to the gauge in a global linked list. Recall from the
@@ -111,12 +113,12 @@ use an `InMemoryStatsReceiver`_ which provides ``ReadableCounters`` and ``Readab
 enable simpler testing.
 
 Usage from Java
-----------------
+---------------
 There are Java-friendly mechanisms in the ``StatsReceivers`` object (note the trailing **s**) for
 creating counters, gauges and stats. In addition ``JStats`` is available for measuring latency.
 
 Thread-safety
---------------
+-------------
 It is expected that implementations of ``StatsReceivers`` and their associated counters/gauges/stats
 themselves are thread-safe and safe to use across threads.
 
@@ -124,7 +126,7 @@ The caveat is that because ``Gauges`` run a function when they are read, the cod
 function **must also** be thread-safe.
 
 Access needed to a StatsReceiver in an inconvenient place
-----------------------------------------------------------
+---------------------------------------------------------
 Ideally classes would be passed a properly scoped ``StatsReceiver`` in their constructor but this
 isn’t always simple or feasible. This may be due to various reasons such as legacy code, code in a
 static initializer or a Scala object. In these cases, if you are depending on finagle-core, you
