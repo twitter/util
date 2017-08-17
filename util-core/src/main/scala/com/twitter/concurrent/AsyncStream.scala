@@ -341,12 +341,29 @@ sealed abstract class AsyncStream[+A] {
    */
   def scanLeft[B](z: B)(f: (B, A) => B): AsyncStream[B] =
     this match {
-      case Embed(fas) => Embed(fas.map(_.scanLeft(z)(f)))
+      case Embed(fas) => Cons(Future.value(z), () => Embed(fas.map(_.scanLeftEmbed(z)(f))))
       case Empty => FromFuture(Future.value(z))
       case FromFuture(fa) =>
         Cons(Future.value(z), () => FromFuture(fa.map(f(z, _))))
       case Cons(fa, more) =>
         Cons(Future.value(z), () => Embed(fa.map(a => more().scanLeft(f(z, a))(f))))
+    }
+
+  /**
+    * Helper method used to avoid scanLeft being one behind in case of Embed AsyncStream.
+    *
+    * scanLeftEmbed, unlike scanLeft, does not return the initial value `z` and is there to
+    * prevent the Embed case from returning duplicate initial `z` values for scanLeft.
+    *
+    */
+  private def scanLeftEmbed[B](z: B)(f: (B, A) => B): AsyncStream[B] =
+    this match {
+      case Embed(fas) => Embed(fas.map(_.scanLeftEmbed(z)(f)))
+      case Empty => Empty
+      case FromFuture(fa) =>
+        FromFuture(fa.map(f(z, _)))
+      case Cons(fa, more) =>
+        Embed(fa.map(a => more().scanLeft(f(z, a))(f)))
     }
 
   /**
