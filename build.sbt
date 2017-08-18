@@ -90,11 +90,18 @@ val sharedSettings = Seq(
   }
 )
 
+lazy val noPublishSettings = Seq(
+  publish := {},
+  publishLocal := {},
+  publishArtifact := false
+)
+
 lazy val util = Project(
   id = "util",
   base = file(".")
 ).settings(
   sharedSettings ++
+    noPublishSettings ++
     unidocSettings ++
     Seq(
       unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(utilBenchmark)
