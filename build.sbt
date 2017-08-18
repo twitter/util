@@ -210,15 +210,6 @@ lazy val utilDoc = Project(
     includeFilter in Sphinx := ("*.html" | "*.png" | "*.svg" | "*.js" | "*.css" | "*.gif" | "*.txt")
   ))
 
-lazy val utilEvents = Project(
-  id = "util-events",
-  base = file("util-events")
-).settings(
-  sharedSettings
-).settings(
-  name := "util-events"
-).dependsOn(utilApp)
-
 lazy val utilFunction = Project(
   id = "util-function",
   base = file("util-function")
