@@ -102,7 +102,7 @@ lazy val util = Project(
 ).aggregate(
   utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
   utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
-  utilZkTest, utilClassPreloader, utilBenchmark, utilApp, utilEvents, utilSecurity, utilStats, utilTunable
+  utilZkTest, utilClassPreloader, utilBenchmark, utilApp, utilSecurity, utilStats, utilTunable
 )
 
 lazy val utilApp = Project(
@@ -126,7 +126,7 @@ lazy val utilBenchmark = Project(
   JmhPlugin
 ).settings(
   name := "util-benchmark"
-).dependsOn(utilCore, utilEvents, utilHashing, utilJvm, utilStats)
+).dependsOn(utilCore, utilHashing, utilJvm, utilStats)
 
 lazy val utilCache = Project(
   id = "util-cache",
