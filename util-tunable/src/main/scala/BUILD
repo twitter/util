@@ -14,4 +14,7 @@ scala_library(name='scala',
   strict_deps=True,
   fatal_warnings=True,
   sources=rglobs('*.scala', exclude=[rglobs('util/tunable/linter/*')]),
+  exports=[
+    '3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind',
+  ]
 )

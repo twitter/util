@@ -8,6 +8,9 @@ scala_library(
     '3rdparty/jvm/cglib',
     'util/util-core/src/main/scala'
   ],
+  exports=[
+    '3rdparty/jvm/cglib',
+  ],
   fatal_warnings=True,
   sources=rglobs('*.scala'),
   strict_deps=True,

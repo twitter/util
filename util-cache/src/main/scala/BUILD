@@ -11,4 +11,8 @@ scala_library(
   provides=scala_artifact(org='com.twitter',
                           name='util-cache',
                           repo = artifactory,),
+  exports=[
+    'util/util-core/src/main/scala:scala',
+  ]
+
 )

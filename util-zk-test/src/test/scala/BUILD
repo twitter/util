@@ -8,5 +8,7 @@ junit_tests(
     'util/util-zk-test',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
+
 )

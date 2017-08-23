@@ -10,5 +10,7 @@ junit_tests(
     'util/util-registry/src/main/scala:scala',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
+
 )

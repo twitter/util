@@ -10,5 +10,7 @@ junit_tests(
     'util/util-function/src/main/java:java',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.java')
+  sources=rglobs('*.java'),
+  strict_deps=True,
+
 )

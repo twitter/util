@@ -7,8 +7,8 @@ scala_library(
   fatal_warnings = True,
   strict_deps = True,
   dependencies = [
-    'util/util-logging',
     'util/util-core/src/main/scala:scala',
+    'util/util-logging',
   ],
   sources = rglobs('*.scala')
 )

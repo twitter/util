@@ -12,4 +12,8 @@ scala_library(
   fatal_warnings=True,
   sources=rglobs('*.scala'),
   strict_deps=True,
+  exports=[
+    'util/util-core/src/main/scala:scala',
+  ]
+
 )

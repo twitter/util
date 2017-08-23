@@ -6,5 +6,7 @@ junit_tests(
     'util/util-codec/src/main/scala',
   ],
   fatal_warnings=True,
-  sources=rglobs('*.scala')
+  sources=rglobs('*.scala'),
+  strict_deps=True,
+
 )

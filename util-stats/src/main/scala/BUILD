@@ -10,6 +10,9 @@ scala_library(
     'util/util-core/src/main/scala',
     'util/util-lint/src/main/scala',
   ],
+  exports=[
+    '3rdparty/jvm/com/github/ben-manes/caffeine',
+  ],
   fatal_warnings=True,
   sources=rglobs('*.scala'),
   strict_deps=True,
