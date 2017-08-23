@@ -10,6 +10,9 @@ API Changes:
 
   * util-events: Module has been removed. ``PHAB_ID=D82346``
 
+  * util-lint: Add GlobalRules#withRules for testing. Allow for the ability to 
+    specify a global rules set for use in testing. ``PHAB_ID=D83506``
+
 7.0.0  2017-08-15
 
 New Features:

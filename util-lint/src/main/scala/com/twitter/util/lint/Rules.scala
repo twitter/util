@@ -1,5 +1,6 @@
 package com.twitter.util.lint
 
+import com.twitter.util.Local
 import scala.collection.immutable.{Iterable, List}
 
 /**
@@ -53,12 +54,32 @@ class RulesImpl extends Rules {
 }
 
 object GlobalRules {
-
   private[this] val rules = new RulesImpl()
 
   /**
    * Gets the global [[Rules]] implementation.
+   *
+   * If it's call inside of a `withRules` context then it's a temporary
+   * rule set, useful for writing isolated tests.
    */
-  def get: Rules = rules
+  def get: Rules = localRules() match {
+    case None => rules
+    case Some(local) => local
+  }
 
+  /**
+   * Note, this should only ever be updated by methods used for testing.
+   */
+  private[this] val localRules = new Local[Rules]
+
+  /**
+   * Changes the global rule set to instead return a local one.
+   *
+   * Takes the rules context with it when moved to a different thread via
+   * Twitter concurrency primitives, like `flatMap` on a
+   * [[com.twitter.util.Future]].
+   */
+  def withRules[A](replacement: Rules)(fn: => A): A = localRules.let(replacement) {
+    fn
+  }
 }

@@ -268,7 +268,7 @@ lazy val utilLint = Project(
   sharedSettings
 ).settings(
   name := "util-lint"
-)
+).dependsOn(utilCore)
 
 lazy val utilLogging = Project(
   id = "util-logging",

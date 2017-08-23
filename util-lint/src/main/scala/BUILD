@@ -4,6 +4,9 @@ scala_library(
     name = 'util-lint',
     repo = artifactory,
   ),
+  dependencies=[
+    'util/util-core/src/main/scala',
+  ],
   fatal_warnings=True,
   sources=rglobs('*.scala'),
   strict_deps=True,
