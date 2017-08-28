@@ -171,7 +171,6 @@ trait StatsReceiver {
    *
    * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  @varargs
   def addGauge(name: String*)(f: => Float): Gauge = addGauge(Verbosity.Default, name: _*)(f)
 
   /**
@@ -191,7 +190,6 @@ trait StatsReceiver {
    *
    * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  @varargs
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge
 
   /**
