@@ -9,7 +9,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class CumulativeGaugeTest extends FunSuite {
 
-  class TestGauge extends CumulativeGauge(MoreExecutors.directExecutor()) {
+  class TestGauge extends CumulativeGauge(MoreExecutors.sameThreadExecutor()) {
     val numRegisters = new AtomicInteger()
     val numDeregisters = new AtomicInteger()
 
