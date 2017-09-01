@@ -54,6 +54,9 @@ val sharedSettings = Seq(
   javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),
   javacOptions in doc := Seq("-source", "1.8"),
 
+  fork in Test := true,
+  javaOptions in Test := Seq("-DSKIP_FLAKY=true"),
+
   // This is bad news for things like com.twitter.util.Time
   parallelExecution in Test := false,
 
