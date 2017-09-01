@@ -57,9 +57,6 @@ val sharedSettings = Seq(
   // -a: print stack traces for failing asserts
   testOptions += Tests.Argument(TestFrameworks.JUnit, "-a"),
 
-  fork in Test := true,
-  javaOptions in Test := Seq("-DSKIP_FLAKY=true"),
-
   // This is bad news for things like com.twitter.util.Time
   parallelExecution in Test := false,
 
