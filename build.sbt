@@ -54,6 +54,9 @@ val sharedSettings = Seq(
   javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),
   javacOptions in doc := Seq("-source", "1.8"),
 
+  // -a: print stack traces for failing asserts
+  testOptions += Tests.Argument(TestFrameworks.JUnit, "-a"),
+
   fork in Test := true,
   javaOptions in Test := Seq("-DSKIP_FLAKY=true"),
 

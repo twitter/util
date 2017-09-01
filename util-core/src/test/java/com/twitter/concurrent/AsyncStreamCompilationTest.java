@@ -1,16 +1,18 @@
 package com.twitter.concurrent;
 
-import com.twitter.util.Await;
-import com.twitter.util.Function;
-import com.twitter.util.Function0;
+import org.junit.Assert;
 import org.junit.Test;
+
+import com.twitter.util.Await;
+import com.twitter.util.Function0;
+import com.twitter.util.Function;
 
 public class AsyncStreamCompilationTest {
   @Test
   public void testErgo() throws Exception {
     final AsyncStream<Integer> a = AsyncStream.<Integer>empty();
     Boolean emptyA = (Boolean) Await.result(a.isEmpty());
-    assert(emptyA);
+    Assert.assertTrue(emptyA);
 
     final AsyncStream<Integer> b = AsyncStream.<Integer>mk(
       1,
@@ -23,16 +25,17 @@ public class AsyncStreamCompilationTest {
     );
 
     Boolean emptyB = (Boolean) Await.result(b.isEmpty());
-    assert(!emptyB);
+    Assert.assertFalse(emptyB);
 
-    b.map(new Function<Integer, Integer>() {
-      @Override
-      public Integer apply(Integer i) {
-        return i + 1;
-      }
-    });
+    final AsyncStream<Integer> plusOne =
+      b.map(new Function<Integer, Integer>() {
+        @Override
+        public Integer apply(Integer i) {
+          return i + 1;
+        }
+      });
 
-    assert(Await.result(b.head()).get() == 2);
+    Assert.assertTrue(Await.result(plusOne.head()).get() == 2);
 
     AsyncStream<Integer> c = b.concat(
       new Function0<AsyncStream<Integer>>() {
