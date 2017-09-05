@@ -402,8 +402,15 @@ object Logger extends Iterable[Logger] {
   /** An alias for `get(name)` */
   def apply(name: String) = get(name)
 
-  private def get(depth: Int): Logger =
-    getForClassName(new Throwable().getStackTrace()(depth).getClassName)
+  private def get(depth: Int): Logger = {
+    val st = new Throwable().getStackTrace
+    if (st.length >= depth) {
+      getForClassName(st(depth).getClassName)
+    } else {
+      // Seems like there is no stack trace in throwable, possibly the JVM is running with `-XX:-StackTraceInThrowable` option
+      getForClassName("stackTraceIsAbsent")
+    }
+  }
 
   /**
    * Return a logger for the class name of the class/object that called
