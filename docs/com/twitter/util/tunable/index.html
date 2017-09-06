@@ -125,24 +125,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
-    </li><li name="com.twitter.util.events" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="events"></a><a id="events:events"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#events" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">package</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="../events/index.html">
-              <span class="name">events</span>
-            </a>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
     </li><li name="com.twitter.util.javainterop" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="javainterop"></a><a id="javainterop:javainterop"></a>
       <span class="permalink">
@@ -303,7 +285,39 @@
       </span>
       
       
-    </li>
+    </li><li class="current-entities indented4">
+                        <a class="object" href="JsonTunableMapper$.html" title=""></a>
+                        <a class="class" href="JsonTunableMapper.html" title="Parses a given JSON string into a TunableMap."></a>
+                        <a href="JsonTunableMapper.html" title="Parses a given JSON string into a TunableMap.">
+                          JsonTunableMapper
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="NullTunableMap$.html" title="A TunableMap that returns a Tunable.none for every TunableMap.Key
+"></a>
+                        <a href="NullTunableMap$.html" title="A TunableMap that returns a Tunable.none for every TunableMap.Key
+">
+                          NullTunableMap
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="ServiceLoadedTunableMap$.html" title=""></a>
+                        <a class="trait" href="ServiceLoadedTunableMap.html" title="TunableMap loaded through com.twitter.app.LoadService."></a>
+                        <a href="ServiceLoadedTunableMap.html" title="TunableMap loaded through com.twitter.app.LoadService.">
+                          ServiceLoadedTunableMap
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="Tunable$.html" title=""></a>
+                        <a class="class" href="Tunable.html" title="A Tunable is an abstraction for an object that produces a Some(value) or None when applied."></a>
+                        <a href="Tunable.html" title="A Tunable is an abstraction for an object that produces a Some(value) or None when applied.">
+                          Tunable
+                        </a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="TunableMap$.html" title=""></a>
+                        <a class="class" href="TunableMap.html" title="A Map that can be used to access Tunables using TunableMap.Keys."></a>
+                        <a href="TunableMap.html" title="A Map that can be used to access Tunables using TunableMap.Keys.">
+                          TunableMap
+                        </a>
+                      </li>
               </ul>
             </div>
           </div>
@@ -334,17 +348,234 @@
           <div id="comment" class="fullcommenttop"></div>
         
 
-      
+      <div id="mbrsel">
+        <div class="toggle"></div>
+        <div id="memberfilter">
+          <i class="material-icons arrow"></i>
+          <span class="input">
+            <input id="mbrsel-input" placeholder="Filter all members" type="text" accesskey="/" />
+          </span>
+          <i class="clear material-icons"></i>
+        </div>
+        <div id="filterby">
+          <div id="order">
+            <span class="filtertype">Ordering</span>
+            <ol>
+              
+              <li class="alpha in"><span>Alphabetic</span></li>
+              
+            </ol>
+          </div>
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+      </div>
 
       <div id="template">
         <div id="allMembers">
         
 
-        
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.twitter.util.tunable.JsonTunableMapper" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="JsonTunableMapperextendsAnyRef"></a><a id="JsonTunableMapper:JsonTunableMapper"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#JsonTunableMapperextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="Parses a given JSON string into a TunableMap." href="JsonTunableMapper.html">
+              <span class="name">JsonTunableMapper</span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. The expected format is:</p><p>{
+   &quot;tunables&quot;:
+     [
+        {
+          &quot;id&quot; : &quot;$id1&quot;,
+          &quot;value&quot; : $value,
+          &quot;type&quot; : &quot;$class&quot;
+        },
+        {
+          &quot;id&quot; : &quot;$id2&quot;,
+          &quot;value&quot; : $value,
+          &quot;type&quot; : &quot;$class&quot;
+        }
+    ]
+}</p><p>Where $id1 and $id2 are unique identifiers used to access the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>, $value is the value,
+and $class is the fully-qualified class name (e.g. com.twitter.util.Duration)</p><p>If the JSON is invalid, or contains duplicate ids for <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>s, <code>parse</code> will
+return a <a href="../Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a>. Otherwise, <code>parse</code> returns <span class="extype" name="Return[TunableMap">Return[TunableMap</span>
+</p></div></div>
+    </li><li name="com.twitter.util.tunable.ServiceLoadedTunableMap" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ServiceLoadedTunableMapextendsTunableMap"></a><a id="ServiceLoadedTunableMap:ServiceLoadedTunableMap"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#ServiceLoadedTunableMapextendsTunableMap" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="TunableMap loaded through com.twitter.app.LoadService." href="ServiceLoadedTunableMap.html">
+              <span class="name">ServiceLoadedTunableMap</span>
+            </a><span class="result"> extends <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a></span>
+      </span>
+      
+      <p class="shortcomment cmt"><a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a> loaded through <code>com.twitter.app.LoadService</code>.</p>
+    </li><li name="com.twitter.util.tunable.Tunable" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Tunable[T]extendsAnyRef"></a><a id="Tunable[T]:Tunable[T]"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#Tunable[T]extendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">sealed abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A Tunable is an abstraction for an object that produces a Some(value) or None when applied." href="Tunable.html">
+              <span class="name">Tunable</span>
+            </a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a> is an abstraction for an object that produces a Some(value) or None when applied.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a> is an abstraction for an object that produces a Some(value) or None when applied.
+Implementations may enable mutation, such that successive applications of the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>
+produce different values.</p><p>For more information about Tunables, see
+<a href="https://twitter.github.io/finagle/guide/Configuration.html#tunables" target="_blank">https://twitter.github.io/finagle/guide/Configuration.html#tunables</a>
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>type of value this <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a> holds</p></dd></dl></div>
+    </li><li name="com.twitter.util.tunable.TunableMap" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TunableMapextendsAnyRef"></a><a id="TunableMap:TunableMap"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#TunableMapextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A Map that can be used to access Tunables using TunableMap.Keys." href="TunableMap.html">
+              <span class="name">TunableMap</span>
+            </a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A Map that can be used to access <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>s using <a href="TunableMap$$Key.html" class="extype" name="com.twitter.util.tunable.TunableMap.Key">TunableMap.Key</a>s.</p>
+    </li></ol>
+            </div>
 
         
 
-        
+        <div class="values members">
+              <h3>Value Members</h3>
+              <ol>
+                <li name="com.twitter.util.tunable.JsonTunableMapper" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JsonTunableMapper"></a><a id="JsonTunableMapper:JsonTunableMapper"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#JsonTunableMapper" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="JsonTunableMapper$.html">
+              <span class="name">JsonTunableMapper</span>
+            </a>
+      </span>
+      
+      
+    </li><li name="com.twitter.util.tunable.NullTunableMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NullTunableMap"></a><a id="NullTunableMap:NullTunableMap"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#NullTunableMap" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="A TunableMap that returns a Tunable.none for every TunableMap.Key
+" href="NullTunableMap$.html">
+              <span class="name">NullTunableMap</span>
+            </a><span class="result"> extends <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a> that returns a <a href="Tunable$.html#none[T]:com.twitter.util.tunable.Tunable[T]" class="extmbr" name="com.twitter.util.tunable.Tunable#none">Tunable.none</a> for every <a href="TunableMap$$Key.html" class="extype" name="com.twitter.util.tunable.TunableMap.Key">TunableMap.Key</a>
+</p>
+    </li><li name="com.twitter.util.tunable.ServiceLoadedTunableMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ServiceLoadedTunableMap"></a><a id="ServiceLoadedTunableMap:ServiceLoadedTunableMap"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#ServiceLoadedTunableMap" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ServiceLoadedTunableMap$.html">
+              <span class="name">ServiceLoadedTunableMap</span>
+            </a>
+      </span>
+      
+      
+    </li><li name="com.twitter.util.tunable.Tunable" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Tunable"></a><a id="Tunable:Tunable"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#Tunable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Tunable$.html">
+              <span class="name">Tunable</span>
+            </a>
+      </span>
+      
+      
+    </li><li name="com.twitter.util.tunable.TunableMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TunableMap"></a><a id="TunableMap:TunableMap"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/tunable/index.html#TunableMap" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="TunableMap$.html">
+              <span class="name">TunableMap</span>
+            </a>
+      </span>
+      
+      
+    </li>
+              </ol>
+            </div>
 
         
 

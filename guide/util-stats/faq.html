@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>FAQ &#8212; Util 7.0.0 documentation</title>
+    <title>FAQ &#8212; Util 7.1.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '7.0.0',
+        VERSION:     '7.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 7.0.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 7.1.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
-    <link rel="next" title="Filter Stats" href="filter_stats.html" />
+    <link rel="next" title="Util Cookbook" href="../util-cookbook/index.html" />
     <link rel="prev" title="User Guide" href="user_guide.html" />
    
   
@@ -56,7 +56,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="filter_stats.html" title="Filter Stats"
+          <a href="../util-cookbook/index.html" title="Util Cookbook"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="user_guide.html" title="User Guide"
@@ -92,6 +92,15 @@ Code initially was written directly to the implementations and there were
 two implementations. <cite>finagle-stats</cite> was written quite a bit later in order to
 improve upon both of these implementations in terms of
 allocation efficiency and histogram precision.</p>
+</div>
+<div class="section" id="why-is-nullstatsreceiver-being-used">
+<h2>Why is <cite>NullStatsReceiver</cite> being used?<a class="headerlink" href="#why-is-nullstatsreceiver-being-used" title="Permalink to this headline">¶</a></h2>
+<p><cite>NullStatsReceiver</cite> is used when no metrics implementation is found on the classpath.
+The section on <a class="reference internal" href="user_guide.html#choosing-impl"><span class="std std-ref">choosing the stats implementation</span></a> covers how to
+pick an implementation for your application. Twitter runs its production
+services with <cite>finagle-stats</cite> and it is available on
+<a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">Github</a>
+and <a class="reference external" href="https://search.maven.org/#search%7Cga%7C1%7Cfinagle-stats">Maven Central</a>.</p>
 </div>
 <div class="section" id="why-migrate-to-finagle-stats">
 <h2>Why migrate to finagle-stats?<a class="headerlink" href="#why-migrate-to-finagle-stats" title="Permalink to this headline">¶</a></h2>
@@ -153,6 +162,7 @@ illustrates the advantages of <cite>finagle-stats</cite> over the older librarie
 <li><a class="reference internal" href="#">FAQ</a><ul>
 <li><a class="reference internal" href="#why-are-util-stats-in-the-com-twitter-finagle-stats-package">Why are util-stats in the com.twitter.finagle.stats package?</a></li>
 <li><a class="reference internal" href="#why-were-there-three-different-implementations">Why were there three(!) different implementations?</a></li>
+<li><a class="reference internal" href="#why-is-nullstatsreceiver-being-used">Why is <cite>NullStatsReceiver</cite> being used?</a></li>
 <li><a class="reference internal" href="#why-migrate-to-finagle-stats">Why migrate to finagle-stats?</a></li>
 </ul>
 </li>
@@ -162,7 +172,7 @@ illustrates the advantages of <cite>finagle-stats</cite> over the older librarie
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">util-stats Guide</a><ul>
       <li>Previous: <a href="user_guide.html" title="previous chapter">User Guide</a></li>
-      <li>Next: <a href="filter_stats.html" title="next chapter">Filter Stats</a></li>
+      <li>Next: <a href="../util-cookbook/index.html" title="next chapter">Util Cookbook</a></li>
   </ul></li>
   </ul></li>
 </ul>

@@ -15,7 +15,6 @@ you get counters, gauges (value at a point in time) and stats (histograms).
    basics
    user_guide
    faq
-   filter_stats
 
 Contact
 -------

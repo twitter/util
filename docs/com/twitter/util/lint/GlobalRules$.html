@@ -406,7 +406,7 @@ whether or not there are any issues.">
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.lint.GlobalRules#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.lint.GlobalRules#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="get:com.twitter.util.lint.Rules"></a><a id="get:Rules"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/lint/GlobalRules$.html#get:com.twitter.util.lint.Rules" title="Permalink">
@@ -421,7 +421,9 @@ whether or not there are any issues.">
         <span class="name">get</span><span class="result">: <a href="Rules.html" class="extype" name="com.twitter.util.lint.Rules">Rules</a></span>
       </span>
       
-      <p class="shortcomment cmt">Gets the global <a href="Rules.html" class="extype" name="com.twitter.util.lint.Rules">Rules</a> implementation.</p>
+      <p class="shortcomment cmt">Gets the global <a href="Rules.html" class="extype" name="com.twitter.util.lint.Rules">Rules</a> implementation.</p><div class="fullcomment"><div class="comment cmt"><p>Gets the global <a href="Rules.html" class="extype" name="com.twitter.util.lint.Rules">Rules</a> implementation.</p><p>If it's call inside of a <code>withRules</code> context then it's a temporary
+rule set, useful for writing isolated tests.
+</p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -616,6 +618,25 @@ whether or not there are any issues.">
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.lint.GlobalRules#withRules" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withRules[A](replacement:com.twitter.util.lint.Rules)(fn:=&gt;A):A"></a><a id="withRules[A](Rules)(⇒A):A"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/lint/GlobalRules$.html#withRules[A](replacement:com.twitter.util.lint.Rules)(fn:=&gt;A):A" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withRules</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="replacement">replacement: <a href="Rules.html" class="extype" name="com.twitter.util.lint.Rules">Rules</a></span>)</span><span class="params">(<span name="fn">fn: ⇒ <span class="extype" name="com.twitter.util.lint.GlobalRules.withRules.A">A</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.lint.GlobalRules.withRules.A">A</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Changes the global rule set to instead return a local one.</p><div class="fullcomment"><div class="comment cmt"><p>Changes the global rule set to instead return a local one.</p><p>Takes the rules context with it when moved to a different thread via
+Twitter concurrency primitives, like <code>flatMap</code> on a
+<a href="../Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>.
+</p></div></div>
     </li>
               </ol>
             </div>

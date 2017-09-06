@@ -525,10 +525,7 @@ be a part of this measurement: thus, it needs to be retained by the
 caller. Or put another way, the measurement is only guaranteed to exist
 as long as there exists a strong reference to the returned
 <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> and typically should be stored in a member variable.</p><p>Measurements under the same name are added together.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@varargs</span><span class="args">()</span>
-              
-        </dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html" target="_blank">java.lang.ref.WeakReference</a></p></span><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html" target="_blank">java.lang.ref.WeakReference</a></p></span><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
     to store the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> that can give the desired lifecycle.</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
