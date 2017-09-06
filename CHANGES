@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Next Version
 
+7.1.0  2017-09-06
+
 API Changes:
 
   * util-events: Module has been removed. ``PHAB_ID=D82346``
