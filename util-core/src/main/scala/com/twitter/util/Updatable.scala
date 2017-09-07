@@ -1,7 +1,7 @@
 package com.twitter.util
 
 /** Denotes an updatable container. */
-trait Updatable[T] {
+trait Updatable[-T] {
 
   /** Update the container with value `t` */
   def update(t: T): Unit
@@ -10,9 +10,14 @@ trait Updatable[T] {
 object Updatable {
 
   /**
-   * Construct an Updatable that discards the update.
+   * Singleton instance of an Updatable which discards any updates.
    */
-  def empty[A](): Updatable[A] = new Updatable[A] {
-    def update(result: A) = ()
+  val Empty: Updatable[Any] = new Updatable[Any] {
+    def update(result: Any): Unit = ()
   }
+
+  /**
+   * Returns an Updatable that discards any updates.
+   */
+  def empty[A](): Updatable[A] = Empty
 }
