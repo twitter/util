@@ -1738,8 +1738,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
     "Be interruptible" in {
       implicit val timer = new MockTimer
 
-      // sleep forever and grab the task that's created
-      val f = Future.sleep(Duration.Top)(timer)
+      // sleep and grab the task that's created
+      val f = Future.sleep(1.second)(timer)
       val task = timer.tasks(0)
       // then raise a known exception
       val e = new Exception("expected")
@@ -1754,6 +1754,12 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
       implicit val timer = new MockTimer
       assert(Future.sleep(Duration.Zero) eq Future.Done)
       assert(Future.sleep((-10).seconds) eq Future.Done)
+      assert(timer.tasks.isEmpty)
+    }
+
+    "Return Future.never for Duration.Top" in {
+      implicit val timer = new MockTimer
+      assert(Future.sleep(Duration.Top) eq Future.never)
       assert(timer.tasks.isEmpty)
     }
   }
