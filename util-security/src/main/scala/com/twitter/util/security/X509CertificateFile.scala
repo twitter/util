@@ -18,13 +18,15 @@ import java.security.cert.{CertificateFactory, X509Certificate}
 class X509CertificateFile(file: File) {
 
   private[this] def logException(ex: Throwable): Unit =
-    log.warning(s"X509Certificate (${file.getName()}) failed to load: ${ex.getMessage()}.")
+    log.warning(s"X509Certificate (${file.getName}) failed to load: ${ex.getMessage}.")
 
   private[this] def generateX509Certificate(decodedMessage: Array[Byte]): X509Certificate = {
     val certFactory = CertificateFactory.getInstance("X.509")
-    certFactory
+    val certificate = certFactory
       .generateCertificate(new ByteArrayInputStream(decodedMessage))
       .asInstanceOf[X509Certificate]
+    certificate.checkValidity()
+    certificate
   }
 
   /**

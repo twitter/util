@@ -12,7 +12,7 @@ import org.scalatest.junit.JUnitRunner
 class X509CertificateFileTest extends FunSuite {
 
   private[this] def assertIsCslCert(cert: X509Certificate): Unit = {
-    val subjectData: String = cert.getSubjectX500Principal().getName()
+    val subjectData: String = cert.getSubjectX500Principal.getName()
     assert(subjectData.contains("Core Systems Libraries"))
   }
 
@@ -56,7 +56,7 @@ class X509CertificateFileTest extends FunSuite {
     val certFile = new X509CertificateFile(tempFile)
     val tryCert = certFile.readX509Certificate()
 
-    assertLogMessage(handler.get, tempFile.getName(), "Incomplete BER/DER data.")
+    assertLogMessage(handler.get, tempFile.getName, "Incomplete BER/DER data.")
     assertCertException(tryCert)
   }
 
@@ -85,11 +85,29 @@ class X509CertificateFileTest extends FunSuite {
 
     assert(certs.length == 2)
 
-    val intermediate = certs(0)
+    val intermediate = certs.head
     assertIsCslCert(intermediate)
 
     val root = certs(1)
     assertIsCslCert(root)
+  }
+
+  test("X509 Certificate File is not valid: expired") {
+    val tempFile = TempFile.fromResourcePath("/certs/test-rsa-expired.crt")
+    // deleteOnExit is handled by TempFile
+
+    intercept[java.security.cert.CertificateExpiredException] {
+      readCertFromFile(tempFile).get()
+    }
+  }
+
+  test("X509 Certificate File is not valid: not yet ready") {
+    val tempFile = TempFile.fromResourcePath("/certs/test-rsa-future.crt")
+    // deleteOnExit is handled by TempFile
+
+    intercept[java.security.cert.CertificateNotYetValidException] {
+      readCertFromFile(tempFile).get()
+    }
   }
 
 }
