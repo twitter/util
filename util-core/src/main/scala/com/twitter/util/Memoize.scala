@@ -67,6 +67,11 @@ object Memoize {
   def apply[A, B](f: A => B): A => B = snappable[A, B](f)
 
   /**
+   * Thread-safe memoization for a Function2.
+   */
+  def function2[A, B, C](f: (A, B) => C): (A, B) => C = scala.Function.untupled(apply(f.tupled))
+
+  /**
    * Produces [[com.twitter.util.Memoize.Snappable]], thread-safe
    * memoization for a function.
    */

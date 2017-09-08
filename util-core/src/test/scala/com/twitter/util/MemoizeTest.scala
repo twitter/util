@@ -28,6 +28,24 @@ class MemoizeTest extends FunSuite {
     verify(adder, times(1))(2)
   }
 
+  test("Memoize.function2: only runs the function once for the same input") {
+    // mockito can't spy anonymous classes,
+    // and this was the simplest approach i could come up with.
+    class Adder extends ((Int, Int) => Int) {
+      def apply(i: Int, j: Int) = i + j
+    }
+
+    val adder = spy(new Adder)
+    val memoizer = Memoize.function2(adder.apply)
+
+    assert(2 == memoizer(1, 1))
+    assert(2 == memoizer(1, 1))
+    assert(3 == memoizer(2, 1))
+
+    verify(adder, times(1))(1, 1)
+    verify(adder, times(1))(2, 1)
+  }
+
   test("Memoize.apply: only executes the memoized computation once per input") {
     val callCount = new AtomicInteger(0)
 
