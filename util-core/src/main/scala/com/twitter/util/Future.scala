@@ -140,6 +140,7 @@ object Future {
    */
   def sleep(howlong: Duration)(implicit timer: Timer): Future[Unit] =
     if (howlong <= Duration.Zero) Future.Done
+    else if (howlong == Duration.Top) Future.never
     else
       new Promise[Unit] with Promise.InterruptHandler with (() => Unit) {
         private[this] val task = timer.schedule(howlong.fromNow)(this())
