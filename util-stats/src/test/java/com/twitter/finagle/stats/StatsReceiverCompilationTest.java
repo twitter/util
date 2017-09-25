@@ -80,6 +80,11 @@ public final class StatsReceiverCompilationTest {
     StatsReceiver sr = new AbstractStatsReceiver() {
 
       @Override
+      public Stat stat(Verbosity verbosity, String... name) {
+        return nullSr.stat(verbosity, name);
+      }
+
+      @Override
       public Object repr() {
         return this;
       }
@@ -101,7 +106,7 @@ public final class StatsReceiverCompilationTest {
 
       @Override
       public Gauge addGauge(Verbosity verbosity, Seq<String> name, Function0<Object> f) {
-        return nullSr.addGauge(name, f);
+        return nullSr.addGauge(verbosity, name, f);
       }
     };
   }
