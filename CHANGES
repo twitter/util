@@ -6,6 +6,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Next Version
 
+API Changes:
+
+  * util-app: c.t.app.Flag.let and letClear are now generic in their return type.
+    ``PHAB_ID=D93951``
+
 Runtime Behavior Changes:
 
   * util-security: Assert validity of X.509 certificates when read from a file.

@@ -1,11 +1,8 @@
 package com.twitter.app
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import scala.collection.mutable.Buffer
 
-@RunWith(classOf[JUnitRunner])
 class FlagTest extends FunSuite {
 
   class Ctx(failFastUntilParsed: Boolean = false) {
@@ -77,6 +74,15 @@ class FlagTest extends FunSuite {
     assert(buf == Seq(1, 2, 3))
   }
 
+  test("Flag: let return values reflect bindings") {
+    def current: Boolean = MyGlobalBooleanFlag()
+
+    val res1 = MyGlobalBooleanFlag.let(true) { current.toString }
+    assert(res1 == "true")
+    val res2 = MyGlobalBooleanFlag.let(false) { current.toString }
+    assert(res2 == "false")
+  }
+
   test("Flag: letClear") {
     // track the order the blocks execute and that they only execute once
     var buf = Buffer[Int]()
@@ -93,6 +99,17 @@ class FlagTest extends FunSuite {
     }
 
     assert(buf == Seq(1, 2, 3))
+  }
+
+  test("Flag: letClear return values reflect bindings") {
+    def current: Boolean = MyGlobalBooleanFlag()
+
+    MyGlobalBooleanFlag.let(true) {
+      val res1 = current
+      val res2 = MyGlobalBooleanFlag.letClear { current }
+      assert(res1)
+      assert(!res2)
+    }
   }
 
   class Dctx extends Ctx {

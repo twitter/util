@@ -149,7 +149,7 @@ class Flag[T: Flaggable] private[app] (
    *
    * @see [[letClear]]
    */
-  def let(t: T)(f: => Unit): Unit =
+  def let[R](t: T)(f: => R): R =
     let(Some(t), f)
 
   /**
@@ -159,10 +159,10 @@ class Flag[T: Flaggable] private[app] (
    *
    * @see [[let]]
    */
-  def letClear(f: => Unit): Unit =
+  def letClear[R](f: => R): R =
     let(None, f)
 
-  private[this] def let(t: Option[T], f: => Unit): Unit = {
+  private[this] def let[R](t: Option[T], f: => R): R = {
     val prev = localValue
     setLocalValue(t)
     try f
