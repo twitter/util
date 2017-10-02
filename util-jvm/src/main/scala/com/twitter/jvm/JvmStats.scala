@@ -78,7 +78,6 @@ object JvmStats {
       if (pool.getCollectionUsage != null) {
         def usage = pool.getCollectionUsage // this is a snapshot, we can't reuse the value
         gauges.add(postGCStats.addGauge(name, "used") { usage.getUsed })
-        gauges.add(postGCStats.addGauge(name, "max") { usage.getMax })
       }
       if (pool.getUsage != null) {
         def usage = pool.getUsage // this is a snapshot, we can't reuse the value

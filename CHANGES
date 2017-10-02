@@ -13,6 +13,10 @@ API Changes:
 
 Runtime Behavior Changes:
 
+  * util-jvm: The `jvm/mem/postGC/{poolName}/max` metric has been removed
+    because it is the same as the `jvm/mem/current/{poolName}/max` metric.
+    ``PHAB_ID=D95291``
+
   * util-security: Assert validity of X.509 certificates when read from a file.
     Attempting to read a `c.t.util.security.X509CeritificateFile` will now assert
     that the certificate is valid, i.e., if the current date and time are within
