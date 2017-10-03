@@ -1,8 +1,8 @@
 package com.twitter.concurrent
 
-import scala.util.Random
-
 import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
+import com.twitter.util.Return
+import scala.util.Random
 
 /**
  * An offer to communicate with another process. The offer is
@@ -48,8 +48,8 @@ trait Offer[+T] { self =>
    * of the synchronization.
    */
   def sync(): Future[T] =
-    prepare() flatMap { tx =>
-      tx.ack() flatMap {
+    prepare().flatMap { tx =>
+      tx.ack().flatMap {
         case Tx.Commit(v) => Future.value(v)
         case Tx.Abort => sync()
       }
@@ -69,15 +69,15 @@ trait Offer[+T] { self =>
    * successfully synchronized.
    */
   def map[U](f: T => U): Offer[U] = new Offer[U] {
-    def prepare() = self.prepare() map { tx =>
+    def prepare(): Future[Tx[U]] = self.prepare().map { tx =>
       new Tx[U] {
         import Tx.{Commit, Abort}
-        def ack() = tx.ack() map {
+        def ack(): Future[Tx.Result[U]] = tx.ack().map {
           case Commit(t) => Commit(f(t))
           case Abort => Abort
         }
 
-        def nack() { tx.nack() }
+        def nack(): Unit = tx.nack()
       }
     }
   }
@@ -115,11 +115,11 @@ trait Offer[+T] { self =>
    * }}}
    */
   def orElse[U >: T](other: Offer[U]): Offer[U] = new Offer[U] {
-    def prepare() = {
+    def prepare(): Future[Tx[U]] = {
       val ourTx = self.prepare()
       if (ourTx.isDefined) ourTx
       else {
-        ourTx foreach { tx =>
+        ourTx.foreach { tx =>
           tx.nack()
         }
         ourTx.raise(LostSynchronization)
@@ -137,7 +137,7 @@ trait Offer[+T] { self =>
    * this to enumerate over all received values.
    */
   def foreach(f: T => Unit) {
-    sync() foreach { v =>
+    sync().foreach { v =>
       f(v)
       foreach(f)
     }
@@ -148,8 +148,9 @@ trait Offer[+T] { self =>
    * closure.  Convenient for loops.
    */
   def andThen(f: => Unit) {
-    sync() onSuccess { _ =>
-      f
+    sync().respond {
+      case Return(_) => f
+      case _ =>
     }
   }
 
@@ -164,12 +165,12 @@ trait Offer[+T] { self =>
   /**
    * Alias for synchronize.
    */
-  def ? = sync()
+  def ? : Future[T] = sync()
 
   /**
    * Synchronize, blocking for the result.
    */
-  def ?? = syncWait()
+  def ?? : T = syncWait()
 }
 
 /**
@@ -189,14 +190,14 @@ object Offer {
    * Note: Updates here must also be done at [[com.twitter.concurrent.Offers.newConstOffer()]].
    */
   def const[T](x: => T): Offer[T] = new Offer[T] {
-    def prepare() = Future.value(Tx.const(x))
+    def prepare(): Future[Tx[T]] = Future.value(Tx.const(x))
   }
 
   /**
    * An offer that never synchronizes.
    */
   val never: Offer[Nothing] = new Offer[Nothing] {
-    def prepare() = Future.never
+    def prepare(): Future[Tx[Nothing]] = Future.never
   }
 
   private[this] val rng = Some(new Random(Time.now.inNanoseconds))
@@ -263,8 +264,10 @@ object Offer {
             while (j < prepd.length) {
               val loser = prepd(j)
               if (loser ne winner) {
-                loser onSuccess { tx =>
-                  tx.nack()
+                loser.respond {
+                  case Return(tx) =>
+                    tx.nack()
+                  case _ =>
                 }
                 loser.raise(LostSynchronization)
               }
@@ -297,7 +300,7 @@ object Offer {
   def timeout(timeout: Duration)(implicit timer: Timer): Offer[Unit] = new Offer[Unit] {
     private[this] val deadline = timeout.fromNow
 
-    def prepare() = {
+    def prepare(): Future[Tx[Unit]] = {
       if (deadline <= Time.now) FutureTxUnit
       else {
         val p = new Promise[Tx[Unit]]

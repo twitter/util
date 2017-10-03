@@ -1,10 +1,9 @@
 package com.twitter.zk
 
-import org.apache.zookeeper.ZooKeeper
-
 import com.twitter.concurrent.{Broker, Offer, Serialized}
 import com.twitter.logging.Logger
 import com.twitter.util.{Await, Duration, Future, Promise, Return, TimeoutException, Timer}
+import org.apache.zookeeper.ZooKeeper
 
 /**
  * An Asynchronous ZooKeeper Client.
@@ -47,7 +46,7 @@ case class NativeConnector(
    * Get the connection if one already exists or obtain a new one.
    * If the connection is not received within connectTimeout, the connection is released.
    */
-  def apply() =
+  def apply(): Future[ZooKeeper] =
     serialized {
       connection getOrElse {
         val c = mkConnection
@@ -68,14 +67,13 @@ case class NativeConnector(
   /**
    * If there is a connection, release it.
    */
-  def release() =
+  def release(): Future[Unit] =
     serialized {
       connection match {
         case None => Future.Unit
-        case Some(c) => {
+        case Some(c) =>
           connection = None
           c.release()
-        }
       }
     }.flatten
 }
@@ -125,12 +123,12 @@ object NativeConnector {
     protected[this] val connectPromise = new Promise[ZooKeeper]
 
     /** A ZooKeeper handle that will error if connectTimeout is specified and exceeded. */
-    lazy val connected: Future[ZooKeeper] = connectTimeout map { timeout =>
-      connectPromise within (timer, timeout) rescue {
+    lazy val connected: Future[ZooKeeper] = connectTimeout.map { timeout =>
+      connectPromise.within(timer, timeout).rescue {
         case _: TimeoutException =>
           Future.exception(ConnectTimeoutException(connectString, timeout))
       }
-    } getOrElse (connectPromise)
+    }.getOrElse(connectPromise)
 
     protected[this] val releasePromise = new Promise[Unit]
     val released: Future[Unit] = releasePromise
@@ -144,17 +142,21 @@ object NativeConnector {
     val sessionEvents: Offer[StateEvent] = {
       val broker = new Broker[StateEvent]
       def loop() {
-        sessionBroker.recv sync () map { StateEvent(_) } onSuccess {
-          case StateEvent.Connected =>
-            zookeeper foreach { zk =>
-              connectPromise.updateIfEmpty(Return(zk))
-              authenticate foreach { auth =>
-                log.info("Authenticating to zk as %s".format(new String(auth.data, "UTF-8")))
-                zk.addAuthInfo(auth.mode, auth.data)
+        sessionBroker.recv.sync()
+          .map { StateEvent(_) }
+          .respond {
+            case Return(StateEvent.Connected) =>
+              zookeeper.foreach { zk =>
+                connectPromise.updateIfEmpty(Return(zk))
+                authenticate.foreach { auth =>
+                  log.info("Authenticating to zk as %s".format(new String(auth.data, "UTF-8")))
+                  zk.addAuthInfo(auth.mode, auth.data)
+                }
               }
-            }
-          case _ =>
-        } flatMap { broker.send(_).sync() } ensure loop()
+            case _ =>
+          }
+          .flatMap { broker.send(_).sync() }
+          .ensure { loop() }
       }
       loop()
       broker.recv
@@ -168,7 +170,7 @@ object NativeConnector {
      */
     def apply(): Future[ZooKeeper] = {
       assert(!releasePromise.isDefined)
-      zookeeper = zookeeper orElse Some { mkZooKeeper }
+      zookeeper = zookeeper.orElse { Some { mkZooKeeper } }
       connected
     }
 
