@@ -17,6 +17,4 @@ junit_tests(
   # for this target, we could try enabling this again.
   fatal_warnings=False,
   sources=rglobs('*.scala'),
-  strict_deps=True,
-
 )

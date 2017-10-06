@@ -11,7 +11,6 @@ scala_library(name='scala',
     'util/util-app/src/main/scala',
     'util/util-core/src/main/scala:scala',
   ],
-  strict_deps=True,
   fatal_warnings=True,
   sources=rglobs('*.scala', exclude=[rglobs('util/tunable/linter/*')]),
   exports=[

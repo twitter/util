@@ -9,7 +9,6 @@ scala_library(
     'util/util-tunable/src/main/scala:scala',
   ],
   sources=rglobs('*.scala'),
-  strict_deps=True,
 )
 
 jvm_binary(

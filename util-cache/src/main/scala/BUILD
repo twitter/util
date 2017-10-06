@@ -1,6 +1,5 @@
 scala_library(
   fatal_warnings=True,
-  strict_deps=True,
   sources=rglobs('*.scala'),
   dependencies=[
     '3rdparty/jvm/com/github/ben-manes/caffeine',

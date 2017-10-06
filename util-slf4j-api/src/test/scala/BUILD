@@ -10,6 +10,4 @@ junit_tests(
   ],
   fatal_warnings=True,
   sources=rglobs('*.scala', '*.java'),
-  strict_deps=True,
-
 )

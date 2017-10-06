@@ -5,7 +5,6 @@ scala_library(
     repo = artifactory,
   ),
   fatal_warnings = True,
-  strict_deps = True,
   dependencies = [
     'util/util-core/src/main/scala:scala',
     'util/util-logging',
