@@ -17,6 +17,5 @@ jvm_binary(
   dependencies=[
     ':scala',
   ],
-  strict_deps=True,
   fatal_warnings=True,
 )

@@ -11,6 +11,4 @@ junit_tests(
   ],
   fatal_warnings=True,
   sources=rglobs('*.java'),
-  strict_deps=True,
-
 )
