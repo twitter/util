@@ -17,12 +17,9 @@
 package com.twitter.logging
 
 import com.twitter.app.App
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterEach, BeforeAndAfterAll, FunSuite}
 
-@RunWith(classOf[JUnitRunner])
-class AppTest extends FunSuite with BeforeAndAfterEach with BeforeAndAfterAll {
+class LoggingTest extends FunSuite with BeforeAndAfterEach with BeforeAndAfterAll {
   // ensure this is initialized--we need to do something with it or scala
   // complains about purity
   require(ScribeHandler.log != null)
