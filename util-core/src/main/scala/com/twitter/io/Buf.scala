@@ -194,7 +194,7 @@ abstract class Buf { outer =>
 
   /** Helps implementations of [[slice]]. */
   protected[this] def isSliceEmpty(from: Int, until: Int): Boolean =
-    until <= from || from >= length
+    Buf.isSliceEmpty(from, until, length)
 
   /** Helps implementations of [[slice]]. */
   protected[this] def isSliceIdentity(from: Int, until: Int): Boolean =
@@ -309,6 +309,10 @@ object Buf {
     if (until < 0)
       throw new IllegalArgumentException(s"'until' must be non-negative: $until")
   }
+
+  // Helper for determining if a given slice is empty
+  private def isSliceEmpty(from: Int, until: Int, underlyingLength: Int): Boolean =
+    until <= from || from >= underlyingLength
 
   /**
    * A `Buf` which is composed of other `Bufs`.
@@ -667,12 +671,15 @@ object Buf {
     object Owned {
 
       /**
-       * Construct a buffer representing the provided array of bytes
-       * at the given offsets.
+       * Construct a buffer representing the provided array of bytes, delimited
+       * by the indices `from` inclusive and `until` exclusive: `[begin, end)`.
+       * Out of bounds indices are truncated. Negative indices are not accepted.
        */
-      def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
-        if (begin == end) Buf.Empty
-        else new ByteArray(bytes, begin, end)
+      def apply(bytes: Array[Byte], begin: Int, end: Int): Buf = {
+        checkSliceArgs(begin, end)
+        if (isSliceEmpty(begin, end, bytes.length)) Buf.Empty
+        else new ByteArray(bytes, begin, math.min(end, bytes.length))
+      }
 
       /** Construct a buffer representing the provided array of bytes. */
       def apply(bytes: Array[Byte]): Buf = apply(bytes, 0, bytes.length)
@@ -699,13 +706,19 @@ object Buf {
     /** Safe copying constructors / extractors for Buf.ByteArray. */
     object Shared {
 
-      /** Construct a buffer representing a copy of an array of bytes at the given offsets. */
-      def apply(bytes: Array[Byte], begin: Int, end: Int): Buf =
-        if (begin == end) Buf.Empty
+      /**
+       * Construct a buffer representing a copy of the array of bytes, delimited
+       * by the indices `from` inclusive and `until` exclusive: `[begin, end)`.
+       * Out of bounds indices are truncated. Negative indices are not accepted.
+       */
+      def apply(bytes: Array[Byte], begin: Int, end: Int): Buf = {
+        checkSliceArgs(begin, end)
+        if (isSliceEmpty(begin, end, bytes.length)) Buf.Empty
         else {
-          val copy = java.util.Arrays.copyOfRange(bytes, begin, end - begin)
-          new ByteArray(copy, 0, end - begin)
+          val copy = java.util.Arrays.copyOfRange(bytes, begin, math.min(end, bytes.length))
+          new ByteArray(copy, 0, copy.length)
         }
+      }
 
       /** Construct a buffer representing a copy of the entire byte array. */
       def apply(bytes: Array[Byte]): Buf = apply(bytes, 0, bytes.length)

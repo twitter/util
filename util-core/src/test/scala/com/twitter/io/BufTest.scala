@@ -4,15 +4,13 @@ import com.twitter.io.Buf.{ByteArray, Processor}
 import java.nio.{ByteBuffer, CharBuffer}
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
-import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen, Prop}
 import org.scalatest.FunSuite
-import org.scalatest.junit.{AssertionsForJUnit, JUnitRunner}
+import org.scalatest.junit.AssertionsForJUnit
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 import scala.collection.mutable
 
-@RunWith(classOf[JUnitRunner])
 class BufTest
     extends FunSuite
     with MockitoSugar
@@ -51,6 +49,15 @@ class BufTest
     }
   }
 
+  test("Buf.ByteArray.[Owned|Shared](data, begin, end) returns the empty buf if end <= Begin") {
+    val data = Array[Byte](1, 2, 3)
+    assert(Buf.ByteArray.Owned(data, 1, 1) eq Buf.Empty)
+    assert(Buf.ByteArray.Shared(data, 1, 1) eq Buf.Empty)
+
+    assert(Buf.ByteArray.Owned(data, 2, 1) eq Buf.Empty)
+    assert(Buf.ByteArray.Shared(data, 2, 1) eq Buf.Empty)
+  }
+
   test("Buf.slice returns empty buf") {
     bufs.foreach { buf =>
       withClue(buf.toString) {
@@ -58,6 +65,31 @@ class BufTest
         assert(Buf.Empty == buf.slice(buf.length + 1, buf.length + 2))
       }
     }
+  }
+
+  test("Buf.ByteArray.[Owned|Shared](data, begin, end) validates non-negative indexes") {
+    val data = Array[Byte]()
+    Seq(-1 -> 1, 1 -> -1).foreach { case (begin, end) =>
+      intercept[IllegalArgumentException] {
+        Buf.ByteArray.Owned(data, begin, end)
+      }
+
+      intercept[IllegalArgumentException] {
+        Buf.ByteArray.Shared(data, begin, end)
+      }
+    }
+  }
+
+  test("Buf.ByteArray.[Owned|Shared](data, begin, end) truncates out of bound indexes") {
+    val data = Array[Byte](1, 2, 3)
+
+    // begin == data.length, end > data.length
+    assert(Buf.ByteArray.Owned(data, 3, 4) eq Buf.Empty)
+    assert(Buf.ByteArray.Shared(data, 3, 4) eq Buf.Empty)
+
+    // begin in bounds, end truncated to data.length
+    assert(Buf.ByteArray.Owned(data, 1, 4) == Buf.ByteArray.Owned(data, 1, 3))
+    assert(Buf.ByteArray.Shared(data, 1, 4) == Buf.ByteArray.Owned(data, 1, 3))
   }
 
   test("Buf.slice is no-op when from and until are covering") {
@@ -266,22 +298,32 @@ class BufTest
     assert(-1 == composite.process(0, 5, stopAt5))
   }
 
-  test("Buf.ByteArray.Shared.apply is safe") {
+  test("Buf.ByteArray.Shared.apply(Array[Byte]) is safe") {
     val array = Array.fill(10)(0.toByte)
     val buf = Buf.ByteArray.Shared(array)
     array(0) = 13
-    val copy = new Array[Byte](10)
-    buf.write(copy, 0)
-    assert(copy(0) == 0)
+    assert(buf.get(0) == 0)
+  }
+
+  test("Buf.ByteArray.Shared.apply(Array[Byte], begin, end) takes the correct slice") {
+    val range = 0 until 10
+    val array = range.map(_.toByte).toArray
+
+    for (i <- range) {
+      for (j <- i until 10) {
+        val buf = Buf.ByteArray.Shared(array, i, j)
+        assert(buf.length == j - i)
+        val ijarray = (i until j).map(_.toByte).toArray
+        assert(buf == Buf.ByteArray.Owned(ijarray))
+      }
+    }
   }
 
   test("Buf.ByteArray.Direct.apply is unsafe") {
     val array = Array.fill(10)(0.toByte)
     val buf = Buf.ByteArray.Owned(array)
     array(0) = 13
-    val copy = new Array[Byte](10)
-    buf.write(copy, 0)
-    assert(copy(0) == 13)
+    assert(buf.get(0) == 13)
   }
 
   test("Buf.ByteArray.Shared.unapply is safe") {

@@ -11,7 +11,14 @@ API Changes:
   * util-app: c.t.app.Flag.let and letClear are now generic in their return type.
     ``PHAB_ID=D93951``
 
+Bug Fixes:
+  * util-core: Fix Buf.ByteArray.Shared.apply(bytes,begin,end) constructor function.
+    ``PHAB_ID=D100648``
+
 Runtime Behavior Changes:
+
+  * util-core: c.t.io.Buf.ByteArray.[Owned.Shared](Array[Byte], begin, end) now
+    validates its input arguments. ``PHAB_ID=D100648``
 
   * util-jvm: The `jvm/mem/postGC/{poolName}/max` metric has been removed
     because it is the same as the `jvm/mem/current/{poolName}/max` metric.
@@ -231,7 +238,7 @@ New Features:
   * util-core: Introduced a positional `Buf` API, `Buf.Indexed`, and retrofitted
     all existing implementations in util and finagle to adopt it. It is now used
     throughout for a reductions in allocation and latency. In two services at
-    Twitter we saw a 1–2% reduction in allocations. We plan to open the API to
+    Twitter we saw a 1-2% reduction in allocations. We plan to open the API to
     the public and make it a part of `Buf` once we are confident in the APIs.
     ``RB_ID=904559`` ``RB_ID=905253`` ``RB_ID=906201``
 
