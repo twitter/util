@@ -141,7 +141,7 @@ using.
 Via TwitterServer/finagle-stats — the `HTTP admin interface`_ responds with json at
 ``/admin/metrics.json`` and there is a web UI for watching them in real-time at ``/admin/metrics``.
 
-.. _Load Service: https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala
+.. _LoadService: https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala
 .. _finagle-stats: https://github.com/twitter/finagle/tree/master/finagle-stats
 .. _BroadcastStatsReceiver: https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala
 .. _NullStatsReceiver: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala
