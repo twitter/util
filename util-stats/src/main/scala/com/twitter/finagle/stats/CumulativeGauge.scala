@@ -133,62 +133,69 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
   protected[this] def registerGauge(verbosity: Verbosity, name: Seq[String], f: => Float): Unit
   protected[this] def deregisterGauge(name: Seq[String]): Unit
 
-  private[this] def whenNotPresent(verbosity: Verbosity): JFunction[Seq[String], CumulativeGauge] =
-    new JFunction[Seq[String], CumulativeGauge] {
-      // the gauge's state machine only goes Alive => Dead to simplify trickiness
-      // around garbage collection and races
-      def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
+  // To avoid creating a new function on each call to `whenGaugeNotPresent`, we cache these
+  // functions for [[Verbosity.Default]] and [[Verbosity.Debug]], the most common cases.
+  private[this] val whenDefaultNotPresent = whenNotPresent(Verbosity.Default)
+  private[this] val whenDebugNotPresent = whenNotPresent(Verbosity.Debug)
 
-        self.registerGauge(verbosity, key, getValue)
+  private[this] def getWhenNotPresent(verbosity: Verbosity) = verbosity match {
+    case Verbosity.Default => whenDefaultNotPresent
+    case Verbosity.Debug => whenDebugNotPresent
+    case _ => whenNotPresent(verbosity)
+  }
 
-        // we grab the read lock on increment and decrement, which can race each
-        // other.  we only grab the write lock when we tear down the cumulative
-        // gauge, so that we can ensure no more increments happen after death.
-        private[this] val lock = new StampedLock()
-        private[this] val registers = new AtomicInteger(0)
+  private[this] def whenNotPresent(verbosity: Verbosity) = new JFunction[Seq[String], CumulativeGauge] {
+    def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
+      self.registerGauge(verbosity, key, getValue)
 
-        // protected by `lock`
-        private[this] var dead = false
+      // we grab the read lock on increment and decrement, which can race each
+      // other.  we only grab the write lock when we tear down the cumulative
+      // gauge, so that we can ensure no more increments happen after death.
+      private[this] val lock = new StampedLock()
+      private[this] val registers = new AtomicInteger(0)
 
-        def register(): Boolean = {
-          val stamp = lock.readLock()
-          try {
-            if (dead) return false
-            registers.incrementAndGet()
-          } finally {
-            lock.unlockRead(stamp)
-          }
-          true
+      // protected by `lock`
+      private[this] var dead = false
+
+      def register(): Boolean = {
+        val stamp = lock.readLock()
+        try {
+          if (dead) return false
+          registers.incrementAndGet()
+        } finally {
+          lock.unlockRead(stamp)
         }
+        true
+      }
 
-        def deregister(): Unit = {
-          val readStamp = lock.readLock()
-          if (registers.decrementAndGet() == 0) {
-            // we could skip a cas by using tryConvertToWriteLock, but it makes
-            // the code much uglier.
-            lock.unlockRead(readStamp)
-            val writeStamp = lock.writeLock()
+      def deregister(): Unit = {
+        val readStamp = lock.readLock()
+        if (registers.decrementAndGet() == 0) {
+          // we could skip a cas by using tryConvertToWriteLock, but it makes
+          // the code much uglier.
+          lock.unlockRead(readStamp)
+          val writeStamp = lock.writeLock()
 
-            try {
-              if (!dead && registers.get == 0) {
-                dead = true
-                gauges.remove(key)
-                self.deregisterGauge(key)
-              }
-            } finally {
-              lock.unlockWrite(writeStamp)
+          try {
+            if (!dead && registers.get == 0) {
+              dead = true
+              gauges.remove(key)
+              self.deregisterGauge(key)
             }
-          } else {
-            lock.unlockRead(readStamp)
+          } finally {
+            lock.unlockWrite(writeStamp)
           }
+        } else {
+          lock.unlockRead(readStamp)
         }
       }
     }
+  }
 
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
     var gauge: Gauge = null
     while (gauge == null) {
-      val cumulativeGauge = gauges.computeIfAbsent(name, whenNotPresent(verbosity))
+      val cumulativeGauge = gauges.computeIfAbsent(name, getWhenNotPresent(verbosity))
       gauge = cumulativeGauge.addGauge(f)
     }
     gauge
