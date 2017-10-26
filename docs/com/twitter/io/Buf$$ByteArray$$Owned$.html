@@ -330,7 +330,7 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
       </span>
       
       <p class="shortcomment cmt">Construct a buffer representing the provided array of bytes.</p>
-    </li><li name="com.twitter.io.Buf.ByteArray.Owned#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Buf.ByteArray.Owned#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(bytes:Array[Byte],begin:Int,end:Int):com.twitter.io.Buf"></a><a id="apply(Array[Byte],Int,Int):Buf"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Buf$$ByteArray$$Owned$.html#apply(bytes:Array[Byte],begin:Int,end:Int):com.twitter.io.Buf" title="Permalink">
@@ -345,8 +345,11 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
         <span class="name">apply</span><span class="params">(<span name="bytes">bytes: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Array" class="extype" target="_top">Array</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>, <span name="begin">begin: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="end">end: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
       
-      <p class="shortcomment cmt">Construct a buffer representing the provided array of bytes
-at the given offsets.</p>
+      <p class="shortcomment cmt">Construct a buffer representing the provided array of bytes, delimited
+by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[begin, end)</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a buffer representing the provided array of bytes, delimited
+by the indices <code>from</code> inclusive and <code>until</code> exclusive: <code>[begin, end)</code>.
+Out of bounds indices are truncated. Negative indices are not accepted.
+</p></div></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">

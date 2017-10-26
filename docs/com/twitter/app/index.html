@@ -573,7 +573,7 @@ instance.</p><div class="fullcomment"><div class="comment cmt"><p>A single comma
 instance.</p><p>The current value can be extracted via <span class="extype" name="apply()">apply()</span>, <a href="Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">get</a>, and
 <a href="Flag.html#getWithDefault:Option[T]" class="extmbr" name="com.twitter.app.Flag#getWithDefault">getWithDefault</a>. <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">Local</a>-scoped modifications
 of their values, which can be useful for tests, can be done by calls to
-<a href="Flag.html#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a> and <a href="Flag.html#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a>.</p><p>Using a <code>String</code>-typed <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>, <code>myFlag</code>, which is unset and has a default
+<a href="Flag.html#let[R](t:T)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#let">let</a> and <a href="Flag.html#letClear[R](f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a>.</p><p>Using a <code>String</code>-typed <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>, <code>myFlag</code>, which is unset and has a default
 value of &quot;DEFAULT&quot; as an example:</p><pre>myFlag.isDefined <span class="cmt">// => false</span>
 myFlag.get <span class="cmt">// => None</span>
 myFlag.getWithDefault <span class="cmt">// => Some("DEFAULT")</span>

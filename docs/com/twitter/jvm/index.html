@@ -445,8 +445,8 @@ measurements).">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="numProcs$.html" title=""></a>
-                        <a href="numProcs$.html" title="">
+                        <a class="object" href="numProcs$.html" title="Flag for the number of available processors"></a>
+                        <a href="numProcs$.html" title="Flag for the number of available processors">
                           numProcs
                         </a>
                       </li><li name="com.twitter.logging" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -1060,7 +1060,7 @@ the JVM started</p></dd></dl></div>
       </span>
       
       <p class="shortcomment cmt">Retrieve the named JVM option.</p>
-    </li><li name="com.twitter.jvm.numProcs" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.jvm.numProcs" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="numProcs"></a><a id="numProcs:numProcs"></a>
       <span class="permalink">
       <a href="../../../com/twitter/jvm/index.html#numProcs" title="Permalink">
@@ -1072,12 +1072,14 @@ the JVM started</p></dd></dl></div>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="numProcs$.html">
+        <a title="Flag for the number of available processors" href="numProcs$.html">
               <span class="name">numProcs</span>
             </a><span class="result"> extends <a href="../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
       </span>
       
-      
+      <p class="shortcomment cmt">Flag for the number of available processors</p><div class="fullcomment"><div class="comment cmt"><p>Flag for the number of available processors</p><p>If unset, the default is obtained from the JVM runtime.
+If set to -1.0, the result is forced to the value provided by the JVM runtime.
+</p></div></div>
     </li>
               </ol>
             </div>

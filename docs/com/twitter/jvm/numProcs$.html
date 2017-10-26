@@ -267,8 +267,8 @@ measurements).">
                         </a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="" title=""></a>
-                        <a href="" title="">
+                        <a class="object" href="" title="Flag for the number of available processors"></a>
+                        <a href="" title="Flag for the number of available processors">
                           numProcs
                         </a>
                       </li>
@@ -299,7 +299,9 @@ measurements).">
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Flag for the number of available processors</p><p>If unset, the default is obtained from the JVM runtime.
+If set to -1.0, the result is forced to the value provided by the JVM runtime.
+</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -604,10 +606,10 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
       <code>public static Flag&lt;?&gt; globalFlagInstance()</code> which
       returns the singleton instance of the flag.
       See <a href="../app/JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a> for more details.</p></span></dd></dl></div>
-    </li><li name="com.twitter.app.GlobalFlag#getValue" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getValue:Option[T]"></a><a id="getValue:Option[Double]"></a>
+    </li><li name="com.twitter.jvm.numProcs#getValue" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getValue:Option[Double]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/jvm/numProcs$.html#getValue:Option[T]" title="Permalink">
+      <a href="../../../com/twitter/jvm/numProcs$.html#getValue:Option[Double]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -619,7 +621,7 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="name">getValue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a>]</span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.jvm.numProcs">numProcs</a> → <a href="../app/GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
     </li><li name="com.twitter.app.Flag#getWithDefault" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getWithDefault:Option[T]"></a><a id="getWithDefault:Option[Double]"></a>
       <span class="permalink">
@@ -705,9 +707,9 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.app.Flag#let" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="let(t:T)(f:=&gt;Unit):Unit"></a><a id="let(Double)(⇒Unit):Unit"></a>
+      <a id="let[R](t:T)(f:=&gt;R):R"></a><a id="let[R](Double)(⇒R):R"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/jvm/numProcs$.html#let(t:T)(f:=&gt;Unit):Unit" title="Permalink">
+      <a href="../../../com/twitter/jvm/numProcs$.html#let[R](t:T)(f:=&gt;R):R" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -716,17 +718,17 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">let</span><span class="params">(<span name="t">t: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">let</span><span class="tparams">[<span name="R">R</span>]</span><span class="params">(<span name="t">t: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.app.Flag.let.R">R</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.app.Flag.let.R">R</span></span>
       </span>
       
       <p class="shortcomment cmt">Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#letClear(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#letClear[R](f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.Flag#letClear" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="letClear(f:=&gt;Unit):Unit"></a><a id="letClear(⇒Unit):Unit"></a>
+      <a id="letClear[R](f:=&gt;R):R"></a><a id="letClear[R](⇒R):R"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/jvm/numProcs$.html#letClear(f:=&gt;Unit):Unit" title="Permalink">
+      <a href="../../../com/twitter/jvm/numProcs$.html#letClear[R](f:=&gt;R):R" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -735,7 +737,7 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">letClear</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">letClear</span><span class="tparams">[<span name="R">R</span>]</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.app.Flag.letClear.R">R</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.app.Flag.letClear.R">R</span></span>
       </span>
       
       <p class="shortcomment cmt">Unset the value of this flag, such that <a href="../app/Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
@@ -743,7 +745,7 @@ only for the scope of the current <a href="../util/Local.html" class="extype" na
 given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Unset the value of this flag, such that <a href="../app/Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
 only for the scope of the current <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the
 given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#let(t:T)(f:=&gt;Unit):Unit" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#let[R](t:T)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.GlobalFlag#name" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <span class="permalink">
