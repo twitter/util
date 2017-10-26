@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+17.10.0  2017-10-26
+
 Release Version Changes:
   * From now on, release versions will be based on release date in the format of
     YY.MM.x where x is a patch number. ``PHAB_ID=D101244``
