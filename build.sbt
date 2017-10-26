@@ -2,10 +2,9 @@ import sbtunidoc.Plugin.UnidocKeys._
 import sbtunidoc.Plugin.{ScalaUnidoc, unidocSettings}
 import scoverage.ScoverageKeys
 
-val branch = Process("git" :: "rev-parse" :: "--abbrev-ref" :: "HEAD" :: Nil).!!.trim
-val suffix = if (branch == "master") "" else "-SNAPSHOT"
+// All Twitter library releases are date versioned as YY.MM.patch
+val releaseVersion = "0.0.0-SNAPSHOT"
 
-val libVersion = "7.1.0" + suffix
 val zkVersion = "3.5.0-alpha"
 val zkClientVersion = "0.0.81"
 val zkGroupVersion = "0.0.92"
@@ -24,7 +23,7 @@ val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 val slf4jLib = "org.slf4j" % "slf4j-api" % slf4jVersion
 
 val sharedSettings = Seq(
-  version := libVersion,
+  version := releaseVersion,
   organization := "com.twitter",
   scalaVersion := "2.12.1",
   crossScalaVersions := Seq("2.11.11", "2.12.1"),

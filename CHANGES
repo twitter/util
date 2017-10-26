@@ -4,7 +4,11 @@ The changelog style is adapted from Apache Lucene.
 
 Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in commits.
 
-Next Version
+Unreleased
+
+Release Version Changes:
+  * From now on, release versions will be based on release date in the format of
+    YY.MM.x where x is a patch number. ``PHAB_ID=D101244``
 
 API Changes:
 
@@ -35,7 +39,7 @@ API Changes:
 
   * util-events: Module has been removed. ``PHAB_ID=D82346``
 
-  * util-lint: Add GlobalRules#withRules for testing. Allow for the ability to 
+  * util-lint: Add GlobalRules#withRules for testing. Allow for the ability to
     specify a global rules set for use in testing. ``PHAB_ID=D83506``
 
 7.0.0  2017-08-15
@@ -58,7 +62,7 @@ New Features:
   * util-tunable: `c.t.u.tunable.Tunable`, `c.t.u.tunable.TunableMap`,
     `c.t.u.tunable.JsonTunableMapper`, and `c.t.u.tunable.ServiceLoadedTunableMap` are now public.
     This allows users to create and use Tunables, a mechanism for accessing dynamically
-    configured values. See https://twitter.github.io/finagle/guide/Configuration.html#tunables 
+    configured values. See https://twitter.github.io/finagle/guide/Configuration.html#tunables
     for details on how these can be used in Finagle. ``PHAB_ID=D80751``.
 
 Bug Fixes:
@@ -147,7 +151,7 @@ API Changes:
     Removed deprecated `c.t.u.Futures.select`; use `Future.select` instead.
     Remove deprecated `flatten` method on `c.t.u.Future`; use `Futures.flatten` instead.
     ``RB_ID=915500``
-  
+
   * util-core: Removed deprecated `c.t.u.LongOverflowException`. Use
     `java.lang.ArithmeticException` instead. Removed deprecated
     `c.t.u.LongOverflowArith` and all methods on it:
