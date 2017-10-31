@@ -17,4 +17,4 @@ for [bridging legacy logging APIs](https://www.slf4j.org/legacy.html) including 
 
 The utility attempts to protect the user from installing the [`SLF4JBridgeHandler`](https://www.slf4j.org/apidocs/org/slf4j/bridge/SLF4JBridgeHandler.html) 
 if the `slf4j-jdk14` logging implementation is detected on the classpath to prevent 
-[an infinite loop](httsp://www.slf4j.org/legacy.html#julRecursion).
+[an infinite loop](https://www.slf4j.org/legacy.html#julRecursion).
