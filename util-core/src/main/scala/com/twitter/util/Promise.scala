@@ -308,7 +308,16 @@ object Promise {
   sealed trait Responder[A] { this: Future[A] =>
     protected[util] def depth: Short
     protected def parent: Promise[A]
-    protected[util] def continue(k: K[A])
+
+    protected final def continueAll(wq: WaitQueue[A]): Unit = {
+      var ks = wq
+      while (ks ne WaitQueue.Empty) {
+        continue(ks.first)
+        ks = ks.rest
+      }
+    }
+
+    protected def continue(k: K[A]): Unit
 
     /**
      * Note: exceptions in responds are monitored.  That is, if the
@@ -358,7 +367,7 @@ object Promise {
 
     def raise(interrupt: Throwable): Unit = parent.raise(interrupt)
 
-    protected[util] def continue(k: K[A]): Unit = parent.continue(k)
+    protected def continue(k: K[A]): Unit = parent.continue(k)
 
     override def toString: String = s"Future@$hashCode(depth=$depth,parent=$parent)"
   }
@@ -906,7 +915,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   }
 
   @tailrec
-  protected[util] final def continue(k: K[A]): Unit = state match {
+  protected final def continue(k: K[A]): Unit = state match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, WaitQueue(k, waitq)))
         continue(k)
@@ -950,44 +959,26 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     state match {
       case waitq: WaitQueue[A] =>
         if (!cas(waitq, target)) link(target)
-        else {
-          var ks = waitq
-          while (ks ne WaitQueue.Empty) {
-            target.continue(ks.first)
-            ks = ks.rest
-          }
-        }
+        else target.continueAll(waitq)
 
       case s: Interruptible[A] =>
         if (!cas(s, target)) link(target)
         else {
-          var ks = s.waitq
-          while (ks ne WaitQueue.Empty) {
-            target.continue(ks.first)
-            ks = ks.rest
-          }
+          target.continueAll(s.waitq)
           target.setInterruptHandler(s.handler)
         }
 
       case s: Transforming[A] =>
         if (!cas(s, target)) link(target)
         else {
-          var ks = s.waitq
-          while (ks ne WaitQueue.Empty) {
-            target.continue(ks.first)
-            ks = ks.rest
-          }
+          target.continueAll(s.waitq)
           target.forwardInterruptsTo(s.other)
         }
 
       case s: Interrupted[A] =>
         if (!cas(s, target)) link(target)
         else {
-          var ks = s.waitq
-          while (ks ne WaitQueue.Empty) {
-            target.continue(ks.first)
-            ks = ks.rest
-          }
+          target.continueAll(s.waitq)
           target.raise(s.signal)
         }
 
