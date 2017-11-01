@@ -17,6 +17,12 @@ Release Version Changes:
   * From now on, release versions will be based on release date in the format of
     YY.MM.x where x is a patch number. ``PHAB_ID=D101244``
 
+New Features:
+
+  * util-intellij: Create util-intellij project and publish IntelliJ capture
+    points plugin for debugging asynchronous stack traces of code using Twitter
+    Futures in Scala 2.11.11. ``PHAB_ID=D96782``
+
 API Changes:
 
   * util-app: c.t.app.Flag.let and letClear are now generic in their return type.

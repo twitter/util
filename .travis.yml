@@ -37,6 +37,7 @@ before_script:
 
 script:
     - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+    - travis_retry ./sbt ++2.11.11 "project util-intellij" coverage test coverageReport
     - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
 
 after_success:

@@ -22,11 +22,14 @@ val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 val slf4jLib = "org.slf4j" % "slf4j-api" % slf4jVersion
 
-val sharedSettings = Seq(
+val defaultProjectSettings = Seq(
+  scalaVersion := "2.12.1",
+  crossScalaVersions := Seq("2.11.11", "2.12.1")
+)
+
+val baseSettings = Seq(
   version := releaseVersion,
   organization := "com.twitter",
-  scalaVersion := "2.12.1",
-  crossScalaVersions := Seq("2.11.11", "2.12.1"),
   // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
   unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
   libraryDependencies ++= Seq(
@@ -68,22 +71,22 @@ val sharedSettings = Seq(
   pomExtra :=
     <url>https://github.com/twitter/util</url>
       <licenses>
-    <license>
-    <name>Apache License, Version 2.0</name>
-    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-      </license>
-    </licenses>
-    <scm>
-    <url>git@github.com:twitter/util.git</url>
-    <connection>scm:git:git@github.com:twitter/util.git</connection>
-    </scm>
-    <developers>
-    <developer>
-    <id>twitter</id>
-    <name>Twitter Inc.</name>
-    <url>https://www.twitter.com/</url>
-      </developer>
-    </developers>,
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+      </licenses>
+      <scm>
+        <url>git@github.com:twitter/util.git</url>
+        <connection>scm:git:git@github.com:twitter/util.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>twitter</id>
+          <name>Twitter Inc.</name>
+          <url>https://www.twitter.com/</url>
+        </developer>
+      </developers>,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (version.value.trim.endsWith("SNAPSHOT"))
@@ -92,6 +95,8 @@ val sharedSettings = Seq(
       Some("releases"  at nexus + "service/local/staging/deploy/maven2")
   }
 )
+
+val sharedSettings = defaultProjectSettings ++ baseSettings
 
 lazy val noPublishSettings = Seq(
   publish := {},
@@ -254,6 +259,16 @@ lazy val utilHashing = Project(
 ).settings(
   name := "util-hashing",
   libraryDependencies += scalacheckLib
+).dependsOn(utilCore % "test")
+
+lazy val utilIntellij = Project(
+  id = "util-intellij",
+  base = file("util-intellij")
+).settings(
+  baseSettings
+).settings(
+  name := "util-intellij",
+  scalaVersion := "2.11.11"
 ).dependsOn(utilCore % "test")
 
 lazy val utilJvm = Project(
