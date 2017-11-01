@@ -1,5 +1,3 @@
-import sbtunidoc.Plugin.UnidocKeys._
-import sbtunidoc.Plugin.{ScalaUnidoc, unidocSettings}
 import scoverage.ScoverageKeys
 
 // All Twitter library releases are date versioned as YY.MM.patch
@@ -40,6 +38,8 @@ val baseSettings = Seq(
   ),
 
   ScoverageKeys.coverageHighlighting := true,
+  resolvers +=
+    "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
 
   scalacOptions := Seq(
     // Note: Add -deprecation when deprecated methods are removed
@@ -109,10 +109,11 @@ lazy val noPublishSettings = Seq(
 lazy val util = Project(
   id = "util",
   base = file(".")
+).enablePlugins(
+  ScalaUnidocPlugin
 ).settings(
   sharedSettings ++
     noPublishSettings ++
-    unidocSettings ++
     Seq(
       unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(utilBenchmark)
     )
@@ -202,7 +203,7 @@ lazy val utilCore = Project(
   resourceGenerators in Compile += Def.task {
     val projectName = name.value
     val file = resourceManaged.value / "com" / "twitter" / projectName / "build.properties"
-    val buildRev = Process("git" :: "rev-parse" :: "HEAD" :: Nil).!!.trim
+    val buildRev = scala.sys.process.Process("git" :: "rev-parse" :: "HEAD" :: Nil).!!.trim
     val buildName = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss").format(new java.util.Date)
     val contents = s"name=$projectName\nversion=${version.value}\nbuild_revision=$buildRev\nbuild_name=$buildName"
     IO.write(file, contents)
