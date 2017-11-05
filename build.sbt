@@ -34,7 +34,7 @@ val baseSettings = Seq(
     // See http://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
     "org.mockito" % "mockito-all" % "1.10.19" % "test",
-    "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+    "org.scalatest" %% "scalatest" % "3.0.4" % "test"
   ),
 
   ScoverageKeys.coverageHighlighting := true,
