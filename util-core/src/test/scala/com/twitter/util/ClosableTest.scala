@@ -5,6 +5,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.junit.JUnitRunner
+import scala.language.reflectiveCalls
 
 @RunWith(classOf[JUnitRunner])
 class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
