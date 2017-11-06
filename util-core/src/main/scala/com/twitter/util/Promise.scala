@@ -7,6 +7,10 @@ import scala.runtime.NonLocalReturnControl
 
 object Promise {
 
+  // An experimental property that enables LIFO continuations for promises. Use with CAUTION.
+  private val UseLifoContinuations: Boolean =
+    System.getProperty("com.twitter.util.UseLifoPromiseContinuations", "false").toBoolean
+
   /**
    * Embeds an "interrupt handler" into a [[Promise]].
    *
@@ -80,6 +84,100 @@ object Promise {
         else loop(from.rest, WaitQueue(from.first, to))
 
       loop(this, WaitQueue.empty)
+    }
+
+    final def runInScheduler(t: Try[A], lifo: Boolean): Unit =
+      if (lifo) runLifoInScheduler(t)
+      else runDepthInScheduler(t)
+
+    final def runLifoInScheduler(t: Try[A]): Unit =
+      Scheduler.submit(new Runnable() { def run(): Unit = WaitQueue.this.runLifo(t) })
+
+    @tailrec
+    private def runLifo(t: Try[A]): Unit =
+      if (this ne WaitQueue.Empty) {
+        first(t)
+        rest.runLifo(t)
+      }
+
+    final def runDepthInScheduler(t: Try[A]): Unit =
+      Scheduler.submit(new Runnable() { def run(): Unit = WaitQueue.this.runDepth(t) })
+
+
+    private def runDepth(t: Try[A]): Unit = {
+      var k: K[A] = null
+      var moreDepth = false
+
+      // Depth 0, about 77% only at this depth
+      var ks = this
+      while (ks ne WaitQueue.Empty) {
+        k = ks.first
+        if (k.depth == 0)
+          k(t)
+        else
+          moreDepth = true
+        ks = ks.rest
+      }
+
+      // depth >= 1, about 23%
+      if (!moreDepth)
+        return
+
+      var maxDepth = 1
+      ks = this
+      while (ks ne WaitQueue.Empty) {
+        k = ks.first
+        if (k.depth == 1)
+          k(t)
+        else if (k.depth > maxDepth)
+          maxDepth = k.depth
+        ks = ks.rest
+      }
+
+      // Depth > 1, about 7%
+      if (maxDepth > 1)
+        runDepth2Plus(t, maxDepth)
+    }
+
+    private def runDepth2Plus(t: Try[A], maxDepth: Int): Unit = {
+      // empirically via JMH `FutureBenchmark.runqSize` the performance
+      // is better once the the list gets larger. that cutoff point
+      // was 14 in tests. however, it should be noted that this number
+      // was picked for how it performs for that single distribution.
+      // should it turn out that many users have a large `rest` with
+      // shallow distributions, this number should likely be higher.
+      // that said, this number is empirically large and should be a
+      // rarely run code path.
+      val size = this.size
+      if (size > 13) {
+        var rem = new mutable.ArrayBuffer[K[A]](size)
+        var ks = this
+        while (ks ne WaitQueue.Empty) {
+          val k = ks.first
+          if (k.depth > 1)
+            rem += k
+          ks = ks.rest
+        }
+
+        val sorted = rem.sortBy(K.depthOfK)
+        var i = 0
+        while (i < sorted.size) {
+          sorted(i).apply(t)
+          i += 1
+        }
+      } else {
+        var depth = 2
+        while (depth <= maxDepth) {
+          var ks = this
+          while (ks ne WaitQueue.Empty) {
+            val k = ks.first
+            if (k.depth == depth)
+              k(t)
+            ks = ks.rest
+          }
+          depth += 1
+        }
+      }
     }
 
     final override def toString: String = s"WaitQueue(size=$size)"
@@ -247,17 +345,6 @@ object Promise {
 
   /*
    * Performance notes:
-   *
-   * The following is a characteristic CDF of wait queue lengths.
-   * This was retrieved by instrumenting the promise implementation
-   * and running it with the 'finagle-topo' test suite.
-   *
-   *   0 26%
-   *   1 77%
-   *   2 94%
-   *   3 97%
-   *
-   * Which amounts to .94 callbacks on average.
    *
    * Due to OOPS compression on 64-bit architectures, objects that
    * have one field are of the same size as objects with two. We
@@ -492,6 +579,9 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   protected[util] final def depth: Short = 0
   protected final def parent: Promise[A] = this
 
+  // Exposed for testing.
+  protected def useLifoContinuations: Boolean = Promise.UseLifoContinuations
+
   // Note: this will always be one of:
   // - WaitQueue (Waiting)
   // - Interrupted
@@ -526,88 +616,6 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
 
   @inline private[this] def cas(oldState: Any, newState: Any): Boolean =
     unsafe.compareAndSwapObject(this, stateOff, oldState, newState)
-
-  private[this] def runq(waitq: WaitQueue[A], result: Try[A]) =
-    Scheduler.submit(new Runnable {
-      def run(): Unit = {
-        var k: K[A] = null
-        var moreDepth = false
-
-        // Depth 0, about 77% only at this depth
-        var ks = waitq
-        while (ks ne WaitQueue.Empty) {
-          k = ks.first
-          if (k.depth == 0)
-            k(result)
-          else
-            moreDepth = true
-          ks = ks.rest
-        }
-
-        // depth >= 1, about 23%
-        if (!moreDepth)
-          return
-
-        var maxDepth = 1
-        ks = waitq
-        while (ks ne WaitQueue.Empty) {
-          k = ks.first
-          if (k.depth == 1)
-            k(result)
-          else if (k.depth > maxDepth)
-            maxDepth = k.depth
-          ks = ks.rest
-        }
-        // Depth > 1, about 7%
-        if (maxDepth > 1)
-          runDepth2Plus(waitq, result, maxDepth)
-      }
-
-      private[this] def runDepth2Plus(
-        waitq: WaitQueue[A],
-        result: Try[A],
-        maxDepth: Int
-      ): Unit = {
-        // empirically via JMH `FutureBenchmark.runqSize` the performance
-        // is better once the the list gets larger. that cutoff point
-        // was 14 in tests. however, it should be noted that this number
-        // was picked for how it performs for that single distribution.
-        // should it turn out that many users have a large `rest` with
-        // shallow distributions, this number should likely be higher.
-        // that said, this number is empirically large and should be a
-        // rare run code path.
-        val size = waitq.size
-        if (size > 13) {
-          var rem = new mutable.ArrayBuffer[K[A]](size)
-          var ks = waitq
-          while (ks ne WaitQueue.Empty) {
-            val k = ks.first
-            if (k.depth > 1)
-              rem += k
-            ks = ks.rest
-          }
-
-          val sorted = rem.sortBy(K.depthOfK)
-          var i = 0
-          while (i < sorted.size) {
-            sorted(i).apply(result)
-            i += 1
-          }
-        } else {
-          var depth = 2
-          while (depth <= maxDepth) {
-            var ks = waitq
-            while (ks ne WaitQueue.Empty) {
-              val k = ks.first
-              if (k.depth == depth)
-                k(result)
-              ks = ks.rest
-            }
-            depth += 1
-          }
-        }
-      }
-    })
 
   /**
    * (Re)sets the interrupt handler. There is only
@@ -886,26 +894,26 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, result)) updateIfEmpty(result)
       else {
-        runq(waitq, result)
+        waitq.runInScheduler(result, useLifoContinuations)
         true
       }
 
     case s: Interruptible[A] =>
       if (!cas(s, result)) updateIfEmpty(result)
       else {
-        runq(s.waitq, result)
+        s.waitq.runInScheduler(result, useLifoContinuations)
         true
       }
     case s: Transforming[A] =>
       if (!cas(s, result)) updateIfEmpty(result)
       else {
-        runq(s.waitq, result)
+        s.waitq.runInScheduler(result, useLifoContinuations)
         true
       }
     case s: Interrupted[A] =>
       if (!cas(s, result)) updateIfEmpty(result)
       else {
-        runq(s.waitq, result)
+        s.waitq.runInScheduler(result, useLifoContinuations)
         true
       }
 
@@ -929,11 +937,9 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
       if (!cas(s, new Interrupted(WaitQueue(k, s.waitq), s.signal)))
         continue(k)
     case v: Try[A] /* Done */ =>
-      Scheduler.submit(new Runnable {
-        def run(): Unit = {
-          k(v)
-        }
-      })
+      // Concrete strategy doesn't matter as it's just one continuation.
+      // We pick LIFO for simplicity.
+      k.runLifoInScheduler(v)
     case p: Promise[A] /* Linked */ => p.continue(k)
   }
 

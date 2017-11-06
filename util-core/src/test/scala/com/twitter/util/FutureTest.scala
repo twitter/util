@@ -15,7 +15,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl
-import scala.util.control.{ControlThrowable, NonFatal}
+import scala.util.control.ControlThrowable
 import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
@@ -1292,7 +1292,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           assert(wasCalledWith == Some(1))
         }
 
-        "runs callbacks just once and in order" in {
+        "runs callbacks just once and in order (depth)" in {
           var i, j, k, h = 0
           val p = new Promise[Int]
           p ensure {
@@ -1315,6 +1315,34 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           assert(j == 2)
           assert(k == 4)
           assert(h == 8)
+        }
+
+        "runs callbacks just once and in order (lifo)" in {
+          var i, j, k, h = 0
+          val p = new Promise[Int] {
+            override protected def useLifoContinuations: Boolean = true
+          }
+
+          p ensure {
+            i = i + j + k + h + 1
+          } ensure {
+            j = i + j + k + h + 1
+          } ensure {
+            k = i + j + k + h + 1
+          } ensure {
+            h = i + j + k + h + 1
+          }
+
+          assert(i == 0)
+          assert(j == 0)
+          assert(k == 0)
+          assert(h == 0)
+
+          p.setValue(1)
+          assert(i == 8)
+          assert(j == 4)
+          assert(k == 2)
+          assert(h == 1)
         }
 
         "monitor exceptions" in {
