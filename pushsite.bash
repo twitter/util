@@ -8,7 +8,7 @@ dir=/tmp/util.$$
 trap "rm -fr $dir" 0 1 2
 
 echo 'making site...' 1>&2
-./sbt --warn util-doc/make-site
+./sbt --warn util-doc/makeSite
 
 unidoc="target/scala-$VERSION/unidoc/"
 rm -fr "$unidoc"
