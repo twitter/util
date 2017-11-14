@@ -8,8 +8,13 @@ import scala.runtime.NonLocalReturnControl
 object Promise {
 
   // An experimental property that enables LIFO continuations for promises. Use with CAUTION.
-  private val UseLifoContinuations: Boolean =
+  @volatile private var UseLifoContinuations: Boolean =
     System.getProperty("com.twitter.util.UseLifoPromiseContinuations", "false").toBoolean
+
+  // Switches the callback execution strategy to LIFO or Depth-based.
+  private[twitter] def useLifoContinuations(lifo: Boolean): Unit = {
+    UseLifoContinuations = lifo
+  }
 
   /**
    * Embeds an "interrupt handler" into a [[Promise]].
