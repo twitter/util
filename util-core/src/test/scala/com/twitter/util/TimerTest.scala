@@ -285,6 +285,31 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
     }
   }
 
+  test("Tasks created using Timer.schedule(Time) shouldn't be retained after cancellation") {
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      assert(timer.tasks.isEmpty)
+      val task = timer.schedule(Time.now + 3.seconds)()
+      assert(timer.tasks.size == 1)
+      task.cancel()
+      assert(timer.tasks.isEmpty)
+    }
+  }
+
+  test("Tasks created using Timer.schedule(Duration) shouldn't be retained after cancellation") {
+    Time.withCurrentTimeFrozen { ctl =>
+      val timer = new MockTimer
+      assert(timer.tasks.isEmpty)
+      val task = timer.schedule(3.seconds)()
+      eventually { assert(timer.tasks.size == 1) }
+      ctl.advance(30.seconds)
+      timer.tick()
+      eventually { assert(timer.tasks.size == 1) }
+      task.cancel()
+      assert(timer.tasks.isEmpty)
+    }
+  }
+
   test("Timer should cancel schedule(when)") {
     Time.withCurrentTimeFrozen { ctl =>
       val timer = new MockTimer

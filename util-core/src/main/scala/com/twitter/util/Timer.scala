@@ -386,16 +386,24 @@ class MockTimer extends Timer {
   protected def schedulePeriodically(when: Time, period: Duration)(f: => Unit): TimerTask = {
     var isCancelled = false
 
-    val task = new TimerTask {
-      def cancel(): Unit = MockTimer.this.synchronized {
-        isCancelled = true
-      }
-    }
+    // We create Tasks dynamically, so we need a mechanism to cancel them (thus removing
+    // them from `tasks` so we don't leak memory). We can't have multiple of the same timer task
+    // scheduled –even if the time advances some multiple
+    // beyond the scheduling period– because one scheduled task creates the next after it has run
+    // (running is triggered in `tick`).
+    var scheduledTask: Option[TimerTask] = None
 
     def runAndReschedule(): Unit = MockTimer.this.synchronized {
       if (!isCancelled) {
-        schedule(Time.now + period) { runAndReschedule() }
+        scheduledTask = Some(schedule(Time.now + period) { runAndReschedule() })
         f
+      }
+    }
+
+    val task = new TimerTask {
+      def cancel(): Unit = MockTimer.this.synchronized {
+        isCancelled = true
+        scheduledTask.foreach(_.cancel())
       }
     }
 
