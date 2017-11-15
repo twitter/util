@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+17.11.0  2017-11-15
+
 New Features:
 
   * util-security: Added `c.t.util.security.PrivateKeyFile` for reading PKCS#8
