@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.concurrent.Offer
 import org.openjdk.jmh.annotations._
 
 class FutureBenchmark extends StdBenchAnnotations {
@@ -19,7 +20,7 @@ class FutureBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   @OperationsPerInvocation(N)
-  def timeCallback(state: CallbackState) {
+  def timeCallback(state: CallbackState): Unit = {
     import state._
 
     assert(n < 4)
@@ -34,121 +35,135 @@ class FutureBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def timeCollect(state: CollectState) {
+  def timeCollect(state: CollectState): Future[Seq[Int]] = {
     import state._
 
     Future.collect(futures)
   }
 
   @Benchmark
-  def timeCollectToTry(state: CollectState) {
+  def timeCollectToTry(state: CollectState): Future[Seq[Try[Int]]] = {
     import state._
 
     Future.collectToTry(futures)
   }
 
   @Benchmark
-  def timeJoin(state: CollectState) {
+  def timeJoin(state: CollectState): Future[Unit] = {
     import state._
 
     Future.join(futures)
   }
 
   @Benchmark
-  def timeRespond(state: PromiseUnitState) {
-    import state._
-
+  def timeRespond(): Boolean = {
+    val promise = new Promise[Unit]()
     promise.respond(RespondFn)
     promise.setDone()
   }
 
   @Benchmark
-  def timeMap(state: PromiseUnitState): String = {
-    val mapped = state.promise.map(state.MapFn)
-    state.promise.setDone()
+  def timeMap(): String = {
+    val promise = new Promise[Unit]()
+    val mapped = promise.map(MapFn)
+    promise.setDone()
     Await.result(mapped)
   }
 
   @Benchmark
-  def timeFlatMap(state: PromiseUnitState) {
-    import state._
-
+  def timeFlatMap(): Boolean = {
+    val promise = new Promise[Unit]()
     promise.flatMap(FlatMapFn)
     promise.setDone()
   }
 
   @Benchmark
-  def timeSelect(state: SelectState) {
+  def timeSelect(state: SelectState): Future[(Try[Unit], Seq[Future[Unit]])] = {
     import state._
 
     Future.select(futures)
   }
 
   @Benchmark
-  def timeSelectIndex(state: SelectIndexState) {
+  def timeSelectIndex(state: SelectIndexState): Future[Int] = {
     import state._
 
     Future.selectIndex(futures)
   }
 
   @Benchmark
-  def timeWhileDo(state: WhileDoState) {
-    import state._
+  def timeWhileDo(): Future[Unit] = {
+    var i = 0
 
-    Future.whileDo(continue)(future)
+    def continue: Boolean =
+      if (i < N) {
+        i += 1
+        true
+      } else {
+        false
+      }
+
+    Future.whileDo(continue)(Future.Done)
   }
 
   @Benchmark
-  def timeEach(state: EachState) {
+  def timeEach(state: EachState): Future[Nothing] = {
     import state._
+
+    var i = 0
+
+    def next: Future[Unit] =
+      if (i < num) {
+        i += 1
+        Future.Unit
+      } else {
+        Future.???
+      }
 
     Future.each(next)(body)
   }
 
   @Benchmark
   @OperationsPerInvocation(N)
-  def timeParallel(): Unit = {
-
+  def timeParallel(): Seq[Future[Unit]] = {
     Future.parallel(N)(Future.Unit)
   }
 
   @Benchmark
-  def timeToOffer(): Unit = {
-
+  def timeToOffer(): Offer[Try[Unit]] = {
     Future.Unit.toOffer
   }
 
   @Benchmark
-  def timeFlatten(state: FlattenState) {
+  def timeFlatten(state: FlattenState): Future[Unit] = {
     import state._
 
     future.flatten
   }
 
   @Benchmark
-  def timeLiftTotry(): Unit = {
-
+  def timeLiftTotry(): Future[Try[Unit]] = {
     Future.Unit.liftToTry
   }
 
   @Benchmark
-  def timeLowerFromTry(state: LowerFromTryState) {
+  def timeLowerFromTry(state: LowerFromTryState): Future[Unit] = {
     import state._
 
     future.lowerFromTry
   }
 
   @Benchmark
-  def timeUnit(state: PromiseUnitState): Unit = {
-    import state._
+  def timeUnit(): Unit = {
+    val promise = new Promise[Unit]()
     val unit = promise.unit
     promise.setDone()
     Await.result(unit)
   }
 
   @Benchmark
-  def timeVoided(state: PromiseUnitState): Void = {
-    import state._
+  def timeVoided(): Void = {
+    val promise = new Promise[Unit]()
     val voided = promise.voided
     promise.setDone()
     Await.result(voided)
@@ -205,6 +220,12 @@ object FutureBenchmark {
   private val RespondFn: Try[Unit] => Unit = { _ =>
     ()
   }
+  private val FlatMapFn: Unit => Future[Unit] = { _: Unit =>
+    Future.Unit
+  }
+  private val MapFn: Unit => String = { _: Unit =>
+    "hi"
+  }
 
   @State(Scope.Benchmark)
   class ByState {
@@ -219,7 +240,7 @@ object FutureBenchmark {
     var depth: Int = 0
   }
 
-  val StringFuture = Future.value("hi")
+  private val StringFuture = Future.value("hi")
 
   @State(Scope.Thread)
   class CollectState {
@@ -236,59 +257,12 @@ object FutureBenchmark {
     }
   }
 
-  @State(Scope.Thread)
-  class PromiseUnitState {
-    val FlatMapFn = { _: Unit =>
-      Future.Unit
-    }
-    val MapFn = { _: Unit =>
-      "hi"
-    }
-
-    var promise: Promise[Unit] = _
-
-    @Setup
-    def prepare(): Unit = {
-      promise = new Promise[Unit]
-    }
-  }
-
-  @State(Scope.Thread)
-  class WhileDoState {
-    private var i = 0
-
-    def continue =
-      if (i < N) {
-        i += 1
-        true
-      } else
-        false
-
-    val future = Future.Unit
-
-    @Setup
-    def prepare(): Unit = {
-      i = 0
-    }
-  }
-
-  @State(Scope.Thread)
+  @State(Scope.Benchmark)
   class EachState {
-    private var i = 0
-
-    def next =
-      if (i < N) {
-        i += 1
-        Future.Unit
-      } else
-        Future.???
+    @Param(Array("10"))
+    var num: Int = _
 
     val body: Unit => Unit = _ => ()
-
-    @Setup
-    def prepare(): Unit = {
-      i = 0
-    }
   }
 
   @State(Scope.Benchmark)
