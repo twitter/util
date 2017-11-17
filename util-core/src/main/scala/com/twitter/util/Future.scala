@@ -1333,22 +1333,31 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
   case class NextThrewException(cause: Throwable)
       extends IllegalArgumentException("'next' threw an exception", cause)
 
-  /**
-   * Produce values from `next` until it fails, synchronously
-   * applying `body` to each iteration. The returned future
-   * indicates completion (via an exception).
-   */
-  def each[A](next: => Future[A])(body: A => Unit): Future[Nothing] = {
-    def go(): Future[Nothing] =
-      try next flatMap { a =>
-        body(a); go()
-      } catch {
-        case NonFatal(exc) =>
+  private class Each[A](next: => Future[A], body: A => Unit)
+    extends (Try[A] => Future[Nothing]) {
+    def apply(t: Try[A]): Future[Nothing] = t match {
+      case Return(a) =>
+        body(a)
+        go()
+      case t@Throw(_) =>
+        Future.const(t.cast[Nothing])
+    }
+    def go(): Future[Nothing] = {
+      try next.transform(this)
+      catch {
+        case scala.util.control.NonFatal(exc) =>
           Future.exception(NextThrewException(exc))
       }
-
-    go()
+    }
   }
+
+  /**
+   * Produce values from `next` until it fails synchronously
+   * applying `body` to each iteration. The returned `Future`
+   * indicates completion via a failed `Future`.
+   */
+  def each[A](next: => Future[A])(body: A => Unit): Future[Nothing] =
+    new Each(next, body).go()
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
     var i = 0
