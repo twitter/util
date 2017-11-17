@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -6,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &#8212; Util 17.10.0 documentation</title>
+    <title>Basics &mdash; Util 17.12.0-SNAPSHOT documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '17.10.0',
+        VERSION:     '17.12.0-SNAPSHOT',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,9 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 17.10.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 17.12.0-SNAPSHOT documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Futures" href="futures.html" />
     <link rel="prev" title="Util Cookbook" href="index.html" />
@@ -45,11 +44,11 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -61,15 +60,15 @@
         <li class="right" >
           <a href="index.html" title="Util Cookbook"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
+        <li><a href="../index.html">Util</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="basics">
 <h1>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h1>
@@ -78,7 +77,7 @@
 <p>While trivial with Scala&#8217;s pattern matching it is
 less obvious from Java.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">,</span> <span class="nc">Try</span><span class="o">}</span>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">,</span> <span class="nc">Try</span><span class="o">}</span>
 
 <span class="k">def</span> <span class="n">extract</span><span class="o">(</span><span class="n">t</span><span class="k">:</span> <span class="kt">Try</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
   <span class="n">t</span> <span class="k">match</span> <span class="o">{</span>
@@ -88,7 +87,7 @@ less obvious from Java.</p>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Return</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Return</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Throw</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
 
@@ -104,12 +103,12 @@ less obvious from Java.</p>
 </div>
 <div class="section" id="conversions-between-twitter-s-try-and-scala-s-try">
 <h2>Conversions between Twitter&#8217;s Try and Scala&#8217;s Try<a class="headerlink" href="#conversions-between-twitter-s-try-and-scala-s-try" title="Permalink to this headline">¶</a></h2>
-<p>Scala&#8217;s <code class="docutils literal"><span class="pre">scala.util.Try</span></code>, <code class="docutils literal"><span class="pre">scala.util.Success</span></code>, and <code class="docutils literal"><span class="pre">scala.util.Failure</span></code>
-were based on Twitter&#8217;s <code class="docutils literal"><span class="pre">com.twitter.util.Try</span></code>, <code class="docutils literal"><span class="pre">com.twitter.util.Return</span></code>
-and <code class="docutils literal"><span class="pre">com.twitter.util.Throw</span></code> and converting to and from them is sometimes
+<p>Scala&#8217;s <tt class="docutils literal"><span class="pre">scala.util.Try</span></tt>, <tt class="docutils literal"><span class="pre">scala.util.Success</span></tt>, and <tt class="docutils literal"><span class="pre">scala.util.Failure</span></tt>
+were based on Twitter&#8217;s <tt class="docutils literal"><span class="pre">com.twitter.util.Try</span></tt>, <tt class="docutils literal"><span class="pre">com.twitter.util.Return</span></tt>
+and <tt class="docutils literal"><span class="pre">com.twitter.util.Throw</span></tt> and converting to and from them is sometimes
 necessary.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Try</span> <span class="k">=&gt;</span> <span class="nc">TwitterTry</span><span class="o">}</span>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Try</span> <span class="k">=&gt;</span> <span class="nc">TwitterTry</span><span class="o">}</span>
 
 <span class="k">def</span> <span class="n">toScalaTry</span><span class="o">(</span><span class="n">twitterTry</span><span class="k">:</span> <span class="kt">TwitterTry</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">scala.util.Try</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span>
   <span class="n">twitterTry</span><span class="o">.</span><span class="n">asScala</span>
@@ -119,7 +118,7 @@ necessary.</p>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Try</span><span class="o">;</span>
 
 <span class="n">scala</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">toScalaTry</span><span class="o">(</span><span class="n">Try</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">twitterTry</span><span class="o">)</span> <span class="o">{</span>
   <span class="k">return</span> <span class="n">twitterTry</span><span class="o">.</span><span class="na">asScala</span><span class="o">();</span>
@@ -133,15 +132,15 @@ necessary.</p>
 </div>
 <div class="section" id="controlling-time-for-tests">
 <h2>Controlling Time for tests<a class="headerlink" href="#controlling-time-for-tests" title="Permalink to this headline">¶</a></h2>
-<p>The current time, <code class="docutils literal"><span class="pre">com.twitter.util.Time.now</span></code>, can be manipulated for
-writing deterministic tests with <code class="docutils literal"><span class="pre">Time.withTimeAt</span></code>, <code class="docutils literal"><span class="pre">Time.withCurrentTimeFrozen</span></code>,
-<code class="docutils literal"><span class="pre">Time.withTimeFunction</span></code>, and <code class="docutils literal"><span class="pre">Time.sleep</span></code>.</p>
-<p>While <code class="docutils literal"><span class="pre">Time.now</span></code> is not a &#8220;global&#8221;, it is properly propagated through
-to other code via the standard usage of <code class="docutils literal"><span class="pre">Locals</span></code> throughout <cite>util</cite>.
-Specifically, code using <code class="docutils literal"><span class="pre">Future</span></code>s, <code class="docutils literal"><span class="pre">FuturePool</span></code>s, and <code class="docutils literal"><span class="pre">MockTimer</span></code>s
-will see the manipulated <code class="docutils literal"><span class="pre">Time.now</span></code>.</p>
+<p>The current time, <tt class="docutils literal"><span class="pre">com.twitter.util.Time.now</span></tt>, can be manipulated for
+writing deterministic tests with <tt class="docutils literal"><span class="pre">Time.withTimeAt</span></tt>, <tt class="docutils literal"><span class="pre">Time.withCurrentTimeFrozen</span></tt>,
+<tt class="docutils literal"><span class="pre">Time.withTimeFunction</span></tt>, and <tt class="docutils literal"><span class="pre">Time.sleep</span></tt>.</p>
+<p>While <tt class="docutils literal"><span class="pre">Time.now</span></tt> is not a &#8220;global&#8221;, it is properly propagated through
+to other code via the standard usage of <tt class="docutils literal"><span class="pre">Locals</span></tt> throughout <cite>util</cite>.
+Specifically, code using <tt class="docutils literal"><span class="pre">Future</span></tt>s, <tt class="docutils literal"><span class="pre">FuturePool</span></tt>s, and <tt class="docutils literal"><span class="pre">MockTimer</span></tt>s
+will see the manipulated <tt class="docutils literal"><span class="pre">Time.now</span></tt>.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
 <span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">FuturePool</span><span class="o">,</span> <span class="nc">Time</span><span class="o">}</span>
 
 <span class="k">val</span> <span class="n">time</span> <span class="k">=</span> <span class="nc">Time</span><span class="o">.</span><span class="n">fromMilliseconds</span><span class="o">(</span><span class="mi">123456L</span><span class="o">)</span>
@@ -157,7 +156,7 @@ will see the manipulated <code class="docutils literal"><span class="pre">Time.n
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Time</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func</span><span class="o">;</span>
@@ -179,13 +178,13 @@ will see the manipulated <code class="docutils literal"><span class="pre">Time.n
 </div>
 <div class="section" id="controlling-timers">
 <h3>Controlling Timers<a class="headerlink" href="#controlling-timers" title="Permalink to this headline">¶</a></h3>
-<p>For the same reasons you would want to control <code class="docutils literal"><span class="pre">Time</span></code> deterministically,
-you may have code that relies on a <code class="docutils literal"><span class="pre">Timer</span></code> and need the same abilities.
-Enter <code class="docutils literal"><span class="pre">com.twitter.util.MockTimer</span></code>, which plays well with the <code class="docutils literal"><span class="pre">Time</span></code>
-manipulation methods discussed above. It adds a method to <code class="docutils literal"><span class="pre">Timer</span></code>, <code class="docutils literal"><span class="pre">tick()</span></code>,
-which runs all <code class="docutils literal"><span class="pre">TimerTasks</span></code> that are past their deadline.</p>
+<p>For the same reasons you would want to control <tt class="docutils literal"><span class="pre">Time</span></tt> deterministically,
+you may have code that relies on a <tt class="docutils literal"><span class="pre">Timer</span></tt> and need the same abilities.
+Enter <tt class="docutils literal"><span class="pre">com.twitter.util.MockTimer</span></tt>, which plays well with the <tt class="docutils literal"><span class="pre">Time</span></tt>
+manipulation methods discussed above. It adds a method to <tt class="docutils literal"><span class="pre">Timer</span></tt>, <tt class="docutils literal"><span class="pre">tick()</span></tt>,
+which runs all <tt class="docutils literal"><span class="pre">TimerTasks</span></tt> that are past their deadline.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
+<div class="highlight-scala"><div class="highlight"><pre><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
 <span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span><span class="o">,</span> <span class="nc">MockTimer</span><span class="o">,</span> <span class="nc">Time</span><span class="o">}</span>
 
 <span class="nc">Time</span><span class="o">.</span><span class="n">withWithCurrentTimeFrozen</span> <span class="o">{</span> <span class="n">timeControl</span> <span class="k">=&gt;</span>
@@ -209,7 +208,7 @@ which runs all <code class="docutils literal"><span class="pre">TimerTasks</span
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.MockTimer</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Time</span><span class="o">;</span>
@@ -243,7 +242,7 @@ which runs all <code class="docutils literal"><span class="pre">TimerTasks</span
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.

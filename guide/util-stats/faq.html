@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -6,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>FAQ &#8212; Util 17.10.0 documentation</title>
+    <title>FAQ &mdash; Util 17.12.0-SNAPSHOT documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '17.10.0',
+        VERSION:     '17.12.0-SNAPSHOT',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,9 +25,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 17.10.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 17.12.0-SNAPSHOT documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="Util Cookbook" href="../util-cookbook/index.html" />
     <link rel="prev" title="User Guide" href="user_guide.html" />
@@ -45,11 +44,11 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -61,15 +60,15 @@
         <li class="right" >
           <a href="user_guide.html" title="User Guide"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li> 
+        <li><a href="../index.html">Util</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="faq">
 <h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
@@ -88,7 +87,7 @@ To ease the transition, the package namespace was left as is.</p>
 was created for Java developers and Ostrich was created for Scala developers.
 Code initially was written directly to the implementations and there were
 (and still are) some subtle differences in their behavior.
-<code class="docutils literal"><span class="pre">StatsReceiver</span></code> was written in order to bridge the gap between the
+<tt class="docutils literal"><span class="pre">StatsReceiver</span></tt> was written in order to bridge the gap between the
 two implementations. <cite>finagle-stats</cite> was written quite a bit later in order to
 improve upon both of these implementations in terms of
 allocation efficiency and histogram precision.</p>
@@ -96,7 +95,7 @@ allocation efficiency and histogram precision.</p>
 <div class="section" id="why-is-nullstatsreceiver-being-used">
 <h2>Why is <cite>NullStatsReceiver</cite> being used?<a class="headerlink" href="#why-is-nullstatsreceiver-being-used" title="Permalink to this headline">¶</a></h2>
 <p><cite>NullStatsReceiver</cite> is used when no metrics implementation is found on the classpath.
-The section on <a class="reference internal" href="user_guide.html#choosing-impl"><span class="std std-ref">choosing the stats implementation</span></a> covers how to
+The section on <a class="reference internal" href="user_guide.html#choosing-impl"><em>choosing the stats implementation</em></a> covers how to
 pick an implementation for your application. Twitter runs its production
 services with <cite>finagle-stats</cite> and it is available on
 <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">Github</a>
@@ -146,7 +145,7 @@ illustrates the advantages of <cite>finagle-stats</cite> over the older librarie
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.

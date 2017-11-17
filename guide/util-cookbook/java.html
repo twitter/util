@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -6,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Usage from Java &#8212; Util 17.10.0 documentation</title>
+    <title>Usage from Java &mdash; Util 17.12.0-SNAPSHOT documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '17.10.0',
+        VERSION:     '17.12.0-SNAPSHOT',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,10 +25,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 17.10.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 17.12.0-SNAPSHOT documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
+    <link rel="next" title="Twitter Futures Capture Points" href="../util-capturepoints/index.html" />
     <link rel="prev" title="Input/Output" href="io.html" />
    
   
@@ -44,46 +44,49 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../util-capturepoints/index.html" title="Twitter Futures Capture Points"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="io.html" title="Input/Output"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
+        <li><a href="../index.html">Util</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Util Cookbook</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="usage-from-java">
 <h1>Usage from Java<a class="headerlink" href="#usage-from-java" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="scala-s-functions">
 <h2>Scala&#8217;s Functions<a class="headerlink" href="#scala-s-functions" title="Permalink to this headline">¶</a></h2>
-<p>Due to Scala&#8217;s <code class="docutils literal"><span class="pre">Function0</span></code> and <code class="docutils literal"><span class="pre">Function1</span></code> being <code class="docutils literal"><span class="pre">traits</span></code>, these are
+<p>Due to Scala&#8217;s <tt class="docutils literal"><span class="pre">Function0</span></tt> and <tt class="docutils literal"><span class="pre">Function1</span></tt> being <tt class="docutils literal"><span class="pre">traits</span></tt>, these are
 difficult to instantiate directly from Java.</p>
-<p>Use <code class="docutils literal"><span class="pre">com.twitter.util.Function</span></code> instead of <code class="docutils literal"><span class="pre">scala.Function1</span></code>s and
-<code class="docutils literal"><span class="pre">scala.PartialFunction</span></code>s. While <code class="docutils literal"><span class="pre">com.twitter.util.Function0</span></code> is a
-replacement for <code class="docutils literal"><span class="pre">scala.Function0</span></code>.</p>
-<p>While the <code class="docutils literal"><span class="pre">scala.runtime.AbstractFunction</span></code>s look tempting, they were not
+<p>Use <tt class="docutils literal"><span class="pre">com.twitter.util.Function</span></tt> instead of <tt class="docutils literal"><span class="pre">scala.Function1</span></tt>s and
+<tt class="docutils literal"><span class="pre">scala.PartialFunction</span></tt>s. While <tt class="docutils literal"><span class="pre">com.twitter.util.Function0</span></tt> is a
+replacement for <tt class="docutils literal"><span class="pre">scala.Function0</span></tt>.</p>
+<p>While the <tt class="docutils literal"><span class="pre">scala.runtime.AbstractFunction</span></tt>s look tempting, they were not
 intended to be used for Java interop and we got mixed messages from the scalac
-team as to whether it was a good idea to use them. The <code class="docutils literal"><span class="pre">com.twitter.util</span></code>
+team as to whether it was a good idea to use them. The <tt class="docutils literal"><span class="pre">com.twitter.util</span></tt>
 versions of these work perfectly well and should be used instead of those.</p>
-<p>There are also construction methods on the <code class="docutils literal"><span class="pre">Function</span></code> object such as <code class="docutils literal"><span class="pre">func</span></code>
-which improves interop with Java 8&#8217;s lambdas as well as <code class="docutils literal"><span class="pre">ofCallable</span></code> and
-<code class="docutils literal"><span class="pre">ofRunnable</span></code>.</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
+<p>There are also construction methods on the <tt class="docutils literal"><span class="pre">Function</span></tt> object such as <tt class="docutils literal"><span class="pre">func</span></tt>
+which improves interop with Java 8&#8217;s lambdas as well as <tt class="docutils literal"><span class="pre">ofCallable</span></tt> and
+<tt class="docutils literal"><span class="pre">ofRunnable</span></tt>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Function</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func</span><span class="o">;</span>
@@ -101,7 +104,7 @@ which improves interop with Java 8&#8217;s lambdas as well as <code class="docut
 <span class="c1">// Scala&#39;s Function1.</span>
 <span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">func</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
 <span class="c1">// and used inline, with method references:</span>
-<span class="n">Future</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fi</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">func</span><span class="o">(</span><span class="n">String</span><span class="o">::</span><span class="n">length</span><span class="o">()));</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fi</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">func</span><span class="o">(</span><span class="nl">String:</span><span class="o">:</span><span class="n">length</span><span class="o">()));</span>
 
 <span class="c1">// use a static import of cons and lambdas for interop with</span>
 <span class="c1">// Scala Function1&#39;s that return Unit.</span>
@@ -114,18 +117,18 @@ which improves interop with Java 8&#8217;s lambdas as well as <code class="docut
 <div class="section" id="compatibility-apis">
 <h2>Compatibility APIs<a class="headerlink" href="#compatibility-apis" title="Permalink to this headline">¶</a></h2>
 <p>For many common classes and methods, there are static compatibility classes that
-provide Java developers with more idiomatic APIs and less <code class="docutils literal"><span class="pre">Foo$.MODULE$</span></code>s.
-Note that Scala will sometimes create the static forwarding methods on <code class="docutils literal"><span class="pre">Foo</span></code>
+provide Java developers with more idiomatic APIs and less <tt class="docutils literal"><span class="pre">Foo$.MODULE$</span></tt>s.
+Note that Scala will sometimes create the static forwarding methods on <tt class="docutils literal"><span class="pre">Foo</span></tt>
 itself so it is worth looking there as well.</p>
 <p>The class or object&#8217;s scaladocs should point you towards where to look. These
-are typically located at <code class="docutils literal"><span class="pre">$module/src/main/java</span></code>.  There are also Java
-compatibility tests which exist under <code class="docutils literal"><span class="pre">$module/src/test/java/</span></code> which can be
+are typically located at <tt class="docutils literal"><span class="pre">$module/src/main/java</span></tt>.  There are also Java
+compatibility tests which exist under <tt class="docutils literal"><span class="pre">$module/src/test/java/</span></tt> which can be
 helpful for seeing how to use the APIs from Java. Often, the Java analog will
 follow the convention of being in the same package, but with a plural name.
-For example, <code class="docutils literal"><span class="pre">com.twitter.io.Buf</span></code> has Java&#8217;s <code class="docutils literal"><span class="pre">com.twitter.io.Bufs</span></code>.</p>
-<p>As an example, this uses <code class="docutils literal"><span class="pre">com.twitter.util.FuturePools</span></code> in order to access
-the <code class="docutils literal"><span class="pre">FuturePool</span></code> companion object methods.</p>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="o">;</span>
+For example, <tt class="docutils literal"><span class="pre">com.twitter.io.Buf</span></tt> has Java&#8217;s <tt class="docutils literal"><span class="pre">com.twitter.io.Bufs</span></tt>.</p>
+<p>As an example, this uses <tt class="docutils literal"><span class="pre">com.twitter.util.FuturePools</span></tt> in order to access
+the <tt class="docutils literal"><span class="pre">FuturePool</span></tt> companion object methods.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
 
@@ -141,7 +144,7 @@ the <code class="docutils literal"><span class="pre">FuturePool</span></code> co
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
@@ -165,6 +168,7 @@ the <code class="docutils literal"><span class="pre">FuturePool</span></code> co
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">Util Cookbook</a><ul>
       <li>Previous: <a href="io.html" title="previous chapter">Input/Output</a></li>
+      <li>Next: <a href="../util-capturepoints/index.html" title="next chapter">Twitter Futures Capture Points</a></li>
   </ul></li>
   </ul></li>
 </ul>
