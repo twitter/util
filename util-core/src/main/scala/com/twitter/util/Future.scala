@@ -242,7 +242,7 @@ object Future {
   // only set once, we prefer to mix in Function1.
   private[this] class JoinPromise[A](fs: Seq[Future[A]], size: Int)
       extends Promise[Unit]
-      with Function1[Try[A], Unit] {
+      with (Try[A] => Unit) {
 
     private[this] val count = new AtomicInteger(size)
 
@@ -277,17 +277,16 @@ object Future {
    *     `Future` regardless of if they succeed or fail.
    */
   def join[A](fs: Seq[Future[A]]): Future[Unit] = {
-    if (fs.isEmpty) {
-      Future.Unit
-    } else {
+    if (fs.isEmpty) Future.Unit
+    else {
       val size = fs.size
-      if (size == 1) {
-        fs(0).unit
-      } else {
-        val p = new JoinPromise[A](fs, size)
+      if (size == 1) fs.head.unit
+      else {
+        val result = new JoinPromise[A](fs, size)
         val iterator = fs.iterator
-        while (iterator.hasNext) iterator.next().respond(p)
-        p
+        while (iterator.hasNext && !result.isDefined) iterator.next().respond(result)
+
+        result
       }
     }
   }
@@ -1126,7 +1125,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
       var i = 0
       val it = fs.iterator
 
-      while (it.hasNext) {
+      while (it.hasNext && !result.isDefined) {
         it.next().respond(result.collectTo(i))
         i += 1
       }
@@ -1146,7 +1145,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)) map { _ => (%s) }""".format(
     if (fs.isEmpty) emptyMap
     else {
       val (keys, values) = fs.toSeq.unzip
-      Future.collect(values) map { seq =>
+      Future.collect(values).map { seq =>
         keys.zip(seq)(scala.collection.breakOut): Map[A, B]
       }
     }
