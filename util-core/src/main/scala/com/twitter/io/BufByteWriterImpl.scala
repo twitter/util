@@ -228,7 +228,6 @@ private final class FixedBufByteWriter(arr: Array[Byte], private[io] var index: 
    * `FixedByteWriter.` DO NOT USE OUTSIDE OF BUFWRITER!
    */
   private[io] def array: Array[Byte] = arr
-  def size: Int = arr.length
   def remaining: Int = arr.length - index
 
   def arrayToWrite(bytes: Int): Array[Byte] = {
@@ -244,7 +243,7 @@ private final class FixedBufByteWriter(arr: Array[Byte], private[io] var index: 
     curIndex
   }
 
-  val owned: Buf = Buf.ByteArray.Owned(arr)
+  def owned(): Buf = Buf.ByteArray.Owned(arr, 0, index)
 }
 
 /**
@@ -276,9 +275,9 @@ private final class DynamicBufByteWriter(arr: Array[Byte]) extends AbstractBufBy
   private[this] def resizeIfNeeded(requiredRemainingBytes: Int): Unit = {
     if (requiredRemainingBytes > underlying.remaining) {
 
-      var size: Int = underlying.size
+      var size: Int = underlying.array.length
 
-      val written = underlying.size - underlying.remaining
+      val written = size - underlying.remaining
 
       val requiredSize: Int = written + requiredRemainingBytes
 
@@ -318,8 +317,5 @@ private final class DynamicBufByteWriter(arr: Array[Byte]) extends AbstractBufBy
   /**
    * Copies the contents of this writer into a `Buf` of the exact size needed.
    */
-  def owned(): Buf = {
-    // trim the buffer to the size of the contents
-    Buf.ByteArray.Owned(underlying.array, 0, underlying.size - underlying.remaining)
-  }
+  def owned(): Buf = underlying.owned()
 }

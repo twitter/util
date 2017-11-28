@@ -13,6 +13,11 @@ New Features:
   * util-security: Added `c.t.util.security.PrivateKeyFile` for reading PKCS#8
     PEM formatted `PrivateKey` files. ``PHAB_ID=D105266``
 
+Bug Fixes:
+  * util-core: `c.t.io.BufByteWriter.fixed(size).owned()` will only represent bytes
+    explicitly written instead of the full size of the backing array, `size`.
+    ``PHAB_ID=D112938``
+
 17.10.0  2017-10-26
 
 Release Version Changes:

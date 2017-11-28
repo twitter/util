@@ -2,12 +2,9 @@ package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
 import java.nio.charset.StandardCharsets
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-@RunWith(classOf[JUnitRunner])
 final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyChecks {
   import ByteWriter.OverflowException
 
@@ -195,6 +192,12 @@ final class BufByteWriterTest extends FunSuite with GeneratorDrivenPropertyCheck
   // FIXED
   test("index initialized to zero") {
     assertIndex(BufByteWriter.fixed(1), 0)
+  }
+
+  test("trims unwritten bytes") {
+    assert(BufByteWriter.fixed(5).owned.length == 0)
+    assert(BufByteWriter.fixed(5).writeIntBE(1).owned.length == 4)
+    assert(BufByteWriter.fixed(4).writeIntBE(1).owned.length == 4)
   }
 
   testWriteString("fixed", size => BufByteWriter.fixed(size), overflowOK = false)
