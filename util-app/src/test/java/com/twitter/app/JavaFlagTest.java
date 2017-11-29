@@ -13,6 +13,7 @@ import com.twitter.util.Function;
 import com.twitter.util.StorageUnit;
 import com.twitter.util.Time;
 
+import static com.twitter.util.Function.func0;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -95,6 +96,13 @@ public class JavaFlagTest {
     } catch (NumberFormatException expected) {
       assertEquals("For input string: \"9876543210L\"", expected.getMessage());
     }
+  }
+
+  @Test
+  public void testLet() {
+    Flags flags = new Flags("ApplicationName");
+    Flag<Long> flag = flags.create("long", 1234567890L, "", Flaggable.ofJavaLong());
+    assertEquals("ok", flag.let(5L, func0(() -> "ok")));
   }
 
 }

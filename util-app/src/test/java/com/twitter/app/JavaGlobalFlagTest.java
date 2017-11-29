@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.twitter.util.Function0;
 
 import static com.twitter.util.Function.func;
+import static com.twitter.util.Function.func0;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -24,6 +25,12 @@ public class JavaGlobalFlagTest {
     assertTrue(flagOption.isDefined());
     Flag<?> flag = flagOption.get();
     assertEquals("default value", flag.apply());
+  }
+
+  @Test
+  public void testLet() {
+    Flag<String> flag = javaGlobalDollar$.Flag;
+    assertEquals("returned", flag.let("ok", func0(() -> "returned")));
   }
 
   @Test
