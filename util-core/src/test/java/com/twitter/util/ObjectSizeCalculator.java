@@ -7,17 +7,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Sets;
+import scala.Predef;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 
 // copied from https://github.com/twitter/commons/blob/master/src/java/com/twitter/common/objectsize/ObjectSizeCalculator.java
 /**
@@ -115,15 +115,14 @@ public class ObjectSizeCalculator {
   // added.
   private final int superclassFieldPadding;
 
+  // Have to use buildAsync with a synchronous view due to a CHM bug in Java 8.
+  // See https://github.com/ben-manes/caffeine/issues/89
   private final LoadingCache<Class<?>, ClassSizeInfo> classSizeInfos =
-      CacheBuilder.newBuilder().build(new CacheLoader<Class<?>, ClassSizeInfo>() {
-        public ClassSizeInfo load(Class<?> clazz) {
-          return new ClassSizeInfo(clazz);
-        }
-      });
+    Caffeine.newBuilder()
+        .buildAsync(ClassSizeInfo::new)
+        .synchronous();
 
-
-  private final Set<Object> alreadyVisited = Sets.newIdentityHashSet();
+  private final Set<Object> alreadyVisited = Collections.newSetFromMap(new IdentityHashMap<>());
   private final Deque<Object> pending = new ArrayDeque<Object>(16 * 1024);
   private long size;
 
@@ -134,7 +133,7 @@ public class ObjectSizeCalculator {
    * @param memoryLayoutSpecification a description of the JVM memory layout.
    */
   public ObjectSizeCalculator(MemoryLayoutSpecification memoryLayoutSpecification) {
-    Preconditions.checkNotNull(memoryLayoutSpecification);
+    Predef.require(memoryLayoutSpecification != null);
     arrayHeaderSize = memoryLayoutSpecification.getArrayHeaderSize();
     objectHeaderSize = memoryLayoutSpecification.getObjectHeaderSize();
     objectPadding = memoryLayoutSpecification.getObjectPadding();
@@ -186,7 +185,7 @@ public class ObjectSizeCalculator {
       if (clazz.isArray()) {
         visitArray(obj);
       } else {
-        classSizeInfos.getUnchecked(clazz).visit(obj, this);
+        classSizeInfos.get(clazz).visit(obj, this);
       }
     }
   }
@@ -249,7 +248,7 @@ public class ObjectSizeCalculator {
     size += objectSize;
   }
 
-  @VisibleForTesting
+  /** Visible for testing */
   static long roundTo(long x, int multiple) {
     return ((x + multiple - 1) / multiple) * multiple;
   }
@@ -280,7 +279,7 @@ public class ObjectSizeCalculator {
       }
       final Class<?> superClass = clazz.getSuperclass();
       if (superClass != null) {
-        final ClassSizeInfo superClassInfo = classSizeInfos.getUnchecked(superClass);
+        final ClassSizeInfo superClassInfo = classSizeInfos.get(superClass);
         fieldsSize += roundTo(superClassInfo.fieldsSize, superclassFieldPadding);
         referenceFields.addAll(Arrays.asList(superClassInfo.referenceFields));
       }
@@ -300,10 +299,8 @@ public class ObjectSizeCalculator {
         try {
           calc.enqueue(f.get(obj));
         } catch (IllegalAccessException e) {
-          final AssertionError ae = new AssertionError(
-              "Unexpected denial of access to " + f);
-          ae.initCause(e);
-          throw ae;
+          throw new AssertionError(
+              "Unexpected denial of access to " + f, e);
         }
       }
     }
@@ -326,7 +323,7 @@ public class ObjectSizeCalculator {
         type.getName());
   }
 
-  @VisibleForTesting
+  /** Visible for testing */
   static MemoryLayoutSpecification getEffectiveMemoryLayoutSpecification() {
     final String vmName = System.getProperty("java.vm.name");
     if (vmName == null || !(vmName.startsWith("Java HotSpot(TM) ")

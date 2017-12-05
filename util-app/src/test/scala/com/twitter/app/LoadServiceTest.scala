@@ -1,6 +1,5 @@
 package com.twitter.app
 
-import com.google.common.io.ByteStreams
 import com.twitter.conversions.time._
 import com.twitter.finagle.util.loadServiceDenied
 import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
@@ -8,13 +7,10 @@ import com.twitter.util.{Await, Future, FuturePool}
 import java.io.{File, InputStream}
 import java.net.URL
 import java.util
-import java.util.Random
-import java.util.concurrent
 import java.util.concurrent.{Callable, CountDownLatch, ExecutorService, Executors}
-import org.junit.runner.RunWith
+import java.util.{Random, concurrent}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import scala.collection.mutable
 
 // These traits correspond to files in:
@@ -54,7 +50,6 @@ class LoadServiceDeadlockImpl extends LoadServiceDeadlock {
     UsesLoadService.lsd
 }
 
-@RunWith(classOf[JUnitRunner])
 class LoadServiceTest extends FunSuite with MockitoSugar {
 
   test("LoadService should apply[T] and return a set of instances of T") {
@@ -243,7 +238,8 @@ class MetaInfCodedClassloader(parent: ClassLoader) extends ClassLoader(parent) {
       try {
         val path = name.replaceAll("\\.", "/") + ".class"
         val is: InputStream = getClass.getClassLoader.getResourceAsStream(path)
-        val buf = ByteStreams.toByteArray(is)
+        // NOTE: this is not efficient, but its a 1-liner for test code.
+        val buf = Iterator.continually(is.read()).takeWhile(_ != -1).map(_.toByte).toArray
 
         defineClass(name, buf, 0, buf.length)
       } catch {

@@ -1,15 +1,16 @@
 package com.twitter.finagle.stats
 
-import com.google.common.util.concurrent.MoreExecutors
+import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicInteger
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class CumulativeGaugeTest extends FunSuite {
 
-  class TestGauge extends CumulativeGauge(MoreExecutors.sameThreadExecutor()) {
+  private[this] val sameThreadExecutor = new Executor {
+    def execute(command: Runnable): Unit = command.run()
+  }
+
+  class TestGauge extends CumulativeGauge(sameThreadExecutor) {
     val numRegisters = new AtomicInteger()
     val numDeregisters = new AtomicInteger()
 
@@ -71,7 +72,7 @@ class CumulativeGaugeTest extends FunSuite {
   test("a CumulativeGauge should sum values across all registered gauges") {
     val gauge = new TestGauge()
 
-    val underlying = 0.until(100).foreach { _ =>
+    val underlying = 0.until(100).map { _ =>
       gauge.addGauge { 10.0f }
     }
     assert(gauge.getValue == (10.0f * 100))

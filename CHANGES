@@ -6,6 +6,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+API Changes:
+
+  * util-collection: `c.t.util.SetMaker` has been removed.
+    Direct usage of Guava is recommended if needed. ``PHAB_ID=D116852``
+
 17.11.0  2017-11-15
 
 New Features:

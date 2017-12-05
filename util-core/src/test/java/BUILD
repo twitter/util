@@ -1,6 +1,6 @@
 junit_tests(
   dependencies=[
-    '3rdparty/jvm/com/google/guava',
+    '3rdparty/jvm/com/github/ben-manes/caffeine',
     '3rdparty/jvm/junit:junit',
     '3rdparty/jvm/org/mockito:mockito-all',
     '3rdparty/jvm/org/scala-lang:scala-library',
