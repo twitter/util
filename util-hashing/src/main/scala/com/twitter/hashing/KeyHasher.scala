@@ -31,7 +31,6 @@ object KeyHasher {
 
   /**
    * Ketama's default hash algorithm: the first 4 bytes of the MD5 as a little-endian int.
-   * Wow, really? Who thought that was a good way to do it? :(
    */
   val KETAMA = fromHashableInt(Hashable.MD5_LEInt)
   val CRC32_ITU = fromHashableInt(Hashable.CRC32_ITU)

@@ -124,32 +124,21 @@ object Hashable extends LowPriorityHashable {
     override def toString() = "FNV1A_64"
   }
 
-  // the idea here of cloning the MessageDigest is from Google's Guava.
-  // it shaves off a significant amount of clock time and object allocations
-  private[this] val MessageDigestMd5 = MessageDigest.getInstance("MD5")
-  private[this] val Md5SupportsClone: Boolean = try {
-    MessageDigestMd5.clone()
-    true
-  } catch {
-    case _: CloneNotSupportedException =>
-      false
-  }
-  private[this] def newMd5MessageDigest(): MessageDigest = {
-    if (Md5SupportsClone)
-      MessageDigestMd5.clone().asInstanceOf[MessageDigest]
-    else
-      MessageDigest.getInstance("MD5")
+  private[this] val newMd5MessageDigest: ThreadLocal[MessageDigest] = {
+    new ThreadLocal[MessageDigest] {
+      override def initialValue(): MessageDigest = {
+        MessageDigest.getInstance("MD5")
+      }
+    }
   }
 
   /**
    * Ketama's default hash algorithm: the first 4 bytes of the MD5 as a little-endian int.
-   * Wow, really? Who thought that was a good way to do it? :(
    */
   val MD5_LEInt = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
-      val hasher = newMd5MessageDigest()
+      val hasher = newMd5MessageDigest.get()
       hasher.update(key)
-
       val d = hasher.digest()
       (d(0) & 0xff) |
         ((d(1) & 0xff) << 8) |
