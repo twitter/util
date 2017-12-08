@@ -196,6 +196,7 @@ lazy val utilCore = Project(
   name := "util-core",
   libraryDependencies ++= Seq(
     guavaLib % "test",
+    caffeineLib % "test",
     scalacheckLib,
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
