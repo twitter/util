@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &mdash; Util 17.12.0-SNAPSHOT documentation</title>
+    <title>User Guide &#8212; Util 17.12.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '17.12.0-SNAPSHOT',
+        VERSION:     '17.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Util 17.12.0-SNAPSHOT documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 17.12.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -44,11 +45,11 @@
   </script>
 
   </head>
-  <body>
+  <body role="document">
   
   
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -60,15 +61,15 @@
         <li class="right" >
           <a href="basics.html" title="Basics"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Util</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">util-stats Guide</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
@@ -78,13 +79,13 @@
 wired up properly. Finagle uses <a class="reference external" href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala">LoadService</a> in order to discover implementations on the
 classpath. The standard implementation comes via <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">finagle-stats</a>.</p>
 <p>If multiple implementations are found, metrics are reported to <strong>all</strong> of the implementations via a
-<a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a>. This feature is useful when <em class="xref std std-ref">transitioning from one library
-implementation to another</em>. Once you are done migrating, in the interests of efficiency
+<a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a>. This feature is useful when <span class="xref std std-ref">transitioning from one library
+implementation to another</span>. Once you are done migrating, in the interests of efficiency
 and memory pressure, it is wise to validate that only a single implementation is loaded via your
 dependencies. This also implies that developers of libraries should not depend on a specific
 implementation and only depend on util-stats.</p>
 <p>If no implementations are found, metrics are reported to a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> which is essentially
-<tt class="docutils literal"><span class="pre">/dev/null</span></tt>.</p>
+<code class="docutils literal"><span class="pre">/dev/null</span></code>.</p>
 </div>
 <div class="section" id="leveraging-verbosity-levels">
 <h2>Leveraging Verbosity Levels<a class="headerlink" href="#leveraging-verbosity-levels" title="Permalink to this headline">¶</a></h2>
@@ -110,9 +111,9 @@ methods.</p>
 <h2>Prefer storing counters and stats in member variables<a class="headerlink" href="#prefer-storing-counters-and-stats-in-member-variables" title="Permalink to this headline">¶</a></h2>
 <p>While it may be tempting to create your metrics inline, whenever possible you should initialize
 these up front, typically in a class constructor. This is because while capturing usage via
-<tt class="docutils literal"><span class="pre">Stat.add</span></tt> and <tt class="docutils literal"><span class="pre">Counter.incr</span></tt> is optimized for performance, the construction of a <tt class="docutils literal"><span class="pre">Stat</span></tt> and
-<tt class="docutils literal"><span class="pre">Counter</span></tt> is not.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CountingExample</span><span class="o">(</span><span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
+<code class="docutils literal"><span class="pre">Stat.add</span></code> and <code class="docutils literal"><span class="pre">Counter.incr</span></code> is optimized for performance, the construction of a <code class="docutils literal"><span class="pre">Stat</span></code> and
+<code class="docutils literal"><span class="pre">Counter</span></code> is not.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CountingExample</span><span class="o">(</span><span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
   <span class="c1">// create the Counter once and store it in a member</span>
   <span class="k">private</span> <span class="k">val</span> <span class="n">numSheep</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;sheep&quot;</span><span class="o">)</span>
 
@@ -133,11 +134,11 @@ ids in your metric names).</p>
 <div class="section" id="store-gauges-in-member-variables">
 <span id="gauges-in-members"></span><h2>Store gauges in member variables<a class="headerlink" href="#store-gauges-in-member-variables" title="Permalink to this headline">¶</a></h2>
 <p>While your application code is not likely to refer to the value returned from
-<tt class="docutils literal"><span class="pre">StatsReceiver.addGauge</span></tt>, you should store it in a member variable. This is due to the common
-implementation of <tt class="docutils literal"><span class="pre">Gauge</span></tt> being <tt class="docutils literal"><span class="pre">CumulativeGauge</span></tt>, which uses <a class="reference external" href="http://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html">java.lang.ref.WeakReference</a>.
-If a <tt class="docutils literal"><span class="pre">CumulativeGauge</span></tt> is not held by a strong reference, <em>the gauge is eligible for garbage
+<code class="docutils literal"><span class="pre">StatsReceiver.addGauge</span></code>, you should store it in a member variable. This is due to the common
+implementation of <code class="docutils literal"><span class="pre">Gauge</span></code> being <code class="docutils literal"><span class="pre">CumulativeGauge</span></code>, which uses <a class="reference external" href="http://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html">java.lang.ref.WeakReference</a>.
+If a <code class="docutils literal"><span class="pre">CumulativeGauge</span></code> is not held by a strong reference, <em>the gauge is eligible for garbage
 collection</em>, which would cause your metric to disappear unexpectedly at runtime.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span class="c1">// bad, don&#39;t do this:</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// bad, don&#39;t do this:</span>
 <span class="k">class</span> <span class="nc">BadExample</span><span class="o">(</span><span class="n">queue</span><span class="k">:</span> <span class="kt">BlockingQueue</span><span class="o">[</span><span class="kt">Work</span><span class="o">],</span> <span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
   <span class="n">statsReceiver</span><span class="o">.</span><span class="n">addGauge</span><span class="o">(</span><span class="s">&quot;num_waiting&quot;</span><span class="o">)</span> <span class="o">{</span> <span class="n">queue</span><span class="o">.</span><span class="n">size</span> <span class="o">}</span>
   <span class="c1">// code that may do incredible things but you&#39;d never know</span>
@@ -156,46 +157,46 @@ collection</em>, which would cause your metric to disappear unexpectedly at runt
 </div>
 <div class="section" id="prefer-addgauge-over-providegauge">
 <h2>Prefer <cite>addGauge</cite> over <cite>provideGauge</cite><a class="headerlink" href="#prefer-addgauge-over-providegauge" title="Permalink to this headline">¶</a></h2>
-<p><tt class="docutils literal"><span class="pre">StatsReceiver</span></tt> offers two similar methods, <tt class="docutils literal"><span class="pre">addGauge</span></tt> and <tt class="docutils literal"><span class="pre">provideGauge</span></tt>, and whenever
-possible <tt class="docutils literal"><span class="pre">addGauge</span></tt> should be preferred. <tt class="docutils literal"><span class="pre">provideGauge</span></tt> is basically a call to <tt class="docutils literal"><span class="pre">addGauge</span></tt>
+<p><code class="docutils literal"><span class="pre">StatsReceiver</span></code> offers two similar methods, <code class="docutils literal"><span class="pre">addGauge</span></code> and <code class="docutils literal"><span class="pre">provideGauge</span></code>, and whenever
+possible <code class="docutils literal"><span class="pre">addGauge</span></code> should be preferred. <code class="docutils literal"><span class="pre">provideGauge</span></code> is basically a call to <code class="docutils literal"><span class="pre">addGauge</span></code>
 along with code that holds a strong reference to the gauge in a global linked list. Recall from the
-<a class="reference internal" href="#gauges-in-members"><em>previous note</em></a> that <tt class="docutils literal"><span class="pre">Gauges</span></tt> need to held in strong references and as
-such you should only rely on <tt class="docutils literal"><span class="pre">provideGauge</span></tt> when you do not have a place to keep a strong
+<a class="reference internal" href="#gauges-in-members"><span class="std std-ref">previous note</span></a> that <code class="docutils literal"><span class="pre">Gauges</span></code> need to held in strong references and as
+such you should only rely on <code class="docutils literal"><span class="pre">provideGauge</span></code> when you do not have a place to keep a strong
 reference.</p>
 </div>
 <div class="section" id="testing-code-that-use-statsreceivers">
 <h2>Testing code that use StatsReceivers<a class="headerlink" href="#testing-code-that-use-statsreceivers" title="Permalink to this headline">¶</a></h2>
 <p>If your tests do not need to verify the value of stats, you should use a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a>
 which provides a no-op implementation. If your tests need to verify the value of stats, you should
-use an <a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> which provides <tt class="docutils literal"><span class="pre">ReadableCounters</span></tt> and <tt class="docutils literal"><span class="pre">ReadableStats</span></tt> that
+use an <a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> which provides <code class="docutils literal"><span class="pre">ReadableCounters</span></code> and <code class="docutils literal"><span class="pre">ReadableStats</span></code> that
 enable simpler testing.</p>
 </div>
 <div class="section" id="usage-from-java">
 <h2>Usage from Java<a class="headerlink" href="#usage-from-java" title="Permalink to this headline">¶</a></h2>
-<p>There are Java-friendly mechanisms in the <tt class="docutils literal"><span class="pre">StatsReceivers</span></tt> object (note the trailing <strong>s</strong>) for
-creating counters, gauges and stats. In addition <tt class="docutils literal"><span class="pre">JStats</span></tt> is available for measuring latency.</p>
+<p>There are Java-friendly mechanisms in the <code class="docutils literal"><span class="pre">StatsReceivers</span></code> object (note the trailing <strong>s</strong>) for
+creating counters, gauges and stats. In addition <code class="docutils literal"><span class="pre">JStats</span></code> is available for measuring latency.</p>
 </div>
 <div class="section" id="thread-safety">
 <h2>Thread-safety<a class="headerlink" href="#thread-safety" title="Permalink to this headline">¶</a></h2>
-<p>It is expected that implementations of <tt class="docutils literal"><span class="pre">StatsReceivers</span></tt> and their associated counters/gauges/stats
+<p>It is expected that implementations of <code class="docutils literal"><span class="pre">StatsReceivers</span></code> and their associated counters/gauges/stats
 themselves are thread-safe and safe to use across threads.</p>
-<p>The caveat is that because <tt class="docutils literal"><span class="pre">Gauges</span></tt> run a function when they are read, the code you provide as the
+<p>The caveat is that because <code class="docutils literal"><span class="pre">Gauges</span></code> run a function when they are read, the code you provide as the
 function <strong>must also</strong> be thread-safe.</p>
 </div>
 <div class="section" id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">
 <h2>Access needed to a StatsReceiver in an inconvenient place<a class="headerlink" href="#access-needed-to-a-statsreceiver-in-an-inconvenient-place" title="Permalink to this headline">¶</a></h2>
-<p>Ideally classes would be passed a properly scoped <tt class="docutils literal"><span class="pre">StatsReceiver</span></tt> in their constructor but this
+<p>Ideally classes would be passed a properly scoped <code class="docutils literal"><span class="pre">StatsReceiver</span></code> in their constructor but this
 isn’t always simple or feasible. This may be due to various reasons such as legacy code, code in a
 static initializer or a Scala object. In these cases, if you are depending on finagle-core, you
-should consider using one of <tt class="docutils literal"><span class="pre">DefaultStatsReceiver</span></tt>, <tt class="docutils literal"><span class="pre">ClientStatsReceiver</span></tt> or
-<tt class="docutils literal"><span class="pre">ServerStatsReceiver</span></tt>. These are initialized via Finagle’s <tt class="docutils literal"><span class="pre">LoadService</span></tt> mechanism.</p>
+should consider using one of <code class="docutils literal"><span class="pre">DefaultStatsReceiver</span></code>, <code class="docutils literal"><span class="pre">ClientStatsReceiver</span></code> or
+<code class="docutils literal"><span class="pre">ServerStatsReceiver</span></code>. These are initialized via Finagle’s <code class="docutils literal"><span class="pre">LoadService</span></code> mechanism.</p>
 </div>
 <div class="section" id="viewing-per-node-metrics">
 <h2>Viewing per-node metrics<a class="headerlink" href="#viewing-per-node-metrics" title="Permalink to this headline">¶</a></h2>
 <p>This is possible, however the mechanism varies depending on which “application” framework you are
 using.</p>
 <p>Via TwitterServer/finagle-stats — the <a class="reference external" href="https://twitter.github.io/twitter-server/Features.html#http-admin-interface">HTTP admin interface</a> responds with json at
-<tt class="docutils literal"><span class="pre">/admin/metrics.json</span></tt> and there is a web UI for watching them in real-time at <tt class="docutils literal"><span class="pre">/admin/metrics</span></tt>.</p>
+<code class="docutils literal"><span class="pre">/admin/metrics.json</span></code> and there is a web UI for watching them in real-time at <code class="docutils literal"><span class="pre">/admin/metrics</span></code>.</p>
 </div>
 </div>
 
@@ -203,7 +204,7 @@ using.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
 <p>
   Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
