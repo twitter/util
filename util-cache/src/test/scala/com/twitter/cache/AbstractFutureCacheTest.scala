@@ -11,11 +11,11 @@ abstract class AbstractFutureCacheTest extends FunSuite {
   def mkCtx(): Ctx
 
   trait Ctx {
-    val value = Future.value("value")
+    val value: Future[String] = Future.value("value")
     val cache: FutureCache[String, String]
   }
 
-  final def interruptSafe(fCache: (String => Future[Int])) {
+  final def interruptSafe(fCache: (String => Future[Int])): Unit = {
     val f = fCache("key")
     val exn = new Exception
     f.raise(exn)

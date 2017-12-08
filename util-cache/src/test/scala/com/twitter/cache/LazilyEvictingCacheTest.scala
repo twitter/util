@@ -1,27 +1,24 @@
 package com.twitter.cache
 
-import com.google.common.cache.{CacheLoader, CacheBuilder}
-import com.twitter.cache.guava.LoadingFutureCache
-import com.twitter.util.{Await, Promise, Future}
-import org.junit.runner.RunWith
-import org.mockito.Mockito.{verify, never, when}
+import com.github.benmanes.caffeine.cache.{CacheLoader, Caffeine}
+import com.twitter.cache.caffeine.LoadingFutureCache
+import com.twitter.util.{Await, Future, Promise}
 import org.mockito.Matchers._
+import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
-@RunWith(classOf[JUnitRunner])
 class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
-  val explodingCacheLoader =
+  private val explodingCacheLoader =
     new CacheLoader[String, Future[String]] {
-      override def load(k: String): Future[String] =
+      def load(k: String): Future[String] =
         throw new RuntimeException("unexpected load call")
     }
 
   test("LazilyEvictingCache should evict on failed futures for set") {
     val cache = mock[LoadingFutureCache[String, String]]
     val fCache = EvictingCache.lazily(cache)
-    val p = Promise[String]
+    val p = new Promise[String]()
     when(cache.get("key")).thenReturn(Some(p))
     fCache.set("key", p)
     verify(cache).set("key", p)
@@ -42,7 +39,7 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
   test("LazilyEvictingCache should keep satisfied futures for set") {
     val cache = mock[LoadingFutureCache[String, String]]
     val fCache = new LazilyEvictingCache(cache)
-    val p = Promise[String]
+    val p = new Promise[String]()
     when(cache.get("key")).thenReturn(Some(p))
 
     fCache.set("key", p)
@@ -57,9 +54,7 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
 
   test("LazilyEvictingCache getOrElseUpdate doesn't mutate previously set values") {
     val cache = new LoadingFutureCache(
-      CacheBuilder
-        .newBuilder()
-        .build(explodingCacheLoader)
+      Caffeine.newBuilder().build(explodingCacheLoader)
     )
     val fCache = new LazilyEvictingCache(cache)
 
@@ -72,13 +67,11 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
 
   test("LazilyEvictingCache getOrElseUpdate computes a future") {
     val cache = new LoadingFutureCache(
-      CacheBuilder
-        .newBuilder()
-        .build(explodingCacheLoader)
+      Caffeine.newBuilder().build(explodingCacheLoader)
     )
     val fCache = new LazilyEvictingCache(cache)
 
-    val p = Promise[String]
+    val p = new Promise[String]()
     val f = fCache.getOrElseUpdate("key")(p)
 
     p.setValue("new value")
@@ -88,20 +81,18 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
   }
 
   test("LazilyEvictingCache should evict on failed futures for getOrElseUpdate") {
-    val p = Promise[Int]
+    val p = new Promise[Int]()
 
     var loadCount = 0
     val cache = new LoadingFutureCache(
-      CacheBuilder
-        .newBuilder()
-        .build(
-          new CacheLoader[String, Future[Int]] {
-            override def load(k: String): Future[Int] = {
-              loadCount += 1
-              Future.value(loadCount)
-            }
+      Caffeine.newBuilder().build(
+        new CacheLoader[String, Future[Int]] {
+          def load(k: String): Future[Int] = {
+            loadCount += 1
+            Future.value(loadCount)
           }
-        )
+        }
+      )
     )
     val fCache = new LazilyEvictingCache(cache)
 
@@ -122,20 +113,18 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
   }
 
   test("LazilyEvictingCache should keep satisfied futures for getOrElseUpdate") {
-    val p = Promise[Int]
+    val p = new Promise[Int]()
 
     var loadCount = 0
     val cache = new LoadingFutureCache(
-      CacheBuilder
-        .newBuilder()
-        .build(
-          new CacheLoader[String, Future[Int]] {
-            override def load(k: String): Future[Int] = {
-              loadCount += 1
-              Future.value(loadCount)
-            }
+      Caffeine.newBuilder().build(
+        new CacheLoader[String, Future[Int]] {
+          def load(k: String): Future[Int] = {
+            loadCount += 1
+            Future.value(loadCount)
           }
-        )
+        }
+      )
     )
     val fCache = new LazilyEvictingCache(cache)
 

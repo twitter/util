@@ -62,4 +62,5 @@ object GuavaCache {
    */
   def fromCache[K, V](fn: K => Future[V], cache: GCache[K, Future[V]]): K => Future[V] =
     FutureCache.default(fn, new GuavaCache(cache))
+
 }

@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference
  * A single-value asynchronous cache with TTL.  The provider supplies the future value when invoked
  * and this class ensures that the provider is not invoked more frequently than the TTL.  If the
  * future fails, that failure is not cached. If more than one value is required, a FutureCache
- * backed by a guava cache with TTL may be more appropriate.
+ * backed by a `Caffeine` cache with TTL may be more appropriate.
  *
  * This is useful in situations where a call to an external service returns a value that changes
  * infrequently and we need to access that value often, for example asking a service for a list of

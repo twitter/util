@@ -15,15 +15,29 @@ API Changes:
 
 17.11.0  2017-11-15
 
+Dependencies:
+
+  * Guava has been removed as dependency from all modules except the
+    'util-cache-guava' module. ``PHAB_ID=D117039``
+
 New Features:
 
   * util-security: Added `c.t.util.security.PrivateKeyFile` for reading PKCS#8
     PEM formatted `PrivateKey` files. ``PHAB_ID=D105266``
 
 Bug Fixes:
+
   * util-core: `c.t.io.BufByteWriter.fixed(size).owned()` will only represent bytes
     explicitly written instead of the full size of the backing array, `size`.
     ``PHAB_ID=D112938``
+
+API Changes:
+
+  * util-cache: The Guava dependency and its associated implementations have been
+    moved to a new module, 'util-cache-guava'. ``PHAB_ID=D117039``
+
+  * util-cache: `c.t.cache.EvictingCache.lazily` now takes a `FutureCache`
+    instead of an implementation specific cache. ``PHAB_ID=D117039``
 
 17.10.0  2017-10-26
 

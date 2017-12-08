@@ -5,6 +5,7 @@ junit_tests(
     '3rdparty/jvm/org/scala-lang:scala-library',
     '3rdparty/jvm/com/google/guava:guava',
     'util/util-cache',
+    'util/util-cache-guava/src/main/scala:scala',
     'util/util-core/src/main/scala:scala',
   ],
   fatal_warnings=True,

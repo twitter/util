@@ -81,9 +81,8 @@ abstract class FutureCacheProxy[K, V](underlying: FutureCache[K, V]) extends Fut
  * val map = (new java.util.concurrent.ConcurrentHashMap[K, V]()).asScala
  * val cachedFn: K => Future[V] = FutureCache.default(fn, FutureCache.fromMap(map))
  *
- * We typically recommend that you use Guava Caches.  There's an API that makes
- * it easy to use Guava caches, and can be found in the util-collection lib.
- * The object is called [[com.twitter.cache.guava.Guava$]].
+ * We typically recommend that you use `Caffeine` Caches via
+ * [[com.twitter.cache.caffeine.CaffeineCache]].
  */
 object FutureCache {
 

@@ -38,50 +38,54 @@ Those primitives are:
 
 A. [AsyncMemoize][0] (caching)
 B. [EvictingCache][1] (eviction)
-C.  [interruption][2] (this is simple with Twitter Futures so it doesn't need its own class)
+C. [interruption][2] (this is simple with Twitter Futures so it doesn't need its own class)
 
 
-We strongly encourage users to use [Guava caches][3], as the backing synchronous cache.  Once you’ve
-constructed your cache, you can hand it to [GuavaCache][4], which will construct it for you
-correctly.
+We strongly encourage users to use [Caffeine caches][3], as the backing synchronous cache. Once you’ve
+constructed your cache, you can hand it to [com.twitter.cache.caffeine.CaffeineCache][4],
+which will construct it for you correctly.
 
-We're also experimenting with [Caffeine][5], which has a very similar api to Guava.  You should be
-able to use it in the same way, practically as a drop-in replacement.
+If you are using [Guava][5], use the util-cache-guava dependency and
+[com.twitter.cache.guava.GuavaCache][6].
 
 ### Quickstart
 
 To get started, all we need is a function that returns a future, and a cache.
 
 ```scala
-import com.google.common.cache.{CacheBuilder, Cache}
+import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
+import com.twitter.cache.caffeine.CaffeineCache
 import com.twitter.util.Future
 import java.util.concurrent.TimeUnit
 
-val fn: Req => Future[Rep] = ???
-val cache: Cache[Req, Future[Rep]] = CacheBuilder.newBuilder[Req, Future[Rep]]()
+val fn: Req => Future[Rep] = Req => ???
+val cache: Cache[Req, Future[Rep]] = Caffeine.newBuilder()
   .maximumSize(10000)
   .expireAfterWrite(10, TimeUnit.MINUTES)
   .build()
-val cachedFn: Req => Future[Rep] = GuavaCache.fromCache(fn, cache)
+val cachedFn: Req => Future[Rep] = CaffeineCache.fromCache(fn, cache)
 ```
 
-Some users may want to use Guava’s `LoadingCache`, which works equally well.
+Some users may want to use Caffeine’s `LoadingCache`, which works equally well.
 
 ```scala
-import com.google.common.cache.{CacheBuilder, LoadingCache, CacheLoader}
+import com.github.benmanes.caffeine.cache.{CacheLoader, Caffeine}
+import com.twitter.cache.caffeine.CaffeineCache
 import com.twitter.util.Future
 import java.util.concurrent.TimeUnit
 
-val fn: Req => Future[Rep] = ???
-val cache: LoadingCache[Req, Future[Rep]] = CacheBuilder.newBuilder[Req, Future[Rep]]()
+val fn: Req => Future[Rep] = req => ???
+val cache: LoadingCache[Req, Future[Rep]] = Caffeine.newBuilder()
   .maximumSize(10000)
   .expireAfterWrite(10, TimeUnit.MINUTES)
-  .build(new CacheLoader[Req, Future[Rep]]() {
-    def load(Req req): Future[Rep] = {
-      fn(req)
+  .build(
+    new CacheLoader[Req, Future[Rep]]() {
+      def load(req: Req): Future[Rep] = {
+        fn(req)
+      }
     }
-  })
-val cachedFn: Req => Future[Rep] = GuavaCache.fromLoadingCache(cache)
+  )
+val cachedFn: Req => Future[Int] = CaffeineCache.fromLoadingCache(cache)
 ```
 
 ### Advanced Usage
@@ -97,17 +101,18 @@ underlying work because it’s expensive.
 In this case, we might start with something like:
 
 ```scala
-import com.google.common.cache.{CacheBuilder, Cache}
+import com.github.benmanes.caffeine.cache.{CacheLoader, Caffeine}
+import com.twitter.cache.caffeine.CaffeineCache
 import com.twitter.cache.FutureCache
 import com.twitter.util.Future
+import java.util.concurrent.TimeUnit
 
-val fn: K => Future[V] = ??? // we assume this is provided
-val gCache: Cache[K, Future[Rep]] = CacheBuilder.newBuilder[Req, Future[Rep]]()
+val fn: K => Future[V] = _ => ??? // we assume this is provided
+val cCache: Cache[K, Future[Rep]] = Caffeine.newBuilder()
   .maximumSize(10000)
   .expireAfterWrite(10, TimeUnit.MINUTES)
   .build()
-// we don’t use GuavaCache.default so we can add defaults manually
-val cache: FutureCache[Req, Rep] = new GuavaCache(gCache)
+val cache: FutureCache[Req, Rep] = new CaffeineCache(cCache)
 val shared = FutureCache.default(fn, cache)
 ```
 
@@ -119,7 +124,7 @@ import com.twitter.util.Future
 import java.util.concurrent.TimeUnit
 
 val fn: K => Future[V] = ??? // we assume this is provided
-val cache: FutureCache = ???  // we assume this is provided, probably using GuavaCache
+val cache: FutureCache = ???  // we assume this is provided, probably using CaffeineCache
 val shared = AsyncMemoize(fn, new EvictingCache(cache)).andThen { f: Future[V] => f.interruptible() }
 ```
 
@@ -130,7 +135,7 @@ import com.twitter.cache.{AsyncMemoize, EvictingCache, FutureCache}
 import com.twitter.util.Future
 
 val fn: K => Future[V] = ??? // we assume this is provided
-val cache: FutureCache = ???  // we assume this is provided, probably using GuavaCache
+val cache: FutureCache = ???  // we assume this is provided, probably using CaffeineCache
 val owned = AsyncMemoize(fn, new EvictingCache(cache))
 ```
 
@@ -169,6 +174,7 @@ val cachedFile: () => Future[String] = Refresh.every(5.minutes) {
 [0]: https://github.com/twitter/util/blob/develop/util-cache/src/main/scala/com/twitter/cache/AsyncMemoize.scala
 [1]: https://github.com/twitter/util/blob/develop/util-cache/src/main/scala/com/twitter/cache/EvictingCache.scala
 [2]: https://github.com/twitter/util/blob/f5e363e5dbfa42a49478e0324099a7f2884cf6d8/util-cache/src/main/scala/com/twitter/cache/FutureCache.scala#L101-L109
-[3]: https://github.com/google/guava/wiki/CachesExplained
-[4]: https://github.com/twitter/util/blob/develop/util-cache/src/main/scala/com/twitter/cache/guava/GuavaCache.scala
-[5]: https://github.com/ben-manes/caffeine/wiki
+[3]: https://github.com/ben-manes/caffeine/wiki
+[4]: https://github.com/twitter/util/blob/develop/util-cache/src/main/scala/com/twitter/cache/caffeine/CaffeineCache.scala
+[5]: https://github.com/google/guava/wiki/CachesExplained
+[6]: https://github.com/twitter/util/blob/develop/util-cache-guava/src/main/scala/com/twitter/cache/guava/GuavaCache.scala

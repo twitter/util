@@ -118,9 +118,31 @@ lazy val util = Project(
       unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(utilBenchmark)
     )
 ).aggregate(
-  utilFunction, utilRegistry, utilCore, utilCodec, utilCollection, utilCache, utilDoc, utilReflect,
-  utilLint, utilLogging, utilSlf4jApi, utilSlf4jJulBridge, utilTest, utilThrift, utilHashing, utilJvm, utilZk,
-  utilZkTest, utilClassPreloader, utilBenchmark, utilApp, utilSecurity, utilStats, utilTunable
+  utilApp,
+  utilBenchmark,
+  utilCache,
+  utilCacheGuava,
+  utilClassPreloader,
+  utilCodec,
+  utilCollection,
+  utilCore,
+  utilDoc,
+  utilFunction,
+  utilHashing,
+  utilJvm,
+  utilLint,
+  utilLogging,
+  utilReflect,
+  utilRegistry,
+  utilSecurity,
+  utilSlf4jApi,
+  utilSlf4jJulBridge,
+  utilStats,
+  utilTest,
+  utilThrift,
+  utilTunable,
+  utilZk,
+  utilZkTest
 )
 
 lazy val utilApp = Project(
@@ -153,8 +175,18 @@ lazy val utilCache = Project(
   sharedSettings
 ).settings(
   name := "util-cache",
-  libraryDependencies ++= Seq(guavaLib, caffeineLib, jsr305Lib)
+  libraryDependencies ++= Seq(caffeineLib, jsr305Lib)
 ).dependsOn(utilCore)
+
+lazy val utilCacheGuava = Project(
+  id = "util-cache-guava",
+  base = file("util-cache-guava")
+).settings(
+  sharedSettings
+).settings(
+  name := "util-cache-guava",
+  libraryDependencies ++= Seq(guavaLib, jsr305Lib)
+).dependsOn(utilCache % "compile->compile;test->test", utilCore)
 
 lazy val utilClassPreloader = Project(
   id = "util-class-preloader",
