@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+17.12.0  2017-12-08
+
 API Changes:
 
   * util-collection: `c.t.util.SetMaker` has been removed.
