@@ -151,10 +151,7 @@ lazy val utilApp = Project(
 ).settings(
   sharedSettings
 ).settings(
-  name := "util-app",
-  libraryDependencies ++= Seq(
-    guavaLib
-  )
+  name := "util-app"
 ).dependsOn(utilCore, utilRegistry)
 
 lazy val utilBenchmark = Project(
@@ -214,7 +211,6 @@ lazy val utilCollection = Project(
 ).settings(
   name := "util-collection",
   libraryDependencies ++= Seq(
-    guavaLib,
     scalacheckLib
   )
 ).dependsOn(utilCore % "compile->compile;test->test")
@@ -227,7 +223,6 @@ lazy val utilCore = Project(
 ).settings(
   name := "util-core",
   libraryDependencies ++= Seq(
-    guavaLib % "test",
     caffeineLib % "test",
     scalacheckLib,
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
@@ -382,7 +377,7 @@ lazy val utilStats = Project(
   sharedSettings
 ).settings(
   name := "util-stats",
-  libraryDependencies ++= Seq(caffeineLib, jsr305Lib, scalacheckLib, guavaLib % "test")
+  libraryDependencies ++= Seq(caffeineLib, jsr305Lib, scalacheckLib)
 ).dependsOn(utilCore, utilLint)
 
 lazy val utilTest = Project(
