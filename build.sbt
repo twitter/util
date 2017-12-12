@@ -256,7 +256,8 @@ lazy val utilDoc = Project(
 ).enablePlugins(
   SphinxPlugin
 ).settings(
-  sharedSettings ++ Seq(
+  sharedSettings ++ 
+  noPublishSettings ++ Seq(
     scalacOptions in doc ++= Seq("-doc-title", "Util", "-doc-version", version.value),
     includeFilter in Sphinx := ("*.html" | "*.png" | "*.svg" | "*.js" | "*.css" | "*.gif" | "*.txt")
   ))
