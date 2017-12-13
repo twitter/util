@@ -419,8 +419,9 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
    * Scales this `Duration` by modding by `x`.
    */
   def %(x: Duration): Duration = x match {
-    case Undefined | Nanoseconds(0) => Undefined
-    case Nanoseconds(ns) => fromNanoseconds(nanos % ns)
+    case Undefined => Undefined
+    case ns if ns.isZero => Undefined
+    case ns if ns.isFinite => fromNanoseconds(nanos % ns.inNanoseconds)
     case Top | Bottom => this
   }
 

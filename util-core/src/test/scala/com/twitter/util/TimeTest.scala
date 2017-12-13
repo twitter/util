@@ -106,6 +106,23 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenProper
         assert(in.readObject() == v)
       }
     }
+
+    "has correct isZero behaviour" in {
+      for (t <- Seq(Top, Bottom, Undefined, fromNanoseconds(1L))) {
+        assert(t.isZero == false)
+      }
+
+      for (z <- Seq(
+          Zero,
+          fromNanoseconds(0),
+          fromMicroseconds(0),
+          fromFractionalSeconds(0),
+          fromMilliseconds(0),
+          fromSeconds(0)
+        )) {
+        assert(z.isZero == true)
+      }
+    }
   }
 
   "Top" should {

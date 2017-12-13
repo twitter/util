@@ -35,4 +35,10 @@ class DurationBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def durationAddDeltaOverflow: Duration = d3 + d5
+
+  @Benchmark
+  def durationMod: Duration = d4 % d3
+
+  @Benchmark
+  def durationFloor: Duration = d4.floor(d3)
 }

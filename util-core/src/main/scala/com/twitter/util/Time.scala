@@ -190,7 +190,7 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
       case Duration.Top => Top
       case Duration.Bottom => Bottom
       case Duration.Undefined => Undefined
-      case Duration.Nanoseconds(ns) => addNanos(inNanoseconds, ns)
+      case ns => addNanos(inNanoseconds, ns.inNanoseconds)
     }
   }
 
@@ -198,6 +198,9 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
 
   /** Is this a finite TimeLike value? */
   def isFinite: Boolean
+
+  /** Is this a finite TimeLike value and equals 0 */
+  def isZero: Boolean = isFinite && this.inNanoseconds == 0
 
   /** The difference between the two `TimeLike`s */
   def diff(that: This): Duration
@@ -220,10 +223,10 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
    * results because of timezones.
    */
   def floor(increment: Duration): This = (this, increment) match {
-    case (Nanoseconds(0), Duration.Nanoseconds(0)) => Undefined
-    case (Nanoseconds(num), Duration.Nanoseconds(0)) => if (num < 0) Bottom else Top
-    case (Nanoseconds(num), Duration.Nanoseconds(denom)) => fromNanoseconds((num / denom) * denom)
-    case (self, Duration.Nanoseconds(_)) => self
+    case (num, ns) if num.isZero && ns.isZero => Undefined
+    case (num, ns) if num.isFinite && ns.isZero => if (num.inNanoseconds < 0) Bottom else Top
+    case (num, denom) if num.isFinite && denom.isFinite =>  fromNanoseconds((num.inNanoseconds / denom.inNanoseconds) * denom.inNanoseconds)
+    case (self, n) if n.isFinite => self
     case (_, _) => Undefined
   }
 
@@ -593,7 +596,7 @@ sealed class Time private[util] (protected val nanos: Long) extends {
    */
   def -(that: Time): Duration = diff(that)
 
-  override def isFinite: Boolean = true
+  def isFinite: Boolean = true
 
   def diff(that: Time): Duration = {
     // subtracts b from a while taking care of long overflow
