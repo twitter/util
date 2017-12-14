@@ -26,9 +26,8 @@ jdk:
   - oraclejdk8
 
 notifications:
-  hipchat:
-    rooms:
-      secure: ip7yYXJllgMZEwkDNgEfcFUmVtJlGzW3eC+x/NHZWUe7aFTbD/+Who31EWLU28fU9O9FdQquzL96oEQMyD+d+Cy03EhboOJf1f/oKinT1UXNvcx+kf912EgaU8ei4ZQ/o5oc7A+sTyq3wA/FSm/BwhUOjSDFZ4oOTZZXxoZYvYc=
+  slack:
+    secure: E0knpocRWQT1YI4TgAZGxS7Xoe15wWZ5fbJsi0nfMhxHSlngrnxAknN60qovPa2J8R/opryX/0jwaUF2/5RPYVxf6ARNI428WkrltxctQeCugN8j5XqpBqXLR/+GPetqFe9WwF6ycg3bmThsXnap6/xNB75zMWj+2E1CYTqwpA0=
 
 before_script:
   # default $SBT_OPTS is irrelevant to sbt lancher
