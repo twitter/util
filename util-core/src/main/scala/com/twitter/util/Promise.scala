@@ -1005,16 +1005,16 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   }
 
   def poll: Option[Try[A]] = state match {
-    case _: WaitQueue[A] | _: Interruptible[A] | _: Interrupted[A] | _: Transforming[A] => None
     case res: Try[A] /* Done */ => Some(res)
     case p: Promise[A] /* Linked */ => p.poll
+    case _ /* WaitQueue, Interruptible, Interrupted, or Transforming */ => None
   }
 
   override def isDefined: Boolean = state match {
     // Note: the basic implementation is the same as `poll()`, but we want to avoid doing
     // object allocations for `Some`s when the caller does not need the result.
-    case _: WaitQueue[A] | _: Interruptible[A] | _: Interrupted[A] | _: Transforming[A] => false
     case _: Try[A] /* Done */ => true
     case p: Promise[A] /* Linked */ => p.isDefined
+    case _ /* WaitQueue, Interruptible, Interrupted, or Transforming */ => false
   }
 }

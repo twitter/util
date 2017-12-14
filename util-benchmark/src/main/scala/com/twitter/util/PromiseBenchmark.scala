@@ -47,6 +47,22 @@ class PromiseBenchmark extends StdBenchAnnotations {
   def interruptsN(state: PromiseBenchmark.InterruptsState): Promise[String] = {
     Promise.interrupts(state.futures: _*)
   }
+
+  @Benchmark
+  def promiseIsDefined(state: PromiseBenchmark.PromiseState): Boolean = {
+    if (state.i == state.len) state.i = 0
+    val ret = state.promises(state.i).isDefined
+    state.i += 1
+    ret
+  }
+
+  @Benchmark
+  def promisePoll(state: PromiseBenchmark.PromiseState): Option[Try[Unit]] = {
+    if (state.i == state.len) state.i = 0
+    val ret = state.promises(state.i).poll
+    state.i += 1
+    ret
+  }
 }
 
 object PromiseBenchmark {
@@ -73,5 +89,25 @@ object PromiseBenchmark {
     val futures: List[Future[Int]] = (0 until 100).map(i => Future.value(i)).toList
     val a: Future[String] = Future.value("a")
     val b: Future[String] = Future.value("b")
+  }
+
+  @State(Scope.Thread)
+  class PromiseState {
+    /* state == WaitQueue */
+    val pw: Promise[Unit] = new Promise[Unit]()
+
+    /* state == Try */
+    val pt: Promise[Unit] = new Promise[Unit](Return.Unit)
+
+    /* state == Interruptible */
+    val f: PartialFunction[Throwable, Unit] = { case _ => () }
+    val pi: Promise[Unit] = new Promise[Unit](f)
+
+    /* state == Promise */
+    val pl: Promise[Unit] = Promise.attached[Unit](new Promise[Unit]())
+
+    var i: Int = 0
+    val promises: Array[Promise[Unit]] = Array(pw, pt, pi, pl)
+    val len: Int = promises.length
   }
 }
