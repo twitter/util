@@ -1680,6 +1680,9 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * ''Note'': On timeout, the underlying future is not interrupted.
    *
+   * ''Note'': Interrupting a returned future would not prevent it from being satisfied
+   *           with a given exception (when the time comes).
+   *
    * @param timer to run timeout on.
    * @param when indicates when to stop waiting for the result to be available.
    * @param exc exception to throw.
@@ -1705,13 +1708,16 @@ abstract class Future[+A] extends Awaitable[A] { self =>
       }
 
   /**
-   * Delay the completion of this Future for at least
-   * `howlong` from now.
+   * Delay the completion of this Future for at least `howlong` from now.
+   *
+   * ''Note'': Interrupting a returned future would not prevent it from becoming this future
+   *           (when the time comes).
    */
   def delayed(howlong: Duration)(implicit timer: Timer): Future[A] =
     if (howlong == Duration.Zero) this
     else
       new Promise[A] with (() => Unit) { other =>
+        // Timer task.
         def apply(): Unit = become(self)
 
         timer.schedule(howlong.fromNow)(other())
