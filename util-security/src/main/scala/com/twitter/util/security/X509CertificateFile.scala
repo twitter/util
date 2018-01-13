@@ -20,15 +20,6 @@ class X509CertificateFile(file: File) {
   private[this] def logException(ex: Throwable): Unit =
     log.warning(s"X509Certificate (${file.getName}) failed to load: ${ex.getMessage}.")
 
-  private[this] def generateX509Certificate(decodedMessage: Array[Byte]): X509Certificate = {
-    val certFactory = CertificateFactory.getInstance("X.509")
-    val certificate = certFactory
-      .generateCertificate(new ByteArrayInputStream(decodedMessage))
-      .asInstanceOf[X509Certificate]
-    certificate.checkValidity()
-    certificate
-  }
-
   /**
    * Attempts to read the contents of the X.509 Certificate from the file.
    */
@@ -57,4 +48,13 @@ private object X509CertificateFile {
   private val MessageType: String = "CERTIFICATE"
 
   private val log = Logger.get("com.twitter.util.security")
+
+  private def generateX509Certificate(decodedMessage: Array[Byte]): X509Certificate = {
+    val certFactory = CertificateFactory.getInstance("X.509")
+    val certificate = certFactory
+      .generateCertificate(new ByteArrayInputStream(decodedMessage))
+      .asInstanceOf[X509Certificate]
+    certificate.checkValidity()
+    certificate
+  }
 }

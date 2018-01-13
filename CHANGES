@@ -6,6 +6,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+New Features:
+
+  * util-security: Added `c.t.util.security.X509CrlFile` for reading
+    Certificate Revocation List PEM formatted `X509CRL` files.
+    ``PHAB_ID=D127700``
+
 17.12.0  2017-12-08
 
 API Changes:
