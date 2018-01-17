@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+18.1.0  2018-01-17
+
 New Features:
 
   * util-security: Added `c.t.util.security.X509CrlFile` for reading
