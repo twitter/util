@@ -472,9 +472,9 @@ the cache are evicted later.</p>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.cache.EvictingCache#lazily" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="lazily[K,V](underlying:com.twitter.cache.caffeine.LoadingFutureCache[K,V]):com.twitter.cache.FutureCache[K,V]"></a><a id="lazily[K,V](LoadingFutureCache[K,V]):FutureCache[K,V]"></a>
+      <a id="lazily[K,V](underlying:com.twitter.cache.FutureCache[K,V]):com.twitter.cache.FutureCache[K,V]"></a><a id="lazily[K,V](FutureCache[K,V]):FutureCache[K,V]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/cache/EvictingCache$.html#lazily[K,V](underlying:com.twitter.cache.caffeine.LoadingFutureCache[K,V]):com.twitter.cache.FutureCache[K,V]" title="Permalink">
+      <a href="../../../com/twitter/cache/EvictingCache$.html#lazily[K,V](underlying:com.twitter.cache.FutureCache[K,V]):com.twitter.cache.FutureCache[K,V]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -483,24 +483,7 @@ the cache are evicted later.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">lazily</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="underlying">underlying: <a href="caffeine/LoadingFutureCache.html" class="extype" name="com.twitter.cache.caffeine.LoadingFutureCache">LoadingFutureCache</a>[<span class="extype" name="com.twitter.cache.EvictingCache.lazily.K">K</span>, <span class="extype" name="com.twitter.cache.EvictingCache.lazily.V">V</span>]</span>)</span><span class="result">: <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">FutureCache</a>[<span class="extype" name="com.twitter.cache.EvictingCache.lazily.K">K</span>, <span class="extype" name="com.twitter.cache.EvictingCache.lazily.V">V</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Wraps an underlying FutureCache, ensuring that if a failed future
-is fetched, we evict it.</p>
-    </li><li name="com.twitter.cache.EvictingCache#lazily" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="lazily[K,V](underlying:com.twitter.cache.guava.LoadingFutureCache[K,V]):com.twitter.cache.FutureCache[K,V]"></a><a id="lazily[K,V](LoadingFutureCache[K,V]):FutureCache[K,V]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/cache/EvictingCache$.html#lazily[K,V](underlying:com.twitter.cache.guava.LoadingFutureCache[K,V]):com.twitter.cache.FutureCache[K,V]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">lazily</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="underlying">underlying: <a href="guava/LoadingFutureCache.html" class="extype" name="com.twitter.cache.guava.LoadingFutureCache">LoadingFutureCache</a>[<span class="extype" name="com.twitter.cache.EvictingCache.lazily.K">K</span>, <span class="extype" name="com.twitter.cache.EvictingCache.lazily.V">V</span>]</span>)</span><span class="result">: <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">FutureCache</a>[<span class="extype" name="com.twitter.cache.EvictingCache.lazily.K">K</span>, <span class="extype" name="com.twitter.cache.EvictingCache.lazily.V">V</span>]</span>
+        <span class="name">lazily</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="underlying">underlying: <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">FutureCache</a>[<span class="extype" name="com.twitter.cache.EvictingCache.lazily.K">K</span>, <span class="extype" name="com.twitter.cache.EvictingCache.lazily.V">V</span>]</span>)</span><span class="result">: <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">FutureCache</a>[<span class="extype" name="com.twitter.cache.EvictingCache.lazily.K">K</span>, <span class="extype" name="com.twitter.cache.EvictingCache.lazily.V">V</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Wraps an underlying FutureCache, ensuring that if a failed future

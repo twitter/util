@@ -478,7 +478,8 @@ discards the result of <code>this</code>. Note that this applies only
         <span class="name">by</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="when">when: <a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="exc">exc: ⇒ <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Returns a new Future that fails if it is not satisfied before the given time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that fails if it is not satisfied before the given time.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.
+      <p class="shortcomment cmt">Returns a new Future that fails if it is not satisfied before the given time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that fails if it is not satisfied before the given time.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.</p><p><i>Note</i>: Interrupting a returned future would not prevent it from being satisfied
+          with a given exception (when the time comes).
 </p></div><dl class="paramcmts block"><dt class="param">timer</dt><dd class="cmt"><p>to run timeout on.</p></dd><dt class="param">when</dt><dd class="cmt"><p>indicates when to stop waiting for the result to be available.</p></dd><dt class="param">exc</dt><dd class="cmt"><p>exception to throw.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
     </li><li name="com.twitter.util.Future#by" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="by(timer:com.twitter.util.Timer,when:com.twitter.util.Time):com.twitter.util.Future[A]"></a><a id="by(Timer,Time):Future[Children]"></a>
@@ -607,9 +608,8 @@ or it is becoming another Future via <code>become</code>.
         <span class="name">delayed</span><span class="params">(<span name="howlong">howlong: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Delay the completion of this Future for at least
-<code>howlong</code> from now.</p><div class="fullcomment"><div class="comment cmt"><p>Delay the completion of this Future for at least
-<code>howlong</code> from now.
+      <p class="shortcomment cmt">Delay the completion of this Future for at least <code>howlong</code> from now.</p><div class="fullcomment"><div class="comment cmt"><p>Delay the completion of this Future for at least <code>howlong</code> from now.</p><p><i>Note</i>: Interrupting a returned future would not prevent it from becoming this future
+          (when the time comes).
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
     </li><li name="com.twitter.util.Promise#depth" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="depth:Short"></a>

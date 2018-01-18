@@ -207,9 +207,8 @@
 FutureCaches.  Once you've constructed a basic FutureCache, you should almost
 always wrap it with default.  Normal usage looks like:</p><p>val fn: K =&gt; Future[V]
 val map = (new java.util.concurrent.ConcurrentHashMap[K, V]()).asScala
-val cachedFn: K =&gt; Future[V] = FutureCache.default(fn, FutureCache.fromMap(map))</p><p>We typically recommend that you use Guava Caches.  There's an API that makes
-it easy to use Guava caches, and can be found in the util-collection lib.
-The object is called <span class="extype" name="com.twitter.cache.guava.Guava$">com.twitter.cache.guava.Guava$</span>.
+val cachedFn: K =&gt; Future[V] = FutureCache.default(fn, FutureCache.fromMap(map))</p><p>We typically recommend that you use <code>Caffeine</code> Caches via
+<a href="caffeine/CaffeineCache.html" class="extype" name="com.twitter.cache.caffeine.CaffeineCache">com.twitter.cache.caffeine.CaffeineCache</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
