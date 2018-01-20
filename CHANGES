@@ -8,8 +8,14 @@ Unreleased
 
 New Features:
 
-* util-core: Added implicit conversion for percentage specified as "x.percent"
-  to a fractional Double in `c.t.conversions.percent`. ``PHAB_ID=D128792``
+  * util-core: Added implicit conversion for percentage specified as "x.percent"
+    to a fractional Double in `c.t.conversions.percent`. ``PHAB_ID=D128792``
+
+Runtime Behavior Changes:
+
+  * util-app: When `c.t.a.App.exitOnError` is called, it now gives `close`
+    an opportunity to clean up resources before exiting with an error.
+    ``PHAB_ID=D129437``
 
 18.1.0  2018-01-17
 

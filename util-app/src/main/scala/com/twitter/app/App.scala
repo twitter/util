@@ -63,7 +63,7 @@ trait App extends Closable with CloseAwaitably {
 
   protected def exitOnError(reason: String): Unit = {
     System.err.println(reason)
-    close()
+    Await.ready(close(), closeDeadline - Time.now)
     System.exit(1)
   }
 
