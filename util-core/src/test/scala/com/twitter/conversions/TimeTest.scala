@@ -1,12 +1,9 @@
 package com.twitter.conversions
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
 import com.twitter.util.Duration
 
-@RunWith(classOf[JUnitRunner])
 class TimeTest extends FunSuite {
   import time._
 
