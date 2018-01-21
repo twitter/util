@@ -41,6 +41,16 @@ sealed abstract class Tunable[T](val id: String) { self =>
       def apply(): Option[T] =
         self().orElse(that())
     }
+
+  /**
+   * Returns a [[Tunable]] containing the result of applying f to this [[Tunable]] value.
+   *
+   * @note the returned [[Tunable]] will have the `id` of this [[Tunable]]
+   */
+  def map[A](f: T => A): Tunable[A] =
+    new Tunable[A](id) {
+      def apply(): Option[A] = self().map(f)
+    }
 }
 
 object Tunable {

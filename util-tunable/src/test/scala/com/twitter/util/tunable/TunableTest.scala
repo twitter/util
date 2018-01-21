@@ -122,4 +122,52 @@ class TunableTest extends FunSuite {
 
     assert(composed() == Some("hello2"))
   }
+
+  test("map uses the id of the original Tunable") {
+    val tunable = Tunable.mutable("id", 5)
+    val composed = tunable.map(v => v * 2)
+    assert(composed.id == tunable.id)
+  }
+
+  test("map maps the value of the original Tunable if it is defined") {
+    val tunable = Tunable.mutable("id", 5)
+    val composed = tunable.map(v => v * 2)
+    assert(composed() == Some(10))
+  }
+
+  test("map returns None when applied if the value of the first Tunable is not defined") {
+    val tunable = Tunable.emptyMutable[Int]("id")
+    val composed = tunable.map(v => v * 2)
+    assert(composed() == None)
+  }
+
+  test("map reflects the changes of mutable Tunables with an initial value") {
+    val tunable = Tunable.mutable("id", 5)
+    val composed = tunable.map(v => v * 2)
+    assert(composed() == Some(10))
+
+    tunable.set(7)
+
+    assert(composed() == Some(14))
+  }
+
+  test("map reflects the changes of mutable Tunables without an initial value") {
+    val tunable = Tunable.emptyMutable[Int]("id")
+    val composed = tunable.map(v => v * 2)
+    assert(composed() == None)
+
+    tunable.set(5)
+
+    assert(composed() == Some(10))
+  }
+
+  test("map reflects the changes of mutable Tunables when it is cleared") {
+    val tunable = Tunable.mutable("id", 5)
+    val composed = tunable.map(v => v * 2)
+    assert(composed() == Some(10))
+
+    tunable.clear()
+
+    assert(composed() == None)
+  }
 }
