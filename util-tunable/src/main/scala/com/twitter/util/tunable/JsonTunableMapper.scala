@@ -27,8 +27,10 @@ object JsonTunableMapper {
    * These deserializers are:
    *
    * - [[com.twitter.util.tunable.json.DurationFromString]]
+   * - [[com.twitter.util.tunable.json.StorageUnitFromString]]
    */
-  val DefaultDeserializers: Seq[JsonDeserializer[_]] = Seq(DurationFromString)
+  val DefaultDeserializers: Seq[JsonDeserializer[_]] =
+    Seq(DurationFromString, StorageUnitFromString)
 
   /**
    * Create a new [[JsonTunableMapper]], using the provided deserializers `deserializers`.

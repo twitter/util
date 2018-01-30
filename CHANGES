@@ -11,6 +11,9 @@ New Features:
   * util-core: Added implicit conversion for percentage specified as "x.percent"
     to a fractional Double in `c.t.conversions.percent`. ``PHAB_ID=D128792``
 
+  * util-tunable: Add deserializer for `c.t.u.StorageUnit` to JsonTunableMapper
+    ``PHAB_ID=D132368``
+
 Runtime Behavior Changes:
 
   * util-app: When `c.t.a.App.exitOnError` is called, it now gives `close`

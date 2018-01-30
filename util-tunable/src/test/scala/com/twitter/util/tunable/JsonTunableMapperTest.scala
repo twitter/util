@@ -3,8 +3,9 @@ package com.twitter.util.tunable
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.twitter.conversions.storage._
 import com.twitter.conversions.time._
-import com.twitter.util.{Duration, Return, Throw}
+import com.twitter.util.{Duration, Return, StorageUnit, Throw}
 import org.scalatest.FunSuite
 import scala.collection.JavaConverters._
 
@@ -105,6 +106,24 @@ class JsonTunableMapperTest extends FunSuite {
         assert(map(TunableMap.Key[Duration]("timeoutId2"))() == Some(Duration.Top))
         assert(map(TunableMap.Key[Duration]("timeoutId3"))() == Some(Duration.Bottom))
         assert(map(TunableMap.Key[Duration]("timeoutId4"))() == Some(Duration.Undefined))
+      case Throw(_) => fail()
+    }
+  }
+
+  test("parses json with StorageUnit value") {
+    val json = """
+      |{ "tunables": [
+      |   { "id" : "maxRequestSize",
+      |     "value" : "100.kilobytes",
+      |     "type" : "com.twitter.util.StorageUnit"
+      |   }
+      | ]
+      |}""".stripMargin
+
+    JsonTunableMapper().parse(json) match {
+      case Return(map) =>
+        assert(map.entries.size == 1)
+        assert(map(TunableMap.Key[StorageUnit]("maxRequestSize"))() == Some(100.kilobytes))
       case Throw(_) => fail()
     }
   }

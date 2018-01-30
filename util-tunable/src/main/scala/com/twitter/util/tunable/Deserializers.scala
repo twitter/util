@@ -20,4 +20,11 @@ private[twitter] object json {
       deserializationContext: DeserializationContext
     ): util.Duration = util.Duration.parse(jsonParser.getText)
   }
+
+  val StorageUnitFromString = new StdDeserializer[util.StorageUnit](classOf[util.StorageUnit]) {
+    override def deserialize(
+      jsonParser: JsonParser,
+      deserializationContext: DeserializationContext
+    ): util.StorageUnit = util.StorageUnit.parse(jsonParser.getText)
+  }
 }
