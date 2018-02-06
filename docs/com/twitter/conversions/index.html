@@ -199,6 +199,10 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
     </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="object" href="percent$.html" title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent."></a>
+                        <a href="percent$.html" title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent.">percent</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="storage$.html" title=""></a>
                         <a href="storage$.html" title="">storage</a>
                       </li><li class="current-entities indented3">
@@ -425,7 +429,32 @@
         <div class="values members">
               <h3>Value Members</h3>
               <ol>
-                <li name="com.twitter.conversions.storage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+                <li name="com.twitter.conversions.percent" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="percent"></a><a id="percent:percent"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/index.html#percent" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent." href="percent$.html"><span class="name">percent</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to
+where 1.0 is 100 percent.</p><div class="fullcomment"><div class="comment cmt"><p>Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to
+where 1.0 is 100 percent.
+</p></div><dl class="attributes block"> <div class="block">Example:
+               <ol><li class="cmt"><p></p><pre><span class="num">1.</span>percent == <span class="num">0.01</span>
+<span class="num">100.</span>percent == <span class="num">1.0</span>
+<span class="num">99.9</span>.percent == <span class="num">0.999</span>
+<span class="num">500.</span>percent == <span class="num">5.0</span>
+-<span class="num">10.</span>percent == -<span class="num">0.1</span></pre></li></ol>
+            </div><dt>Note</dt><dd><span class="cmt"><p>Negative values, fractional values, and values greater than 100 are permitted.</p></span></dd></dl></div>
+    </li><li name="com.twitter.conversions.storage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="storage"></a><a id="storage:storage"></a>
       <span class="permalink">
       <a href="../../../com/twitter/conversions/index.html#storage" title="Permalink">
