@@ -55,26 +55,25 @@ class FutureBenchmark extends StdBenchAnnotations {
     Future.join(futures)
   }
 
+  // The following three benchmarks (timeRespond, timeMap, timeFlatMap) only account
+  // for continuation creation and its registration within a wait queue.
+  //
+  // See runqSize and runqBaseline benchmarks for analysing Promise.WaitQueue.run
+  // (i.e., promise satisfaction) performance.
+
   @Benchmark
-  def timeRespond(): Boolean = {
-    val promise = new Promise[Unit]()
-    promise.respond(RespondFn)
-    promise.setDone()
+  def timeRespond(): Future[Unit] = {
+    new Promise[Unit].respond(RespondFn)
   }
 
   @Benchmark
-  def timeMap(): String = {
-    val promise = new Promise[Unit]()
-    val mapped = promise.map(MapFn)
-    promise.setDone()
-    Await.result(mapped)
+  def timeMap(): Future[Unit] = {
+    new Promise[Unit].map(MapFn)
   }
 
   @Benchmark
-  def timeFlatMap(): Boolean = {
-    val promise = new Promise[Unit]()
-    promise.flatMap(FlatMapFn)
-    promise.setDone()
+  def timeFlatMap(): Future[Unit] = {
+    new Promise[Unit].flatMap(FlatMapFn)
   }
 
   @Benchmark
@@ -223,8 +222,8 @@ object FutureBenchmark {
   private val FlatMapFn: Unit => Future[Unit] = { _: Unit =>
     Future.Unit
   }
-  private val MapFn: Unit => String = { _: Unit =>
-    "hi"
+  private val MapFn: Unit => Unit = { _: Unit =>
+    ()
   }
 
   @State(Scope.Benchmark)
