@@ -1,11 +1,8 @@
 package com.twitter.app
 
 import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class FlagsTest extends FunSuite {
 
   class Ctx(failFastUntilParsed: Boolean = false) {

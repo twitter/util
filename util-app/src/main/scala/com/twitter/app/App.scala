@@ -62,7 +62,20 @@ trait App extends Closable with CloseAwaitably {
   protected def failfastOnFlagsNotParsed: Boolean = false
 
   protected def exitOnError(reason: String): Unit = {
+    exitOnError(reason, "")
+  }
+
+  /**
+   * The details Fn may be an expensive operation (which could fail). We want to
+   * ensure that we've at least written the `reason` field to System.err before
+   * attempting to write the `detail` field so that users will at a minimum see the
+   * `reason` for the exit regardless of any extra details.
+   */
+  protected def exitOnError(reason: String, details: => String): Unit = {
     System.err.println(reason)
+    // want to ensure "reason" is written before attempting to write any details
+    System.err.flush()
+    System.err.println(details)
     Await.ready(close(), closeDeadline - Time.now)
     System.exit(1)
   }
@@ -200,7 +213,7 @@ trait App extends Closable with CloseAwaitably {
       case FlagUsageError(reason) =>
         exitOnError(reason)
       case FlagParseException(reason, _) =>
-        exitOnError(reason)
+        exitOnError(reason, flag.usage)
       case e: Throwable =>
         e.printStackTrace()
         exitOnError("Exception thrown in main on startup")

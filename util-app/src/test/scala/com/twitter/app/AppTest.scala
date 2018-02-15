@@ -1,19 +1,17 @@
 package com.twitter.app
 
 import com.twitter.conversions.time._
-import com.twitter.util.{Closable, Future, MockTimer, Promise, Time}
+import com.twitter.util.{Closable, Future, MockTimer, Promise, Time, Timer}
 import java.util.concurrent.ConcurrentLinkedQueue
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
 class TestApp(f: () => Unit) extends App {
   var reason: Option[String] = None
-  protected override def exitOnError(reason: String) = {
+  protected override def exitOnError(reason: String, details: => String): Unit = {
     this.reason = Some(reason)
   }
 
-  def main() = f()
+  def main(): Unit = f()
 }
 
 object VeryBadApp extends App {
@@ -23,17 +21,16 @@ object VeryBadApp extends App {
     throw new RuntimeException("this is a bad app")
   }
 
-  def main() = {}
+  def main(): Unit = {}
 }
 
-@RunWith(classOf[JUnitRunner])
 class AppTest extends FunSuite {
   test("App: make sure system.exit called on exception from main") {
     val test1 = new TestApp(() => throw new RuntimeException("simulate main failing"))
 
     test1.main(Array())
 
-    assert(test1.reason == Some("Exception thrown in main on startup"))
+    assert(test1.reason.contains("Exception thrown in main on startup"))
   }
 
   test("App: propagate underlying exception from fields in app") {
@@ -46,14 +43,14 @@ class AppTest extends FunSuite {
     val test1 = new TestApp(() => ())
     val test2 = new TestApp(() => ())
 
-    assert(App.registered != Some(test1))
-    assert(App.registered != Some(test2))
+    assert(!App.registered.contains(test1))
+    assert(!App.registered.contains(test2))
 
     test1.main(Array.empty)
-    assert(App.registered == Some(test1))
+    assert(App.registered.contains(test1))
 
     test2.main(Array.empty)
-    assert(App.registered == Some(test2))
+    assert(App.registered.contains(test2))
   }
 
   test("App: pass in bad args and expect usage") {
@@ -72,7 +69,7 @@ class AppTest extends FunSuite {
     class Test1 extends App {
       onExit(q.add(4))
       postmain(q.add(3))
-      def main() = q.add(2)
+      def main(): Unit = q.add(2)
       premain(q.add(1))
       init(q.add(0))
     }
@@ -81,7 +78,7 @@ class AppTest extends FunSuite {
   }
 
   test("App: sequenced exits") {
-    val a = new App { def main() = () }
+    val a = new App { def main(): Unit = () }
     val p = new Promise[Unit]
     var n1, n2 = 0
     val c1 = Closable.make { _ =>
@@ -107,8 +104,8 @@ class AppTest extends FunSuite {
   test("App: sequenced exits respect deadline") {
     val t = new MockTimer
     val a = new App {
-      override lazy val shutdownTimer = t
-      def main() = ()
+      override lazy val shutdownTimer: Timer = t
+      def main(): Unit = ()
     }
 
     Time.withCurrentTimeFrozen { ctl =>
@@ -141,8 +138,8 @@ class AppTest extends FunSuite {
   ) {
     val t = new MockTimer
     val a = new App {
-      override lazy val shutdownTimer = t
-      def main() = ()
+      override lazy val shutdownTimer: Timer = t
+      def main(): Unit = ()
     }
 
     Time.withCurrentTimeFrozen { ctl =>
@@ -192,8 +189,8 @@ class AppTest extends FunSuite {
   test("App: late closeOnExitLast closes stalled second phase") {
     val t = new MockTimer
     val a = new App {
-      override lazy val shutdownTimer = t
-      def main() = ()
+      override lazy val shutdownTimer: Timer = t
+      def main(): Unit = ()
     }
 
     Time.withCurrentTimeFrozen { ctl =>

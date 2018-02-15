@@ -1,39 +1,36 @@
 package com.twitter.app
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
 object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
 object MyGlobalBooleanFlag extends GlobalFlag[Boolean](false, "a boolean flag")
 
-@RunWith(classOf[JUnitRunner])
 class GlobalFlagTest extends FunSuite {
 
   test("GlobalFlag.get") {
-    assert(MyGlobalBooleanFlag.get == None)
-    assert(MyGlobalFlagNoDefault.get == None)
+    assert(MyGlobalBooleanFlag.get.isEmpty)
+    assert(MyGlobalFlagNoDefault.get.isEmpty)
 
-    assert(MyGlobalFlag.get == None)
+    assert(MyGlobalFlag.get.isEmpty)
     val flag = new Flags("my", includeGlobal = true)
     try {
       flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "supplied"))
-      assert(MyGlobalFlag.get == Some("supplied"))
+      assert(MyGlobalFlag.get.contains("supplied"))
     } finally {
       MyGlobalFlag.reset()
     }
   }
 
   test("GlobalFlag.getWithDefault") {
-    assert(MyGlobalBooleanFlag.getWithDefault == Some(false))
-    assert(MyGlobalFlagNoDefault.getWithDefault == None)
+    assert(MyGlobalBooleanFlag.getWithDefault.contains(false))
+    assert(MyGlobalFlagNoDefault.getWithDefault.isEmpty)
 
-    assert(MyGlobalFlag.getWithDefault == Some("a test flag"))
+    assert(MyGlobalFlag.getWithDefault.contains("a test flag"))
     val flag = new Flags("my", includeGlobal = true)
     try {
       flag.parseArgs(Array("-com.twitter.app.MyGlobalFlag", "supplied"))
-      assert(MyGlobalFlag.getWithDefault == Some("supplied"))
+      assert(MyGlobalFlag.getWithDefault.contains("supplied"))
     } finally {
       MyGlobalFlag.reset()
     }
@@ -47,10 +44,10 @@ class GlobalFlagTest extends FunSuite {
   }
 
   test("GlobalFlag: implicit value of true for booleans") {
-    assert(MyGlobalBooleanFlag() == false)
+    assert(!MyGlobalBooleanFlag())
     val flag = new Flags("my", includeGlobal = true)
     flag.parseArgs(Array("-com.twitter.app.MyGlobalBooleanFlag"))
-    assert(MyGlobalBooleanFlag() == true)
+    assert(MyGlobalBooleanFlag())
     MyGlobalBooleanFlag.reset()
   }
 

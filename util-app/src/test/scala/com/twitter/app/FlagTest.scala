@@ -1,7 +1,10 @@
 package com.twitter.app
 
+import com.twitter.app.SolarSystemPlanets._
+import com.twitter.conversions.time._
+import com.twitter.util.{Await, Awaitable}
 import org.scalatest.FunSuite
-import scala.collection.mutable.Buffer
+import scala.collection.mutable
 
 class FlagTest extends FunSuite {
 
@@ -55,7 +58,7 @@ class FlagTest extends FunSuite {
     def current: Boolean = MyGlobalBooleanFlag()
 
     // track the order the blocks execute and that they only execute once
-    var buf = Buffer[Int]()
+    var buf = mutable.Buffer[Int]()
 
     // make sure they stack properly
     assert(!current)
@@ -85,7 +88,7 @@ class FlagTest extends FunSuite {
 
   test("Flag: letClear") {
     // track the order the blocks execute and that they only execute once
-    var buf = Buffer[Int]()
+    var buf = mutable.Buffer[Int]()
 
     MyGlobalBooleanFlag.let(true) {
       assert(MyGlobalBooleanFlag.isDefined)
@@ -113,7 +116,7 @@ class FlagTest extends FunSuite {
   }
 
   class Dctx extends Ctx {
-    val quuxFlag = flag[Int]("quux", "an int")
+    val quuxFlag: Flag[Int] = flag[Int]("quux", "an int")
   }
 
   test("Flag: no default usage") {
@@ -124,9 +127,9 @@ class FlagTest extends FunSuite {
 
   private class GetCtx {
     private val flags = new Flags("test")
-    val withDefault = flags[Int]("f1", 1, "an f1")
-    val noDefault = flags[Int]("f2", "an f2")
-    val noDefaultAndSupplied = flags[Int]("f3", "an f3")
+    val withDefault: Flag[Int] = flags[Int]("f1", 1, "an f1")
+    val noDefault: Flag[Int] = flags[Int]("f2", "an f2")
+    val noDefaultAndSupplied: Flag[Int] = flags[Int]("f3", "an f3")
 
     assert(flags.parseArgs(Array("-f3=3")) == Flags.Ok(Nil))
   }
@@ -135,18 +138,67 @@ class FlagTest extends FunSuite {
     val ctx = new GetCtx()
     import ctx._
 
-    assert(withDefault.get == None)
-    assert(noDefault.get == None)
-    assert(noDefaultAndSupplied.get == Some(3))
+    assert(withDefault.get.isEmpty)
+    assert(noDefault.get.isEmpty)
+    assert(noDefaultAndSupplied.get.contains(3))
   }
 
   test("Flag.getWithDefault") {
     val ctx = new GetCtx()
     import ctx._
 
-    assert(withDefault.getWithDefault == Some(1))
-    assert(noDefault.getWithDefault == None)
-    assert(noDefaultAndSupplied.getWithDefault == Some(3))
+    assert(withDefault.getWithDefault.contains(1))
+    assert(noDefault.getWithDefault.isEmpty)
+    assert(noDefaultAndSupplied.getWithDefault.contains(3))
   }
 
+  test("Flag.usage - new flag value") {
+    val marsColony = new ColonizeTestApp()
+    try {
+      // new flag value
+      marsColony.main(Array("-planet=Mars"))
+      assert(marsColony.colony == Mars)
+    } finally {
+      await(marsColony.close())
+    }
+  }
+
+  test("Flag.usage - flag default") {
+    val earthColony = new ColonizeTestApp()
+    try {
+      // use flag default
+      earthColony.main(Array.empty[String])
+      assert(earthColony.colony == Earth)
+    } finally {
+      await(earthColony.close())
+    }
+  }
+
+  test("Flag.usage - undefined") {
+    val attackColony = new ColonizeTestApp()
+    try {
+      // error for undefined flag, "attack"
+      intercept[Throwable] {
+        attackColony.main(Array("-attack=Mars"))
+      }
+    } finally {
+      await(attackColony.close())
+    }
+  }
+
+  test("Flag.usage - munged") {
+    val venusColony = new ColonizeTestApp()
+    try {
+      // error for munged flag
+      intercept[Throwable] {
+        venusColony.main(Array("-plenat=Venus"))
+      }
+    } finally {
+      await(venusColony.close())
+    }
+  }
+
+  private def await(awaitable: Awaitable[_]): Unit = {
+    Await.result(awaitable, 2.seconds)
+  }
 }

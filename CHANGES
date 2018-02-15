@@ -6,6 +6,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+Runtime Behavior Changes:
+
+  * util-app: Ensure that any flag parsing error reason is written to `System.err`
+    before attempting to print flag usage. In the event that collecting flags for
+    the printing the usage message fails, users will still receive a useful message
+    as to why flag parsing failed. ``PHAB_ID=D137629``
+
 18.2.0  2018-02-05
 
 New Features:

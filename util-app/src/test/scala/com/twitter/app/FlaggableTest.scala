@@ -1,10 +1,7 @@
 package com.twitter.app
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class FlaggableTest extends FunSuite {
 
   test("Flaggable: parse booleans") {

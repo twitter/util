@@ -143,7 +143,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
               remaining += a
             else
               return Error(
-                "Error parsing flag \"%s\": %s\n%s".format(k, FlagUndefinedMessage, usage)
+                "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
               )
 
           // Flag isn't defined
@@ -152,7 +152,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
               remaining += a
             else
               return Error(
-                "Error parsing flag \"%s\": %s\n%s".format(k, FlagUndefinedMessage, usage)
+                "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
               )
 
           // Optional argument without a value
@@ -162,7 +162,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
           // Mandatory argument without a value and with no more arguments.
           case Array(k) if i == args.length =>
             return Error(
-              "Error parsing flag \"%s\": %s\n%s".format(k, FlagValueRequiredMessage, usage)
+              "Error parsing flag \"%s\": %s".format(k, FlagValueRequiredMessage)
             )
 
           // Mandatory argument with another argument
@@ -172,7 +172,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
             catch {
               case NonFatal(e) =>
                 return Error(
-                  "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
+                  "Error parsing flag \"%s\": %s".format(k, e.getMessage)
                 )
             }
 
@@ -182,7 +182,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
             catch {
               case e: Throwable =>
                 return Error(
-                  "Error parsing flag \"%s\": %s\n%s".format(k, e.getMessage, usage)
+                  "Error parsing flag \"%s\": %s".format(k, e.getMessage)
                 )
             }
         }
@@ -240,6 +240,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
         throw new IllegalStateException
       case Error(reason) =>
         System.err.println(reason)
+        System.err.println(usage)
         System.exit(1)
         throw new IllegalStateException
     }
@@ -306,7 +307,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
     usage: String,
     flaggable: Flaggable[T]
   ): Flag[T] = {
-    implicit val impl = flaggable
+    implicit val impl: Flaggable[T] = flaggable
     val f = new Flag[T](name, help, usage, failFastUntilParsed)
     add(f)
     f
