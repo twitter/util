@@ -13,6 +13,14 @@ Runtime Behavior Changes:
     the printing the usage message fails, users will still receive a useful message
     as to why flag parsing failed. ``PHAB_ID=D137629``
 
+Deprecations:
+
+  * util-core: RichU64* APIs are deprecated. Use Java 8 Unsigned Long API instead:
+    ``PHAB_ID=D137893``
+
+    - `new RichU64String("123").toU64Long` -> `Long.parseUnsignedInt`
+    - `new RichU64Long(123L).toU64HexString` -> `Long.toHexString` (no leading zeros)
+
 18.2.0  2018-02-05
 
 New Features:

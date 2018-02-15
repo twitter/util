@@ -7,6 +7,7 @@ package com.twitter.util
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream}
 import scala.language.implicitConversions
 
+@deprecated("Use Java 8 unsigned Long APIs instead", "2018-02-13")
 class RichU64Long(l64: Long) {
   import U64._
 
@@ -38,6 +39,7 @@ class RichU64Long(l64: Long) {
   def toU64HexString = (new RichU64ByteArray(toU64ByteArray)).toU64HexString
 }
 
+@deprecated("Use Java 8 unsigned Long APIs instead", "2018-02-13")
 class RichU64ByteArray(bytes: Array[Byte]) {
   private def deSign(b: Byte): Int = {
     if (b < 0) {
@@ -60,6 +62,7 @@ class RichU64ByteArray(bytes: Array[Byte]) {
  * @throws NumberFormatException if string is not a non-negative hexadecimal
  * string
  */
+@deprecated("Use Java 8 unsigned Long APIs instead", "2018-02-13")
 class RichU64String(string: String) {
   private[this] def validateHexDigit(c: Char): Unit = {
     if (!(('0' <= c && c <= '9') ||
@@ -90,6 +93,7 @@ class RichU64String(string: String) {
   def toU64Long: Long = (new RichU64ByteArray(toU64ByteArray)).toU64Long
 }
 
+@deprecated("Use Java 8 unsigned Long APIs instead", "2018-02-13")
 object U64 {
   private val bigInt0x8000000000000000L = (0x7FFFFFFFFFFFFFFFL: BigInt) + 1
 
