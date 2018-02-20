@@ -1,9 +1,9 @@
 junit_tests(
-  dependencies=[
-    '3rdparty/jvm/junit',
-    'util/util-stats/src/main/scala',
-    'util/util-core/src/main/scala:scala',
-  ],
-  fatal_warnings=True,
-  sources=rglobs('*.java')
+    sources = rglobs("*.java"),
+    fatal_warnings = True,
+    dependencies = [
+        "3rdparty/jvm/junit",
+        "util/util-core/src/main/scala",
+        "util/util-stats/src/main/scala",
+    ],
 )

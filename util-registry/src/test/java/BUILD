@@ -1,9 +1,9 @@
 junit_tests(
-  dependencies=[
-    '3rdparty/jvm/org/scala-lang:scala-library',
-    '3rdparty/jvm/junit',
-    'util/util-registry/src/main/scala',
-  ],
-  fatal_warnings=True,
-  sources=rglobs('*.java')
+    sources = rglobs("*.java"),
+    fatal_warnings = True,
+    dependencies = [
+        "3rdparty/jvm/junit",
+        "3rdparty/jvm/org/scala-lang:scala-library",
+        "util/util-registry/src/main/scala",
+    ],
 )

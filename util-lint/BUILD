@@ -1,11 +1,12 @@
 target(
-  dependencies=[
-    'util/util-lint/src/main/scala'
-  ]
+    dependencies = [
+        "util/util-lint/src/main/scala",
+    ],
 )
 
-target(name='tests',
-  dependencies=[
-    'util/util-lint/src/test/scala',
-  ]
+target(
+    name = "tests",
+    dependencies = [
+        "util/util-lint/src/test/scala",
+    ],
 )

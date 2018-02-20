@@ -1,5 +1,5 @@
 target(
-  dependencies=[
-    'util/util-benchmark/src/main/scala'
-  ]
+    dependencies = [
+        "util/util-benchmark/src/main/scala",
+    ],
 )

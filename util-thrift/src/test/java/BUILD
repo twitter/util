@@ -1,7 +1,7 @@
 junit_tests(
-  dependencies=[
-    '3rdparty/jvm/org/apache/thrift:libthrift-0.5.0',
-  ],
-  fatal_warnings=True,
-  sources=rglobs('*.java'),
+    sources = rglobs("*.java"),
+    fatal_warnings = True,
+    dependencies = [
+        "3rdparty/jvm/org/apache/thrift:libthrift-0.5.0",
+    ],
 )

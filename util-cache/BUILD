@@ -1,12 +1,13 @@
 target(
-  dependencies=[
-    'util/util-cache/src/main/scala'
-  ]
+    dependencies = [
+        "util/util-cache/src/main/scala",
+    ],
 )
 
-target(name='tests',
-  dependencies=[
-    'util/util-cache/src/test/java',
-    'util/util-cache/src/test/scala'
-  ]
+target(
+    name = "tests",
+    dependencies = [
+        "util/util-cache/src/test/java",
+        "util/util-cache/src/test/scala",
+    ],
 )

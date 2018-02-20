@@ -1,5 +1,5 @@
 java_agent(
-  sources=rglobs('*.java'),
-  premain='com.twitter.classpreloader.ClassPreloader',
-  can_retransform=True
+    sources = rglobs("*.java"),
+    can_retransform = True,
+    premain = "com.twitter.classpreloader.ClassPreloader",
 )
