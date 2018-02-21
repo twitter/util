@@ -13,6 +13,9 @@ Runtime Behavior Changes:
     the printing the usage message fails, users will still receive a useful message
     as to why flag parsing failed. ``PHAB_ID=D137629``
 
+  * util-core: Promises/Futures now use LIFO execution order for their callbacks
+    (was depth-based algorithm before).  ``PHAB_ID=D135407``
+
 Deprecations:
 
   * util-core: RichU64* APIs are deprecated. Use Java 8 Unsigned Long API instead:

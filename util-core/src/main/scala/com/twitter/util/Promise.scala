@@ -2,19 +2,9 @@ package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
 import scala.annotation.tailrec
-import scala.collection.mutable
 import scala.runtime.NonLocalReturnControl
 
 object Promise {
-
-  // An experimental property that enables LIFO continuations for promises. Use with CAUTION.
-  @volatile private var UseLifoContinuations: Boolean =
-    System.getProperty("com.twitter.util.UseLifoPromiseContinuations", "false").toBoolean
-
-  // Switches the callback execution strategy to LIFO or Depth-based.
-  private[twitter] def useLifoContinuations(lifo: Boolean): Unit = {
-    UseLifoContinuations = lifo
-  }
 
   /**
    * Embeds an "interrupt handler" into a [[Promise]].
@@ -91,99 +81,15 @@ object Promise {
       loop(this, WaitQueue.empty)
     }
 
-    final def runInScheduler(t: Try[A], lifo: Boolean): Unit =
-      if (lifo) runLifoInScheduler(t)
-      else runDepthInScheduler(t)
-
-    final def runLifoInScheduler(t: Try[A]): Unit =
-      Scheduler.submit(new Runnable() { def run(): Unit = WaitQueue.this.runLifo(t) })
+    final def runInScheduler(t: Try[A]): Unit =
+      Scheduler.submit(new Runnable() { def run(): Unit = WaitQueue.this.run(t) })
 
     @tailrec
-    private def runLifo(t: Try[A]): Unit =
+    private def run(t: Try[A]): Unit =
       if (this ne WaitQueue.Empty) {
         first(t)
-        rest.runLifo(t)
+        rest.run(t)
       }
-
-    final def runDepthInScheduler(t: Try[A]): Unit =
-      Scheduler.submit(new Runnable() { def run(): Unit = WaitQueue.this.runDepth(t) })
-
-
-    private def runDepth(t: Try[A]): Unit = {
-      var k: K[A] = null
-      var moreDepth = false
-
-      // Depth 0, about 77% only at this depth
-      var ks = this
-      while (ks ne WaitQueue.Empty) {
-        k = ks.first
-        if (k.depth == 0)
-          k(t)
-        else
-          moreDepth = true
-        ks = ks.rest
-      }
-
-      // depth >= 1, about 23%
-      if (!moreDepth)
-        return
-
-      var maxDepth = 1
-      ks = this
-      while (ks ne WaitQueue.Empty) {
-        k = ks.first
-        if (k.depth == 1)
-          k(t)
-        else if (k.depth > maxDepth)
-          maxDepth = k.depth
-        ks = ks.rest
-      }
-
-      // Depth > 1, about 7%
-      if (maxDepth > 1)
-        runDepth2Plus(t, maxDepth)
-    }
-
-    private def runDepth2Plus(t: Try[A], maxDepth: Int): Unit = {
-      // empirically via JMH `FutureBenchmark.runqSize` the performance
-      // is better once the the list gets larger. that cutoff point
-      // was 14 in tests. however, it should be noted that this number
-      // was picked for how it performs for that single distribution.
-      // should it turn out that many users have a large `rest` with
-      // shallow distributions, this number should likely be higher.
-      // that said, this number is empirically large and should be a
-      // rarely run code path.
-      val size = this.size
-      if (size > 13) {
-        var rem = new mutable.ArrayBuffer[K[A]](size)
-        var ks = this
-        while (ks ne WaitQueue.Empty) {
-          val k = ks.first
-          if (k.depth > 1)
-            rem += k
-          ks = ks.rest
-        }
-
-        val sorted = rem.sortBy(K.depthOfK)
-        var i = 0
-        while (i < sorted.size) {
-          sorted(i).apply(t)
-          i += 1
-        }
-      } else {
-        var depth = 2
-        while (depth <= maxDepth) {
-          var ks = this
-          while (ks ne WaitQueue.Empty) {
-            val k = ks.first
-            if (k.depth == depth)
-              k(t)
-            ks = ks.rest
-          }
-          depth += 1
-        }
-      }
-    }
 
     final override def toString: String = s"WaitQueue(size=$size)"
   }
@@ -218,16 +124,8 @@ object Promise {
    *       may change following the further performance improvements.
    */
   private[util] trait K[-A] extends (Try[A] => Unit) with WaitQueue[A] {
-
-    /** Depth tag used for scheduling */
-    protected[util] def depth: Short
-
     final def first: K[A] = this
     final def rest: WaitQueue[A] = WaitQueue.empty
-  }
-
-  private object K {
-    val depthOfK: K[_] => Short = _.depth
   }
 
   /**
@@ -255,8 +153,7 @@ object Promise {
     // It's not possible (yet) to embed K[A] into Promise because
     // Promise[A] (Linked) and WaitQueue (Waiting) states become ambiguous.
     private[this] val k = new K[A] {
-      protected[util] def depth: Short = underlying.depth
-      // This is only called after the parent has been successfully satisfied
+      // This is only called after the underlying has been successfully satisfied
       def apply(result: Try[A]): Unit = self.update(result)
     }
 
@@ -297,11 +194,8 @@ object Promise {
    * @param saved The saved local context of the invocation site
    * @param k the closure to invoke in the saved context, with the
    * provided result
-   * @param depth a tag used to store the chain depth of this context
-   * for scheduling purposes.
    */
-  private class Monitored[A](saved: Local.Context, k: Try[A] => Unit, val depth: Short)
-      extends K[A] {
+  private class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A] {
     def apply(result: Try[A]): Unit = {
       val current = Local.save()
       Local.restore(saved)
@@ -317,16 +211,14 @@ object Promise {
    * @param saved The saved local context of the invocation site
    * @param promise The Promise for the transformed value
    * @param f The closure to invoke to produce the Future of the transformed value.
-   * @param depth a tag used to store the chain depth of this context
-   * for scheduling purposes.
    */
   private class Transformer[A, B](
     saved: Local.Context,
     promise: Promise[B],
-    f: Try[A] => Future[B],
-    val depth: Short
+    f: Try[A] => Future[B]
   ) extends K[A] {
-    private[this] def k(r: Try[A]) = {
+
+    private[this] def k(r: Try[A]): Unit = {
       promise.become(
         try f(r)
         catch {
@@ -349,17 +241,6 @@ object Promise {
   }
 
   /*
-   * Performance notes:
-   *
-   * Due to OOPS compression on 64-bit architectures, objects that
-   * have one field are of the same size as objects with two. We
-   * exploit this by explicitly caching the first callback in its own
-   * field, thus avoiding additional representation overhead in 77%
-   * of promises.
-   *
-   * todo: do this sort of profiling in a production app with
-   * production load.
-   *
    * Implementation notes:
    *
    * While these various states for `Promises.state` should be nicely modeled
@@ -398,9 +279,6 @@ object Promise {
   private val AlwaysUnit: Any => Unit = _ => ()
 
   sealed trait Responder[A] { this: Future[A] =>
-    protected[util] def depth: Short
-    protected def parent: Promise[A]
-
     protected final def continueAll(wq: WaitQueue[A]): Unit = {
       var ks = wq
       while (ks ne WaitQueue.Empty) {
@@ -418,50 +296,17 @@ object Promise {
      * [[Monitor]] for details.
      */
     def respond(k: Try[A] => Unit): Future[A] = {
-      continue(new Monitored(Local.save(), k, depth))
-      new Chained(parent, (depth + 1).toShort)
+      continue(new Monitored(Local.save(), k))
+      this
     }
 
     def transform[B](f: Try[A] => Future[B]): Future[B] = {
       val promise = interrupts[B](this)
 
-      continue(new Transformer(Local.save(), promise, f, depth))
+      continue(new Transformer(Local.save(), promise, f))
 
       promise
     }
-  }
-
-  /** A future that is chained from a parent promise with a certain depth. */
-  private class Chained[A](val parent: Promise[A], val depth: Short)
-      extends Future[A]
-      with Responder[A] {
-    if (depth == Short.MaxValue)
-      throw new AssertionError("Future chains cannot be longer than 32766!")
-
-    // Awaitable
-    @throws(classOf[TimeoutException])
-    @throws(classOf[InterruptedException])
-    def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
-      parent.ready(timeout)
-      this
-    }
-
-    @throws(classOf[Exception])
-    def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): A =
-      parent.result(timeout)
-
-    def isReady(implicit permit: Awaitable.CanAwait): Boolean =
-      parent.isReady
-
-    def poll: Option[Try[A]] = parent.poll
-
-    override def isDefined: Boolean = parent.isDefined
-
-    def raise(interrupt: Throwable): Unit = parent.raise(interrupt)
-
-    protected def continue(k: K[A]): Unit = parent.continue(k)
-
-    override def toString: String = s"Future@$hashCode(depth=$depth,parent=$parent)"
   }
 
   // PUBLIC API
@@ -555,37 +400,22 @@ object Promise {
  * =Implementation details=
  *
  * A Promise is in one of six states: `Waiting`, `Interruptible`,
- * `Interrupted`, `Transforming`, Done` and `Linked` where `Interruptible`,
+ * `Interrupted`, `Transforming`, `Done` and `Linked` where `Interruptible`,
  * `Interrupted`, and `Transforming` are variants of `Waiting` to deal with future
  * interrupts. Promises are concurrency-safe, using lock-free operations
- * throughout. Callback dispatch is scheduled with
- * [[com.twitter.concurrent.Scheduler]].
+ * throughout. Callback dispatch is scheduled with [[Scheduler]].
  *
- * Waiters are stored as a [[com.twitter.util.Promise.K]]. `K`s
- * (mnemonic: continuation) specifies a `depth`. This is used to
- * implement Promise chaining: a callback with depth `d` is invoked only
- * after all callbacks with depth < `d` have already been invoked.
+ * Waiters (i.e., continuations) are stored in a [[Promise.WaitQueue]] and
+ * executed in the LIFO order.
  *
  * `Promise.become` merges two promises: they are declared equivalent.
  * `become` merges the states of the two promises, and links one to the
  * other. Thus promises support the analog to tail-call elimination: no
  * space leak is incurred from `flatMap` in the tail position since
  * intermediate promises are merged into the root promise.
- *
- * A number of optimizations are employed to conserve ''space'': we pay
- * particular heed to the JVM's object representation, in particular for
- * OpenJDK (HotSpot) version 7 running on 64-bit architectures with
- * compressed OOPS. See comments on `com.twitter.util.Promise.State`
- * for details.
  */
 class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[A]] {
   import Promise._
-
-  protected[util] final def depth: Short = 0
-  protected final def parent: Promise[A] = this
-
-  // Exposed for testing.
-  protected def useLifoContinuations: Boolean = Promise.UseLifoContinuations
 
   // Note: this will always be one of:
   // - WaitQueue (Waiting)
@@ -899,26 +729,26 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, result)) updateIfEmpty(result)
       else {
-        waitq.runInScheduler(result, useLifoContinuations)
+        waitq.runInScheduler(result)
         true
       }
 
     case s: Interruptible[A] =>
       if (!cas(s, result)) updateIfEmpty(result)
       else {
-        s.waitq.runInScheduler(result, useLifoContinuations)
+        s.waitq.runInScheduler(result)
         true
       }
     case s: Transforming[A] =>
       if (!cas(s, result)) updateIfEmpty(result)
       else {
-        s.waitq.runInScheduler(result, useLifoContinuations)
+        s.waitq.runInScheduler(result)
         true
       }
     case s: Interrupted[A] =>
       if (!cas(s, result)) updateIfEmpty(result)
       else {
-        s.waitq.runInScheduler(result, useLifoContinuations)
+        s.waitq.runInScheduler(result)
         true
       }
 
@@ -941,10 +771,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     case s: Interrupted[A] =>
       if (!cas(s, new Interrupted(WaitQueue(k, s.waitq), s.signal)))
         continue(k)
-    case v: Try[A] /* Done */ =>
-      // Concrete strategy doesn't matter as it's just one continuation.
-      // We pick LIFO for simplicity.
-      k.runLifoInScheduler(v)
+    case v: Try[A] /* Done */ => k.runInScheduler(v)
     case p: Promise[A] /* Linked */ => p.continue(k)
   }
 

@@ -852,8 +852,6 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             var ran = false
             val f = Future.monitored {
               inner1 ensure {
-                throw exc
-              } ensure {
                 // Note that these are sequenced so that interrupts
                 // will be delivered before inner's handler is cleared.
                 ran = true
@@ -862,6 +860,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
                 } catch {
                   case e: Throwable => assert(true == false)
                 }
+              } ensure {
+                throw exc
               }
               inner
             }
@@ -1292,36 +1292,9 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           assert(wasCalledWith == Some(1))
         }
 
-        "runs callbacks just once and in order (depth)" in {
-          var i, j, k, h = 0
-          val p = new Promise[Int]
-          p ensure {
-            i = i + j + k + h + 1
-          } ensure {
-            j = i + j + k + h + 1
-          } ensure {
-            k = i + j + k + h + 1
-          } ensure {
-            h = i + j + k + h + 1
-          }
-
-          assert(i == 0)
-          assert(j == 0)
-          assert(k == 0)
-          assert(h == 0)
-
-          p.setValue(1)
-          assert(i == 1)
-          assert(j == 2)
-          assert(k == 4)
-          assert(h == 8)
-        }
-
         "runs callbacks just once and in order (lifo)" in {
           var i, j, k, h = 0
-          val p = new Promise[Int] {
-            override protected def useLifoContinuations: Boolean = true
-          }
+          val p = new Promise[Int]
 
           p ensure {
             i = i + j + k + h + 1
