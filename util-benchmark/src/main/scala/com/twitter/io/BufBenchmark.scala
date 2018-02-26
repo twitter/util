@@ -6,7 +6,6 @@ import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 import scala.util.Random
 
-// run via:
 // ./sbt 'project util-benchmark' 'jmh:run BufBenchmark'
 @State(Scope.Benchmark)
 class BufBenchmark extends StdBenchAnnotations {
@@ -220,4 +219,25 @@ class BufBenchmark extends StdBenchAnnotations {
   def singleByteIndexedCompositeBuf(): Byte =
     singleByteGet(compositeBuf)
 
+}
+
+// ./sbt 'project util-benchmark' 'jmh:run BufEqualsBenchmark'
+@State(Scope.Benchmark)
+class BufEqualsBenchmark extends StdBenchAnnotations {
+
+  val strings: Seq[Buf] = Seq("one", "two").map(Buf.Utf8(_))
+  val msgs: Set[Buf] = {
+    val joins = for {
+      first <- strings
+      second <- strings
+    } yield first.concat(second)
+    joins.toSet
+  }
+
+  val test: Buf = Buf.Utf8("...").concat(Buf.Utf8("..."))
+
+  @Benchmark
+  def CheckSet(): Boolean = {
+    msgs.contains(test)
+  }
 }
