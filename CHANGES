@@ -16,6 +16,9 @@ Runtime Behavior Changes:
   * util-core: Promises/Futures now use LIFO execution order for their callbacks
     (was depth-based algorithm before).  ``PHAB_ID=D135407``
 
+  * util-core: Wrap the function passed to `Closable.make` in a try/catch and return
+    a `Future.exception` over any NonFatal exception. ``PHAB_ID=D142086``
+
 Deprecations:
 
   * util-core: RichU64* APIs are deprecated. Use Java 8 Unsigned Long API instead:

@@ -40,7 +40,7 @@ trait Closable { self =>
 abstract class AbstractClosable extends Closable
 
 /**
- * Note: There is a Java-friendly API for this object: [[com.twitter.util.Closables]].
+ * Note: There is a Java-friendly API for this object: `com.twitter.util.Closables`.
  */
 object Closable {
   private[this] val logger = Logger.getLogger("")
@@ -141,7 +141,9 @@ object Closable {
 
   /** Make a new [[Closable]] whose `close` method invokes f. */
   def make(f: Time => Future[Unit]): Closable = new Closable {
-    def close(deadline: Time): Future[Unit] = f(deadline)
+    def close(deadline: Time): Future[Unit] =
+      try f(deadline)
+      catch { case NF(ex) => Future.exception(ex) }
   }
 
   def ref(r: AtomicReference[Closable]): Closable = new Closable {
