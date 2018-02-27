@@ -12,7 +12,7 @@ import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 import scala.collection.mutable
 
 class BufTest
-    extends FunSuite
+  extends FunSuite
     with MockitoSugar
     with GeneratorDrivenPropertyChecks
     with Checkers
@@ -404,6 +404,154 @@ class BufTest
     intercept[IllegalArgumentException] {
       buf.slice(0, -1)
     }
+  }
+
+  test("Buf.get in Composites") {
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val a4 = Array.range(24, 32).map(_.toByte)
+    val b1 = Buf.ByteArray.Owned(a1)
+    val b2 = Buf.ByteArray.Owned(a2)
+    val b3 = Buf.ByteArray.Owned(a3)
+    val b4 = Buf.ByteArray.Owned(a4)
+    val comp2 = b1.concat(b2)
+    val comp3 = comp2.concat(b3)
+    val compN = comp3.concat(b4)
+
+    for (i <- 0 until b1.length)
+      assert(b1.get(i) == i)
+
+    for (i <- 0 until comp2.length)
+      assert(comp2.get(i) == i)
+
+    for (i <- 0 until comp3.length)
+      assert(comp3.get(i) == i)
+
+    for (i <- 0 until compN.length)
+      assert(compN.get(i) == i)
+  }
+
+  test("IndexedTwo process and IndexedThree process") {
+    val processor = new Buf.Processor {
+      def apply(byte: Byte): Boolean = true
+    }
+
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val a4 = Array.range(24, 32).map(_.toByte)
+    val b1 = Buf.ByteArray.Owned(a1)
+    val b2 = Buf.ByteArray.Owned(a2)
+    val b3 = Buf.ByteArray.Owned(a3)
+    val b4 = Buf.ByteArray.Owned(a4)
+    val comp2 = b1.concat(b2)
+    val comp3 = comp2.concat(b3)
+
+    // IndexedTwo
+    // only in b1
+    assert(comp2.process(0, 4, processor) == -1)
+    // only in b2
+    assert(comp2.process(8, 12, processor) == -1)
+    // in b1 and b2
+    assert(comp2.process(4, 12, processor) == -1)
+
+    // IndexedThree
+    // only in b1
+    assert(comp3.process(0, 4, processor) == -1)
+    // only in b2
+    assert(comp3.process(8, 12, processor) == -1)
+    // only in b3
+    assert(comp3.process(16, 20, processor) == -1)
+    // in b1 and b2
+    assert(comp3.process(4, 12, processor) == -1)
+    // in b2 and b3
+    assert(comp3.process(12, 20, processor) == -1)
+    // in b1, b2, and b3
+    assert(comp3.process(4, 20, processor) == -1)
+  }
+
+  test("Composite.length") {
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 15).map(_.toByte)
+    val a3 = Array.range(15, 21).map(_.toByte)
+    val a4 = Array.range(21, 26).map(_.toByte)
+    val b1 = Buf.ByteArray.Owned(a1)
+    val b2 = Buf.ByteArray.Owned(a2)
+    val b3 = Buf.ByteArray.Owned(a3)
+    val b4 = Buf.ByteArray.Owned(a4)
+    val comp2 = b1.concat(b2)
+    val comp3 = comp2.concat(b3)
+    val compN = comp3.concat(b4)
+
+    assert(comp2.length == 15)
+    assert(comp3.length == 21)
+    assert(compN.length == 26)
+  }
+
+  test("IndexedTwo write") {
+    val out1 = new Array[Byte](3)
+    val out2 = new Array[Byte](16)
+    val bb1 = java.nio.ByteBuffer.wrap(out1)
+    val bb2 = java.nio.ByteBuffer.wrap(out2)
+
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val b1 = Buf.ByteArray.Owned(a1)
+    val b2 = Buf.ByteArray.Owned(a2)
+    val comp2 = b1.concat(b2)
+
+    intercept[IllegalArgumentException] {
+      comp2.write(out1, 0)
+    }
+
+    intercept[IllegalArgumentException] {
+      comp2.write(bb1)
+    }
+
+    comp2.write(out2, 0)
+
+    for (i <- 0 until comp2.length)
+      assert(out2(i) == comp2.get(i))
+
+    comp2.write(bb2)
+
+    for (i <- 0 until comp2.length)
+      assert(bb2.get(i) == comp2.get(i))
+  }
+
+  test("IndexedThree write") {
+    val out1 = new Array[Byte](3)
+    val out2 = new Array[Byte](24)
+    val bb1 = java.nio.ByteBuffer.wrap(out1)
+    val bb2 = java.nio.ByteBuffer.wrap(out2)
+
+    val a1 = Array.range(0, 8).map(_.toByte)
+    val a2 = Array.range(8, 16).map(_.toByte)
+    val a3 = Array.range(16, 24).map(_.toByte)
+    val b1 = Buf.ByteArray.Owned(a1)
+    val b2 = Buf.ByteArray.Owned(a2)
+    val b3 = Buf.ByteArray.Owned(a3)
+    val comp2 = b1.concat(b2)
+    val comp3 = comp2.concat(b3)
+
+    intercept[IllegalArgumentException] {
+      comp3.write(out1, 0)
+    }
+
+    intercept[IllegalArgumentException] {
+      comp3.write(bb1)
+    }
+
+    comp3.write(out2, 0)
+
+    for (i <- 0 until comp3.length)
+      assert(out2(i) == comp3.get(i))
+
+    comp3.write(bb2)
+
+    for (i <- 0 until comp3.length)
+      assert(bb2.get(i) == comp3.get(i))
   }
 
   test("Buf.get") {

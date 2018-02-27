@@ -1,7 +1,9 @@
 package com.twitter.io
 
+import com.twitter.io.Buf.{IndexedThree, IndexedTwo}
 import java.nio.ReadOnlyBufferException
 import java.nio.charset.{Charset, StandardCharsets => JChar}
+import scala.annotation.switch
 import scala.collection.immutable.VectorBuilder
 
 /**
@@ -92,19 +94,74 @@ abstract class Buf { outer =>
     else
       this match {
         // This could be much cleaner as a Tuple match, but we want to avoid the allocation.
-        case left: Buf.Composite.Impl =>
+        case Buf.Composite.Impl(left: Vector[Buf], leftLength) =>
           right match {
-            case right: Buf.Composite.Impl => // (Composite, Composite)
-              new Buf.Composite.Impl(Buf.fastConcat(left.bs, right.bs), left.length + right.length)
-            case _ => // (Composite, Buf)
-              new Buf.Composite.Impl(left.bs :+ right, left.length + right.length)
+            case Buf.Composite.Impl(right: Vector[Buf], rightLength) =>
+              Buf.Composite.Impl(Buf.fastConcat(left, right), leftLength + rightLength)
+            case Buf.Composite.Impl(right: IndexedTwo, rightLength) =>
+              Buf.Composite.Impl(left :+ right.a :+ right.b, leftLength + rightLength)
+            case Buf.Composite.Impl(right: IndexedThree, rightLength) =>
+              Buf.Composite.Impl(left :+ right.a :+ right.b :+ right.c, leftLength + rightLength)
+            case _ =>
+              Buf.Composite.Impl(left :+ right, leftLength + right.length)
           }
+
+        case Buf.Composite.Impl(left: IndexedTwo, leftLength) =>
+          right match {
+            case Buf.Composite.Impl(right: Vector[Buf], rightLength) =>
+              Buf.Composite.Impl(left.a +: left.b +: right, leftLength + rightLength)
+            case Buf.Composite.Impl(right: IndexedTwo, rightLength) =>
+              Buf.Composite.Impl(
+                (new VectorBuilder[Buf] += left.a += left.b += right.a += right.b).result(),
+                leftLength + rightLength
+              )
+            case Buf.Composite.Impl(right: IndexedThree, rightLength) =>
+              Buf.Composite.Impl(
+                (new VectorBuilder[Buf] += left.a += left.b += right.a += right.b += right.c)
+                  .result(),
+                leftLength + rightLength
+              )
+            case _ =>
+              Buf.Composite.Impl(
+                new IndexedThree(left.a, left.b, right), leftLength + right.length
+              )
+          }
+
+        case Buf.Composite.Impl(left: IndexedThree, leftLength) =>
+          right match {
+            case Buf.Composite.Impl(right: Vector[Buf], rightLength) =>
+              Buf.Composite.Impl(left.a +: left.b +: left.c +: right, leftLength + rightLength)
+            case Buf.Composite.Impl(right: IndexedTwo, rightLength) =>
+              Buf.Composite.Impl(
+                (new VectorBuilder[Buf] += left.a += left.b += left.c += right.a += right.b)
+                  .result(),
+                leftLength + rightLength
+              )
+            case Buf.Composite.Impl(right: IndexedThree, rightLength) =>
+              Buf.Composite.Impl(
+                (new VectorBuilder[Buf] += left.a += left.b += left.c += right.a += right.b += right.c).result(),
+                leftLength + rightLength
+              )
+            case _ =>
+              Buf.Composite.Impl(
+                (new VectorBuilder[Buf] += left.a += left.b += left.c += right).result(),
+                leftLength + right.length
+              )
+          }
+
         case left =>
           right match {
-            case right: Buf.Composite.Impl => // (Buf, Composite)
-              new Buf.Composite.Impl(left +: right.bs, left.length + right.length)
-            case _ => // (Buf, Buf)
-              new Buf.Composite.Impl(Vector(left, right), left.length + right.length)
+            case Buf.Composite.Impl(right: Vector[Buf], rightLength) =>
+              Buf.Composite.Impl(left +: right, left.length + rightLength)
+            case Buf.Composite.Impl(right: IndexedTwo, rightLength) =>
+              Buf.Composite.Impl(new IndexedThree(left, right.a, right.b), left.length + rightLength)
+            case Buf.Composite.Impl(right: IndexedThree, rightLength) =>
+              Buf.Composite.Impl(
+                (new VectorBuilder[Buf] += left += right.a += right.b += right.c).result(),
+                left.length + rightLength
+              )
+            case _ =>
+              Buf.Composite.Impl(new IndexedTwo(left, right), left.length + right.length)
           }
       }
   }
@@ -283,7 +340,7 @@ object Buf {
       case b: Composite.Impl =>
         // Guaranteed to be non-empty by construction
         length += b.length
-        builder ++= b.bs
+        builder ++= b.bufs
 
       case b =>
         val len = b.length
@@ -313,6 +370,27 @@ object Buf {
   // Helper for determining if a given slice is empty
   private def isSliceEmpty(from: Int, until: Int, underlyingLength: Int): Boolean =
     until <= from || from >= underlyingLength
+
+  private final class IndexedTwo(val a: Buf, val b: Buf) extends IndexedSeq[Buf] {
+    def apply(idx: Int): Buf = (idx: @switch) match {
+      case 0 => a
+      case 1 => b
+      case _ => throw new IndexOutOfBoundsException(s"$idx")
+    }
+
+    def length: Int = 2
+  }
+
+  private final class IndexedThree(val a: Buf, val b: Buf, val c: Buf) extends IndexedSeq[Buf] {
+    def apply(idx: Int): Buf = (idx: @switch) match {
+      case 0 => a
+      case 1 => b
+      case 2 => c
+      case _ => throw new IndexOutOfBoundsException(s"$idx")
+    }
+
+    def length: Int = 3
+  }
 
   /**
    * A `Buf` which is composed of other `Bufs`.
@@ -479,23 +557,33 @@ object Buf {
     def unapply(buf: Composite): Option[IndexedSeq[Buf]] =
       Some(buf.bufs)
 
-    /** Basic implementation of a [[Buf]] created from n-`Bufs`. */
-    private[Buf] final class Impl(val bs: Vector[Buf], protected val computedLength: Int)
+    /** 
+      * Basic implementation of a [[Buf]] created from n-`Bufs`.
+      */
+    private[Buf] final case class Impl(bufs: IndexedSeq[Buf], protected val computedLength: Int)
         extends Buf.Composite {
+
+      bufs match {
+        case _: Vector[Buf] =>
+        case _: IndexedTwo =>
+        case _: IndexedThree =>
+        case _ => throw new IllegalArgumentException(s"Type not allowed: ${bufs.getClass.getName}")
+      }
+
       // ensure there is a need for a `Composite`
-      if (bs.length <= 1)
-        throw new IllegalArgumentException(s"Must have 2 or more bufs: $bs")
+      if (bufs.length <= 1)
+        throw new IllegalArgumentException(s"Must have 2 or more bufs: $bufs")
       if (computedLength <= 0)
         throw new IllegalArgumentException(s"Length must be positive: $computedLength")
-      def bufs: IndexedSeq[Buf] = bs
+
       // the factory method requires non-empty Bufs
       override def isEmpty: Boolean = false
 
       def get(index: Int): Byte = {
         var bufIdx = 0
         var byteIdx = 0
-        while (bufIdx < bs.length) {
-          val buf = bs(bufIdx)
+        while (bufIdx < bufs.length) {
+          val buf = bufs(bufIdx)
           val bufLen = buf.length
           if (index < byteIdx + bufLen) {
             return buf.get(index - byteIdx)
@@ -513,8 +601,8 @@ object Buf {
         var i = 0
         var bufIdx = 0
         var continue = true
-        while (continue && i < until && bufIdx < bs.length) {
-          val buf = bs(bufIdx)
+        while (continue && i < until && bufIdx < bufs.length) {
+          val buf = bufs(bufIdx)
           val bufLen = buf.length
 
           if (i + bufLen < from) {
