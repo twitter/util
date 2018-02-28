@@ -382,12 +382,12 @@ object Var {
    * Updates from `update` are ignored after the returned
    * [[com.twitter.util.Closable]] is closed.
    */
-  def async[T](empty: T)(update: Updatable[T] => Closable): Var[T] = new Var[T] {
+  def async[T](empty: T)(update: Updatable[T] => Closable): Var[T] = new Var[T] { self =>
     import create._
     private var state: State[T] = Idle
 
     private val closable = Closable.make { deadline =>
-      synchronized {
+      self.synchronized {
         state match {
           case Idle =>
             Future.Done
@@ -406,7 +406,7 @@ object Var {
     }
 
     protected def observe(depth: Int, obs: Observer[T]): Closable = {
-      val v = synchronized {
+      val v = self.synchronized {
         state match {
           case Idle =>
             val v = Var(empty)
