@@ -30,6 +30,8 @@ services with `finagle-stats` and it is available on
 `Github <https://github.com/twitter/finagle/tree/master/finagle-stats>`_
 and `Maven Central <https://search.maven.org/#search%7Cga%7C1%7Cfinagle-stats>`_.
 
+.. _why_finagle_stats:
+
 Why migrate to finagle-stats?
 -----------------------------
 The `finagle-stats` library is designed to replace the other two libraries
@@ -45,3 +47,8 @@ illustrates the advantages of `finagle-stats` over the older libraries.
 +------------------------------+---------------+----------+-----------------+
 | Sampling error               | N/A           |  ±5%     | ±0.5%           |
 +------------------------------+---------------+----------+-----------------+
+
+`finagle-stats` allows you to visualize and download the full details of `Stat`
+histograms. This is available on the
+`/admin/histogram <https://twitter.github.io/twitter-server/Admin.html#admin-histograms>`_
+admin page.
