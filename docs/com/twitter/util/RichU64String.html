@@ -804,7 +804,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">RichU64String</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <span class="name deprecated" title="Deprecated: (Since version 2018-02-13) Use Java 8 unsigned Long APIs instead">RichU64String</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
       </span>
       </h4>
 
@@ -812,7 +812,10 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>RichU64String parses string as a 64-bit unsigned hexadecimal long,
 outputting a signed Long or a byte array. Valid input is 1-16 hexadecimal
 digits (0-9, a-z, A-Z).
-</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="NumberFormatException"><code>NumberFormatException</code></span> if string is not a non-negative hexadecimal
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2018-02-13)</i> Use Java 8 unsigned Long APIs instead</p></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="NumberFormatException"><code>NumberFormatException</code></span> if string is not a non-negative hexadecimal
 string</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes

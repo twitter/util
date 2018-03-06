@@ -1177,22 +1177,6 @@ or it is becoming another Future via <code>become</code>.
       <p class="shortcomment cmt">Delay the completion of this Future for at least <code>howlong</code> from now.</p><div class="fullcomment"><div class="comment cmt"><p>Delay the completion of this Future for at least <code>howlong</code> from now.</p><p><i>Note</i>: Interrupting a returned future would not prevent it from becoming this future
           (when the time comes).
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
-    </li><li name="com.twitter.util.Promise#depth" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="depth:Short"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/FutureTask.html#depth:Short" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">depth</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Short.html#scala.Short" class="extype" name="scala.Short">Short</a></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="index.html" class="extype" name="com.twitter.util">com.twitter.util</a>] </dd><dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> → <a href="Promise$$Responder.html" class="extype" name="com.twitter.util.Promise.Responder">Responder</a></dd></dl></div>
     </li><li name="com.twitter.util.Promise#detach" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="detach(k:com.twitter.util.Promise.K[A]):Boolean"></a><a id="detach(K[A]):Boolean"></a>
       <span class="permalink">
@@ -1819,22 +1803,6 @@ successful.  Returns a chained Future as in <code>respond</code>.
       
       <p class="shortcomment cmt">A synonym for <a href="Future.html#select[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]" class="extmbr" name="com.twitter.util.Future#select">select</a>: Choose the first <code>Future</code> to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>A synonym for <a href="Future.html#select[U&gt;:A](other:com.twitter.util.Future[U]):com.twitter.util.Future[U]" class="extmbr" name="com.twitter.util.Future#select">select</a>: Choose the first <code>Future</code> to be satisfied.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
-    </li><li name="com.twitter.util.Promise#parent" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="parent:com.twitter.util.Promise[A]"></a><a id="parent:Promise[A]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/FutureTask.html#parent:com.twitter.util.Promise[A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">parent</span><span class="result">: <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<span class="extype" name="com.twitter.util.FutureTask.A">A</span>]</span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> → <a href="Promise$$Responder.html" class="extype" name="com.twitter.util.Promise.Responder">Responder</a></dd></dl></div>
     </li><li name="com.twitter.util.Promise#poll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="poll:Option[com.twitter.util.Try[A]]"></a><a id="poll:Option[Try[A]]"></a>
       <span class="permalink">
@@ -2322,22 +2290,6 @@ more readable methods to use.
         </dd><dt>Note</dt><dd><span class="cmt"><p>Invoking <code>updateIfEmpty</code> without checking the boolean result is almost
 never the right approach. Doing so is generally unsafe unless race
 conditions are acceptable.</p></span></dd></dl></div>
-    </li><li name="com.twitter.util.Promise#useLifoContinuations" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="useLifoContinuations:Boolean"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/FutureTask.html#useLifoContinuations:Boolean" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">useLifoContinuations</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd></dl></div>
     </li><li name="com.twitter.util.Future#voided" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="voided:com.twitter.util.Future[Void]"></a><a id="voided:Future[Void]"></a>
       <span class="permalink">

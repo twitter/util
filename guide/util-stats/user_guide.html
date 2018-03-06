@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &#8212; Util 18.2.0 documentation</title>
+    <title>User Guide &#8212; Util 18.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '18.2.0',
+        VERSION:     '18.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 18.2.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 18.3.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -86,20 +86,6 @@ dependencies. This also implies that developers of libraries should not depend o
 implementation and only depend on util-stats.</p>
 <p>If no implementations are found, metrics are reported to a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> which is essentially
 <code class="docutils literal"><span class="pre">/dev/null</span></code>.</p>
-</div>
-<div class="section" id="leveraging-verbosity-levels">
-<h2>Leveraging Verbosity Levels<a class="headerlink" href="#leveraging-verbosity-levels" title="Permalink to this headline">¶</a></h2>
-<p>Introducing a new application metric (i.e., a histogram or a counter) is always a trade-off between
-its operational value and its cost within observability. Verbosity levels for StatsReceivers are
-aiming to reduce the observability cost of Finagle-based services by allowing for a granular control
-over which metrics are being exported in the application’s steady state.</p>
-<p>Similar to log levels, verbosity levels provide means to mark a given metric as “debug” and
-potentially (assuming supported in implementation) prevent it from being exported under standard
-operations.</p>
-<p>Limiting the number of exported metrics via verbosity levels can reduce applications&#8217; operational
-cost. However taking this to extremes may drastically affect operability of your service. We
-recommend using your judgment to make sure blacklisting a given metric will not reduce a process&#8217;
-visibility.</p>
 </div>
 <div class="section" id="measuring-the-latency-of-operations">
 <h2>Measuring the latency of operations<a class="headerlink" href="#measuring-the-latency-of-operations" title="Permalink to this headline">¶</a></h2>
@@ -165,7 +151,7 @@ such you should only rely on <code class="docutils literal"><span class="pre">pr
 reference.</p>
 </div>
 <div class="section" id="testing-code-that-use-statsreceivers">
-<h2>Testing code that use StatsReceivers<a class="headerlink" href="#testing-code-that-use-statsreceivers" title="Permalink to this headline">¶</a></h2>
+<span id="testing-code"></span><h2>Testing code that use StatsReceivers<a class="headerlink" href="#testing-code-that-use-statsreceivers" title="Permalink to this headline">¶</a></h2>
 <p>If your tests do not need to verify the value of stats, you should use a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a>
 which provides a no-op implementation. If your tests need to verify the value of stats, you should
 use an <a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> which provides <code class="docutils literal"><span class="pre">ReadableCounters</span></code> and <code class="docutils literal"><span class="pre">ReadableStats</span></code> that
@@ -183,6 +169,20 @@ themselves are thread-safe and safe to use across threads.</p>
 <p>The caveat is that because <code class="docutils literal"><span class="pre">Gauges</span></code> run a function when they are read, the code you provide as the
 function <strong>must also</strong> be thread-safe.</p>
 </div>
+<div class="section" id="leveraging-verbosity-levels">
+<h2>Leveraging Verbosity Levels<a class="headerlink" href="#leveraging-verbosity-levels" title="Permalink to this headline">¶</a></h2>
+<p>Introducing a new application metric (i.e., a histogram or a counter) is always a trade-off between
+its operational value and its cost within observability. Verbosity levels for StatsReceivers are
+aiming to reduce the observability cost of Finagle-based services by allowing for a granular control
+over which metrics are being exported in the application’s steady state.</p>
+<p>Similar to log levels, verbosity levels provide means to mark a given metric as “debug” and
+potentially (assuming supported in implementation) prevent it from being exported under standard
+operations.</p>
+<p>Limiting the number of exported metrics via verbosity levels can reduce applications&#8217; operational
+cost. However taking this to extremes may drastically affect operability of your service. We
+recommend using your judgment to make sure blacklisting a given metric will not reduce a process&#8217;
+visibility.</p>
+</div>
 <div class="section" id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">
 <h2>Access needed to a StatsReceiver in an inconvenient place<a class="headerlink" href="#access-needed-to-a-statsreceiver-in-an-inconvenient-place" title="Permalink to this headline">¶</a></h2>
 <p>Ideally classes would be passed a properly scoped <code class="docutils literal"><span class="pre">StatsReceiver</span></code> in their constructor but this
@@ -190,6 +190,17 @@ isn’t always simple or feasible. This may be due to various reasons such as le
 static initializer or a Scala object. In these cases, if you are depending on finagle-core, you
 should consider using one of <code class="docutils literal"><span class="pre">DefaultStatsReceiver</span></code>, <code class="docutils literal"><span class="pre">ClientStatsReceiver</span></code> or
 <code class="docutils literal"><span class="pre">ServerStatsReceiver</span></code>. These are initialized via Finagle’s <code class="docutils literal"><span class="pre">LoadService</span></code> mechanism.</p>
+</div>
+<div class="section" id="useful-statsreceivers">
+<h2>Useful StatsReceivers<a class="headerlink" href="#useful-statsreceivers" title="Permalink to this headline">¶</a></h2>
+<p>There a few <code class="docutils literal"><span class="pre">StatsReceiver</span></code>s which work across implementations that
+developers may find useful.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> useful for <a class="reference internal" href="#testing-code"><span class="std std-ref">unit testing</span></a>.</li>
+<li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> for when you do not care about all metrics.</li>
+<li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/BlacklistStatsReceiver.scala">BlacklistStatsReceiver</a> programmatically decide which metrics to ignore.</li>
+<li><a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a> allows for sending metrics to two or more <code class="docutils literal"><span class="pre">StatsReceiver</span></code>s.</li>
+</ul>
 </div>
 <div class="section" id="viewing-per-node-metrics">
 <h2>Viewing per-node metrics<a class="headerlink" href="#viewing-per-node-metrics" title="Permalink to this headline">¶</a></h2>
@@ -219,7 +230,6 @@ using.</p>
   <ul>
 <li><a class="reference internal" href="#">User Guide</a><ul>
 <li><a class="reference internal" href="#choosing-the-stats-implementation-to-use-for-finagle">Choosing the stats implementation to use for Finagle</a></li>
-<li><a class="reference internal" href="#leveraging-verbosity-levels">Leveraging Verbosity Levels</a></li>
 <li><a class="reference internal" href="#measuring-the-latency-of-operations">Measuring the latency of operations</a></li>
 <li><a class="reference internal" href="#prefer-storing-counters-and-stats-in-member-variables">Prefer storing counters and stats in member variables</a></li>
 <li><a class="reference internal" href="#store-gauges-in-member-variables">Store gauges in member variables</a></li>
@@ -227,7 +237,9 @@ using.</p>
 <li><a class="reference internal" href="#testing-code-that-use-statsreceivers">Testing code that use StatsReceivers</a></li>
 <li><a class="reference internal" href="#usage-from-java">Usage from Java</a></li>
 <li><a class="reference internal" href="#thread-safety">Thread-safety</a></li>
+<li><a class="reference internal" href="#leveraging-verbosity-levels">Leveraging Verbosity Levels</a></li>
 <li><a class="reference internal" href="#access-needed-to-a-statsreceiver-in-an-inconvenient-place">Access needed to a StatsReceiver in an inconvenient place</a></li>
+<li><a class="reference internal" href="#useful-statsreceivers">Useful StatsReceivers</a></li>
 <li><a class="reference internal" href="#viewing-per-node-metrics">Viewing per-node metrics</a></li>
 </ul>
 </li>

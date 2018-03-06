@@ -2469,22 +2469,15 @@ and inline.</p>
       <p class="shortcomment cmt">A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.</p><div class="fullcomment"><div class="comment cmt"><p>A writeable <a href="Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that supports merging.
 Callbacks (responders) of Promises are scheduled with
 <a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><h3>Implementation details</h3><p>A Promise is in one of six states: <code>Waiting</code>, <code>Interruptible</code>,
-<code>Interrupted</code>, <code>Transforming</code>, Done<code> and </code>Linked<code> where </code>Interruptible<code>,
-<code>Interrupted</code>, and </code>Transforming<code> are variants of </code>Waiting<code> to deal with future
+<code>Interrupted</code>, <code>Transforming</code>, <code>Done</code> and <code>Linked</code> where <code>Interruptible</code>,
+<code>Interrupted</code>, and <code>Transforming</code> are variants of <code>Waiting</code> to deal with future
 interrupts. Promises are concurrency-safe, using lock-free operations
-throughout. Callback dispatch is scheduled with
-<a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</code></p><p>Waiters are stored as a <span class="extype" name="com.twitter.util.Promise.K">com.twitter.util.Promise.K</span>. <code>K</code>s
-(mnemonic: continuation) specifies a <code>depth</code>. This is used to
-implement Promise chaining: a callback with depth <code>d</code> is invoked only
-after all callbacks with depth &lt; <code>d</code> have already been invoked.</p><p><code>Promise.become</code> merges two promises: they are declared equivalent.
+throughout. Callback dispatch is scheduled with <span class="extype" name="Scheduler">Scheduler</span>.</p><p>Waiters (i.e., continuations) are stored in a <span class="extype" name="Promise.WaitQueue">Promise.WaitQueue</span> and
+executed in the LIFO order.</p><p><code>Promise.become</code> merges two promises: they are declared equivalent.
 <code>become</code> merges the states of the two promises, and links one to the
 other. Thus promises support the analog to tail-call elimination: no
 space leak is incurred from <code>flatMap</code> in the tail position since
-intermediate promises are merged into the root promise.</p><p>A number of optimizations are employed to conserve <i>space</i>: we pay
-particular heed to the JVM's object representation, in particular for
-OpenJDK (HotSpot) version 7 running on 64-bit architectures with
-compressed OOPS. See comments on <code>com.twitter.util.Promise.State</code>
-for details.
+intermediate promises are merged into the root promise.
 </p></div></div>
     </li><li name="com.twitter.util.ProxyTimer" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ProxyTimerextendsTimer"></a><a id="ProxyTimer:ProxyTimer"></a>
@@ -2566,59 +2559,6 @@ for details.
       </span>
       
       
-    </li><li name="com.twitter.util.RichU64ByteArray" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="RichU64ByteArrayextendsAnyRef"></a><a id="RichU64ByteArray:RichU64ByteArray"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#RichU64ByteArrayextendsAnyRef" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="RichU64ByteArray.html"><span class="name">RichU64ByteArray</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
-      </span>
-      
-      
-    </li><li name="com.twitter.util.RichU64Long" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="RichU64LongextendsAnyRef"></a><a id="RichU64Long:RichU64Long"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#RichU64LongextendsAnyRef" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="RichU64Long.html"><span class="name">RichU64Long</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
-      </span>
-      
-      
-    </li><li name="com.twitter.util.RichU64String" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="RichU64StringextendsAnyRef"></a><a id="RichU64String:RichU64String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#RichU64StringextendsAnyRef" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="RichU64String parses string as a 64-bit unsigned hexadecimal long, outputting a signed Long or a byte array." href="RichU64String.html"><span class="name">RichU64String</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">RichU64String parses string as a 64-bit unsigned hexadecimal long,
-outputting a signed Long or a byte array.</p><div class="fullcomment"><div class="comment cmt"><p>RichU64String parses string as a 64-bit unsigned hexadecimal long,
-outputting a signed Long or a byte array. Valid input is 1-16 hexadecimal
-digits (0-9, a-z, A-Z).
-</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="NumberFormatException"><code>NumberFormatException</code></span> if string is not a non-negative hexadecimal
-string</p></span></dd></dl></div>
     </li><li name="com.twitter.util.ScheduledThreadPoolTimer" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ScheduledThreadPoolTimerextendsTimer"></a><a id="ScheduledThreadPoolTimer:ScheduledThreadPoolTimer"></a>
       <span class="permalink">
@@ -3201,6 +3141,68 @@ from an expression should be marked as computed:</p><p>   var level = required[I
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> use a Plain Old Scala Object</p></dd></dl></div>
+    </li><li name="com.twitter.util.RichU64ByteArray" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RichU64ByteArrayextendsAnyRef"></a><a id="RichU64ByteArray:RichU64ByteArray"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#RichU64ByteArrayextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="RichU64ByteArray.html"><span class="name deprecated" title="Deprecated: (Since version 2018-02-13) Use Java 8 unsigned Long APIs instead">RichU64ByteArray</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2018-02-13)</i> Use Java 8 unsigned Long APIs instead</p></dd></dl></div>
+    </li><li name="com.twitter.util.RichU64Long" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RichU64LongextendsAnyRef"></a><a id="RichU64Long:RichU64Long"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#RichU64LongextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="RichU64Long.html"><span class="name deprecated" title="Deprecated: (Since version 2018-02-13) Use Java 8 unsigned Long APIs instead">RichU64Long</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2018-02-13)</i> Use Java 8 unsigned Long APIs instead</p></dd></dl></div>
+    </li><li name="com.twitter.util.RichU64String" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RichU64StringextendsAnyRef"></a><a id="RichU64String:RichU64String"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#RichU64StringextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="RichU64String parses string as a 64-bit unsigned hexadecimal long, outputting a signed Long or a byte array." href="RichU64String.html"><span class="name deprecated" title="Deprecated: (Since version 2018-02-13) Use Java 8 unsigned Long APIs instead">RichU64String</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">RichU64String parses string as a 64-bit unsigned hexadecimal long,
+outputting a signed Long or a byte array.</p><div class="fullcomment"><div class="comment cmt"><p>RichU64String parses string as a 64-bit unsigned hexadecimal long,
+outputting a signed Long or a byte array. Valid input is 1-16 hexadecimal
+digits (0-9, a-z, A-Z).
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2018-02-13)</i> Use Java 8 unsigned Long APIs instead</p></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="NumberFormatException"><code>NumberFormatException</code></span> if string is not a non-negative hexadecimal
+string</p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -3392,7 +3394,7 @@ combinators or callbacks registered on a Future.</p></div></div>
         <a title="Note: There is a Java-friendly API for this object: com.twitter.util.Closables." href="Closable$.html"><span class="name">Closable</span></a>
       </span>
       
-      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Closables.html" class="extype" name="com.twitter.util.Closables">com.twitter.util.Closables</a>.</p>
+      <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <code>com.twitter.util.Closables</code>.</p>
     </li><li name="com.twitter.util.Codec" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Codec"></a><a id="Codec:Codec"></a>
       <span class="permalink">
@@ -4144,22 +4146,6 @@ is analogous to try/finally).
       <p class="shortcomment cmt">A <code>java.text.SimpleDateFormat</code> that avoids confusion between YYYY and yyyy.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>java.text.SimpleDateFormat</code> that avoids confusion between YYYY and yyyy.
 One should never use YYYY (week year) unless the format also includes the week of year.
 </p></div></div>
-    </li><li name="com.twitter.util.U64" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="U64"></a><a id="U64:U64"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#U64" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="U64$.html"><span class="name">U64</span></a>
-      </span>
-      
-      
     </li><li name="com.twitter.util.Unsafe" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Unsafe"></a><a id="Unsafe:Unsafe"></a>
       <span class="permalink">
@@ -4278,6 +4264,25 @@ Scala standard library.
       Twitter's util needed to provide this for users who were still on
       Scala 2.9 at the time.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p>Scala's <a href="http://www.scala-lang.org/api/current/#scala.util.control.NonFatal$" target="_blank">NonFatal</a>
      for usage notes.</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.U64" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="U64"></a><a id="U64:U64"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#U64" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="U64$.html"><span class="name deprecated" title="Deprecated: (Since version 2018-02-13) Use Java 8 unsigned Long APIs instead">U64</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2018-02-13)</i> Use Java 8 unsigned Long APIs instead</p></dd></dl></div>
     </li></ol>
             </div>
         </div>

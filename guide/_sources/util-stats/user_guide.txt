@@ -20,23 +20,6 @@ implementation and only depend on util-stats.
 If no implementations are found, metrics are reported to a `NullStatsReceiver`_ which is essentially
 ``/dev/null``.
 
-Leveraging Verbosity Levels
----------------------------
-
-Introducing a new application metric (i.e., a histogram or a counter) is always a trade-off between
-its operational value and its cost within observability. Verbosity levels for StatsReceivers are
-aiming to reduce the observability cost of Finagle-based services by allowing for a granular control
-over which metrics are being exported in the application’s steady state.
-
-Similar to log levels, verbosity levels provide means to mark a given metric as “debug” and
-potentially (assuming supported in implementation) prevent it from being exported under standard
-operations.
-
-Limiting the number of exported metrics via verbosity levels can reduce applications' operational
-cost. However taking this to extremes may drastically affect operability of your service. We
-recommend using your judgment to make sure blacklisting a given metric will not reduce a process'
-visibility.
-
 Measuring the latency of operations
 -----------------------------------
 A common need for clients is to capture the latency distribution, often of asynchronous calls such
@@ -105,6 +88,8 @@ along with code that holds a strong reference to the gauge in a global linked li
 such you should only rely on ``provideGauge`` when you do not have a place to keep a strong
 reference.
 
+.. _testing_code:
+
 Testing code that use StatsReceivers
 ------------------------------------
 If your tests do not need to verify the value of stats, you should use a `NullStatsReceiver`_
@@ -125,6 +110,23 @@ themselves are thread-safe and safe to use across threads.
 The caveat is that because ``Gauges`` run a function when they are read, the code you provide as the
 function **must also** be thread-safe.
 
+Leveraging Verbosity Levels
+---------------------------
+
+Introducing a new application metric (i.e., a histogram or a counter) is always a trade-off between
+its operational value and its cost within observability. Verbosity levels for StatsReceivers are
+aiming to reduce the observability cost of Finagle-based services by allowing for a granular control
+over which metrics are being exported in the application’s steady state.
+
+Similar to log levels, verbosity levels provide means to mark a given metric as “debug” and
+potentially (assuming supported in implementation) prevent it from being exported under standard
+operations.
+
+Limiting the number of exported metrics via verbosity levels can reduce applications' operational
+cost. However taking this to extremes may drastically affect operability of your service. We
+recommend using your judgment to make sure blacklisting a given metric will not reduce a process'
+visibility.
+
 Access needed to a StatsReceiver in an inconvenient place
 ---------------------------------------------------------
 Ideally classes would be passed a properly scoped ``StatsReceiver`` in their constructor but this
@@ -132,6 +134,20 @@ isn’t always simple or feasible. This may be due to various reasons such as le
 static initializer or a Scala object. In these cases, if you are depending on finagle-core, you
 should consider using one of ``DefaultStatsReceiver``, ``ClientStatsReceiver`` or
 ``ServerStatsReceiver``. These are initialized via Finagle’s ``LoadService`` mechanism.
+
+Useful StatsReceivers
+---------------------
+
+There a few ``StatsReceiver``\s which work across implementations that
+developers may find useful.
+
+- `InMemoryStatsReceiver`_ useful for :ref:`unit testing <testing_code>`.
+
+- `NullStatsReceiver`_ for when you do not care about all metrics.
+
+- `BlacklistStatsReceiver`_ programmatically decide which metrics to ignore.
+
+- `BroadcastStatsReceiver`_ allows for sending metrics to two or more ``StatsReceiver``\s.
 
 Viewing per-node metrics
 ------------------------
@@ -151,3 +167,4 @@ Via TwitterServer/finagle-stats — the `HTTP admin interface`_ responds with js
 .. _java.lang.ref.WeakReference: http://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html
 .. _InMemoryStatsReceiver: https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala
 .. _HTTP admin interface: https://twitter.github.io/twitter-server/Features.html#http-admin-interface
+.. _BlacklistStatsReceiver: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/BlacklistStatsReceiver.scala

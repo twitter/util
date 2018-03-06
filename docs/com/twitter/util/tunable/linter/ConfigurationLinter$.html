@@ -540,6 +540,26 @@ provides a default value to be passed as <code>close(grace)</code>.
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.app.App#exitOnError" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exitOnError(reason:String,details:=&gt;String):Unit"></a><a id="exitOnError(String,⇒String):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#exitOnError(reason:String,details:=&gt;String):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exitOnError</span><span class="params">(<span name="reason">reason: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="details">details: ⇒ <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The details Fn may be an expensive operation (which could fail).</p><div class="fullcomment"><div class="comment cmt"><p>The details Fn may be an expensive operation (which could fail). We want to
+ensure that we've at least written the <code>reason</code> field to System.err before
+attempting to write the <code>detail</code> field so that users will at a minimum see the
+<code>reason</code> for the exit regardless of any extra details.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#exitOnError" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="exitOnError(reason:String):Unit"></a><a id="exitOnError(String):Unit"></a>
       <span class="permalink">
       <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#exitOnError(reason:String):Unit" title="Permalink">
