@@ -6,6 +6,18 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+Runtime Behavior Changes:
+
+  * util-stats: Alphabetically sort stats printed to the given `PrintStream` in the
+    `c.t.finagle.stats.InMemoryStatsReceiver#print(PrintStream)` function.
+
+    To include stats headers which provide better visual separation for the different
+    types of stats being printedm, set `includeHeaders` to true. E.g.,
+    ```
+    InMemoryStatsReceiver#print(PrintStream, includeHeaders = true)
+    ```
+    ``PHAB_ID=D144091``
+
 18.3.0  2018-03-05
 
 Runtime Behavior Changes:

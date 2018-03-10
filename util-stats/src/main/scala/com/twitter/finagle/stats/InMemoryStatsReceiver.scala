@@ -2,8 +2,34 @@ package com.twitter.finagle.stats
 
 import java.io.PrintStream
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection.mutable
 import scala.collection.JavaConverters._
+import scala.collection.{SortedMap, mutable}
+
+object InMemoryStatsReceiver {
+  private[stats] implicit class RichMap[K, V](val self: mutable.Map[K, V]) {
+    def mapKeys[T](func: K => T): mutable.Map[T, V] = {
+      for ((k, v) <- self) yield {
+        func(k) -> v
+      }
+    }
+
+    def toSortedMap(implicit ordering: Ordering[K]): SortedMap[K, V] = {
+      SortedMap[K, V]() ++ self
+    }
+  }
+
+  private[stats] def statValuesToStr(values: Seq[Float]): String = {
+    if (values.length <= MaxStatsValues) {
+      values.mkString("[", ",", "]")
+    } else {
+      val numOmitted = values.length - MaxStatsValues
+      values.take(MaxStatsValues).mkString("[", ",", OmittedValuesStr.format(numOmitted))
+    }
+  }
+
+  private[stats] val OmittedValuesStr = "... (omitted %s value(s))]"
+  private[stats] val MaxStatsValues = 3
+}
 
 /**
  * An in-memory implementation of [[StatsReceiver]], which is mostly used for testing.
@@ -23,6 +49,7 @@ import scala.collection.JavaConverters._
  * }}}
  **/
 class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
+  import InMemoryStatsReceiver._
 
   def repr: InMemoryStatsReceiver = this
 
@@ -78,13 +105,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
 
       override def toString: String = {
         val vals = apply()
-        val valStr = if (vals.length <= 3) {
-          vals.mkString("[", ",", "]")
-        } else {
-          val numOmitted = vals.length - 3
-          vals.take(3).mkString("[", ",", s"... (omitted $numOmitted value(s))]")
-        }
-        s"Stat(${name.mkString("/")}=$valStr)"
+        s"Stat(${name.mkString("/")}=${statValuesToStr(vals)})"
       }
     }
 
@@ -115,14 +136,42 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
 
   /**
    * Dumps this in-memory stats receiver to the given [[PrintStream]].
+   * @param p the [[PrintStream]] to which to write in-memory values.
    */
   def print(p: PrintStream): Unit = {
-    for ((k, v) <- counters)
-      p.printf("%s %d\n", k.mkString("/"), v: java.lang.Long)
-    for ((k, g) <- gauges)
-      p.printf("%s %f\n", k.mkString("/"), g(): java.lang.Float)
-    for ((k, s) <- stats if s.size > 0)
-      p.printf("%s %f\n", k.mkString("/"), (s.sum / s.size): java.lang.Float)
+    print(p, includeHeaders = false)
+  }
+
+  /**
+   * Dumps this in-memory stats receiver to the given [[PrintStream]].
+   * @param p the [[PrintStream]] to which to write in-memory values.
+   * @param includeHeaders optionally include printing underlines headers for the different types
+   *                       of stats printed, e.g., "Counters:", "Gauges:", "Stats;"
+   */
+  def print(p: PrintStream, includeHeaders: Boolean): Unit = {
+    val sortedCounters = counters.mapKeys(_.mkString("/")).toSortedMap
+    val sortedGauges = gauges.mapKeys(_.mkString("/")).toSortedMap
+    val sortedStats = stats.mapKeys(_.mkString("/")).toSortedMap
+
+    if (includeHeaders) {
+      p.println("Counters:")
+      p.println("---------")
+    }
+    for ((k, v) <- sortedCounters)
+      p.print(f"$k%s $v%d\n")
+    if (includeHeaders) {
+      p.println("\nGauges:")
+      p.println("-------")
+    }
+    for ((k, g) <- sortedGauges)
+      p.print(f"$k%s ${ g() }%f\n")
+    if (includeHeaders) {
+      p.println("\nStats:")
+      p.println("------")
+    }
+    for ((k, s) <- sortedStats if s.nonEmpty) {
+      p.print(f"$k%s ${ s.sum / s.size }%f ${statValuesToStr(s)}\n")
+    }
   }
 
   /**
@@ -143,7 +192,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     }
 
     new HistogramDetail {
-      def counts = {
+      def counts: Seq[BucketAndCount] = {
         addedValues
           .map { x =>
             nearestPosInt(x)
