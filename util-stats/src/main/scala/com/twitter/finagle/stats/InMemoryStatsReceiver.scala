@@ -153,19 +153,19 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     val sortedGauges = gauges.mapKeys(_.mkString("/")).toSortedMap
     val sortedStats = stats.mapKeys(_.mkString("/")).toSortedMap
 
-    if (includeHeaders) {
+    if (includeHeaders && sortedCounters.nonEmpty) {
       p.println("Counters:")
       p.println("---------")
     }
     for ((k, v) <- sortedCounters)
       p.print(f"$k%s $v%d\n")
-    if (includeHeaders) {
+    if (includeHeaders && sortedGauges.nonEmpty) {
       p.println("\nGauges:")
       p.println("-------")
     }
     for ((k, g) <- sortedGauges)
       p.print(f"$k%s ${ g() }%f\n")
-    if (includeHeaders) {
+    if (includeHeaders && sortedStats.nonEmpty) {
       p.println("\nStats:")
       p.println("------")
     }

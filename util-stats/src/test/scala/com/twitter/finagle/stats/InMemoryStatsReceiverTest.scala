@@ -255,4 +255,62 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
       ps.close()
     }
   }
+
+  test("print include headers skip empty") {
+    val baos = new ByteArrayOutputStream()
+    val ps = new PrintStream(baos, true, "utf-8")
+
+    try {
+      val inMemoryStatsReceiver = new InMemoryStatsReceiver
+      inMemoryStatsReceiver.counter("x", "y", "z").incr()
+      inMemoryStatsReceiver.counter("x", "y", "z").incr(2)
+      assert(inMemoryStatsReceiver.counter("x", "y", "z")() == 3)
+
+      inMemoryStatsReceiver.counter("x", "y", "q").incr()
+      inMemoryStatsReceiver.counter("x", "y", "q").incr(2)
+      assert(inMemoryStatsReceiver.counter("x", "y", "q")() == 3)
+
+      inMemoryStatsReceiver.counter("counter").incr()
+      inMemoryStatsReceiver.counter("counter").incr(2)
+      assert(inMemoryStatsReceiver.counter("counter")() == 3)
+
+      inMemoryStatsReceiver.counter("a", "b", "c").incr()
+      inMemoryStatsReceiver.counter("a", "b", "c").incr(2)
+      assert(inMemoryStatsReceiver.counter("a", "b", "c")() == 3)
+
+      inMemoryStatsReceiver.counter("a", "m", "n").incr()
+      inMemoryStatsReceiver.counter("a", "m", "n").incr(2)
+      assert(inMemoryStatsReceiver.counter("a", "m", "n")() == 3)
+
+      inMemoryStatsReceiver.stat("stat").add(1.0f)
+      inMemoryStatsReceiver.stat("stat").add(2.0f)
+      assert(inMemoryStatsReceiver.stat("stat")() == Seq(1.0f, 2.0f))
+
+      inMemoryStatsReceiver.stat("d", "e", "f").add(1.0f)
+      inMemoryStatsReceiver.stat("d", "e", "f").add(2.0f)
+      inMemoryStatsReceiver.stat("d", "e", "f").add(3.0f)
+      inMemoryStatsReceiver.stat("d", "e", "f").add(4.0f)
+      assert(inMemoryStatsReceiver.stat("d", "e", "f")() == Seq(1.0f, 2.0f, 3.0f, 4.0f))
+
+      inMemoryStatsReceiver.print(ps, includeHeaders = true)
+      val content = new String(baos.toByteArray, StandardCharsets.UTF_8)
+      val parts = content.split('\n')
+
+      assert(parts.length == 12)
+      assert(parts(0) == "Counters:")
+      assert(parts(1) == "---------")
+      assert(parts(2) == "a/b/c 3")
+      assert(parts(3) == "a/m/n 3")
+      assert(parts(4) == "counter 3")
+      assert(parts(5) == "x/y/q 3")
+      assert(parts(6) == "x/y/z 3")
+      assert(parts(7) == "")
+      assert(parts(8) == "Stats:")
+      assert(parts(9) == "------")
+      assert(parts(10) == "d/e/f 2.500000 [1.0,2.0,3.0... (omitted 1 value(s))]")
+      assert(parts(11) == "stat 1.500000 [1.0,2.0]")
+    } finally {
+      ps.close()
+    }
+  }
 }
