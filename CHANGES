@@ -8,6 +8,10 @@ Unreleased
 
 Runtime Behavior Changes:
 
+  * util-app: Add visibility for NonFatal exceptions during exiting of `c.t.app.App`. 
+    Added visibility into any NonFatal exceptions which occur during the closing of 
+    resources during `App#close`. ``PHAB_ID=D146029``
+
   * util-core: Ensure the `Awaitable.CloseAwaitably0.closeAwaitably` Future returns. 
     Because the `closed` AtomicBoolean is flipped, we want to make sure that executing 
     the passed in `f` function satisfies the `onClose` Promise even the cases of thrown

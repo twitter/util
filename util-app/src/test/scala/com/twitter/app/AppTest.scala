@@ -1,9 +1,10 @@
 package com.twitter.app
 
 import com.twitter.conversions.time._
-import com.twitter.util.{Closable, Future, MockTimer, Promise, Time, Timer}
+import com.twitter.util._
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.scalatest.FunSuite
+import scala.language.reflectiveCalls
 
 class TestApp(f: () => Unit) extends App {
   var reason: Option[String] = None
@@ -22,6 +23,14 @@ object VeryBadApp extends App {
   }
 
   def main(): Unit = {}
+}
+
+trait ErrorOnExitApp extends App {
+  override val defaultCloseGracePeriod: Duration = 2.seconds
+
+  override def exitOnError(throwable: Throwable): Unit = {
+    throw throwable
+  }
 }
 
 class AppTest extends FunSuite {
@@ -127,6 +136,7 @@ class AppTest extends FunSuite {
 
       ctl.advance(2.seconds)
       t.tick()
+      t.tick()
 
       assert(n2 == 1)
       assert(f.isDefined)
@@ -176,6 +186,7 @@ class AppTest extends FunSuite {
       assert(!f.isDefined)
 
       ctl.advance(2.seconds)
+      t.tick()
       t.tick()
 
       assert(n1 == 1)
@@ -228,6 +239,7 @@ class AppTest extends FunSuite {
 
       ctl.advance(2.seconds)
       t.tick()
+      t.tick()
 
       assert(n1 == 1)
       assert(n2 == 1)
@@ -268,5 +280,68 @@ class AppTest extends FunSuite {
 
     app.closeOnExit(closable)
     assert(closed)
+  }
+
+  test("App: exit functions properly capture non-fatal exceptions") {
+    val app = new ErrorOnExitApp {
+      def main(): Unit = {
+        onExit{
+          throw new Exception("FORCED ON EXIT")
+        }
+
+        closeOnExit(Closable.make { _ =>
+          throw new Exception("FORCED CLOSE ON EXIT")
+        })
+
+        closeOnExitLast(Closable.make { _ =>
+          throw new Exception("FORCED CLOSE ON EXIT LAST")
+        })
+      }
+    }
+
+    val e = intercept[CloseException] {
+      app.main(Array.empty)
+    }
+
+    assert(e.getSuppressed.length == 3)
+  }
+
+  test("App: fatal exceptions escape exit functions") {
+    // first fatal (InterruptedException) kills the app during close
+    val app = new ErrorOnExitApp {
+      def main(): Unit = {
+        closeOnExit(Closable.make { _ =>
+          throw new InterruptedException("FORCED CLOSE ON EXIT")
+        })
+      }
+    }
+
+    intercept[InterruptedException] {
+      app.main(Array.empty)
+    }
+  }
+
+  test("App: exit functions properly capture mix of non-fatal and fatal exceptions") {
+    val app = new ErrorOnExitApp {
+      def main(): Unit = {
+        onExit{
+          throw new Exception("FORCED ON EXIT")
+        }
+
+        closeOnExit(Closable.make { _ =>
+          throw new Exception("FORCED CLOSE ON EXIT")
+        })
+
+        closeOnExitLast(Closable.make { _ =>
+          throw new InterruptedException("FORCED CLOSE ON EXIT LAST")
+        })
+      }
+    }
+
+    val e = intercept[Throwable] {
+      app.main(Array.empty)
+    }
+
+    assert(e.getClass == classOf[InterruptedException])
   }
 }

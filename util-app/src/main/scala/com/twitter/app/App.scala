@@ -61,6 +61,20 @@ trait App extends Closable with CloseAwaitably {
    */
   protected def failfastOnFlagsNotParsed: Boolean = false
 
+  /** Exit on error with the given Throwable */
+  protected def exitOnError(throwable: Throwable): Unit = {
+    throwable.printStackTrace()
+    throwable match {
+      case _: CloseException =>
+        // exception occurred while closing, do not attempt to close again
+        System.err.println(throwable.getMessage)
+        System.exit(1)
+      case _ =>
+        exitOnError("Exception thrown in main on startup")
+    }
+  }
+
+  /** Exit on error with the given `reason` String */
   protected def exitOnError(reason: String): Unit = {
     exitOnError(reason, "")
   }
@@ -191,19 +205,52 @@ trait App extends Closable with CloseAwaitably {
   final def close(deadline: Time): Future[Unit] = synchronized {
     closing = closeAwaitably {
       closeDeadline = deadline.max(Time.now + MinGrace)
-      val firstPhase = Closable
-        .all(exits.asScala.toSeq: _*)
-        .close(closeDeadline)
+      Future
+        .collectToTry(exits.asScala.toSeq.map(_.close(closeDeadline)))
         .by(shutdownTimer, closeDeadline)
-
-      firstPhase
-        .transform { _ =>
-          Closable.all(lastExits.asScala.toSeq: _*).close(closeDeadline)
+        .transform {
+          case Return(results) =>
+            closeLastExits(results, closeDeadline)
+          case Throw(t) =>
+            // this would be triggered by a timeout on the collectToTry of exits,
+            // still try to close last exits
+            closeLastExits(Seq(Throw(t)), closeDeadline)
         }
-        .by(shutdownTimer, closeDeadline)
     }
-
     closing
+  }
+
+  private[this] def newCloseException(errors: Seq[Throwable]): CloseException = {
+    val message = if (errors.size == 1) {
+      "An error occurred on exit"
+    } else {
+      s"${errors.size} errors occurred on exit"
+    }
+    val exc = new CloseException(message)
+    errors.foreach { error =>
+      exc.addSuppressed(error)
+    }
+    exc
+  }
+
+  private[this] final def closeLastExits(
+    onExitResults: Seq[Try[Unit]],
+    deadline: Time
+  ): Future[Unit] = {
+    Future
+      .collectToTry(lastExits.asScala.toSeq.map(_.close(deadline)))
+      .by(shutdownTimer, deadline)
+      .transform {
+        case Return(results) =>
+          val errors = (onExitResults ++ results).collect { case Throw(e) => e }
+          if (errors.isEmpty) {
+            Future.Done
+          } else {
+            Future.exception(newCloseException(errors))
+          }
+        case Throw(t) =>
+          Future.exception(newCloseException(Seq(t)))
+      }
   }
 
   final def main(args: Array[String]): Unit = {
@@ -214,9 +261,8 @@ trait App extends Closable with CloseAwaitably {
         exitOnError(reason)
       case FlagParseException(reason, _) =>
         exitOnError(reason, flag.usage)
-      case e: Throwable =>
-        e.printStackTrace()
-        exitOnError("Exception thrown in main on startup")
+      case t: Throwable =>
+        exitOnError(t)
     }
   }
 
