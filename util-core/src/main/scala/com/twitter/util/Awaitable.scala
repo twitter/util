@@ -3,6 +3,7 @@ package com.twitter.util
 import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.collection.JavaConverters._
+import scala.util.control.{NonFatal => NF}
 
 /**
  * Wait for the result of some action. Awaitable is not used
@@ -196,7 +197,15 @@ private[util] trait CloseAwaitably0[U <: Unit] extends Awaitable[U] {
    */
   protected def closeAwaitably(f: => Future[U]): Future[U] = {
     if (closed.compareAndSet(false, true))
-      onClose.become(f)
+      try {
+        onClose.become(f)
+      } catch {
+        case NF(e) =>
+          onClose.setException(e)
+        case t: Throwable =>
+          onClose.setException(t)
+          throw t
+      }
     onClose
   }
 
@@ -226,6 +235,6 @@ private[util] trait CloseAwaitably0[U <: Unit] extends Awaitable[U] {
  * }
  * }}}
  *
- * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractCloseAwaitably]].
+ * Note: There is a Java-friendly API for this trait: `com.twitter.util.AbstractCloseAwaitably`.
  */
 trait CloseAwaitably extends CloseAwaitably0[Unit]

@@ -8,6 +8,11 @@ Unreleased
 
 Runtime Behavior Changes:
 
+  * util-core: Ensure the `Awaitable.CloseAwaitably0.closeAwaitably` Future returns. 
+    Because the `closed` AtomicBoolean is flipped, we want to make sure that executing 
+    the passed in `f` function satisfies the `onClose` Promise even the cases of thrown
+    exceptions. ``PHAB_ID=D146565``
+
   * util-stats: Alphabetically sort stats printed to the given `PrintStream` in the
     `c.t.finagle.stats.InMemoryStatsReceiver#print(PrintStream)` function.
 
