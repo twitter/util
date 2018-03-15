@@ -401,7 +401,7 @@ lazy val utilThrift = Project(
 ).settings(
   name := "util-thrift",
   libraryDependencies ++= Seq(
-    "com.twitter"                % "libthrift"        % "0.5.0-7",
+    "org.apache.thrift"          % "libthrift"        % "0.10.0",
     slf4jLib % "provided",
     "com.fasterxml.jackson.core" % "jackson-core"     % jacksonVersion,
     "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
