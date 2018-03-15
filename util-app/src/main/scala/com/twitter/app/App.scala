@@ -21,10 +21,12 @@ import scala.collection.mutable
  * in the premain or later, after they have been parsed.
  *
  * {{{
+ * import com.twitter.app.App
+ *
  * object MyApp extends App {
  *   val n = flag("n", 100, "Number of items to process")
  *
- *   def main() {
+ *   def main(): Unit = {
  *     for (i <- 0 until n()) process(i)
  *   }
  * }
@@ -102,6 +104,50 @@ trait App extends Closable with CloseAwaitably {
 
   // finagle isn't available here, so no DefaultTimer
   protected lazy val shutdownTimer: Timer = new JavaTimer(isDaemon = true)
+
+  /**
+   * Programmatically specify which implementations to use in [[LoadService.apply]]
+   * for the given interfaces. This allows applications to circumvent
+   * the standard service loading mechanism when needed. It may be useful
+   * if the application has a broad and/or rapidly changing set of dependencies.
+   *
+   * For example, to require `SuperCoolMetrics` be used as the
+   * `com.twitter.finagle.stats.StatsReceiver` implementation:
+   * {{{
+   * import com.initech.SuperCoolMetrics
+   * import com.twitter.app.App
+   * import com.twitter.app.LoadService.Binding
+   * import com.twitter.finagle.stats.StatsReceiver
+   *
+   * class MyApp extends App {
+   *   val implementationToUse = new SuperCoolMetrics()
+   *
+   *   override protected[this] val loadServiceBindings: Seq[Binding[_]] = {
+   *     Seq(new Binding(classOf[StatsReceiver], implementationToUse))
+   *   }
+   *
+   *   def main(): Unit = {
+   *     val loaded = LoadService[StatsReceiver]()
+   *     assert(Seq(implementationToUse) == loaded)
+   *   }
+   * }
+   * }}}
+   *
+   * If this is called for a `Class[T]` after [[LoadService.apply]]
+   * has been called for that same interface, an `IllegalStateException`
+   * will be thrown. For this reason, bindings are done as early
+   * as possible in the application lifecycle, before even `inits`
+   * and flag parsing.
+   *
+   * @note this should not generally be used by "libraries" as it forces
+   *       their user's implementation choice.
+   *
+   * @return a mapping from `Class` to the 1 or more implementations to
+   *         be used by [[LoadService.apply]] for that interface.
+   *
+   * @see [[LoadService.apply]]
+   */
+  protected[this] def loadServiceBindings: Seq[LoadService.Binding[_]] = Nil
 
   /**
    * Invoke `f` before anything else (including flag parsing).
@@ -269,6 +315,10 @@ trait App extends Closable with CloseAwaitably {
   final def nonExitingMain(args: Array[String]): Unit = {
     App.register(this)
 
+    loadServiceBindings.foreach { binding =>
+      LoadService.bind(binding)
+    }
+
     for (f <- inits) f()
 
     flag.parseArgs(args, allowUndefinedFlags) match {
@@ -288,7 +338,7 @@ trait App extends Closable with CloseAwaitably {
       catch { case _: NoSuchMethodException => None }
 
     // Invoke main() if it exists.
-    mainMethod foreach { method =>
+    mainMethod.foreach { method =>
       try method.invoke(this)
       catch { case e: InvocationTargetException => throw e.getCause }
     }

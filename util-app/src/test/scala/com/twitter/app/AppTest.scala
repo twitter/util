@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import com.twitter.app.LoadService.Binding
 import com.twitter.conversions.time._
 import com.twitter.util._
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -84,6 +85,26 @@ class AppTest extends FunSuite {
     }
     new Test1().main(Array.empty)
     assert(q.toArray.toSeq == Seq(0, 1, 2, 3, 4))
+  }
+
+  test("loadServiceBinds") {
+    trait Iface1
+    trait Iface2
+    val impl1 = new Iface1 {}
+    val impl2a = new Iface2 {}
+    val impl2b = new Iface2 {}
+    class BindApp extends App {
+      override protected[this] val loadServiceBindings: Seq[Binding[_]] = Seq(
+        new Binding(classOf[Iface1], impl1),
+        new Binding[Iface2](classOf[Iface2], Seq(impl2a, impl2b))
+      )
+
+      def main(): Unit = {
+        assert(Seq(impl1) == LoadService[Iface1]())
+        assert(Seq(impl2a, impl2b) == LoadService[Iface2]())
+      }
+    }
+    new BindApp().main(Array.empty)
   }
 
   test("App: sequenced exits") {

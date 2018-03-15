@@ -6,6 +6,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+New Features:
+
+  * util-app: Add the ability to bind specific implementations for `LoadService.apply`
+    via `App.loadServiceBindings`. ``PHAB_ID=D146554``
+
 Runtime Behavior Changes:
 
   * util-app: Add visibility for NonFatal exceptions during exiting of `c.t.app.App`. 

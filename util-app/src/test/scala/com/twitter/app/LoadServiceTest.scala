@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import com.twitter.app.LoadService.Binding
 import com.twitter.conversions.time._
 import com.twitter.finagle.util.loadServiceDenied
 import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
@@ -71,7 +72,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     }
   }
 
-  test("LoadService should only load 1 instance of T, even when there's multiple occurence of T") {
+  test("LoadService should only load 1 instance of T, even when there's multiple occurrences of T") {
     val randomIfaces = LoadService[LoadServiceRandomInterface]()
     assert(randomIfaces.size == 1)
   }
@@ -204,6 +205,42 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       assert(1 == loaded.size)
       assert(classOf[LoadServiceMultipleImpls3] == loaded.head.getClass)
     }
+  }
+
+  test("LoadService.bind") {
+    trait BindTest
+    val toUse = new BindTest {}
+    LoadService.bind(new Binding(classOf[BindTest], toUse))
+    val loaded = LoadService[BindTest]()
+    assert(loaded == Seq(toUse))
+  }
+
+  test("LoadService.bind no impls") {
+    trait BindNoImpls
+    intercept[IllegalArgumentException] {
+      LoadService.bind(new Binding[BindNoImpls](classOf[BindNoImpls], Seq.empty))
+    }
+  }
+
+  test("LoadService.bind after LoadService.apply") {
+    trait BindAfterApply
+    LoadService[BindAfterApply]()
+    intercept[IllegalStateException] {
+      LoadService.bind(new Binding(classOf[BindAfterApply], new BindAfterApply {}))
+    }
+  }
+
+  test("LoadService.bind multiple times") {
+    trait BindMultiple
+    val first = new BindMultiple {}
+    LoadService.bind(new Binding(classOf[BindMultiple], first))
+    val last = Seq(new BindMultiple {})
+    LoadService.bind(new Binding[BindMultiple](classOf[BindMultiple], last))
+    // check that it has been registered multiple times
+    assert(LoadService.duplicateBindings.contains(classOf[BindMultiple]))
+
+    // check that the last registration wins
+    assert(LoadService[BindMultiple]() == last)
   }
 
   test("does not deadlock") {
