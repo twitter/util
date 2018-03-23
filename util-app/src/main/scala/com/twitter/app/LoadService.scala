@@ -120,11 +120,10 @@ object LoadService {
     GlobalRegistry.get.put(Seq("loadservice", ifaceName), implClassNames.mkString(","))
 
   /**
-   * Returns classes for the given `ClassTag` as specified by
-   * resource files in `META-INF/services/FullyQualifiedClassTagsClassName`.
+   * Returns classes for the given `Class` as specified by
+   * resource files in `META-INF/services/FullyQualifiedClassName`.
    */
-  def apply[T: ClassTag](): Seq[T] = {
-    val iface = implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]]
+  def apply[T](iface: Class[T]): Seq[T] = {
     val ifaceName = iface.getName
     val allowed = binds.synchronized {
       loaded.put(iface, ())
@@ -136,6 +135,17 @@ object LoadService {
     }
     addToRegistry(ifaceName, impls.map(_.getClass.getName))
     impls
+  }
+
+  /**
+   * Returns classes for the given `ClassTag` as specified by
+   * resource files in `META-INF/services/FullyQualifiedClassTagsClassName`.
+   *
+   * @see [[apply(Class)]] for a Java friendly API.
+   */
+  def apply[T: ClassTag](): Seq[T] = {
+    val iface = implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]]
+    apply(iface)
   }
 
   private[this] def loadImpls[T](iface: Class[T], ifaceName: String): Seq[T] = {
