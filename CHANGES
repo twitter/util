@@ -11,6 +11,9 @@ New Features:
   * util-app: Add the ability to bind specific implementations for `LoadService.apply`
     via `App.loadServiceBindings`. ``PHAB_ID=D146554``
 
+  * util-core: Introduce the `ClosableOnce` trait which extends the guarantees of
+    `Closable` to include idempotency of the `close` method. ``PHAB_ID=D152000``
+
 Runtime Behavior Changes:
 
   * util-app: Add visibility for NonFatal exceptions during exiting of `c.t.app.App`. 
