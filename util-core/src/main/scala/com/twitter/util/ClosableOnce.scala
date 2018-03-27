@@ -2,6 +2,10 @@ package com.twitter.util
 
 /**
  * A mixin trait to describe resources that are an idempotent [[Closable]].
+ *
+ * The first call to `close(Time)` triggers closing the resource with the
+ * provided deadline while subsequent calls will yield the same `Future`
+ * as the first invocation irrespective of the deadline provided.
  */
 trait ClosableOnce extends Closable {
 
@@ -26,12 +30,12 @@ trait ClosableOnce extends Closable {
    * @note if this method throws a synchronous exception, that exception will
    *       be wrapped in a failed future.
    */
-  protected def doClose(deadline: Time): Future[Unit]
+  protected def closeOnce(deadline: Time): Future[Unit]
 
   final def close(deadline: Time): Future[Unit] = {
     if (once()) {
       val closeF =
-        try doClose(deadline)
+        try closeOnce(deadline)
         catch { case NonFatal(ex) => Future.exception(ex) }
       closePromise.become(closeF)
     }
@@ -42,7 +46,7 @@ trait ClosableOnce extends Closable {
 object ClosableOnce {
 
   private final class ClosableOnceWrapper(underlying: Closable) extends ClosableOnce {
-    protected def doClose(deadline: Time): Future[Unit] = underlying.close(deadline)
+    protected def closeOnce(deadline: Time): Future[Unit] = underlying.close(deadline)
   }
 
   /**

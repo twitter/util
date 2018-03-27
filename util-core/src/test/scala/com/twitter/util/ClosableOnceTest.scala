@@ -23,11 +23,11 @@ class ClosableOnceTest extends FunSuite {
     assert(closedCalls == 1)
   }
 
-  test("if doClose throws an exception, the closeable is closed with that exception") {
+  test("if closeOnce throws an exception, the closeable is closed with that exception") {
     val ex = new Exception("boom")
     var closedCalls = 0
     val closableOnce = new ClosableOnce {
-      protected def doClose(deadline: Time): Future[Unit] = {
+      protected def closeOnce(deadline: Time): Future[Unit] = {
         closedCalls += 1
         throw ex
       }
