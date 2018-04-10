@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+18.4.0  2018-04-10
+
 New Features:
 
   * util-app: Add the ability to bind specific implementations for `LoadService.apply`
