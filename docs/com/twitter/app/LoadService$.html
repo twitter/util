@@ -122,6 +122,10 @@
                         <a class="trait" href="App.html" title="A composable application trait that includes flag parsing as well as basic application lifecycle (pre- and post- main)."></a>
                         <a href="App.html" title="A composable application trait that includes flag parsing as well as basic application lifecycle (pre- and post- main).">App</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CloseException.html" title="An exception that represents collected errors which occurred on close of the app."></a>
+                        <a href="CloseException.html" title="An exception that represents collected errors which occurred on close of the app.">CloseException</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Flag$.html" title=""></a>
                         <a class="class" href="Flag.html" title="A single command-line flag, instantiated by a com.twitter.app.Flags instance."></a>
                         <a href="Flag.html" title="A single command-line flag, instantiated by a com.twitter.app.Flags instance.">Flag</a>
@@ -194,7 +198,8 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>. It is
-more resilient to varying Java packaging configurations than ServiceLoader.
+more resilient to varying Java packaging configurations than ServiceLoader.</p><p>For further control, see <a href="App.html#loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]" class="extmbr" name="com.twitter.app.App#loadServiceBindings">App.loadServiceBindings</a> and the
+<span class="extype" name="loadServiceDenied">loadServiceDenied</span> flag.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -245,7 +250,29 @@ more resilient to varying Java packaging configurations than ServiceLoader.
         <div id="allMembers">
         
 
-        
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.twitter.app.LoadService.Binding" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Binding[T]extendsAnyRef"></a><a id="Binding[T]:Binding[T]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/LoadService$.html#Binding[T]extendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="Used to specify which implementation(s) should be used for the interface given by iface." href="LoadService$$Binding.html"><span class="name">Binding</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Used to specify which implementation(s) should be used for the
+interface given by <code>iface</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Used to specify which implementation(s) should be used for the
+interface given by <code>iface</code>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="App.html#loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]" class="extmbr" name="com.twitter.app.App#loadServiceBindings">App.loadServiceBindings</a></p></span></dd></dl></div>
+    </li></ol>
+            </div>
 
         
 
@@ -300,7 +327,7 @@ more resilient to varying Java packaging configurations than ServiceLoader.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.app.LoadService#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.app.LoadService#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]"></a><a id="apply[T]()(ClassTag[T]):Seq[T]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/app/LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" title="Permalink">
@@ -316,7 +343,26 @@ more resilient to varying Java packaging configurations than ServiceLoader.
       </span>
       
       <p class="shortcomment cmt">Returns classes for the given <code>ClassTag</code> as specified by
-resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code>.</p>
+resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns classes for the given <code>ClassTag</code> as specified by
+resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="apply(Class)">apply(Class)</span> for a Java friendly API.</p></span></dd></dl></div>
+    </li><li name="com.twitter.app.LoadService#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="apply[T](iface:Class[T]):Seq[T]"></a><a id="apply[T](Class[T]):Seq[T]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/LoadService$.html#apply[T](iface:Class[T]):Seq[T]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="iface">iface: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="com.twitter.app.LoadService.apply.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.app.LoadService.apply.T">T</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns classes for the given <code>Class</code> as specified by
+resource files in <code>META-INF/services/FullyQualifiedClassName</code>.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -357,6 +403,22 @@ resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.app.LoadService#duplicateBindings" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="duplicateBindings:Set[Class[_]]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/LoadService$.html#duplicateBindings:Set[Class[_]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">duplicateBindings</span><span class="result">: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="scala.Predef.Class">Class</span>[_]]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Return any interfaces that have been registered multiple times via <span class="extype" name="bind">bind</span>.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

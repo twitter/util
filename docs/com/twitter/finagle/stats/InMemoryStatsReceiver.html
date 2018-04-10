@@ -186,7 +186,7 @@
                         <a class="trait" href="HistogramDetail.html" title="Details of a histogram's data points."></a>
                         <a href="HistogramDetail.html" title="Details of a histogram's data points.">HistogramDetail</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="InMemoryStatsReceiver$.html" title=""></a>
                         <a class="class" href="" title="An in-memory implementation of StatsReceiver, which is mostly used for testing."></a>
                         <a href="" title="An in-memory implementation of StatsReceiver, which is mostly used for testing.">InMemoryStatsReceiver</a>
                       </li><li class="current-entities indented4">
@@ -252,14 +252,16 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <a href="InMemoryStatsReceiver$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.twitter">twitter</a>.<a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="index.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
-        <h1>InMemoryStatsReceiver<span class="permalink">
+        <h1><a href="InMemoryStatsReceiver$.html" title="See companion object">InMemoryStatsReceiver</a><span class="permalink">
       <a href="../../../../com/twitter/finagle/stats/InMemoryStatsReceiver.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="InMemoryStatsReceiver$.html" title="See companion object">object InMemoryStatsReceiver</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -764,7 +766,24 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#print" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#print" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="print(p:java.io.PrintStream,includeHeaders:Boolean):Unit"></a><a id="print(PrintStream,Boolean):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/InMemoryStatsReceiver.html#print(p:java.io.PrintStream,includeHeaders:Boolean):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">print</span><span class="params">(<span name="p">p: <span class="extype" name="java.io.PrintStream">PrintStream</span></span>, <span name="includeHeaders">includeHeaders: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Dumps this in-memory stats receiver to the given <span class="extype" name="PrintStream">PrintStream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Dumps this in-memory stats receiver to the given <span class="extype" name="PrintStream">PrintStream</span>.</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>the <span class="extype" name="PrintStream">PrintStream</span> to which to write in-memory values.</p></dd><dt class="param">includeHeaders</dt><dd class="cmt"><p>optionally include printing underlines headers for the different types
+                      of stats printed, e.g., &quot;Counters:&quot;, &quot;Gauges:&quot;, &quot;Stats;&quot;</p></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.InMemoryStatsReceiver#print" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="print(p:java.io.PrintStream):Unit"></a><a id="print(PrintStream):Unit"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/finagle/stats/InMemoryStatsReceiver.html#print(p:java.io.PrintStream):Unit" title="Permalink">
@@ -779,7 +798,7 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
         <span class="name">print</span><span class="params">(<span name="p">p: <span class="extype" name="java.io.PrintStream">PrintStream</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Dumps this in-memory stats receiver to the given <span class="extype" name="PrintStream">PrintStream</span>.</p>
+      <p class="shortcomment cmt">Dumps this in-memory stats receiver to the given <span class="extype" name="PrintStream">PrintStream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Dumps this in-memory stats receiver to the given <span class="extype" name="PrintStream">PrintStream</span>.</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>the <span class="extype" name="PrintStream">PrintStream</span> to which to write in-memory values.</p></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#provideGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="provideGauge(name:String*)(f:=&gt;Float):Unit"></a><a id="provideGauge(String*)(⇒Float):Unit"></a>
       <span class="permalink">

@@ -122,6 +122,10 @@
                         <a class="trait" href="App.html" title="A composable application trait that includes flag parsing as well as basic application lifecycle (pre- and post- main)."></a>
                         <a href="App.html" title="A composable application trait that includes flag parsing as well as basic application lifecycle (pre- and post- main).">App</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CloseException.html" title="An exception that represents collected errors which occurred on close of the app."></a>
+                        <a href="CloseException.html" title="An exception that represents collected errors which occurred on close of the app.">CloseException</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Flag$.html" title=""></a>
                         <a class="class" href="Flag.html" title="A single command-line flag, instantiated by a com.twitter.app.Flags instance."></a>
                         <a href="Flag.html" title="A single command-line flag, instantiated by a com.twitter.app.Flags instance.">Flag</a>
@@ -474,15 +478,36 @@ is done via <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com
 defined in the member <code>flag</code>. Applications should be constructed
 with modularity in mind, and common functionality should be
 extracted into mixins.</p><p>Flags should only be constructed in the constructor, and should only be read
-in the premain or later, after they have been parsed.</p><pre><span class="kw">object</span> MyApp <span class="kw">extends</span> <span class="std">App</span> {
+in the premain or later, after they have been parsed.</p><pre><span class="kw">import</span> com.twitter.app.<span class="std">App</span>
+
+<span class="kw">object</span> MyApp <span class="kw">extends</span> <span class="std">App</span> {
   <span class="kw">val</span> n = flag(<span class="lit">"n"</span>, <span class="num">100</span>, <span class="lit">"Number of items to process"</span>)
 
-  <span class="kw">def</span> main() {
+  <span class="kw">def</span> main(): <span class="std">Unit</span> = {
     <span class="kw">for</span> (i <span class="kw">&lt;-</span> <span class="num">0</span> until n()) process(i)
   }
 }</pre><p>Note that a missing <code>main</code> is OK: mixins may provide behavior that
 does not require defining a custom <code>main</code> method.
 </p></div></div>
+    </li><li name="com.twitter.app.CloseException" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CloseExceptionextendsExceptionwithNoStackTrace"></a><a id="CloseException:CloseException"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/index.html#CloseExceptionextendsExceptionwithNoStackTrace" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="An exception that represents collected errors which occurred on close of the app." href="CloseException.html"><span class="name">CloseException</span></a><span class="result"> extends <span class="extype" name="scala.Exception">Exception</span> with <a href="http://www.scala-lang.org/api/2.12.4/scala/util/control/NoStackTrace.html#scala.util.control.NoStackTrace" class="extype" name="scala.util.control.NoStackTrace">NoStackTrace</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">An exception that represents collected errors which occurred on close of the app.</p><div class="fullcomment"><div class="comment cmt"><p>An exception that represents collected errors which occurred on close of the app.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Collected exceptions which occurred during closing are added as &quot;suppressed&quot; exceptions.</p></span>, <span class="cmt"><p>When execution of the <code>App#nonExitingMain</code> throws a <a href="CloseException.html" class="extype" name="com.twitter.app.CloseException">CloseException</a>, the app will not
+      attempt to call <code>App#close()</code> again in the <code>App#exitOnError(t: Throwable)</code> function since
+      this Exception is assumed be a result of already calling <code>App#close()</code>.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html#getSuppressed()" target="_blank">https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html#getSuppressed()</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.Flag" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Flag[T]extendsAnyRef"></a><a id="Flag[T]:Flag[T]"></a>
       <span class="permalink">
@@ -822,7 +847,8 @@ those supplied by system properties.</p></div><dl class="attributes block"> <dt>
       </span>
       
       <p class="shortcomment cmt">Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>. It is
-more resilient to varying Java packaging configurations than ServiceLoader.
+more resilient to varying Java packaging configurations than ServiceLoader.</p><p>For further control, see <a href="App.html#loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]" class="extmbr" name="com.twitter.app.App#loadServiceBindings">App.loadServiceBindings</a> and the
+<span class="extype" name="loadServiceDenied">loadServiceDenied</span> flag.
 </p></div></div>
     </li>
               </ol>

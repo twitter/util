@@ -122,6 +122,10 @@
                         <a class="trait" href="" title="A composable application trait that includes flag parsing as well as basic application lifecycle (pre- and post- main)."></a>
                         <a href="" title="A composable application trait that includes flag parsing as well as basic application lifecycle (pre- and post- main).">App</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="CloseException.html" title="An exception that represents collected errors which occurred on close of the app."></a>
+                        <a href="CloseException.html" title="An exception that represents collected errors which occurred on close of the app.">CloseException</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Flag$.html" title=""></a>
                         <a class="class" href="Flag.html" title="A single command-line flag, instantiated by a com.twitter.app.Flags instance."></a>
                         <a href="Flag.html" title="A single command-line flag, instantiated by a com.twitter.app.Flags instance.">Flag</a>
@@ -201,10 +205,12 @@ is done via <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com
 defined in the member <code>flag</code>. Applications should be constructed
 with modularity in mind, and common functionality should be
 extracted into mixins.</p><p>Flags should only be constructed in the constructor, and should only be read
-in the premain or later, after they have been parsed.</p><pre><span class="kw">object</span> MyApp <span class="kw">extends</span> <span class="std">App</span> {
+in the premain or later, after they have been parsed.</p><pre><span class="kw">import</span> com.twitter.app.<span class="std">App</span>
+
+<span class="kw">object</span> MyApp <span class="kw">extends</span> <span class="std">App</span> {
   <span class="kw">val</span> n = flag(<span class="lit">"n"</span>, <span class="num">100</span>, <span class="lit">"Number of items to process"</span>)
 
-  <span class="kw">def</span> main() {
+  <span class="kw">def</span> main(): <span class="std">Unit</span> = {
     <span class="kw">for</span> (i <span class="kw">&lt;-</span> <span class="num">0</span> until n()) process(i)
   }
 }</pre><p>Note that a missing <code>main</code> is OK: mixins may provide behavior that
@@ -607,7 +613,23 @@ attempting to write the <code>detail</code> field so that users will at a minimu
         <span class="name">exitOnError</span><span class="params">(<span name="reason">reason: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <p class="shortcomment cmt">Exit on error with the given <code>reason</code> String</p><div class="fullcomment"><div class="comment cmt"><p>Exit on error with the given <code>reason</code> String</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="com.twitter.app.App#exitOnError" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exitOnError(throwable:Throwable):Unit"></a><a id="exitOnError(Throwable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/App.html#exitOnError(throwable:Throwable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exitOnError</span><span class="params">(<span name="throwable">throwable: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Exit on error with the given Throwable</p><div class="fullcomment"><div class="comment cmt"><p>Exit on error with the given Throwable</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.app.App#failfastOnFlagsNotParsed" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="failfastOnFlagsNotParsed:Boolean"></a>
       <span class="permalink">
@@ -759,6 +781,50 @@ breaking existing users, it was introduced using <code>false</code>.
 </p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
 <a href="../util/Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#loadServiceBindings" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]"></a><a id="loadServiceBindings:Seq[Binding[_]]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/App.html#loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">loadServiceBindings</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="LoadService$$Binding.html" class="extype" name="com.twitter.app.LoadService.Binding">Binding</a>[_]]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Programmatically specify which implementations to use in <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
+for the given interfaces.</p><div class="fullcomment"><div class="comment cmt"><p>Programmatically specify which implementations to use in <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
+for the given interfaces. This allows applications to circumvent
+the standard service loading mechanism when needed. It may be useful
+if the application has a broad and/or rapidly changing set of dependencies.</p><p>For example, to require <code>SuperCoolMetrics</code> be used as the
+<code>com.twitter.finagle.stats.StatsReceiver</code> implementation:</p><pre><span class="kw">import</span> com.initech.SuperCoolMetrics
+<span class="kw">import</span> com.twitter.app.<span class="std">App</span>
+<span class="kw">import</span> com.twitter.app.LoadService.Binding
+<span class="kw">import</span> com.twitter.finagle.stats.StatsReceiver
+
+<span class="kw">class</span> MyApp <span class="kw">extends</span> <span class="std">App</span> {
+  <span class="kw">val</span> implementationToUse = <span class="kw">new</span> SuperCoolMetrics()
+
+  <span class="kw">override</span> <span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">val</span> loadServiceBindings: <span class="std">Seq</span>[Binding[_]] = {
+    <span class="std">Seq</span>(<span class="kw">new</span> Binding(classOf[StatsReceiver], implementationToUse))
+  }
+
+  <span class="kw">def</span> main(): <span class="std">Unit</span> = {
+    <span class="kw">val</span> loaded = LoadService[StatsReceiver]()
+    assert(<span class="std">Seq</span>(implementationToUse) == loaded)
+  }
+}</pre><p>If this is called for a <code>Class[T]</code> after <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
+has been called for that same interface, an <code>IllegalStateException</code>
+will be thrown. For this reason, bindings are done as early
+as possible in the application lifecycle, before even <code>inits</code>
+and flag parsing.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a mapping from <code>Class</code> to the 1 or more implementations to
+        be used by <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a> for that interface.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Note</dt><dd><span class="cmt"><p>this should not generally be used by &quot;libraries&quot; as it forces
+      their user's implementation choice.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#main" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="main(args:Array[String]):Unit"></a><a id="main(Array[String]):Unit"></a>
       <span class="permalink">

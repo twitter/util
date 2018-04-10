@@ -459,6 +459,10 @@
                         <a href="AbstractClosable.html" title="Abstract Closable class for Java compatibility.">AbstractClosable</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractClosableOnce.html" title="A Java-friendly API for the ClosableOnce trait."></a>
+                        <a href="AbstractClosableOnce.html" title="A Java-friendly API for the ClosableOnce trait.">AbstractClosableOnce</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractCloseAwaitably.html" title="Java's analog of Scala's com.twitter.util.CloseAwaitably."></a>
                         <a href="AbstractCloseAwaitably.html" title="Java's analog of Scala's com.twitter.util.CloseAwaitably.">AbstractCloseAwaitably</a>
                       </li><li class="current-entities indented3">
@@ -537,6 +541,10 @@
                         <a class="object" href="Closable$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.Closables."></a>
                         <a class="trait" href="Closable.html" title="Closable is a mixin trait to describe a closable resource."></a>
                         <a href="Closable.html" title="Closable is a mixin trait to describe a closable resource.">Closable</a>
+                      </li><li class="current-entities indented3">
+                        <a class="object" href="ClosableOnce$.html" title=""></a>
+                        <a class="trait" href="ClosableOnce.html" title="A mixin trait to describe resources that are an idempotent Closable."></a>
+                        <a href="ClosableOnce.html" title="A mixin trait to describe resources that are an idempotent Closable.">ClosableOnce</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Closables.html" title="Java compatibility layer for com.twitter.util.Closable."></a>
@@ -1101,6 +1109,22 @@
       </span>
       
       <p class="shortcomment cmt">Abstract <code>Closable</code> class for Java compatibility.</p>
+    </li><li name="com.twitter.util.AbstractClosableOnce" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractClosableOnceextendsClosableOnce"></a><a id="AbstractClosableOnce:AbstractClosableOnce"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#AbstractClosableOnceextendsClosableOnce" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A Java-friendly API for the ClosableOnce trait." href="AbstractClosableOnce.html"><span class="name">AbstractClosableOnce</span></a><span class="result"> extends <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A Java-friendly API for the <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a> trait.</p>
     </li><li name="com.twitter.util.AbstractCloseAwaitably" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="AbstractCloseAwaitablyextendsAbstractClosablewithAwaitable[scala.runtime.BoxedUnit]"></a><a id="AbstractCloseAwaitably:AbstractCloseAwaitably"></a>
       <span class="permalink">
@@ -1411,6 +1435,25 @@ that the provider of the computation may choose to ignore.
       
       <p class="shortcomment cmt">Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p><div class="fullcomment"><div class="comment cmt"><p>Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">com.twitter.util.AbstractClosable</a>.
 </p></div></div>
+    </li><li name="com.twitter.util.ClosableOnce" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ClosableOnceextendsClosable"></a><a id="ClosableOnce:ClosableOnce"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#ClosableOnceextendsClosable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="A mixin trait to describe resources that are an idempotent Closable." href="ClosableOnce.html"><span class="name">ClosableOnce</span></a><span class="result"> extends <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><p>The first call to <code>close(Time)</code> triggers closing the resource with the
+provided deadline while subsequent calls will yield the same <code>Future</code>
+as the first invocation irrespective of the deadline provided.
+</p></div></div>
     </li><li name="com.twitter.util.Closables" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ClosablesextendsObject"></a><a id="Closables:Closables"></a>
       <span class="permalink">
@@ -1448,7 +1491,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
   <span class="kw">def</span> close(deadline: Time) = closeAwaitably {
     <span class="cmt">// close the resource</span>
   }
-}</pre><p>Note: There is a Java-friendly API for this trait: <a href="AbstractCloseAwaitably.html" class="extype" name="com.twitter.util.AbstractCloseAwaitably">com.twitter.util.AbstractCloseAwaitably</a>.
+}</pre><p>Note: There is a Java-friendly API for this trait: <code>com.twitter.util.AbstractCloseAwaitably</code>.
 </p></div></div>
     </li><li name="com.twitter.util.Codec" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Codec[T,S]extendsEncoder[T,S]withDecoder[T,S]"></a><a id="Codec[T,S]:Codec[T,S]"></a>
@@ -3395,6 +3438,22 @@ combinators or callbacks registered on a Future.</p></div></div>
       </span>
       
       <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <code>com.twitter.util.Closables</code>.</p>
+    </li><li name="com.twitter.util.ClosableOnce" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClosableOnce"></a><a id="ClosableOnce:ClosableOnce"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#ClosableOnce" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ClosableOnce$.html"><span class="name">ClosableOnce</span></a>
+      </span>
+      
+      
     </li><li name="com.twitter.util.Codec" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Codec"></a><a id="Codec:Codec"></a>
       <span class="permalink">
