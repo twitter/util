@@ -160,7 +160,7 @@ class ScribeHandler(
   private[this] val stats = new ScribeHandlerStats(statsReceiver)
 
   // it may be necessary to log errors here if scribe is down:
-  private val loggerName = getClass.toString
+  private val loggerName = getClass.getName
 
   private var lastConnectAttempt = Time.epoch
 

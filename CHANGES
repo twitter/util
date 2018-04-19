@@ -6,6 +6,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+Bug Fixes:
+
+  * util-logging: Fix incorrect `loggerName` in `c.t.logging.ScribeHandler` which
+    prevented the short-circuiting of publishing messages emitted from the ScribeHandler.
+    ``PHAB_ID=D161552``
+
 18.4.0  2018-04-10
 
 New Features:
