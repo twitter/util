@@ -1,5 +1,6 @@
 package com.twitter.hashing
 
+import scala.util.hashing.MurmurHash3
 import java.security.MessageDigest
 
 /** Type-class for generic hashing
@@ -48,7 +49,7 @@ object Hashable extends LowPriorityHashable {
    * FNV fast hashing algorithm in 32 bits.
    * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
-  val FNV1_32 = new Hashable[Array[Byte], Int] {
+  val FNV1_32: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]) = {
       val PRIME: Int = 16777619
       var i = 0
@@ -61,14 +62,14 @@ object Hashable extends LowPriorityHashable {
       (rv & MaxUnsignedInt).toInt
     }
 
-    override def toString() = "FNV1_32"
+    override def toString(): String = "FNV1_32"
   }
 
   /**
    * FNV fast hashing algorithm in 32 bits, variant with operations reversed.
    * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
-  val FNV1A_32 = new Hashable[Array[Byte], Int] {
+  val FNV1A_32: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
       val PRIME: Int = 16777619
       var i = 0
@@ -81,14 +82,14 @@ object Hashable extends LowPriorityHashable {
       (rv & MaxUnsignedInt).toInt
     }
 
-    override def toString() = "FNV1A_32"
+    override def toString(): String = "FNV1A_32"
   }
 
   /**
    * FNV fast hashing algorithm in 64 bits.
    * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
-  val FNV1_64 = new Hashable[Array[Byte], Long] {
+  val FNV1_64: Hashable[Array[Byte], Long] = new Hashable[Array[Byte], Long] {
     def apply(key: Array[Byte]): Long = {
       val PRIME: Long = 1099511628211L
       var i = 0
@@ -101,14 +102,14 @@ object Hashable extends LowPriorityHashable {
       rv
     }
 
-    override def toString() = "FNV1_64"
+    override def toString(): String = "FNV1_64"
   }
 
   /**
    * FNV fast hashing algorithm in 64 bits, variant with operations reversed.
    * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
-  val FNV1A_64 = new Hashable[Array[Byte], Long] {
+  val FNV1A_64: Hashable[Array[Byte], Long] = new Hashable[Array[Byte], Long] {
     def apply(key: Array[Byte]): Long = {
       val PRIME: Long = 1099511628211L
       var i = 0
@@ -121,7 +122,7 @@ object Hashable extends LowPriorityHashable {
       rv
     }
 
-    override def toString() = "FNV1A_64"
+    override def toString(): String = "FNV1A_64"
   }
 
   private[this] val newMd5MessageDigest: ThreadLocal[MessageDigest] = {
@@ -135,7 +136,7 @@ object Hashable extends LowPriorityHashable {
   /**
    * Ketama's default hash algorithm: the first 4 bytes of the MD5 as a little-endian int.
    */
-  val MD5_LEInt = new Hashable[Array[Byte], Int] {
+  val MD5_LEInt: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
       val hasher = newMd5MessageDigest.get()
       hasher.update(key)
@@ -146,13 +147,13 @@ object Hashable extends LowPriorityHashable {
         ((d(3) & 0xff) << 24)
     }
 
-    override def toString() = "Ketama"
+    override def toString(): String = "Ketama"
   }
 
   /**
    * The default memcache hash algorithm is the ITU-T variant of CRC-32.
    */
-  val CRC32_ITU = new Hashable[Array[Byte], Int] {
+  val CRC32_ITU: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
       var i = 0
       val len = key.length
@@ -173,15 +174,15 @@ object Hashable extends LowPriorityHashable {
       ((rv ^ MaxUnsignedInt) & MaxUnsignedInt).toInt
     }
 
-    override def toString() = "CRC32_ITU"
+    override def toString(): String = "CRC32_ITU"
   }
 
   /**
    * Paul Hsieh's hash function.
    * http://www.azillionmonkeys.com/qed/hash.html
    */
-  val HSIEH = new Hashable[Array[Byte], Int] {
-    override def apply(key: Array[Byte]): Int = {
+  val HSIEH: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
+    def apply(key: Array[Byte]): Int = {
       var hash: Int = 0
 
       if (key.isEmpty)
@@ -238,15 +239,15 @@ object Hashable extends LowPriorityHashable {
       hash
     }
 
-    override def toString() = "Hsieh"
+    override def toString(): String = "Hsieh"
   }
 
   /**
    * Jenkins Hash Function
    * http://en.wikipedia.org/wiki/Jenkins_hash_function
    */
-  val JENKINS = new Hashable[Array[Byte], Long] {
-    override def apply(key: Array[Byte]): Long = {
+  val JENKINS: Hashable[Array[Byte], Long] = new Hashable[Array[Byte], Long] {
+    def apply(key: Array[Byte]): Long = {
       var a, b, c = 0xdeadbeef + key.length
 
       def rot(x: Int, k: Int) = (((x) << (k)) | ((x) >> (32 - (k))))
@@ -314,4 +315,16 @@ object Hashable extends LowPriorityHashable {
     }
   }
 
+  /**
+   * murmur3 hash https://en.wikipedia.org/wiki/MurmurHash
+   */
+  val MURMUR3: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
+    def apply(key: Array[Byte]): Int = {
+      // seed can be any arbitrary value
+      val seed = 0xdeadbeef + key.length
+      MurmurHash3.bytesHash(key, seed)
+    }
+
+    override def toString(): String = "MURMUR3"
+  }
 }

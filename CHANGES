@@ -12,6 +12,10 @@ Bug Fixes:
     prevented the short-circuiting of publishing messages emitted from the ScribeHandler.
     ``PHAB_ID=D161552``
 
+  * util-hashing: Add murmur3, a fast, non-cryptographic hashing function that
+    is missing from hashing.
+    ``PHAB_ID=D164915``
+
 18.4.0  2018-04-10
 
 New Features:
@@ -24,12 +28,12 @@ New Features:
 
 Runtime Behavior Changes:
 
-  * util-app: Add visibility for NonFatal exceptions during exiting of `c.t.app.App`. 
-    Added visibility into any NonFatal exceptions which occur during the closing of 
+  * util-app: Add visibility for NonFatal exceptions during exiting of `c.t.app.App`.
+    Added visibility into any NonFatal exceptions which occur during the closing of
     resources during `App#close`. ``PHAB_ID=D146029``
 
-  * util-core: Ensure the `Awaitable.CloseAwaitably0.closeAwaitably` Future returns. 
-    Because the `closed` AtomicBoolean is flipped, we want to make sure that executing 
+  * util-core: Ensure the `Awaitable.CloseAwaitably0.closeAwaitably` Future returns.
+    Because the `closed` AtomicBoolean is flipped, we want to make sure that executing
     the passed in `f` function satisfies the `onClose` Promise even the cases of thrown
     exceptions. ``PHAB_ID=D146565``
 
