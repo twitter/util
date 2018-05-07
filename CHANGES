@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+18.5.0  2018-05-07
+
 Bug Fixes:
 
   * util-core: `c.t.concurrent.AsyncSemaphore` no longer completes promises while holding
