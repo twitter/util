@@ -8,6 +8,9 @@ Unreleased
 
 Bug Fixes:
 
+  * util-core: `c.t.concurrent.AsyncSemaphore` no longer completes promises while holding
+    its intrinsic lock. ``PHAB_ID=D167434``
+
   * util-logging: Fix incorrect `loggerName` in `c.t.logging.ScribeHandler` which
     prevented the short-circuiting of publishing messages emitted from the ScribeHandler.
     ``PHAB_ID=D161552``

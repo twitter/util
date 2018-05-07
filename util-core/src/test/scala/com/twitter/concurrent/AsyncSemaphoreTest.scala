@@ -25,6 +25,8 @@ class AsyncSemaphoreTest extends FunSpec {
 
   type FixtureParam = AsyncSemaphoreHelper
 
+  private def await[T](t: Awaitable[T]): T = Await.result(t, 15.seconds)
+
   override def withFixture(test: OneArgTest) = {
     val sem = new AsyncSemaphore(2)
     val helper = new AsyncSemaphoreHelper(sem, 0, new ConcurrentLinkedQueue[Permit])
@@ -39,6 +41,120 @@ class AsyncSemaphoreTest extends FunSpec {
         s.permits add permit
       }
       fPermit
+    }
+
+    it("shouldn't deadlock on releases") { _ =>
+      val semaphore1 = new AsyncSemaphore(1)
+      val semaphore2 = new AsyncSemaphore(1)
+
+      val latch1 = new CountDownLatch(1)
+      val latch2 = new CountDownLatch(1)
+
+      val permit1 = await(semaphore1.acquire())
+      val permit2 = await(semaphore2.acquire())
+
+      val futurePermit1 = semaphore1.acquire()
+      val futurePermit2 = semaphore2.acquire()
+
+      assert(!futurePermit1.isDefined)
+      assert(!futurePermit2.isDefined)
+
+      // Add continuations that acquire each others lock
+      futurePermit1.map { permit =>
+        latch1.countDown()
+        latch2.await()
+        semaphore2.numWaiters // poor synchronization causes a deadlock
+        permit.release()
+      }
+
+      futurePermit2.map { permit =>
+        latch2.countDown()
+        latch1.await()
+        semaphore1.numWaiters // poor synchronization causes a deadlock
+        permit.release()
+      }
+
+      val thread1 = new Thread {
+        override def run(): Unit = {
+          permit1.release()
+        }
+      }
+
+      val thread2 = new Thread {
+        override def run(): Unit = {
+          permit2.release()
+        }
+      }
+
+      thread1.start()
+      thread2.start()
+
+      thread1.join(15 * 1000)
+      thread2.join(15 * 1000)
+
+      // If they didn't deadlock, they shouldn't be alive.
+      assert(!thread1.isAlive)
+      assert(!thread2.isAlive)
+
+      assert(futurePermit1.isDefined)
+      assert(futurePermit2.isDefined)
+    }
+
+    it("shouldn't deadlock on interrupts") { _ =>
+      val semaphore1 = new AsyncSemaphore(1)
+      val semaphore2 = new AsyncSemaphore(1)
+
+      val latch1 = new CountDownLatch(1)
+      val latch2 = new CountDownLatch(1)
+
+      val permit1 = await(semaphore1.acquire())
+      val unused = await(semaphore2.acquire())
+
+      val futurePermit1 = semaphore1.acquire()
+      val futurePermit2 = semaphore2.acquire()
+
+      assert(!futurePermit1.isDefined)
+      assert(!futurePermit2.isDefined)
+
+      // Add continuations that acquire each others lock
+      futurePermit1.ensure {
+        latch1.countDown()
+        latch2.await()
+        semaphore2.numWaiters // poor synchronization causes a deadlock
+      }
+
+      futurePermit2.ensure {
+        latch2.countDown()
+        latch1.await()
+        semaphore1.numWaiters // poor synchronization causes a deadlock
+      }
+
+      val thread1 = new Thread {
+        override def run(): Unit = {
+          permit1.release()
+        }
+      }
+
+      val ex = new Exception("boom")
+
+      val thread2 = new Thread {
+        override def run(): Unit = {
+          futurePermit2.raise(ex)
+        }
+      }
+
+      thread1.start()
+      thread2.start()
+
+      thread1.join(15 * 1000)
+      thread2.join(15 * 1000)
+
+      // If they didn't deadlock, they shouldn't be alive.
+      assert(!thread1.isAlive)
+      assert(!thread2.isAlive)
+
+      assert(futurePermit1.isDefined)
+      assert(futurePermit2.poll == Some(Throw(ex)))
     }
 
     it("should validate constructor parameters") { _ =>
