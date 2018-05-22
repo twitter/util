@@ -4,6 +4,7 @@ import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
 import java.{util => ju}
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.{Level, Logger}
+import scala.annotation.tailrec
 import scala.util.control.{NonFatal => NF}
 
 /**
@@ -76,14 +77,18 @@ object Closable {
       val fs = closables.map { closable =>
         safeClose(closable, deadline)
       }
-      for (f <- fs) {
-        f.poll match {
-          case Some(Return(_)) =>
-          case _ => return Future.join(fs)
+      val iter = fs.iterator
+      @tailrec
+      def checkNext(): Future[Unit] = {
+        if (!iter.hasNext) Future.Done
+        else {
+          iter.next().poll match {
+            case Some(Return(_)) => checkNext()
+            case _ => Future.join(fs)
+          }
         }
       }
-
-      Future.Done
+      checkNext()
     }
   }
 
