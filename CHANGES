@@ -6,6 +6,18 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+API Changes:
+  
+  * util-class-preloader: This library has been removed since it deprecated. We
+  no longer recommend that people do this. ``PHAB_ID=D174250``
+
+
+Deprecations:
+
+  * util-reflect: This library has been deprecated since it is legacy code and shouldn't
+    be used for new services. We no longer think this facility is the right way to do it
+    and encourage you to provide your own forwarders. ``PHAB_ID=D174250``
+
 18.5.0  2018-05-07
 
 Bug Fixes:
