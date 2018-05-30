@@ -22,7 +22,7 @@ class BufInputStream(val buf: Buf) extends InputStream {
   override def available(): Int = synchronized { length - index }
 
   // Closing a BufInputStream has no effect.
-  override def close() {}
+  override def close(): Unit = {}
 
   // Marks the current position in this input stream.
   override def mark(readlimit: Int) = synchronized { mrk = index }

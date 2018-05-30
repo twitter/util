@@ -133,7 +133,7 @@ sealed abstract class Try[+R] {
   /**
    * Applies the given function f if this is a Result.
    */
-  def foreach(f: R => Unit) { onSuccess(f) }
+  def foreach(f: R => Unit): Unit = { onSuccess(f) }
 
   /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw.

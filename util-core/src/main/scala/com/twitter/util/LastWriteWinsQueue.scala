@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference
 class LastWriteWinsQueue[A] extends java.util.Queue[A] {
   val item = new AtomicReference[Option[A]](None)
 
-  def clear() {
+  def clear(): Unit = {
     item.set(None)
   }
 

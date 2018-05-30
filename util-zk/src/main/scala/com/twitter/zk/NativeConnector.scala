@@ -141,7 +141,7 @@ object NativeConnector {
      */
     val sessionEvents: Offer[StateEvent] = {
       val broker = new Broker[StateEvent]
-      def loop() {
+      def loop(): Unit = {
         sessionBroker.recv.sync()
           .map { StateEvent(_) }
           .respond {

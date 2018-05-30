@@ -213,14 +213,14 @@ trait ZNode {
     val broker = new Broker[ZNode.TreeUpdate]
 
     /** Pipe events from a subtree's monitor to this broker. */
-    def pipeSubTreeUpdates(next: Offer[ZNode.TreeUpdate]) {
+    def pipeSubTreeUpdates(next: Offer[ZNode.TreeUpdate]): Unit = {
       next.sync().flatMap(broker ! _).onSuccess { _ =>
         pipeSubTreeUpdates(next)
       }
     }
 
     /** Monitor a watch on this node. */
-    def monitorWatch(watch: Future[ZNode.Watch[ZNode.Children]], knownChildren: Set[ZNode]) {
+    def monitorWatch(watch: Future[ZNode.Watch[ZNode.Children]], knownChildren: Set[ZNode]): Unit = {
       log.debug("monitoring %s with %d known children", path, knownChildren.size)
       watch onFailure { e =>
         // An error occurred and there's not really anything we can do about it.

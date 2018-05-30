@@ -75,14 +75,14 @@ class QueueingHandlerTest extends WordSpec with Eventually with IntegrationPatie
     "publish, drop on overflow" in {
       val logger = freshLogger()
       val blockingHandler = new MockHandler {
-        override def publish(record: javalog.LogRecord) {
+        override def publish(record: javalog.LogRecord): Unit = {
           Thread.sleep(100000)
         }
       }
       @volatile var droppedCount = 0
 
       val queueHandler = new QueueingHandler(blockingHandler, 1) {
-        override protected def onOverflow(record: javalog.LogRecord) {
+        override protected def onOverflow(record: javalog.LogRecord): Unit = {
           droppedCount += 1
         }
       }
@@ -102,7 +102,7 @@ class QueueingHandlerTest extends WordSpec with Eventually with IntegrationPatie
       val logger = freshLogger()
       var wasFlushed = false
       val handler = new MockHandler {
-        override def flush() { wasFlushed = true }
+        override def flush(): Unit = { wasFlushed = true }
       }
       val queueHandler = new QueueingHandler(handler, 1)
       logger.addHandler(queueHandler)
@@ -117,7 +117,7 @@ class QueueingHandlerTest extends WordSpec with Eventually with IntegrationPatie
       val logger = freshLogger()
       var wasClosed = false
       val handler = new MockHandler {
-        override def close() { wasClosed = true }
+        override def close(): Unit = { wasClosed = true }
       }
       val queueHandler = new QueueingHandler(handler)
       logger.addHandler(queueHandler)
@@ -135,7 +135,7 @@ class QueueingHandlerTest extends WordSpec with Eventually with IntegrationPatie
       @volatile var mustError = true
       @volatile var didLog = false
       val handler = new MockHandler {
-        override def publish(record: javalog.LogRecord) {
+        override def publish(record: javalog.LogRecord): Unit = {
           if (mustError) {
             mustError = false
             throw new Exception("Unable to log for whatever reason.")

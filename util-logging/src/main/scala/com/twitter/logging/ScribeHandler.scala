@@ -190,9 +190,9 @@ class ScribeHandler(
 
   def queueSize: Int = queue.size()
 
-  override def flush() {
+  override def flush(): Unit = {
 
-    def connect() {
+    def connect(): Unit = {
       if (!socket.isDefined) {
         if (Time.now.since(lastConnectAttempt) > connectBackoff) {
           try {
@@ -247,7 +247,7 @@ class ScribeHandler(
     }
 
     // TODO we should send any remaining messages before the app terminates
-    def sendBatch() {
+    def sendBatch(): Unit = {
       synchronized {
         connect()
         detectArchaicServer()
@@ -309,7 +309,7 @@ class ScribeHandler(
     }
 
     flusher.execute(new Runnable {
-      def run() { sendBatch() }
+      def run(): Unit = { sendBatch() }
     })
   }
 
@@ -344,7 +344,7 @@ class ScribeHandler(
     buffer
   }
 
-  private def closeSocket() {
+  private def closeSocket(): Unit = {
     synchronized {
       socket.foreach { s =>
         try {
@@ -357,7 +357,7 @@ class ScribeHandler(
     }
   }
 
-  override def close() {
+  override def close(): Unit = {
     stats.incrCloses()
     // TODO consider draining the flusher queue before returning
     // nothing stops a pending flush from opening a new socket
@@ -365,12 +365,12 @@ class ScribeHandler(
     flusher.shutdown()
   }
 
-  override def publish(record: javalog.LogRecord) {
+  override def publish(record: javalog.LogRecord): Unit = {
     if (record.getLoggerName == loggerName) return
     publish(getFormatter.format(record).getBytes("UTF-8"))
   }
 
-  def publish(record: Array[Byte]) {
+  def publish(record: Array[Byte]): Unit = {
     stats.incrPublished()
     if (!queue.offer(record)) stats.incrDroppedRecords()
     if (Time.now.since(_lastTransmission) >= bufferTime) flush()

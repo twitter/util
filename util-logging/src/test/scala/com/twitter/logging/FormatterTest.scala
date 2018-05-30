@@ -140,7 +140,7 @@ class FormatterTest extends WordSpec {
 
     "write stack traces" should {
       object ExceptionLooper {
-        def cycle(n: Int) {
+        def cycle(n: Int): Unit = {
           if (n == 0) {
             throw new Exception("Aie!")
           } else {
@@ -149,7 +149,7 @@ class FormatterTest extends WordSpec {
           }
         }
 
-        def cycle2(n: Int) {
+        def cycle2(n: Int): Unit = {
           try {
             cycle(n)
           } catch {

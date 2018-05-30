@@ -134,7 +134,7 @@ class SyslogFormatterConfig extends FormatterConfig {
    */
   var priority: Int = SyslogHandler.PRIORITY_USER
 
-  def serverName_=(name: String) { serverName = Some(name) }
+  def serverName_=(name: String): Unit = { serverName = Some(name) }
 
   override def apply() =
     new SyslogFormatter(

@@ -58,7 +58,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       data: Array[Byte] = "".getBytes,
       acls: Seq[ACL] = zkClient.acl,
       mode: CreateMode = zkClient.mode
-    )(wait: => Future[String]) {
+    )(wait: => Future[String]): Unit = {
       when(
         zk.create(
           meq(path),
@@ -78,7 +78,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def delete(path: String, version: Int)(wait: => Future[Unit]) {
+    def delete(path: String, version: Int)(wait: => Future[Unit]): Unit = {
       when(zk.delete(meq(path), meq(version), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[
         AsyncCallback.VoidCallback
       ](2) { cbValue =>
@@ -91,7 +91,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def exists(path: String)(stat: => Future[Stat]) {
+    def exists(path: String)(stat: => Future[Stat]): Unit = {
       when(
         zk.exists(
           meq(path),
@@ -109,7 +109,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def watch(path: String)(stat: => Future[Stat])(update: => Future[WatchedEvent]) {
+    def watch(path: String)(stat: => Future[Stat])(update: => Future[WatchedEvent]): Unit = {
       val watcher = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.StatCallback])
       when(zk.exists(meq(path), watcher.capture(), cb.capture(), meq(null))) thenAnswer answer[
@@ -127,7 +127,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def getChildren(path: String)(children: => Future[ZNode.Children]) {
+    def getChildren(path: String)(children: => Future[ZNode.Children]): Unit = {
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
       when(zk.getChildren(meq(path), meq(false), any[AsyncCallback.Children2Callback], meq(null))) thenAnswer answer[
         AsyncCallback.Children2Callback
@@ -149,7 +149,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
 
     def watchChildren(
       path: String
-    )(children: => Future[ZNode.Children])(update: => Future[WatchedEvent]) {
+    )(children: => Future[ZNode.Children])(update: => Future[WatchedEvent]): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
       when(zk.getChildren(meq(path), w.capture(), cb.capture(), meq(null))) thenAnswer answer[
@@ -168,7 +168,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def getData(path: String)(result: => Future[ZNode.Data]) {
+    def getData(path: String)(result: => Future[ZNode.Data]): Unit = {
       when(zk.getData(meq(path), meq(false), any[AsyncCallback.DataCallback], meq(null))) thenAnswer answer[
         AsyncCallback.DataCallback
       ](2) { cbValue =>
@@ -181,7 +181,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def watchData(path: String)(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]) {
+    def watchData(path: String)(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.DataCallback])
       when(zk.getData(meq(path), w.capture(), cb.capture(), meq(null))) thenAnswer answer[
@@ -199,7 +199,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def setData(path: String, data: Array[Byte], version: Int)(waiting: => Future[Stat]) {
+    def setData(path: String, data: Array[Byte], version: Int)(waiting: => Future[Stat]): Unit = {
       when(
         zk.setData(meq(path), meq(data), meq(version), any[AsyncCallback.StatCallback], meq(null))
       ) thenAnswer answer[AsyncCallback.StatCallback](3) { cbValue =>
@@ -212,7 +212,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def sync(path: String)(wait: Future[Unit]) {
+    def sync(path: String)(wait: Future[Unit]): Unit = {
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.VoidCallback])
       when(zk.sync(meq(path), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[
         AsyncCallback.VoidCallback
@@ -539,7 +539,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       "monitor" should {
         class MonitorHelper extends ExistHelper {
           val deleted = NodeEvent.Deleted(znode.path)
-          def expectZNodes(n: Int) {
+          def expectZNodes(n: Int): Unit = {
             val results = 0 until n map { _ =>
               ZNode.Exists(znode, new Stat)
             }
@@ -805,7 +805,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
         z.path -> ZNode.TreeUpdate(z, z.children.toSet -- prior, prior -- z.children.toSet)
       }.toMap
 
-      def okUpdates(event: String => WatchedEvent) {
+      def okUpdates(event: String => WatchedEvent): Unit = {
         // Create promises for each node in the tree -- satisfying a promise will fire a
         // ChildrenChanged event for its associated node.
         val updatePromises = treeChildren.map { _.path -> new Promise[WatchedEvent] }.toMap

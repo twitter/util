@@ -46,17 +46,17 @@ class LogRecord(level: javalog.Level, msg: String) extends javalog.LogRecord(lev
     sourceMethodName
   }
 
-  override def setSourceClassName(name: String) {
+  override def setSourceClassName(name: String): Unit = {
     inferred = true
     sourceClassName = name
   }
 
-  override def setSourceMethodName(name: String) {
+  override def setSourceMethodName(name: String): Unit = {
     inferred = true
     sourceMethodName = name
   }
 
-  private[this] def infer() {
+  private[this] def infer(): Unit = {
     // TODO: there is a small optimization we can do in jdk7 with new JavaLangAccess
     val stack = Thread.currentThread.getStackTrace()
 

@@ -37,7 +37,7 @@ trait Connector {
   }
 
   @tailrec
-  final def onSessionEvent(f: EventHandler) {
+  final def onSessionEvent(f: EventHandler): Unit = {
     val list = listeners.get()
     if (!listeners.compareAndSet(list, f :: list)) onSessionEvent(f)
   }

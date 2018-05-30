@@ -252,7 +252,7 @@ object Hashable extends LowPriorityHashable {
 
       def rot(x: Int, k: Int) = (((x) << (k)) | ((x) >> (32 - (k))))
 
-      def mix() {
+      def mix(): Unit = {
         a -= c; a ^= rot(c, 4); c += b
         b -= a; b ^= rot(a, 6); a += c
         c -= b; c ^= rot(b, 8); b += a
@@ -261,7 +261,7 @@ object Hashable extends LowPriorityHashable {
         c -= b; c ^= rot(b, 4); b += a
       }
 
-      def fin() {
+      def fin(): Unit = {
         c ^= b; c -= rot(b, 14); a ^= c; a -= rot(c, 11)
         b ^= a; b -= rot(a, 25); c ^= b; c -= rot(b, 16)
         a ^= c; a -= rot(c, 4); b ^= a; b -= rot(a, 14)

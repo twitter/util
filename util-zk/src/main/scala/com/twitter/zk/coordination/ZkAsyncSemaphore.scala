@@ -49,7 +49,7 @@ class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: 
   private[this] class ZkSemaphorePermit(node: ZNode) extends Permit {
     val zkPath = node.path
     val sequenceNumber = sequenceNumberOf(zkPath)
-    override def release() {
+    override def release(): Unit = {
       node.delete()
     }
   }

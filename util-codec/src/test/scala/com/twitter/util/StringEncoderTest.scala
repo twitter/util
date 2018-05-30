@@ -64,7 +64,7 @@ class GZIPStringEncoderTest extends WordSpec {
   "a gzip string encoder" should {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {
-      def testCodec(str: String) {
+      def testCodec(str: String): Unit = {
         assert(str == gse.decodeString(gse.encodeString(str)))
       }
 

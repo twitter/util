@@ -51,7 +51,7 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * If multiple threads call `offer` simultaneously, the operation is thread-safe but
    * the resulting order of values in the spool is non-deterministic.
    */
-  final def offer(value: A) {
+  final def offer(value: A): Unit = {
 
     val nextPromise = new Promise[Spool[A]]
     nextPromise.setInterruptHandler(interruptHandler)
@@ -69,7 +69,7 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * thread-safe but the resulting order of values in the spool is
    * non-deterministic.
    */
-  final def offerAndClose(value: A) {
+  final def offerAndClose(value: A): Unit = {
 
     updatingTailCall(emptyPromise) { currentPromise =>
       currentPromise.setValue(value *:: Future.value(Spool.empty[A]))
@@ -81,7 +81,7 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * Closes this SpoolSource, which also terminates the generated Spool.  This method
    * is idempotent.
    */
-  final def close() {
+  final def close(): Unit = {
     updatingTailCall(emptyPromise) { currentPromise =>
       currentPromise.setValue(Spool.empty[A])
       closedp.setDone()
@@ -98,7 +98,7 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
    * Raises exception on this SpoolSource, which also terminates the generated Spool.  This method
    * is idempotent.
    */
-  final def raise(e: Throwable) {
+  final def raise(e: Throwable): Unit = {
     updatingTailCall(emptyPromise) { currentPromise =>
       currentPromise.setException(e)
       closedp.setException(e)
@@ -106,7 +106,7 @@ class SpoolSource[A](interruptHandler: PartialFunction[Throwable, Unit]) {
   }
 
   @tailrec
-  private[this] def updatingTailCall(newPromise: Promise[Spool[A]])(f: Promise[Spool[A]] => Unit) {
+  private[this] def updatingTailCall(newPromise: Promise[Spool[A]])(f: Promise[Spool[A]] => Unit): Unit = {
     val currentPromise = promiseRef.get
     // if the current promise is emptyPromise, then this source has already been closed
     if (currentPromise ne emptyPromise) {

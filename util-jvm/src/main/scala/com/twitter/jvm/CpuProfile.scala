@@ -29,18 +29,18 @@ case class CpuProfile(
    *
    *   http://google-perftools.googlecode.com/svn/trunk/doc/cpuprofile-fileformat.html
    */
-  def writeGoogleProfile(out: OutputStream) {
+  def writeGoogleProfile(out: OutputStream): Unit = {
     var next = 1
     val uniq = mutable.HashMap[StackTraceElement, Int]()
     val word = ByteBuffer.allocate(8)
     word.order(ByteOrder.LITTLE_ENDIAN)
-    def putWord(n: Long) {
+    def putWord(n: Long): Unit = {
       word.clear()
       word.putLong(n)
       out.write(word.array())
     }
 
-    def putString(s: String) {
+    def putString(s: String): Unit = {
       out.write(s.getBytes)
     }
 
@@ -163,7 +163,7 @@ object CpuProfile {
   def recordInThread(howlong: Duration, frequency: Int, state: Thread.State): Future[CpuProfile] = {
     val p = new Promise[CpuProfile]
     val thr = new Thread("CpuProfile") {
-      override def run() {
+      override def run(): Unit = {
         p.setValue(record(howlong, frequency, state))
       }
     }

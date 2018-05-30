@@ -43,7 +43,7 @@ class Foo
     extends LogRecordTestHelper({ r: JRecord =>
       r.getSourceClassName()
     }) {
-  def makingLogRecord() {
+  def makingLogRecord(): Unit = {
     logger.log(Level.INFO, "OK")
   }
 

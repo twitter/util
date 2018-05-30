@@ -16,7 +16,7 @@ class PromiseBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def detach(state: PromiseBenchmark.PromiseDetachState) {
+  def detach(state: PromiseBenchmark.PromiseDetachState): Unit = {
     import state._
     promise.detach()
   }

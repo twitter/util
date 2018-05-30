@@ -52,7 +52,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
    *
    * This is meant to be used in a `before` block.
    */
-  def traceLogger(level: Level) {
+  def traceLogger(level: Level): Unit = {
     traceLogger("", level)
   }
 
@@ -62,7 +62,7 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
    *
    * This is meant to be used in a `before` block.
    */
-  def traceLogger(name: String, level: Level) {
+  def traceLogger(name: String, level: Level): Unit = {
     traceHandler.clear()
     val logger = Logger.get(name)
     logger.setLevel(level)

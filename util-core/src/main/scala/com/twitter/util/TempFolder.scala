@@ -38,7 +38,7 @@ trait TempFolder {
    *
    * Use of this function may not be nested.
    */
-  def withTempFolder(f: => Any) {
+  def withTempFolder(f: => Any): Unit = {
     val tempFolder = System.getProperty("java.io.tmpdir")
     // Note: If we were willing to have a dependency on Guava in util-core
     // we could just use `com.google.common.io.Files.createTempDir()`

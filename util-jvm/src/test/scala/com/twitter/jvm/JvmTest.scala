@@ -20,7 +20,7 @@ class JvmTest extends WordSpec with TestLogging {
           def compileThresh = None
         }
         def snapCounters = Map()
-        def setSnap(snap: Snapshot) {
+        def setSnap(snap: Snapshot): Unit = {
           currentSnap = snap
         }
 
@@ -28,7 +28,7 @@ class JvmTest extends WordSpec with TestLogging {
 
         def snap = currentSnap
 
-        def pushGc(gc: Gc) {
+        def pushGc(gc: Gc): Unit = {
           val gcs = snap.lastGcs filter (_.name != gc.name)
           setSnap(snap.copy(lastGcs = gc +: gcs))
         }

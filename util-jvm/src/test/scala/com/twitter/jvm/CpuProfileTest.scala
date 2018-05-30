@@ -18,7 +18,7 @@ class CpuProfileTest extends FunSuite {
     def nextTime: Time = start + iter.next().milliseconds * 10
 
     val t = new Thread("CpuProfileTest") {
-      override def run() {
+      override def run(): Unit = {
         Thread.sleep(10000)
       }
     }

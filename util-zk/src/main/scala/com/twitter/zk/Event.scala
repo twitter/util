@@ -100,9 +100,9 @@ object NodeEvent {
 }
 
 class EventPromise extends Promise[WatchedEvent] with Watcher {
-  def process(event: WatchedEvent) { updateIfEmpty(Return(event)) }
+  def process(event: WatchedEvent): Unit = { updateIfEmpty(Return(event)) }
 }
 
 class EventBroker extends Broker[WatchedEvent] with Watcher {
-  def process(event: WatchedEvent) { send(event).sync() }
+  def process(event: WatchedEvent): Unit = { send(event).sync() }
 }

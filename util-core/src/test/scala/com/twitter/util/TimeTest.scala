@@ -451,7 +451,7 @@ with IntegrationPatience {
         assert(Time.now == t0)
         @volatile var threadTime: Option[Time] = None
         val thread = new Thread {
-          override def run() {
+          override def run(): Unit = {
             threadTime = Some(Time.now)
           }
         }
@@ -500,7 +500,7 @@ with IntegrationPatience {
       Time.withCurrentTimeFrozen { ctl =>
         val ctx = Local.save()
         val r = new Runnable {
-          def run() {
+          def run(): Unit = {
             Local.restore(ctx)
             Time.sleep(5.seconds)
           }

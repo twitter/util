@@ -14,7 +14,7 @@ import com.twitter.util.{Future, Promise, Try}
  */
 trait Serialized {
   protected case class Job[T](promise: Promise[T], doItToIt: () => T) {
-    def apply() {
+    def apply(): Unit = {
       promise.update { Try { doItToIt() } }
     }
   }

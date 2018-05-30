@@ -12,7 +12,7 @@ class OfferBenchmark {
   import OfferBenchmark._
 
   @Benchmark
-  def timeChoose(state: OfferBenchmarkState) {
+  def timeChoose(state: OfferBenchmarkState): Unit = {
     val offers = state.toChooseFrom()
     Offer.choose(state.rngOpt, offers).prepare()
   }
