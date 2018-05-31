@@ -365,4 +365,27 @@ class AppTest extends FunSuite {
 
     assert(e.getClass == classOf[InterruptedException])
   }
+
+  test("failures during graceful shutdown bubble up by default") {
+    val app = new App {
+      final def main(): Unit = {
+        closeOnExit(Closable.make(_ => Future.exception(new Exception("failed to close"))))
+      }
+    }
+
+    intercept[Throwable] {
+      app.main(Array.empty)
+    }
+  }
+
+  test("applications can disable graceful shutdown failures from bubbling up") {
+    val app = new App {
+      final override def suppressGracefulShutdownErrors = true
+      final def main(): Unit = {
+        closeOnExit(Closable.make(_ => Future.exception(new Exception("failed to close"))))
+      }
+    }
+
+    app.main(Array.empty)
+  }
 }

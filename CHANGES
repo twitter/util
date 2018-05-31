@@ -18,6 +18,11 @@ Deprecations:
     be used for new services. We no longer think this facility is the right way to do it
     and encourage you to provide your own forwarders. ``PHAB_ID=D174250``
 
+New Features:
+
+  * util-app: added #suppressGracefulShutdownErrors method to optionally suppress exceptions
+    during graceful shutdown from bubbling up. ``PHAB_ID=D176970``
+
 18.5.0  2018-05-07
 
 Bug Fixes:

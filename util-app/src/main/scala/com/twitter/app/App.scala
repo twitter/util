@@ -1,13 +1,14 @@
 package com.twitter.app
 
 import com.twitter.conversions.time._
-import com.twitter.util._
+import com.twitter.util.{NonFatal => _, _}
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.Logger
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.util.control.NonFatal
 
 /**
  * A composable application trait that includes flag parsing as well
@@ -95,6 +96,14 @@ trait App extends Closable with CloseAwaitably {
     Await.ready(close(), closeDeadline - Time.now)
     System.exit(1)
   }
+
+  /**
+   * By default any failure during the graceful shutdown portion of an [[App]]'s lifecycle
+   * bubbles up and causes non-zero return codes in the process. Setting this to `false`
+   * allows an application to suppress these errors and express that graceful shutdown logic
+   * should not be a determinant of the process exit code.
+   */
+  protected def suppressGracefulShutdownErrors: Boolean = false
 
   private val inits: mutable.Buffer[() => Unit] = mutable.Buffer.empty
   private val premains: mutable.Buffer[() => Unit] = mutable.Buffer.empty
@@ -351,7 +360,14 @@ trait App extends Closable with CloseAwaitably {
     close(defaultCloseGracePeriod)
 
     // The deadline to 'close' is advisory; we enforce it here.
-    Await.result(this, closeDeadline - Time.now)
+    if (!suppressGracefulShutdownErrors) Await.result(this, closeDeadline - Time.now)
+    else {
+      try { // even if we suppress shutdown errors, we give the resources time to close
+        Await.ready(this, closeDeadline - Time.now)
+      } catch {
+        case NonFatal(_) => ()
+      }
+    }
   }
 }
 
