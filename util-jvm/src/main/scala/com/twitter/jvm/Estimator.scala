@@ -8,7 +8,7 @@ import scala.util.Random
 trait Estimator[T] {
 
   /** A scalar measurement `m` was taken */
-  def measure(m: T)
+  def measure(m: T): Unit
 
   /** Estimate the current value */
   def estimate: T
@@ -28,7 +28,7 @@ class Kalman(N: Int) {
    * Update the filter with measurement `m`
    * and measurement error `e`.
    */
-  def measure(m: Double, e: Double) {
+  def measure(m: Double, e: Double): Unit = {
     val i = (n % N).toInt
     mbuf(i) = m
     ebuf(i) = e
@@ -83,7 +83,7 @@ class KalmanGaussianError(N: Int, range: Double) extends Kalman(N) with Estimato
   require(range >= 0D && range < 1D)
   private[this] val rng = new Random
 
-  def measure(m: Double) {
+  def measure(m: Double): Unit = {
     measure(m, rng.nextGaussian() * range * m)
   }
 }
@@ -115,7 +115,7 @@ class WindowedMeans(N: Int, windows: Seq[(Int, Int)]) extends Estimator[Double] 
     sum / count
   }
 
-  def measure(m: Double) {
+  def measure(m: Double): Unit = {
     if (n == 0)
       java.util.Arrays.fill(buf, m)
     else
@@ -140,7 +140,7 @@ class LoadAverage(interval: Double) extends Estimator[Double] {
   private[this] val a = math.exp(-1D / interval)
   private[this] var load = Double.NaN
 
-  def measure(m: Double) {
+  def measure(m: Double): Unit = {
     load =
       if (load.isNaN) m
       else load * a + m * (1 - a)

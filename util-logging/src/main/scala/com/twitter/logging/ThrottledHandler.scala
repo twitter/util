@@ -103,7 +103,7 @@ class ThrottledHandler(
       didExpire
     }
 
-    private[this] def publishSwallowed() {
+    private[this] def publishSwallowed(): Unit = {
       val throttledRecord = new javalog.LogRecord(
         level,
         "(swallowed %d repeating messages)".format(count - maxToDisplay)
@@ -117,14 +117,14 @@ class ThrottledHandler(
   private val throttleMap = new mutable.HashMap[String, Throttle]
 
   @deprecated("Use flushThrottled() instead", "5.3.13")
-  def reset() {
+  def reset(): Unit = {
     flushThrottled()
   }
 
   /**
    * Force printing any "swallowed" messages.
    */
-  def flushThrottled() {
+  def flushThrottled(): Unit = {
     synchronized {
       val now = Time.now
       throttleMap retain {
@@ -137,7 +137,7 @@ class ThrottledHandler(
    * Log a message, with sprintf formatting, at the desired level, and
    * attach an exception and stack trace.
    */
-  override def publish(record: javalog.LogRecord) {
+  override def publish(record: javalog.LogRecord): Unit = {
     val now = Time.now
     val last = lastFlushCheck.get
 
@@ -149,7 +149,7 @@ class ThrottledHandler(
       case r: LazyLogRecordUnformatted => r.preformatted
       case _ => record.getMessage
     }
-    @tailrec def tryPublish() {
+    @tailrec def tryPublish(): Unit = {
       val throttle = synchronized {
         throttleMap.getOrElseUpdate(
           key,

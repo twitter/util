@@ -28,7 +28,7 @@ object SignalHandlerFactory {
 }
 
 trait SignalHandler {
-  def handle(signal: String, handlers: Map[String, Set[String => Unit]])
+  def handle(signal: String, handlers: Map[String, Set[String => Unit]]): Unit
 }
 
 object SunSignalHandler {
@@ -48,7 +48,7 @@ class SunSignalHandler extends SignalHandler {
   private val handleMethod = signalClass.getMethod("handle", signalClass, signalHandlerClass)
   private val nameMethod = signalClass.getMethod("getName")
 
-  def handle(signal: String, handlers: Map[String, Set[String => Unit]]) {
+  def handle(signal: String, handlers: Map[String, Set[String => Unit]]): Unit = {
     val sunSignal =
       signalClass.getConstructor(classOf[String]).newInstance(signal).asInstanceOf[Object]
     val proxy = Proxy
@@ -79,7 +79,7 @@ object HandleSignal {
    * Set the callback function for a named unix signal.
    * For now, this only works on the Sun^H^H^HOracle JVM.
    */
-  def apply(posixSignal: String)(f: String => Unit) {
+  def apply(posixSignal: String)(f: String => Unit): Unit = {
     if (!handlers.contains(posixSignal)) {
       handlers.synchronized {
         SignalHandlerFactory().foreach { _.handle(posixSignal, handlers) }
@@ -92,7 +92,7 @@ object HandleSignal {
     }
   }
 
-  def clear(posixSignal: String) {
+  def clear(posixSignal: String): Unit = {
     handlers.synchronized {
       handlers(posixSignal).clear()
     }

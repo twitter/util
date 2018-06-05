@@ -21,7 +21,7 @@ import scala.util.Random
 @RunWith(classOf[JUnitRunner])
 class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
   implicit class FutureMatcher[A](future: Future[A]) {
-    def mustProduce(expected: Try[A]) {
+    def mustProduce(expected: Try[A]): Unit = {
       expected match {
         case Throw(ex) =>
           val t = intercept[Throwable] {
@@ -58,7 +58,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
     def exception[A](exc: Throwable): Future[A] = this(Throw(exc))
   }
 
-  def test(name: String, const: MkConst) {
+  def test(name: String, const: MkConst): Unit = {
     "object Future (%s)".format(name) when {
       "times" should {
         trait TimesHelper {
@@ -411,7 +411,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           Time.withCurrentTimeFrozen { control =>
             val blocker = new Promise[Unit]
             val thread = new Thread {
-              override def run() {
+              override def run(): Unit = {
                 when(f(result)) thenReturn (Future.value(Seq(7, 8, 9)))
                 batcher(4)
                 batcher(5)
@@ -735,7 +735,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
       }
 
-      def testJoin(label: String, joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])) {
+      def testJoin(label: String, joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])): Unit = {
         "join(%s)".format(label) should {
           trait JoinHelper {
             val p0 = new HandledPromise[Int]
@@ -1064,7 +1064,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
       }
 
-      def testSequence(which: String, seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]) {
+      def testSequence(which: String, seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]): Unit = {
         which when {
           "successes" should {
             "interruption of the produced future" which {
@@ -1377,7 +1377,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
 
         val t = new Thread {
-          override def run() {
+          override def run(): Unit = {
             local() = 1010
             promise() = Return(local())
           }

@@ -808,7 +808,7 @@ class BufTest
   }
 
   test("hash code, equals") {
-    def ae(a: Buf, b: Buf) {
+    def ae(a: Buf, b: Buf): Unit = {
       assert(a == b)
       assert(a.hashCode == b.hashCode)
     }

@@ -7,7 +7,7 @@ import java.net.URL
 
 object ConfigurationLinter extends App {
 
-  def main() {
+  def main(): Unit = {
     var allSucceeded = true
 
     println("\nValidating TunableMap configuration files...")

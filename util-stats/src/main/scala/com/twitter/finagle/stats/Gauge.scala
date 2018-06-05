@@ -5,5 +5,5 @@ package com.twitter.finagle.stats
  * computed health metric.
  */
 trait Gauge {
-  def remove()
+  def remove(): Unit
 }

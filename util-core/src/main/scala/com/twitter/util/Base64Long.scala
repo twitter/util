@@ -74,7 +74,7 @@ object Base64Long {
    * The number is treated as unsigned, so there is never a leading negative sign, and the
    * representations of negative numbers are larger than positive numbers.
    */
-  def toBase64(builder: StringBuilder, l: Long, alphabet: Int => Char = StandardBase64Alphabet) {
+  def toBase64(builder: StringBuilder, l: Long, alphabet: Int => Char = StandardBase64Alphabet): Unit = {
     if (l == 0) {
       // Special case for zero: Just like in decimal, if the number is
       // zero, represent it as a single zero digit.

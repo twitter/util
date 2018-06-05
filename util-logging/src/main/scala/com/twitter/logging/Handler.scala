@@ -71,9 +71,9 @@ abstract class ProxyHandler(val handler: Handler)
 }
 
 object NullHandler extends Handler(BareFormatter, None) {
-  def publish(record: javalog.LogRecord) {}
-  def close() {}
-  def flush() {}
+  def publish(record: javalog.LogRecord): Unit = {}
+  def close(): Unit = {}
+  def flush(): Unit = {}
 
   // for java compatibility
   def get(): this.type = this

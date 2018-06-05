@@ -159,7 +159,7 @@ object Closable {
   private val refq = new ReferenceQueue[Object]
 
   private val collectorThread = new Thread("CollectClosables") {
-    override def run() {
+    override def run(): Unit = {
       while (true) {
         try {
           val ref = refq.remove()

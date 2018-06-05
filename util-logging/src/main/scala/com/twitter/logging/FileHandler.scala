@@ -147,13 +147,13 @@ class FileHandler(
     }
   }
 
-  def flush() {
+  def flush(): Unit = {
     synchronized {
       stream.flush()
     }
   }
 
-  def close() {
+  def close(): Unit = {
     synchronized {
       flush()
       try {
@@ -172,7 +172,7 @@ class FileHandler(
     new FileOutputStream(filename, append)
   }
 
-  private def openLog() {
+  private def openLog(): Unit = {
     synchronized {
       stream = openStream()
       openTime = Time.now.inMilliseconds
@@ -237,7 +237,7 @@ class FileHandler(
    * Delete files when "too many" have accumulated.
    * This duplicates logrotate's "rotate count" option.
    */
-  private def removeOldFiles() {
+  private def removeOldFiles(): Unit = {
     if (rotateCount >= 0) {
       // collect files which are not `filename`, but which share the prefix/suffix
       val prefixName = new File(filenamePrefix).getName
@@ -265,7 +265,7 @@ class FileHandler(
     removeOldFiles()
   }
 
-  def publish(record: javalog.LogRecord) {
+  def publish(record: javalog.LogRecord): Unit = {
     try {
       val formattedLine = getFormatter.format(record)
       val formattedBytes = formattedLine.getBytes(FileHandler.UTF8)
@@ -296,7 +296,7 @@ class FileHandler(
     }
   }
 
-  private def handleThrowable(e: Throwable) {
+  private def handleThrowable(e: Throwable): Unit = {
     System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
   }
 

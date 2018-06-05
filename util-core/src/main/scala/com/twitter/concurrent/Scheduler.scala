@@ -366,7 +366,7 @@ class BridgedThreadPoolScheduler(
       local.submit(r)
     else
       try executor.execute(new Runnable {
-        def run() {
+        def run(): Unit = {
           BridgedThreadPoolScheduler.this.submit(r)
         }
       })

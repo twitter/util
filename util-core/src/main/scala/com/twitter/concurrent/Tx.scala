@@ -28,7 +28,7 @@ trait Tx[+T] {
    * Abort the transaction. It is invalid to abort a transaction after
    * acknowledging it.
    */
-  def nack()
+  def nack(): Unit
 }
 
 /**
@@ -44,7 +44,7 @@ object Tx {
    */
   val aborted: Tx[Nothing] = new Tx[Nothing] {
     def ack() = Future.value(Abort)
-    def nack() {}
+    def nack(): Unit = {}
   }
 
   /**
@@ -54,7 +54,7 @@ object Tx {
    */
   def const[T](msg: T): Tx[T] = new Tx[T] {
     def ack() = Future.value(Commit(msg))
-    def nack() {}
+    def nack(): Unit = {}
   }
 
   /**
@@ -117,7 +117,7 @@ object Tx {
         }
       }
 
-      def nack() {
+      def nack(): Unit = {
         lock.synchronized {
           state match {
             case Idle => state = Nackd(this)

@@ -136,7 +136,7 @@ trait Offer[+T] { self =>
    * with each successfully synchronized value.  A receiver can use
    * this to enumerate over all received values.
    */
-  def foreach(f: T => Unit) {
+  def foreach(f: T => Unit): Unit = {
     sync().foreach { v =>
       f(v)
       foreach(f)
@@ -147,7 +147,7 @@ trait Offer[+T] { self =>
    * Synchronize (discarding the value), and then invoke the given
    * closure.  Convenient for loops.
    */
-  def andThen(f: => Unit) {
+  def andThen(f: => Unit): Unit = {
     sync().respond {
       case Return(_) => f
       case _ =>

@@ -111,7 +111,7 @@ class PromiseTest extends FunSuite {
   }
 
   // this won't work inline, because we still hold a reference to d
-  def detach(d: Promise.Detachable) {
+  def detach(d: Promise.Detachable): Unit = {
     assert(d != null)
     assert(d.detach())
   }

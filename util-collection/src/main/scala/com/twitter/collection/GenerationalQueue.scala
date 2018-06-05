@@ -5,9 +5,9 @@ import scala.collection._
 import com.twitter.util.{Duration, Time}
 
 trait GenerationalQueue[A] {
-  def touch(a: A)
-  def add(a: A)
-  def remove(a: A)
+  def touch(a: A): Unit
+  def add(a: A): Unit
+  def remove(a: A): Unit
   def collect(d: Duration): Option[A]
   def collectAll(d: Duration): Iterable[A]
 }
@@ -117,7 +117,7 @@ class BucketGenerationalQueue[A](timeout: Duration) extends GenerationalQueue[A]
     }
   }
 
-  private[this] def updateBuckets() {
+  private[this] def updateBuckets(): Unit = {
     if (maybeGrowChain())
       buckets = compactChain()
   }

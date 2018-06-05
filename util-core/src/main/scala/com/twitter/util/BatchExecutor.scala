@@ -39,12 +39,12 @@ private[util] class BatchExecutor[In, Out](
     @volatile var cancelled = false
     val task = timer.schedule(after.fromNow) { flush() }
 
-    def cancel() {
+    def cancel(): Unit = {
       cancelled = true
       task.cancel()
     }
 
-    def flush() {
+    def flush(): Unit = {
       val doAfter = batcher.synchronized {
         if (!cancelled)
           flushBatch()
@@ -108,7 +108,7 @@ private[util] class BatchExecutor[In, Out](
     doAfter()
   }
 
-  def scheduleFlushIfNecessary() {
+  def scheduleFlushIfNecessary(): Unit = {
     if (timeThreshold < Duration.Top && scheduled.isEmpty)
       scheduled = Some(new ScheduledFlush(timeThreshold, timer))
   }
@@ -132,7 +132,7 @@ private[util] class BatchExecutor[In, Out](
       }
   }
 
-  def executeBatch(batch: Seq[(In, Promise[Out])]) {
+  def executeBatch(batch: Seq[(In, Promise[Out])]): Unit = {
     val uncancelled = batch filter {
       case (in, p) =>
         p.isInterrupted match {

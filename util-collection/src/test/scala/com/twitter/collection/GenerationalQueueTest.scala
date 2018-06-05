@@ -14,7 +14,7 @@ class GenerationalQueueTest extends FunSuite {
     name: String,
     newQueue: () => GenerationalQueue[String],
     timeout: Duration
-  ) {
+  ): Unit = {
 
     test("%s: Don't collect fresh data".format(name)) {
       Time.withCurrentTimeFrozen { _ =>

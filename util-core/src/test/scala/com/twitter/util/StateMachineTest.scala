@@ -13,7 +13,7 @@ class StateMachineTest extends WordSpec {
         case class State2() extends State
         state = State1()
 
-        def command1() {
+        def command1(): Unit = {
           transition("command1") {
             case State1() => state = State2()
           }

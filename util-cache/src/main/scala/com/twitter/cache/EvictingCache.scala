@@ -11,7 +11,7 @@ private[cache] class EvictingCache[K, V](underlying: FutureCache[K, V])
     f // we return the original future to make evict(k, f) easier to work with.
   }
 
-  override def set(k: K, v: Future[V]) {
+  override def set(k: K, v: Future[V]): Unit = {
     super.set(k, v)
     evictOnFailure(k, v)
   }

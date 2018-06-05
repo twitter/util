@@ -153,7 +153,7 @@ trait Jvm {
    * same is true of the internal datastructures used by foreachGc,
    * but they are svelte.
    */
-  def foreachGc(f: Gc => Unit) {
+  def foreachGc(f: Gc => Unit): Unit = {
     val Period = 1.second
     val LogPeriod = 30.minutes
     @volatile var missedCollections = 0L

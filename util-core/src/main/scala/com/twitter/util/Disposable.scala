@@ -84,7 +84,7 @@ trait Managed[+T] { selfT =>
    * Create a new T, and pass it to the given operation (f).
    * After it completes, the resource is disposed.
    */
-  def foreach(f: T => Unit) {
+  def foreach(f: T => Unit): Unit = {
     val r = this.make()
     try f(r.get)
     finally r.dispose()

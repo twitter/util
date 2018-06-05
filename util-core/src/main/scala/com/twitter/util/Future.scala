@@ -1994,7 +1994,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @see [[com.twitter.util.Promise.become]]
    */
-  def proxyTo[B >: A](other: Promise[B]) {
+  def proxyTo[B >: A](other: Promise[B]): Unit = {
     if (other.isDefined) {
       throw new IllegalStateException(
         s"Cannot call proxyTo on an already satisfied Promise: ${Await.result(other.liftToTry)}"

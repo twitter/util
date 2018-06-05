@@ -35,12 +35,12 @@ class ContentionTest extends FunSuite with Eventually {
     val plato = new Philosopher()
 
     val d = new Thread(new Runnable() {
-      def run() { descartes.dine(plato) }
+      def run(): Unit = { descartes.dine(plato) }
     })
     d.start()
 
     val p = new Thread(new Runnable() {
-      def run() { plato.dine(descartes) }
+      def run(): Unit = { plato.dine(descartes) }
     })
     p.start()
     Await.all(descartes.ready, plato.ready)

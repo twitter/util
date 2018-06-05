@@ -37,7 +37,7 @@ abstract class FutureCache[K, V] {
   /**
    * Unconditionally sets a value for a given key
    */
-  def set(key: K, value: Future[V])
+  def set(key: K, value: Future[V]): Unit
 
   /**
    * Evicts the contents of a `key` if the old value is `value`.

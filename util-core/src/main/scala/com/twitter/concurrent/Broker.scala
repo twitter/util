@@ -40,7 +40,7 @@ class Broker[T] {
   private[this] val state = new AtomicReference[State](Quiet)
 
   @tailrec
-  private[this] def rmElem(elem: AnyRef) {
+  private[this] def rmElem(elem: AnyRef): Unit = {
     state.get match {
       case s @ Sending(q) =>
         val nextq = q filter { _ ne elem }

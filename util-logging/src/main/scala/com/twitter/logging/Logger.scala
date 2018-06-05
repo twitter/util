@@ -131,7 +131,7 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
    * formatting is required.
    */
   @varargs
-  final def log(level: Level, thrown: Throwable, message: String, items: Any*) {
+  final def log(level: Level, thrown: Throwable, message: String, items: Any*): Unit = {
     val myLevel = getLevel
     if ((myLevel eq null) || (level.intValue >= myLevel.intValue)) {
 
@@ -448,7 +448,7 @@ object Logger extends Iterable[Logger] {
    * Reset all the loggers and register new loggers
    * @note Only one logger is permitted per namespace
    */
-  def configure(loggerFactories: List[() => Logger]) {
+  def configure(loggerFactories: List[() => Logger]): Unit = {
     loggerFactoryCache = loggerFactories
 
     clearHandlers()

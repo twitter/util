@@ -14,7 +14,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
   def length = count_
   override def size = count_
 
-  def clear() {
+  def clear(): Unit = {
     top = 0
     count_ = 0
   }
@@ -30,7 +30,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
   /**
    * Pushes an element, possibly forcing out the oldest element in the stack.
    */
-  def +=(elem: A) {
+  def +=(elem: A): Unit = {
     top = if (top == 0) maxSize - 1 else top - 1
     array(top) = elem
     if (count_ < maxSize) count_ += 1
@@ -41,7 +41,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
    * of 0 is the same as calling this += elem.  This is a O(n) operation
    * as elements need to be shifted around.
    */
-  def insert(i: Int, elem: A) {
+  def insert(i: Int, elem: A): Unit = {
     if (i == 0) this += elem
     else if (i > count_) throw new IndexOutOfBoundsException(i.toString)
     else if (i == count_) {
@@ -57,7 +57,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
   /**
    * Replaces an element in the stack.
    */
-  def update(index: Int, elem: A) {
+  def update(index: Int, elem: A): Unit = {
     array((top + index) % maxSize) = elem
   }
 
@@ -67,7 +67,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
    * stack can hold, then only the last maxSize elements will end up in
    * the stack.
    */
-  def ++=(iter: Iterable[A]) {
+  def ++=(iter: Iterable[A]): Unit = {
     for (elem <- iter) this += elem
   }
 

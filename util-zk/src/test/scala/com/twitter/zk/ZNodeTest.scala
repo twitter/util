@@ -14,7 +14,7 @@ class ZNodeTest extends WordSpec with MockitoSugar {
     class ZNodeSpecHelper {
       val zk = mock[ZkClient]
     }
-    def pathTest(path: String, parent: String, name: String) {
+    def pathTest(path: String, parent: String, name: String): Unit = {
       val h = new ZNodeSpecHelper
       import h._
 

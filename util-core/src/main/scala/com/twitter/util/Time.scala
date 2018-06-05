@@ -495,8 +495,8 @@ object Time extends TimeLikeOps[Time] {
 }
 
 trait TimeControl {
-  def set(time: Time)
-  def advance(delta: Duration)
+  def set(time: Time): Unit
+  def advance(delta: Duration): Unit
 }
 
 /**

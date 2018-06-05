@@ -130,7 +130,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
     var latch = new CountDownLatch(1)
 
     val timer = new JavaTimer {
-      override def logError(t: Throwable) {
+      override def logError(t: Throwable): Unit = {
         errors += 1
         latch.countDown()
       }
