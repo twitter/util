@@ -12,7 +12,7 @@ class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyC
   class Ctx {
     var leafCounter = 0
 
-    private[this] val inMemoryStatsReceiver: Gen[StatsReceiver] = Gen.wrap {
+    private[this] val inMemoryStatsReceiver: Gen[StatsReceiver] = Gen.delay {
       leafCounter += 1
       Gen.const(new InMemoryStatsReceiver())
     }
@@ -67,7 +67,7 @@ class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyC
       Gen.oneOf(seq).flatMap(identity)
     }
 
-    implicit val impl = Arbitrary(Gen.wrap(statsReceiverTopology(0)))
+    implicit val impl = Arbitrary(Gen.delay(statsReceiverTopology(0)))
   }
 
   test("DelegatingStatsReceiver.all collects effectively across many StatsReceivers") {
