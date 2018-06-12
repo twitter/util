@@ -12,7 +12,7 @@ import org.scalatest.WordSpec
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
 import scala.collection.JavaConverters._
 

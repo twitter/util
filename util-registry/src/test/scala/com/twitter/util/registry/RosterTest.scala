@@ -6,7 +6,7 @@ import org.mockito.Matchers.anyObject
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
 class RosterTest extends FunSuite with MockitoSugar {

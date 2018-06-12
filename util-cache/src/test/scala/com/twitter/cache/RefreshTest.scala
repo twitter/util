@@ -6,7 +6,7 @@ import com.twitter.util.TimeConversions._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 @RunWith(classOf[JUnitRunner])
 class RefreshTest extends FunSuite with MockitoSugar {

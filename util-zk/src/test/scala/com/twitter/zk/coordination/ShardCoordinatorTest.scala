@@ -6,7 +6,7 @@ import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 import com.twitter.conversions.time._
 import com.twitter.util.{Await, Future, JavaTimer}
