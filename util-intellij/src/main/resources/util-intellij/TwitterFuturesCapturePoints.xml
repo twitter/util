@@ -39,7 +39,7 @@
 				   class-name="com.twitter.util.ConstFuture"
 				   method-name="respond"
 				   capture-key-expression="k"
-				   insert-class-name="com.twitter.util.ConstFuture$$anon$8"
+				   insert-class-name="com.twitter.util.ConstFuture$$anon$1"
 				   insert-method-name="run"
 				   insert-key-expression="k" />
 
@@ -48,7 +48,7 @@
 				   class-name="com.twitter.util.ConstFuture"
 				   method-name="transform"
 				   capture-key-expression="f"
-				   insert-class-name="com.twitter.util.ConstFuture$$anon$9"
+				   insert-class-name="com.twitter.util.ConstFuture$$anon$2"
 				   insert-method-name="run"
 				   insert-key-expression="f" />
 
