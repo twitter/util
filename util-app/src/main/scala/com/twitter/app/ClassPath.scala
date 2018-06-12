@@ -61,7 +61,8 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     buf
   }
 
-  private[this] def getEntries(loader: ClassLoader): Seq[(URI, ClassLoader)] = {
+  // package protected for testing
+  private[app] def getEntries(loader: ClassLoader): Seq[(URI, ClassLoader)] = {
     val ents = mutable.Buffer[(URI, ClassLoader)]()
     val parent = loader.getParent
     if (parent != null)
@@ -69,8 +70,13 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
 
     loader match {
       case urlLoader: URLClassLoader =>
-        for (url <- urlLoader.getURLs) {
-          ents += (url.toURI -> loader)
+        Option(urlLoader.getURLs) match {
+          case Some(urls) =>
+            urls.foreach { url =>
+              if (url != null)
+                ents += (url.toURI -> loader)
+            }
+          case _ =>
         }
       case _ =>
     }

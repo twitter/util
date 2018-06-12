@@ -9,8 +9,16 @@ Unreleased
 API Changes:
   
   * util-class-preloader: This library has been removed since it deprecated. We
-  no longer recommend that people do this. ``PHAB_ID=D174250``
+    no longer recommend that people do this. ``PHAB_ID=D174250``
 
+Bug Fixes:
+
+  * util-app: Fix issue where in some environments, `URLClassLoader#getURLs` can
+    return null, failing LoadService from initializing properly
+    (see: https://github.com/google/guava/issues/2239). The `URLClassLoader` javadoc
+    is not clear if a null can be returned when calling `URLClassLoader#getURLs` and for
+    at least one application server, the default returned is null, thus we should be more
+    resilient against this possibility. Fixes Finagle #695. ``PHAB_ID=D181152``
 
 Deprecations:
 
