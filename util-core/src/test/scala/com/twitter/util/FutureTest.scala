@@ -15,6 +15,7 @@ import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl
 import scala.util.Random
 import scala.util.control.ControlThrowable
+import scala.util.control.NonFatal
 
 class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
   implicit class FutureMatcher[A](future: Future[A]) {
