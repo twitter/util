@@ -1,5 +1,7 @@
 package com.twitter.util
 
+import scala.util.control.NonFatal
+
 /**
  * A mixin trait to describe resources that are an idempotent [[Closable]].
  *

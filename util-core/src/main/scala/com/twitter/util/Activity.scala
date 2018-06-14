@@ -7,6 +7,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.Buffer
 import scala.language.higherKinds
 import scala.reflect.ClassTag
+import scala.util.control.NonFatal
 
 /**
  * An Activity is a handle to a concurrently running process, producing

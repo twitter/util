@@ -7,7 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 
 API Changes:
-  
+
+  * util-core: Removed `c.t.u.NonFatal`, use `scala.util.control.NonFatal`
+    instead. ``PHAB_ID=D181918``
+
   * util-class-preloader: This library has been removed since it deprecated. We
     no longer recommend that people do this. ``PHAB_ID=D174250``
 

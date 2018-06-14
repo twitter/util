@@ -3,6 +3,7 @@ package com.twitter.util
 import com.twitter.concurrent.Scheduler
 import scala.annotation.tailrec
 import scala.runtime.NonLocalReturnControl
+import scala.util.control.NonFatal
 
 object Promise {
 

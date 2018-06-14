@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import scala.util.control.NonFatal
 import scala.util.{Success, Failure}
 
 /**
