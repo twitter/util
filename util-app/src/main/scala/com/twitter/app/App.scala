@@ -159,6 +159,26 @@ trait App extends Closable with CloseAwaitably {
   protected[this] def loadServiceBindings: Seq[LoadService.Binding[_]] = Nil
 
   /**
+   * Parse the command line arguments as an Array of Strings. The default
+   * implementation parses the given String[] as [[Flag]] input values.
+   *
+   * Users may override this method to specify different functionality.
+   *
+   * @param args String Array which represents the command line input given
+   *             to the application.
+   */
+  protected[this] def parseArgs(args: Array[String]): Unit = {
+    flag.parseArgs(args, allowUndefinedFlags) match {
+      case Flags.Ok(remainder) =>
+        _args = remainder.toArray
+      case Flags.Help(usage) =>
+        throw FlagUsageError(usage)
+      case Flags.Error(reason) =>
+        throw FlagParseException(reason)
+    }
+  }
+
+  /**
    * Invoke `f` before anything else (including flag parsing).
    */
   protected final def init(f: => Unit): Unit = {
@@ -330,14 +350,7 @@ trait App extends Closable with CloseAwaitably {
 
     for (f <- inits) f()
 
-    flag.parseArgs(args, allowUndefinedFlags) match {
-      case Flags.Ok(remainder) =>
-        _args = remainder.toArray
-      case Flags.Help(usage) =>
-        throw FlagUsageError(usage)
-      case Flags.Error(reason) =>
-        throw FlagParseException(reason)
-    }
+    parseArgs(args)
 
     for (f <- premains) f()
 

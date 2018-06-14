@@ -8,6 +8,10 @@ Unreleased
 
 API Changes:
 
+  * util-app: Allow users a way to override the argument parsing behavior in
+    `c.t.app.App#nonExitingMain` which was inlined. Users can override `parseArgs`
+    to define custom behavior. ``PHAB_ID=D181660``
+
   * util-core: Removed `c.t.u.NonFatal`, use `scala.util.control.NonFatal`
     instead. ``PHAB_ID=D181918``
 
