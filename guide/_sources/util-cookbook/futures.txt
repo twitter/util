@@ -83,16 +83,12 @@ Java:
 
 .. code-block:: java
 
-    import com.twitter.util.Function0;
     import com.twitter.util.Future;
     import com.twitter.util.FuturePools;
+    import static com.twitter.util.Function.func0;
 
     Future<String> futureResult = FuturePools.unboundedPool().apply(
-      new Function0<String>() {
-        public String apply() {
-          return someIO();
-        }
-      }
+      func0(() -> someIO());
     );
 
 Future Recursion

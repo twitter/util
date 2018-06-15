@@ -923,6 +923,25 @@ and flag parsing.
 executed after all postmains complete. The thread resumes when all exit
 hooks complete or <code>closeDeadline</code> expires.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#parseArgs" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parseArgs(args:Array[String]):Unit"></a><a id="parseArgs(Array[String]):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#parseArgs(args:Array[String]):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">parseArgs</span><span class="params">(<span name="args">args: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Parse the command line arguments as an Array of Strings.</p><div class="fullcomment"><div class="comment cmt"><p>Parse the command line arguments as an Array of Strings. The default
+implementation parses the given String[] as <a href="../../../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a> input values.</p><p>Users may override this method to specify different functionality.
+</p></div><dl class="paramcmts block"><dt class="param">args</dt><dd class="cmt"><p>String Array which represents the command line input given
+            to the application.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
     </li><li name="com.twitter.app.App#postmain" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="postmain(f:=&gt;Unit):Unit"></a><a id="postmain(⇒Unit):Unit"></a>
       <span class="permalink">
@@ -1011,6 +1030,27 @@ method.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#suppressGracefulShutdownErrors" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="suppressGracefulShutdownErrors:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#suppressGracefulShutdownErrors:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">suppressGracefulShutdownErrors</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">By default any failure during the graceful shutdown portion of an <a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a>'s lifecycle
+bubbles up and causes non-zero return codes in the process.</p><div class="fullcomment"><div class="comment cmt"><p>By default any failure during the graceful shutdown portion of an <a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a>'s lifecycle
+bubbles up and causes non-zero return codes in the process. Setting this to <code>false</code>
+allows an application to suppress these errors and express that graceful shutdown logic
+should not be a determinant of the process exit code.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">

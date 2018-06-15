@@ -579,10 +579,6 @@
                         <a href="NoFuture.html" title="A Future which can never be satisfied and is thus always in the pending state.">NoFuture</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="NonFatal$.html" title="A classifier of non-fatal Exceptions."></a>
-                        <a href="NonFatal$.html" title="A classifier of non-fatal Exceptions.">NonFatal</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="object" href="NullMonitor$.html" title="A monitor that always fails to handle an exception."></a>
                         <a href="NullMonitor$.html" title="A monitor that always fails to handle an exception.">NullMonitor</a>
                       </li><li class="current-entities indented3">
@@ -1105,7 +1101,7 @@ Can be useful for Java programmers.
         <span class="name">apply</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="a">a: ⇒ <span class="extype" name="com.twitter.util.Future.apply.A">A</span></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.apply.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Creates a satisfied <code>Future</code> from the result of running <code>a</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a satisfied <code>Future</code> from the result of running <code>a</code>.</p><p>If the result of <code>a</code> is a <a href="NonFatal$.html" class="extype" name="com.twitter.util.NonFatal">non-fatal exception</a>,
+      <p class="shortcomment cmt">Creates a satisfied <code>Future</code> from the result of running <code>a</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a satisfied <code>Future</code> from the result of running <code>a</code>.</p><p>If the result of <code>a</code> is a non-fatal exception,
 this will result in a failed <code>Future</code>. Otherwise, the result
 is a successfully satisfied <code>Future</code>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>that <code>a</code> is executed in the calling thread and as such
