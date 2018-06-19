@@ -6,6 +6,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+API Changes:
+
+  * util-core: Local.Context used to be a type alias for Array[Option[_]], now it is
+    a new key-value liked structure. ``PHAB_ID=D182478``
+
 18.6.0  2018-06-14
 
 API Changes:

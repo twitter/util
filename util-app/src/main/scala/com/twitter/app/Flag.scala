@@ -94,7 +94,7 @@ class Flag[T: Flaggable] private[app] (
     if (updatedMap.isEmpty)
       localFlagValues.clear()
     else
-      localFlagValues.set(Some(updatedMap))
+      localFlagValues.update(updatedMap)
   }
 
   @volatile private[this] var failFast = failFastUntilParsed

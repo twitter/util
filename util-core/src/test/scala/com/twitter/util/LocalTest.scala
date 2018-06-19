@@ -1,11 +1,11 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
+import org.scalacheck.Arbitrary
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-@RunWith(classOf[JUnitRunner])
-class LocalTest extends FunSuite {
+class LocalTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("Local: should be undefined by default") {
     val local = new Local[Int]
     assert(local() == None)
@@ -162,4 +162,24 @@ class LocalTest extends FunSuite {
     assert(l() == Some(100))
     assert(fn() == 101)
   }
+
+  implicit lazy val arbKey: Arbitrary[Local.Key] = Arbitrary(new Local.Key)
+
+  test("Context should have the same behavior with Map") {
+    val context = Local.Context.empty
+    val map = Map.empty[Local.Key, Option[Int]]
+
+    forAll(arbitrary[Int], arbitrary[Local.Key]) { (value, key) =>
+      if (value % 2 == 0) {
+        val c = context.set(key, Some(value))
+        val m = map.updated(key, value)
+        assert(c.get(key) == m.get(key))
+      } else {
+        val c = context.remove(key)
+        val m = map - key
+        assert(c.get(key) == m.get(key))
+      }
+    }
+  }
+
 }
