@@ -9,9 +9,11 @@ java_library(
     dependencies = [
         "3rdparty/jvm/org/scala-lang:scala-library",
         "util/util-core/src/main/scala",
+        "util/util-function/src/main/java",
     ],
     exports = [
         "3rdparty/jvm/org/scala-lang:scala-library",
         "util/util-core/src/main/scala",
+        "util/util-function/src/main/java",
     ],
 )

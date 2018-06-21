@@ -13,5 +13,6 @@ scala_library(
     ],
     exports = [
         "3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators",
+        "util/util-function/src/main/java",
     ],
 )
