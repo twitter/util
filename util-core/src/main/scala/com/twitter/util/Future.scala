@@ -1500,9 +1500,47 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * promises may be involved in `flatMap` chains).
    *
    * Raising an interrupt does not alter the externally observable
-   * state of the Future. They are used to signal to the ''producer''
+   * state of the `Future`. They are used to signal to the ''producer''
    * of the future's value that the result is no longer desired (for
-   * whatever reason given in the passed Throwable).
+   * whatever reason given in the passed `Throwable`). For example:
+   * {{{
+   * import com.twitter.util.Promise
+   * val p = new Promise[Unit]()
+   * p.setInterruptHandler { case _ => println("interrupt handler fired") }
+   * p.poll // is `None`
+   * p.raise(new Exception("raised!"))
+   * p.poll // is still `None`
+   * }}}
+   *
+   * In the context of a `Future` created via composition (e.g.
+   * `flatMap`/`onSuccess`/`transform`), `raise`-ing on that `Future` will
+   * call `raise` on the head of the chain which created this `Future`.
+   * For example:
+   * {{{
+   * import com.twitter.util.Promise
+   * val p = new Promise[Int]()
+   * p.setInterruptHandler { case _ => println("interrupt handler fired") }
+   * val f = p.map(_ + 1)
+   *
+   * f.raise(new Exception("fire!"))
+   * }}}
+   * The call to `f.raise` will call `p.raise` and print "interrupt handler fired".
+   *
+   * When the head of that chain of `Futures` is satisfied, the next
+   * `Future` in the chain created by composition will have `raise`
+   * called. For example:
+   * {{{
+   * import com.twitter.util.Promise
+   * val p1, p2 = new Promise[Int]()
+   * p1.setInterruptHandler { case _ => println("p1 interrupt handler") }
+   * p2.setInterruptHandler { case _ => println("p2 interrupt handler") }
+   * val f = p1.flatMap { _ => p2 }
+   *
+   * f.raise(new Exception("fire!")) // will print "p1 interrupt handler"
+   * p1.setValue(1) // will print "p2 interrupt handler"
+   * }}}
+   *
+   * @see [[Promise.setInterruptHandler]]
    */
   def raise(interrupt: Throwable): Unit
 
@@ -1968,19 +2006,27 @@ abstract class Future[+A] extends Awaitable[A] { self =>
     flatMap[B](ev)
 
   /**
-   * Returns an identical future except that it ignores interrupts which match a predicate
+   * Returns an identical `Future` except that it ignores interrupts which match a predicate.
+   *
+   * @see [[raise]]
+   * @see [[masked]]
+   * @see [[interruptible()]]
    */
   def mask(pred: PartialFunction[Throwable, Boolean]): Future[A] = {
     val p = Promise[A]()
     p.setInterruptHandler {
-      case t if !PartialFunction.cond(t)(pred) => this.raise(t)
+      case t if !PartialFunction.cond(t)(pred) => self.raise(t)
     }
-    this.proxyTo(p)
+    self.proxyTo(p)
     p
   }
 
   /**
-   * Returns an identical future that ignores all interrupts
+   * Returns an identical `Future` that ignores all interrupts.
+   *
+   * @see [[raise]]
+   * @see [[mask]]
+   * @see [[interruptible()]]
    */
   def masked: Future[A] = mask(Future.AlwaysMasked)
 
@@ -2022,6 +2068,10 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * prevent memory leaks if the parent Future will never be
    * satisfied, because closures that are attached to this derivative
    * `Future` will not be held onto by the killer `Future`.
+   *
+   * @see [[raise]]
+   * @see [[mask]]
+   * @see [[masked]]
    */
   def interruptible(): Future[A] = {
     if (isDefined) return this

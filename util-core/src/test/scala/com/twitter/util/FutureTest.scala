@@ -1068,22 +1068,23 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             "interruption of the produced future" which {
               "before the antecedent Future completes, propagates back to the antecedent" in {
                 val f1, f2 = new HandledPromise[Unit]
-                val f = seqop(f1, () => f2)
+                val f3 = seqop(f1, () => f2)
                 assert(f1.handled.isEmpty)
                 assert(f2.handled.isEmpty)
-                f.raise(new Exception)
+                f3.raise(new Exception)
                 assert(f1.handled.isDefined)
+                assert(f2.handled.isEmpty)
                 f1() = Return.Unit
                 assert(f2.handled.isDefined)
               }
 
               "after the antecedent Future completes, does not propagate back to the antecedent" in {
                 val f1, f2 = new HandledPromise[Unit]
-                val f = seqop(f1, () => f2)
+                val f3 = seqop(f1, () => f2)
                 assert(f1.handled.isEmpty)
                 assert(f2.handled.isEmpty)
                 f1() = Return.Unit
-                f.raise(new Exception)
+                f3.raise(new Exception)
                 assert(f1.handled.isEmpty)
                 assert(f2.handled.isDefined)
               }
@@ -1096,8 +1097,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
                 f3.setInterruptHandler {
                   case `exc` => didInterrupt = true
                 }
-                val f = seqop(f1, () => seqop(f2, () => f3))
-                f.raise(exc)
+                val f4 = seqop(f1, () => seqop(f2, () => f3))
+                f4.raise(exc)
                 assert(!didInterrupt)
                 f1.setDone()
                 assert(!didInterrupt)
@@ -1137,7 +1138,7 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             next()
         }
       )
-      testSequence("before", (a, next) => a before next())
+      testSequence("before", (a, next) => a.before { next() })
 
       "flatMap (values)" should {
         val f = Future(1).flatMap { x =>
