@@ -2008,6 +2008,26 @@ abstract class Future[+A] extends Awaitable[A] { self =>
   /**
    * Returns an identical `Future` except that it ignores interrupts which match a predicate.
    *
+   * This means that a [[Promise.setInterruptHandler Promise's interrupt handler]]
+   * will not execute on calls to [[Future.raise]] for inputs to `pred`
+   * that evaluate to `true`. Also, `raise` will not be forwarded to chained Futures.
+   *
+   * For example:
+   * {{{
+   * val p = new Promise[Int]()
+   * p.setInterruptHandler { case x => println(s"interrupt handler for ${x.getClass}") }
+   * val f1: Future[Int] = p.mask {
+   *   case _: IllegalArgumentException => true
+   * }
+   * f1.raise(new IllegalArgumentException("ignored!")) // nothing will be printed
+   * f1.map(_ + 1).raise(new IllegalArgumentException("ignored!")) // nothing will be printed
+   *
+   * val f2: Future[Int] = p.mask {
+   *   case _: IllegalArgumentException => true
+   * }
+   * f2.raise(new Exception("fire!")) // will print "interrupt handler for class java.lang.Exception"
+   * }}}
+   *
    * @see [[raise]]
    * @see [[masked]]
    * @see [[interruptible()]]
@@ -2023,6 +2043,21 @@ abstract class Future[+A] extends Awaitable[A] { self =>
 
   /**
    * Returns an identical `Future` that ignores all interrupts.
+   *
+   * This means that a [[Promise.setInterruptHandler Promise's interrupt handler]]
+   * will not execute for any call to [[Future.raise]].  Also, `raise` will not
+   * be forwarded to chained Futures.
+   *
+   * For example:
+   * {{{
+   * import com.twitter.util.{Future, Promise}
+   * val p = new Promise[Int]()
+   * p.setInterruptHandler { case _ => println("interrupt handler") }
+   *
+   * val f: Future[Int] = p.masked
+   * f.raise(new Exception("ignored!")) // nothing will be printed
+   * f1.map(_ + 1).raise(new Exception("ignored!")) // nothing will be printed
+   * }}}
    *
    * @see [[raise]]
    * @see [[mask]]
