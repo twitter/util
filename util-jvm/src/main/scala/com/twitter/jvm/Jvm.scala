@@ -261,7 +261,9 @@ object Jvm {
   private lazy val _jvm =
     try new Hotspot
     catch {
-      case NonFatal(_) => NilJvm
+      case NonFatal(_) | _: UnsatisfiedLinkError =>
+        log.warning("failed to create Hotspot JVM interface, using NilJvm instead")
+        NilJvm
     }
 
   private val log = Logger.getLogger(getClass.getName)
