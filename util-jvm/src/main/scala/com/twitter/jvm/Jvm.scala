@@ -262,7 +262,7 @@ object Jvm {
     try new Hotspot
     catch {
       case NonFatal(_) | _: UnsatisfiedLinkError =>
-        log.log(Level.WARNING, "failed to create Hotspot JVM interface, using NilJvm instead")
+        log.warning("failed to create Hotspot JVM interface, using NilJvm instead")
         NilJvm
     }
 
