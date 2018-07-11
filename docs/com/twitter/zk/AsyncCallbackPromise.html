@@ -870,7 +870,7 @@ particular, this is different from <a href="../util/Future.html#masked:com.twitt
 prevent memory leaks if the parent Future will never be
 satisfied, because closures that are attached to this derivative
 <code>Future</code> will not be held onto by the killer <code>Future</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../util/Future.html#masked:com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#masked">masked</a></p></span><span class="cmt"><p><a href="../util/Future.html#mask(pred:PartialFunction[Throwable,Boolean]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#mask">mask</a></p></span><span class="cmt"><p><a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Promise#isDefined" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isDefined:Boolean"></a>
       <span class="permalink">
@@ -1087,9 +1087,20 @@ and preserving the failed computation of <code>this</code>.
         <span class="name">mask</span><span class="params">(<span name="pred">pred: <a href="http://www.scala-lang.org/api/2.12.4/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.zk.AsyncCallbackPromise.T">T</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Returns an identical future except that it ignores interrupts which match a predicate
-</p><div class="fullcomment"><div class="comment cmt"><p>Returns an identical future except that it ignores interrupts which match a predicate
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns an identical <code>Future</code> except that it ignores interrupts which match a predicate.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an identical <code>Future</code> except that it ignores interrupts which match a predicate.</p><p>This means that a <a href="../util/Promise.html#setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit" class="extmbr" name="com.twitter.util.Promise#setInterruptHandler">Promise's interrupt handler</a>
+will not execute on calls to <a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">Future.raise</a> for inputs to <code>pred</code>
+that evaluate to <code>true</code>. Also, <code>raise</code> will not be forwarded to chained Futures.</p><p>For example:</p><pre><span class="kw">val</span> p = <span class="kw">new</span> Promise[<span class="std">Int</span>]()
+p.setInterruptHandler { <span class="kw">case</span> x <span class="kw">=&gt;</span> println(s<span class="lit">"interrupt handler for ${x.getClass}"</span>) }
+<span class="kw">val</span> f1: Future[<span class="std">Int</span>] = p.mask {
+  <span class="kw">case</span> _: IllegalArgumentException <span class="kw">=&gt;</span> <span class="kw">true</span>
+}
+f1.raise(<span class="kw">new</span> IllegalArgumentException(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span>
+f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> IllegalArgumentException(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span>
+
+<span class="kw">val</span> f2: Future[<span class="std">Int</span>] = p.mask {
+  <span class="kw">case</span> _: IllegalArgumentException <span class="kw">=&gt;</span> <span class="kw">true</span>
+}
+f2.raise(<span class="kw">new</span> Exception(<span class="lit">"fire!"</span>)) <span class="cmt">// will print "interrupt handler for class java.lang.Exception"</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="interruptible()">interruptible()</span></p></span><span class="cmt"><p><a href="../util/Future.html#masked:com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#masked">masked</a></p></span><span class="cmt"><p><a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#masked" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="masked:com.twitter.util.Future[A]"></a><a id="masked:Future[T]"></a>
       <span class="permalink">
@@ -1105,9 +1116,15 @@ and preserving the failed computation of <code>this</code>.
         <span class="name">masked</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.zk.AsyncCallbackPromise.T">T</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Returns an identical future that ignores all interrupts
-</p><div class="fullcomment"><div class="comment cmt"><p>Returns an identical future that ignores all interrupts
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns an identical <code>Future</code> that ignores all interrupts.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an identical <code>Future</code> that ignores all interrupts.</p><p>This means that a <a href="../util/Promise.html#setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit" class="extmbr" name="com.twitter.util.Promise#setInterruptHandler">Promise's interrupt handler</a>
+will not execute for any call to <a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">Future.raise</a>.  Also, <code>raise</code> will not
+be forwarded to chained Futures.</p><p>For example:</p><pre><span class="kw">import</span> com.twitter.util.{Future, Promise}
+<span class="kw">val</span> p = <span class="kw">new</span> Promise[<span class="std">Int</span>]()
+p.setInterruptHandler { <span class="kw">case</span> _ <span class="kw">=&gt;</span> println(<span class="lit">"interrupt handler"</span>) }
+
+<span class="kw">val</span> f: Future[<span class="std">Int</span>] = p.masked
+f.raise(<span class="kw">new</span> Exception(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span>
+f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> Exception(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="interruptible()">interruptible()</span></p></span><span class="cmt"><p><a href="../util/Future.html#mask(pred:PartialFunction[Throwable,Boolean]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#mask">mask</a></p></span><span class="cmt"><p><a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -1299,13 +1316,34 @@ one-shot and latest-interrupt wins. That is, the last interrupt
 to have been raised is delivered exactly once to the Promise
 responsible for making progress on the future (multiple such
 promises may be involved in <code>flatMap</code> chains).</p><p>Raising an interrupt does not alter the externally observable
-state of the Future. They are used to signal to the <i>producer</i>
+state of the <code>Future</code>. They are used to signal to the <i>producer</i>
 of the future's value that the result is no longer desired (for
-whatever reason given in the passed Throwable).
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> → <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>Annotations</dt><dd>
+whatever reason given in the passed <code>Throwable</code>). For example:</p><pre><span class="kw">import</span> com.twitter.util.Promise
+<span class="kw">val</span> p = <span class="kw">new</span> Promise[<span class="std">Unit</span>]()
+p.setInterruptHandler { <span class="kw">case</span> _ <span class="kw">=&gt;</span> println(<span class="lit">"interrupt handler fired"</span>) }
+p.poll <span class="cmt">// is `None`</span>
+p.raise(<span class="kw">new</span> Exception(<span class="lit">"raised!"</span>))
+p.poll <span class="cmt">// is still `None`</span></pre><p>In the context of a <code>Future</code> created via composition (e.g.
+<code>flatMap</code>/<code>onSuccess</code>/<code>transform</code>), <code>raise</code>-ing on that <code>Future</code> will
+call <code>raise</code> on the head of the chain which created this <code>Future</code>.
+For example:</p><pre><span class="kw">import</span> com.twitter.util.Promise
+<span class="kw">val</span> p = <span class="kw">new</span> Promise[<span class="std">Int</span>]()
+p.setInterruptHandler { <span class="kw">case</span> _ <span class="kw">=&gt;</span> println(<span class="lit">"interrupt handler fired"</span>) }
+<span class="kw">val</span> f = p.map(_ + <span class="num">1</span>)
+
+f.raise(<span class="kw">new</span> Exception(<span class="lit">"fire!"</span>))</pre><p>The call to <code>f.raise</code> will call <code>p.raise</code> and print &quot;interrupt handler fired&quot;.</p><p>When the head of that chain of <code>Futures</code> is satisfied, the next
+<code>Future</code> in the chain created by composition will have <code>raise</code>
+called. For example:</p><pre><span class="kw">import</span> com.twitter.util.Promise
+<span class="kw">val</span> p1, p2 = <span class="kw">new</span> Promise[<span class="std">Int</span>]()
+p1.setInterruptHandler { <span class="kw">case</span> _ <span class="kw">=&gt;</span> println(<span class="lit">"p1 interrupt handler"</span>) }
+p2.setInterruptHandler { <span class="kw">case</span> _ <span class="kw">=&gt;</span> println(<span class="lit">"p2 interrupt handler"</span>) }
+<span class="kw">val</span> f = p1.flatMap { _ <span class="kw">=&gt;</span> p2 }
+
+f.raise(<span class="kw">new</span> Exception(<span class="lit">"fire!"</span>)) <span class="cmt">// will print "p1 interrupt handler"</span>
+p1.setValue(<span class="num">1</span>) <span class="cmt">// will print "p2 interrupt handler"</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> → <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@tailrec</span><span class="args">()</span>
               
-        </dd></dl></div>
+        </dd><dt>See also</dt><dd><span class="cmt"><p><a href="../util/Promise.html#setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit" class="extmbr" name="com.twitter.util.Promise#setInterruptHandler">Promise.setInterruptHandler</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#raiseWithin" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="raiseWithin(timer:com.twitter.util.Timer,timeout:com.twitter.util.Duration,exc:Throwable):com.twitter.util.Future[A]"></a><a id="raiseWithin(Timer,Duration,Throwable):Future[T]"></a>
       <span class="permalink">

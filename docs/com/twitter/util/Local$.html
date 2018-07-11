@@ -867,25 +867,25 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.util.Local.Context" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Context=Array[Option[_]]"></a><a id="Context:Context"></a>
+              <ol><li name="com.twitter.util.Local.Context" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ContextextendsAnyRef"></a><a id="Context:Context"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Local$.html#Context=Array[Option[_]]" title="Permalink">
+      <a href="../../../com/twitter/util/Local$.html#ContextextendsAnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">type</span>
+        <span class="modifier">sealed abstract </span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Context</span><span class="result alias"> = <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[_]]</span>
+        <a title="A key value structure with better run-time performance characteristics when the number of elements is less than 16." href="Local$$Context.html"><span class="name">Context</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">Represents the current state of all <a href="Local.html" class="extype" name="com.twitter.util.Local">locals</a> for a given
-execution context.</p><div class="fullcomment"><div class="comment cmt"><p>Represents the current state of all <a href="Local.html" class="extype" name="com.twitter.util.Local">locals</a> for a given
-execution context.</p><p>This should be treated as an opaque value and direct modifications
-and access are considered verboten.
+      <p class="shortcomment cmt">A key value structure with better run-time performance characteristics
+when the number of elements is less than 16.</p><div class="fullcomment"><div class="comment cmt"><p>A key value structure with better run-time performance characteristics
+when the number of elements is less than 16.
+key - Local.Key, value - Option[_]
 </p></div></div>
     </li></ol>
             </div>
@@ -1137,7 +1137,7 @@ and restored upon invocation.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">let</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="ctx">ctx: <a href="#Context=Array[Option[_]]" class="extmbr" name="com.twitter.util.Local.Context">Context</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Local.let.U">U</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Local.let.U">U</span></span>
+        <span class="name">let</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="ctx">ctx: <a href="Local$$Context.html" class="extype" name="com.twitter.util.Local.Context">Context</a></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.util.Local.let.U">U</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.util.Local.let.U">U</span></span>
       </span>
       
       <p class="shortcomment cmt">Execute a block with the given Locals, restoring current values upon completion.</p>
@@ -1224,7 +1224,7 @@ current values upon completion.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">restore</span><span class="params">(<span name="saved">saved: <a href="#Context=Array[Option[_]]" class="extmbr" name="com.twitter.util.Local.Context">Context</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">restore</span><span class="params">(<span name="saved">saved: <a href="Local$$Context.html" class="extype" name="com.twitter.util.Local.Context">Context</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Restore the Local state to a given Context of values.</p>
@@ -1240,7 +1240,7 @@ current values upon completion.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">save</span><span class="params">()</span><span class="result">: <a href="#Context=Array[Option[_]]" class="extmbr" name="com.twitter.util.Local.Context">Context</a></span>
+        <span class="name">save</span><span class="params">()</span><span class="result">: <a href="Local$$Context.html" class="extype" name="com.twitter.util.Local.Context">Context</a></span>
       </span>
       
       <p class="shortcomment cmt">Return a snapshot of the current Local state.</p>
@@ -1344,6 +1344,22 @@ current values upon completion.</p>
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.Local.Context" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Context"></a><a id="Context:Context"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Local$.html#Context" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Local$$Context$.html"><span class="name">Context</span></a>
+      </span>
+      
+      
     </li>
               </ol>
             </div>

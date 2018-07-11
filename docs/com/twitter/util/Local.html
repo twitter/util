@@ -821,7 +821,7 @@ threading Locals through execution contexts.</p><p>Promises pass locals through 
 dependencies.  This means that Locals have exactly the same semantics as
 ThreadLocals, if you think of <code>continue</code> (the asynchronous sequence operator)
 as semicolon (the synchronous sequence operator).</p><p>Because it's not meaningful to inherit control from two places, Locals don't
-have to worry about having to merge two <a href="Local$.html#Context=Array[Option[_]]" class="extmbr" name="com.twitter.util.Local.Context">Contexts</a>.</p><p>Note: the implementation is optimized for situations in which save and
+have to worry about having to merge two <a href="Local$$Context.html" class="extype" name="com.twitter.util.Local.Context">Contexts</a>.</p><p>Note: the implementation is optimized for situations in which save and
 restore optimizations are dominant.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
