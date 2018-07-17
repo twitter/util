@@ -126,4 +126,13 @@
 				   insert-method-name="apply"
 				   insert-key-expression="this" />
 
+
+	<!-- com.twitter.util.Future.joinWith -->
+	<capture-point enabled="true"
+				   class-name="com.twitter.util.Future"
+				   method-name="joinWith"
+				   capture-key-expression="race"
+				   insert-class-name="com.twitter.util.Future$$anon$5"
+				   insert-method-name="apply"
+				   insert-key-expression="this" />
 </capture-points>
