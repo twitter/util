@@ -18,6 +18,8 @@ import scala.util.control.ControlThrowable
 import scala.util.control.NonFatal
 
 class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
+  import FutureTest._
+
   implicit class FutureMatcher[A](future: Future[A]) {
     def mustProduce(expected: Try[A]): Unit = {
       expected match {
@@ -742,28 +744,35 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             assert(!f.isDefined)
           }
 
-          "only return when both futures complete" in {
+          for {
+            left <- Seq(Ret(1), Thr(new Exception), Nvr)
+            right <- Seq(Ret(2), Thr(new Exception), Nvr)
+            leftFirst <- Seq(true, false)
+          } {
             new JoinHelper {
-              p0() = Return(1)
-              assert(!f.isDefined)
-              p1() = Return(2)
-              assert(Await.result(f) == ((1, 2)))
-            }
-          }
-
-          "return with exception if the first future throws" in {
-            new JoinHelper {
-              p0() = Throw(new Exception)
-              intercept[Exception] { Await.result(f) }
-            }
-          }
-
-          "return with exception if the second future throws" in {
-            new JoinHelper {
-              p0() = Return(1)
-              assert(!f.isDefined)
-              p1() = Throw(new Exception)
-              intercept[Exception] { Await.result(f) }
+              if (leftFirst) {
+                satisfy(p0, left)
+                satisfy(p1, right)
+              } else {
+                satisfy(p1, right)
+                satisfy(p0, left)
+              }
+              (left, right) match {
+                // Two Throws are special because leftFirst determines the
+                // exception (e0 or e1). Otherwise, every other case with a
+                // Throw will result in just one exception.
+                case (Thr(e0), Thr(e1)) =>
+                  val actual = intercept[Exception] { await(f) }
+                  assert(actual == (if (leftFirst) e0 else e1), explain(left, right, leftFirst))
+                case (_, Thr(exn)) =>
+                  val actual = intercept[Exception] { await(f) }
+                  assert(actual == exn, explain(left, right, leftFirst))
+                case (Thr(exn), _) =>
+                  val actual = intercept[Exception] { await(f) }
+                  assert(actual == exn, explain(left, right, leftFirst))
+                case (Nvr, Ret(_)) | (Ret(_), Nvr) | (Nvr, Nvr) => assert(!f.isDefined)
+                case (Ret(a), Ret(b)) => assert(await(f) == (a, b), explain(left, right, leftFirst))
+              }
             }
           }
 
@@ -1950,5 +1959,25 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
 
       assert(done.poll.contains(Throw(Future.NextThrewException(exc))))
     }
+  }
+}
+
+private object FutureTest {
+  def await[A](f: Future[A]): A = Await.result(f, 10.milliseconds)
+
+  sealed trait Result
+  case class Ret(num: Int) extends Result
+  case class Thr(exn: Exception) extends Result
+  case object Nvr extends Result
+
+  def satisfy(p: Promise[Int], result: Result): Unit = result match {
+    case Nvr =>
+    case Thr(exn) => p() = Throw(exn)
+    case Ret(value) => p() = Return(value)
+  }
+
+  def explain(left: Result, right: Result, leftFirst: Boolean): String = {
+    val leftOrRight = if (leftFirst) "left" else "right"
+    s": $left.join($right) where $leftOrRight is satisfied first has an unexpected result"
   }
 }

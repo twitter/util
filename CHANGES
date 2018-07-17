@@ -6,6 +6,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+Bug Fixes:
+
+  * util-core: Fixed an issue with Future.joinWith where it waits for
+    completion of both futures even if one has failed. This also affects
+    the join method, which is implemented in terms of joinWith. ``PHAB_ID=D191342``
+
 18.7.0  2018-07-10
 
 API Changes:

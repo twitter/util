@@ -115,15 +115,6 @@
 				   insert-method-name="apply"
 				   insert-key-expression="listener" />
 
-	<!--com.twitter.util.Future.joinWith  -->
-	<capture-point enabled="true"
-				   class-name="com.twitter.util.Future"
-				   method-name="joinWith"
-				   capture-key-expression="fn"
-				   insert-class-name="com.twitter.util.Future$$anonfun$joinWith$1$$anonfun$apply$4"
-				   insert-method-name="apply"
-				   insert-key-expression="fn" />
-
 	<!-- com.twitter.util.Future.ensure
 	NOTE: Even though we capture Future.respond, this capture point only applies when
 	Future.ensure is called. See [insert-class-name] below. -->

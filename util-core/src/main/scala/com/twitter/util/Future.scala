@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import com.twitter.concurrent.{Offer, Tx}
-import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList}
 import scala.collection.mutable
@@ -1910,14 +1910,28 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    */
   def joinWith[B, C](other: Future[B])(fn: (A, B) => C): Future[C] = {
     val p = Promise.interrupts[C](this, other)
-    this.respond {
-      case Throw(t) => p.update(Throw(t))
-      case Return(a) =>
-        other.respond {
-          case Throw(t) => p.update(Throw(t))
-          case Return(b) => p.update(Return(fn(a, b)))
+    // This is a race between this future and the other to set the atomic
+    // reference. In the Throw case, the winner updates the promise and the
+    // loser does nothing. In the Return case the jobs are flipped: the loser
+    // updates the promise and the winner does nothing. There is one more
+    // consideration: in the Throw case, the loser sets the promise if the
+    // winner was a Return. This guarantees that there can be only one attempt
+    // to call `fn` and also to update the promise.
+    val race = new AtomicReference[Try[_]] with (Try[_] => Unit) {
+      def apply(tx: Try[_]): Unit = {
+        val isFirst = compareAndSet(null, tx)
+        tx match {
+          case Return(_) if !isFirst && get.isReturn =>
+            p.setValue(fn(Await.result(Future.this), Await.result(other)))
+          case t@Throw(_) if isFirst || get.isReturn =>
+            p.update(t.cast[C])
+          case _ =>
         }
+      }
     }
+
+    this.respond(race)
+    other.respond(race)
     p
   }
 
