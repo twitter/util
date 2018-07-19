@@ -125,7 +125,7 @@ final class JsonTunableMapper(deserializers: Seq[JsonDeserializer[_ <: Any]]) {
     val uniqueIds = ids.distinct
 
     if (ids.size != uniqueIds.size)
-      throw new IllegalArgumentException(s"Duplicate Toggle ids found: ${ids.mkString(",")}")
+      throw new IllegalArgumentException(s"Duplicate Tunable ids found: ${ids.mkString(",")}")
 
     if (jsonTunables.tunables.isEmpty) {
       NullTunableMap
