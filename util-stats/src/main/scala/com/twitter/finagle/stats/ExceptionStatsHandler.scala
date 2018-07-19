@@ -92,7 +92,7 @@ class CategorizingExceptionStatsHandler(
  *     val f1 =
  *       Failure.adapt(
  *         new CancelledConnectionException(new ConnectException),
- *         Failure.Restartable|Failure.Interrupted)
+ *         FailureFlags.Retryable|FailureFlags.Interrupted)
  *     val f2 =
  *       new IndividualRequestTimeoutException(1.seconds)
  *     f2.serviceName = "myservice"
