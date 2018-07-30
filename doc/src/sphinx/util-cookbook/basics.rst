@@ -138,7 +138,7 @@ Scala:
     import com.twitter.conversions.time._
     import com.twitter.util.{Future, MockTimer, Time}
 
-    Time.withWithCurrentTimeFrozen { timeControl =>
+    Time.withCurrentTimeFrozen { timeControl =>
       val timer = new MockTimer()
       // schedule some work for later
       val f: Future[String] = timer.doLater(1.millisecond) {
