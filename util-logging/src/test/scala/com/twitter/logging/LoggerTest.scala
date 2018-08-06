@@ -276,12 +276,13 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
       }
 
       "file handler" in {
+        val separator = java.io.File.pathSeparator
         withTempFolder {
           val log: Logger = LoggerFactory(
             node = "com.twitter",
             level = Some(Level.DEBUG),
             handlers = FileHandler(
-              filename = folderName + "/test.log",
+              filename = folderName + separator + "test.log",
               rollPolicy = Policy.Never,
               append = false,
               level = Some(Level.INFO),
@@ -296,7 +297,8 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
           assert(log.getLevel == Level.DEBUG)
           assert(log.getHandlers().length == 1)
           val handler = log.getHandlers()(0).asInstanceOf[FileHandler]
-          assert(handler.filename == folderName + "/test.log")
+          val fileName = folderName + separator + "test.log"
+          assert(handler.filename == fileName)
           assert(handler.append == false)
           assert(handler.getLevel == Level.INFO)
           val formatter = handler.formatter
