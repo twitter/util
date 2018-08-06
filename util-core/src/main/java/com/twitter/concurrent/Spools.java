@@ -1,6 +1,6 @@
 package com.twitter.concurrent;
 
-import scala.collection.JavaConversions;
+import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public final class Spools {
    * Creates a new `Spool` of given `elems`.
    */
   public static <T> Spool<T> newSpool(Collection<T> elems) {
-    Seq<T> seq = JavaConversions.asScalaBuffer(new ArrayList<T>(elems)).toSeq();
+    Seq<T> seq = JavaConverters.collectionAsScalaIterableConverter(elems).asScala().toSeq();
     return new Spool.ToSpool<T>(seq).toSpool();
   }
 

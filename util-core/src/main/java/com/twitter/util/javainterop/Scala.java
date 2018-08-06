@@ -3,14 +3,13 @@ package com.twitter.util.javainterop;
 import scala.Option;
 import scala.Tuple2;
 
-import static scala.collection.JavaConversions.asScalaBuffer;
-import static scala.collection.JavaConversions.asScalaSet;
+import scala.collection.JavaConverters;
 
 /**
  * A collection of conversions from Java collections to their immutable
  * Scala variants.
  *
- * See scala.collection.JavaConversions if you do not need immutable
+ * See scala.collection.JavaConverters if you do not need immutable
  * collections.
  */
 public final class Scala {
@@ -20,7 +19,7 @@ public final class Scala {
   /**
    * Converts a {@link java.util.List} to an immutable Scala Seq.
    *
-   * See scala.collection.JavaConversions.asScalaBuffer if you do
+   * See scala.collection.JavaConverters.asScalaBuffer if you do
    * not need the returned Seq to be immutable.
    *
    * @return an empty Seq if the input is null.
@@ -32,14 +31,16 @@ public final class Scala {
     if (jList == null) {
       return scala.collection.immutable.Seq$.MODULE$.<E>empty();
     } else {
-      return asScalaBuffer(jList).toList();
+      //TODO: After dropping support for 2.11.x, replace with
+      //JavaConverters.asScalaBuffer(jlist).toList();
+      return JavaConverters.asScalaBufferConverter(jList).asScala().toList();
     }
   }
 
   /**
    * Converts a {@link java.util.Set} to an immutable Scala Set.
    *
-   * See scala.collection.JavaConversions.asScalaSet if you do
+   * See scala.collection.JavaConverters.asScalaSet if you do
    * not need the returned Set to be immutable.
    *
    * @return an empty Set if the input is null.
@@ -51,14 +52,16 @@ public final class Scala {
     if (jSet == null) {
       return scala.collection.immutable.Set$.MODULE$.<E>empty();
     } else {
-      return asScalaSet(jSet).toSet();
+      //TODO: After dropping support for 2.11.x, replace with
+      //JavaConverters.asScalaSet(jSet).toSet
+      return JavaConverters.asScalaSetConverter(jSet).asScala().toSet();
     }
   }
 
   /**
    * Converts a {@link java.util.Map} to an immutable Scala Map.
    *
-   * See scala.collection.JavaConversions.asScalaMap if you do
+   * See scala.collection.JavaConverters.asScalaMap if you do
    * not need the returned Map to be immutable.
    *
    * @return an empty Map if the input is null.
