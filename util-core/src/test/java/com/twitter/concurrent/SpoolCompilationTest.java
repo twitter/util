@@ -4,7 +4,7 @@ import com.twitter.util.Await;
 import com.twitter.util.Future;
 import org.junit.Assert;
 import org.junit.Test;
-import scala.collection.JavaConversions;
+import scala.collection.JavaConverters;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,9 +55,9 @@ public class SpoolCompilationTest {
     Spool<String> abNothing = ab.concat(Spools.<String>newEmptySpool());
     Spool<String> abc = Await.result(ab.concat(Future.value(c)));
 
-    Collection<String> listA = JavaConversions.seqAsJavaList(Await.result(ab.toSeq()));
-    Collection<String> listB = JavaConversions.seqAsJavaList(Await.result(abNothing.toSeq()));
-    Collection<String> listC = JavaConversions.seqAsJavaList(Await.result(abc.toSeq()));
+    Collection<String> listA = JavaConverters.seqAsJavaList(Await.result(ab.toSeq()));
+    Collection<String> listB = JavaConverters.seqAsJavaList(Await.result(abNothing.toSeq()));
+    Collection<String> listC = JavaConverters.seqAsJavaList(Await.result(abc.toSeq()));
 
     Assert.assertArrayEquals(new String[] { "a", "b"}, listA.toArray());
     Assert.assertArrayEquals(new String[] { "a", "b"}, listB.toArray());

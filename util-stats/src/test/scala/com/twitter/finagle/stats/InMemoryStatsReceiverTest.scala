@@ -231,7 +231,7 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
 
       inMemoryStatsReceiver.print(ps, includeHeaders = true)
       val content = new String(baos.toByteArray, StandardCharsets.UTF_8)
-      val parts = content.split('\n')
+      val parts = content.filterNot(_ == '\r').split('\n')
 
       assert(parts.length == 17)
       assert(parts(0) == "Counters:")
@@ -294,7 +294,7 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
 
       inMemoryStatsReceiver.print(ps, includeHeaders = true)
       val content = new String(baos.toByteArray, StandardCharsets.UTF_8)
-      val parts = content.split('\n')
+      val parts = content.filterNot(_ == '\r').split('\n')
 
       assert(parts.length == 12)
       assert(parts(0) == "Counters:")
