@@ -9,7 +9,7 @@ import scala.annotation.tailrec
 /**
  * Construct a Writer from a given OutputStream.
  */
-private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends ClosableWriter {
+private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends ClosableWriter[Buf] {
   import com.twitter.io.OutputStreamWriter._
 
   private[this] val done = new Promise[Unit]

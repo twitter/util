@@ -15,14 +15,14 @@ public final class Writers {
   /**
    * See {@code com.twitter.io.Writer.fromOutputStream}
    */
-  public static Writer.ClosableWriter newOutputStreamWriter(OutputStream out) {
+  public static Writer.ClosableWriter<Buf> newOutputStreamWriter(OutputStream out) {
     return Writer$.MODULE$.fromOutputStream(out);
   }
 
   /**
    * See {@code com.twitter.io.Writer.fromOutputStream}
    */
-  public static Writer.ClosableWriter newOutputStreamWriter(OutputStream out, int bufsize) {
+  public static Writer.ClosableWriter<Buf> newOutputStreamWriter(OutputStream out, int bufsize) {
     return Writer$.MODULE$.fromOutputStream(out, bufsize);
   }
 

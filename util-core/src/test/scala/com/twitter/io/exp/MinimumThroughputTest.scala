@@ -14,7 +14,7 @@ import org.scalatest.mockito.MockitoSugar
 class MinimumThroughputTest extends FunSuite with MockitoSugar {
   test("Reader - negative minBps") {
     intercept[AssertionError] {
-      MinimumThroughput.reader(mock[Reader], -1, Timer.Nil)
+      MinimumThroughput.reader(mock[Reader[Buf]], -1, Timer.Nil)
     }
   }
 
@@ -53,7 +53,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
     Time.withCurrentTimeFrozen { tc =>
       // it'd be great if we could just use a mock.
       // the problem was that stubs are evaluated once, eagerly, at creation time.
-      val underlying = new Reader {
+      val underlying = new Reader[Buf] {
         private var reads = 0
         def discard(): Unit = ()
         def read(n: Int): Future[Option[Buf]] = {
@@ -90,7 +90,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
   }
 
   test("Reader - times out while reading") {
-    val underlying = mock[Reader]
+    val underlying = mock[Reader[Buf]]
     when(underlying.read(1))
       .thenReturn(Future.never)
 
@@ -117,7 +117,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
 
   test("Reader - failures from underlying reader are untouched") {
     val ex = new RuntimeException("└[∵┌]└[ ∵ ]┘[┐∵]┘")
-    val underlying = mock[Reader]
+    val underlying = mock[Reader[Buf]]
     when(underlying.read(1))
       .thenReturn(Future.exception(ex))
 
@@ -135,7 +135,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
 
   test("Reader - pass through EOFs from underlying") {
     val reader = MinimumThroughput.reader(
-      Reader.Null,
+      Reader.empty,
       1d, // min bytes per second
       Timer.Nil
     )
@@ -147,7 +147,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
   }
 
   test("Reader - discard is passed through to underlying") {
-    val underlying = mock[Reader]
+    val underlying = mock[Reader[Buf]]
     val reader = MinimumThroughput.reader(underlying, 1, Timer.Nil)
 
     reader.discard()
@@ -175,7 +175,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
     Time.withCurrentTimeFrozen { tc =>
       // it'd be great if we could just use a mock.
       // the problem was that stubs are evaluated once, eagerly, at creation time.
-      val underlying = new Writer {
+      val underlying = new Writer[Buf] {
         private var writes = 0
         def fail(cause: Throwable): Unit = ()
         def write(buf: Buf): Future[Unit] = {
@@ -212,7 +212,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
 
   test("Writer - times out while writing") {
     val buf = Buf.UsAscii("0")
-    val underlying = mock[Writer]
+    val underlying = mock[Writer[Buf]]
     when(underlying.write(buf))
       .thenReturn(Future.never)
 
@@ -236,7 +236,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
   test("Writer - failures from underlying writer are untouched") {
     val buf = Buf.UsAscii("0")
     val ex = new RuntimeException("ᕕ( ᐛ )ᕗ")
-    val underlying = mock[Writer]
+    val underlying = mock[Writer[Buf]]
     when(underlying.write(buf))
       .thenReturn(Future.exception(ex))
 
@@ -249,7 +249,7 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
   }
 
   test("Writer - fail is passed through to underlying") {
-    val underlying = mock[Writer]
+    val underlying = mock[Writer[Buf]]
 
     val writer = MinimumThroughput.writer(underlying, 1d, Timer.Nil)
 

@@ -5,10 +5,10 @@ import com.twitter.util.{Future, Return, Try, Throw}
 /**
  * Construct a Reader from a Buf.
  */
-private[io] class BufReader(buf: Buf) extends Reader {
+private[io] class BufReader(buf: Buf) extends Reader[Buf] {
   @volatile private[this] var state: Try[Buf] = Return(buf)
 
-  def read(n: Int) = synchronized {
+  def read(n: Int): Future[Option[Buf]] = synchronized {
     state match {
       case Return(buf) =>
         if (buf.isEmpty) Future.None
@@ -21,12 +21,12 @@ private[io] class BufReader(buf: Buf) extends Reader {
     }
   }
 
-  def discard() = synchronized {
+  def discard(): Unit = synchronized {
     state = Throw(new Reader.ReaderDiscarded)
   }
 }
 
 object BufReader {
-  def apply(buf: Buf): Reader =
+  def apply(buf: Buf): Reader[Buf] =
     if (buf.isEmpty) Reader.Null else new BufReader(buf)
 }

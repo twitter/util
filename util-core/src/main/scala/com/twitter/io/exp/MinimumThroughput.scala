@@ -58,9 +58,9 @@ object MinimumThroughput {
 
   }
 
-  private class MinReader(reader: Reader, minBps: Double, timer: Timer)
+  private class MinReader(reader: Reader[Buf], minBps: Double, timer: Timer)
       extends Min(minBps)
-      with Reader {
+      with Reader[Buf] {
     def discard(): Unit = reader.discard()
 
     def read(n: Int): Future[Option[Buf]] = {
@@ -94,9 +94,9 @@ object MinimumThroughput {
     }
   }
 
-  private class MinWriter(writer: Writer, minBps: Double, timer: Timer)
+  private class MinWriter(writer: Writer[Buf], minBps: Double, timer: Timer)
       extends Min(minBps)
-      with Writer {
+      with Writer[Buf] {
     def fail(cause: Throwable): Unit = writer.fail(cause)
 
     override def write(buf: Buf): Future[Unit] = {
@@ -140,7 +140,7 @@ object MinimumThroughput {
    *
    * @note the minimum time allotted to any read is 1 second.
    */
-  def reader(reader: Reader, minBps: Double, timer: Timer): Reader =
+  def reader(reader: Reader[Buf], minBps: Double, timer: Timer): Reader[Buf] =
     new MinReader(reader, minBps, timer)
 
   /**
@@ -152,7 +152,7 @@ object MinimumThroughput {
    *
    * @note the minimum time allotted to any write is 1 second.
    */
-  def writer(writer: Writer, minBps: Double, timer: Timer): Writer =
+  def writer(writer: Writer[Buf], minBps: Double, timer: Timer): Writer[Buf] =
     new MinWriter(writer, minBps, timer)
 
 }

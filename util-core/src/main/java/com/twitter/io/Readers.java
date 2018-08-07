@@ -20,75 +20,79 @@ public final class Readers {
   /**
    * See {@code com.twitter.io.Reader.Null}.
    */
-  public static final Reader NULL = Reader$.MODULE$.Null();
+  public static final Reader<?> NULL = Reader$.MODULE$.Null();
+
+  public static <A> Reader<A> newEmptyReader() {
+    return Reader$.MODULE$.<A>empty();
+  }
 
   /**
    * See {@code com.twitter.io.Reader.fromBuf}.
    */
-  public static Reader newBufReader(Buf buf) {
+  public static Reader<Buf> newBufReader(Buf buf) {
     return Reader$.MODULE$.fromBuf(buf);
   }
 
   /**
    * See {@code com.twitter.io.Reader.readAll}.
    */
-  public static Future<Buf> readAll(Reader r) {
+  public static Future<Buf> readAll(Reader<Buf> r) {
     return Reader$.MODULE$.readAll(r);
   }
 
   /**
    * See {@code com.twitter.io.Reader.concat}.
    */
-  public static Reader concat(AsyncStream<Reader> readers) {
+  public static Reader<Buf> concat(AsyncStream<Reader<Buf>> readers) {
     return Reader$.MODULE$.concat(readers);
   }
 
   /**
    * See {@code com.twitter.io.Reader.copy}.
    */
-  public static Future<BoxedUnit> copy(Reader r, Writer w) {
+  public static Future<BoxedUnit> copy(Reader<Buf> r, Writer<Buf> w) {
     return Reader$.MODULE$.copy(r, w);
   }
 
   /**
    * See {@code com.twitter.io.Reader.copy}.
    */
-  public static Future<BoxedUnit> copy(Reader r, Writer w, int readSize) {
+  public static Future<BoxedUnit> copy(Reader<Buf> r, Writer<Buf> w, int readSize) {
     return Reader$.MODULE$.copy(r, w, readSize);
   }
 
   /**
    * See {@code com.twitter.io.Reader.copyMany}.
    */
-  public static Future<BoxedUnit> copyMany(AsyncStream<Reader> readers, Writer w) {
+  public static Future<BoxedUnit> copyMany(AsyncStream<Reader<Buf>> readers, Writer<Buf> w) {
     return Reader$.MODULE$.copyMany(readers, w);
   }
 
   /**
    * See {@code com.twitter.io.Reader.copyMany}.
    */
-  public static Future<BoxedUnit> copyMany(AsyncStream<Reader> readers, Writer w, int readSize) {
+  public static Future<BoxedUnit> copyMany(AsyncStream<Reader<Buf>> readers, Writer<Buf> w, int readSize) {
     return Reader$.MODULE$.copyMany(readers, w, readSize);
   }
 
   /**
    * See {@code com.twitter.io.Reader.writable()}.
    */
-  public static Reader.Writable writable() {
+  public static Reader.Writable<Buf> writable() {
     return Reader$.MODULE$.writable();
   }
 
   /**
    * See {@code com.twitter.io.Reader.fromFile()}.
    */
-  public static Reader newFileReader(File f) throws FileNotFoundException {
+  public static Reader<Buf> newFileReader(File f) throws FileNotFoundException {
     return Reader$.MODULE$.fromFile(f);
   }
 
   /**
    * See {@code com.twitter.io.Reader.fromStream()}.
    */
-  public static Reader newInputStreamReader(InputStream in) {
+  public static Reader<Buf> newInputStreamReader(InputStream in) {
     return Reader$.MODULE$.fromStream(in);
   }
 

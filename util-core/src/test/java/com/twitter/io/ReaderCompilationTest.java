@@ -23,18 +23,18 @@ public class ReaderCompilationTest {
 
   @Test
   public void testReadAll() {
-    Readers.readAll(Readers.NULL);
+    Readers.readAll(Readers.newEmptyReader());
   }
 
   @Test
   public void testConcat() {
-    Readers.concat(AsyncStream.<Reader>empty());
+    Readers.concat(AsyncStream.<Reader<Buf>>empty());
   }
 
 
   @Test
   public void testWritable() {
-    Reader.Writable w = Readers.writable();
+    Reader.Writable<Buf> w = Readers.writable();
     w.close();
   }
 

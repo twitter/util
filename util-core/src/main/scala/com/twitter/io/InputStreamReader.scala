@@ -11,7 +11,7 @@ import java.io.InputStream
  * reaches the EOF or a call to [[discard()]] or [[close()]].
  */
 class InputStreamReader private[io] (inputStream: InputStream, maxBufferSize: Int, pool: FuturePool)
-    extends Reader
+    extends Reader[Buf]
     with Closable
     with CloseAwaitably {
   private[this] val mutex = new AsyncMutex()

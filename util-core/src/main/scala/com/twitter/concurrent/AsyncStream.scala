@@ -681,7 +681,7 @@ object AsyncStream {
    * Transformation (or lift) from [[Reader]] into `AsyncStream[Buf]`, where each [[Buf]]
    * has size up to `chunkSize`.
    */
-  def fromReader(r: Reader, chunkSize: Int = Int.MaxValue): AsyncStream[Buf] =
+  def fromReader(r: Reader[Buf], chunkSize: Int = Int.MaxValue): AsyncStream[Buf] =
     fromFuture(r.read(chunkSize)).flatMap {
       case Some(buf) => buf +:: fromReader(r, chunkSize)
       case None => AsyncStream.empty[Buf]

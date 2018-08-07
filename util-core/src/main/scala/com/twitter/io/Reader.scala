@@ -5,10 +5,13 @@ import com.twitter.util._
 import java.io.{File, FileInputStream, FileNotFoundException, InputStream, OutputStream}
 
 /**
- * A Reader represents a stream of bytes, read in discrete chunks.
+ * A Reader represents a stream of `A`s.
+ *
  * Readers permit at most one outstanding read.
+ *
+ * @tparam A the type of objects produced by this reader
  */
-trait Reader {
+trait Reader[+A] {
 
   /**
    * Asynchronously read at most `n` bytes from the byte stream. The
@@ -18,7 +21,7 @@ trait Reader {
    *
    * A result of None indicates EOF.
    */
-  def read(n: Int): Future[Option[Buf]]
+  def read(n: Int): Future[Option[A]]
 
   /**
    * Discard this reader: its output is no longer required.
@@ -28,15 +31,17 @@ trait Reader {
 
 object Reader {
 
-  val Null: Reader = new Reader {
-    def read(n: Int): Future[Option[Buf]] = Future.None
+  val Null: Reader[Nothing] = new Reader[Nothing] {
+    def read(n: Int): Future[Option[Nothing]] = Future.None
     def discard(): Unit = ()
   }
+
+  def empty[A]: Reader[A] = Null.asInstanceOf[Reader[A]]
 
   /**
    * Read the entire bytestream presented by `r`.
    */
-  def readAll(r: Reader): Future[Buf] = {
+  def readAll(r: Reader[Buf]): Future[Buf] = {
     def loop(left: Buf): Future[Buf] =
       r.read(Int.MaxValue).flatMap {
         case Some(right) => loop(left concat right)
@@ -49,7 +54,7 @@ object Reader {
   /**
    * Reader from a Buf.
    */
-  def fromBuf(buf: Buf): Reader = BufReader(buf)
+  def fromBuf(buf: Buf): Reader[Buf] = BufReader(buf)
 
   class ReaderDiscarded extends Exception("This writer's reader has been discarded")
 
@@ -79,7 +84,7 @@ object Reader {
    *   }
    * }}}
    */
-  trait Writable extends Reader with Writer with Closable
+  trait Writable[A] extends Reader[A] with Writer[A] with Closable
 
   private sealed trait State
 
@@ -121,7 +126,7 @@ object Reader {
    *
    * @see Readers.writable() for a Java API.
    */
-  def writable(): Writable = new Writable {
+  def writable(): Writable[Buf] = new Writable[Buf] {
     // thread-safety provided by synchronization on `this`
     private[this] var state: State = Idle
 
@@ -266,7 +271,7 @@ object Reader {
    */
   @throws(classOf[FileNotFoundException])
   @throws(classOf[SecurityException])
-  def fromFile(f: File): Reader =
+  def fromFile(f: File): Reader[Buf] =
     fromStream(new FileInputStream(f))
 
   /**
@@ -277,20 +282,20 @@ object Reader {
    *
    * @see `Readers.fromStream` for a Java API
    */
-  def fromStream(s: InputStream): Reader =
+  def fromStream(s: InputStream): Reader[Buf] =
     InputStreamReader(s)
 
   /**
    * Convenient abstraction to read from a stream of Readers as if it were a
    * single Reader.
    */
-  def concat(readers: AsyncStream[Reader]): Reader = {
+  def concat(readers: AsyncStream[Reader[Buf]]): Reader[Buf] = {
     val target = Reader.writable()
     val f = copyMany(readers, target).respond {
       case Throw(exc) => target.fail(exc)
       case _ => target.close()
     }
-    new Reader {
+    new Reader[Buf] {
       def read(n: Int): Future[Option[Buf]] = target.read(n)
       def discard(): Unit = {
         // We have to do this so that when the the target is discarded we can
@@ -316,7 +321,7 @@ object Reader {
    *
    * @param bufsize The number of bytes to read each time.
    */
-  def copyMany(readers: AsyncStream[Reader], target: Writer, bufsize: Int): Future[Unit] =
+  def copyMany(readers: AsyncStream[Reader[Buf]], target: Writer[Buf], bufsize: Int): Future[Unit] =
     readers.foreachF(Reader.copy(_, target, bufsize))
 
   /**
@@ -327,7 +332,7 @@ object Reader {
    * Reader.copyMany(readers, writer) ensure writer.close()
    * }}}
    */
-  def copyMany(readers: AsyncStream[Reader], target: Writer): Future[Unit] =
+  def copyMany(readers: AsyncStream[Reader[Buf]], target: Writer[Buf]): Future[Unit] =
     copyMany(readers, target, Writer.BufferSize)
 
   /**
@@ -341,7 +346,7 @@ object Reader {
    *
    * @param n The number of bytes to read on each refill of the Writer.
    */
-  def copy(r: Reader, w: Writer, n: Int): Future[Unit] = {
+  def copy(r: Reader[Buf], w: Writer[Buf], n: Int): Future[Unit] = {
     def loop(): Future[Unit] =
       r.read(n).flatMap {
         case None => Future.Done
@@ -364,14 +369,14 @@ object Reader {
    * Reader.copy(r, w) ensure w.close()
    * }}}
    */
-  def copy(r: Reader, w: Writer): Future[Unit] = copy(r, w, Writer.BufferSize)
+  def copy(r: Reader[Buf], w: Writer[Buf]): Future[Unit] = copy(r, w, Writer.BufferSize)
 }
 
 /**
  * A Writer represents a sink for a stream of bytes, providing
  * a convenient interface for the producer of such streams.
  */
-trait Writer {
+trait Writer[-A] {
 
   /**
    * Write a chunk. The returned future is completed
@@ -380,7 +385,7 @@ trait Writer {
    * Only one outstanding `write` is permitted, thus
    * backpressure is asserted.
    */
-  def write(buf: Buf): Future[Unit]
+  def write(buf: A): Future[Unit]
 
   /**
    * Indicate that the producer of the bytestream has
@@ -399,9 +404,11 @@ object Writer {
    * where writing to the [[Writer]] is nonsensical such as the [[Writer]] on the
    * `Response` returned by the Finagle HTTP client.
    */
-  val FailingWriter: ClosableWriter = new ClosableWriter {
+  val FailingWriter: Writer[Buf] with Closable = fail[Buf]
+
+  def fail[A]: Writer[A] with Closable = new Writer[A] with Closable {
+    def write(buf: A): Future[Unit] = Future.exception(new IllegalStateException("NullWriter"))
     def fail(cause: Throwable): Unit = ()
-    def write(buf: Buf): Future[Unit] = Future.exception(new IllegalStateException("NullWriter"))
     def close(deadline: Time): Future[Unit] = Future.Done
   }
 
@@ -410,7 +417,7 @@ object Writer {
    *
    * Exists primarily for Java compatibility.
    */
-  trait ClosableWriter extends Writer with Closable
+  trait ClosableWriter[A] extends Writer[A] with Closable
 
   val BufferSize: Int = 4096
 
@@ -423,7 +430,7 @@ object Writer {
    *
    * @param bufsize Size of the copy buffer between Writer and OutputStream.
    */
-  def fromOutputStream(out: OutputStream, bufsize: Int): ClosableWriter =
+  def fromOutputStream(out: OutputStream, bufsize: Int): ClosableWriter[Buf] =
     new OutputStreamWriter(out, bufsize)
 
   /**
@@ -433,6 +440,6 @@ object Writer {
    * behavior is identical to multiple threads calling `write` on the underlying
    * OutputStream.
    */
-  def fromOutputStream(out: OutputStream): ClosableWriter =
+  def fromOutputStream(out: OutputStream): ClosableWriter[Buf] =
     fromOutputStream(out, BufferSize)
 }
