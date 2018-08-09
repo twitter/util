@@ -34,7 +34,7 @@ public class ReaderCompilationTest {
 
   @Test
   public void testWritable() {
-    Reader.Writable<Buf> w = Readers.writable();
+    Pipe<Buf> w = Readers.writable();
     w.close();
   }
 

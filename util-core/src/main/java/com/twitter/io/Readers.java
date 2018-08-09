@@ -78,7 +78,7 @@ public final class Readers {
   /**
    * See {@code com.twitter.io.Reader.writable()}.
    */
-  public static Reader.Writable<Buf> writable() {
+  public static Pipe<Buf> writable() {
     return Reader$.MODULE$.writable();
   }
 
