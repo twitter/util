@@ -70,45 +70,6 @@ class ReaderTest
     }
   }
 
-  test("Writer.fromOutputStream - close") {
-    val w = Writer.fromOutputStream(new ByteArrayOutputStream)
-    w.close()
-    intercept[IllegalStateException] { Await.result(w.write(Buf.Empty)) }
-  }
-
-  test("Writer.fromOutputStream - fail") {
-    val w = Writer.fromOutputStream(new ByteArrayOutputStream)
-    w.fail(new Exception)
-    intercept[Exception] { Await.result(w.write(Buf.Empty)) }
-  }
-
-  test("Writer.fromOutputStream - error") {
-    val os = new OutputStream {
-      def write(b: Int): Unit = ()
-      override def write(b: Array[Byte], n: Int, m: Int): Unit = throw new Exception
-    }
-    val f = Writer.fromOutputStream(os).write(Buf.Utf8("."))
-    intercept[Exception] { Await.result(f) }
-  }
-
-  test("Writer.fromOutputStream") {
-    val closep = new Promise[Unit]
-    val writep = new Promise[Array[Byte]]
-    val os = new OutputStream {
-      def write(b: Int): Unit = ()
-      override def write(b: Array[Byte], n: Int, m: Int): Unit = writep.setValue(b)
-      override def close(): Unit = closep.setDone()
-    }
-    val w = Writer.fromOutputStream(os)
-    assert(!writep.isDefined)
-    assert(!closep.isDefined)
-    Await.ready(w.write(Buf.Utf8(".")))
-    assert(writep.isDefined)
-    assert(!closep.isDefined)
-    Await.ready(w.close())
-    assert(closep.isDefined)
-  }
-
   test("Reader.concat") {
     forAll { (ss: List[String]) =>
       val readers = ss.map { s =>
