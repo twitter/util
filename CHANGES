@@ -6,6 +6,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 
+New Features:
+
+  * util-security: Add `NullSslSession` related objects for use with non-existent
+    `SSLSession`s.  ``PHAB_ID=D201421``
+
 API Changes:
 
   * util-core: `c.t.io.Reader` and `c.t.io.Writer` are now abstracted over the type
