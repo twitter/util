@@ -69,7 +69,7 @@ trait Logging {
    * Return the name of the underlying [[com.twitter.util.logging.Logger]]
    * @return a String name
    */
-  protected def loggerName = logger.name
+  protected def loggerName: String = logger.name
 
   /* Trace */
 
@@ -86,7 +86,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def trace(marker: Marker, message: => Any): Unit =
-    if (isTraceEnabled) logger.trace(marker, message)
+    if (isTraceEnabled(marker)) logger.trace(marker, message)
 
   /** $log */
   protected[this] def trace(message: => Any, cause: Throwable): Unit =
@@ -94,7 +94,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def trace(marker: Marker, message: => Any, cause: Throwable): Unit =
-    if (isTraceEnabled) logger.trace(marker, message, cause)
+    if (isTraceEnabled(marker)) logger.trace(marker, message, cause)
 
   /** $logResult */
   protected[this] def traceResult[T](message: => String)(fn: => T): T = {
@@ -118,7 +118,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def debug(marker: Marker, message: => Any): Unit =
-    if (isDebugEnabled) logger.debug(marker, message)
+    if (isDebugEnabled(marker)) logger.debug(marker, message)
 
   /** $log */
   protected[this] def debug(message: => Any, cause: Throwable): Unit =
@@ -126,7 +126,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def debug(marker: Marker, message: => Any, cause: Throwable): Unit =
-    if (isDebugEnabled) logger.debug(marker, message, cause)
+    if (isDebugEnabled(marker)) logger.debug(marker, message, cause)
 
   /** $logResult */
   protected[this] def debugResult[T](message: => String)(fn: => T): T = {
@@ -150,7 +150,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def info(marker: Marker, message: => Any): Unit =
-    if (isInfoEnabled) logger.info(marker, message)
+    if (isInfoEnabled(marker)) logger.info(marker, message)
 
   /** $log */
   protected[this] def info(message: => Any, cause: Throwable): Unit =
@@ -158,7 +158,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def info(marker: Marker, message: => Any, cause: Throwable): Unit =
-    if (isInfoEnabled) logger.info(marker, message, cause)
+    if (isInfoEnabled(marker)) logger.info(marker, message, cause)
 
   /** $logResult */
   protected[this] def infoResult[T](message: => String)(fn: => T): T = {
@@ -182,7 +182,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def warn(marker: Marker, message: => Any): Unit =
-    if (isWarnEnabled) logger.warn(marker, message)
+    if (isWarnEnabled(marker)) logger.warn(marker, message)
 
   /** $log */
   protected[this] def warn(message: => Any, cause: Throwable): Unit =
@@ -190,7 +190,7 @@ trait Logging {
 
   /** $logMarker */
   protected[this] def warn(marker: Marker, message: => Any, cause: Throwable): Unit =
-    if (isWarnEnabled) logger.warn(marker, message, cause)
+    if (isWarnEnabled(marker)) logger.warn(marker, message, cause)
 
   /** $logResult */
   protected[this] def warnResult[T](message: => String)(fn: => T): T = {
@@ -212,17 +212,17 @@ trait Logging {
   protected[this] def error(message: => Any): Unit =
     if (isErrorEnabled) logger.error(message)
 
+  /** $logMarker */
+  protected[this] def error(marker: Marker, message: => Any): Unit =
+    if (isErrorEnabled(marker)) logger.error(marker, message)
+
   /** $log */
   protected[this] def error(message: => Any, cause: Throwable): Unit =
     if (isErrorEnabled) logger.error(message, cause)
 
   /** $logMarker */
-  protected[this] def error(marker: Marker, message: => Any): Unit =
-    if (isErrorEnabled) logger.error(marker, message)
-
-  /** $logMarker */
   protected[this] def error(marker: Marker, message: => Any, cause: Throwable): Unit =
-    if (isErrorEnabled) logger.error(marker, message, cause)
+    if (isErrorEnabled(marker)) logger.error(marker, message, cause)
 
   /** $logResult */
   protected[this] def errorResult[T](message: => String)(fn: => T): T = {

@@ -20,6 +20,9 @@ API Changes:
   * util-core: `c.t.io.Reader.Writable` is now `c.t.io.Pipe`. Both `Writable` type and
     its factory method are deprecated; use `new Pipe[A]` instead.  ``PHAB_ID=D199536``
 
+  * util-slf4j-api: Ensure that marker information is used when determining if log
+    level is enabled for methods which support markers. ``PHAB_ID=D202387``
+
 18.8.0  2018-08-06
 
 Bug Fixes:

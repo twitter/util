@@ -130,11 +130,11 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
 
   /** $logMarker */
   def trace(marker: Marker, message: String): Unit =
-    if (underlying.isTraceEnabled) underlying.trace(marker, message)
+    if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message)
 
   /** $logMarker */
   def trace(marker: Marker, message: String, cause: Throwable): Unit =
-    if (underlying.isTraceEnabled) underlying.trace(marker, message, cause)
+    if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message, cause)
 
   /** $logWith */
   def traceWith(message: String, args: AnyRef*): Unit =
@@ -147,9 +147,9 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
   /** $logWithMarker */
   def traceWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
-      if (underlying.isTraceEnabled) underlying.trace(marker, message)
+      if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message)
     } else {
-      if (underlying.isTraceEnabled) underlying.trace(marker, message, args: _*)
+      if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message, args: _*)
     }
 
   /* Debug */
@@ -171,11 +171,11 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
 
   /** $logMarker */
   def debug(marker: Marker, message: String): Unit =
-    if (underlying.isDebugEnabled) underlying.debug(marker, message)
+    if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message)
 
   /** $logMarker */
   def debug(marker: Marker, message: String, cause: Throwable): Unit =
-    if (underlying.isDebugEnabled) underlying.debug(marker, message, cause)
+    if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message, cause)
 
   /** $logWith */
   def debugWith(message: String, args: AnyRef*): Unit =
@@ -188,9 +188,9 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
   /** $logWithMarker */
   def debugWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
-      if (underlying.isDebugEnabled) underlying.debug(marker, message)
+      if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message)
     } else {
-      if (underlying.isDebugEnabled) underlying.debug(marker, message, args: _*)
+      if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message, args: _*)
     }
 
   /* Info */
@@ -212,11 +212,11 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
 
   /** $logMarker */
   def info(marker: Marker, message: String): Unit =
-    if (underlying.isInfoEnabled) underlying.info(marker, message)
+    if (underlying.isInfoEnabled(marker)) underlying.info(marker, message)
 
   /** $logMarker */
   def info(marker: Marker, message: String, cause: Throwable): Unit =
-    if (underlying.isInfoEnabled) underlying.info(marker, message, cause)
+    if (underlying.isInfoEnabled(marker)) underlying.info(marker, message, cause)
 
   /** $logWith */
   def infoWith(message: String, args: AnyRef*): Unit =
@@ -229,9 +229,9 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
   /** $logWithMarker */
   def infoWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
-      if (underlying.isInfoEnabled) underlying.info(marker, message)
+      if (underlying.isInfoEnabled(marker)) underlying.info(marker, message)
     } else {
-      if (underlying.isInfoEnabled) underlying.info(marker, message, args: _*)
+      if (underlying.isInfoEnabled(marker)) underlying.info(marker, message, args: _*)
     }
 
   /* Warn */
@@ -253,11 +253,11 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
 
   /** $logMarker */
   def warn(marker: Marker, message: String): Unit =
-    if (underlying.isWarnEnabled) underlying.warn(marker, message)
+    if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message)
 
   /** $logMarker */
   def warn(marker: Marker, message: String, cause: Throwable): Unit =
-    if (underlying.isWarnEnabled) underlying.warn(marker, message, cause)
+    if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message, cause)
 
   /** $logWith */
   def warnWith(message: String, args: AnyRef*): Unit =
@@ -270,9 +270,9 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
   /** $logWithMarker */
   def warnWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
-      if (underlying.isWarnEnabled) underlying.warn(marker, message)
+      if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message)
     } else {
-      if (underlying.isWarnEnabled) underlying.warn(marker, message, args: _*)
+      if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message, args: _*)
     }
 
   /* Error */
@@ -294,11 +294,11 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
 
   /** $logMarker */
   def error(marker: Marker, message: String): Unit =
-    if (underlying.isErrorEnabled) underlying.error(marker, message)
+    if (underlying.isErrorEnabled(marker)) underlying.error(marker, message)
 
   /** $logMarker */
   def error(marker: Marker, message: String, cause: Throwable): Unit =
-    if (underlying.isErrorEnabled) underlying.error(marker, message, cause)
+    if (underlying.isErrorEnabled(marker)) underlying.error(marker, message, cause)
 
   /** $logWith */
   def errorWith(message: String, args: AnyRef*): Unit =
@@ -311,8 +311,8 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
   /** $logWithMarker */
   def errorWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
-      if (underlying.isErrorEnabled) underlying.error(marker, message)
+      if (underlying.isErrorEnabled(marker)) underlying.error(marker, message)
     } else {
-      if (underlying.isErrorEnabled) underlying.error(marker, message, args: _*)
+      if (underlying.isErrorEnabled(marker)) underlying.error(marker, message, args: _*)
     }
 }
