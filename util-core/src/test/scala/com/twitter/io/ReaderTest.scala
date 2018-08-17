@@ -2,8 +2,9 @@ package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
 import com.twitter.conversions.time._
-import com.twitter.util.{Await, Future, Promise}
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, OutputStream}
+import com.twitter.util.{Await, Awaitable, Future, Promise}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
@@ -19,6 +20,8 @@ class ReaderTest
   private def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
   private def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
 
+  private def await[T](t: Awaitable[T]): T = Await.result(t, 5.seconds)
+
   private def toSeq(b: Option[Buf]): Seq[Byte] = b match {
     case None => fail("Expected full buffer")
     case Some(buf) =>
@@ -31,7 +34,7 @@ class ReaderTest
 
   private def assertReadWhileReading(r: Reader[Buf]): Unit = {
     val f = r.read(1)
-    intercept[IllegalStateException] { Await.result(r.read(1)) }
+    intercept[IllegalStateException] { await(r.read(1)) }
     assert(!f.isDefined)
   }
 
@@ -39,9 +42,9 @@ class ReaderTest
     val f = r.read(1)
     assert(!f.isDefined)
     p.setException(new Exception)
-    intercept[Exception] { Await.result(f) }
-    intercept[Exception] { Await.result(r.read(0)) }
-    intercept[Exception] { Await.result(r.read(1)) }
+    intercept[Exception] { await(f) }
+    intercept[Exception] { await(r.read(0)) }
+    intercept[Exception] { await(r.read(1)) }
   }
 
   test("Reader.copy - source and destination equality") {
@@ -58,7 +61,7 @@ class ReaderTest
           }
         }
 
-      Await.result(Future.join(f, g))
+      await(Future.join(f, g))
 
       val b = new ByteArrayOutputStream
       b.write(p)
@@ -76,7 +79,7 @@ class ReaderTest
         BufReader(Buf.Utf8(s))
       }
       val buf = Reader.readAll(Reader.concat(AsyncStream.fromSeq(readers)))
-      Await.result(buf) should equal(Buf.Utf8(ss.mkString))
+      await(buf) should equal(Buf.Utf8(ss.mkString))
     }
   }
 
@@ -123,7 +126,7 @@ class ReaderTest
     }
     val combined = Reader.concat(head +:: tail)
     val buf = Reader.readAll(combined)
-    intercept[Exception] { Await.result(buf) }
+    intercept[Exception] { await(buf) }
     assert(!p.isDefined)
   }
 
@@ -131,7 +134,7 @@ class ReaderTest
     val in = spy(new ByteArrayInputStream(arr(0, 10)))
     val r = Reader.fromStream(in)
     val f = Reader.readAll(r)
-    assert(Await.result(f, 5.seconds) == buf(0, 10))
+    assert(await(f) == buf(0, 10))
     eventually {
       verify(in).close()
     }
@@ -145,4 +148,37 @@ class ReaderTest
       verify(in).close()
     }
   }
+
+  test("Reader.fromAsyncStream completes when stream is empty") {
+    val as = AsyncStream(buf(1, 10))
+    val r = Reader.fromAsyncStream(as)
+    val f = Reader.readAll(r)
+    assert(await(f) == buf(1, 10))
+  }
+
+  test("Reader.fromAsyncStream fails on exceptional stream") {
+    val as = AsyncStream.exception(new Exception())
+    val r = Reader.fromAsyncStream(as)
+    val f = Reader.readAll(r)
+    intercept[Exception] { await(f) }
+  }
+
+  test("Reader.fromAsyncStream only evaluates tail when buffer is exhausted") {
+    val tailEvaluated = new AtomicBoolean(false)
+    def tail: AsyncStream[Buf] = {
+      tailEvaluated.set(true)
+      AsyncStream.empty
+    }
+    val as = AsyncStream.mk(buf(0, 10), tail)
+    val r = Reader.fromAsyncStream(as)
+
+    // partially read the buffer
+    await(r.read(9))
+    assert(!tailEvaluated.get())
+
+    // read the rest of the buffer
+    await(r.read(2))
+    assert(tailEvaluated.get())
+  }
+
 }

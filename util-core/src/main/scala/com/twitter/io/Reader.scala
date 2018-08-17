@@ -121,6 +121,20 @@ object Reader {
     InputStreamReader(s)
 
   /**
+   * Allow [[AsyncStream]] to be consumed as a [[Reader]]
+   */
+  def fromAsyncStream[A <: Buf](as: AsyncStream[A]): Reader[A] = {
+    val pipe = new Pipe[A]()
+    // orphan the Future but allow it to clean up
+    // the Pipe IF the stream ever finishes or fails
+    as.foreachF(pipe.write).respond {
+      case Return(_) => pipe.close()
+      case Throw(e) => pipe.fail(e)
+    }
+    pipe
+  }
+
+  /**
    * Convenient abstraction to read from a stream of Readers as if it were a
    * single Reader.
    */

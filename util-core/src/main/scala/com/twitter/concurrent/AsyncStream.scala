@@ -678,13 +678,12 @@ object AsyncStream {
     }
 
   /**
-   * Transformation (or lift) from [[Reader]] into `AsyncStream[Buf]`, where each [[Buf]]
-   * has size up to `chunkSize`.
+   * Transformation (or lift) from [[Reader]] into `AsyncStream`.
    */
-  def fromReader(r: Reader[Buf], chunkSize: Int = Int.MaxValue): AsyncStream[Buf] =
+  def fromReader[A <: Buf](r: Reader[A], chunkSize: Int = Int.MaxValue): AsyncStream[A] =
     fromFuture(r.read(chunkSize)).flatMap {
       case Some(buf) => buf +:: fromReader(r, chunkSize)
-      case None => AsyncStream.empty[Buf]
+      case None => AsyncStream.empty[A]
     }
 
   /**
