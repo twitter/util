@@ -76,10 +76,10 @@ public final class Readers {
   }
 
   /**
-   * See {@code com.twitter.io.Reader.writable()}.
+   * See {@code com.twitter.io.Pipe}.
    */
   public static Pipe<Buf> writable() {
-    return Reader$.MODULE$.writable();
+    return new Pipe<>();
   }
 
   /**

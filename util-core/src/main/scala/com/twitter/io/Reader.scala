@@ -139,7 +139,7 @@ object Reader {
    * single Reader.
    */
   def concat(readers: AsyncStream[Reader[Buf]]): Reader[Buf] = {
-    val target = Reader.writable()
+    val target = new Pipe[Buf]()
     val f = copyMany(readers, target).respond {
       case Throw(exc) => target.fail(exc)
       case _ => target.close()

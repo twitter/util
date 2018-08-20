@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.io.{Buf, Reader}
+import com.twitter.io.{Buf, Pipe}
 import com.twitter.util.{Await, Future, StdBenchAnnotations}
 import org.openjdk.jmh.annotations.{Benchmark, Param, Scope, State}
 
@@ -26,7 +26,7 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
 
   private[this] val b = new Broker[Buf]
   private[this] val q = new AsyncQueue[Buf]
-  private[this] val r = Reader.writable()
+  private[this] val r = new Pipe[Buf]()
 
   private[this] def sink(buf: Any): Future[Boolean] = Future.True
   private[this] def source(): Future[Buf] = Future.value(buf)
