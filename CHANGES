@@ -5,13 +5,19 @@ The changelog style is adapted from Apache Lucene.
 Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in commits.
 
 Unreleased
+----------
 
-New Features:
+New Features
+~~~~~~~~~~~~
+
+  * util-core: Added Reader#fromAsyncStream for consuming an `AsyncStream` as a `Reader`.
+    ``PHAB_ID=D202334``
 
   * util-security: Add `NullSslSession` related objects for use with non-existent
     `SSLSession`s.  ``PHAB_ID=D201421``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: `c.t.io.Reader` and `c.t.io.Writer` are now abstracted over the type
     they produce/consume (`Reader[A]` and `Writer[A]`) and are no longer fixed to `Buf`.
@@ -23,29 +29,30 @@ API Changes:
   * util-slf4j-api: Ensure that marker information is used when determining if log
     level is enabled for methods which support markers. ``PHAB_ID=D202387``
 
-New Features:
+18.8.0
+-------
 
-  * util-core: Added Reader#fromAsyncStream for consuming an `AsyncStream` as a `Reader`.
-    ``PHAB_ID=D202334``
-
-18.8.0  2018-08-06
-
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: Fixed an issue with Future.joinWith where it waits for
     completion of both futures even if one has failed. This also affects
     the join method, which is implemented in terms of joinWith. ``PHAB_ID=D191342``
 
-18.7.0  2018-07-10
+18.7.0
+-------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Local.Context used to be a type alias for Array[Option[_]], now it is
     a new key-value liked structure. ``PHAB_ID=D182478``
 
-18.6.0  2018-06-14
+18.6.0
+-------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-app: Allow users a way to override the argument parsing behavior in
     `c.t.app.App#nonExitingMain` which was inlined. Users can override `parseArgs`
@@ -57,7 +64,8 @@ API Changes:
   * util-class-preloader: This library has been removed since it deprecated. We
     no longer recommend that people do this. ``PHAB_ID=D174250``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-app: Fix issue where in some environments, `URLClassLoader#getURLs` can
     return null, failing LoadService from initializing properly
@@ -66,20 +74,24 @@ Bug Fixes:
     at least one application server, the default returned is null, thus we should be more
     resilient against this possibility. Fixes Finagle #695. ``PHAB_ID=D181152``
 
-Deprecations:
+Deprecations
+~~~~~~~~~~~~
 
   * util-reflect: This library has been deprecated since it is legacy code and shouldn't
     be used for new services. We no longer think this facility is the right way to do it
     and encourage you to provide your own forwarders. ``PHAB_ID=D174250``
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: added #suppressGracefulShutdownErrors method to optionally suppress exceptions
     during graceful shutdown from bubbling up. ``PHAB_ID=D176970``
 
-18.5.0  2018-05-07
+18.5.0
+-------
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: `c.t.concurrent.AsyncSemaphore` no longer completes promises while holding
     its intrinsic lock. ``PHAB_ID=D167434``
@@ -92,9 +104,11 @@ Bug Fixes:
     is missing from hashing.
     ``PHAB_ID=D164915``
 
-18.4.0  2018-04-10
+18.4.0
+-------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: Add the ability to bind specific implementations for `LoadService.apply`
     via `App.loadServiceBindings`. ``PHAB_ID=D146554``
@@ -102,7 +116,8 @@ New Features:
   * util-core: Introduce the `ClosableOnce` trait which extends the guarantees of
     `Closable` to include idempotency of the `close` method. ``PHAB_ID=D152000``
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-app: Add visibility for NonFatal exceptions during exiting of `c.t.app.App`.
     Added visibility into any NonFatal exceptions which occur during the closing of
@@ -123,9 +138,11 @@ Runtime Behavior Changes:
     ```
     ``PHAB_ID=D144091``
 
-18.3.0  2018-03-05
+18.3.0
+-------
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-app: Ensure that any flag parsing error reason is written to `System.err`
     before attempting to print flag usage. In the event that collecting flags for
@@ -138,7 +155,8 @@ Runtime Behavior Changes:
   * util-core: Wrap the function passed to `Closable.make` in a try/catch and return
     a `Future.exception` over any NonFatal exception. ``PHAB_ID=D142086``
 
-Deprecations:
+Deprecations
+~~~~~~~~~~~~
 
   * util-core: RichU64* APIs are deprecated. Use Java 8 Unsigned Long API instead:
     ``PHAB_ID=D137893``
@@ -146,9 +164,11 @@ Deprecations:
     - `new RichU64String("123").toU64Long` -> `Long.parseUnsignedInt`
     - `new RichU64Long(123L).toU64HexString` -> `Long.toHexString` (no leading zeros)
 
-18.2.0  2018-02-05
+18.2.0
+-------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Added implicit conversion for percentage specified as "x.percent"
     to a fractional Double in `c.t.conversions.percent`. ``PHAB_ID=D128792``
@@ -156,46 +176,56 @@ New Features:
   * util-tunable: Add deserializer for `c.t.u.StorageUnit` to JsonTunableMapper
     ``PHAB_ID=D132368``
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-app: When `c.t.a.App.exitOnError` is called, it now gives `close`
     an opportunity to clean up resources before exiting with an error.
     ``PHAB_ID=D129437``
 
-18.1.0  2018-01-17
+18.1.0
+-------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-security: Added `c.t.util.security.X509CrlFile` for reading
     Certificate Revocation List PEM formatted `X509CRL` files.
     ``PHAB_ID=D127700``
 
-17.12.0  2017-12-08
+17.12.0
+-------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-collection: `c.t.util.SetMaker` has been removed.
     Direct usage of Guava is recommended if needed. ``PHAB_ID=D116852``
 
-17.11.0  2017-11-15
+17.11.0
+-------
 
-Dependencies:
+Dependencies
+~~~~~~~~~~~~
 
   * Guava has been removed as dependency from all modules except the
     'util-cache-guava' module. ``PHAB_ID=D117039``
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-security: Added `c.t.util.security.PrivateKeyFile` for reading PKCS#8
     PEM formatted `PrivateKey` files. ``PHAB_ID=D105266``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: `c.t.io.BufByteWriter.fixed(size).owned()` will only represent bytes
     explicitly written instead of the full size of the backing array, `size`.
     ``PHAB_ID=D112938``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-cache: The Guava dependency and its associated implementations have been
     moved to a new module, 'util-cache-guava'. ``PHAB_ID=D117039``
@@ -203,28 +233,33 @@ API Changes:
   * util-cache: `c.t.cache.EvictingCache.lazily` now takes a `FutureCache`
     instead of an implementation specific cache. ``PHAB_ID=D117039``
 
-17.10.0  2017-10-26
+17.10.0
+-------
 
 Release Version Changes:
   * From now on, release versions will be based on release date in the format of
     YY.MM.x where x is a patch number. ``PHAB_ID=D101244``
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-intellij: Create util-intellij project and publish IntelliJ capture
     points plugin for debugging asynchronous stack traces of code using Twitter
     Futures in Scala 2.11.11. ``PHAB_ID=D96782``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-app: c.t.app.Flag.let and letClear are now generic in their return type.
     ``PHAB_ID=D93951``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
   * util-core: Fix Buf.ByteArray.Shared.apply(bytes,begin,end) constructor function.
     ``PHAB_ID=D100648``
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-core: c.t.io.Buf.ByteArray.[Owned.Shared](Array[Byte], begin, end) now
     validates its input arguments. ``PHAB_ID=D100648``
@@ -239,8 +274,10 @@ Runtime Behavior Changes:
     the validity period given in the certificate. ``PHAB_ID=D88745``
 
 7.1.0  2017-09-06
+------------------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-events: Module has been removed. ``PHAB_ID=D82346``
 
@@ -248,8 +285,10 @@ API Changes:
     specify a global rules set for use in testing. ``PHAB_ID=D83506``
 
 7.0.0  2017-08-15
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Added `c.t.util.SlowProbeProxyTimer` for monitoring the duration
     of execution for timer tasks. ``PHAB_ID=D70279``
@@ -270,7 +309,8 @@ New Features:
     configured values. See https://twitter.github.io/finagle/guide/Configuration.html#tunables
     for details on how these can be used in Finagle. ``PHAB_ID=D80751``.
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: Fix some consistency issues with `c.t.util.ByteReaderImpl`. Advance its
     cursor by the number of bytes consumed via `readBytes(Int)`, not the number specified
@@ -278,7 +318,8 @@ Bug Fixes:
     of bytes specified exceeds the remaining buffer length instead of silently making due
     with the rest of the buffer's contents. ``PHAB_ID=D78301``
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-core: `c.t.util.Closable.sequence` now continues processing
     the `Closables` should any of their closes result in a failed `Future`
@@ -288,7 +329,8 @@ Runtime Behavior Changes:
   * util-events: `com.twitter.util.events.sinkEnabled` now defaults to false
     in preparation for removal in an upcoming release. ``PHAB_ID=D64437``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: ByteWriter has been transformed into a true trait which can now
     be implemented outside of the com.twitter.io package. ``PHAB_ID=D59996``
@@ -310,7 +352,8 @@ API Changes:
     now may optionally take `c.t.f.stats.Verbosity` as a first argument. ``PHAB_ID=D70112``
 
 
-Deprecations:
+Deprecations
+~~~~~~~~~~~~
 
   * util-events: This module is deprecated and will be removed in an upcoming
     release. ``PHAB_ID=D64437``
@@ -322,8 +365,10 @@ Deprecations:
 
 
 6.45.0  2017-06-06
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: Optional resource shutdown sequencing for registered closables
     via `c.t.app.App#closeOnExitLast`. See longer note there for usage.
@@ -339,7 +384,8 @@ New Features:
   * util-core: Added `ByteReader.readUnsignedLongBE` and `ByteReader.readUnsignedLongLE`.
     ``RB_ID=917289``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-collection: Removed deprecated `c.t.u.JMapWrapper`. Use
     `scala.collection.JavaConverters` instead. ``RB_ID=915544``
@@ -371,14 +417,17 @@ API Changes:
   * util-eval: Removed from the project. ``RB_ID=915430``
     https://finagle.github.io/blog/2017/04/06/announce-removals/
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-core: All `Timers` now handle negative or undefined times/durations in uniform way:
     treat them as zeros (i.e., `Time.epoch`, `Duration.Zero`). ``RB_ID=916008``
 
 6.43.0  2017-04-20
+------------------
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-core: `Closable.all(..)` will now catch synchronous exceptions thrown
     by any `Closable.close(..)` invocations, and wrap them in a failed Future.
@@ -388,14 +437,16 @@ Runtime Behavior Changes:
     concurrent iteration but now holds strong references to gauge instances.
     ``RB_ID=911951``
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: `c.t.f.u.BufReader` and `c.t.f.u.BufWriter` have been
     moved from finagle-core to util-core and renamed to
     `c.t.io.ByteReader` and `c.t.io.ByteWriter` respectively. They
     are now also exposed publicly. ``RB_ID=911639``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util: util-zk-commons was removed, since it was only a connector between
     util and commons, which was not widely used.  ``RB_ID=910721``
@@ -404,14 +455,17 @@ API Changes:
     are no longer final. ``RB_ID=914191``
 
 6.42.0  2017-03-10
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Promoted the positional `Buf.Indexed` API to be a first-class
     part of `c.t.io.Buf`. If you have a custom implementation of `Buf` it
     will require some effort to become compatible. ``RB_ID=907231``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-app: Set failFastUntilParsed on created flag added to `c.t.app.Flags`
     via `c.t.app.Flags#add`. ``RB_ID=908804``
@@ -428,13 +482,16 @@ API Changes:
   * util-core: Remove deprecated `c.t.concurrent.ConcurrentMultiMap`. Prefer
     Guava's Multimap. ``RB_ID=907516``
 
-Dependencies:
+Dependencies
+~~~~~~~~~~~~
 
   * util: Bump guava to 19.0. ``RB_ID=907807``
 
 6.41.0  2017-02-03
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: App now exposes `closeOnExit` publicly. ``RB_ID=906890``
 
@@ -457,7 +514,8 @@ New Features:
     is a library that provides a utility to "smartly" install the
     Slf4jBridgeHandler. ``RB_ID=900815``
 
-Runtime Behavior Changes:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Improved performance and allocation rates of some "random access"
     `Buf` operations. ``RB_ID=905253``
@@ -465,19 +523,23 @@ Runtime Behavior Changes:
   * util-core: Standardized argument checking in implementations of
     `c.t.io.Buf.write` and `c.t.io.Buf.slice`. ``RB_ID=899935``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Deprecated `c.t.io.ConcatBuf` which is replaced by
     `c.t.io.Buf.apply(Iterable[Buf])`. ``RB_ID=899623``
 
 6.40.0  2016-12-20
+------------------
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: Fix issue with c.t.concurrent.AsyncStream.mapConcurrent which
     will cause the stream head to be held for life of operation. ``RB_ID=896168``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Deprecated charset constants in `c.t.io.Charsets` have been
     removed. Use java.nio.charset.StandardCharsets instead. ``RB_ID=893542``
@@ -493,13 +555,15 @@ API Changes:
     abstract class: `AbstractBuf`. ``RB_ID=897476``
 
 6.39.0  2016-11-22
+------------------
 
 No Changes
-==========
 
 6.38.0  2016-10-10
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: Java developers can now declare instances of `GlobalFlag`
     from Java. See `c.t.app.JavaGlobalFlag` for details. ``RB_ID=874073``
@@ -516,29 +580,35 @@ New Features:
   * util: No longer need to add an additional resolver that points to maven.twttr.com.
     ``RB_ID=878967``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: `c.t.io.InputStreamReader` and `Readers` created by
     `c.t.io.Reader.fromFile` and `fromStream` now close the underlying
     `InputStream` on reading of EOF and on calls to `Reader.discard`.
     ``RB_ID=873319``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: `c.t.app.GlobalFlag` is now `abstract` to reflect how the class
     is intended to be used. ``RB_ID=875409``
 
 
 6.37.0  2016-09-07
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: Introduce `c.t.app.Flag.letClear` allowing flags to be unset.
     ``RB_ID=868177``
 
 6.36.0  2016-08-25
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: `c.t.util.FuturePool` now optionally exposes metrics on
     their internal state such as active tasks, and completed tasks.
@@ -553,7 +623,8 @@ New Features:
   * util-core: Add Java-friendly API for `StorageUnit`. See `StorageUnit.fromX`
     and `StorageUnit.{times, plus, minus, divide}` methods. ``RB_ID=864546``
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-eval: The compiler reporter is now reset between code check invocations.
     This means that when there is a failure that it is no longer required to reset
@@ -561,8 +632,10 @@ Changes in Runtime Behavior:
     be used. ``RB_ID=859878``
 
 6.35.0  2016-07-07
+------------------
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-codec: StringEncoder no longer depends on apache commons-codec, and
     decode will now throw an exception when it fails to decode a byte, instead
@@ -577,7 +650,8 @@ Changes in Runtime Behavior:
     `java.lang.NoSuchMethodException` is considered non-fatal.
     ``RB_ID=835671``
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-app: `com.twitter.finagle.util.LoadService` has been moved to
     `c.t.app.LoadService` and can now be used without needing a finagle-core
@@ -608,7 +682,8 @@ New Features:
 
   * util-security: Added new project. ``RB_ID=843070``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * Builds are now only for Java 8 and Scala 2.11. See the
     `blog post <https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/>`_
@@ -635,7 +710,8 @@ API Changes:
     to remove a `com.twitter.util.lint.Rule` from the `com.twitter.util.lint.GlobalRules`
     set. ``RB_ID=840753``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: AsyncMeter had a bug where if the burst size was smaller than
     the number of disbursed tokens, it would discard all of the tokens over
@@ -655,8 +731,10 @@ Bug Fixes:
     re-enters with identical input parameters instead of deadlocking.
 
 6.34.0  2016-04-26
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Add `Throwables.unchecked` to help Java users deal with checked
     exceptions. ``RB_ID=811441``
@@ -665,7 +743,8 @@ New Features:
     StatsReceivers that don't delegate to another StatsReceiver with
     `com.twitter.finagle.stats.DelegatingStatsReceiver.all`.  ``RB_ID=819519``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Removed deprecated methods from Buf.scala ``RB_ID=809948``
     - Removed `c.t.io.Buf.ByteArray.apply`, replace usage with `Buf.ByteArray.Owned.apply`.
@@ -682,43 +761,53 @@ API Changes:
   * util-zk-common: Removed `com.twitter.zk.ServerSet`. Use implementations of ServerSets in the
     finagle-serversets project. ``RB_ID=821355``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: Fix memory leak in `Var.apply(T, Event[T])` and `Var.patch`.
     ``RB_ID=809100``
 
 6.33.0  2016-03-10
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: AsyncSemaphore supports closing and draining of waiters via `fail`. ``RB_ID=807590``
 
   * util-core: Add convenience methods `force`, `size`, `sum`, and `withEffect` to `AsyncStream`.
     ``RB_ID=808411``
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
 
   * util-core: Fix nested functions `AsyncStream.++` to avoid stack overflow. ``RB_ID=804408``
 
-Deprecations:
+Deprecations
+~~~~~~~~~~~~
 
   * util-core: `Future.rawException` is deprecated in favor of `Future.exception`.
     ``RB_ID=798223``
 
 6.32.0  2016-02-03
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Add `Future.traverseSequentially`. Take a sequence and sequentially apply a function
     A => Future[B] to each item. ``RB_ID=785091``
 
 6.31.0  2016-02-02
+------------------
 
 NOT RELEASED
 
 6.30.0  2015-12-03
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Introduce an `AsyncMeter` for asynchronously rate limiting to a fixed rate over time.
     It can be used for smoothing out bursty traffic, or for slowing down access to a
@@ -727,7 +816,8 @@ New Features:
   * util-core: Introduce a `TokenBucket` for helping to control the relative rates of two processes,
     or for smoothing out the rate of a single process. ``RB_ID=756333``
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: `Timer` now has final implementations for `schedule` which delegate
     to new protected `scheduleOnce` and `schedulePeriodically` methods. This is
@@ -759,14 +849,17 @@ API Changes:
     reschedules themselves). ``RB_ID=771736``
 
 6.29.0  2015-10-15
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
 
   * util-core: Introduce an optional max capacity to `AsyncQueue`.
     Modified `AsyncQueue.offer` to return a boolean indicating whether or not the
     item was accepted. Added `AsyncQueue.drain(): Try[Queue]`. ``RB_ID=745567`
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Remove deprecated methods from `com.twitter.util.Time` and
     `com.twitter.util.Duration`. ``RB_ID=751771``
@@ -775,7 +868,8 @@ API Changes:
     `Time` manipulation tools in latency-sensitive code when measuring elapsed
     time. ``RB_ID=75268``
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
 
   * util-core: The Scheduler clock stats were decommissioned as they only make sense
     relative to `wallTime` and the tracking error we have experienced `wallTime` and
@@ -790,8 +884,10 @@ Changes in Runtime Behavior:
     ``RB_ID=745567`
 
 6.28.0  2015-09-25
+------------------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: Remove deprecated methods from `com.twitter.util.Var`.
 
@@ -807,15 +903,20 @@ API Changes:
     ``RB_ID=744282``
 
 6.27.0  2015-08-28
+------------------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
 
   * util-core: `TimeFormat` optionally takes a `TimeZone` in the constructor.
     If not provided, it uses UTC.
 
 6.26.0  2015-07-27
+------------------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
   * util-core: `Activity`, `BoundedStack`, `RingBuffer` and `Var` migrated
     off of deprecated `ClassManifest` to `ClassTag`. ``RB_ID=720455``
 
@@ -824,7 +925,9 @@ API Changes:
   * util-core: Removed deprecated methods `Future.void` and `Future$.void()`.
     Use `Future.voided` and `Future$.Void` instead. ``RB_ID=720427``
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
   * util-core: `Promise.forwardInterruptsTo(other)` is a no-op if the
                 other future is fulfilled. ``RB_ID=714420``
 
@@ -833,16 +936,23 @@ Changes in Runtime Behavior:
                  `/admin/events/{recordOn,recordOff}`. ``RB_ID=715712``
 
 6.25.0  2015-06-22
+------------------
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
   * util-events: Enable event sink by default.
 
 6.24.0  2015-04-12
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
+
   * util-core: Introduce AsyncStream, an experimental replacement for Spool.
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
   * util-core: `Future.willEqual()` now returns `Future[Boolean]` instead of
                `Promise[Boolean]`.
 
@@ -862,7 +972,9 @@ API Changes:
   * util-core: `Reader.concat` and `Reader.copyMany` now take an AsyncStream
                argument instead of Spool.
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
   * util-core: Futures still rethrow on fatals, but now also Monitor.handle on
                them.
 
@@ -875,38 +987,54 @@ Changes in Runtime Behavior:
                synchronized on `close`.
 
 6.23.0 2014-12-12
+------------------
 
-New Features:
+New Features
+~~~~~~~~~~~~
+
   * util-core: Add method .flushBatch() to batched future returned by Future.batched()
                that immediately initiates processing of all remaining queued requests
+
   * util-core: Add Future.collect() method that collects over Map's values
+
   * util-stats: Create a new module, `util-stats` to move `finagle-core`
                 StatsReceivers to.  They retain the `com.twitter.finagle`
                 namespace to ease the transition.
 
 Deprecation:
+
   * util-stats: Deprecate `com.twitter.finagle.stats.StatsReceiver#time{,TimeFuture}`.
                 Instead, please use the `com.twitter.finagle.stats.Stat` helpers
                 from scala, and the `com.twitter.finagle.stats.JStats` helpers
                 from java.
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
   * util-cache: Remove unused com.twitter.cache.Mod trait and object
+
   * util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared
+
   * util-core: Remove the com.twitter.util.repository package
+
   * util-core: Change return type of Future.batched() to com.twitter.util.Batcher
 
-Java Compatibility:
+Java Compatibility
+~~~~~~~~~~~~~~~~~~
+
   * util-app: Flaggable is now an abstract class for Java compatibility
+
   * util-core: Make Futures an API entry point for Java users
                (even for methods that take Scala collections)
+
   * util-core: Add compilation tests to track Java compatibility of new API
 
-
 6.22.2  2014-10-29
+------------------
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
   * util-core: Removed `Sieve` example.
+
   * util-core: Introduce new constructors and extractors for Buf types to
                support more efficient, correct uses.  Buf types now come with
                Copied and Direct management interfaces -- Direct tries to
@@ -915,95 +1043,158 @@ API Changes:
                data. Additionally, helpers to support Buf-type coersion have
                been added.
 
-New Features:
+New Features
+~~~~~~~~~~~~
+
   * util-app: add an option so that we can let apps fail fast if reading
               argument before args are parsed.
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
+
   * util: add missing @RunWith annotation
+
   * util-core: Java tests for Duration, Time and Timer
+
   * util-core: Reader.writable.fail: make reentrant
 
-Optimizations:
+Optimizations
+~~~~~~~~~~~~~
+
   * util-core: Slurry of PartialFunction micro-optimizations
 
 6.22.1  2014-10-23
+------------------
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
+
   * util and finagle: fix compiler warnings
 
 Deprecation:
+
   * util-core: Add deprecation of RingBuffer to changelog
+
   * util-core: Removed IVar and IVarField
 
-Documentation:
+Documentation
+~~~~~~~~~~~~~
+
   * util-core: Clarify Scaladoc of `Promise.attached`
+
   * util-core: Add self-type to `Promise.Detachable` and augment Promise Scaladocs
+
   * util-io: Better names for Buf.slice() paramters.
 
-New Features:
+New Features
+~~~~~~~~~~~~
+
   * util-app: Add App registration
+
   * util-cache Add asynchronous cache with TTL
+
   * util-core: Add `Activity.future`
 
-Package factoring:
+Package factoring
+~~~~~~~~~~~~~~~~~
+
   * util-logging: factor out testing code into new package util-test
 
 6.22.0  2014-10-13
+------------------
 
-System Requirements:
+System Requirements
+~~~~~~~~~~~~~~~~~~~
+
   * util-core: prefer Await.result(future.liftToTry) to deprecated methods
+
   * c.t.util.Time: Scope Locals with `Local.let` instead of `save`+`restore`
 
-Changes in Runtime Behavior:
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
   * util-logging:
     - Logging's default handler is now async by default via `com.twitter.logging.QueueingHandler`.
     - Two Flags allowing for customization:
       + `com.twitter.logging.log.async`: Default true, turns this functionality on/off.
       + `com.twitter.logging.log.async.maxsize`: Default 4096, max size of the async buffer.
+
   * util.RingBuffer: fix buffer size on drops
+
   * util-io: Fix Buf.ByteBuffer.slice
+
   * util-core: Future.sleep: short-circuit when duration <= 0
+
   * util-core: IVar and IVarField were removed. Use com.twitter.util.Promise instead because it provides a superset of IVar behavior.
 
-New Features:
+New Features
+~~~~~~~~~~~~
+
   * util-core: introduce Memoize.snappable
+
   * util-app: add Flaggable.ofSet
+
   * util-app: introduce Flag.let
 
-Optimizations:
+Optimizations
+~~~~~~~~~~~~~
+
   * util-core: Perf improvement to ConcatBuf#slice
+
   * util-core: Avoid accumulation of listeners in Future.select
+
   * util-core: Event.filter only 1 call to filter predicate
 
-Bug Fixes:
+Bug Fixes
+~~~~~~~~~
+
   * util-jvm: Fix logging in Jvm.foreachGc
+
   * util-core: document StorageUnit can overflow
+
   * util-core: check Future.proxyTo and Promise.become preconditions
 
-API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
   * util-core: remove Leaky and FutureBenchmark
 
-Documentation:
+Documentation
+~~~~~~~~~~~~~
+
   * util, ostrich, finagle, twitter-server: Remove all trailing spaces
 
-  Package factoring:
+Package factoring
+~~~~~~~~~~~~~~~~~
+
   * Test classes from util-logging were factored into its own package, util-test.
 
-  API Changes:
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
   * util-core: Deprecate `RingBuffer` in favor of Guava's `com.google.common.collect.EvictingQueue`.
 
 6.21.2  2014-09-08
+------------------
+
   * util-cache: Adds a Guava-backed asynchronous cache
+
   * util-core: Fixed FuturePool for NLRCK
+
   * util-core: Improve java friendliness of futures
+
   * util-core: Make register/close on Event() work atomically
+
   * util-core: Reimplement Buf.Utf8 encoder/extractor using io.Charsets
+
   * util-core: storage parse() should be able to handle Long
+
   * util-logging: make Logger immutable & break cyclic dependency on Level
+
   * util: Upgrade to scala_2.10
 
 6.20.0  2014-08-22
+------------------
 
   * util: Enables cross-publishing for 2.11
   * util-app: Log severely if a flag is read at the wrong time
@@ -1015,16 +1206,19 @@ Documentation:
   * util-doc: Fix updatedocs.bash to update new util docs
 
 6.19.0  2014-08-05
+------------------
 
   * util: smattering of minor cleanups in util and finagle
   * util-core: Reader and getContent symmetry
 
 6.18.4  2014-07-31
+------------------
 
   * util-core: Remove confusing NOOP 0.until(5) in Future.collect().
   * util-app: Fix a bug in global flag parsing
 
 6.18.2  2014-07-23
+------------------
 
   * util-core: Fixes a broken sbt test
   * util-core: Log exceptions caught by ChannelStatsHandler
@@ -1033,6 +1227,7 @@ Documentation:
   * util-logging: java-friendly LoggerFactory API
 
 6.18.1  2014-07-08
+------------------
 
   * util: Update README to reflect correct storage units.
   * util-*: Convert all tests in util to scalatest
@@ -1041,6 +1236,7 @@ Documentation:
   * util-io: Create Buf.ByteBuffer to wrap java.nio.ByteBuffer
 
 6.18.0  2014-06-23
+------------------
 
   * util-app: Don't kill the JVM on flag-parsing failure
   * util-app: Improve the Scaladocs for com.twitter.app.Flag and friends
@@ -1054,6 +1250,7 @@ Documentation:
   * util-logging: Add additional handlers to Logging trait
 
 6.17.0  2014-06-04
+------------------
 
   * util: Upgrade dependency versions
   * util-core: Scheduler productivity = cpuTime/wallTime
@@ -1062,12 +1259,14 @@ Documentation:
   * util-core: add `Spool.collectFuture`
 
 6.16.0  2014-05-13
+------------------
 
   * util-app: Add flag for configuring acceptance of undefined flags
   * util-app: Minor c.t.app.ClassPath/c.t.f.util.LoadService cleanup
   * util-core: Adds Time.sleep for testing sleeping code
 
 6.15.0  2014-04-29
+------------------
 
   * util-app: enforce close grace period
   * util-core: special case buf.slice(0, buf.length)
@@ -1078,6 +1277,7 @@ Documentation:
   * util-core: make LocalScheduler non-private for custom schedulers
 
 6.14.0  2014-04-09
+------------------
 
   * util-benchmark: Fix caliper failures due to new guava
   * util-core: Add Local.let
@@ -1091,6 +1291,7 @@ Documentation:
   * util-core: Short-circuit `within` and `raiseWithin` if Future is already satisfied
 
 6.13.2  2014-03-24
+------------------
 
   * util-core: Add `StorageUnit.hashCode`
   * util-core: Event.mergeMap: fix Closable
@@ -1098,10 +1299,12 @@ Documentation:
   * util: Upgrade to guava 16
 
 6.13.1  2014-03-20
+------------------
 
   * util: Update zk libraries
 
 6.13.0  2014-03-14
+------------------
 
   * util-app: add usage string, printed before flags
   * util-app: Handle comma-separated values in `Flaggable.ofMap`
@@ -1120,10 +1323,12 @@ Documentation:
   * util: ForkJoin scheduler: first draft
 
 6.12.1  2014-02-18
+------------------
 
   * Upgrade everyone to the new c.t.common.server-set
 
 6.12.0  2014-02-14
+------------------
 
   * LocalScheduler: improve concurrency by sampling less
   * Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException's.
@@ -1141,6 +1346,7 @@ Documentation:
   * Var: fix an iatrogenic concurrency bug
 
 6.11.1  2014-01-16
+------------------
 
   * util-collection: Depend on jsr305.
   * util-core: Add `Promise.attached` and Detachable.
@@ -1148,6 +1354,7 @@ Documentation:
   * util-common: Fix a race condition in ExecutorServiceFuturePool.
 
 6.11.0  2014-01-14
+------------------
 
   * util-core: Add BridgedThreadPoolScheduler.
   * util-core: Add Events, discrete-time values.
@@ -1163,6 +1370,7 @@ Documentation:
   * util-zk-common: Fix finagle-serversets dependencies discrepancy.
 
 6.10.0  2013-12-12
+------------------
 
   * `util-core`: Add functionality to AsyncSemaphore for executing functions as permits become available.
   * `util-core`: Fine-grained locking to prevent deadlocks in Var.
@@ -1170,6 +1378,7 @@ Documentation:
   * `util-core`: Introduce com.twitter.util.Memoize - thread-safe memoization of a function.
 
 6.9.0  2013-12-02
+------------------
 
   * util-core: 2.10 pattern matching strictness
   * util-core: Gives Var single-owner semantics
@@ -1179,10 +1388,12 @@ Documentation:
   * util: sbt version in `build.properties'
 
 6.8.1  2013-11-15
+------------------
 
   * util-core: Break apart interruptible FuturePool for java backcompat
 
 6.8.0  2013-11-12
+------------------
 
   * util-app: Fix null error for Flaggable[InetSocketAddress].
   * util-app: Flag, easier usage of default.
@@ -1197,6 +1408,7 @@ Documentation:
   * util: scaladoc warning cleanup.
 
 6.7.0  2013-10-18
+------------------
 
   * util-core: Introduce Try.collect(), analagous to Future.collect
   * util-core: Add some empirically useful add-ons to Var
@@ -1205,6 +1417,7 @@ Documentation:
   * util-core: Improve gc profile around Var
 
 6.6.0  2013-10-09
+------------------
 
   * util-app: Properly propagate underlying exceptions.
   * util-core: Add a `Var.value` function. (835a043)
@@ -1221,6 +1434,7 @@ Documentation:
   * util-zk: Add ShardCoordinator and ZkAsyncSemaphore classes. (c57b2a9)
 
 6.5.0  2013-09-10
+------------------
 
   * util-hashing: removed dependency on util-core
   * util-core: Introduce swappable schedulers, ThreadPool scheduler.
@@ -1230,6 +1444,7 @@ Documentation:
   * util-core: adding short note on Future 'within'
 
 6.4.0  2013-08-28
+------------------
 
   * util-core: Add Return constants
   * util-core: Make ConstFuture.transform consistent with Promise.transform
@@ -1240,12 +1455,14 @@ Documentation:
   * util-core: Introduce Buf, Reader, and Writer: Zerocopy, buffered I/O
 
 6.3.8  2013-07-22
+------------------
 
   * util-core: Add Future.True and Future.False constants
   * util-app: Treat '--' as end of flags indicator
   * util-app: Add support for long flags
 
 6.3.7  2013-06-24
+------------------
 
   * util-app: flags use by-name default values
   * util-app: Make the global flag test idempotent
@@ -1254,6 +1471,7 @@ Documentation:
   * util: update version in README
 
 6.3.6  2013-06-11
+------------------
 
   * util: Update owners files
   * util-jvm: CpuProfile: sleep the right amount of time for the recording thread
@@ -1262,6 +1480,7 @@ Documentation:
   * util-eval: Gizzard: Some followup deps alignment to fix deployment classpath issues
 
 6.3.5  2013-05-31
+------------------
 
   * util-core: add Time.fromMicroseconds to util.Time
   * util-core: NullMonitor takes itself out when composed
@@ -1272,11 +1491,13 @@ Documentation:
   * util: Update sbt project for (util, ostrich, finagle)
 
 6.3.4  2013-05-16
+------------------
 
   * util-core: Convenience method to await all
   * util-core: RootMonitor never propagates non fatal exception
 
 6.3.3  2013-05-13
+------------------
 
   * util-collection: When growing chain only grow the chain. This addresses a NoSuchElementException.
   * util-eval: fix for when class files are on the classpath directly
@@ -1287,6 +1508,7 @@ Documentation:
   * util: Remove zookeeper dependency ivyXML and replace with ExclusionRules
 
 6.3.2  2013-04-18
+------------------
 
   * util-core: create less garbage in AsyncSemaphore.acquire()
   * util-core: deprecate com.twitter.util.concurrent.Concurrent{Pool, MultiMap}
@@ -1297,6 +1519,7 @@ Documentation:
   * util-zk: ZNode("/path").parentPath should be "/", not an empty string
 
 6.3.0  2013-04-05
+------------------
 
   * util-core: flag a bug with U64 truncation
   * util-core: Future.get: include fatal exceptions
@@ -1304,12 +1527,14 @@ Documentation:
   * util-core: special-case Duration.Zero to avoid allocation
 
 6.2.5  2013-03-27
+------------------
 
   * util-zk: Improvements to util-zk NativeConnector
   * util: Update sbt project definition
   * util: launching test in all scala version of the project
 
 6.2.4  2013-03-21
+------------------
 
   * util-core: Add Future.Nil, it can be used anytime you need a Future[Seq[_]] with an empty sequence.
   * util-core: fix VM test error by ensuring reset
@@ -1318,15 +1543,18 @@ Documentation:
   * util: upgrade com.twitter.common.objectsize to 0.0.7
 
 6.2.3  2013-03-08
+------------------
 
   * util-core: Remove StreamHelper
   * Flag: create Map flag type
 
 6.2.2  2013-02-25
+------------------
 
   * Flag: introduce global flags
 
 6.2.1  2013-02-20
+------------------
 
   * HttpMux: provide visibility into available handlers
   * Flag: add Time type
@@ -1339,12 +1567,14 @@ Documentation:
   * Future: use .nonEmpty instead of != Nil
 
 6.1.0  2013-01-30
+------------------
 
   * preliminary 2.10 port/build
   * Add Closable trait
   * Add contention snapshot
 
 6.0.6  2013-01-22
+------------------
 
   * util-core: concurrent.SpoolSource utility for creating Spools
   * util-core: Spool.flatMap, Spool.++
@@ -1353,6 +1583,7 @@ Documentation:
   mixed Scala/Java
 
 6.0.4  2012-12-18
+------------------
 
   * Broker: more efficient dequeueing of offers
   * Duration: parse all output of Duration.toString
@@ -1362,6 +1593,7 @@ Documentation:
   * util-hashing: add Hashable type class
 
 6.0.3  2012-12-11
+------------------
 
   * Promise: remove future tracing, add explicit transforming state to
   avoid extraneous allocation
@@ -1369,11 +1601,13 @@ Documentation:
   * com.twitter.app: composable apps & flags
 
 6.0.1  2012-11-26
+------------------
 
   * Use java.util.ArrayDeque in place of mutable.Queue due to
   https://issues.scala-lang.org/browse/SI-6690
 
 6.0.0  2012-11-26
+------------------
 
   * Removed future cancellation, which is now replaced with one-shot
   interrupts. These also carry a ``cause'' which will be used
@@ -1384,6 +1618,7 @@ Documentation:
   exceptions
 
 5.3.14  2012-11-20
+------------------
 
   * fix compiler warnings
   * Future.join: support up to 22-tupled futures
@@ -1391,6 +1626,8 @@ Documentation:
   * util-logging: concurrent enqueue support for ScribeHandler, add stats
 
 5.3.13  2012-10-16
+------------------
+
   * AsyncSemaphore: Use volatile vars for the active number and the waiters
   * util-logging: fix ThrottledHandler to not leak memory
   * util-logging: for file handlers, default to append=true since that was the default with FileHandlerConfig and is safer behavior
@@ -1401,6 +1638,8 @@ Documentation:
   * util-logging: Correctly handle files with a shared prefix.
 
 5.3.10  2012-09-06
+------------------
+
   * Improve ZNode.name and ZNode.parentPath to not use Regexes
   * Fix ScheduledThreadPoolTimer.schedule(...).cancel()
   * Upgrade guava dependency to v13
@@ -1410,6 +1649,8 @@ Documentation:
   * Clean up equals and hashCode for Time and Duration
 
 5.3.7  2012-08-21
+------------------
+
   * Disable log handler purging
   * Added ThriftCodec
   * Add a Time.hashCode method
@@ -1417,28 +1658,36 @@ Documentation:
   * patch public release of OSS libraries; catch up sbt
 
 5.3.6  2012-07-26
+------------------
+
   * Fix temporary file name generation
 
 5.3.0  2012-06-25
+------------------
+
   * util-jvm: start timer thread in 'daemon' mode
 
 5.2.0  2012-06-14
+------------------
 
   * JVM CPU profiler
   * util-jvm: fix for JDK 7
 
 5.1.2  2012-06-07
+------------------
 
   * fix documentation
   * util-jvm: gc monitoring
   * Kill com.twitter.concurrent.Channel
 
 5.0.4  2012-06-01
+------------------
 
   * Upgrade scala to 2.9.2
   * Java compatibility: void -> voided
 
 4.0.1
+------------------
 
   * added AsyncQueue
   * config:validate optional subconfigs
@@ -1459,6 +1708,7 @@ Documentation:
   * Time: Treat MaxValue specially in TimeMod.{add,sub}
 
 3.0.0  2012-03-14
+------------------
 
   * AsyncSemaphore: allow parameterizing maximum queue size
   * Logging: scribe handlers may now be named "scribe"
@@ -1468,11 +1718,13 @@ Documentation:
   * Config: Config.optional results in lazy evaluation
 
 2.0.0  2012-02-27
+------------------
 
   * NetUtil: optimize ipv4 address parsing
   * upgrade to Guava r11
 
 1.12.13  2012-02-13
+-------------------
 
   * NetUtil: Add inetAddressToInt, isInetAddressInBlock, isInetAddressInBlocks
   * Future tracer: fix bug where double proxied exceptions fail
@@ -1481,6 +1733,7 @@ Documentation:
   and restoring contexts
 
 1.12.12  2012-01-24
+-------------------
 
   * util-zk-common: Asynchronous wrappers for common ServerSets.
   * IVar.unget: only remove closures by object equality
@@ -1488,21 +1741,25 @@ Documentation:
   * Future.const - builds a constant Future from an existing Try
 
 1.12.9  2012-01-05
+------------------
 
   * ThreadPoolFactories are named by default
   * Offer: ensure ObjectOrder is independent of Object#hashCode
   * new package: util-zk: asynchronous bindings to ZooKeeper
 
 1.12.7  2011-12-02
+------------------
 
   * Future: temporarily disabling default usage of the AsmTracer
 
 1.12.6  2011-12-01
+------------------
 
   * Future: all helper methods now have Java-friendly equivalents
   that take Lists.
 
 1.12.5  2011-11-29
+------------------
 
   * Config: recompile configs based on hash instead of timestamp, add
   memoization
@@ -1517,6 +1774,7 @@ Documentation:
   * Monitors: composable widgets for handling exceptions
 
 1.12.4  2011-11-09
+------------------
 
  * Files.delete has to follow symlinks because jdk6 support
  for symlinks is weaksauce
@@ -1524,18 +1782,21 @@ Documentation:
  * Locals: ensure ``Local'' is fully initialized before registering
 
 1.12.3  2011-11-08
+------------------
 
   * add some docs to Offer, Time
   * util.io.Files: file utilities, documentation for TempFile
   * Offer/Broker: explicit return types for Java compat.
 
 1.12.2  2011-10-28
+------------------
 
   * Json thrift deserializer
   * Finagle: count pending timeouts
   * Fix eval precompile bug
 
 1.12.0  2011-10-21
+------------------
 
   * util.Config.Specified now delays evaluation of specified value, to
   ensure evaluation happens in correct dependency order, rather than
@@ -1543,6 +1804,7 @@ Documentation:
   unless you have directly used the Specified class.
 
 1.11.9  2011-10-14
+------------------
 
   * ivar/future: provide "TCE", per-thread scheduling, and
   promise squashing
@@ -1553,6 +1815,7 @@ Documentation:
   * base64 encoder: make it threadsafe
 
 1.11.8  2011-10-04
+------------------
 
   * Back out TCE for ivar/futures. This introduced a space
   leak and will be fixed momentarily.
@@ -1560,6 +1823,7 @@ Documentation:
   and return as a Future.exception
 
 1.11.7  2011-09-28
+------------------
 
   * ivar/future: provide "TCE", per-thread scheduling, and
   promise squashing
@@ -1570,6 +1834,7 @@ Documentation:
   that are cancelled
 
 1.11.2  2011-08-12
+------------------
 
   * offer: use Int.compare instead of subtraction to avoid
   integer overflow in ObjectOrder
@@ -1577,6 +1842,7 @@ Documentation:
   * Eval: persistent compilation targets
 
 1.11.1  2011-08-05
+------------------
 
   * offer/broker: fixes, simplifications - gets rid of thunked
   values on sends.  removing the infrastructure required to
@@ -1588,21 +1854,25 @@ Documentation:
   functions; tests
 
 1.11.0  2011-08-02
+------------------
 
   * Introduce new util-codec module to contain various codecs.
   Primarily so that it can depend on apache commons-codec 1.5
   for base64 improvements over the sun one.
 
 1.10.4  2011-07-29
+------------------
 
   * Added TestLogging specs helper to util-logging.
   * Spools: like scala streams, but with deferred tails.
 
 1.10.3  2011-07-27
+------------------
 
   * add GZip string encoder
 
 1.10.2  2011-07-18
+------------------
 
   * Maintain a map of already visited objects incase someone
   creates a circular of config objects.
