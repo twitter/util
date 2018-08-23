@@ -16,8 +16,8 @@ class BroadcastStatsReceiverTest extends FunSuite with Matchers {
 
     val broadcastA = BroadcastStatsReceiver(Seq(recv1, recvA))
     val counterA = broadcastA.counter("hi")
-    assert(None == recv1.counters.get(Seq("hi")))
-    assert(None == recv1.counters.get(Seq("scopeA", "hi")))
+    assert(0 == recv1.counters(Seq("hi")))
+    assert(0 == recv1.counters(Seq("scopeA", "hi")))
 
     counterA.incr(1)
     assert(1 == recv1.counters(Seq("hi")))
@@ -25,7 +25,7 @@ class BroadcastStatsReceiverTest extends FunSuite with Matchers {
 
     val broadcastB = BroadcastStatsReceiver(Seq(recv1, recvB))
     val counterB = broadcastB.counter("hi")
-    assert(None == recv1.counters.get(Seq("scopeB", "hi")))
+    assert(0 == recv1.counters(Seq("scopeB", "hi")))
 
     counterB.incr(1)
     assert(2 == recv1.counters(Seq("hi")))
@@ -40,8 +40,8 @@ class BroadcastStatsReceiverTest extends FunSuite with Matchers {
 
     val broadcastA = BroadcastStatsReceiver(Seq(recv1, recvA))
     val statA = broadcastA.stat("hi")
-    assert(None == recv1.stats.get(Seq("hi")))
-    assert(None == recv1.stats.get(Seq("scopeA", "hi")))
+    assert(Nil == recv1.stats(Seq("hi")))
+    assert(Nil == recv1.stats(Seq("scopeA", "hi")))
 
     statA.add(5f)
     assert(Seq(5f) == recv1.stats(Seq("hi")))
@@ -49,7 +49,7 @@ class BroadcastStatsReceiverTest extends FunSuite with Matchers {
 
     val broadcastB = BroadcastStatsReceiver(Seq(recv1, recvB))
     val statB = broadcastB.stat("hi")
-    assert(None == recv1.stats.get(Seq("scopeB", "hi")))
+    assert(Nil == recv1.stats(Seq("scopeB", "hi")))
 
     statB.add(10f)
     assert(Seq(5f, 10f) == recv1.stats(Seq("hi")).sorted)

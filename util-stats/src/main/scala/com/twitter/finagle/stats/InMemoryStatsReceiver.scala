@@ -76,6 +76,13 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
 
       verbosity += name -> v
 
+      // eagerly initialize
+      counters.synchronized {
+        if (!counters.contains(name)) {
+          counters(name) = 0
+        }
+      }
+
       def incr(delta: Long): Unit = counters.synchronized {
         val oldValue = apply()
         counters(name) = oldValue + delta
@@ -96,6 +103,13 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     new ReadableStat {
 
       verbosity += name -> v
+
+      // eagerly initialize
+      stats.synchronized {
+        if (!stats.contains(name)) {
+          stats(name) = Nil
+        }
+      }
 
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()

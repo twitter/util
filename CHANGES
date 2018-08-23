@@ -23,6 +23,10 @@ Breaking API Changes
     they produce/consume (`Reader[A]` and `Writer[A]`) and are no longer fixed to `Buf`.
     ``PHAB_ID=D195638``
 
+  * util-core: `InMemoryStatsReceiver` now eagerly creates the mappings for `Counters`
+    and `Stats` instead of waiting for the first call to `Counter.incr` and `Stat.add`.
+    ``PHAB_ID=D205760``
+
   * util-core: `c.t.io.Reader.Writable` is now `c.t.io.Pipe`. Both `Writable` type and
     its factory method are deprecated; use `new Pipe[A]` instead.  ``PHAB_ID=D199536``
 
