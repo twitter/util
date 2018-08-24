@@ -19,7 +19,7 @@ and is being actively developed and maintained.
 
 [Releases](https://maven-badges.herokuapp.com/maven-central/com.twitter/util_2.12)
 are done on an approximately monthly schedule. While [semver](http://semver.org/)
-is not followed, the [changelogs](CHANGES) are detailed and include sections on
+is not followed, the [changelogs](CHANGELOG.rst) are detailed and include sections on
 public API breaks and changes in runtime behavior.
 
 ## Contributing
