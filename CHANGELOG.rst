@@ -33,6 +33,13 @@ Breaking API Changes
   * util-slf4j-api: Ensure that marker information is used when determining if log
     level is enabled for methods which support markers. ``PHAB_ID=D202387``
 
+  * util-slfj4-api: Finalize the underlying logger def in the Logging trait as it is not
+    expected that this be overridable. If users wish to change how the underlying logger is
+    constructed they should simply use the Logger and its methods directly rather than
+    configuring the the underlying logger of the Logging trait.
+
+    Add better Java compatibility for constructing a Logger. ``PHAB_ID=D204330``
+
 18.8.0
 -------
 

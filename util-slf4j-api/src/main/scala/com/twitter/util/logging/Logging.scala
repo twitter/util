@@ -56,20 +56,20 @@ import scala.language.implicitConversions
  */
 trait Logging {
 
-  private[this] lazy val _logger: Logger =
+  private[this] final lazy val _logger: Logger =
     Logger(LoggerFactory.getLogger(getClass))
 
   /**
    * Return the underlying [[com.twitter.util.logging.Logger]]
    * @return a [[com.twitter.util.logging.Logger]]
    */
-  protected[this] def logger: Logger = _logger
+  protected[this] final def logger: Logger = _logger
 
   /**
    * Return the name of the underlying [[com.twitter.util.logging.Logger]]
    * @return a String name
    */
-  protected def loggerName: String = logger.name
+  protected[this] final def loggerName: String = logger.name
 
   /* Trace */
 

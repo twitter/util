@@ -5,7 +5,6 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FunSuite, Matchers}
 import org.slf4j
-import org.slf4j.LoggerFactory
 import scala.language.reflectiveCalls
 
 class LoggingTest extends FunSuite with Matchers with MockitoSugar {
@@ -318,7 +317,7 @@ class LoggingTest extends FunSuite with Matchers with MockitoSugar {
   }
 
   test("Logging#null values") {
-    val logger = Logger(LoggerFactory.getLogger(this.getClass))
+    val logger = Logger(slf4j.LoggerFactory.getLogger(this.getClass))
     logger.info(null)
     val list = Nil
     logger.info(list.toString)
@@ -357,7 +356,7 @@ class LoggingTest extends FunSuite with Matchers with MockitoSugar {
       val arg1 = "arg1"
       val arg2 = new Integer(1)
       val arg3 = "arg3"
-      val underlying = mock[org.slf4j.Logger]
+      val underlying = mock[slf4j.Logger]
       when(isEnabledFn(underlying)).thenReturn(isEnabled)
       val logger = Logger(underlying)
     }

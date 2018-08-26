@@ -2,17 +2,19 @@ package com.twitter.util.logging
 
 import org.slf4j
 import org.slf4j.{LoggerFactory, Marker}
-import scala.reflect.ClassTag
+import scala.reflect.{ClassTag, classTag}
 
 /**
  * Companion object for [[com.twitter.util.logging.Logger]] which provides
  * factory methods for creation.
+ *
+ * @note Java users, see [[com.twitter.util.logging.Loggers.getLogger]]
  */
 object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] for the given name.
-   * @param name - name of the underlying Logger.
+   * @param name name of the underlying Logger.
    *
    * {{{
    *    val logger = Logger("name")
@@ -24,7 +26,7 @@ object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] named for the given class.
-   * @param clazz - class to use for naming the underlying Logger.
+   * @param clazz class to use for naming the underlying Logger.
    *
    * {{{
    *    val logger = Logger(classOf[MyClass])
@@ -36,22 +38,21 @@ object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] for the runtime class wrapped
-   * by the implicit class tag.
-   * @param classTag - the [[scala.reflect.ClassTag]] denoting the runtime class `T`.
-   * @tparam T - the runtime class type
+   * by the implicit [[scala.reflect.ClassTag]] denoting the runtime class `T`.
+   * @tparam T the runtime class type
    *
    * {{{
    *    val logger = Logger[MyClass]
    * }}}
    */
-  def apply[T](implicit classTag: ClassTag[T]): Logger = {
-    new Logger(LoggerFactory.getLogger(classTag.runtimeClass))
+  def apply[T: ClassTag]: Logger = {
+    new Logger(LoggerFactory.getLogger(classTag[T].runtimeClass))
   }
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] wrapping the given underlying
    * [[org.slf4j.Logger]].
-   * @param underlying - an `org.slf4j.Logger`
+   * @param underlying an `org.slf4j.Logger`
    *
    * {{{
    *    val logger = Logger(LoggerFactory.getLogger("name"))
