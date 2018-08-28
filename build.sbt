@@ -18,7 +18,8 @@ val guavaLib = "com.google.guava" % "guava" % "19.0"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.3.4"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
-val slf4jLib = "org.slf4j" % "slf4j-api" % slf4jVersion
+val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
+val slf4jSimple = "org.slf4j" % "slf4j-simple" % slf4jVersion
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.12.4",
@@ -336,7 +337,8 @@ lazy val utilSlf4jApi = Project(
 ).settings(
   name := "util-slf4j-api",
   libraryDependencies ++= Seq(
-    slf4jLib
+    slf4jApi,
+    slf4jSimple 
   )
 ).dependsOn(utilCore % "test")
 
@@ -348,7 +350,7 @@ lazy val utilSlf4jJulBridge = Project(
 ).settings(
   name := "util-slf4j-jul-bridge",
   libraryDependencies ++= Seq(
-    slf4jLib,
+    slf4jApi,
     "org.slf4j" % "jul-to-slf4j" % slf4jVersion)
 ).dependsOn(utilCore, utilSlf4jApi)
 
@@ -402,7 +404,7 @@ lazy val utilThrift = Project(
   name := "util-thrift",
   libraryDependencies ++= Seq(
     "org.apache.thrift"          % "libthrift"        % "0.10.0",
-    slf4jLib % "provided",
+    slf4jApi % "provided",
     "com.fasterxml.jackson.core" % "jackson-core"     % jacksonVersion,
     "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
   )
