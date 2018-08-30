@@ -38,6 +38,36 @@ object Reader {
 
   def empty[A]: Reader[A] = Null.asInstanceOf[Reader[A]]
 
+  // See Reader.chunked
+  private final class Chunked(r: Reader[Buf], chunkSize: Int)
+    extends Reader[Buf] with (Option[Buf] => Future[Option[Buf]]) {
+
+    require(chunkSize > 0, s"chunkSize should be > 0 but was $chunkSize")
+
+    private[this] var state = Buf.Empty
+
+    // We only enter here when state (buffer) is empty.
+    def apply(in: Option[Buf]): Future[Option[Buf]] = synchronized {
+      in match {
+        case Some(b) =>
+          state = b
+          read(chunkSize)
+        case None => Future.None
+      }
+    }
+
+    def read(n: Int): Future[Option[Buf]] = synchronized {
+      if (state.isEmpty) r.read(Int.MaxValue).flatMap(this)
+      else {
+        val result = state.slice(0, chunkSize)
+        state = state.slice(chunkSize, Int.MaxValue)
+        Future.value(Some(result))
+      }
+    }
+
+    def discard(): Unit = r.discard()
+  }
+
   /**
    * Read the entire bytestream presented by `r`.
    */
@@ -45,11 +75,20 @@ object Reader {
     def loop(left: Buf): Future[Buf] =
       r.read(Int.MaxValue).flatMap {
         case Some(right) => loop(left concat right)
-        case none => Future.value(left)
+        case _ => Future.value(left)
       }
 
     loop(Buf.Empty)
   }
+
+  /**
+   * Chunk the output of a given [[Reader]] by at most `chunkSize` (bytes). This consumes the
+   * reader.
+   *
+   * @note The `n` (number of bytes to read) argument on the returned reader is ignored
+   *       (`Int.MaxValue` is used instead).
+   */
+  def chunked(r: Reader[Buf], chunkSize: Int): Reader[Buf] = new Chunked(r, chunkSize)
 
   /**
    * Reader from a Buf.

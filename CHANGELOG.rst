@@ -13,6 +13,9 @@ New Features
 * util-core: Added Reader#fromAsyncStream for consuming an `AsyncStream` as a `Reader`.
   ``PHAB_ID=D202334``
 
+* util-core: Introducing `Reader.chunked` that chunks the output of a given reader.
+  ``PHAB_ID=D206676``
+
 * util-security: Add `NullSslSession` related objects for use with non-existent
   `SSLSession`s.  ``PHAB_ID=D201421``
 
