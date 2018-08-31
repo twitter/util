@@ -32,6 +32,8 @@ notifications:
 before_script:
   # default $SBT_OPTS is irrelevant to sbt lancher
   - unset SBT_OPTS
+  # workaround for https://github.com/travis-ci/travis-ci/issues/4527
+  - curl -L --create-dirs -o $HOME/.sbt/launchers/1.1.4/sbt-launch.jar http://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/1.1.4/sbt-launch.jar
   - travis_retry ./sbt --error ++$TRAVIS_SCALA_VERSION update
 
 script:
