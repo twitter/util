@@ -10,6 +10,9 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-logging: New way to construct `ScribeHandler` for java interoperability.
+  ``PHAB_ID=D208928``
+
 * util-core: Added Reader#fromAsyncStream for consuming an `AsyncStream` as a `Reader`.
   ``PHAB_ID=D202334``
 

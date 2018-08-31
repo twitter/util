@@ -52,9 +52,13 @@ object ScribeHandler {
 
   /**
    * Generates a HandlerFactory that returns a ScribeHandler.
-   * NOTE: ScribeHandler is usually used to write structured binary data.
+   *
+   * @note ScribeHandler is usually used to write structured binary data.
    * When used in this way, wrapping this in other handlers, such as ThrottledHandler,
    * which emit plain-text messages into the log, will corrupt the resulting data.
+   *
+   * @note Java users of this library can use one of the methods in [[ScribeHandlers]],
+   * so they need not provide all the default arguments.
    *
    * @param bufferTime
    * send a scribe message no more frequently than this:
@@ -73,7 +77,7 @@ object ScribeHandler {
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None,
     statsReceiver: StatsReceiver = NullStatsReceiver
-  ) =
+  ): () => ScribeHandler =
     () =>
       new ScribeHandler(
         hostname,
@@ -111,7 +115,6 @@ object ScribeHandler {
       level,
       NullStatsReceiver
     )
-
 }
 
 /**
