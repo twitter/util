@@ -870,9 +870,9 @@ object Buf {
       else if (isSliceIdentity(from, until)) this
       else {
         val dup = underlying.duplicate()
-        val limit = dup.position + math.min(until, length)
-        if (dup.limit > limit) dup.limit(limit)
-        dup.position(dup.position + from)
+        val limit = dup.position() + math.min(until, length)
+        if (dup.limit() > limit) dup.limit(limit)
+        dup.position(dup.position() + from)
         new ByteBuffer(dup)
       }
     }
@@ -886,7 +886,7 @@ object Buf {
     protected def unsafeByteArrayBuf: Option[Buf.ByteArray] =
       if (underlying.hasArray) {
         val array = underlying.array
-        val begin = underlying.arrayOffset + underlying.position
+        val begin = underlying.arrayOffset + underlying.position()
         val end = begin + underlying.remaining
         Some(new ByteArray(array, begin, end))
       } else None

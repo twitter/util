@@ -763,7 +763,7 @@ class BufTest
     val bb0 = java.nio.ByteBuffer.wrap(bytes)
     val Buf.ByteBuffer.Shared(bb1) = Buf.ByteBuffer.Owned(bb0)
     bb1.position(3)
-    assert(bb0.position == 0)
+    assert(bb0.position() == 0)
   }
 
   test("Buf.ByteBuffer.Direct.unapply is unsafe") {
@@ -780,7 +780,7 @@ class BufTest
     val Buf.ByteBuffer(bb1) = Buf.ByteBuffer.Owned(bb0)
     assert(bb1.isReadOnly)
     bb1.position(3)
-    assert(bb0.position == 0)
+    assert(bb0.position() == 0)
   }
 
   test("ByteArray.coerce(ByteArray)") {
