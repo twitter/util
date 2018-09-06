@@ -49,18 +49,18 @@ public class SpoolCompilationTest {
   public void testSpoolConcat() throws Exception {
     Spool<String> a = Spools.newSpool(Arrays.asList("a"));
     Spool<String> b = Spools.newSpool(Arrays.asList("b"));
-    Spool<String> c = Spools.newSpool(Arrays.asList("c"));
+    Spool<String> cd = Spools.newSpool(Arrays.asList("c", "d"));
 
     Spool<String> ab = a.concat(b);
     Spool<String> abNothing = ab.concat(Spools.<String>newEmptySpool());
-    Spool<String> abc = Await.result(ab.concat(Future.value(c)));
+    Spool<String> abcd = Await.result(ab.concat(Future.value(cd)));
 
     Collection<String> listA = JavaConverters.seqAsJavaListConverter(Await.result(ab.toSeq())).asJava();
     Collection<String> listB = JavaConverters.seqAsJavaListConverter(Await.result(abNothing.toSeq())).asJava();
-    Collection<String> listC = JavaConverters.seqAsJavaListConverter(Await.result(abc.toSeq())).asJava();
+    Collection<String> listC = JavaConverters.seqAsJavaListConverter(Await.result(abcd.toSeq())).asJava();
 
     Assert.assertArrayEquals(new String[] { "a", "b"}, listA.toArray());
     Assert.assertArrayEquals(new String[] { "a", "b"}, listB.toArray());
-    Assert.assertArrayEquals(new String[] { "a", "b", "c"}, listC.toArray());
+    Assert.assertArrayEquals(new String[] { "a", "b", "c" , "d"}, listC.toArray());
   }
 }

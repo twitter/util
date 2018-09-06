@@ -43,9 +43,7 @@ public final class Closables {
    * @see com.twitter.util.Closable$#all(scala.collection.Seq)
    */
   public static Closable all(Closable... closables) {
-    return Closable$.MODULE$.all(
-      scala.collection.mutable.WrappedArray$.MODULE$.make(closables)
-    );
+    return Closable$.MODULE$.all(closables);
   }
 
   /**
