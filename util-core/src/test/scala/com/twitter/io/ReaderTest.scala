@@ -2,14 +2,16 @@ package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
 import com.twitter.conversions.time._
+import com.twitter.conversions.storage._
 import com.twitter.util.{Await, Awaitable, Future, Promise}
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
-import org.scalacheck.Gen
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FunSuite, Matchers}
+import scala.annotation.tailrec
 
 class ReaderTest
     extends FunSuite
@@ -81,16 +83,16 @@ class ReaderTest
     } yield (s, i)
 
     forAll(stringAndChunk) { case (s, i) =>
-      val r = Reader.chunked(Reader.fromBuf(Buf.Utf8(s)), i)
+        val r = Reader.chunked(Reader.fromBuf(Buf.Utf8(s)), i)
 
-      def readLoop(): Unit = await(r.read(Int.MaxValue)) match {
-        case Some(b) =>
-          assert(b.length <= i)
-          readLoop()
-        case None => ()
-      }
+        def readLoop(): Unit = await(r.read(Int.MaxValue)) match {
+          case Some(b) =>
+            assert(b.length <= i)
+            readLoop()
+          case None => ()
+        }
 
-      readLoop()
+        readLoop()
     }
   }
 
@@ -202,4 +204,61 @@ class ReaderTest
     assert(tailEvaluated.get())
   }
 
+  test("Reader.framed reads framed data") {
+    val getByteArrays: Gen[Seq[Buf]] = Gen.listOf(
+      for {
+        // limit arrays to a few kilobytes, otherwise we may generate a very large amount of data
+        numBytes <- Gen.choose(0.bytes.inBytes, 2.kilobytes.inBytes)
+        bytes <- Gen.containerOfN[Array, Byte](numBytes.toInt, Arbitrary.arbitrary[Byte])
+      } yield Buf.ByteArray.Owned(bytes)
+    )
+
+    forAll(getByteArrays) { buffers: Seq[Buf] =>
+      val buffersWithLength = buffers.map(buf => Buf.U32BE(buf.length).concat(buf))
+
+      val r = Reader.framed(BufReader(Buf(buffersWithLength)), new ReaderTest.U32BEFramer())
+
+      // read all of the frames
+      buffers.foreach { buf =>
+        assert(await(r.read(Int.MaxValue)).contains(buf))
+      }
+
+      // make sure the reader signals EOF
+      assert(await(r.read(Int.MaxValue)).isEmpty)
+    }
+  }
+
+  test("Reader.framed reads empty frames") {
+    val r = Reader.framed(BufReader(Buf.U32BE(0)), new ReaderTest.U32BEFramer())
+    assert(await(r.read(Int.MaxValue)).contains(Buf.Empty))
+    assert(await(r.read(Int.MaxValue)).isEmpty)
+  }
+
+}
+
+object ReaderTest {
+
+  /**
+   * Used to test Reader.framed, extract fields in terms of
+   * frames, signified by a 32-bit BE value preceding
+   * each frame.
+   */
+  private class U32BEFramer() extends (Buf => Seq[Buf]) {
+    var state: Buf = Buf.Empty
+
+    @tailrec
+    private def loop(acc: Seq[Buf], buf: Buf): Seq[Buf] = {
+      buf match {
+        case Buf.U32BE(l, d) if d.length >= l =>
+          loop(acc :+ d.slice(0, l), d.slice(l, d.length))
+        case _ =>
+          state = buf
+          acc
+      }
+    }
+
+    def apply(buf: Buf): Seq[Buf] = synchronized {
+      loop(Seq.empty, state concat buf)
+    }
+  }
 }

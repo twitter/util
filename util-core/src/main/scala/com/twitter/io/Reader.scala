@@ -57,6 +57,7 @@ object Reader {
     }
 
     def read(n: Int): Future[Option[Buf]] = synchronized {
+      // flatMap to `this` to prevent allocating
       if (state.isEmpty) r.read(Int.MaxValue).flatMap(this)
       else {
         val result = state.slice(0, chunkSize)
@@ -66,6 +67,40 @@ object Reader {
     }
 
     def discard(): Unit = r.discard()
+  }
+
+  // see Reader.framed
+  private final class Framed(r: Reader[Buf], framer: Buf => Seq[Buf])
+    extends Reader[Buf] with (Option[Buf] => Future[Option[Buf]]) {
+
+    private[this] var frames: Seq[Buf] = Seq.empty
+
+    // we only enter here when `frames` is empty.
+    def apply(in: Option[Buf]): Future[Option[Buf]] = synchronized {
+      in match {
+        case Some(data) =>
+          frames = framer(data)
+          read(Int.MaxValue)
+        case None =>
+          Future.None
+      }
+    }
+
+    def read(n: Int): Future[Option[Buf]] = synchronized {
+      frames match {
+        case nextFrame :: rst =>
+          frames = rst
+          Future.value(Some(nextFrame))
+        case _ =>
+          // flatMap to `this` to prevent allocating
+          r.read(Int.MaxValue).flatMap(this)
+      }
+    }
+
+    def discard(): Unit = synchronized {
+      frames = Seq.empty
+      r.discard()
+    }
   }
 
   /**
@@ -258,4 +293,12 @@ object Reader {
    * }}}
    */
   def copy(r: Reader[Buf], w: Writer[Buf]): Future[Unit] = copy(r, w, Writer.BufferSize)
+
+  /**
+   * Wraps a [[ Reader[Buf] ]] and emits frames as decided by `framer`.
+   *
+   * @note The returned `Reader` may not be thread safe depending on the behavior
+   *       of the framer.
+   */
+  def framed(r: Reader[Buf], framer: Buf => Seq[Buf]): Reader[Buf] = new Framed(r, framer)
 }

@@ -19,6 +19,9 @@ New Features
 * util-core: Introducing `Reader.chunked` that chunks the output of a given reader.
   ``PHAB_ID=D206676``
 
+* util-core: Added Reader#framed for consuming data framed by a user supplied function.
+  ``PHAB_ID=D212396``
+
 * util-security: Add `NullSslSession` related objects for use with non-existent
   `SSLSession`s.  ``PHAB_ID=D201421``
 
