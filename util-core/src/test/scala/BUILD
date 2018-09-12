@@ -8,7 +8,7 @@ junit_tests(
     #
     # At some point later, when we can enable `-Xlint:-warn-missing-interpolator`
     # for this target, we could try enabling this again.
-    fatal_warnings = False,
+    compiler_option_sets = {},
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",

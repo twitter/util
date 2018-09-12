@@ -4,7 +4,7 @@ scala_library(
         "*.scala",
         exclude = [rglobs("util/tunable/linter/*")],
     ),
-    fatal_warnings = True,
+    compiler_option_sets = {"fatal_warnings"},
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-tunable",

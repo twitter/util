@@ -14,7 +14,7 @@ scala_library(
 jvm_binary(
     name = "configuration-linter",
     main = "com.twitter.util.tunable.linter.ConfigurationLinter",
-    fatal_warnings = True,
+    compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         ":scala",
     ],

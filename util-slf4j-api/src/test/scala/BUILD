@@ -1,6 +1,6 @@
 junit_tests(
     sources = rglobs("*.scala", "*.java"),
-    fatal_warnings = True,
+    compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",

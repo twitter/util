@@ -1,6 +1,6 @@
 junit_tests(
     sources = rglobs("*.scala"),
-    fatal_warnings = True,
+    compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
         "3rdparty/jvm/junit",
@@ -17,7 +17,7 @@ scala_library(
         "com/twitter/cache/AbstractFutureCacheTest.scala",
         "com/twitter/cache/AbstractLoadingFutureCacheTest.scala",
     ],
-    fatal_warnings = True,
+    compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",

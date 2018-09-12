@@ -1,6 +1,6 @@
 junit_tests(
     sources = globs("*.scala"),
-    fatal_warnings = True,
+    compiler_option_sets = {"fatal_warnings"},
     strict_deps = True,
     dependencies = [
         "3rdparty/jvm/org/scalatest",
