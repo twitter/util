@@ -178,9 +178,13 @@
                         <a class="class" href="InputStreamReader.html" title="Provides the Reader API for an InputStream."></a>
                         <a href="InputStreamReader.html" title="Provides the Reader API for an InputStream.">InputStreamReader</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a class="class" href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer."></a>
+                        <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks."></a>
-                        <a href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks.">Reader</a>
+                        <a class="trait" href="Reader.html" title="A Reader represents a stream of As."></a>
+                        <a href="Reader.html" title="A Reader represents a stream of As.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -199,8 +203,8 @@
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Writer$.html" title=""></a>
-                        <a class="trait" href="" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams."></a>
-                        <a href="" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
+                        <a href="" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -230,13 +234,13 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Writer</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <span class="name">Writer</span><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Writer represents a sink for a stream of bytes, providing
-a convenient interface for the producer of such streams.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Writer represents a sink for a stream of <code>A</code>s, providing a convenient interface
+for the producer of such streams.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -246,7 +250,7 @@ a convenient interface for the producer of such streams.
             <span class="toggle">
               Known Subclasses
             </span>
-            <div class="subClasses hiddenContent"><a href="Reader$$Writable.html" class="extype" name="com.twitter.io.Reader.Writable">Writable</a>, <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a></div>
+            <div class="subClasses hiddenContent"><a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>, <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a></div>
           </div></div>
         
 
@@ -311,14 +315,12 @@ a convenient interface for the producer of such streams.
         <span class="name">fail</span><span class="params">(<span name="cause">cause: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Indicate that the producer of the bytestream has
-failed.</p><div class="fullcomment"><div class="comment cmt"><p>Indicate that the producer of the bytestream has
-failed. No further writes are allowed.
+      <p class="shortcomment cmt">Indicate that the producer of the bytestream has failed.</p><div class="fullcomment"><div class="comment cmt"><p>Indicate that the producer of the bytestream has failed. No further writes are allowed.
 </p></div></div>
     </li><li name="com.twitter.io.Writer#write" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="write(buf:com.twitter.io.Buf):com.twitter.util.Future[Unit]"></a><a id="write(Buf):Future[Unit]"></a>
+      <a id="write(buf:A):com.twitter.util.Future[Unit]"></a><a id="write(A):Future[Unit]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Writer.html#write(buf:com.twitter.io.Buf):com.twitter.util.Future[Unit]" title="Permalink">
+      <a href="../../../com/twitter/io/Writer.html#write(buf:A):com.twitter.util.Future[Unit]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -327,12 +329,11 @@ failed. No further writes are allowed.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">write</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+        <span class="name">write</span><span class="params">(<span name="buf">buf: <span class="extype" name="com.twitter.io.Writer.A">A</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Write a chunk.</p><div class="fullcomment"><div class="comment cmt"><p>Write a chunk. The returned future is completed
-when the chunk has been fully read by the sink.</p><p>Only one outstanding <code>write</code> is permitted, thus
-backpressure is asserted.
+      <p class="shortcomment cmt">Write a chunk.</p><div class="fullcomment"><div class="comment cmt"><p>Write a chunk. The returned future is completed when the chunk has been
+fully read by the sink.</p><p>Only one outstanding <code>write</code> is permitted, thus backpressure is asserted.
 </p></div></div>
     </li></ol>
             </div>

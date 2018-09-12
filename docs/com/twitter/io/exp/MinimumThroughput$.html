@@ -495,9 +495,9 @@ per second throughput limits.
               
         </dd></dl></div>
     </li><li name="com.twitter.io.exp.MinimumThroughput#reader" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="reader(reader:com.twitter.io.Reader,minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Reader"></a><a id="reader(Reader,Double,Timer):Reader"></a>
+      <a id="reader(reader:com.twitter.io.Reader[com.twitter.io.Buf],minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="reader(Reader[Buf],Double,Timer):Reader[Buf]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/io/exp/MinimumThroughput$.html#reader(reader:com.twitter.io.Reader,minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Reader" title="Permalink">
+      <a href="../../../../com/twitter/io/exp/MinimumThroughput$.html#reader(reader:com.twitter.io.Reader[com.twitter.io.Buf],minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Reader[com.twitter.io.Buf]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -506,11 +506,11 @@ per second throughput limits.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">reader</span><span class="params">(<span name="reader">reader: <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="minBps">minBps: <a href="http://www.scala-lang.org/api/2.12.4/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>, <span name="timer">timer: <a href="../../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>
+        <span class="name">reader</span><span class="params">(<span name="reader">reader: <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>, <span name="minBps">minBps: <a href="http://www.scala-lang.org/api/2.12.4/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>, <span name="timer">timer: <a href="../../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Ensures that the throughput of <a href="../Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">reads</a> happen
-above a minimum specified bytes per second rate.</p><div class="fullcomment"><div class="comment cmt"><p>Ensures that the throughput of <a href="../Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">reads</a> happen
+      <p class="shortcomment cmt">Ensures that the throughput of <a href="../Reader.html#read(n:Int):com.twitter.util.Future[Option[A]]" class="extmbr" name="com.twitter.io.Reader#read">reads</a> happen
+above a minimum specified bytes per second rate.</p><div class="fullcomment"><div class="comment cmt"><p>Ensures that the throughput of <a href="../Reader.html#read(n:Int):com.twitter.util.Future[Option[A]]" class="extmbr" name="com.twitter.io.Reader#read">reads</a> happen
 above a minimum specified bytes per second rate.</p><p>Reads will return a Future of a <a href="BelowThroughputException.html" class="extype" name="com.twitter.io.exp.BelowThroughputException">BelowThroughputException</a> when the
 throughput is not met.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>the minimum time allotted to any read is 1 second.</p></span></dd></dl></div>
@@ -615,9 +615,9 @@ throughput is not met.
               
         </dd></dl></div>
     </li><li name="com.twitter.io.exp.MinimumThroughput#writer" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="writer(writer:com.twitter.io.Writer,minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Writer"></a><a id="writer(Writer,Double,Timer):Writer"></a>
+      <a id="writer(writer:com.twitter.io.Writer[com.twitter.io.Buf],minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Writer[com.twitter.io.Buf]"></a><a id="writer(Writer[Buf],Double,Timer):Writer[Buf]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/io/exp/MinimumThroughput$.html#writer(writer:com.twitter.io.Writer,minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Writer" title="Permalink">
+      <a href="../../../../com/twitter/io/exp/MinimumThroughput$.html#writer(writer:com.twitter.io.Writer[com.twitter.io.Buf],minBps:Double,timer:com.twitter.util.Timer):com.twitter.io.Writer[com.twitter.io.Buf]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -626,11 +626,11 @@ throughput is not met.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">writer</span><span class="params">(<span name="writer">writer: <a href="../Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>, <span name="minBps">minBps: <a href="http://www.scala-lang.org/api/2.12.4/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>, <span name="timer">timer: <a href="../../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></span>
+        <span class="name">writer</span><span class="params">(<span name="writer">writer: <a href="../Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>, <span name="minBps">minBps: <a href="http://www.scala-lang.org/api/2.12.4/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>, <span name="timer">timer: <a href="../../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<a href="../Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Ensures that the throughput of <a href="../Writer.html#write(buf:com.twitter.io.Buf):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.io.Writer#write">writes</a> happen
-above a minimum specified bytes per second rate.</p><div class="fullcomment"><div class="comment cmt"><p>Ensures that the throughput of <a href="../Writer.html#write(buf:com.twitter.io.Buf):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.io.Writer#write">writes</a> happen
+      <p class="shortcomment cmt">Ensures that the throughput of <a href="../Writer.html#write(buf:A):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.io.Writer#write">writes</a> happen
+above a minimum specified bytes per second rate.</p><div class="fullcomment"><div class="comment cmt"><p>Ensures that the throughput of <a href="../Writer.html#write(buf:A):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.io.Writer#write">writes</a> happen
 above a minimum specified bytes per second rate.</p><p>Writes will return a Future of a <a href="BelowThroughputException.html" class="extype" name="com.twitter.io.exp.BelowThroughputException">BelowThroughputException</a> when the
 throughput is not met.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>the minimum time allotted to any write is 1 second.</p></span></dd></dl></div>

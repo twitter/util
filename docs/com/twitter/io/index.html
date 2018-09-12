@@ -306,9 +306,13 @@
                         <a class="class" href="InputStreamReader.html" title="Provides the Reader API for an InputStream."></a>
                         <a href="InputStreamReader.html" title="Provides the Reader API for an InputStream.">InputStreamReader</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a class="class" href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer."></a>
+                        <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks."></a>
-                        <a href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks.">Reader</a>
+                        <a class="trait" href="Reader.html" title="A Reader represents a stream of As."></a>
+                        <a href="Reader.html" title="A Reader represents a stream of As.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -327,8 +331,8 @@
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Writer$.html" title=""></a>
-                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams."></a>
-                        <a href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
+                        <a href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -610,9 +614,9 @@ builders are stateful. Assume that the builder implementations are &quot;&quot;n
 threadsafe unless otherwise noted.
 </p></div></div>
     </li><li name="com.twitter.io.InputStreamReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="InputStreamReaderextendsReaderwithClosablewithCloseAwaitably"></a><a id="InputStreamReader:InputStreamReader"></a>
+      <a id="InputStreamReaderextendsReader[com.twitter.io.Buf]withClosablewithCloseAwaitably"></a><a id="InputStreamReader:InputStreamReader"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/index.html#InputStreamReaderextendsReaderwithClosablewithCloseAwaitably" title="Permalink">
+      <a href="../../../com/twitter/io/index.html#InputStreamReaderextendsReader[com.twitter.io.Buf]withClosablewithCloseAwaitably" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -621,16 +625,38 @@ threadsafe unless otherwise noted.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Provides the Reader API for an InputStream." href="InputStreamReader.html"><span class="name">InputStreamReader</span></a><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
+        <a title="Provides the Reader API for an InputStream." href="InputStreamReader.html"><span class="name">InputStreamReader</span></a><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
       </span>
       
-      <p class="shortcomment cmt">Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
+      <p class="shortcomment cmt">Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[A]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
 reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
 </p></div></div>
-    </li><li name="com.twitter.io.Reader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ReaderextendsAnyRef"></a><a id="Reader:Reader"></a>
+    </li><li name="com.twitter.io.Pipe" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Pipe[A&lt;:com.twitter.io.Buf]extendsReader[A]withWriter[A]withClosable"></a><a id="Pipe[A&lt;:Buf]:Pipe[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/index.html#ReaderextendsAnyRef" title="Permalink">
+      <a href="../../../com/twitter/io/index.html#Pipe[A&lt;:com.twitter.io.Buf]extendsReader[A]withWriter[A]withClosable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer." href="Pipe.html"><span class="name">Pipe</span></a><span class="tparams">[<span name="A">A &lt;: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>]</span><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>] with <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A synchronous in-memory pipe that connects <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> in the sense
+that a reader's input is the output of a writer.</p><div class="fullcomment"><div class="comment cmt"><p>A synchronous in-memory pipe that connects <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> in the sense
+that a reader's input is the output of a writer.</p><p>Reads and writes on the pipe are matched one to one and only one outstanding <code>read</code>
+or <code>write</code> is permitted in the current implementation. That is, the <code>write</code> (its
+returned <span class="extype" name="Future">Future</span>) is resolved when the <code>read</code> consumes the written data.</p><p>It is safe to call <code>read</code>, <code>write</code>, and <code>close</code> concurrently. The individual calls
+are synchronized on the given <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>.
+</p></div></div>
+    </li><li name="com.twitter.io.Reader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Reader[+A]extendsAnyRef"></a><a id="Reader[+A]:Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#Reader[+A]extendsAnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -639,12 +665,11 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Reader represents a stream of bytes, read in discrete chunks." href="Reader.html"><span class="name">Reader</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Reader represents a stream of As." href="Reader.html"><span class="name">Reader</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">A Reader represents a stream of bytes, read in discrete chunks.</p><div class="fullcomment"><div class="comment cmt"><p>A Reader represents a stream of bytes, read in discrete chunks.
-Readers permit at most one outstanding read.
-</p></div></div>
+      <p class="shortcomment cmt">A Reader represents a stream of <code>A</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A Reader represents a stream of <code>A</code>s.</p><p>Readers permit at most one outstanding read.
+</p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>the type of objects produced by this reader</p></dd></dl></div>
     </li><li name="com.twitter.io.Readers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ReadersextendsObject"></a><a id="Readers:Readers"></a>
       <span class="permalink">
@@ -663,9 +688,9 @@ Readers permit at most one outstanding read.
       <p class="shortcomment cmt">Java APIs for Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Reader.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Reader</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writer" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="WriterextendsAnyRef"></a><a id="Writer:Writer"></a>
+      <a id="Writer[-A]extendsAnyRef"></a><a id="Writer[-A]:Writer[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/index.html#WriterextendsAnyRef" title="Permalink">
+      <a href="../../../com/twitter/io/index.html#Writer[-A]extendsAnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -674,11 +699,11 @@ Readers permit at most one outstanding read.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams." href="Writer.html"><span class="name">Writer</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams." href="Writer.html"><span class="name">Writer</span></a><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">A Writer represents a sink for a stream of bytes, providing
-a convenient interface for the producer of such streams.</p>
+      <p class="shortcomment cmt">A Writer represents a sink for a stream of <code>A</code>s, providing a convenient interface
+for the producer of such streams.</p>
     </li><li name="com.twitter.io.Writers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="WritersextendsObject"></a><a id="Writers:Writers"></a>
       <span class="permalink">
@@ -837,6 +862,22 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
       </span>
       <span class="symbol">
         <a title="" href="InputStreamReader$.html"><span class="name">InputStreamReader</span></a>
+      </span>
+      
+      
+    </li><li name="com.twitter.io.Pipe" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Pipe"></a><a id="Pipe:Pipe"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#Pipe" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Pipe$.html"><span class="name">Pipe</span></a>
       </span>
       
       

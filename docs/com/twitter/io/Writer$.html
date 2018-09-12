@@ -178,9 +178,13 @@
                         <a class="class" href="InputStreamReader.html" title="Provides the Reader API for an InputStream."></a>
                         <a href="InputStreamReader.html" title="Provides the Reader API for an InputStream.">InputStreamReader</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a class="class" href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer."></a>
+                        <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks."></a>
-                        <a href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks.">Reader</a>
+                        <a class="trait" href="Reader.html" title="A Reader represents a stream of As."></a>
+                        <a href="Reader.html" title="A Reader represents a stream of As.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -199,8 +203,8 @@
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="" title=""></a>
-                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams."></a>
-                        <a href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
+                        <a href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -288,9 +292,9 @@
         <div id="types" class="types members">
               <h3>Type Members</h3>
               <ol><li name="com.twitter.io.Writer.ClosableWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ClosableWriterextendsWriterwithClosable"></a><a id="ClosableWriter:ClosableWriter"></a>
+      <a id="ClosableWriter[A]extendsWriter[A]withClosable"></a><a id="ClosableWriter[A]:ClosableWriter[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Writer$.html#ClosableWriterextendsWriterwithClosable" title="Permalink">
+      <a href="../../../com/twitter/io/Writer$.html#ClosableWriter[A]extendsWriter[A]withClosable" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -299,7 +303,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Represents a Writer which is Closable." href="Writer$$ClosableWriter.html"><span class="name">ClosableWriter</span></a><span class="result"> extends <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+        <a title="Represents a Writer which is Closable." href="Writer$$ClosableWriter.html"><span class="name">ClosableWriter</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.ClosableWriter.A">A</span>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       
       <p class="shortcomment cmt">Represents a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> which is <span class="extype" name="Closable">Closable</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Represents a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> which is <span class="extype" name="Closable">Closable</span>.</p><p>Exists primarily for Java compatibility.
@@ -377,9 +381,9 @@
       
       
     </li><li name="com.twitter.io.Writer#FailingWriter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="FailingWriter:com.twitter.io.Writer.ClosableWriter"></a><a id="FailingWriter:ClosableWriter"></a>
+      <a id="FailingWriter:com.twitter.io.Writer[com.twitter.io.Buf]withcom.twitter.util.Closable"></a><a id="FailingWriter:Writer[Buf]withClosable"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Writer$.html#FailingWriter:com.twitter.io.Writer.ClosableWriter" title="Permalink">
+      <a href="../../../com/twitter/io/Writer$.html#FailingWriter:com.twitter.io.Writer[com.twitter.io.Buf]withcom.twitter.util.Closable" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -388,7 +392,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">FailingWriter</span><span class="result">: <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a></span>
+        <span class="name">FailingWriter</span><span class="result">: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       
       <p class="shortcomment cmt">A <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a> instance that will always fail.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a> instance that will always fail. Useful for situations
@@ -467,6 +471,22 @@ where writing to the <a href="Writer.html" class="extype" name="com.twitter.io.W
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.io.Writer#fail" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fail[A]:com.twitter.io.Writer[A]withcom.twitter.util.Closable"></a><a id="fail[A]:Writer[A]withClosable"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Writer$.html#fail[A]:com.twitter.io.Writer[A]withcom.twitter.util.Closable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fail</span><span class="tparams">[<span name="A">A</span>]</span><span class="result">: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.fail.A">A</span>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -490,9 +510,9 @@ where writing to the <a href="Writer.html" class="extype" name="com.twitter.io.W
               
         </dd></dl></div>
     </li><li name="com.twitter.io.Writer#fromOutputStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="fromOutputStream(out:java.io.OutputStream):com.twitter.io.Writer.ClosableWriter"></a><a id="fromOutputStream(OutputStream):ClosableWriter"></a>
+      <a id="fromOutputStream(out:java.io.OutputStream):com.twitter.io.Writer.ClosableWriter[com.twitter.io.Buf]"></a><a id="fromOutputStream(OutputStream):ClosableWriter[Buf]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Writer$.html#fromOutputStream(out:java.io.OutputStream):com.twitter.io.Writer.ClosableWriter" title="Permalink">
+      <a href="../../../com/twitter/io/Writer$.html#fromOutputStream(out:java.io.OutputStream):com.twitter.io.Writer.ClosableWriter[com.twitter.io.Buf]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -501,7 +521,7 @@ where writing to the <a href="Writer.html" class="extype" name="com.twitter.io.W
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromOutputStream</span><span class="params">(<span name="out">out: <span class="extype" name="java.io.OutputStream">OutputStream</span></span>)</span><span class="result">: <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a></span>
+        <span class="name">fromOutputStream</span><span class="params">(<span name="out">out: <span class="extype" name="java.io.OutputStream">OutputStream</span></span>)</span><span class="result">: <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Construct a <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a> from a given OutputStream.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a> from a given OutputStream.</p><p>This <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> is not thread safe. If multiple threads attempt to <code>write</code>, the
@@ -509,9 +529,9 @@ behavior is identical to multiple threads calling <code>write</code> on the unde
 OutputStream.
 </p></div></div>
     </li><li name="com.twitter.io.Writer#fromOutputStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="fromOutputStream(out:java.io.OutputStream,bufsize:Int):com.twitter.io.Writer.ClosableWriter"></a><a id="fromOutputStream(OutputStream,Int):ClosableWriter"></a>
+      <a id="fromOutputStream(out:java.io.OutputStream,bufsize:Int):com.twitter.io.Writer.ClosableWriter[com.twitter.io.Buf]"></a><a id="fromOutputStream(OutputStream,Int):ClosableWriter[Buf]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Writer$.html#fromOutputStream(out:java.io.OutputStream,bufsize:Int):com.twitter.io.Writer.ClosableWriter" title="Permalink">
+      <a href="../../../com/twitter/io/Writer$.html#fromOutputStream(out:java.io.OutputStream,bufsize:Int):com.twitter.io.Writer.ClosableWriter[com.twitter.io.Buf]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -520,7 +540,7 @@ OutputStream.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromOutputStream</span><span class="params">(<span name="out">out: <span class="extype" name="java.io.OutputStream">OutputStream</span></span>, <span name="bufsize">bufsize: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a></span>
+        <span class="name">fromOutputStream</span><span class="params">(<span name="out">out: <span class="extype" name="java.io.OutputStream">OutputStream</span></span>, <span name="bufsize">bufsize: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Construct a <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a> from a given OutputStream.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a <a href="Writer$$ClosableWriter.html" class="extype" name="com.twitter.io.Writer.ClosableWriter">ClosableWriter</a> from a given OutputStream.</p><p>This <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> is not thread safe. If multiple threads attempt to <code>write</code>, the

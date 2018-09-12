@@ -218,6 +218,10 @@
                         <a class="class" href="ScribeHandler.html" title="NOTE: ScribeHandler is usually used to write structured binary data."></a>
                         <a href="ScribeHandler.html" title="NOTE: ScribeHandler is usually used to write structured binary data.">ScribeHandler</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="ScribeHandlers$.html" title=""></a>
+                        <a href="ScribeHandlers$.html" title="">ScribeHandlers</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="StringHandler$.html" title=""></a>
                         <a class="class" href="StringHandler.html" title="Mostly useful for unit tests: logging goes directly into a string buffer."></a>
                         <a href="StringHandler.html" title="Mostly useful for unit tests: logging goes directly into a string buffer.">StringHandler</a>
@@ -568,12 +572,12 @@
       </span>
       
       <p class="shortcomment cmt">Generates a HandlerFactory that returns a ScribeHandler.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a HandlerFactory that returns a ScribeHandler.
-NOTE: ScribeHandler is usually used to write structured binary data.
-When used in this way, wrapping this in other handlers, such as ThrottledHandler,
-which emit plain-text messages into the log, will corrupt the resulting data.
 </p></div><dl class="paramcmts block"><dt class="param">bufferTime</dt><dd class="cmt"><p>
 send a scribe message no more frequently than this:</p></dd><dt class="param">connectBackoff</dt><dd class="cmt"><p>
-don't connect more frequently than this (when the scribe server is down):</p></dd></dl></div>
+don't connect more frequently than this (when the scribe server is down):</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Java users of this library can use one of the methods in <a href="ScribeHandlers$.html" class="extype" name="com.twitter.logging.ScribeHandlers">ScribeHandlers</a>,
+so they need not provide all the default arguments.</p></span>, <span class="cmt"><p>ScribeHandler is usually used to write structured binary data.
+When used in this way, wrapping this in other handlers, such as ThrottledHandler,
+which emit plain-text messages into the log, will corrupt the resulting data.</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">

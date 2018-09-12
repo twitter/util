@@ -562,9 +562,9 @@ more recent scala version so we will revisit this soon.
       
       <p class="shortcomment cmt">Transformation (or lift) from <span class="extype" name="Option">Option</span> into <code>AsyncStream</code>.</p>
     </li><li name="com.twitter.concurrent.AsyncStream#fromReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="fromReader(r:com.twitter.io.Reader,chunkSize:Int):com.twitter.concurrent.AsyncStream[com.twitter.io.Buf]"></a><a id="fromReader(Reader,Int):AsyncStream[Buf]"></a>
+      <a id="fromReader[A&lt;:com.twitter.io.Buf](r:com.twitter.io.Reader[A],chunkSize:Int):com.twitter.concurrent.AsyncStream[A]"></a><a id="fromReader[A&lt;:Buf](Reader[A],Int):AsyncStream[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/concurrent/AsyncStream$.html#fromReader(r:com.twitter.io.Reader,chunkSize:Int):com.twitter.concurrent.AsyncStream[com.twitter.io.Buf]" title="Permalink">
+      <a href="../../../com/twitter/concurrent/AsyncStream$.html#fromReader[A&lt;:com.twitter.io.Buf](r:com.twitter.io.Reader[A],chunkSize:Int):com.twitter.concurrent.AsyncStream[A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -573,11 +573,10 @@ more recent scala version so we will revisit this soon.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromReader</span><span class="params">(<span name="r">r: <a href="../io/Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></span>, <span name="chunkSize">chunkSize: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a> = <span class="symbol">Int.MaxValue</span></span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="../io/Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
+        <span class="name">fromReader</span><span class="tparams">[<span name="A">A &lt;: <a href="../io/Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>]</span><span class="params">(<span name="r">r: <a href="../io/Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.fromReader.A">A</span>]</span>, <span name="chunkSize">chunkSize: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a> = <span class="symbol">Int.MaxValue</span></span>)</span><span class="result">: <a href="AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.concurrent.AsyncStream.fromReader.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Transformation (or lift) from <span class="extype" name="Reader">Reader</span> into <code>AsyncStream[Buf]</code>, where each <span class="extype" name="Buf">Buf</span>
-has size up to <code>chunkSize</code>.</p>
+      <p class="shortcomment cmt">Transformation (or lift) from <span class="extype" name="Reader">Reader</span> into <code>AsyncStream</code>.</p>
     </li><li name="com.twitter.concurrent.AsyncStream#fromSeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="fromSeq[A](seq:Seq[A]):com.twitter.concurrent.AsyncStream[A]"></a><a id="fromSeq[A](Seq[A]):AsyncStream[A]"></a>
       <span class="permalink">

@@ -178,9 +178,13 @@
                         <a class="class" href="" title="Provides the Reader API for an InputStream."></a>
                         <a href="" title="Provides the Reader API for an InputStream.">InputStreamReader</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a class="class" href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer."></a>
+                        <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks."></a>
-                        <a href="Reader.html" title="A Reader represents a stream of bytes, read in discrete chunks.">Reader</a>
+                        <a class="trait" href="Reader.html" title="A Reader represents a stream of As."></a>
+                        <a href="Reader.html" title="A Reader represents a stream of As.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -199,8 +203,8 @@
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Writer$.html" title=""></a>
-                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams."></a>
-                        <a href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
+                        <a href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -230,18 +234,18 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">InputStreamReader</span><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
+        <span class="name">InputStreamReader</span><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read(n:Int):com.twitter.util.Future[Option[A]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
 reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>], <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
         </div></div>
         
 
@@ -852,7 +856,7 @@ method.
             </div><div class="parent" name="com.twitter.util.Closable">
               <h3>Inherited from <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
             </div><div class="parent" name="com.twitter.io.Reader">
-              <h3>Inherited from <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></h3>
+              <h3>Inherited from <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">

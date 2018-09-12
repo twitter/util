@@ -160,7 +160,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">ClosableWriter</span><span class="result"> extends <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+        <span class="name">ClosableWriter</span><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.ClosableWriter.A">A</span>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       </h4>
 
@@ -170,7 +170,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.ClosableWriter.A">A</span>], <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
         </div></div>
         
 
@@ -254,14 +254,12 @@ up other tasks.
         <span class="name">fail</span><span class="params">(<span name="cause">cause: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Indicate that the producer of the bytestream has
-failed.</p><div class="fullcomment"><div class="comment cmt"><p>Indicate that the producer of the bytestream has
-failed. No further writes are allowed.
+      <p class="shortcomment cmt">Indicate that the producer of the bytestream has failed.</p><div class="fullcomment"><div class="comment cmt"><p>Indicate that the producer of the bytestream has failed. No further writes are allowed.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd></dl></div>
     </li><li name="com.twitter.io.Writer#write" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="write(buf:com.twitter.io.Buf):com.twitter.util.Future[Unit]"></a><a id="write(Buf):Future[Unit]"></a>
+      <a id="write(buf:A):com.twitter.util.Future[Unit]"></a><a id="write(A):Future[Unit]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Writer$$ClosableWriter.html#write(buf:com.twitter.io.Buf):com.twitter.util.Future[Unit]" title="Permalink">
+      <a href="../../../com/twitter/io/Writer$$ClosableWriter.html#write(buf:A):com.twitter.util.Future[Unit]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -270,12 +268,11 @@ failed. No further writes are allowed.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">write</span><span class="params">(<span name="buf">buf: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+        <span class="name">write</span><span class="params">(<span name="buf">buf: <span class="extype" name="com.twitter.io.Writer.ClosableWriter.A">A</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Write a chunk.</p><div class="fullcomment"><div class="comment cmt"><p>Write a chunk. The returned future is completed
-when the chunk has been fully read by the sink.</p><p>Only one outstanding <code>write</code> is permitted, thus
-backpressure is asserted.
+      <p class="shortcomment cmt">Write a chunk.</p><div class="fullcomment"><div class="comment cmt"><p>Write a chunk. The returned future is completed when the chunk has been
+fully read by the sink.</p><p>Only one outstanding <code>write</code> is permitted, thus backpressure is asserted.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd></dl></div>
     </li></ol>
             </div>
@@ -683,7 +680,7 @@ the resource has been fully relinquished.
         <div class="parent" name="com.twitter.util.Closable">
               <h3>Inherited from <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
             </div><div class="parent" name="com.twitter.io.Writer">
-              <h3>Inherited from <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></h3>
+              <h3>Inherited from <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.ClosableWriter.A">A</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">

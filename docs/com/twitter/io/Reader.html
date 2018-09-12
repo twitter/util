@@ -178,9 +178,13 @@
                         <a class="class" href="InputStreamReader.html" title="Provides the Reader API for an InputStream."></a>
                         <a href="InputStreamReader.html" title="Provides the Reader API for an InputStream.">InputStreamReader</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="Pipe$.html" title=""></a>
+                        <a class="class" href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer."></a>
+                        <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="" title="A Reader represents a stream of bytes, read in discrete chunks."></a>
-                        <a href="" title="A Reader represents a stream of bytes, read in discrete chunks.">Reader</a>
+                        <a class="trait" href="" title="A Reader represents a stream of As."></a>
+                        <a href="" title="A Reader represents a stream of As.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -199,8 +203,8 @@
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Writer$.html" title=""></a>
-                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams."></a>
-                        <a href="Writer.html" title="A Writer represents a sink for a stream of bytes, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
+                        <a href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -230,14 +234,13 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Reader</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <span class="name">Reader</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Reader represents a stream of bytes, read in discrete chunks.
-Readers permit at most one outstanding read.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Reader represents a stream of <code>A</code>s.</p><p>Readers permit at most one outstanding read.
+</p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>the type of objects produced by this reader</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -246,7 +249,7 @@ Readers permit at most one outstanding read.
             <span class="toggle">
               Known Subclasses
             </span>
-            <div class="subClasses hiddenContent"><a href="InputStreamReader.html" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a>, <a href="Reader$$Writable.html" class="extype" name="com.twitter.io.Reader.Writable">Writable</a></div>
+            <div class="subClasses hiddenContent"><a href="InputStreamReader.html" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a>, <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a></div>
           </div></div>
         
 
@@ -313,9 +316,9 @@ Readers permit at most one outstanding read.
       
       <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p>
     </li><li name="com.twitter.io.Reader#read" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]"></a><a id="read(Int):Future[Option[Buf]]"></a>
+      <a id="read(n:Int):com.twitter.util.Future[Option[A]]"></a><a id="read(Int):Future[Option[A]]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/Reader.html#read(n:Int):com.twitter.util.Future[Option[com.twitter.io.Buf]]" title="Permalink">
+      <a href="../../../com/twitter/io/Reader.html#read(n:Int):com.twitter.util.Future[Option[A]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -324,7 +327,7 @@ Readers permit at most one outstanding read.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">read</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]]</span>
+        <span class="name">read</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.io.Reader.A">A</span>]]</span>
       </span>
       
       <p class="shortcomment cmt">Asynchronously read at most <code>n</code> bytes from the byte stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read at most <code>n</code> bytes from the byte stream. The
