@@ -25,26 +25,32 @@ class ServiceLoadedTunableTestClient2Dup extends ServiceLoadedTunableMap with Tu
 
 class ServiceLoadedTunableMapTest extends FunSuite {
 
-  test("NullTunableMap returned when no matches") {
-    val tunableMap = ServiceLoadedTunableMap("Non-existent-id")
-    assert(tunableMap eq NullTunableMap)
-  }
-
-  test("TunableMap returned when there is one match for id") {
-    val tunableMap = ServiceLoadedTunableMap("client1")
-
-    assert(tunableMap.entries.size == 2)
-    assert(tunableMap(TunableMap.Key[String]("tunableId1"))() == Some("foo"))
-    assert(tunableMap(TunableMap.Key[Int]("tunableId2"))() == Some(5))
-  }
-
   test(
     "IllegalArgumentException thrown when there is more than one ServiceLoadedTunableMap " +
       "for a given serviceName/id"
   ) {
 
-    intercept[IllegalStateException] {
+    val ex = intercept[IllegalStateException] {
       ServiceLoadedTunableMap("client2")
+    }
+    assert(ex.getMessage.contains("Found multiple `ServiceLoadedTunableMap`s for client2"))
+  }
+
+  test("NullTunableMap returned when no matches") {
+    intercept[IllegalStateException] {
+      val tunableMap = ServiceLoadedTunableMap("Non-existent-id")
+      assert(tunableMap eq NullTunableMap)
+    }
+  }
+
+  test("TunableMap returned when there is one match for id") {
+    intercept[IllegalStateException] {
+
+      val tunableMap = ServiceLoadedTunableMap("client1")
+
+      assert(tunableMap.entries.size == 2)
+      assert(tunableMap(TunableMap.Key[String]("tunableId1"))() == Some("foo"))
+      assert(tunableMap(TunableMap.Key[Int]("tunableId2"))() == Some(5))
     }
   }
 }

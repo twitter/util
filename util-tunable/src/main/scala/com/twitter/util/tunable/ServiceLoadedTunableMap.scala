@@ -1,6 +1,9 @@
 package com.twitter.util.tunable
 
 import com.twitter.app.LoadService
+import com.twitter.concurrent.Once
+import java.util.concurrent.ConcurrentHashMap
+import java.util.function.BiFunction
 
 /**
  * [[TunableMap]] loaded through `com.twitter.app.LoadService`.
@@ -16,6 +19,8 @@ trait ServiceLoadedTunableMap extends TunableMap {
 
 object ServiceLoadedTunableMap {
 
+  private[this] val loadedMaps = new ConcurrentHashMap[String, TunableMap]()
+
   /**
    * Uses `com.twitter.app.LoadService` to load the [[TunableMap]] for a given `id`.
    *
@@ -24,18 +29,51 @@ object ServiceLoadedTunableMap {
    * If more than one match is found, an `IllegalStateException` is thrown.
    */
   def apply(id: String): TunableMap = {
+    init()
+    loadedMaps.getOrDefault(id, NullTunableMap)
+  }
 
-    val tunableMaps = LoadService[ServiceLoadedTunableMap]().filter(_.id == id).toList
+  private[this] val init = Once {
+    val serviceLoadedTunableMap = LoadService[ServiceLoadedTunableMap]().toList
+    serviceLoadedTunableMap.foreach(setLoadedMap)
+  }
 
-    tunableMaps match {
-      case Nil =>
-        NullTunableMap
-      case tunableMap :: Nil =>
-        tunableMap
-      case _ =>
-        throw new IllegalStateException(
-          s"Found multiple `ServiceLoadedTunableMap`s for $id: ${tunableMaps.mkString(", ")}"
-        )
+  private[this] def setLoadedMap(serviceLoadedTunableMap: ServiceLoadedTunableMap): Unit = {
+    loadedMaps.compute(
+      serviceLoadedTunableMap.id,
+      new BiFunction[String, TunableMap, TunableMap] {
+        def apply(
+          id: String,
+          curr: TunableMap
+        ): TunableMap = {
+          if (curr != null) throw new IllegalStateException(
+            s"Found multiple `ServiceLoadedTunableMap`s for $id: $curr, $serviceLoadedTunableMap"
+          )
+          else serviceLoadedTunableMap
+        }
+      }
+    )
+  }
+
+  /**
+   * Uses `com.twitter.app.LoadService` to load all [[ServiceLoadedTunableMap]]s,
+   * The subtype `com.twitter.util.tunable.ConfigbusTunableMap`s would re-construct
+   * and re-subscribe to the ConfigBus.
+   *
+   * @note this should be called after ServerInfo.initialized().
+   */
+  private[twitter] def reloadAll(): Unit = {
+    val serviceLoadedTunableMaps = LoadService[ServiceLoadedTunableMap]().toList
+    serviceLoadedTunableMaps.foreach { serviceLoadedTunableMap =>
+      loadedMaps.computeIfPresent(
+        serviceLoadedTunableMap.id,
+        new BiFunction[String, TunableMap, TunableMap] {
+          def apply(
+            id: String,
+            curr: TunableMap
+          ): TunableMap = serviceLoadedTunableMap
+        }
+      )
     }
   }
 }
