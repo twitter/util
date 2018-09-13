@@ -28,6 +28,9 @@ New Features
 * util-security: Add `NullSslSession` related objects for use with non-existent
   `SSLSession`s.  ``PHAB_ID=D201421``
 
+* util-tunable: Introducing `Tunable.asVar` that allows observing changes to tunables.
+  ``PHAB_ID=D211622``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 

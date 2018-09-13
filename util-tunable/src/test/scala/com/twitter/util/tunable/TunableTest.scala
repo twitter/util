@@ -170,4 +170,67 @@ class TunableTest extends FunSuite {
 
     assert(composed() == None)
   }
+
+  test("mutable tunables are observable") {
+    val tunable = Tunable.mutable("id", 5)
+    val obs = tunable.asVar
+
+    assert(obs.sample().contains(5))
+  }
+
+  test("empty mutable tunables are observable") {
+    val tunable = Tunable.emptyMutable[Int]("id")
+    val obs = tunable.asVar
+
+    assert(obs.sample().isEmpty)
+    tunable.set(5)
+    assert(obs.sample().contains(5))
+  }
+
+  test("mutable tunable changes are observed") {
+    val tunable = Tunable.mutable("id", 5)
+    val obs = tunable.asVar
+
+    assert(obs.sample().contains(5))
+    tunable.set(6)
+    assert(obs.sample().contains(6))
+  }
+
+  test("orElse Tunable is observable if first value is defined") {
+    val tunable = Tunable.mutable("a", 5)
+    val orElsed = tunable.orElse(Tunable.const("b", 6))
+
+    val obs = orElsed.asVar
+    assert(obs.sample().contains(5))
+    tunable.clear()
+    assert(obs.sample().contains(6))
+  }
+
+  test("orElse Tunable is observable if first value is undefined") {
+    val tunable = Tunable.emptyMutable[Int]("a")
+    val orElsed = tunable.orElse(Tunable.const("b", 5))
+
+    val obs = orElsed.asVar
+    assert(obs.sample().contains(5))
+    tunable.set(6)
+    assert(obs.sample().contains(6))
+  }
+
+  test("map of mutable Tunables is observable") {
+    val tunable = Tunable.mutable("id", 5)
+    val mapped = tunable.map(_ + 1)
+    val obs = mapped.asVar
+
+    assert(obs.sample().contains(6))
+    tunable.set(6)
+    assert(obs.sample().contains(7))
+  }
+
+  test("map of const Tunables is observable") {
+    val tunable = Tunable.const("id", 5)
+    val mapped = tunable.map(_ + 1)
+    val obs = mapped.asVar
+
+    assert(obs.sample().contains(6))
+  }
 }

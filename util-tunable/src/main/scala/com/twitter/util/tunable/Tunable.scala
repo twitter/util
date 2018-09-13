@@ -1,5 +1,7 @@
 package com.twitter.util.tunable
 
+import com.twitter.util.Var
+
 /**
  * A [[Tunable]] is an abstraction for an object that produces a Some(value) or None when applied.
  * Implementations may enable mutation, such that successive applications of the [[Tunable]]
@@ -12,6 +14,12 @@ package com.twitter.util.tunable
  * @tparam T  type of value this [[Tunable]] holds
  */
 sealed abstract class Tunable[T](val id: String) { self =>
+
+  /**
+   * Returns a [[Var]] that observes this [[Tunable]].  Observers of the [[Var]] will be notified
+   * whenever the value of this [[Tunable]] is updated.
+   */
+  def asVar: Var[Option[T]]
 
   // validate id is not empty
   if (id.trim.isEmpty)
@@ -35,6 +43,12 @@ sealed abstract class Tunable[T](val id: String) { self =>
    */
   def orElse(that: Tunable[T]): Tunable[T] =
     new Tunable[T](id) {
+
+      def asVar: Var[Option[T]] = self.asVar.flatMap {
+        case Some(_) => self.asVar
+        case None => that.asVar
+      }
+
       override def toString: String =
         s"${self.toString}.orElse(${that.toString})"
 
@@ -49,6 +63,9 @@ sealed abstract class Tunable[T](val id: String) { self =>
    */
   def map[A](f: T => A): Tunable[A] =
     new Tunable[A](id) {
+
+      def asVar: Var[Option[A]] = self.asVar.map(_.map(f))
+
       def apply(): Option[A] = self().map(f)
     }
 }
@@ -58,16 +75,17 @@ object Tunable {
   /**
    * A [[Tunable]] that always returns `value` when applied.
    */
-  final class Const[T](id: String, private val value: T) extends Tunable[T](id) {
-    private[this] val SomeValue = Some(value)
+  final class Const[T](id: String, value: T) extends Tunable[T](id) {
+    private val holder = Var.value(Some(value))
 
-    def apply(): Option[T] =
-      SomeValue
+    def apply(): Option[T] = holder()
+
+    def asVar: Var[Option[T]] = holder
   }
 
   object Const {
     def unapply[T](tunable: Tunable[T]): Option[T] = tunable match {
-      case tunable: Tunable.Const[T] => Some(tunable.value)
+      case tunable: Tunable.Const[T] => tunable.holder()
       case _ => None
     }
   }
@@ -78,8 +96,11 @@ object Tunable {
   def const[T](id: String, value: T): Const[T] = new Const(id, value)
 
   private[this] val NoneTunable = new Tunable[Any]("com.twitter.util.tunable.NoneTunable") {
+
     def apply(): Option[Any] =
       None
+
+    val asVar: Var[Option[Any]] = Var.value(None)
   }
 
   /**
@@ -91,8 +112,12 @@ object Tunable {
   /**
    * A [[Tunable]] whose value can be changed. Operations are thread-safe.
    */
-  final class Mutable[T] private[tunable] (id: String, @volatile private var _value: Option[T])
+  final class Mutable[T] private[tunable] (id: String, _value: Option[T])
       extends Tunable[T](id) {
+
+    private[this] final val mutableHolder = Var(_value)
+
+    def asVar: Var[Option[T]] = mutableHolder
 
     /**
      * Set the value of the [[Tunable.Mutable]].
@@ -100,21 +125,18 @@ object Tunable {
      * Note that setting the value to `null` will result in a value of Some(null) when the
      * [[Tunable]] is applied.
      */
-    def set(value: T): Unit =
-      _value = Some(value)
+    def set(value: T): Unit = mutableHolder.update(Some(value))
 
     /**
      * Clear the value of the [[Tunable.Mutable]]. Calling `apply` on the [[Tunable.Mutable]]
      * will produce `None`.
      */
-    def clear(): Unit =
-      _value = None
+    def clear(): Unit = mutableHolder.update(None)
 
     /**
      * Get the current value of the [[Tunable.Mutable]]
      */
-    def apply(): Option[T] =
-      _value
+    def apply(): Option[T] = mutableHolder()
   }
 
   /**

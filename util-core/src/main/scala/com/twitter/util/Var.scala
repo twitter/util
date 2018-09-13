@@ -226,18 +226,20 @@ object Var {
     v
   }
 
-  private case class Value[T](v: T) extends Var[T] {
+  private case class Value[T](v: T) extends Var[T] with Extractable[T] {
     protected def observe(depth: Int, obs: Observer[T]): Closable = {
       obs.claim(this)
       obs.publish(this, v, 0)
       Closable.nop
     }
+
+    def apply(): T = v
   }
 
   /**
    * Create a new, constant, v-valued Var.
    */
-  def value[T](v: T): Var[T] = Value(v)
+  def value[T](v: T): Var[T] with Extractable[T] = Value(v)
 
   /**
    * Collect a collection of Vars into a Var of collection.
