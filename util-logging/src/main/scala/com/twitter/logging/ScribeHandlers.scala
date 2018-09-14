@@ -4,6 +4,7 @@ import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.logging.ScribeHandler._
 
 object ScribeHandlers {
+
   /**
    * For Java compatibility. Calls [[ScribeHandler.apply()]] method with
    * the provided arguments, so Java users don't need to provide the

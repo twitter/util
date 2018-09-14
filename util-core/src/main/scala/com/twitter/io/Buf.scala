@@ -123,7 +123,8 @@ abstract class Buf { outer =>
               )
             case _ =>
               Buf.Composite.Impl(
-                new IndexedThree(left.a, left.b, right), leftLength + right.length
+                new IndexedThree(left.a, left.b, right),
+                leftLength + right.length
               )
           }
 
@@ -139,7 +140,8 @@ abstract class Buf { outer =>
               )
             case Buf.Composite.Impl(right: IndexedThree, rightLength) =>
               Buf.Composite.Impl(
-                (new VectorBuilder[Buf] += left.a += left.b += left.c += right.a += right.b += right.c).result(),
+                (new VectorBuilder[Buf] += left.a += left.b += left.c += right.a += right.b += right.c)
+                  .result(),
                 leftLength + rightLength
               )
             case _ =>
@@ -154,7 +156,8 @@ abstract class Buf { outer =>
             case Buf.Composite.Impl(right: Vector[Buf], rightLength) =>
               Buf.Composite.Impl(left +: right, left.length + rightLength)
             case Buf.Composite.Impl(right: IndexedTwo, rightLength) =>
-              Buf.Composite.Impl(new IndexedThree(left, right.a, right.b), left.length + rightLength)
+              Buf.Composite
+                .Impl(new IndexedThree(left, right.a, right.b), left.length + rightLength)
             case Buf.Composite.Impl(right: IndexedThree, rightLength) =>
               Buf.Composite.Impl(
                 (new VectorBuilder[Buf] += left += right.a += right.b += right.c).result(),
@@ -557,9 +560,9 @@ object Buf {
     def unapply(buf: Composite): Option[IndexedSeq[Buf]] =
       Some(buf.bufs)
 
-    /** 
-      * Basic implementation of a [[Buf]] created from n-`Bufs`.
-      */
+    /**
+     * Basic implementation of a [[Buf]] created from n-`Bufs`.
+     */
     private[Buf] final case class Impl(bufs: IndexedSeq[Buf], protected val computedLength: Int)
         extends Buf.Composite {
 

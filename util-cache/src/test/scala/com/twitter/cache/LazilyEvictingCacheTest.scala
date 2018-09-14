@@ -85,14 +85,16 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
 
     var loadCount = 0
     val cache = new LoadingFutureCache(
-      Caffeine.newBuilder().build(
-        new CacheLoader[String, Future[Int]] {
-          def load(k: String): Future[Int] = {
-            loadCount += 1
-            Future.value(loadCount)
+      Caffeine
+        .newBuilder()
+        .build(
+          new CacheLoader[String, Future[Int]] {
+            def load(k: String): Future[Int] = {
+              loadCount += 1
+              Future.value(loadCount)
+            }
           }
-        }
-      )
+        )
     )
     val fCache = new LazilyEvictingCache(cache)
 
@@ -117,14 +119,16 @@ class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
 
     var loadCount = 0
     val cache = new LoadingFutureCache(
-      Caffeine.newBuilder().build(
-        new CacheLoader[String, Future[Int]] {
-          def load(k: String): Future[Int] = {
-            loadCount += 1
-            Future.value(loadCount)
+      Caffeine
+        .newBuilder()
+        .build(
+          new CacheLoader[String, Future[Int]] {
+            def load(k: String): Future[Int] = {
+              loadCount += 1
+              Future.value(loadCount)
+            }
           }
-        }
-      )
+        )
     )
     val fCache = new LazilyEvictingCache(cache)
 

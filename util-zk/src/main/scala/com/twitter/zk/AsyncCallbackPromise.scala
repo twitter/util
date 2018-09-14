@@ -46,7 +46,13 @@ class ExistsCallbackPromise(znode: ZNode)
 class ChildrenCallbackPromise(znode: ZNode)
     extends AsyncCallbackPromise[ZNode.Children]
     with AsyncCallback.Children2Callback {
-  def processResult(rc: Int, path: String, ctx: AnyRef, children: JList[String], stat: Stat): Unit = {
+  def processResult(
+    rc: Int,
+    path: String,
+    ctx: AnyRef,
+    children: JList[String],
+    stat: Stat
+  ): Unit = {
     process(rc, path) {
       znode(stat, children.asScala.toSeq)
     }

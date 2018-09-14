@@ -40,7 +40,7 @@ class X509CrlFileTest extends FunSuite {
     // Lines were manually deleted from a real crl file
     val tempFile = TempFile.fromResourcePath("/crl/csl-intermediate-garbage.crl")
     // deleteOnExit is handled by TempFile
-    
+
     val crlFile = new X509CrlFile(tempFile)
     val tryCrl = crlFile.readX509Crl()
 
@@ -51,7 +51,7 @@ class X509CrlFileTest extends FunSuite {
   test("File is a Certificate Revocation List") {
     val tempFile = TempFile.fromResourcePath("/crl/csl-intermediate.crl")
     // deleteOnExit is handled by TempFile
-    
+
     val crlFile = new X509CrlFile(tempFile)
     val tryCrl = crlFile.readX509Crl()
 

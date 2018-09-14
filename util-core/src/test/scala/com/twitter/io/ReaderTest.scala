@@ -82,7 +82,8 @@ class ReaderTest
       i <- Gen.posNum[Int].suchThat(_ <= s.length)
     } yield (s, i)
 
-    forAll(stringAndChunk) { case (s, i) =>
+    forAll(stringAndChunk) {
+      case (s, i) =>
         val r = Reader.chunked(Reader.fromBuf(Buf.Utf8(s)), i)
 
         def readLoop(): Unit = await(r.read(Int.MaxValue)) match {

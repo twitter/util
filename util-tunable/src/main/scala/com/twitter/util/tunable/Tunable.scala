@@ -112,8 +112,7 @@ object Tunable {
   /**
    * A [[Tunable]] whose value can be changed. Operations are thread-safe.
    */
-  final class Mutable[T] private[tunable] (id: String, _value: Option[T])
-      extends Tunable[T](id) {
+  final class Mutable[T] private[tunable] (id: String, _value: Option[T]) extends Tunable[T](id) {
 
     private[this] final val mutableHolder = Var(_value)
 

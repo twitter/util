@@ -50,4 +50,3 @@ abstract class FutureTransformer[-A, +B] {
    */
   def handle(throwable: Throwable): B = throw throwable
 }
-

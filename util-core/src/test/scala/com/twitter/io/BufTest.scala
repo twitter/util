@@ -12,7 +12,7 @@ import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 import scala.collection.mutable
 
 class BufTest
-  extends FunSuite
+    extends FunSuite
     with MockitoSugar
     with GeneratorDrivenPropertyChecks
     with Checkers
@@ -69,14 +69,15 @@ class BufTest
 
   test("Buf.ByteArray.[Owned|Shared](data, begin, end) validates non-negative indexes") {
     val data = Array[Byte]()
-    Seq(-1 -> 1, 1 -> -1).foreach { case (begin, end) =>
-      intercept[IllegalArgumentException] {
-        Buf.ByteArray.Owned(data, begin, end)
-      }
+    Seq(-1 -> 1, 1 -> -1).foreach {
+      case (begin, end) =>
+        intercept[IllegalArgumentException] {
+          Buf.ByteArray.Owned(data, begin, end)
+        }
 
-      intercept[IllegalArgumentException] {
-        Buf.ByteArray.Shared(data, begin, end)
-      }
+        intercept[IllegalArgumentException] {
+          Buf.ByteArray.Shared(data, begin, end)
+        }
     }
   }
 

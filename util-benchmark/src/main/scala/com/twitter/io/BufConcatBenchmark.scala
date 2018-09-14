@@ -30,10 +30,22 @@ object BufConcatBenchmark {
   val buf4: Buf = buf3.concat(buf1)
 
   val bufMatrix: Array[(Buf, Buf)] = Array(
-    (buf1, buf1), (buf1, buf2), (buf1, buf3), (buf1, buf4),
-    (buf2, buf1), (buf2, buf2), (buf2, buf3), (buf2, buf4),
-    (buf3, buf1), (buf3, buf2), (buf3, buf3), (buf3, buf4),
-    (buf4, buf1), (buf4, buf2), (buf4, buf3), (buf4, buf4)
+    (buf1, buf1),
+    (buf1, buf2),
+    (buf1, buf3),
+    (buf1, buf4),
+    (buf2, buf1),
+    (buf2, buf2),
+    (buf2, buf3),
+    (buf2, buf4),
+    (buf3, buf1),
+    (buf3, buf2),
+    (buf3, buf3),
+    (buf3, buf4),
+    (buf4, buf1),
+    (buf4, buf2),
+    (buf4, buf3),
+    (buf4, buf4)
   )
 
   @State(Scope.Thread)
@@ -69,11 +81,9 @@ class BufConcatBenchmark extends StdBenchAnnotations {
 class ConcatTwoBufsBenchmark extends StdBenchAnnotations {
   import BufConcatBenchmark._
 
-  @Param(Array(
-    "0", "1", "2", "3",
-    "4", "5", "6", "7",
-    "8", "9", "10", "11",
-    "12", "13", "14", "15"))
+  @Param(
+    Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15")
+  )
   var index: Int = _
 
   @Benchmark

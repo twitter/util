@@ -12,6 +12,6 @@ object NullSslSessionContext extends SSLSessionContext {
   def getSession(name: Array[Byte]): SSLSession = NullSslSession
   def getSessionCacheSize: Int = 0
   def getSessionTimeout: Int = 0
-  def setSessionCacheSize(size: Int): Unit = { }
-  def setSessionTimeout(seconds: Int): Unit = { }
+  def setSessionCacheSize(size: Int): Unit = {}
+  def setSessionTimeout(seconds: Int): Unit = {}
 }

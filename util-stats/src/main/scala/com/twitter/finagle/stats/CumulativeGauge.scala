@@ -144,53 +144,54 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
     case _ => whenNotPresent(verbosity)
   }
 
-  private[this] def whenNotPresent(verbosity: Verbosity) = new JFunction[Seq[String], CumulativeGauge] {
-    def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
-      self.registerGauge(verbosity, key, getValue)
+  private[this] def whenNotPresent(verbosity: Verbosity) =
+    new JFunction[Seq[String], CumulativeGauge] {
+      def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
+        self.registerGauge(verbosity, key, getValue)
 
-      // we grab the read lock on increment and decrement, which can race each
-      // other.  we only grab the write lock when we tear down the cumulative
-      // gauge, so that we can ensure no more increments happen after death.
-      private[this] val lock = new StampedLock()
-      private[this] val registers = new AtomicInteger(0)
+        // we grab the read lock on increment and decrement, which can race each
+        // other.  we only grab the write lock when we tear down the cumulative
+        // gauge, so that we can ensure no more increments happen after death.
+        private[this] val lock = new StampedLock()
+        private[this] val registers = new AtomicInteger(0)
 
-      // protected by `lock`
-      private[this] var dead = false
+        // protected by `lock`
+        private[this] var dead = false
 
-      def register(): Boolean = {
-        val stamp = lock.readLock()
-        try {
-          if (dead) return false
-          registers.incrementAndGet()
-        } finally {
-          lock.unlockRead(stamp)
-        }
-        true
-      }
-
-      def deregister(): Unit = {
-        val readStamp = lock.readLock()
-        if (registers.decrementAndGet() == 0) {
-          // we could skip a cas by using tryConvertToWriteLock, but it makes
-          // the code much uglier.
-          lock.unlockRead(readStamp)
-          val writeStamp = lock.writeLock()
-
+        def register(): Boolean = {
+          val stamp = lock.readLock()
           try {
-            if (!dead && registers.get == 0) {
-              dead = true
-              gauges.remove(key)
-              self.deregisterGauge(key)
-            }
+            if (dead) return false
+            registers.incrementAndGet()
           } finally {
-            lock.unlockWrite(writeStamp)
+            lock.unlockRead(stamp)
           }
-        } else {
-          lock.unlockRead(readStamp)
+          true
+        }
+
+        def deregister(): Unit = {
+          val readStamp = lock.readLock()
+          if (registers.decrementAndGet() == 0) {
+            // we could skip a cas by using tryConvertToWriteLock, but it makes
+            // the code much uglier.
+            lock.unlockRead(readStamp)
+            val writeStamp = lock.writeLock()
+
+            try {
+              if (!dead && registers.get == 0) {
+                dead = true
+                gauges.remove(key)
+                self.deregisterGauge(key)
+              }
+            } finally {
+              lock.unlockWrite(writeStamp)
+            }
+          } else {
+            lock.unlockRead(readStamp)
+          }
         }
       }
     }
-  }
 
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
     var gauge: Gauge = null

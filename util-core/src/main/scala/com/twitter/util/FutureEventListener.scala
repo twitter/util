@@ -23,4 +23,3 @@ trait FutureEventListener[T] {
    */
   def onFailure(cause: Throwable): Unit
 }
-

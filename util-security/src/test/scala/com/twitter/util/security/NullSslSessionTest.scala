@@ -44,4 +44,3 @@ class NullSslSessionTest extends FunSuite {
   }
 
 }
-

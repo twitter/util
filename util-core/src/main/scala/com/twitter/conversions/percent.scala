@@ -21,7 +21,7 @@ object percent {
 
   private val BigDecimal100 = BigDecimal(100.0)
 
-  class RichDoublePercent private[conversions](val wrapped: Double) extends AnyVal {
+  class RichDoublePercent private[conversions] (val wrapped: Double) extends AnyVal {
     // convert wrapped to BigDecimal to preserve precision when dividing Doubles
     def percent: Double =
       if (wrapped.equals(Double.NaN)

@@ -45,7 +45,7 @@ object Reader {
     require(chunkSize > 0, s"chunkSize should be > 0 but was $chunkSize")
 
     @tailrec
-    private def loop(acc: Seq[Buf], in: Buf) : Seq[Buf] = {
+    private def loop(acc: Seq[Buf], in: Buf): Seq[Buf] = {
       if (in.length < chunkSize) acc :+ in
       else {
         loop(
@@ -62,7 +62,8 @@ object Reader {
 
   // see Reader.framed
   private final class Framed(r: Reader[Buf], framer: Buf => Seq[Buf])
-    extends Reader[Buf] with (Option[Buf] => Future[Option[Buf]]) {
+      extends Reader[Buf]
+      with (Option[Buf] => Future[Option[Buf]]) {
 
     private[this] var frames: Seq[Buf] = Seq.empty
 

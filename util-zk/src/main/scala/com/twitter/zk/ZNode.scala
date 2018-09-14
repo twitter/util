@@ -220,7 +220,10 @@ trait ZNode {
     }
 
     /** Monitor a watch on this node. */
-    def monitorWatch(watch: Future[ZNode.Watch[ZNode.Children]], knownChildren: Set[ZNode]): Unit = {
+    def monitorWatch(
+      watch: Future[ZNode.Watch[ZNode.Children]],
+      knownChildren: Set[ZNode]
+    ): Unit = {
       log.debug("monitoring %s with %d known children", path, knownChildren.size)
       watch onFailure { e =>
         // An error occurred and there's not really anything we can do about it.

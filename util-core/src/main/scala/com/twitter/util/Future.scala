@@ -1324,13 +1324,12 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
   case class NextThrewException(cause: Throwable)
       extends IllegalArgumentException("'next' threw an exception", cause)
 
-  private class Each[A](next: => Future[A], body: A => Unit)
-    extends (Try[A] => Future[Nothing]) {
+  private class Each[A](next: => Future[A], body: A => Unit) extends (Try[A] => Future[Nothing]) {
     def apply(t: Try[A]): Future[Nothing] = t match {
       case Return(a) =>
         body(a)
         go()
-      case t@Throw(_) =>
+      case t @ Throw(_) =>
         Future.const(t.cast[Nothing])
     }
     def go(): Future[Nothing] = {
@@ -1923,7 +1922,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
         tx match {
           case Return(_) if !isFirst && get.isReturn =>
             p.setValue(fn(Await.result(Future.this), Await.result(other)))
-          case t@Throw(_) if isFirst || get.isReturn =>
+          case t @ Throw(_) if isFirst || get.isReturn =>
             p.update(t.cast[C])
           case _ =>
         }
@@ -1967,7 +1966,9 @@ abstract class Future[+A] extends Awaitable[A] { self =>
         s"Cannot call proxyTo on an already satisfied Promise: ${Await.result(other.liftToTry)}"
       )
     }
-    respond { res => other.update(res) }
+    respond { res =>
+      other.update(res)
+    }
   }
 
   /**

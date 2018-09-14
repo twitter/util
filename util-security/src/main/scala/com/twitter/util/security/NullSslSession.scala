@@ -27,8 +27,8 @@ object NullSslSession extends SSLSession {
   def getSessionContext: SSLSessionContext = NullSslSessionContext
   def getValue(name: String): Object = ""
   def getValueNames: Array[String] = Array.empty
-  def invalidate: Unit = { }
+  def invalidate: Unit = {}
   def isValid: Boolean = false
-  def putValue(name: String, value: Object): Unit = { }
-  def removeValue(name: String): Unit = { }
+  def putValue(name: String, value: Object): Unit = {}
+  def removeValue(name: String): Unit = {}
 }

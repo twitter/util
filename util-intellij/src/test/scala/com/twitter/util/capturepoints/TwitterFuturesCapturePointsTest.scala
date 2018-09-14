@@ -27,13 +27,21 @@ class TwitterFuturesCapturePointsTest extends FunSuite {
   /**
    * test that [methodName] is a member of `ClassOf[com.twitter.util.className]`
    */
-  private[this] def testMethod(methodType: String, className: String, methodName: String = "apply"): Unit = {
+  private[this] def testMethod(
+    methodType: String,
+    className: String,
+    methodName: String = "apply"
+  ): Unit = {
     val m = Class.forName(className)
     val methodArray = findMethod(m, methodName)
-    assert(methodArray.nonEmpty, s": couldn't find $methodType method ${m.getTypeName}.$methodName.")
+    assert(
+      methodArray.nonEmpty,
+      s": couldn't find $methodType method ${m.getTypeName}.$methodName."
+    )
   }
 
-  val capturePointsXML = XML.load(getClass.getResourceAsStream("/util-intellij/TwitterFuturesCapturePoints.xml"))
+  val capturePointsXML =
+    XML.load(getClass.getResourceAsStream("/util-intellij/TwitterFuturesCapturePoints.xml"))
 
   /**
    * perform "capture method" and "insert method" tests for each capture point

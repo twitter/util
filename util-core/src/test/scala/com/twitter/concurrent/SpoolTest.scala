@@ -474,7 +474,9 @@ class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
      * Confirms that the given operation does not consume an entire Spool, and then
      * returns the resulting Spool and tail check for further validation.
      */
-    def applyLazily(f: Spool[Int] => Future[Spool[Int]]): (Future[Spool[Int]], Future[Spool[Int]]) = {
+    def applyLazily(
+      f: Spool[Int] => Future[Spool[Int]]
+    ): (Future[Spool[Int]], Future[Spool[Int]]) = {
       val tail = new Promise[Spool[Int]]
 
       // A spool where only the head is valid.

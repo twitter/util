@@ -32,6 +32,7 @@ object LoadService {
     val iface: Class[T],
     val implementations: Seq[T]
   ) {
+
     /**
      * Convenience constructor for binding a single implementation.
      */
@@ -100,14 +101,17 @@ object LoadService {
     val prevs = binds.synchronized {
       if (loaded.contains(binding.iface)) {
         throw new IllegalStateException(
-          s"LoadService.apply has already been called for ${binding.iface.getName}.")
+          s"LoadService.apply has already been called for ${binding.iface.getName}."
+        )
       }
       binds.put(binding.iface, binding.implementations)
     }
     prevs.foreach { ps =>
       bindDupes.put(binding.iface, ())
-      log.warning(s"Replaced existing `LoadService.bind` for `${binding.iface.getName}`, " +
-        s"old='$ps', new='${binding.implementations}'")
+      log.warning(
+        s"Replaced existing `LoadService.bind` for `${binding.iface.getName}`, " +
+          s"old='$ps', new='${binding.implementations}'"
+      )
     }
   }
 

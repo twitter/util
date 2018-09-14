@@ -9,7 +9,7 @@ import java.security.cert.{CertificateFactory, X509CRL}
 /**
  * A representation of an X.509 Certificate Revocation List (CRL)
  * PEM-encoded and stored in a file.
- * 
+ *
  * @example
  * -----BEGIN X509 CRL-----
  * base64encodedbytes

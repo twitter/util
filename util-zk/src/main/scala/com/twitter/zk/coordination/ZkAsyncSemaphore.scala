@@ -35,7 +35,12 @@ import org.apache.zookeeper.{CreateMode, KeeperException}
  * } // handle { ... }
  * }}}
  */
-class ZkAsyncSemaphore(zk: ZkClient, path: String, numPermits: Int, maxWaiters: Option[Int] = None) {
+class ZkAsyncSemaphore(
+  zk: ZkClient,
+  path: String,
+  numPermits: Int,
+  maxWaiters: Option[Int] = None
+) {
   import ZkAsyncSemaphore._
   require(numPermits > 0)
   require(maxWaiters.getOrElse(0) >= 0)

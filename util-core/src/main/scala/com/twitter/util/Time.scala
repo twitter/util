@@ -225,7 +225,8 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def floor(increment: Duration): This = (this, increment) match {
     case (num, ns) if num.isZero && ns.isZero => Undefined
     case (num, ns) if num.isFinite && ns.isZero => if (num.inNanoseconds < 0) Bottom else Top
-    case (num, denom) if num.isFinite && denom.isFinite =>  fromNanoseconds((num.inNanoseconds / denom.inNanoseconds) * denom.inNanoseconds)
+    case (num, denom) if num.isFinite && denom.isFinite =>
+      fromNanoseconds((num.inNanoseconds / denom.inNanoseconds) * denom.inNanoseconds)
     case (self, n) if n.isFinite => self
     case (_, _) => Undefined
   }

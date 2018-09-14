@@ -181,7 +181,9 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
     }
 
-    def watchData(path: String)(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]): Unit = {
+    def watchData(
+      path: String
+    )(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.DataCallback])
       when(zk.getData(meq(path), w.capture(), cb.capture(), meq(null))) thenAnswer answer[

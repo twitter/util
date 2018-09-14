@@ -123,12 +123,14 @@ object NativeConnector {
     protected[this] val connectPromise = new Promise[ZooKeeper]
 
     /** A ZooKeeper handle that will error if connectTimeout is specified and exceeded. */
-    lazy val connected: Future[ZooKeeper] = connectTimeout.map { timeout =>
-      connectPromise.within(timer, timeout).rescue {
-        case _: TimeoutException =>
-          Future.exception(ConnectTimeoutException(connectString, timeout))
+    lazy val connected: Future[ZooKeeper] = connectTimeout
+      .map { timeout =>
+        connectPromise.within(timer, timeout).rescue {
+          case _: TimeoutException =>
+            Future.exception(ConnectTimeoutException(connectString, timeout))
+        }
       }
-    }.getOrElse(connectPromise)
+      .getOrElse(connectPromise)
 
     protected[this] val releasePromise = new Promise[Unit]
     val released: Future[Unit] = releasePromise
@@ -142,7 +144,8 @@ object NativeConnector {
     val sessionEvents: Offer[StateEvent] = {
       val broker = new Broker[StateEvent]
       def loop(): Unit = {
-        sessionBroker.recv.sync()
+        sessionBroker.recv
+          .sync()
           .map { StateEvent(_) }
           .respond {
             case Return(StateEvent.Connected) =>

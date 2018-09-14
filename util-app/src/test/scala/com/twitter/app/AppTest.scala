@@ -306,7 +306,7 @@ class AppTest extends FunSuite {
   test("App: exit functions properly capture non-fatal exceptions") {
     val app = new ErrorOnExitApp {
       def main(): Unit = {
-        onExit{
+        onExit {
           throw new Exception("FORCED ON EXIT")
         }
 
@@ -345,7 +345,7 @@ class AppTest extends FunSuite {
   test("App: exit functions properly capture mix of non-fatal and fatal exceptions") {
     val app = new ErrorOnExitApp {
       def main(): Unit = {
-        onExit{
+        onExit {
           throw new Exception("FORCED ON EXIT")
         }
 

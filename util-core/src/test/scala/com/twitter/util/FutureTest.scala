@@ -93,11 +93,13 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             queue add promise
             promise
           }
-          iteration.onSuccess { _ =>
-            complete = true
-          }.onFailure { _ =>
-            failure = true
-          }
+          iteration
+            .onSuccess { _ =>
+              complete = true
+            }
+            .onFailure { _ =>
+              failure = true
+            }
           assert(!complete)
           assert(!failure)
         }
@@ -173,11 +175,13 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             promise
           }
 
-          iteration.onSuccess { _ =>
-            complete = true
-          }.onFailure { _ =>
-            failure = true
-          }
+          iteration
+            .onSuccess { _ =>
+              complete = true
+            }
+            .onFailure { _ =>
+              failure = true
+            }
           assert(!complete)
           assert(!failure)
         }
@@ -756,7 +760,10 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         }
       }
 
-      def testJoin(label: String, joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])): Unit = {
+      def testJoin(
+        label: String,
+        joiner: ((Future[Int], Future[Int]) => Future[(Int, Int)])
+      ): Unit = {
         s"join($label)" should {
           trait JoinHelper {
             val p0 = new HandledPromise[Int]
@@ -879,18 +886,20 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             val inner1 = new Promise[Int]
             var ran = false
             val f: Future[Int] = Future.monitored {
-              inner1.ensure {
-                // Note that these are sequenced so that interrupts
-                // will be delivered before inner's handler is cleared.
-                ran = true
-                try {
-                  inner.update(Return(1))
-                } catch {
-                  case _: Throwable => fail()
+              inner1
+                .ensure {
+                  // Note that these are sequenced so that interrupts
+                  // will be delivered before inner's handler is cleared.
+                  ran = true
+                  try {
+                    inner.update(Return(1))
+                  } catch {
+                    case _: Throwable => fail()
+                  }
                 }
-              }.ensure {
-                throw exc
-              }
+                .ensure {
+                  throw exc
+                }
               inner
             }
             assert(!ran)
@@ -967,24 +976,33 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         val e = new Exception("rdrr")
 
         "values" in {
-          const.value(1).transform {
-            case Return(v) => const.value(v + 1)
-            case Throw(_) => const.value(0)
-          }.mustProduce(Return(2))
+          const
+            .value(1)
+            .transform {
+              case Return(v) => const.value(v + 1)
+              case Throw(_) => const.value(0)
+            }
+            .mustProduce(Return(2))
         }
 
         "exceptions" in {
-          const.exception(e).transform {
-            case Return(_) => const.value(1)
-            case Throw(_) => const.value(0)
-          }.mustProduce(Return(0))
+          const
+            .exception(e)
+            .transform {
+              case Return(_) => const.value(1)
+              case Throw(_) => const.value(0)
+            }
+            .mustProduce(Return(0))
         }
 
         "exceptions thrown during transformation" in {
-          const.value(1).transform {
-            case Return(_) => const.value(throw e)
-            case Throw(_) => const.value(0)
-          }.mustProduce(Throw(e))
+          const
+            .value(1)
+            .transform {
+              case Return(_) => const.value(throw e)
+              case Throw(_) => const.value(0)
+            }
+            .mustProduce(Throw(e))
         }
 
         "non local returns executed during transformation" in {
@@ -1034,7 +1052,9 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
 
           val actual = intercept[FatalException] {
             Monitor.using(m) {
-              const.value(1).transform { _ => throw exc }
+              const.value(1).transform { _ =>
+                throw exc
+              }
             }
           }
 
@@ -1052,7 +1072,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             .transformedBy(new FutureTransformer[Int, Int] {
               override def flatMap(value: Int): Future[Int] = const.value(value + 1)
               override def rescue(t: Throwable): Future[Int] = const.value(0)
-            }).mustProduce(Return(2))
+            })
+            .mustProduce(Return(2))
         }
 
         "rescue" in {
@@ -1061,7 +1082,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             .transformedBy(new FutureTransformer[Int, Int] {
               override def flatMap(value: Int): Future[Int] = const.value(value + 1)
               override def rescue(t: Throwable): Future[Int] = const.value(0)
-            }).mustProduce(Return(0))
+            })
+            .mustProduce(Return(0))
         }
 
         "exceptions thrown during transformation" in {
@@ -1070,7 +1092,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             .transformedBy(new FutureTransformer[Int, Int] {
               override def flatMap(value: Int): Future[Int] = throw e
               override def rescue(t: Throwable): Future[Int] = const.value(0)
-            }).mustProduce(Throw(e))
+            })
+            .mustProduce(Throw(e))
         }
 
         "map" in {
@@ -1079,7 +1102,8 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             .transformedBy(new FutureTransformer[Int, Int] {
               override def map(value: Int): Int = value + 1
               override def handle(t: Throwable): Int = 0
-            }).mustProduce(Return(2))
+            })
+            .mustProduce(Return(2))
         }
 
         "handle" in {
@@ -1088,11 +1112,15 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             .transformedBy(new FutureTransformer[Int, Int] {
               override def map(value: Int): Int = value + 1
               override def handle(t: Throwable): Int = 0
-            }).mustProduce(Return(0))
+            })
+            .mustProduce(Return(0))
         }
       }
 
-      def testSequence(which: String, seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]): Unit = {
+      def testSequence(
+        which: String,
+        seqop: (Future[Unit], () => Future[Unit]) => Future[Unit]
+      ): Unit = {
         which when {
           "successes" should {
             "interruption of the produced future" which {
@@ -1326,14 +1354,17 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           val p = new Promise[Int]
 
           p.ensure {
-            i = i + j + k + h + 1
-          }.ensure {
-            j = i + j + k + h + 1
-          }.ensure {
-            k = i + j + k + h + 1
-          }.ensure {
-            h = i + j + k + h + 1
-          }
+              i = i + j + k + h + 1
+            }
+            .ensure {
+              j = i + j + k + h + 1
+            }
+            .ensure {
+              k = i + j + k + h + 1
+            }
+            .ensure {
+              h = i + j + k + h + 1
+            }
 
           assert(i == 0)
           assert(j == 0)

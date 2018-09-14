@@ -34,7 +34,9 @@ class Heapster(klass: Class[_]) {
 
   def start(): Unit = { startM.invoke(null) }
   def shutdown(): Unit = { stopM.invoke(null) }
-  def setSamplingPeriod(period: java.lang.Integer): Unit = { setSamplingPeriodM.invoke(null, period) }
+  def setSamplingPeriod(period: java.lang.Integer): Unit = {
+    setSamplingPeriodM.invoke(null, period)
+  }
   def clearProfile(): Unit = { clearProfileM.invoke(null) }
   def dumpProfile(forceGC: java.lang.Boolean): Array[Byte] =
     dumpProfileM.invoke(null, forceGC).asInstanceOf[Array[Byte]]

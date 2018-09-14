@@ -178,13 +178,13 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       p.println("-------")
     }
     for ((k, g) <- sortedGauges)
-      p.print(f"$k%s ${ g() }%f\n")
+      p.print(f"$k%s ${g()}%f\n")
     if (includeHeaders && sortedStats.nonEmpty) {
       p.println("\nStats:")
       p.println("------")
     }
     for ((k, s) <- sortedStats if s.nonEmpty) {
-      p.print(f"$k%s ${ s.sum / s.size }%f ${statValuesToStr(s)}\n")
+      p.print(f"$k%s ${s.sum / s.size}%f ${statValuesToStr(s)}\n")
     }
   }
 
