@@ -43,8 +43,11 @@ object StatsReceivers {
    * Java compatible version of [[StatsReceiver.addGauge]].
    */
   @varargs
-  def addGauge(statsReceiver: StatsReceiver, callable: Callable[JFloat], name: String*): Gauge =
+  def addGauge(statsReceiver: StatsReceiver, callable: Callable[JFloat], name: String*): Gauge = {
+    // scalafix:off StoreGaugesAsMemberVariables
     statsReceiver.addGauge(name: _*)(callable.call())
+    // scalafix:on StoreGaugesAsMemberVariables
+  }
 
   /**
    * Java compatible version of [[StatsReceiver.provideGauge]].

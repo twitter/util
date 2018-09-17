@@ -18,5 +18,9 @@ class VerbosityAdjustingStatsReceiver(
   override def addGauge(
     verbosity: Verbosity,
     names: String*
-  )(f: => Float): Gauge = self.addGauge(defaultVerbosity, names: _*)(f)
+  )(f: => Float): Gauge = {
+    // scalafix:off StoreGaugesAsMemberVariables
+    self.addGauge(defaultVerbosity, names: _*)(f)
+    // scalafix:on StoreGaugesAsMemberVariables
+  }
 }

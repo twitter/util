@@ -10,6 +10,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class InMemoryStatsReceiverTest extends FunSuite with Eventually with IntegrationPatience {
 
+  // scalafix:off StoreGaugesAsMemberVariables
   test("clear") {
     val inMemoryStatsReceiver = new InMemoryStatsReceiver
     inMemoryStatsReceiver.counter("counter").incr()
@@ -313,4 +314,5 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
       ps.close()
     }
   }
+  // scalafix:on StoreGaugesAsMemberVariables
 }

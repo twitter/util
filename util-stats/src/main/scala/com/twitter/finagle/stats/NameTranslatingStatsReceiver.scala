@@ -23,8 +23,11 @@ abstract class NameTranslatingStatsReceiver(
   override def stat(verbosity: Verbosity, name: String*): Stat =
     self.stat(verbosity, translate(name): _*)
 
-  override def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
+  override def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
+    // scalafix:off StoreGaugesAsMemberVariables
     self.addGauge(verbosity, translate(name): _*)(f)
+    // scalafix:on StoreGaugesAsMemberVariables
+  }
 
   override def toString: String = s"$self/$namespacePrefix"
 }

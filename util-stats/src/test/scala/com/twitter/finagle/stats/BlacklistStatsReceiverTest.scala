@@ -6,6 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class BlacklistStatsReceiverTest extends FunSuite {
+  // scalafix:off StoreGaugesAsMemberVariables
   test("BlacklistStatsReceiver blacklists properly") {
     val inmemory = new InMemoryStatsReceiver()
     val bsr = new BlacklistStatsReceiver(inmemory, { case _ => true })
@@ -62,5 +63,5 @@ class BlacklistStatsReceiverTest extends FunSuite {
     assert(inmemory.gauges(Seq("foo", "foo", "baz"))() == 3.0)
     assert(inmemory.stats.isEmpty)
   }
-
+  // scalafix:on StoreGaugesAsMemberVariables
 }
