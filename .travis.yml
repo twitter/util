@@ -3,11 +3,16 @@ sudo: false
 
 language: scala
 
+git:
+  quiet: true # (default = false)
+  depth: 5 # (default = 50)
+
 env:
   - JAVA_OPTS="-DSKIP_FLAKY=true -Dsbt.log.noformat=true"
 
 # These directories are cached to S3 at the end of the build
 cache:
+  timeout: 300 # seconds = 5 mins (default = 3 mins)
   directories:
    - $HOME/.ivy2
    - $HOME/.sbt/boot/scala-$TRAVIS_SCALA_VERSION
@@ -19,7 +24,7 @@ before_cache:
   - find $HOME/.sbt -name "*.lock" -delete
 
 scala:
-  - 2.11.11
+  - 2.11.12
   - 2.12.4
 
 jdk:
@@ -27,11 +32,10 @@ jdk:
 
 notifications:
   slack:
-    secure: E0knpocRWQT1YI4TgAZGxS7Xoe15wWZ5fbJsi0nfMhxHSlngrnxAknN60qovPa2J8R/opryX/0jwaUF2/5RPYVxf6ARNI428WkrltxctQeCugN8j5XqpBqXLR/+GPetqFe9WwF6ycg3bmThsXnap6/xNB75zMWj+2E1CYTqwpA0=
+    secure: BFX2aB0sq5cMxmxlWIwgHwJOjI5W6WBn3YSPqHYYz6VAK6fzlX2VUKsfyQJTUnqMYox/0qGzPUB4TFhVMH3c78ocNZNj/9tPOPLkMfHjAqobnq/89+hp4Q6fmWCMKVAGTzVNq83OCykYkzITcYWxo0Pyc2eguW6tHaHIgqnbCRY=
 
 before_script:
-  # default $SBT_OPTS is irrelevant to sbt lancher
-  - unset SBT_OPTS
+  - unset SBT_OPTS # default $SBT_OPTS is irrelevant to sbt launcher
   - travis_retry ./sbt --error ++$TRAVIS_SCALA_VERSION update
 
 script:
@@ -39,5 +43,5 @@ script:
     - if [[ "$TRAVIS_SCALA_VERSION" == 2.11* ]]; then travis_retry ./sbt ++$TRAVIS_SCALA_VERSION "project util-intellij" coverage test coverageReport; fi
     - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
 
-after_success:
+after_success:  # note this is run per job in the matrix but only the last run is kept by codecov.io.
     - bash <(curl -s https://codecov.io/bash)
