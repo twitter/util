@@ -4,7 +4,7 @@ import com.twitter.util.Duration;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
 import com.twitter.util.Timer;
-import scala.collection.JavaConversions;
+import scala.collection.JavaConverters;
 import scala.runtime.BoxedUnit;
 
 import java.util.ArrayList;
@@ -60,7 +60,8 @@ public final class Offers {
    * @see Offer$#choose(scala.collection.Seq)
    */
   public static <T> Offer<T> choose(Collection<Offer<T>> offers) {
-    return Offer$.MODULE$.choose(JavaConversions.asScalaBuffer(new ArrayList<Offer<T>>(offers)));
+    scala.collection.Seq<Offer<T>> scalaSeq = JavaConverters.collectionAsScalaIterableConverter(offers).asScala().toSeq();
+    return Offer$.MODULE$.choose(scalaSeq);
   }
 
   /**

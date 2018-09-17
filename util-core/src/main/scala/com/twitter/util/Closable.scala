@@ -4,7 +4,7 @@ import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
 import java.{util => ju}
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.{Level, Logger}
-import scala.annotation.tailrec
+import scala.annotation.{tailrec, varargs}
 import scala.util.control.{NonFatal => NF}
 
 /**
@@ -72,7 +72,7 @@ object Closable {
    * Concurrent composition: creates a new closable which, when
    * closed, closes all of the underlying resources simultaneously.
    */
-  def all(closables: Closable*): Closable = new Closable {
+  @varargs def all(closables: Closable*): Closable = new Closable {
     def close(deadline: Time): Future[Unit] = {
       val fs = closables.map { closable =>
         safeClose(closable, deadline)
