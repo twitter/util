@@ -17,7 +17,7 @@ import scala.util.control.NonFatal
  * {{{
  *   val semaphore = new AsyncSemaphore(n)
  *   ...
- *   semaphore.acquireAndRun() {
+ *   semaphore.acquireAndRun {
  *     somethingThatReturnsFutureT()
  *   }
  * }}}
