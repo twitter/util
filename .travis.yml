@@ -19,15 +19,15 @@ before_cache:
   - find $HOME/.sbt -name "*.lock" -delete
 
 scala:
-  - 2.11.11
-  - 2.12.4
+  - 2.11.12
+  - 2.12.6
 
 jdk:
   - oraclejdk8
 
 notifications:
   slack:
-    secure: E0knpocRWQT1YI4TgAZGxS7Xoe15wWZ5fbJsi0nfMhxHSlngrnxAknN60qovPa2J8R/opryX/0jwaUF2/5RPYVxf6ARNI428WkrltxctQeCugN8j5XqpBqXLR/+GPetqFe9WwF6ycg3bmThsXnap6/xNB75zMWj+2E1CYTqwpA0=
+    secure: BFX2aB0sq5cMxmxlWIwgHwJOjI5W6WBn3YSPqHYYz6VAK6fzlX2VUKsfyQJTUnqMYox/0qGzPUB4TFhVMH3c78ocNZNj/9tPOPLkMfHjAqobnq/89+hp4Q6fmWCMKVAGTzVNq83OCykYkzITcYWxo0Pyc2eguW6tHaHIgqnbCRY=
 
 before_script:
   # default $SBT_OPTS is irrelevant to sbt lancher

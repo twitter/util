@@ -23,7 +23,7 @@ val slf4jSimple = "org.slf4j" % "slf4j-simple" % slf4jVersion
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.12.6",
-  crossScalaVersions := Seq("2.11.11", "2.12.6")
+  crossScalaVersions := Seq("2.11.12", "2.12.6")
 )
 
 val baseSettings = Seq(
@@ -299,7 +299,7 @@ lazy val utilIntellij = Project(
   baseSettings
 ).settings(
   name := "util-intellij",
-  scalaVersion := "2.11.11"
+  scalaVersion := "2.11.12"
 ).dependsOn(utilCore % "test")
 
 lazy val utilJvm = Project(
