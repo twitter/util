@@ -1,7 +1,10 @@
 package com.twitter.concurrent;
 
-import scala.collection.JavaConversions;
+import com.twitter.util.Future;
+
+import scala.collection.JavaConverters;
 import scala.collection.Seq;
+import scala.collection.immutable.List;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,9 +24,18 @@ public final class Spools {
   /**
    * Creates a new `Spool` of given `elems`.
    */
+  @SuppressWarnings("unchecked")
   public static <T> Spool<T> newSpool(Collection<T> elems) {
-    Seq<T> seq = JavaConversions.asScalaBuffer(new ArrayList<T>(elems)).toSeq();
-    return new Spool.ToSpool<T>(seq).toSpool();
+    List<T> buffer = (List<T>)List.empty();
+    for (T item : elems) {
+      buffer = buffer.$colon$colon(item);
+    }
+    Spool<T> result = (Spool<T>)EMPTY;
+    while(!buffer.isEmpty()){
+      result = new Spool.Cons<T>(buffer.head(), Future.value(result));
+      buffer = (List<T>)buffer.tail();
+    }
+    return result;
   }
 
   /**

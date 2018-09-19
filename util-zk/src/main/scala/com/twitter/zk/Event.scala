@@ -54,19 +54,18 @@ object StateEvent {
   }
 
   def apply(w: WatchedEvent): StateEvent = {
-    w.getState match {
+    val state = w.getState
+    state match {
       case KeeperState.AuthFailed => AuthFailed
       case KeeperState.SyncConnected => Connected
       case KeeperState.Disconnected => Disconnected
       case KeeperState.Expired => Expired
       case KeeperState.ConnectedReadOnly => ConnectedReadOnly
       case KeeperState.SaslAuthenticated => SaslAuthenticated
-      case KeeperState.Unknown =>
-        throw new IllegalArgumentException("Can't convert deprecated state to StateEvent: Unknown")
-      case KeeperState.NoSyncConnected =>
-        throw new IllegalArgumentException(
-          "Can't convert deprecated state to StateEvent: NoSyncConnected"
-        )
+      case _ =>
+        throw new IllegalArgumentException(s"Can't convert deprecated state to StateEvent: $state")
+      //NoSyncConnected and Unknown are depricated in zk 3.x, and should be
+      //expected to be removed in zk 4.x
     }
   }
 }

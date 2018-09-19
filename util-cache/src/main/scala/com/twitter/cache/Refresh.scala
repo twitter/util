@@ -65,6 +65,6 @@ object Refresh {
         }
     }
     // Return result, which is a no-arg function that returns a future
-    result
+    result _
   }
 }

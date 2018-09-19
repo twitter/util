@@ -3,7 +3,7 @@ package com.twitter.util
 import java.{util => ju}
 import java.util.LinkedHashMap
 import scala.collection.JavaConverters._
-import scala.collection.mutable.{Map, MapLike, SynchronizedMap}
+import scala.collection.mutable.{Map, MapLike}
 
 /**
  * A wrapper trait for java.util.Map implementations to make them behave as scala Maps.
@@ -63,8 +63,34 @@ class LruMap[K, V](val maxSize: Int, val underlying: ju.Map[K, V])
  * A synchronized scala `Map` backed by an [[java.util.LinkedHashMap]]
  */
 class SynchronizedLruMap[K, V](maxSize: Int, underlying: ju.Map[K, V])
-    extends LruMap[K, V](maxSize, ju.Collections.synchronizedMap(underlying))
-    with SynchronizedMap[K, V] {
+    extends LruMap[K, V](maxSize, ju.Collections.synchronizedMap(underlying)) {
+  override def get(key: K): Option[V] = synchronized { super.get(key) }
+  override def iterator: Iterator[(K, V)] = synchronized { super.iterator }
+  override def +=(kv: (K, V)): this.type = synchronized[this.type] { super.+=(kv) }
+  override def -=(key: K): this.type = synchronized[this.type] { super.-=(key) }
+
+  override def size: Int = synchronized { super.size }
+  override def put(key: K, value: V): Option[V] = synchronized { super.put(key, value) }
+  override def update(key: K, value: V): Unit = synchronized { super.update(key, value) }
+  override def remove(key: K): Option[V] = synchronized { super.remove(key) }
+  override def clear(): Unit = synchronized { super.clear() }
+  override def getOrElseUpdate(key: K, default: => V): V = synchronized {
+    super.getOrElseUpdate(key, default)
+  }
+  override def transform(f: (K, V) => V): this.type = synchronized[this.type] { super.transform(f) }
+  override def retain(p: (K, V) => Boolean): this.type = synchronized[this.type] { super.retain(p) }
+  override def values: scala.collection.Iterable[V] = synchronized { super.values }
+  override def valuesIterator: Iterator[V] = synchronized { super.valuesIterator }
+  override def clone(): Self = synchronized { super.clone() }
+  override def foreach[U](f: ((K, V)) => U) = synchronized { super.foreach(f) }
+  override def apply(key: K): V = synchronized { super.apply(key) }
+  override def keySet: scala.collection.Set[K] = synchronized { super.keySet }
+  override def keys: scala.collection.Iterable[K] = synchronized { super.keys }
+  override def keysIterator: Iterator[K] = synchronized { super.keysIterator }
+  override def isEmpty: Boolean = synchronized { super.isEmpty }
+  override def contains(key: K): Boolean = synchronized { super.contains(key) }
+  override def isDefinedAt(key: K) = synchronized { super.isDefinedAt(key) }
   override def empty: SynchronizedLruMap[K, V] = new SynchronizedLruMap[K, V](maxSize)
+  //!!! todo: also add all other methods
   def this(maxSize: Int) = this(maxSize, LruMap.makeUnderlying(maxSize))
 }

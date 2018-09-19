@@ -41,7 +41,7 @@ class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
 }
 
 abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
-  private val healthyQueue = new HealthyQueue[A](makeItem, numItems, isHealthy)
+  private val healthyQueue = new HealthyQueue[A](makeItem _, numItems, isHealthy)
   private val simplePool = new SimplePool[A](healthyQueue)
 
   def reserve(): Future[A] = simplePool.reserve()

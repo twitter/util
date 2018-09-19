@@ -22,8 +22,8 @@ val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 val slf4jSimple = "org.slf4j" % "slf4j-simple" % slf4jVersion
 
 val defaultProjectSettings = Seq(
-  scalaVersion := "2.12.4",
-  crossScalaVersions := Seq("2.11.11", "2.12.4")
+  scalaVersion := "2.12.6",
+  crossScalaVersions := Seq("2.11.11", "2.12.6")
 )
 
 val baseSettings = Seq(
@@ -43,9 +43,9 @@ val baseSettings = Seq(
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
 
   scalacOptions := Seq(
-    // Note: Add -deprecation when deprecated methods are removed
     "-target:jvm-1.8",
     "-unchecked",
+    "-deprecation",
     "-feature",
     "-encoding", "utf8",
     // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761

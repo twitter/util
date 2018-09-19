@@ -289,7 +289,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
     Time.withCurrentTimeFrozen { ctl =>
       val timer = new MockTimer
       assert(timer.tasks.isEmpty)
-      val task = timer.schedule(Time.now + 3.seconds)()
+      val task = timer.schedule(Time.now + 3.seconds)(())
       assert(timer.tasks.size == 1)
       task.cancel()
       assert(timer.tasks.isEmpty)
@@ -300,7 +300,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
     Time.withCurrentTimeFrozen { ctl =>
       val timer = new MockTimer
       assert(timer.tasks.isEmpty)
-      val task = timer.schedule(3.seconds)()
+      val task = timer.schedule(3.seconds)(())
       eventually { assert(timer.tasks.size == 1) }
       ctl.advance(30.seconds)
       timer.tick()
