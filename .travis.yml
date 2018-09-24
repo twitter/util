@@ -30,14 +30,12 @@ notifications:
     secure: BFX2aB0sq5cMxmxlWIwgHwJOjI5W6WBn3YSPqHYYz6VAK6fzlX2VUKsfyQJTUnqMYox/0qGzPUB4TFhVMH3c78ocNZNj/9tPOPLkMfHjAqobnq/89+hp4Q6fmWCMKVAGTzVNq83OCykYkzITcYWxo0Pyc2eguW6tHaHIgqnbCRY=
 
 before_script:
-  # default $SBT_OPTS is irrelevant to sbt lancher
-  - unset SBT_OPTS
-  - travis_retry ./sbt --error ++$TRAVIS_SCALA_VERSION update
+  - unset SBT_OPTS # default $SBT_OPTS is irrelevant to sbt launcher
 
 script:
-    - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
-    - if [[ "$TRAVIS_SCALA_VERSION" == 2.11* ]]; then travis_retry ./sbt ++$TRAVIS_SCALA_VERSION "project util-intellij" coverage test coverageReport; fi
-    - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
+  - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+  - if [[ "$TRAVIS_SCALA_VERSION" == 2.11* ]]; then travis_retry ./sbt ++$TRAVIS_SCALA_VERSION "project util-intellij" coverage test coverageReport; fi
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash)
+  - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
+  - bash <(curl -s https://codecov.io/bash)
