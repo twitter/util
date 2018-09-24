@@ -21,6 +21,12 @@ class PromiseBenchmark extends StdBenchAnnotations {
     promise.detach()
   }
 
+  @Benchmark
+  def detachDetachableFuture(state: PromiseBenchmark.PromiseDetachState): Unit = {
+    import state._
+    detachableFuture.detach()
+  }
+
   // used to isolate the work in the `updateIfEmpty` benchmark
   @Benchmark
   def newUnsatisfiedPromise(): Promise[String] = {
@@ -76,11 +82,17 @@ object PromiseBenchmark {
     var attachedFutures: List[Future[Unit]] = _
     var promise: Promise[Unit] with Detachable = _
 
+    var detachableFuture: Promise[Int] with Detachable = _
+
     @Setup
     def prepare(): Unit = {
       global = new Promise[Unit]
       attachedFutures = List.fill(numAttached) { Promise.attached(global) }
       promise = Promise.attached(global)
+
+      // explicitly using a Future that is not a `Promise` to
+      // test the `DetachableFuture` code paths.
+      detachableFuture = Promise.attached(new ConstFuture(Return(5)))
     }
   }
 

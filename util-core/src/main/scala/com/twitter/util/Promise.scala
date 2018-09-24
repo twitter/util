@@ -172,16 +172,12 @@ object Promise {
       with Detachable
       with (Try[A] => Unit) {
 
-    private[this] var detached: Boolean = false
+    // 0 represents not yet detached, 1 represents detached.
+    @volatile
+    private[this] var alreadyDetached: Int = 0
 
-    def detach(): Boolean = synchronized {
-      if (detached) {
-        false
-      } else {
-        detached = true
-        true
-      }
-    }
+    def detach(): Boolean =
+      unsafe.compareAndSwapInt(this, detachedFutureOffset, 0, 1)
 
     def apply(result: Try[A]): Unit = if (detach()) update(result)
 
@@ -277,6 +273,10 @@ object Promise {
   private val unsafe: sun.misc.Unsafe = Unsafe()
   private val stateOff: Long =
     unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
+
+  private val detachedFutureOffset: Long =
+    unsafe.objectFieldOffset(classOf[DetachableFuture[_]].getDeclaredField("alreadyDetached"))
+
   private val AlwaysUnit: Any => Unit = _ => ()
 
   sealed trait Responder[A] { this: Future[A] =>
