@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.util.{Closable, Future, Promise, Return, Time}
+import com.twitter.util.{Future, Promise, Return, Time}
 
 /**
  * A synchronous in-memory pipe that connects [[Reader]] and [[Writer]] in the sense
@@ -13,7 +13,7 @@ import com.twitter.util.{Closable, Future, Promise, Return, Time}
  * It is safe to call `read`, `write`, and `close` concurrently. The individual calls
  * are synchronized on the given [[Pipe]].
  */
-final class Pipe[A <: Buf] extends Reader[A] with Writer[A] with Closable {
+final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
 
   import Pipe._
 

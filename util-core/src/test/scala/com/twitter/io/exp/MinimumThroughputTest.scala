@@ -187,6 +187,8 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
           }
           Future.Done
         }
+
+        def close(deadline: Time): Future[Unit] = Future.Done
       }
 
       val writer = MinimumThroughput.writer(

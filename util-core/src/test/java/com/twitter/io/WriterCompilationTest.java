@@ -9,7 +9,7 @@ public class WriterCompilationTest {
 
   @Test
   public void testNewOutputStreamWriter() {
-    Writer.ClosableWriter<Buf> w = Writers.newOutputStreamWriter(new ByteArrayOutputStream());
+    Writer<Buf> w = Writers.newOutputStreamWriter(new ByteArrayOutputStream());
     w.close();
   }
 

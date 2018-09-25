@@ -7,7 +7,7 @@ import java.io.OutputStream
  * A Writer represents a sink for a stream of `A`s, providing a convenient interface
  * for the producer of such streams.
  */
-trait Writer[-A] {
+trait Writer[-A] extends Closable {
 
   /**
    * Write a chunk. The returned future is completed when the chunk has been
@@ -29,29 +29,22 @@ trait Writer[-A] {
 object Writer {
 
   /**
-   * A [[ClosableWriter]] instance that will always fail. Useful for situations
+   * A [[Writer]] instance that will always fail. Useful for situations
    * where writing to the [[Writer]] is nonsensical such as the [[Writer]] on the
    * `Response` returned by the Finagle HTTP client.
    */
-  val FailingWriter: Writer[Buf] with Closable = fail[Buf]
+  val FailingWriter: Writer[Buf] = fail[Buf]
 
-  def fail[A]: Writer[A] with Closable = new Writer[A] with Closable {
+  def fail[A]: Writer[A] = new Writer[A] {
     def write(buf: A): Future[Unit] = Future.exception(new IllegalStateException("NullWriter"))
     def fail(cause: Throwable): Unit = ()
     def close(deadline: Time): Future[Unit] = Future.Done
   }
 
-  /**
-   * Represents a [[Writer]] which is [[Closable]].
-   *
-   * Exists primarily for Java compatibility.
-   */
-  trait ClosableWriter[A] extends Writer[A] with Closable
-
   val BufferSize: Int = 4096
 
   /**
-   * Construct a [[ClosableWriter]] from a given OutputStream.
+   * Construct a [[Writer]] from a given OutputStream.
    *
    * This [[Writer]] is not thread safe. If multiple threads attempt to `write`, the
    * behavior is identical to multiple threads calling `write` on the underlying
@@ -59,16 +52,16 @@ object Writer {
    *
    * @param bufsize Size of the copy buffer between Writer and OutputStream.
    */
-  def fromOutputStream(out: OutputStream, bufsize: Int): ClosableWriter[Buf] =
+  def fromOutputStream(out: OutputStream, bufsize: Int): Writer[Buf] =
     new OutputStreamWriter(out, bufsize)
 
   /**
-   * Construct a [[ClosableWriter]] from a given OutputStream.
+   * Construct a [[Writer]] from a given OutputStream.
    *
    * This [[Writer]] is not thread safe. If multiple threads attempt to `write`, the
    * behavior is identical to multiple threads calling `write` on the underlying
    * OutputStream.
    */
-  def fromOutputStream(out: OutputStream): ClosableWriter[Buf] =
+  def fromOutputStream(out: OutputStream): Writer[Buf] =
     fromOutputStream(out, BufferSize)
 }

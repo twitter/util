@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: `c.t.io.Writer` now extends `c.t.util.Closable`. `c.t.io.Writer.ClosableWriter`
+  is no longer exist. ``PHAB_ID=D218453``
+
 18.9.0
 -------
 
