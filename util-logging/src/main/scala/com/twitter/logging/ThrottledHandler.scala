@@ -16,14 +16,14 @@
 
 package com.twitter.logging
 
-import java.util.concurrent.atomic.AtomicReference
-import java.util.{logging => javalog}
-
-import scala.annotation.tailrec
-import scala.collection.mutable
-
 import com.twitter.conversions.time._
 import com.twitter.util.{Duration, Time}
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
+import java.util.{logging => javalog}
+import java.util.function.{Function => JFunction}
+import scala.annotation.tailrec
+import scala.collection.JavaConverters._
 
 object ThrottledHandler {
 
@@ -48,7 +48,9 @@ object ThrottledHandler {
     handler: HandlerFactory,
     duration: Duration = 0.seconds,
     maxToDisplay: Int = Int.MaxValue
-  ) = () => new ThrottledHandler(handler(), duration, maxToDisplay)
+  ): () => ThrottledHandler = () => new ThrottledHandler(handler(), duration, maxToDisplay)
+
+  private val OneSecond = 1.second
 }
 
 /**
@@ -72,33 +74,32 @@ class ThrottledHandler(
   val maxToDisplay: Int
 ) extends ProxyHandler(handler) {
 
+  // we accept some raciness here. it means that sometimes extra log lines will
+  // get logged. this was deemed preferable to holding locks.
   private class Throttle(startTime: Time, name: String, level: javalog.Level) {
+    @volatile
     private[this] var expired = false
-    private[this] var count = 0
 
-    override def toString = "Throttle: startTime=" + startTime + " count=" + count
+    private[this] val count = new AtomicInteger(0)
+
+    override def toString: String = "Throttle: startTime=" + startTime + " count=" + count.get()
 
     final def add(record: javalog.LogRecord, now: Time): Boolean = {
-      val (shouldPublish, added) = synchronized {
-        if (!expired) {
-          count += 1
-          (count <= maxToDisplay, true)
-        } else {
-          (false, false)
+      if (!expired) {
+        if (count.incrementAndGet() <= maxToDisplay) {
+          doPublish(record)
         }
+        true
+      } else {
+        false
       }
-
-      if (shouldPublish) doPublish(record)
-      added
     }
 
     final def removeIfExpired(now: Time): Boolean = {
-      val didExpire = synchronized {
-        expired = (now - startTime >= duration)
-        expired
-      }
+      val didExpire = now - startTime >= duration
+      expired = didExpire
 
-      if (didExpire && count > maxToDisplay) publishSwallowed()
+      if (didExpire && count.get() > maxToDisplay) publishSwallowed()
 
       didExpire
     }
@@ -106,7 +107,7 @@ class ThrottledHandler(
     private[this] def publishSwallowed(): Unit = {
       val throttledRecord = new javalog.LogRecord(
         level,
-        "(swallowed %d repeating messages)".format(count - maxToDisplay)
+        "(swallowed %d repeating messages)".format(count.get() - maxToDisplay)
       )
       throttledRecord.setLoggerName(name)
       doPublish(throttledRecord)
@@ -114,7 +115,7 @@ class ThrottledHandler(
   }
 
   private val lastFlushCheck = new AtomicReference(Time.epoch)
-  private val throttleMap = new mutable.HashMap[String, Throttle]
+  private val throttleMap = new ConcurrentHashMap[String, Throttle]()
 
   @deprecated("Use flushThrottled() instead", "5.3.13")
   def reset(): Unit = {
@@ -125,11 +126,9 @@ class ThrottledHandler(
    * Force printing any "swallowed" messages.
    */
   def flushThrottled(): Unit = {
-    synchronized {
-      val now = Time.now
-      throttleMap retain {
-        case (_, throttle) => !throttle.removeIfExpired(now)
-      }
+    val now = Time.now
+    throttleMap.asScala.retain {
+      case (_, throttle) => !throttle.removeIfExpired(now)
     }
   }
 
@@ -141,7 +140,7 @@ class ThrottledHandler(
     val now = Time.now
     val last = lastFlushCheck.get
 
-    if (now - last > 1.second && lastFlushCheck.compareAndSet(last, now)) {
+    if (now - last > ThrottledHandler.OneSecond && lastFlushCheck.compareAndSet(last, now)) {
       flushThrottled()
     }
 
@@ -150,12 +149,13 @@ class ThrottledHandler(
       case _ => record.getMessage
     }
     @tailrec def tryPublish(): Unit = {
-      val throttle = synchronized {
-        throttleMap.getOrElseUpdate(
-          key,
-          new Throttle(now, record.getLoggerName(), record.getLevel())
-        )
-      }
+      val throttle = throttleMap.computeIfAbsent(
+        key,
+        new JFunction[String, Throttle] {
+          def apply(key: String): Throttle =
+            new Throttle(now, record.getLoggerName(), record.getLevel())
+        }
+      )
 
       // catch the case where throttle is removed before we had a chance to add
       if (!throttle.add(record, now)) tryPublish()
@@ -164,7 +164,7 @@ class ThrottledHandler(
     tryPublish()
   }
 
-  private def doPublish(record: javalog.LogRecord) = {
+  private def doPublish(record: javalog.LogRecord): Unit = {
     super.publish(record)
   }
 }

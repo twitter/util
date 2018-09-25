@@ -16,24 +16,21 @@
 
 package com.twitter.logging
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfter, WordSpec}
-
 import com.twitter.conversions.time._
 import com.twitter.util.{TempFolder, Time}
-@RunWith(classOf[JUnitRunner])
+import org.scalatest.{BeforeAndAfter, WordSpec}
+
 class ThrottledHandlerTest extends WordSpec with BeforeAndAfter with TempFolder {
-  private var handler: StringHandler = null
+  private var handler: StringHandler = _
 
   "ThrottledHandler" should {
     before {
-      Logger.clearHandlers
+      Logger.clearHandlers()
       handler = new StringHandler(BareFormatter, None)
     }
 
     after {
-      Logger.clearHandlers
+      Logger.clearHandlers()
     }
 
     "throttle keyed log messages" in {
