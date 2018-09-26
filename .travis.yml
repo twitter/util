@@ -19,7 +19,8 @@ before_cache:
   - find $HOME/.sbt -name "*.lock" -delete
 
 before_install:
-  - mkdir -p $HOME/.sbt/1.0/
+  - mkdir -p $HOME/.sbt/1.0/plugins
+  - echo 'addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")' > $HOME/.sbt/1.0/plugins/gpg.sbt
   - openssl aes-256-cbc -K $encrypted_0c03606c72ea_key -iv $encrypted_0c03606c72ea_iv -in sonatype.sbt.enc -out $HOME/.sbt/1.0/sonatype.sbt -d
 
 scala:
