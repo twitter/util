@@ -7,11 +7,20 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+18.9.1
+-------
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
 * util-core: `c.t.io.Writer` now extends `c.t.util.Closable`. `c.t.io.Writer.ClosableWriter`
   is no longer exist. ``PHAB_ID=D218453``
+
+Bug Fixes
+~~~~~~~~~
+
+* util-slf4j-api: Moved slf4j-simple dependency to be a 'test' dependency, instead of a
+  compile dependency, which was inaccurate. ``PHAB_ID=D220718``
 
 18.9.0
 -------
