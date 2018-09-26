@@ -18,6 +18,9 @@ before_cache:
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
   - find $HOME/.sbt -name "*.lock" -delete
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_0c03606c72ea_key -iv $encrypted_0c03606c72ea_iv -in sonatype.sbt.enc -out $HOME/.sbt/1.0/sonatype.sbt -d
+
 scala:
   - 2.11.12
   - 2.12.6
@@ -39,3 +42,14 @@ script:
 after_success:
   - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
   - bash <(curl -s https://codecov.io/bash)
+
+stages:
+  - test
+  - name: publish-snapshot
+    if: branch = develop AND env(TRAVIS_EVENT_TYPE) = cron
+
+jobs:
+  include:
+    - stage: publish-snapshot
+      script: ./sbt +publishLocal +publishLocalSigned +publishSigned +publishM2
+      script: ./sbt "project util-intellij" +publishSigned
