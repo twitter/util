@@ -47,7 +47,7 @@ after_success:
 stages:
   - test
   - name: publish-snapshot
-    if: branch = develop AND env(TRAVIS_EVENT_TYPE) = cron
+    if: env(TRAVIS_EVENT_TYPE) = cron
 
 jobs:
   include:
