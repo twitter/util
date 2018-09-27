@@ -7,26 +7,90 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
- * A Reader represents a stream of `A`s.
+ * A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.
  *
- * Readers permit at most one outstanding read.
+ * Given the pull-based API, the consumer is responsible for driving the computation. A very
+ * typical code pattern to consume a reader is to use a read-loop:
  *
- * @tparam A the type of objects produced by this reader
+ * {{{
+ *   def consume[A](r: Reader[A]))(process: A => Future[Unit]): Future[Unit] =
+ *     r.read().flatMap {
+ *       case Some(a) => process(a).before(consume(r)(process))
+ *       case None => Future.Done // reached the end of the stream; no need to discard
+ *     }
+ * }}}
+ *
+ * One way to reason about the read-loop idiom is to view it as a subscription to a publisher
+ * (reader) in the Pub/Sub terminology. Perhaps the major difference between readers and traditional
+ * publishers, is readers only allow one subscriber (read-loop). It's generally safer to assume the
+ * reader is fully consumed (stream is exhausted) once its read-loop is run.
+ *
+ * == Error Handling ==
+ *
+ * Given the read-loop above, its returned [[Future]] could be used to observe both successful and
+ * unsuccessful outcomes.
+ *
+ * {{{
+ *   consume(stream)(_ => Future.Done).respond {
+ *     case Return(()) => println("Consumed an entire stream successfully.")
+ *     case Throw(e) => println(s"Encountered an error while consuming a stream $e")
+ *   }
+ * }}}
+ *
+ * @note Once failed, a stream can not be restarted such that all future reads will resolve into a
+ *       failure. There is no need to discard an already failed stream.
+ *
+ * == Resource Safety ==
+ *
+ * One of the important implications of readers, and streams in general, is that they are prone to
+ * resource leaks unless fully consumed or discarded (failed). Specifically, readers backed by
+ * network connections MUST be discarded unless already consumed (EOF observed) to prevent
+ * connection leaks.
+ *
+ * @note The read-loop above, for example, exhausts the stream (observes EOF) hence does not have to
+ *       discard it (stream).
+ *
+ * == Back Pressure ==
+ *
+ * The pattern above leverages [[Future]] recursion to exert back-pressure via allowing only one
+ * outstanding read. It's usually a good idea to structure consumers this way (i.e., the new read
+ * isn't issued until the current read finishes). This would always ensure a finer grained
+ * back-pressure in network systems allowing the consumers to artificially slow down the producers
+ * and not rely solely on transport and IO buffering.
+ *
+ * @note Whether or not multiple outstanding reads are allowed on a `Reader` type is an undefined
+ *       behaviour but could be changed in a refinement.
+ *
+ * == Cancellations ==
+ *
+ * If a consumer is no longer interested in the stream, it can discard it. Note a discarded reader
+ * (or stream) can not be restarted.
+ *
+ * {{{
+ *   def consumeN[A](r: Reader[A], n: Int)(process: A => Future[Unit]): Future[Unit] =
+ *     if (n == 0) Future(r.discard())
+ *     else r.read().flatMap {
+ *       case Some(a) => process(a).before(consumeN(r, n - 1)(process))
+ *       case None => Future.Done // reached the end of the stream; no need to discard
+ *     }
+ * }}}
  */
 trait Reader[+A] {
 
   /**
-   * Asynchronously read at most `n` bytes from the byte stream. The
-   * returned future represents the results of the read request. If
-   * the read fails, the Reader is considered failed -- future reads
-   * will also fail.
+   * Asynchronously read the next element of this stream. Returned [[Future]] will resolve into
+   * `Some(e)` when the element is available or into `None` when stream is exhausted.
    *
-   * A result of None indicates EOF.
+   * Stream failures are terminal such that all subsequent reads will resolve in failed [[Future]]s.
    */
   def read(n: Int): Future[Option[A]]
 
   /**
-   * Discard this reader: its output is no longer required.
+   * Discard this stream as its output is no longer required. This could be used to signal the
+   * producer of this stream similarly how [[Future.raise]] used to propagate interrupts across
+   * future chains.
+   *
+   * @note Although unnecessary, it's always safe to discard a fully-consumed stream.
    */
   def discard(): Unit
 }
