@@ -1426,6 +1426,19 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
  * @see The [[https://twitter.github.io/finagle/guide/Futures.html user guide]]
  *      on concurrent programming with Futures.
  * @see [[Futures]] for Java-friendly APIs.
+ *
+ * @define callbacks
+ * {{{
+ * import com.twitter.util.Future
+ * def callbacks(result: Future[Int]): Future[Int] =
+ *   result.onSuccess { i =>
+ *     println(i)
+ *   }.onFailure { e =>
+ *     println(e.getMessage)
+ *   }.ensure {
+ *     println("always printed")
+ *   }
+ * }}}
  */
 abstract class Future[+A] extends Awaitable[A] { self =>
 
@@ -1463,6 +1476,13 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * the original future, is done.
    *
    * @note this should be used for side-effects.
+   *
+   * For example:
+   * $callbacks
+   * {{{
+   * val a = Future.value(1)
+   * callbacks(a) // prints "1" and then "always printed"
+   * }}}
    *
    * @param f the side-effect to apply when the computation completes.
    * @see [[respond]] if you need the result of the computation for
@@ -1696,9 +1716,27 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * If this, the original future, succeeds, run `f` on the result.
    *
    * The returned result is a Future that is satisfied when the original future
-   * and the callback, `f`, are done.
+   * and the callback, `f`, are done. For example:
+   * {{{
+   * import com.twitter.util.{Await, Future}
+   * val f: Future[Int] = Future.value(1)
+   * val newf: Future[Int] = f.flatMap { x =>
+   *   Future(x + 10)
+   * }
+   * Await.result(newf) // 11
+   * }}}
+   *
    * If the original future fails, this one will also fail, without executing `f`
-   * and preserving the failed computation of `this`.
+   * and preserving the failed computation of `this`. For example:
+   * {{{
+   * import com.twitter.util.{Await, Future}
+   * val f: Future[Int] = Future.exception(new Exception("boom!"))
+   * val newf: Future[Int] = f.flatMap { x =>
+   *   println("I'm being executed") // won't print
+   *   Future(x + 10)
+   * }
+   * Await.result(newf) // java.lang.Exception: boom!
+   * }}}
    *
    * @see [[map]]
    */
@@ -1752,9 +1790,27 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * If this, the original future, succeeds, run `f` on the result.
    *
    * The returned result is a Future that is satisfied when the original future
-   * and the callback, `f`, are done.
+   * and the callback, `f`, are done. For example:
+   * {{{
+   * import com.twitter.util.{Await, Future}
+   * val f: Future[Int] = Future.value(1)
+   * val newf: Future[Int] = f.map { x =>
+   *   x + 10
+   * }
+   * Await.result(newf) // 11
+   * }}}
+   *
    * If the original future fails, this one will also fail, without executing `f`
-   * and preserving the failed computation of `this`.
+   * and preserving the failed computation of `this`. For example:
+   * {{{
+   * import com.twitter.util.{Await, Future}
+   * val f: Future[Int] = Future.exception(new Exception("boom!"))
+   * val newf: Future[Int] = f.map { x =>
+   *   println("I'm being executed") // won't print
+   *   x + 10
+   * }
+   * Await.result(newf) // java.lang.Exception: boom!
+   * }}}
    *
    * @see [[flatMap]] for computations that return `Future`s.
    * @see [[onSuccess]] for side-effecting chained computations.
@@ -1777,6 +1833,13 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @note this should be used for side-effects.
    *
+   * For example:
+   * $callbacks
+   * {{{
+   * val a = Future.value(1)
+   * callbacks(a) // prints "1" and then "always printed"
+   * }}}
+   *
    * @return chained Future
    * @see [[flatMap]] and [[map]] to produce a new `Future` from the result of
    *     the computation.
@@ -1798,6 +1861,13 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *       `Monitor`. This will happen if you use a construct such as
    *       `future.onFailure { case NonFatal(e) => ... }` when the Throwable
    *       is "fatal".
+   *
+   * For example:
+   * $callbacks
+   * {{{
+   * val b = Future.exception(new Exception("boom!"))
+   * callbacks(b) // prints "boom!" and then "always printed"
+   * }}}
    *
    * @return chained Future
    * @see [[handle]] and [[rescue]] to produce a new `Future` from the result of
@@ -2095,11 +2165,31 @@ abstract class Future[+A] extends Awaitable[A] { self =>
 
   /**
    * Returns the result of the computation as a `Future[Try[A]]`.
+   * For example:
+   * {{{
+   * import com.twitter.util.{Await, Future, Try}
+   * val fr: Future[Int] = Future(1)
+   * val ft: Future[Int] = Future.exception(new Exception("boom!"))
+   * val r: Future[Try[Int]] = fr.liftToTry
+   * val t: Future[Try[Int]] = ft.liftToTry
+   * Await.result(r) // Return(1)
+   * Await.result(t) // Throw(java.lang.Exception: boom!)
+   * }}}
    */
   def liftToTry: Future[Try[A]] = transform(Future.toValue)
 
   /**
    * Lowers a `Future[Try[T]]` into a `Future[T]`.
+   * For example:
+   * {{{
+   * import com.twitter.util.{Await, Future, Return, Throw, Try}
+   * val fr: Future[Try[Int]] = Future(Return(1))
+   * val ft: Future[Try[Int]] = Future(Throw(new Exception("boom!")))
+   * val r: Future[Int] = fr.lowerFromTry
+   * val t: Future[Int] = ft.lowerFromTry
+   * Await.result(r) // 1
+   * Await.result(t) // java.lang.Exception: boom!
+   * }}}
    */
   def lowerFromTry[B](implicit ev: A <:< Try[B]): Future[B] =
     flatMap(Future.lowerFromTry)
