@@ -23,10 +23,6 @@ before_install:
   - echo 'addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")' > $HOME/.sbt/1.0/plugins/gpg.sbt
   - openssl aes-256-cbc -K $encrypted_0c03606c72ea_key -iv $encrypted_0c03606c72ea_iv -in sonatype.sbt.enc -out ~\/.sbt/1.0/sonatype.sbt -d
 
-scala:
-  - 2.11.12
-  - 2.12.6
-
 jdk:
   - oraclejdk8
 
@@ -37,21 +33,25 @@ notifications:
 before_script:
   - unset SBT_OPTS # default $SBT_OPTS is irrelevant to sbt launcher
 
-script:
-  - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
-  - if [[ "$TRAVIS_SCALA_VERSION" == 2.11* ]]; then travis_retry ./sbt ++$TRAVIS_SCALA_VERSION "project util-intellij" coverage test coverageReport; fi
-
-after_success:
-  - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
-  - bash <(curl -s https://codecov.io/bash)
-
 stages:
   - test
   - publish-snapshot
 
 jobs:
   include:
+    - stage: test
+      scala: 2.11.12
+      script:
+        - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+        - travis_retry ./sbt ++$TRAVIS_SCALA_VERSION "project util-intellij" coverage test coverageReport
+    - stage: test
+      scala: 2.12.6
+      script: travis_retry ./sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+      after_success:
+        - ./sbt ++$TRAVIS_SCALA_VERSION coverageAggregate
+        - bash <(curl -s https://codecov.io/bash)
     - stage: publish-snapshot
+      scala: 2.12.6
       script: 
         - ./sbt +publishLocal +publishLocalSigned +publishSigned +publishM2
         - ./sbt "project util-intellij" +publishSigned
