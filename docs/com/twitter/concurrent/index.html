@@ -528,7 +528,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="An asynchronous meter." href="AsyncMeter.html"><span class="name">AsyncMeter</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="An asynchronous meter." href="AsyncMeter.html"><span class="name">AsyncMeter</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An asynchronous meter.</p><div class="fullcomment"><div class="comment cmt"><p>An asynchronous meter.</p><p>Processes can create an asynchronously awaiting future, a &quot;waiter&quot; to wait
@@ -585,7 +585,7 @@ mutex.acquireAndRun() {
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="An asynchronous FIFO queue." href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="An asynchronous FIFO queue." href="AsyncQueue.html"><span class="name">AsyncQueue</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An asynchronous FIFO queue.</p><div class="fullcomment"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing <a href="AsyncQueue.html#offer(elem:T):Boolean" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
@@ -605,14 +605,14 @@ pollers.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="An AsyncSemaphore is a traditional semaphore but with asynchronous execution." href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="An AsyncSemaphore is a traditional semaphore but with asynchronous execution." href="AsyncSemaphore.html"><span class="name">AsyncSemaphore</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An AsyncSemaphore is a traditional semaphore but with asynchronous
 execution.</p><div class="fullcomment"><div class="comment cmt"><p>An AsyncSemaphore is a traditional semaphore but with asynchronous
 execution.</p><p>Grabbing a permit returns a <code>Future[Permit]</code>.</p><p>Basic usage:</p><pre><span class="kw">val</span> semaphore = <span class="kw">new</span> AsyncSemaphore(n)
 ...
-semaphore.acquireAndRun() {
+semaphore.acquireAndRun {
   somethingThatReturnsFutureT()
 }</pre><p>Calls to acquire() and acquireAndRun are serialized, and tickets are
 given out fairly (in order of arrival).
@@ -629,7 +629,7 @@ given out fairly (in order of arrival).
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A representation of a lazy (and possibly infinite) sequence of asynchronous values." href="AsyncStream.html"><span class="name">AsyncStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A representation of a lazy (and possibly infinite) sequence of asynchronous values." href="AsyncStream.html"><span class="name">AsyncStream</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A representation of a lazy (and possibly infinite) sequence of asynchronous
@@ -680,7 +680,7 @@ shutdown.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="An unbuffered FIFO queue, brokered by Offers." href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="An unbuffered FIFO queue, brokered by Offers." href="Broker.html"><span class="name">Broker</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An unbuffered FIFO queue, brokered by <code>Offer</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>An unbuffered FIFO queue, brokered by <code>Offer</code>s. Note that the queue is
@@ -706,7 +706,7 @@ cancellation.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A named Scheduler mix-in that causes submitted tasks to be dispatched according to an java.util.concurrent.ExecutorService created by an abstract factory function." href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A named Scheduler mix-in that causes submitted tasks to be dispatched according to an java.util.concurrent.ExecutorService created by an abstract factory function." href="ExecutorScheduler.html"><span class="name">ExecutorScheduler</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A named Scheduler mix-in that causes submitted tasks to be dispatched according to
@@ -766,7 +766,7 @@ output.</p><p>For example, a <code>NamedPoolThreadFactory</code> with <code>name
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="An offer to communicate with another process." href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="An offer to communicate with another process." href="Offer.html"><span class="name">Offer</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An offer to communicate with another process.</p><div class="fullcomment"><div class="comment cmt"><p>An offer to communicate with another process. The offer is
@@ -797,7 +797,7 @@ but they are always passed through in all of the combinators.</p><p>Note: There 
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.concurrent.Offer companion object." href="Offers.html"><span class="name">Offers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.concurrent.Offer companion object." href="Offers.html"><span class="name">Offers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"> A Java adaptation of <code><a href="Offer.html" class="extype" name="com.twitter.concurrent.Offer">com.twitter.concurrent.Offer</a></code> companion object.</p>
@@ -813,7 +813,7 @@ but they are always passed through in all of the combinators.</p><p>Note: There 
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Token representing an interest in a resource and a way to release that interest." href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="Token representing an interest in a resource and a way to release that interest." href="Permit.html"><span class="name">Permit</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Token representing an interest in a resource and a way to release that interest.</p>
@@ -829,7 +829,7 @@ but they are always passed through in all of the combinators.</p><p>Note: There 
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="An interface for scheduling java.lang.Runnable tasks." href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="An interface for scheduling java.lang.Runnable tasks." href="Scheduler.html"><span class="name">Scheduler</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An interface for scheduling <span class="extype" name="java.lang.Runnable">java.lang.Runnable</span> tasks.</p>
@@ -845,7 +845,7 @@ but they are always passed through in all of the combinators.</p><p>Note: There 
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Efficient ordered serialization of operations." href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="Efficient ordered serialization of operations." href="Serialized.html"><span class="name">Serialized</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Efficient ordered <i>serialization</i> of operations.</p><div class="fullcomment"><div class="comment cmt"><p>Efficient ordered <i>serialization</i> of operations.</p><p><b>Note:</b> This should not be used in place of Scala's
@@ -864,7 +864,7 @@ required.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Note: Spool is no longer the recommended asynchronous stream abstraction." href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="Note: Spool is no longer the recommended asynchronous stream abstraction." href="Spool.html"><span class="name">Spool</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.</p><div class="fullcomment"><div class="comment cmt"><p>Note: <a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">Spool</a> is no longer the recommended asynchronous stream abstraction.
@@ -917,7 +917,7 @@ firstElem *:: rest</pre><p>Note: There is a Java-friendly API for this trait: <a
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A SpoolSource is a simple object for creating and populating a Spool-chain." href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A SpoolSource is a simple object for creating and populating a Spool-chain." href="SpoolSource.html"><span class="name">SpoolSource</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A SpoolSource is a simple object for creating and populating a Spool-chain.</p><div class="fullcomment"><div class="comment cmt"><p>A SpoolSource is a simple object for creating and populating a Spool-chain.  apply()
@@ -934,7 +934,7 @@ returns a Future[Spool] that is populated by calls to offer().  This class is th
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.concurrent.Spool companion object." href="Spools.html"><span class="name">Spools</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.concurrent.Spool companion object." href="Spools.html"><span class="name">Spools</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Spool.html" class="extype" name="com.twitter.concurrent.Spool">com.twitter.concurrent.Spool</a></code> companion object.</p>
@@ -967,7 +967,7 @@ cached threadpool executor.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Tx is used to mediate multi-party transactions with the following protocol:" href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Tx is used to mediate multi-party transactions with the following protocol:" href="Tx.html"><span class="name">Tx</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A <code>Tx</code> is used to mediate multi-party transactions with the following
@@ -991,7 +991,7 @@ protocol:</p><ol class="decimal"><li>A transaction is complete when all parties 
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.concurrent.Tx companion object." href="Txs.html"><span class="name">Txs</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.concurrent.Tx companion object." href="Txs.html"><span class="name">Txs</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Tx.html" class="extype" name="com.twitter.concurrent.Tx">com.twitter.concurrent.Tx</a></code> companion object.</p>

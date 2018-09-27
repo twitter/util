@@ -816,19 +816,19 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An abstract <a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a> that provides callback methods which are called when
 a task takes longer than the specified maximum runtime or if a task is observed
 to be taking longer than the specified maximum runtime.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This makes assumptions that the underlying <code>Timer</code> will execute tasks
-      sequentially in order to catch slow running tasks during execution. If the
-      underlying <code>Timer</code> executes tasks in parallel the callback <code>slowTaskExecuting</code>
-      will become unreliable. However, the <code>slowTaskCompleted</code> callback will remain
-      reliable but must be a thread-safe implementation.</p></span>, <span class="cmt"><p>Observation of slow task execution is performed when scheduling more work to
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Observation of slow task execution is performed when scheduling more work to
       avoid the overhead of another thread or timer checking on tasks. This results
       in lower overhead but means that slow running tasks may not be observed while
       executing. However, they will trigger a callback to the <code>slowTaskCompleted</code>
-      regardless of whether additional work is scheduled.</p></span></dd></dl><div class="toggleContainer block">
+      regardless of whether additional work is scheduled.</p></span>, <span class="cmt"><p>This makes assumptions that the underlying <code>Timer</code> will execute tasks
+      sequentially in order to catch slow running tasks during execution. If the
+      underlying <code>Timer</code> executes tasks in parallel the callback <code>slowTaskExecuting</code>
+      will become unreliable. However, the <code>slowTaskCompleted</code> callback will remain
+      reliable but must be a thread-safe implementation.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a>, <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a>, <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a>, <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -925,7 +925,7 @@ to be taking longer than the specified maximum runtime.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">slowTaskCompleted</span><span class="params">(<span name="elapsed">elapsed: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">slowTaskCompleted</span><span class="params">(<span name="elapsed">elapsed: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Called when a task takes longer than the specified maximum duration
@@ -943,7 +943,7 @@ to be taking longer than the specified maximum runtime.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">slowTaskExecuting</span><span class="params">(<span name="elapsed">elapsed: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">slowTaskExecuting</span><span class="params">(<span name="elapsed">elapsed: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Called when a task is observed to be executing longer than the specified
@@ -969,7 +969,7 @@ maximum duration
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -985,7 +985,7 @@ maximum duration
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -1001,7 +1001,7 @@ maximum duration
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -1033,7 +1033,7 @@ maximum duration
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1097,7 +1097,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -1113,7 +1113,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -1129,7 +1129,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1170,7 +1170,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
@@ -1189,7 +1189,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -1205,7 +1205,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -1221,7 +1221,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1240,7 +1240,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1259,7 +1259,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">schedule</span><span class="params">(<span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
+        <span class="name">schedule</span><span class="params">(<span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       
       <p class="shortcomment cmt">Run <code>f</code> every elapsed <code>period</code>, starting <code>period</code> from now.</p><div class="fullcomment"><div class="comment cmt"><p>Run <code>f</code> every elapsed <code>period</code>, starting <code>period</code> from now.
@@ -1276,12 +1276,12 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
+        <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       
       <p class="shortcomment cmt">Run <code>f</code> at time <code>when</code>; subsequently run <code>f</code> at every elapsed <code>period</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Run <code>f</code> at time <code>when</code>; subsequently run <code>f</code> at every elapsed <code>period</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd><dt>Note</dt><dd><span class="cmt"><p>If <code>when</code> is negative or undefined, it will be treated as <a href="Time$.html#epoch:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#epoch">Time.epoch</a>.</p></span>, <span class="cmt"><p>If <code>period</code> is negative or undefined, the timer task will be rescheduled
-      immediately (i.e., <code>period</code> will be treated as <a href="Duration$.html#Zero:com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#Zero">Duration.Zero</a>).</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd><dt>Note</dt><dd><span class="cmt"><p>If <code>period</code> is negative or undefined, the timer task will be rescheduled
+      immediately (i.e., <code>period</code> will be treated as <a href="Duration$.html#Zero:com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#Zero">Duration.Zero</a>).</p></span>, <span class="cmt"><p>If <code>when</code> is negative or undefined, it will be treated as <a href="Time$.html#epoch:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#epoch">Time.epoch</a>.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Timer#schedule" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="schedule(when:com.twitter.util.Time)(f:=&gt;Unit):com.twitter.util.TimerTask"></a><a id="schedule(Time)(⇒Unit):TimerTask"></a>
       <span class="permalink">
@@ -1294,7 +1294,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
+        <span class="name">schedule</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       
       <p class="shortcomment cmt">Run <code>f</code> at time <code>when</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Run <code>f</code> at time <code>when</code>.
@@ -1311,7 +1311,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">scheduleOnce</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
+        <span class="name">scheduleOnce</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.SlowProbeProxyTimer">SlowProbeProxyTimer</a> → <a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a> → <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
@@ -1327,7 +1327,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">schedulePeriodically</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
+        <span class="name">schedulePeriodically</span><span class="params">(<span name="when">when: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="period">period: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="TimerTask.html" class="extype" name="com.twitter.util.TimerTask">TimerTask</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.SlowProbeProxyTimer">SlowProbeProxyTimer</a> → <a href="ProxyTimer.html" class="extype" name="com.twitter.util.ProxyTimer">ProxyTimer</a> → <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></dd></dl></div>
@@ -1343,7 +1343,7 @@ will cancel the scheduled timer task, if not too late.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stop</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">stop</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Stop the timer.</p><div class="fullcomment"><div class="comment cmt"><p>Stop the timer. Pending tasks are cancelled.
@@ -1393,7 +1393,7 @@ The timer is unusable after being stopped.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1415,7 +1415,7 @@ The timer is unusable after being stopped.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1437,7 +1437,7 @@ The timer is unusable after being stopped.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1464,9 +1464,9 @@ The timer is unusable after being stopped.
             </div><div class="parent" name="com.twitter.util.Timer">
               <h3>Inherited from <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>
         
         </div>

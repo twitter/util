@@ -509,16 +509,16 @@ in terms of integer methods.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Buf represents a fixed, immutable byte buffer with efficient positional access." href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="Buf represents a fixed, immutable byte buffer with efficient positional access." href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Buf represents a fixed, immutable byte buffer with efficient
 positional access.</p><div class="fullcomment"><div class="comment cmt"><p>Buf represents a fixed, immutable byte buffer with efficient
 positional access. Buffers may be sliced and concatenated,
 and thus be used to implement bytestreams.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Buf$.html#Empty:com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#Empty">com.twitter.io.Buf.Empty</a> for an empty <code>Buf</code>.</p></span><span class="cmt"><p><a href="Buf$.html#apply(bufs:Iterable[com.twitter.io.Buf]):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#apply">com.twitter.io.Buf.apply</a> for creating a <code>Buf</code> from other <code>Bufs</code></p></span><span class="cmt"><p><a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">com.twitter.io.Buf.ByteBuffer</a> for an <code>nio.ByteBuffer</code> backed
-    implementation.</p></span><span class="cmt"><p><a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">com.twitter.io.Buf.ByteArray</a> for an <code>Array[Byte]</code> backed
-    implementation.</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">com.twitter.io.Buf.ByteArray</a> for an <code>Array[Byte]</code> backed
+    implementation.</p></span><span class="cmt"><p><a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">com.twitter.io.Buf.ByteBuffer</a> for an <code>nio.ByteBuffer</code> backed
+    implementation.</p></span><span class="cmt"><p><a href="Buf$.html#apply(bufs:Iterable[com.twitter.io.Buf]):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#apply">com.twitter.io.Buf.apply</a> for creating a <code>Buf</code> from other <code>Bufs</code></p></span><span class="cmt"><p><a href="Buf$.html#Empty:com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#Empty">com.twitter.io.Buf.Empty</a> for an empty <code>Buf</code>.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.BufByteWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="BufByteWriterextendsByteWriter"></a><a id="BufByteWriter:BufByteWriter"></a>
       <span class="permalink">
@@ -564,7 +564,7 @@ and thus be used to implement bytestreams.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html"><span class="name">Bufs</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html"><span class="name">Bufs</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of the <code><a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a></code> companion object.</p>
@@ -601,7 +601,7 @@ to decode and interpret the bytes as a numeric value.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="ByteWriters allow efficient encoding to a buffer." href="ByteWriter.html"><span class="name">ByteWriter</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="ByteWriters allow efficient encoding to a buffer." href="ByteWriter.html"><span class="name">ByteWriter</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer.</p><div class="fullcomment"><div class="comment cmt"><p><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer. Concatenating
@@ -632,9 +632,9 @@ threadsafe unless otherwise noted.
 reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
 </p></div></div>
     </li><li name="com.twitter.io.Pipe" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Pipe[A&lt;:com.twitter.io.Buf]extendsReader[A]withWriter[A]withClosable"></a><a id="Pipe[A&lt;:Buf]:Pipe[A]"></a>
+      <a id="Pipe[A&lt;:com.twitter.io.Buf]extendsReader[A]withWriter[A]"></a><a id="Pipe[A&lt;:Buf]:Pipe[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/index.html#Pipe[A&lt;:com.twitter.io.Buf]extendsReader[A]withWriter[A]withClosable" title="Permalink">
+      <a href="../../../com/twitter/io/index.html#Pipe[A&lt;:com.twitter.io.Buf]extendsReader[A]withWriter[A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -643,15 +643,37 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer." href="Pipe.html"><span class="name">Pipe</span></a><span class="tparams">[<span name="A">A &lt;: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>]</span><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>] with <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>] with <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+        <a title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer." href="Pipe.html"><span class="name">Pipe</span></a><span class="tparams">[<span name="A">A &lt;: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>]</span><span class="result"> extends <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>] with <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>]</span>
       </span>
       
       <p class="shortcomment cmt">A synchronous in-memory pipe that connects <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> in the sense
 that a reader's input is the output of a writer.</p><div class="fullcomment"><div class="comment cmt"><p>A synchronous in-memory pipe that connects <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> in the sense
-that a reader's input is the output of a writer.</p><p>Reads and writes on the pipe are matched one to one and only one outstanding <code>read</code>
-or <code>write</code> is permitted in the current implementation. That is, the <code>write</code> (its
-returned <span class="extype" name="Future">Future</span>) is resolved when the <code>read</code> consumes the written data.</p><p>It is safe to call <code>read</code>, <code>write</code>, and <code>close</code> concurrently. The individual calls
-are synchronized on the given <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>.
+that a reader's input is the output of a writer.</p><p>A pipe is structured as a smash of both interfaces, a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> and a <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> such that can
+be passed directly to a consumer or a producer.</p><pre><span class="kw">def</span> consumer(r: Reader[Buf]): Future[<span class="std">Unit</span>] = ???
+<span class="kw">def</span> producer(w: Writer[Buf]): Future[<span class="std">Unit</span>] = ???
+
+<span class="kw">val</span> p = <span class="kw">new</span> Pipe[Buf]
+
+consumer(p)
+producer(p)</pre><p>Reads and writes on the pipe are matched one to one and only one outstanding <code>read</code>
+or <code>write</code> is permitted in the current implementation (multiple pending writes or reads
+resolve into <span class="extype" name="IllegalStateException">IllegalStateException</span> while leaving the pipe healthy). That is, the <code>write</code>
+(its returned <span class="extype" name="Future">Future</span>) is resolved when the <code>read</code> consumes the written data.</p><p>Here is, for example, a very typical write-loop that writes into a pipe-backed <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>:</p><pre><span class="kw">def</span> writeLoop(w: Writer[Buf], data: <span class="std">List</span>[Buf]): Future[<span class="std">Unit</span>] = data <span class="kw">match</span> {
+  <span class="kw">case</span> h :: t <span class="kw">=&gt;</span> p.write(h).before(writeLoop(w, t))
+  <span class="kw">case</span> Nil <span class="kw">=&gt;</span> w.close()
+}</pre><p>Reading from a pipe-backed <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> is no different from working with any other reader:</p><pre><span class="kw">def</span> readLoop(r: Reader[Buf], process: Buf <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] = r.read().flatMap {
+  <span class="kw">case</span> <span class="std">Some</span>(chunk) <span class="kw">=&gt;</span> process(chunk).before(readLoop(r, process))
+  <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> Future.Done
+}</pre><h4> Thread Safety </h4><p>It is safe to call <code>read</code>, <code>write</code>, <code>fail</code>, <code>discard</code>, and <code>close</code> concurrently. The individual
+calls are synchronized on the given <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>.</p><h4> Closing or Failing Pipes </h4><p>Besides expecting a write or a read, a pipe can be closed or failed. A writer can do both <code>close</code>
+and <code>fail</code> the pipe, while reader can only fail the pipe via <code>discard</code>.</p><p>The following behavior is expected with regards to reading from or writing into a closed or a
+failed pipe:</p><ul><li>Writing into a closed pipe yields <span class="extype" name="IllegalStateException">IllegalStateException</span></li><li>Reading from a closed pipe yields EOF (<span class="extype" name="Future.None">Future.None</span>)</li><li>Reading from or writing into a failed pipe yields a failure it was failed with</li></ul><p>It's also worth discussing how pipes are being closed. As closure is always initiated by a
+producer (writer), there is a machinery allowing it to be notified when said closure is observed
+by a consumer (reader).</p><p>The following rules should help reasoning about closure signals in pipes:</p><p>- Closing a pipe with a pending read resolves said read into EOF and returns a <span class="extype" name="Future.Unit">Future.Unit</span>
+- Closing a pipe with a pending write fails said write with <span class="extype" name="IllegalStateException">IllegalStateException</span> and
+  returns a future that will be satisfied when a consumer observes the closure (EOF) via read
+- Closing an idle pipe returns a future that will be satisfied when a consumer observes the
+  closure (EOF) via read
 </p></div></div>
     </li><li name="com.twitter.io.Reader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Reader[+A]extendsAnyRef"></a><a id="Reader[+A]:Reader[A]"></a>
@@ -665,7 +687,7 @@ are synchronized on the given <a href="Pipe.html" class="extype" name="com.twitt
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Reader represents a stream of As." href="Reader.html"><span class="name">Reader</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Reader represents a stream of As." href="Reader.html"><span class="name">Reader</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Reader represents a stream of <code>A</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A Reader represents a stream of <code>A</code>s.</p><p>Readers permit at most one outstanding read.
@@ -682,15 +704,15 @@ are synchronized on the given <a href="Pipe.html" class="extype" name="com.twitt
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java APIs for Reader." href="Readers.html"><span class="name">Readers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="Java APIs for Reader." href="Readers.html"><span class="name">Readers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Reader.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Reader</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writer" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="Writer[-A]extendsAnyRef"></a><a id="Writer[-A]:Writer[A]"></a>
+      <a id="Writer[-A]extendsClosable"></a><a id="Writer[-A]:Writer[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/index.html#Writer[-A]extendsAnyRef" title="Permalink">
+      <a href="../../../com/twitter/io/index.html#Writer[-A]extendsClosable" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -699,7 +721,7 @@ are synchronized on the given <a href="Pipe.html" class="extype" name="com.twitt
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams." href="Writer.html"><span class="name">Writer</span></a><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams." href="Writer.html"><span class="name">Writer</span></a><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       
       <p class="shortcomment cmt">A Writer represents a sink for a stream of <code>A</code>s, providing a convenient interface
@@ -716,7 +738,7 @@ for the producer of such streams.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java APIs for Writer." href="Writers.html"><span class="name">Writers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+        <a title="Java APIs for Writer." href="Writers.html"><span class="name">Writers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Writer.
