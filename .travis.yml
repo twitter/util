@@ -52,5 +52,6 @@ stages:
 jobs:
   include:
     - stage: publish-snapshot
-      script: ./sbt +publishLocal +publishLocalSigned +publishSigned +publishM2
-      script: ./sbt "project util-intellij" +publishSigned
+      script: 
+        - ./sbt +publishLocal +publishLocalSigned +publishSigned +publishM2
+        - ./sbt "project util-intellij" +publishSigned
