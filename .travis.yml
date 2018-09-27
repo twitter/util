@@ -22,7 +22,7 @@ before_install:
   - sudo rm -rf ~/.gnupg
   - mkdir -p $HOME/.sbt/1.0/plugins
   - echo 'addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")' > $HOME/.sbt/1.0/plugins/gpg.sbt
-  - openssl aes-256-cbc -K $encrypted_0c03606c72ea_key -iv $encrypted_0c03606c72ea_iv -in sonatype.sbt.enc -out $HOME`/.sbt/1.0/sonatype.sbt -d
+  - openssl aes-256-cbc -K $encrypted_0c03606c72ea_key -iv $encrypted_0c03606c72ea_iv -in sonatype.sbt.enc -out $HOME/.sbt/1.0/sonatype.sbt -d
 
 jdk:
   - oraclejdk8
@@ -30,6 +30,8 @@ jdk:
 notifications:
   slack:
     secure: BFX2aB0sq5cMxmxlWIwgHwJOjI5W6WBn3YSPqHYYz6VAK6fzlX2VUKsfyQJTUnqMYox/0qGzPUB4TFhVMH3c78ocNZNj/9tPOPLkMfHjAqobnq/89+hp4Q6fmWCMKVAGTzVNq83OCykYkzITcYWxo0Pyc2eguW6tHaHIgqnbCRY=
+    on_failure: change
+    on_success: change
 
 before_script:
   - unset SBT_OPTS # default $SBT_OPTS is irrelevant to sbt launcher
