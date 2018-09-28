@@ -34,6 +34,8 @@ class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
       assert(500.milliseconds * 4 == 2.seconds)
       assert(1.nanosecond * Long.MaxValue == Long.MaxValue.nanoseconds)
       assert(1.nanosecond * Long.MinValue == Long.MinValue.nanoseconds)
+      assert(-1.nanosecond * Long.MinValue == Duration.Top)
+      assert(-1.nanosecond * (Long.MinValue + 1) == Long.MaxValue.nanoseconds)
 
       assert(1.second * 2.0 == 2.seconds)
       assert(500.milliseconds * 4.0 == 2.seconds)
