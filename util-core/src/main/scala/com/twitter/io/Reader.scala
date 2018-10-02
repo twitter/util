@@ -31,9 +31,9 @@ import scala.collection.mutable.ListBuffer
  * unsuccessful outcomes.
  *
  * {{{
- *   consume(stream)(_ => Future.Done).respond {
+ *   consume(stream)(processor).respond {
  *     case Return(()) => println("Consumed an entire stream successfully.")
- *     case Throw(e) => println(s"Encountered an error while consuming a stream $e")
+ *     case Throw(e) => println(s"Encountered an error while consuming a stream: $e")
  *   }
  * }}}
  *
@@ -53,8 +53,8 @@ import scala.collection.mutable.ListBuffer
  * == Back Pressure ==
  *
  * The pattern above leverages [[Future]] recursion to exert back-pressure via allowing only one
- * outstanding read. It's usually a good idea to structure consumers this way (i.e., the new read
- * isn't issued until the current read finishes). This would always ensure a finer grained
+ * outstanding read. It's usually a good idea to structure consumers this way (i.e., the next read
+ * isn't issued until the previous read finishes). This would always ensure a finer grained
  * back-pressure in network systems allowing the consumers to artificially slow down the producers
  * and not rely solely on transport and IO buffering.
  *
