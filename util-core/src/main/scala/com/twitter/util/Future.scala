@@ -49,39 +49,36 @@ object Future {
   private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
   private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied)
-  private val toUnit: Try[Any] => Future[Unit] = {
-    case Return(_) => Future.Unit
-    case t => Future.const(t.asInstanceOf[Try[Unit]])
+  private val tryToUnit: Try[Any] => Try[Unit] = {
+    case t: Return[_] => Try.Unit
+    case t => t.asInstanceOf[Try[Unit]]
   }
-  private val toVoid: Try[Any] => Future[Void] = {
-    case Return(_) => Future.Void
-    case t => Future.const(t.asInstanceOf[Try[Void]])
+  private val tryToVoid: Try[Any] => Try[Void] = {
+    case t: Return[_] => Try.Void
+    case t => t.asInstanceOf[Try[Void]]
   }
   private val AlwaysMasked: PartialFunction[Throwable, Boolean] = { case _ => true }
 
   private val toTuple2Instance: (Any, Any) => (Any, Any) = Tuple2.apply
   private def toTuple2[A, B]: (A, B) => (A, B) = toTuple2Instance.asInstanceOf[(A, B) => (A, B)]
-  private val toValueInstance: Any => Future[Any] = Future.value
-  private def toValue[T]: T => Future[T] = toValueInstance.asInstanceOf[T => Future[T]]
+  private val liftToTryInstance: Any => Try[Any] = Return(_)
+  private def liftToTry[T]: T => Try[T] = liftToTryInstance.asInstanceOf[T => Try[T]]
 
-  private val lowerFromTryInstance: Any => Future[Any] = {
-    case t: Try[_] => Future.const(t)
-  }
+  private val flattenTryInstance: Try[Try[Any]] => Try[Any] = _.flatten
+  private def flattenTry[A, T](implicit ev: A => Try[T]): Try[A] => Try[T] =
+    flattenTryInstance.asInstanceOf[Try[A] => Try[T]]
 
-  private def lowerFromTry[A, T]: A => Future[T] =
-    lowerFromTryInstance.asInstanceOf[A => Future[T]]
-
-  private val toTxInstance: Try[Any] => Future[Tx[Try[Any]]] =
+  private val toTxInstance: Try[Any] => Try[Tx[Try[Any]]] =
     res => {
       val tx = new Tx[Try[Any]] {
         def ack(): Future[Tx.Result[Try[Any]]] = Future.value(Tx.Commit(res))
         def nack(): Unit = ()
       }
 
-      Future.value(tx)
+      Return(tx)
     }
-  private def toTx[A]: Try[A] => Future[Tx[Try[A]]] =
-    toTxInstance.asInstanceOf[Try[A] => Future[Tx[Try[A]]]]
+  private def toTx[A]: Try[A] => Try[Tx[Try[A]]] =
+    toTxInstance.asInstanceOf[Try[A] => Try[Tx[Try[A]]]]
 
   private val emptySeqInstance: Future[Seq[Any]] = Future.value(Seq.empty)
   private def emptySeq[A]: Future[Seq[A]] = emptySeqInstance.asInstanceOf[Future[Seq[A]]]
@@ -1700,7 +1697,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * When this future completes, run `f` on that completed result
    * whether or not this computation was successful.
    *
-   * The returned `Future` will be satisfied when this,
+   * The returned `Future` will be satisfied when `this`,
    * the original future, and `f` are done.
    *
    * @see [[respond]] for purely side-effecting callbacks.
@@ -1711,6 +1708,27 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * @see [[transformedBy]] for a Java friendly API.
    */
   def transform[B](f: Try[A] => Future[B]): Future[B]
+
+  /**
+   * When this future completes, run `f` on that completed result
+   * whether or not this computation was successful.
+   *
+   * This method is similar to `transform`, but the transformation is
+   * applied without introducing an intermediate future, which leads
+   * to better performance.
+   *
+   * The returned `Future` will be satisfied when `this`,
+   * the original future, is done.
+   *
+   * @see [[respond]] for purely side-effecting callbacks.
+   * @see [[map]] and [[flatMap]] for dealing strictly with successful
+   *     computations.
+   * @see [[handle]] and [[rescue]] for dealing strictly with exceptional
+   *     computations.
+   * @see [[transformedBy]] for a Java friendly API.
+   * @see [[transform]] for transformations that return `Future`.
+   */
+  protected def transformTry[B](f: Try[A] => Try[B]): Future[B]
 
   /**
    * If this, the original future, succeeds, run `f` on the result.
@@ -1816,14 +1834,10 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * @see [[onSuccess]] for side-effecting chained computations.
    */
   def map[B](f: A => B): Future[B] =
-    transform {
-      case Return(r) => Future { f(r) }
-      case t: Throw[_] => Future.const[B](t.cast[B])
-    }
+    transformTry(_.map(f))
 
-  def filter(p: A => Boolean): Future[A] = transform { x: Try[A] =>
-    Future.const(x.filter(p))
-  }
+  def filter(p: A => Boolean): Future[A] =
+    transformTry(_.filter(p))
 
   def withFilter(p: A => Boolean): Future[A] = filter(p)
 
@@ -2009,14 +2023,14 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @note failed futures will remain as is.
    */
-  def unit: Future[Unit] = transform(Future.toUnit)
+  def unit: Future[Unit] = transformTry(Future.tryToUnit)
 
   /**
    * Convert this `Future[A]` to a `Future[Void]` by discarding the result.
    *
    * @note failed futures will remain as is.
    */
-  def voided: Future[Void] = transform(Future.toVoid)
+  def voided: Future[Void] = transformTry(Future.tryToVoid)
 
   /**
    * Send updates from this Future to the other.
@@ -2047,7 +2061,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * The offer is activated when the future is satisfied.
    */
   def toOffer: Offer[Try[A]] = new Offer[Try[A]] {
-    def prepare(): Future[Tx[Try[A]]] = transform(Future.toTx)
+    def prepare(): Future[Tx[Try[A]]] = transformTry(Future.toTx)
   }
 
   /**
@@ -2176,7 +2190,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * Await.result(t) // Throw(java.lang.Exception: boom!)
    * }}}
    */
-  def liftToTry: Future[Try[A]] = transform(Future.toValue)
+  def liftToTry: Future[Try[A]] = transformTry(Future.liftToTry)
 
   /**
    * Lowers a `Future[Try[T]]` into a `Future[T]`.
@@ -2192,7 +2206,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * }}}
    */
   def lowerFromTry[B](implicit ev: A <:< Try[B]): Future[B] =
-    flatMap(Future.lowerFromTry)
+    transformTry(Future.flattenTry)
 
   /**
    * Makes a derivative `Future` which will be satisfied with the result

@@ -12,6 +12,16 @@ import scala.util.{Success, Failure}
 object Try {
   case class PredicateDoesNotObtain() extends Exception()
 
+  /**
+   * A constant `Try` that returns `Unit`.
+   */
+  val Unit: Try[Unit] = Try(())
+
+  /**
+   * A constant `Try` that returns `Void`.
+   */
+  val Void: Try[Void] = Try(null: Void)
+
   def apply[R](r: => R): Try[R] = {
     try { Return(r) } catch {
       case NonFatal(e) => Throw(e)

@@ -9,6 +9,7 @@ package com.twitter.util
 class NoFuture extends Future[Nothing] {
   def respond(k: Try[Nothing] => Unit): Future[Nothing] = this
   def transform[B](f: Try[Nothing] => Future[B]): Future[B] = this
+  protected def transformTry[B](f: Try[Nothing] => Try[B]): Future[B] = this
 
   def raise(interrupt: Throwable): Unit = ()
 

@@ -30,7 +30,7 @@
 				   class-name="com.twitter.util.Promise"
 				   method-name="transform"
 				   capture-key-expression="f"
-				   insert-class-name="com.twitter.util.Promise$Transformer"
+				   insert-class-name="com.twitter.util.Promise$FutureTransformer"
 				   insert-method-name="liftedTree1$1"
 				   insert-key-expression="this.f" />
 
@@ -62,7 +62,7 @@
 				   class-name="com.twitter.util.Future"
 				   method-name="map"
 				   capture-key-expression="f"
-				   insert-class-name="com.twitter.util.Future$$anonfun$map$1$$anonfun$apply$3"
+				   insert-class-name="com.twitter.util.Future$$anonfun$map$1"
 				   insert-method-name="apply"
 				   insert-key-expression="f" />
 
