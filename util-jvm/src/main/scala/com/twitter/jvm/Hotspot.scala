@@ -32,7 +32,7 @@ class Hotspot extends Jvm {
       // jdk5/6 have jvm field in ManagementFactory class
       Class.forName("sun.management.ManagementFactory").getDeclaredField("jvm")
     } catch {
-      case _: NoSuchFieldException =>
+      case _: Throwable =>
         // jdk7 moves jvm field to ManagementFactoryHelper class
         Class.forName("sun.management.ManagementFactoryHelper").getDeclaredField("jvm")
     }
