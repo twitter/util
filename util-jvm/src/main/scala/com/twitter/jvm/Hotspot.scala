@@ -9,6 +9,7 @@ import javax.management.openmbean.CompositeDataSupport
 import javax.management.{ObjectName, RuntimeMBeanException}
 import scala.collection.JavaConverters._
 import scala.language.reflectiveCalls
+import scala.util.control.NonFatal
 
 class Hotspot extends Jvm {
   private[this] val epoch =
@@ -32,7 +33,7 @@ class Hotspot extends Jvm {
       // jdk5/6 have jvm field in ManagementFactory class
       Class.forName("sun.management.ManagementFactory").getDeclaredField("jvm")
     } catch {
-      case _: Throwable =>
+      case NonFatal(_) =>
         // jdk7 moves jvm field to ManagementFactoryHelper class
         Class.forName("sun.management.ManagementFactoryHelper").getDeclaredField("jvm")
     }
