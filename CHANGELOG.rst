@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: `c.t.u.Duration.inTimeUnit` can now return
+  `j.u.c.TimeUnit.MINUTES`. ``PHAB_ID=D225115``
+
 18.9.1
 -------
 

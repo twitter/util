@@ -187,6 +187,7 @@ class DurationTest extends { val ops = Duration } with TimeLikeSpec[Duration] {
       assert(23.microseconds.inTimeUnit == ((23000, TimeUnit.NANOSECONDS)))
       assert(23.milliseconds.inTimeUnit == ((23, TimeUnit.MILLISECONDS)))
       assert(23.seconds.inTimeUnit == ((23, TimeUnit.SECONDS)))
+      assert(60.seconds.inTimeUnit == ((1, TimeUnit.MINUTES)))
     }
 
     "inUnit" in {

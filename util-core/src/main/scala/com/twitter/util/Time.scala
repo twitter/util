@@ -156,20 +156,17 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
   def inMillis: Long = inMilliseconds // (Backwards compatibility)
 
   /**
-   * Returns a value/`TimeUnit` pair; attempting to return coarser
-   * grained values if possible (specifically: `TimeUnit.SECONDS` or
-   * `TimeUnit.MILLISECONDS`) before resorting to the default
+   * Returns a value/`TimeUnit` pair; attempting to return coarser grained
+   * values if possible (specifically: `TimeUnit.MINUTES`, `TimeUnit.SECONDS`
+   * or `TimeUnit.MILLISECONDS`) before resorting to the default
    * `TimeUnit.NANOSECONDS`.
    */
-  def inTimeUnit: (Long, TimeUnit) = {
+  def inTimeUnit: (Long, TimeUnit) = inNanoseconds match {
     // allow for APIs that may treat TimeUnit differently if measured in very tiny units.
-    if (inNanoseconds % Duration.NanosPerSecond == 0) {
-      (inSeconds, TimeUnit.SECONDS)
-    } else if (inNanoseconds % Duration.NanosPerMillisecond == 0) {
-      (inMilliseconds, TimeUnit.MILLISECONDS)
-    } else {
-      (inNanoseconds, TimeUnit.NANOSECONDS)
-    }
+    case ns if ns % Duration.NanosPerMinute == 0 => (inMinutes, TimeUnit.MINUTES)
+    case ns if ns % Duration.NanosPerSecond == 0 => (inSeconds, TimeUnit.SECONDS)
+    case ns if ns % Duration.NanosPerMillisecond == 0 => (inMilliseconds, TimeUnit.MILLISECONDS)
+    case ns => (ns, TimeUnit.NANOSECONDS)
   }
 
   /**
