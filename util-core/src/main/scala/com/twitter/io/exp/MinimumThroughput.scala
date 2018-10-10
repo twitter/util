@@ -1,6 +1,5 @@
 package com.twitter.io.exp
 
-import com.twitter.conversions.time._
 import com.twitter.io.{Writer, Buf, Reader}
 import com.twitter.util._
 import scala.util.control.NoStackTrace
@@ -13,7 +12,7 @@ object MinimumThroughput {
 
   private val BpsNoElapsed = -1d
 
-  private val MinDeadline = 1.second
+  private val MinDeadline = Duration.fromSeconds(1)
 
   /** internal marker used to raise on read/write timeouts. */
   private case object MinThroughputTimeoutException extends Exception with NoStackTrace
@@ -54,7 +53,7 @@ object MinimumThroughput {
     }
 
     def newBelowThroughputException: BelowThroughputException =
-      new BelowThroughputException(elapsed, bps, minBps)
+      BelowThroughputException(elapsed, bps, minBps)
 
   }
 

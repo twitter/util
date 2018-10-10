@@ -1,6 +1,5 @@
 package com.twitter.io.exp
 
-import com.twitter.conversions.time._
 import com.twitter.io.{InputStreamReader, Buf, Reader}
 import com.twitter.util._
 import java.io.{FileInputStream, File}
@@ -40,7 +39,9 @@ object ActivitySource {
    * An ActivitySource for observing file contents. Once observed,
    * each file will be polled once per period.
    */
-  def forFiles(period: Duration = 1.minute)(implicit timer: Timer): ActivitySource[Buf] =
+  def forFiles(
+    period: Duration = Duration.fromSeconds(60)
+  )(implicit timer: Timer): ActivitySource[Buf] =
     new CachingActivitySource(new FilePollingActivitySource(period)(timer))
 
   /**

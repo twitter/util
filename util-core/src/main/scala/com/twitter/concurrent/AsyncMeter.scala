@@ -1,6 +1,5 @@
 package com.twitter.concurrent
 
-import com.twitter.conversions.time._
 import com.twitter.util._
 import java.util.concurrent.{
   ArrayBlockingQueue,
@@ -25,7 +24,7 @@ private[concurrent] object Period {
 }
 
 object AsyncMeter {
-  private[concurrent] val MinimumInterval = 1.millisecond
+  private[concurrent] val MinimumInterval = Duration.fromMilliseconds(1)
 
   /**
    * Creates an [[AsyncMeter]] that allows smoothed out `permits` per
@@ -34,7 +33,7 @@ object AsyncMeter {
    * This is equivalent to `AsyncMeter.newMeter(permits, 1.second, maxWaiters)`.
    */
   def perSecond(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
-    newMeter(permits, 1.second, maxWaiters)
+    newMeter(permits, Duration.fromSeconds(1), maxWaiters)
 
   /**
    * Creates an [[AsyncMeter]] that allows smoothed out `permits` per second,
@@ -58,7 +57,7 @@ object AsyncMeter {
    *       second, but the burst should be smoothed out after that.
    */
   def perSecondLimited(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
-    newMeter(1, 1.second / permits, maxWaiters)
+    newMeter(1, Duration.fromSeconds(1) / permits, maxWaiters)
 
   /**
    * Creates an [[AsyncMeter]] that has a maximum burst size of `burstSize` over
@@ -240,7 +239,7 @@ class AsyncMeter private (
     // guarantees that satisfying the thread is not racy--we also use
     // Promise#setValue or Promise#setException to ensure that if there's a
     // race, it will fail loudly.
-    val p = Promise[Unit]
+    val p = Promise[Unit]()
     val tup = (p, permits)
 
     if (q.offer(tup)) {
