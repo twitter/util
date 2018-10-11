@@ -21,6 +21,13 @@ class WriterTest extends FunSuite with Matchers {
     intercept[Exception] { await(w.write(Buf.Empty)) }
   }
 
+  test("fromOutputStream - contramap") {
+    val w = Writer.fromOutputStream(new ByteArrayOutputStream)
+    val nw = w.contramap[String](s => Buf.Utf8(s))
+    await(nw.write("hi"))
+    await(nw.close())
+  }
+
   test("fromOutputStream - error") {
     val os = new OutputStream {
       def write(b: Int): Unit = ()

@@ -52,7 +52,7 @@ import java.io.OutputStream
  * @note Whether or not multiple pending writes are allowed on a `Writer` type is an undefined
  *       behaviour but could be changed in a refinement.
  */
-trait Writer[-A] extends Closable {
+trait Writer[-A] extends Closable { self =>
 
   /**
    * Write an `element` into this stream. Although undefined by this contract, a trustworthy
@@ -70,7 +70,25 @@ trait Writer[-A] extends Closable {
    * @note Failing an already closed stream does not have an effect.
    */
   def fail(cause: Throwable): Unit
+
+  /**
+   * Given f, a function from B into A, creates an Writer[B] whose `fail` and `close` functions
+   * are equivalent to Writer[A]'s. Writer[B]'s `write` function is equivalent to:
+   * {{{
+   * def write(element: B) = Writer[A].write(f(element))
+   * }}}
+   */
+  final def contramap[B](f: B => A): Writer[B] = new Writer[B] {
+    def write(element: B): Future[Unit] = self.write(f(element))
+    def fail(cause: Throwable): Unit = self.fail(cause)
+    def close(deadline: Time): Future[Unit] = self.close(deadline)
+  }
 }
+
+/**
+ * Abstract `Writer` class for Java compatibility.
+ */
+abstract class AbstractWriter[-A] extends Writer[A]
 
 /**
  * @see Writers for Java friendly APIs.

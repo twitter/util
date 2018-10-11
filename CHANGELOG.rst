@@ -34,6 +34,12 @@ Bug Fixes
 * util-slf4j-api: Moved slf4j-simple dependency to be a 'test' dependency, instead of a
   compile dependency, which was inaccurate. ``PHAB_ID=D220718``
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Added a `contramap` function into `c.t.io.Writer`, `Writer` is now a contravariant
+  functor. Added the `AbstractWriter` for Java compatibility ``PHAB_ID=D225686``
+
 18.9.0
 -------
 
