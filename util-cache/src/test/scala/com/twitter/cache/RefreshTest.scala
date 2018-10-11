@@ -1,14 +1,11 @@
 package com.twitter.cache
 
-import com.twitter.util.{Await, Future, Time, Promise}
+import com.twitter.conversions.time._
+import com.twitter.util.{Await, Future, Promise, Time}
 import org.mockito.Mockito._
-import com.twitter.util.TimeConversions._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
 
-@RunWith(classOf[JUnitRunner])
 class RefreshTest extends FunSuite with MockitoSugar {
 
   class Ctx {
@@ -73,7 +70,7 @@ class RefreshTest extends FunSuite with MockitoSugar {
     val ctx = new Ctx
     import ctx._
 
-    val promise = Promise[Int]
+    val promise = Promise[Int]()
     reset(provider)
     when(provider())
       .thenReturn(promise)
@@ -93,7 +90,7 @@ class RefreshTest extends FunSuite with MockitoSugar {
     val ctx = new Ctx
     import ctx._
 
-    val promise = Promise[Int]
+    val promise = Promise[Int]()
     reset(provider)
     when(provider()).thenReturn(promise)
 
@@ -108,7 +105,7 @@ class RefreshTest extends FunSuite with MockitoSugar {
     verify(provider, times(1))()
 
     reset(provider)
-    val promise2 = Promise[Int]
+    val promise2 = Promise[Int]()
     when(provider()).thenReturn(promise2)
 
     val result3 = memoizedFuture()

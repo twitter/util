@@ -15,6 +15,10 @@ Breaking API Changes
 
 * util-core: `c.t.util.TempFolder` has been moved to `c.t.io.TempFolder`. ``PHAB_ID=D226940``
 
+* util-core: Removed the forwarding types `c.t.util.TimeConversions` and
+  `c.t.util.StorageUnitConversions`. Use `c.t.conversions.time` and
+  `c.t.conversions.storage` directly. ``PHAB_ID=D227363``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
