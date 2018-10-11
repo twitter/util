@@ -190,44 +190,6 @@ object Reader {
   class ReaderDiscarded extends Exception("This writer's reader has been discarded")
 
   /**
-   * A [[Reader]] that is linked with a [[Writer]] and `close`-ing
-   * is synchronous.
-   *
-   * Just as with [[Reader readers]] and [[Writer writers]],
-   * only one outstanding `read` or `write` is permitted.
-   *
-   * For a proper `close`, it should only be done when
-   * no writes are outstanding:
-   * {{{
-   *   val rw = Reader.writable()
-   *   ...
-   *   rw.write(buf).before(rw.close())
-   * }}}
-   *
-   * If a producer is interested in knowing when all writes
-   * have been read and the reader has seen the EOF, it can
-   * wait until the future returned by `close()` is satisfied:
-   * {{{
-   *   val rw = Reader.writable()
-   *   ...
-   *   rw.close().ensure {
-   *     println("party on! ♪┏(・o･)┛♪ the Reader has seen the EOF")
-   *   }
-   * }}}
-   */
-  @deprecated("Use Pipe[A] instead", "2018-8-7")
-  type Writable[A <: Buf] = Pipe[A]
-
-  /**
-   * Create a new [[Writable]] which is a [[Reader]] that is linked
-   * with a [[Writer]].
-   *
-   * @see Readers.writable() for a Java API.
-   */
-  @deprecated("Use Pipe() instead", "2018-8-7")
-  def writable(): Pipe[Buf] = new Pipe[Buf]
-
-  /**
    * Create a new [[Reader]] for a `File`.
    *
    * The resources held by the returned [[Reader]] are released

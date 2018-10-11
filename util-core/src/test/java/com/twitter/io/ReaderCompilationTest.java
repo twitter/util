@@ -33,8 +33,8 @@ public class ReaderCompilationTest {
 
 
   @Test
-  public void testWritable() {
-    Pipe<Buf> w = Readers.writable();
+  public void testPipe() {
+    Pipe<Buf> w = new Pipe<>();
     w.close();
   }
 

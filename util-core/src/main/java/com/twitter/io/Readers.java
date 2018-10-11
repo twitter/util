@@ -76,13 +76,6 @@ public final class Readers {
   }
 
   /**
-   * See {@code com.twitter.io.Pipe}.
-   */
-  public static Pipe<Buf> writable() {
-    return new Pipe<>();
-  }
-
-  /**
    * See {@code com.twitter.io.Reader.fromFile()}.
    */
   public static Reader<Buf> newFileReader(File f) throws FileNotFoundException {
