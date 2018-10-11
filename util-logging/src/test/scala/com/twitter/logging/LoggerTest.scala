@@ -17,7 +17,7 @@
 package com.twitter.logging
 
 import com.twitter.conversions.time._
-import com.twitter.util.TempFolder
+import com.twitter.io.TempFolder
 import java.net.InetSocketAddress
 import java.util.concurrent.{Callable, CountDownLatch, Executors, Future, TimeUnit}
 import java.util.{logging => javalog}

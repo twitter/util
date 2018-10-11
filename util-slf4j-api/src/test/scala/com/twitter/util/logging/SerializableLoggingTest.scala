@@ -1,6 +1,6 @@
 package com.twitter.util.logging
 
-import com.twitter.util.TempFolder
+import com.twitter.io.TempFolder
 import java.io._
 import org.scalatest.FunSuite
 

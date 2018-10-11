@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.twitter.util
+package com.twitter.io
 
 import java.io.File
-
-import com.twitter.io.Files
 
 /**
  * Test mixin that creates a temporary thread-local folder for a block of code to execute in.
  * The folder is recursively deleted after the test.
- *
- * Note, the [[com.twitter.util.io]] package would be a better home for this trait.
  *
  * Note that multiple uses of TempFolder cannot be nested, because the temporary directory
  * is effectively a thread-local global.
@@ -59,11 +55,11 @@ trait TempFolder {
    * @return The current thread's active temporary folder.
    * @throws RuntimeException if not running within a withTempFolder block
    */
-  def folderName = { _folderName.get.getPath }
+  def folderName: String = { _folderName.get.getPath }
 
   /**
    * @return The canonical path of the current thread's active temporary folder.
    * @throws RuntimeException if not running within a withTempFolder block
    */
-  def canonicalFolderName = { _folderName.get.getCanonicalPath }
+  def canonicalFolderName: String = { _folderName.get.getCanonicalPath }
 }

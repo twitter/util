@@ -11,7 +11,9 @@ Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
 * util-core: `c.t.io.Reader.Writable` and `c.t.Reader.writable()` are removed. Use `c.t.io.Pipe`
-instead. ``PHAB_ID=D226603``
+  instead. ``PHAB_ID=D226603``
+
+* util-core: `c.t.util.TempFolder` has been moved to `c.t.io.TempFolder`. ``PHAB_ID=D226940``
 
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
