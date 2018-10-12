@@ -84,7 +84,7 @@ class ReaderTest
 
     forAll(stringAndChunk) {
       case (s, i) =>
-        val r = Reader.chunked(Reader.fromBuf(Buf.Utf8(s)), i)
+        val r = Reader.chunked(Reader.fromBuf(Buf.Utf8(s), 32), i)
 
         def readLoop(): Unit = await(r.read(Int.MaxValue)) match {
           case Some(b) =>
@@ -99,9 +99,7 @@ class ReaderTest
 
   test("Reader.concat") {
     forAll { ss: List[String] =>
-      val readers = ss.map { s =>
-        BufReader(Buf.Utf8(s))
-      }
+      val readers = ss.map(s => Reader.fromBuf(Buf.Utf8(s), 16))
       val buf = Reader.readAll(Reader.concat(AsyncStream.fromSeq(readers)))
       assert(await(buf) == Buf.Utf8(ss.mkString))
     }
@@ -156,7 +154,7 @@ class ReaderTest
 
   test("Reader.fromStream closes resources on EOF read") {
     val in = spy(new ByteArrayInputStream(arr(0, 10)))
-    val r = Reader.fromStream(in)
+    val r = Reader.fromStream(in, 4)
     val f = Reader.readAll(r)
     assert(await(f) == buf(0, 10))
     eventually {
@@ -166,11 +164,9 @@ class ReaderTest
 
   test("Reader.fromStream closes resources on discard") {
     val in = spy(new ByteArrayInputStream(arr(0, 10)))
-    val r = Reader.fromStream(in)
+    val r = Reader.fromStream(in, 4)
     r.discard()
-    eventually {
-      verify(in).close()
-    }
+    eventually { verify(in).close() }
   }
 
   test("Reader.fromAsyncStream completes when stream is empty") {

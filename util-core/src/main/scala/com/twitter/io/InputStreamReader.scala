@@ -10,15 +10,22 @@ import java.io.InputStream
  * The given `InputStream` will be closed when [[Reader.read]]
  * reaches the EOF or a call to [[discard()]] or [[close()]].
  */
-class InputStreamReader private[io] (inputStream: InputStream, maxBufferSize: Int, pool: FuturePool)
-    extends Reader[Buf]
+class InputStreamReader private[io] (
+  inputStream: InputStream,
+  chunkSize: Int,
+  pool: FuturePool
+) extends Reader[Buf]
     with Closable
     with CloseAwaitably {
   private[this] val mutex = new AsyncMutex()
   @volatile private[this] var discarded = false
 
-  def this(inputStream: InputStream, maxBufferSize: Int) =
-    this(inputStream, maxBufferSize, FuturePool.interruptibleUnboundedPool)
+  /**
+   * Constructs an [[InputStreamReader]] out of a given `inputStream`. The resulting [[Reader]]
+   * emits chunks of at most `chunkSize`.
+   */
+  def this(inputStream: InputStream, chunkSize: Int) =
+    this(inputStream, chunkSize, FuturePool.interruptibleUnboundedPool)
 
   /**
    * Asynchronously read at most min(`n`, `maxBufferSize`) bytes from
@@ -39,9 +46,8 @@ class InputStreamReader private[io] (inputStream: InputStream, maxBufferSize: In
         try {
           if (discarded)
             throw new Reader.ReaderDiscarded()
-          val size = math.min(n, maxBufferSize)
-          val buffer = new Array[Byte](size)
-          val c = inputStream.read(buffer, 0, size)
+          val buffer = new Array[Byte](chunkSize)
+          val c = inputStream.read(buffer, 0, chunkSize)
           if (c == -1) {
             pool { inputStream.close() }
             None
@@ -64,8 +70,7 @@ class InputStreamReader private[io] (inputStream: InputStream, maxBufferSize: In
    *
    * This closes the underlying `InputStream`.
    */
-  def discard(): Unit =
-    close()
+  def discard(): Unit = close()
 
   /**
    * Discards this [[Reader]] and closes the underlying `InputStream`
@@ -86,8 +91,8 @@ object InputStreamReader {
    */
   def apply(
     inputStream: InputStream,
-    maxBufferSize: Int = DefaultMaxBufferSize
+    chunkSize: Int = DefaultMaxBufferSize
   ): InputStreamReader =
-    new InputStreamReader(inputStream, maxBufferSize)
+    new InputStreamReader(inputStream, chunkSize)
 
 }

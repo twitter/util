@@ -2,7 +2,7 @@ package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
 import com.twitter.util._
-import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
+import java.io.{File, FileInputStream, InputStream}
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
@@ -97,6 +97,8 @@ trait Reader[+A] {
 
 object Reader {
 
+  class ReaderDiscarded extends Exception("This writer's reader has been discarded")
+
   val Null: Reader[Nothing] = new Reader[Nothing] {
     def read(n: Int): Future[Option[Nothing]] = Future.None
     def discard(): Unit = ()
@@ -183,35 +185,69 @@ object Reader {
     new Framed(r, new ChunkedFramer(chunkSize))
 
   /**
-   * Reader from a Buf.
+   * Create a new [[Reader]] from a given [[Buf]]. The output of a returned reader is chunked by
+   * a least `chunkSize` (bytes).
+   *
+   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    */
-  def fromBuf(buf: Buf): Reader[Buf] = BufReader(buf)
-
-  class ReaderDiscarded extends Exception("This writer's reader has been discarded")
+  def fromBuf(buf: Buf): Reader[Buf] = fromBuf(buf, Int.MaxValue)
 
   /**
-   * Create a new [[Reader]] for a `File`.
+   * Create a new [[Reader]] from a given [[Buf]]. The output of a returned reader is chunked by
+   * at most `chunkSize` (bytes).
    *
-   * The resources held by the returned [[Reader]] are released
-   * on reading of EOF and [[Reader.discard()]].
+   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
+   */
+  def fromBuf(buf: Buf, chunkSize: Int): Reader[Buf] = BufReader(buf, chunkSize)
+
+  /**
+   * Create a new [[Reader]] from a given [[File]]. The output of a returned reader is chunked by
+   * at most `chunkSize` (bytes).
    *
+   * The resources held by the returned [[Reader]] are released on reading of EOF and
+   * [[Reader.discard()]].
+   *
+   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    * @see `Readers.fromFile` for a Java API
    */
-  @throws(classOf[FileNotFoundException])
-  @throws(classOf[SecurityException])
-  def fromFile(f: File): Reader[Buf] =
-    fromStream(new FileInputStream(f))
+  def fromFile(f: File): Reader[Buf] = fromFile(f, InputStreamReader.DefaultMaxBufferSize)
 
   /**
-   * Wrap `InputStream` with a [[Reader]].
+   * Create a new [[Reader]] from a given [[File]]. The output of a returned reader is chunked by
+   * at most `chunkSize` (bytes).
    *
-   * Note that the given `InputStream` will be closed
-   * on reading of EOF and [[Reader.discard()]].
+   * The resources held by the returned [[Reader]] are released on reading of EOF and
+   * [[Reader.discard()]].
    *
+   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
+   * @see `Readers.fromFile` for a Java API
+   */
+  def fromFile(f: File, chunkSize: Int): Reader[Buf] = fromStream(new FileInputStream(f), chunkSize)
+
+  /**
+   * Create a new [[Reader]] from a given [[InputStream]]. The output of a returned reader is
+   * chunked by at most `chunkSize` (bytes).
+   *
+   * The resources held by the returned [[Reader]] are released on reading of EOF and
+   * [[Reader.discard()]].
+   *
+   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    * @see `Readers.fromStream` for a Java API
    */
   def fromStream(s: InputStream): Reader[Buf] =
-    InputStreamReader(s)
+    fromStream(s, InputStreamReader.DefaultMaxBufferSize)
+
+  /**
+   * Create a new [[Reader]] from a given [[InputStream]]. The output of a returned reader is
+   * chunked by at most `chunkSize` (bytes).
+   *
+   * The resources held by the returned [[Reader]] are released on reading of EOF and
+   * [[Reader.discard()]].
+   *
+   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
+   * @see `Readers.fromStream` for a Java API
+   */
+  def fromStream(s: InputStream, chunkSize: Int): Reader[Buf] = InputStreamReader(s, chunkSize)
 
   /**
    * Allow [[AsyncStream]] to be consumed as a [[Reader]]

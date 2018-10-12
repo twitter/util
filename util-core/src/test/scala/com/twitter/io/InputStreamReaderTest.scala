@@ -34,7 +34,7 @@ class InputStreamReaderTest extends FunSuite {
   test("InputStreamReader - read positive bytes") {
     val a = arr(0, 25)
     val s = new ByteArrayInputStream(a)
-    val r = new InputStreamReader(s, 4096)
+    val r = new InputStreamReader(s, 10)
 
     val f1 = r.read(10)
     assert(Await.result(f1, 5.seconds) == Some(buf(0, 10)))
@@ -90,7 +90,7 @@ class InputStreamReaderTest extends FunSuite {
   test("InputStreamReader - discard") {
     val a = arr(0, 25)
     val s = new ByteArrayInputStream(a)
-    val r = new InputStreamReader(s, 4096)
+    val r = new InputStreamReader(s, 10)
 
     val f1 = r.read(10)
     assert(Await.result(f1, 5.seconds) == Some(buf(0, 10)))

@@ -29,8 +29,8 @@ public final class Readers {
   /**
    * See {@code com.twitter.io.Reader.fromBuf}.
    */
-  public static Reader<Buf> newBufReader(Buf buf) {
-    return Reader$.MODULE$.fromBuf(buf);
+  public static Reader<Buf> newBufReader(Buf buf, int chunkSize) {
+    return Reader$.MODULE$.fromBuf(buf, chunkSize);
   }
 
   /**
@@ -78,15 +78,15 @@ public final class Readers {
   /**
    * See {@code com.twitter.io.Reader.fromFile()}.
    */
-  public static Reader<Buf> newFileReader(File f) throws FileNotFoundException {
-    return Reader$.MODULE$.fromFile(f);
+  public static Reader<Buf> newFileReader(File f, int chunkSize) throws FileNotFoundException {
+    return Reader$.MODULE$.fromFile(f, chunkSize);
   }
 
   /**
    * See {@code com.twitter.io.Reader.fromStream()}.
    */
-  public static Reader<Buf> newInputStreamReader(InputStream in) {
-    return Reader$.MODULE$.fromStream(in);
+  public static Reader<Buf> newInputStreamReader(InputStream in, int chunkSize) {
+    return Reader$.MODULE$.fromStream(in, chunkSize);
   }
 
 }

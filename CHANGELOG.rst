@@ -19,6 +19,14 @@ Breaking API Changes
   `c.t.util.StorageUnitConversions`. Use `c.t.conversions.time` and
   `c.t.conversions.storage` directly. ``PHAB_ID=D227363``
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: `c.t.io.Reader.fromBuf` (`BufReader`), `c.t.io.Reader.fromFile`,
+  `c.t.io.Reader.fromInputStream` (`InputStreamReader`) now take an additional parameter,
+  `chunkSize`, the upper bound of the number of bytes that a given reader emits at each read.
+  ``PHAB_ID=D203154``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

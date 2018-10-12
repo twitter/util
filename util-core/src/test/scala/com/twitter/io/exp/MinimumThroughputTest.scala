@@ -19,30 +19,17 @@ class MinimumThroughputTest extends FunSuite with MockitoSugar {
   }
 
   test("Reader - faster than min") {
-    val buf = Buf.UsAscii("soylent green is made of...") // 27 bytes
-    val reader = MinimumThroughput.reader(BufReader(buf), 0d, Timer.Nil)
+    val buf = Buf.UsAscii("soylent green is") // 16 bytes
+    val reader = MinimumThroughput.reader(Reader.fromBuf(buf, 8), 0d, Timer.Nil)
 
     // read from the beginning
-    Await.result(reader.read(13)) match {
-      case Some(b) => assert(b == Buf.UsAscii("soylent green"))
-      case _ => fail()
-    }
-
-    // a no-op read
     Await.result(reader.read(0)) match {
-      case Some(b) => assert(b == Buf.Empty)
+      case Some(b) => assert(b == buf.slice(0, 8))
       case _ => fail()
     }
 
-    // read to the end
-    Await.result(reader.read(20)) match {
-      case Some(b) => assert(b == Buf.UsAscii(" is made of..."))
-      case _ => fail()
-    }
-
-    // read past the end
-    Await.result(reader.read(20)) match {
-      case None =>
+    Await.result(reader.read(0)) match {
+      case Some(b) => assert(b == buf.slice(8, 16))
       case _ => fail()
     }
   }

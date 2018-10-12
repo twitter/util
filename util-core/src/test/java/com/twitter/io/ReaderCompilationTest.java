@@ -18,7 +18,7 @@ public class ReaderCompilationTest {
 
   @Test
   public void testNewBufReader() {
-    Readers.newBufReader(Bufs.EMPTY);
+    Readers.newBufReader(Bufs.EMPTY, 1024);
   }
 
   @Test
@@ -41,7 +41,7 @@ public class ReaderCompilationTest {
   @Test
   public void testNewFileReader() {
     try {
-      Readers.newFileReader(new File("a"));
+      Readers.newFileReader(new File("a") ,1024);
     } catch (Exception x) {
       // ok
     }
@@ -49,7 +49,6 @@ public class ReaderCompilationTest {
 
   @Test
   public void testNewInputStreamReader() throws Exception {
-    Readers.newInputStreamReader(new ByteArrayInputStream(new byte[0]));
+    Readers.newInputStreamReader(new ByteArrayInputStream(new byte[0]), 1024);
   }
-
 }

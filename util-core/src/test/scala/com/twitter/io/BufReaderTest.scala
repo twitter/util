@@ -1,31 +1,34 @@
 package com.twitter.io
 
-import com.twitter.util.Await
+import com.twitter.conversions.time._
+import com.twitter.util.{Await, Future}
 import org.junit.runner.RunWith
-import org.scalacheck.Prop
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.Checkers
 
 @RunWith(classOf[JUnitRunner])
 class BufReaderTest extends FunSuite with Checkers {
-  import Prop.{forAll, throws}
+
+  private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 
   test("BufReader") {
-    check(forAll { (bytes: String) =>
+    check { bytes: String =>
       val buf = Buf.Utf8(bytes)
-      val r = BufReader(buf)
-      Await.result(Reader.readAll(r)) == buf
-    })
+      val r = Reader.fromBuf(buf, 8)
+      await(Reader.readAll(r)) == buf
+    }
   }
 
   test("BufReader - discard") {
-    check(forAll { (bytes: String, n: Int) =>
-      val r = BufReader(Buf.Utf8(bytes))
+    check { (bytes: String, n: Int) =>
+      val r = Reader.fromBuf(Buf.Utf8(bytes), n)
       r.discard()
+
       n < 0 ||
       bytes.length == 0 ||
-      throws(classOf[Reader.ReaderDiscarded])({ Await.result(r.read(n)) })
-    })
+      Await
+        .ready(r.read(n), 5.seconds).poll.exists(_.throwable.isInstanceOf[Reader.ReaderDiscarded])
+    }
   }
 }

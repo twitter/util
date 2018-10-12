@@ -625,7 +625,7 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("fromReader") {
     forAll { l: List[Byte] =>
       val buf = Buf.ByteArray.Owned(l.toArray)
-      val as = AsyncStream.fromReader(Reader.fromBuf(buf), chunkSize = 1)
+      val as = AsyncStream.fromReader(Reader.fromBuf(buf, 1), chunkSize = 1)
 
       assert(toSeq(as).map(b => Buf.ByteArray.Owned.extract(b).head) == l)
     }
