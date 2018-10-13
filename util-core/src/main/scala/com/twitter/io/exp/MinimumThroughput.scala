@@ -130,6 +130,8 @@ object MinimumThroughput {
     }
 
     def close(deadline: Time): Future[Unit] = writer.close(deadline)
+
+    def onClose: Future[Unit] = writer.onClose
   }
 
   /**

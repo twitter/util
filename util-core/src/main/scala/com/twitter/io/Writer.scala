@@ -72,6 +72,12 @@ trait Writer[-A] extends Closable { self =>
   def fail(cause: Throwable): Unit
 
   /**
+   * Expose a `Future` that is satisfied when the stream is closed. It may contain an error
+   * if the Writer is failed.
+   */
+  def onClose: Future[Unit]
+
+  /**
    * Given f, a function from B into A, creates an Writer[B] whose `fail` and `close` functions
    * are equivalent to Writer[A]'s. Writer[B]'s `write` function is equivalent to:
    * {{{
@@ -82,6 +88,7 @@ trait Writer[-A] extends Closable { self =>
     def write(element: B): Future[Unit] = self.write(f(element))
     def fail(cause: Throwable): Unit = self.fail(cause)
     def close(deadline: Time): Future[Unit] = self.close(deadline)
+    def onClose: Future[Unit] = self.onClose
   }
 }
 
@@ -106,6 +113,7 @@ object Writer {
     def write(element: A): Future[Unit] = Future.exception(new IllegalStateException("NullWriter"))
     def fail(cause: Throwable): Unit = ()
     def close(deadline: Time): Future[Unit] = Future.Done
+    def onClose: Future[Unit] = Future.never
   }
 
   val BufferSize: Int = 4096

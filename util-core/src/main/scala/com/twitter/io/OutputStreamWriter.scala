@@ -58,6 +58,8 @@ private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Wr
     if (done.updateIfEmpty(Throw(CloseExc))) FuturePool.unboundedPool {
       out.close()
     } else Future.Done
+
+  def onClose: Future[Unit] = done
 }
 
 private object OutputStreamWriter {

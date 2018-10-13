@@ -42,6 +42,9 @@ Breaking API Changes
 * util-core: `c.t.io.Writer` now extends `c.t.util.Closable`. `c.t.io.Writer.ClosableWriter`
   is no longer exist. ``PHAB_ID=D218453``
 
+* util-core: Add `onClose` into `c.t.io.Writer`, it exposes a `Future` that is satisfied when
+  the stream is closed. ``PHAB_ID=D226319``
+
 Bug Fixes
 ~~~~~~~~~
 

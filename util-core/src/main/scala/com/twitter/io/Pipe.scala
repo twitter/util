@@ -78,14 +78,17 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
   // thread-safety provided by synchronization on `this`
   private[this] var state: State[A] = State.Idle
 
+  // satisfied when a `read` observes the EOF (after calling close())
+  private[this] val closep: Promise[Unit] = new Promise[Unit]()
+
   def read(n: Int): Future[Option[A]] = synchronized {
     state match {
       case State.Failed(exc) =>
         Future.exception(exc)
 
-      case State.Closing(reof) =>
+      case State.Closing =>
         state = State.Closed
-        reof.setDone()
+        closep.setDone()
         Future.None
 
       case State.Closed =>
@@ -119,7 +122,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
       case State.Failed(exc) =>
         Future.exception(exc)
 
-      case State.Closed | State.Closing(_) =>
+      case State.Closed | State.Closing =>
         Future.exception(new IllegalStateException("write() while closed"))
 
       case State.Idle =>
@@ -149,17 +152,17 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
     state match {
       case State.Closed | State.Failed(_) =>
       // do not update state to failing
-      case State.Idle =>
+      case State.Idle | State.Closing =>
         state = State.Failed(cause)
-      case State.Closing(reof) =>
-        state = State.Failed(cause)
-        reof.setException(cause)
+        closep.setException(cause)
       case State.Reading(_, p) =>
         state = State.Failed(cause)
         p.setException(cause)
+        closep.setException(cause)
       case State.Writing(_, p) =>
         state = State.Failed(cause)
         p.setException(cause)
+        closep.setException(cause)
     }
   }
 
@@ -171,26 +174,27 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
       case State.Closed =>
         Future.Done
 
-      case State.Closing(p) =>
-        p
+      case State.Closing =>
+        closep
 
       case State.Idle =>
-        val reof = new Promise[Unit]()
-        state = State.Closing(reof)
-        reof
+        state = State.Closing
+        closep
 
       case State.Reading(_, p) =>
         state = State.Closed
         p.update(Return.None)
+        closep.setDone()
         Future.Done
 
       case State.Writing(_, p) =>
-        val reof = new Promise[Unit]()
-        state = State.Closing(reof)
+        state = State.Closing
         p.setException(new IllegalStateException("close() while write is pending"))
-        reof
+        closep
     }
   }
+
+  def onClose: Future[Unit] = closep
 
   override def toString: String = synchronized(s"Pipe(state=$state)")
 }
@@ -223,12 +227,8 @@ object Pipe {
     /** Indicates the pipe was failed. */
     final case class Failed(exc: Throwable) extends State[Nothing]
 
-    /**
-     * Indicates a close occurred while `Idle` — no reads or writes were pending.
-     *
-     * @param reof satisfied when a `read` sees the EOF.
-     */
-    final case class Closing(reof: Promise[Unit]) extends State[Nothing]
+    /** Indicates a close occurred while `Idle` — no reads or writes were pending.*/
+    case object Closing extends State[Nothing]
 
     /** Indicates the reader has seen the EOF. No more reads or writes are allowed. */
     case object Closed extends State[Nothing]
