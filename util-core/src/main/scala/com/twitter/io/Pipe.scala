@@ -73,6 +73,18 @@ import com.twitter.util.{Future, Promise, Return, Time}
  */
 final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
 
+  // Implementation Notes:
+  //
+  // - The the only mutable state of this pipe is `state` and the access to it is synchronized
+  //   on `this`.
+  //
+  // - We do not run promises under a lock (`synchronized`) as it could lead to a deadlock if
+  //   there are interleaved queue operations in the waiter closure.
+  //
+  // - Although promises are run without a lock, synchronized `state` transitions guarantee
+  //   a promise that needs to be run is now owned exclusively by a caller, hence no concurrent
+  //   updates will be racing with it.
+
   import Pipe._
 
   // thread-safety provided by synchronization on `this`
@@ -81,117 +93,136 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
   // satisfied when a `read` observes the EOF (after calling close())
   private[this] val closep: Promise[Unit] = new Promise[Unit]()
 
-  def read(n: Int): Future[Option[A]] = synchronized {
-    state match {
-      case State.Failed(exc) =>
-        Future.exception(exc)
+  def read(n: Int): Future[Option[A]] = {
+    val (waiter, result) = synchronized {
+      state match {
+        case State.Failed(exc) =>
+          (null, Future.exception(exc))
 
-      case State.Closing =>
-        state = State.Closed
-        closep.setDone()
-        Future.None
+        case State.Closing =>
+          state = State.Closed
+          (closep, Future.None)
 
-      case State.Closed =>
-        Future.None
+        case State.Closed =>
+          (null, Future.None)
 
-      case State.Idle =>
-        val p = new Promise[Option[A]]
-        state = State.Reading(n, p)
-        p
+        case State.Idle =>
+          val p = new Promise[Option[A]]
+          state = State.Reading(n, p)
+          (null, p)
 
-      case State.Writing(buf, p) if buf.length <= n =>
-        // pending write can fully fit into this requested read
-        state = State.Idle
-        p.setDone()
-        Future.value(Some(buf))
+        case State.Writing(buf, p) if buf.length <= n =>
+          // pending write can fully fit into this requested read
+          state = State.Idle
+          (p, Future.value(Some(buf)))
 
-      case State.Writing(buf, p) =>
-        // pending write is larger than the requested read
-        state = State.Writing(buf.slice(n, buf.length).asInstanceOf[A], p)
-        Future.value(Some(buf.slice(0, n).asInstanceOf[A]))
+        case State.Writing(buf, p) =>
+          // pending write is larger than the requested read
+          state = State.Writing(buf.slice(n, buf.length).asInstanceOf[A], p)
+          (null, Future.value(Some(buf.slice(0, n).asInstanceOf[A])))
 
-      case State.Reading(_, _) =>
-        Future.exception(new IllegalStateException("read() while read is pending"))
+        case State.Reading(_, _) =>
+          (null, Future.exception(new IllegalStateException("read() while read is pending")))
+      }
     }
+
+    if (waiter != null) waiter.setDone()
+    result
   }
 
   def discard(): Unit = fail(new Reader.ReaderDiscarded())
 
-  def write(buf: A): Future[Unit] = synchronized {
-    state match {
-      case State.Failed(exc) =>
-        Future.exception(exc)
+  def write(buf: A): Future[Unit] = {
+    val (waiter, value, result) = synchronized {
+      state match {
+        case State.Failed(exc) =>
+          (null, null, Future.exception(exc))
 
-      case State.Closed | State.Closing =>
-        Future.exception(new IllegalStateException("write() while closed"))
+        case State.Closed | State.Closing =>
+          (null, null, Future.exception(new IllegalStateException("write() while closed")))
 
-      case State.Idle =>
-        val p = new Promise[Unit]()
-        state = State.Writing(buf, p)
-        p
+        case State.Idle =>
+          val p = new Promise[Unit]
+          state = State.Writing(buf, p)
+          (null, null, p)
 
-      case State.Reading(n, p) if n < buf.length =>
-        // pending reader doesn't have enough space for this write
-        val nextp = new Promise[Unit]()
-        state = State.Writing(buf.slice(n, buf.length).asInstanceOf[A], nextp)
-        p.setValue(Some(buf.slice(0, n).asInstanceOf[A]))
-        nextp
+        case State.Reading(n, p) if n < buf.length =>
+          // pending reader doesn't have enough space for this write
+          val nextp = new Promise[Unit]
+          state = State.Writing(buf.slice(n, buf.length).asInstanceOf[A], nextp)
+          (p, Some(buf.slice(0, n).asInstanceOf[A]), nextp)
 
-      case State.Reading(n, p) =>
-        // pending reader has enough space for the full write
-        state = State.Idle
-        p.setValue(Some(buf))
-        Future.Done
+        case State.Reading(n, p) =>
+          // pending reader has enough space for the full write
+          state = State.Idle
+          (p, Some(buf), Future.Done)
 
-      case State.Writing(_, _) =>
-        Future.exception(new IllegalStateException("write() while write is pending"))
+        case State.Writing(_, _) =>
+          (
+            null,
+            null,
+            Future.exception(new IllegalStateException("write() while write is pending"))
+          )
+      }
     }
+
+    // The waiter and the value are mutually inclusive so just checking against waiter is adequate.
+    if (waiter != null) waiter.setValue(value)
+    result
   }
 
-  def fail(cause: Throwable): Unit = synchronized {
-    state match {
-      case State.Closed | State.Failed(_) =>
-      // do not update state to failing
-      case State.Idle | State.Closing =>
-        state = State.Failed(cause)
-        closep.setException(cause)
-      case State.Reading(_, p) =>
-        state = State.Failed(cause)
-        p.setException(cause)
-        closep.setException(cause)
-      case State.Writing(_, p) =>
-        state = State.Failed(cause)
-        p.setException(cause)
-        closep.setException(cause)
+  def fail(cause: Throwable): Unit = {
+    val (closer, reader, writer) = synchronized {
+      state match {
+        case State.Closed | State.Failed(_) =>
+          // do not update state to failing
+          (null, null, null)
+        case State.Idle | State.Closing =>
+          state = State.Failed(cause)
+          (closep, null, null)
+        case State.Reading(_, p) =>
+          state = State.Failed(cause)
+          (closep, p, null)
+        case State.Writing(_, p) =>
+          state = State.Failed(cause)
+          (closep, null, p)
+      }
     }
+
+    if (reader != null) reader.setException(cause)
+    else if (writer != null) writer.setException(cause)
+
+    if (closer != null) closer.setException(cause)
   }
 
-  def close(deadline: Time): Future[Unit] = synchronized {
-    state match {
-      case State.Failed(t) =>
-        Future.exception(t)
+  def close(deadline: Time): Future[Unit] = {
+    val (closer, reader, writer) = synchronized {
+      state match {
+        case State.Failed(_) | State.Closed | State.Closing =>
+          (null, null, null)
 
-      case State.Closed =>
-        Future.Done
+        case State.Idle =>
+          state = State.Closing
+          (null, null, null)
 
-      case State.Closing =>
-        closep
+        case State.Reading(_, p) =>
+          state = State.Closed
+          (closep, p, null)
 
-      case State.Idle =>
-        state = State.Closing
-        closep
-
-      case State.Reading(_, p) =>
-        state = State.Closed
-        p.update(Return.None)
-        closep.setDone()
-        Future.Done
-
-      case State.Writing(_, p) =>
-        state = State.Closing
-        p.setException(new IllegalStateException("close() while write is pending"))
-        closep
+        case State.Writing(_, p) =>
+          state = State.Closing
+          (null, null, p)
+      }
     }
+
+    if (reader != null)
+      reader.update(Return.None)
+    else if (writer != null)
+      writer.setException(new IllegalStateException("close() while write is pending"))
+
+    if (closer != null) closer.setDone()
+
+    onClose
   }
 
   def onClose: Future[Unit] = closep
