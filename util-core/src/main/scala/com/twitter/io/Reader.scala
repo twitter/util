@@ -264,6 +264,15 @@ object Reader {
   }
 
   /**
+   * Transformation (or lift) from [[Reader]] into `AsyncStream`.
+   */
+  def toAsyncStream[A <: Buf](r: Reader[A], chunkSize: Int = Int.MaxValue): AsyncStream[A] =
+    AsyncStream.fromFuture(r.read(chunkSize)).flatMap {
+      case Some(buf) => buf +:: Reader.toAsyncStream(r, chunkSize)
+      case None => AsyncStream.empty[A]
+    }
+
+  /**
    * Convenient abstraction to read from a stream of Readers as if it were a
    * single Reader.
    */

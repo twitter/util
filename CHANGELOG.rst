@@ -19,6 +19,9 @@ Breaking API Changes
   `c.t.util.StorageUnitConversions`. Use `c.t.conversions.time` and
   `c.t.conversions.storage` directly. ``PHAB_ID=D227363``
 
+* util-core: `c.t.concurrent.AsyncStream.fromReader` has been moved to
+  `c.t.io.Reader.toAsyncStream`. ``PHAB_ID=D228277``
+
 New Features
 ~~~~~~~~~~~~
 

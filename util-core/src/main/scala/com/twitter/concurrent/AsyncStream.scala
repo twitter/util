@@ -1,6 +1,5 @@
 package com.twitter.concurrent
 
-import com.twitter.io.{Buf, Reader}
 import com.twitter.util.{Future, Promise, Return, Throw, Try}
 import scala.annotation.varargs
 import scala.collection.mutable
@@ -675,15 +674,6 @@ object AsyncStream {
     o match {
       case None => empty
       case Some(a) => of(a)
-    }
-
-  /**
-   * Transformation (or lift) from [[Reader]] into `AsyncStream`.
-   */
-  def fromReader[A <: Buf](r: Reader[A], chunkSize: Int = Int.MaxValue): AsyncStream[A] =
-    fromFuture(r.read(chunkSize)).flatMap {
-      case Some(buf) => buf +:: fromReader(r, chunkSize)
-      case None => AsyncStream.empty[A]
     }
 
   /**

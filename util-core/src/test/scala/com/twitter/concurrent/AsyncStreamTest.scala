@@ -1,7 +1,6 @@
 package com.twitter.concurrent
 
 import com.twitter.conversions.time._
-import com.twitter.io.{Buf, Reader}
 import com.twitter.util._
 import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen}
@@ -619,15 +618,6 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
         val completed = toSeq(result.take(workFinished)).sorted
         val expectedCompleted = items.take(expectedFinished).sorted
         assert(completed == expectedCompleted)
-    }
-  }
-
-  test("fromReader") {
-    forAll { l: List[Byte] =>
-      val buf = Buf.ByteArray.Owned(l.toArray)
-      val as = AsyncStream.fromReader(Reader.fromBuf(buf, 1), chunkSize = 1)
-
-      assert(toSeq(as).map(b => Buf.ByteArray.Owned.extract(b).head) == l)
     }
   }
 

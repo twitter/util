@@ -25,14 +25,6 @@ class ReaderTest
 
   private def await[T](t: Awaitable[T]): T = Await.result(t, 5.seconds)
 
-  private def toSeq(b: Option[Buf]): Seq[Byte] = b match {
-    case None => fail("Expected full buffer")
-    case Some(buf) =>
-      val a = new Array[Byte](buf.length)
-      buf.write(a, 0)
-      a.toSeq
-  }
-
   def undefined: AsyncStream[Reader[Buf]] = throw new Exception
 
   private def assertReadWhileReading(r: Reader[Buf]): Unit = {
@@ -199,6 +191,15 @@ class ReaderTest
     // read the rest of the buffer
     await(r.read(2))
     assert(tailEvaluated.get())
+  }
+
+  test("Reader.toAsyncStream") {
+    forAll { l: List[Byte] =>
+      val buf = Buf.ByteArray.Owned(l.toArray)
+      val as = Reader.toAsyncStream(Reader.fromBuf(buf, 1), chunkSize = 1)
+
+      assert(await(as.toSeq()).map(b => Buf.ByteArray.Owned.extract(b).head) == l)
+    }
   }
 
   test("Reader.framed reads framed data") {
