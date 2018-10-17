@@ -1,18 +1,23 @@
 scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
+    # This target exists only to act as an aggregator jar.
+    sources = ["BUILD"],
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-core",
         repo = artifactory,
     ),
     dependencies = [
-        "3rdparty/jvm/org/scala-lang:scala-reflect",
-        "3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators",
-        "util/util-function/src/main/java",
+        "util/util-core/src/main/scala/com/twitter/concurrent",
+        "util/util-core/src/main/scala/com/twitter/conversions",
+        "util/util-core/src/main/scala/com/twitter/io",
+        "util/util-core/src/main/scala/com/twitter/io/exp",
+        "util/util-core/src/main/scala/com/twitter/util",
     ],
     exports = [
-        "3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators",
-        "util/util-function/src/main/java",
+        "util/util-core/src/main/scala/com/twitter/concurrent",
+        "util/util-core/src/main/scala/com/twitter/conversions",
+        "util/util-core/src/main/scala/com/twitter/io",
+        "util/util-core/src/main/scala/com/twitter/io/exp",
+        "util/util-core/src/main/scala/com/twitter/util",
     ],
 )
