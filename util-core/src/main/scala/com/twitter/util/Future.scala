@@ -1050,7 +1050,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    *  {{{
    *    // will return a Future of `Seq(2, 3, 4)`
    *    Future.traverseSequentially(Seq(1, 2, 3)) { i =>
-   *      Future(i + 1)
+   *      Future.value(i + 1)
    *    }
    *  }}}
    *
@@ -1436,6 +1436,10 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
  *     println("always printed")
  *   }
  * }}}
+ *
+ * @define awaitresult
+ * // Await.result blocks the current thread,
+ * // don't use it except for tests.
  */
 abstract class Future[+A] extends Awaitable[A] { self =>
 
@@ -1450,8 +1454,23 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * libraries). Otherwise, it is a best practice to use one of the
    * alternatives ([[onSuccess]], [[onFailure]], etc.).
    *
-   * @note this should be used for side-effects.
+   * @example
+   * {{{
+   * import com.twitter.util.{Await, Future, Return, Throw}
+   * val f1: Future[Int] = Future.value(1)
+   * val f2: Future[Int] = Future.exception(new Exception("boom!"))
+   * val printing: Future[Int] => Future[Int] = x => x.respond {
+   * 	case Return(_) => println("Here's a Return")
+   * 	case Throw(_) => println("Here's an Exception")
+   * }
+   * Await.result(printing(f1))
+   * // Prints side-effect "Here's a Return" and then returns Future value "1"
+   * Await.result(printing(f2))
+   * // Prints side-effect "Here's an Exception" and then throws java.lang.Exception: boom!
+   * $awaitresult
+   * }}}
    *
+   * @note this should be used for side-effects.
    * @param k the side-effect to apply when the computation completes.
    *          The value of the input to `k` will be the result of the
    *          computation to this future.
@@ -1472,15 +1491,14 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * The returned `Future` will be satisfied when this,
    * the original future, is done.
    *
-   * @note this should be used for side-effects.
-   *
-   * For example:
+   * @example
    * $callbacks
    * {{{
    * val a = Future.value(1)
    * callbacks(a) // prints "1" and then "always printed"
    * }}}
    *
+   * @note this should be used for side-effects.
    * @param f the side-effect to apply when the computation completes.
    * @see [[respond]] if you need the result of the computation for
    *     usage in the side-effect.
@@ -1700,6 +1718,20 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * The returned `Future` will be satisfied when `this`,
    * the original future, and `f` are done.
    *
+   * @example
+   * {{{
+   * import com.twitter.util.{Await, Future, Return, Throw}
+   * val f1: Future[Int] = Future.value(1)
+   * val f2: Future[Int] = Future.exception(new Exception("boom!"))
+   * val transforming: Future[Int] => Future[String] = x => x.transform {
+   * 	case Return(i) => Future.value(i.toString)
+   * 	case Throw(e) => Future.value(e.getMessage)
+   * }
+   * Await.result(transforming(f1)) // String = 1
+   * Await.result(transforming(f2)) // String = "boom!"
+   * $awaitresult
+   * }}}
+   *
    * @see [[respond]] for purely side-effecting callbacks.
    * @see [[map]] and [[flatMap]] for dealing strictly with successful
    *     computations.
@@ -1734,26 +1766,30 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * If this, the original future, succeeds, run `f` on the result.
    *
    * The returned result is a Future that is satisfied when the original future
-   * and the callback, `f`, are done. For example:
+   * and the callback, `f`, are done.
+   *
+   * @example
    * {{{
    * import com.twitter.util.{Await, Future}
    * val f: Future[Int] = Future.value(1)
    * val newf: Future[Int] = f.flatMap { x =>
-   *   Future(x + 10)
+   *   Future.value(x + 10)
    * }
    * Await.result(newf) // 11
+   * $awaitresult
    * }}}
    *
    * If the original future fails, this one will also fail, without executing `f`
-   * and preserving the failed computation of `this`. For example:
+   * and preserving the failed computation of `this`
+   * @example
    * {{{
    * import com.twitter.util.{Await, Future}
    * val f: Future[Int] = Future.exception(new Exception("boom!"))
    * val newf: Future[Int] = f.flatMap { x =>
    *   println("I'm being executed") // won't print
-   *   Future(x + 10)
+   *   Future.value(x + 10)
    * }
-   * Await.result(newf) // java.lang.Exception: boom!
+   * Await.result(newf) // throws java.lang.Exception: boom!
    * }}}
    *
    * @see [[map]]
@@ -1784,6 +1820,19 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * This is the equivalent of [[flatMap]] for failed computations.
    *
+   * @example
+   * {{{
+   * import com.twitter.util.{Await, Future}
+   * val f1: Future[Int] = Future.exception(new Exception("boom1!"))
+   * val f2: Future[Int] = Future.exception(new Exception("boom2!"))
+   * val newf: Future[Int] => Future[Int] = x => x.rescue {
+   * 	case e: Exception if e.getMessage == "boom1!" => Future.value(1)
+   * }
+   * Await.result(newf(f1)) // 1
+   * Await.result(newf(f2)) // throws java.lang.Exception: boom2!
+   * $awaitresult
+   * }}}
+   *
    * @see [[handle]]
    */
   def rescue[B >: A](
@@ -1808,7 +1857,9 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * If this, the original future, succeeds, run `f` on the result.
    *
    * The returned result is a Future that is satisfied when the original future
-   * and the callback, `f`, are done. For example:
+   * and the callback, `f`, are done.
+   *
+   * @example
    * {{{
    * import com.twitter.util.{Await, Future}
    * val f: Future[Int] = Future.value(1)
@@ -1816,10 +1867,13 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *   x + 10
    * }
    * Await.result(newf) // 11
+   * $awaitresult
    * }}}
    *
    * If the original future fails, this one will also fail, without executing `f`
-   * and preserving the failed computation of `this`. For example:
+   * and preserving the failed computation of `this`
+   *
+   * @example
    * {{{
    * import com.twitter.util.{Await, Future}
    * val f: Future[Int] = Future.exception(new Exception("boom!"))
@@ -1827,7 +1881,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *   println("I'm being executed") // won't print
    *   x + 10
    * }
-   * Await.result(newf) // java.lang.Exception: boom!
+   * Await.result(newf) // throws java.lang.Exception: boom!
    * }}}
    *
    * @see [[flatMap]] for computations that return `Future`s.
@@ -1847,7 +1901,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @note this should be used for side-effects.
    *
-   * For example:
+   * @example
    * $callbacks
    * {{{
    * val a = Future.value(1)
@@ -1876,7 +1930,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *       `future.onFailure { case NonFatal(e) => ... }` when the Throwable
    *       is "fatal".
    *
-   * For example:
+   * @example
    * $callbacks
    * {{{
    * val b = Future.exception(new Exception("boom!"))
@@ -1937,6 +1991,19 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * future and the callback, `rescueException`, are done.
    *
    * This is the equivalent of [[map]] for failed computations.
+   *
+   * @example
+   * {{{
+   * import com.twitter.util.{Await, Future}
+   * val f1: Future[Int] = Future.exception(new Exception("boom1!"))
+   * val f2: Future[Int] = Future.exception(new Exception("boom2!"))
+   * val newf: Future[Int] => Future[Int] = x => x.handle {
+   * 	case e: Exception if e.getMessage == "boom1!" => 1
+   * }
+   * Await.result(newf(f1)) // 1
+   * Await.result(newf(f2)) // throws java.lang.Exception: boom2!
+   * $awaitresult
+   * }}}
    *
    * @see [[rescue]]
    */
@@ -2179,30 +2246,34 @@ abstract class Future[+A] extends Awaitable[A] { self =>
 
   /**
    * Returns the result of the computation as a `Future[Try[A]]`.
-   * For example:
+   *
+   * @example
    * {{{
    * import com.twitter.util.{Await, Future, Try}
-   * val fr: Future[Int] = Future(1)
+   * val fr: Future[Int] = Future.value(1)
    * val ft: Future[Int] = Future.exception(new Exception("boom!"))
    * val r: Future[Try[Int]] = fr.liftToTry
    * val t: Future[Try[Int]] = ft.liftToTry
    * Await.result(r) // Return(1)
    * Await.result(t) // Throw(java.lang.Exception: boom!)
+   * $awaitresult
    * }}}
    */
   def liftToTry: Future[Try[A]] = transformTry(Future.liftToTry)
 
   /**
    * Lowers a `Future[Try[T]]` into a `Future[T]`.
-   * For example:
+   *
+   * @example
    * {{{
    * import com.twitter.util.{Await, Future, Return, Throw, Try}
-   * val fr: Future[Try[Int]] = Future(Return(1))
-   * val ft: Future[Try[Int]] = Future(Throw(new Exception("boom!")))
+   * val fr: Future[Try[Int]] = Future.value(Return(1))
+   * val ft: Future[Try[Int]] = Future.value(Throw(new Exception("boom!")))
    * val r: Future[Int] = fr.lowerFromTry
    * val t: Future[Int] = ft.lowerFromTry
    * Await.result(r) // 1
-   * Await.result(t) // java.lang.Exception: boom!
+   * Await.result(t) // throws java.lang.Exception: boom!
+   * $awaitresult
    * }}}
    */
   def lowerFromTry[B](implicit ev: A <:< Try[B]): Future[B] =
