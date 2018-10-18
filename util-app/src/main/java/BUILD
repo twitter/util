@@ -1,11 +1,6 @@
-java_library(
-    sources = rglobs("*.java"),
-    compiler_option_sets = {"fatal_warnings"},
-    provides = artifact(
-        org = "com.twitter",
-        name = "util-app-java",
-        repo = artifactory,
-    ),
-    # Not detected as required by zinc.
-    scope = "forced",
+target(
+    dependencies = [
+        "util/util-app/src/main/java/com/twitter/app",
+        "util/util-app/src/main/scala/com/twitter/app",
+    ],
 )

@@ -1,20 +1,15 @@
-scala_library(
-    name = "scala",
+junit_tests(
+    sources = globs("*.scala"),
+    compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-core",
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
         "3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala",
-        "util/util-app/src/main/scala/com/twitter/app",
+        "3rdparty/jvm/junit",
+        "3rdparty/jvm/org/scalacheck",
+        "3rdparty/jvm/org/scalatest",
         "util/util-core/src/main/scala/com/twitter/util",
         "util/util-tunable/src/main/scala/com/twitter/util/tunable",
-    ],
-)
-
-jvm_binary(
-    name = "configuration-linter",
-    main = "com.twitter.util.tunable.linter.ConfigurationLinter",
-    compiler_option_sets = {"fatal_warnings"},
-    dependencies = [
-        ":scala",
+        "util/util-tunable/src/test/resources",
     ],
 )
