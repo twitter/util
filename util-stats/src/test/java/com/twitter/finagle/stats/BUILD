@@ -1,10 +1,9 @@
 junit_tests(
-    sources = globs("*.scala"),
+    sources = globs("*.java"),
     compiler_option_sets = {"fatal_warnings"},
-    strict_deps = True,
     dependencies = [
-        "3rdparty/jvm/org/scalatest",
+        "3rdparty/jvm/junit",
         "util/util-core/src/main/scala/com/twitter/util",
-        "util/util-intellij/src/main/resources",
+        "util/util-stats/src/main/scala/com/twitter/finagle/stats",
     ],
 )

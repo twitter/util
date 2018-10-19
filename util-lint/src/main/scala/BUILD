@@ -1,12 +1,5 @@
-scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
-    provides = scala_artifact(
-        org = "com.twitter",
-        name = "util-lint",
-        repo = artifactory,
-    ),
+target(
     dependencies = [
-        "util/util-core/src/main/scala",
+        "util/util-lint/src/main/scala/com/twitter/util/lint",
     ],
 )

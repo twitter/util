@@ -1,16 +1,19 @@
 scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
+    # This target exists only to act as an aggregator jar.
+    sources = ["BUILD"],
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-cache",
         repo = artifactory,
     ),
     dependencies = [
-        "3rdparty/jvm/com/github/ben-manes/caffeine",
-        "util/util-core/src/main/scala",
+        "util/util-cache/src/main/scala/com/twitter/cache",
+        "util/util-cache/src/main/scala/com/twitter/cache/caffeine",
+        "util/util-core/src/main/scala/com/twitter/util",
     ],
     exports = [
-        "util/util-core/src/main/scala",
+        "util/util-cache/src/main/scala/com/twitter/cache",
+        "util/util-cache/src/main/scala/com/twitter/cache/caffeine",
+        "util/util-core/src/main/scala/com/twitter/util",
     ],
 )
