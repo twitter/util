@@ -7,6 +7,9 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+* util-core: `c.t.u.Future.raiseWithin` methods now take the timeout exception as a call-by-name
+  parameter instead of a strict exception. ``PHAB_ID=D229559``
+
 18.10.0
 -------
 
