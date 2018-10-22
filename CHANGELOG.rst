@@ -8,7 +8,9 @@ Unreleased
 ----------
 
 * util-core: `c.t.u.Future.raiseWithin` methods now take the timeout exception as a call-by-name
-  parameter instead of a strict exception. ``PHAB_ID=D229559``
+  parameter instead of a strict exception. While Scala programs should compile as usual, Java
+  users will need to use a `scala.Function0` as the second parameter. The helper
+  `c.t.u.Function.func0` can be helpful. ``PHAB_ID=D229559``
 
 18.10.0
 -------
