@@ -1,8 +1,5 @@
-junit_tests(
-    sources = rglobs("*.java"),
-    compiler_option_sets = {"fatal_warnings"},
+target(
     dependencies = [
-        "3rdparty/jvm/junit",
-        "util/util-zk-test",
+        "util/util-zk-test/src/test/java/com/twitter/zk",
     ],
 )

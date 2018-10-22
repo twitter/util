@@ -1,15 +1,5 @@
-scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
-    provides = scala_artifact(
-        org = "com.twitter",
-        name = "util-zk-test",
-        repo = artifactory,
-    ),
+target(
     dependencies = [
-        "3rdparty/jvm/org/apache/zookeeper:zookeeper-server",
-    ],
-    exports = [
-        "3rdparty/jvm/org/apache/zookeeper:zookeeper-server",
+        "util/util-zk-test/src/main/scala/com/twitter/zk",
     ],
 )

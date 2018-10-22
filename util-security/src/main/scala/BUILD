@@ -1,13 +1,5 @@
-scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
-    provides = scala_artifact(
-        org = "com.twitter",
-        name = "util-security",
-        repo = artifactory,
-    ),
+target(
     dependencies = [
-        "util/util-core/src/main/scala",
-        "util/util-logging",
+        "util/util-security/src/main/scala/com/twitter/util/security",
     ],
 )

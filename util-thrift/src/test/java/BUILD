@@ -1,7 +1,5 @@
-junit_tests(
-    sources = rglobs("*.java"),
-    compiler_option_sets = {"fatal_warnings"},
+target(
     dependencies = [
-        "3rdparty/jvm/org/apache/thrift:libthrift",
+        "util/util-thrift/src/test/java/com/twitter/util",
     ],
 )

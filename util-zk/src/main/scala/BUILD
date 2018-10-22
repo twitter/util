@@ -1,18 +1,17 @@
 scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
+    # This target exists only to act as an aggregator jar.
+    sources = ["BUILD"],
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-zk",
         repo = artifactory,
     ),
     dependencies = [
-        "3rdparty/jvm/org/apache/zookeeper:zookeeper-client",
-        "util/util-core/src/main/scala",
-        "util/util-logging/src/main/scala",
+        "util/util-zk/src/main/scala/com/twitter/zk",
+        "util/util-zk/src/main/scala/com/twitter/zk/coordination",
     ],
     exports = [
-        "3rdparty/jvm/org/apache/zookeeper:zookeeper-client",
-        "util/util-core/src/main/scala",
+        "util/util-zk/src/main/scala/com/twitter/zk",
+        "util/util-zk/src/main/scala/com/twitter/zk/coordination",
     ],
 )

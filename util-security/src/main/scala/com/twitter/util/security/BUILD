@@ -2,14 +2,11 @@ scala_library(
     compiler_option_sets = {"fatal_warnings"},
     provides = scala_artifact(
         org = "com.twitter",
-        name = "util-test-logging",
+        name = "util-security",
         repo = artifactory,
     ),
     dependencies = [
-        "3rdparty/jvm/org/scalatest",
+        "util/util-core/src/main/scala/com/twitter/util",
         "util/util-logging/src/main/scala/com/twitter/logging",
-    ],
-    exports = [
-        "3rdparty/jvm/org/scalatest",
     ],
 )

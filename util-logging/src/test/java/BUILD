@@ -1,8 +1,5 @@
-junit_tests(
-    sources = rglobs("*.java"),
-    compiler_option_sets = {"fatal_warnings"},
+target(
     dependencies = [
-        "3rdparty/jvm/junit",
-        "util/util-logging/src/main/scala",
+        "util/util-logging/src/test/java/com/twitter/logging",
     ],
 )

@@ -1,17 +1,18 @@
 scala_library(
-    sources = rglobs("*.scala"),
-    compiler_option_sets = {"fatal_warnings"},
+    # This target exists only to act as an aggregator jar.
+    sources = ["BUILD"],
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-test",
         repo = artifactory,
     ),
     dependencies = [
-        "3rdparty/jvm/org/mockito:mockito-all",
-        "3rdparty/jvm/org/scalatest",
-        "util/util-logging/src/main/scala",
+        "util/util-test/src/main/scala/com/twitter/logging",
+        "util/util-test/src/main/scala/com/twitter/util/testing",
     ],
     exports = [
         "3rdparty/jvm/org/scalatest",
+        "util/util-test/src/main/scala/com/twitter/logging",
+        "util/util-test/src/main/scala/com/twitter/util/testing",
     ],
 )
