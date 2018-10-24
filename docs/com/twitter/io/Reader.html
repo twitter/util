@@ -138,6 +138,10 @@
                         <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods in terms of integer methods."></a>
                         <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods in terms of integer methods.">AbstractByteWriter</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
+                        <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access.">Buf</a>
@@ -183,8 +187,8 @@
                         <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="" title="A Reader represents a stream of As."></a>
-                        <a href="" title="A Reader represents a stream of As.">Reader</a>
+                        <a class="trait" href="" title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements."></a>
+                        <a href="" title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -202,9 +206,13 @@
                         <a class="object" href="TempFile$.html" title=""></a>
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TempFolder.html" title="Test mixin that creates a temporary thread-local folder for a block of code to execute in."></a>
+                        <a href="TempFolder.html" title="Test mixin that creates a temporary thread-local folder for a block of code to execute in.">TempFolder</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Writer$.html" title=""></a>
-                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
-                        <a href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements."></a>
+                        <a href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -234,17 +242,44 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Reader</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">Reader</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Reader represents a stream of <code>A</code>s.</p><p>Readers permit at most one outstanding read.
-</p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>the type of objects produced by this reader</p></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.</p><p>Given the pull-based API, the consumer is responsible for driving the computation. A very
+typical code pattern to consume a reader is to use a read-loop:</p><pre><span class="kw">def</span> consume[A](r: Reader[A]))(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
+  r.read().flatMap {
+    <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> process(a).before(consume(r)(process))
+    <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> Future.Done <span class="cmt">// reached the end of the stream; no need to discard</span>
+  }</pre><p>One way to reason about the read-loop idiom is to view it as a subscription to a publisher
+(reader) in the Pub/Sub terminology. Perhaps the major difference between readers and traditional
+publishers, is readers only allow one subscriber (read-loop). It's generally safer to assume the
+reader is fully consumed (stream is exhausted) once its read-loop is run.</p><h4> Error Handling </h4><p>Given the read-loop above, its returned <span class="extype" name="Future">Future</span> could be used to observe both successful and
+unsuccessful outcomes.</p><pre>consume(stream)(processor).respond {
+  <span class="kw">case</span> Return(()) <span class="kw">=&gt;</span> println(<span class="lit">"Consumed an entire stream successfully."</span>)
+  <span class="kw">case</span> Throw(e) <span class="kw">=&gt;</span> println(s<span class="lit">"Encountered an error while consuming a stream: $e"</span>)
+}</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Once failed, a stream can not be restarted such that all future reads will resolve into a
+      failure. There is no need to discard an already failed stream.</p><h4> Resource Safety </h4><p>One of the important implications of readers, and streams in general, is that they are prone to
+resource leaks unless fully consumed or discarded (failed). Specifically, readers backed by
+network connections MUST be discarded unless already consumed (EOF observed) to prevent
+connection leaks.</p></span>, <span class="cmt"><p>The read-loop above, for example, exhausts the stream (observes EOF) hence does not have to
+      discard it (stream).</p><h4> Back Pressure </h4><p>The pattern above leverages <span class="extype" name="Future">Future</span> recursion to exert back-pressure via allowing only one
+outstanding read. It's usually a good idea to structure consumers this way (i.e., the next read
+isn't issued until the previous read finishes). This would always ensure a finer grained
+back-pressure in network systems allowing the consumers to artificially slow down the producers
+and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple outstanding reads are allowed on a <code>Reader</code> type is an undefined
+      behaviour but could be changed in a refinement.</p><h4> Cancellations </h4><p>If a consumer is no longer interested in the stream, it can discard it. Note a discarded reader
+(or stream) can not be restarted.</p><pre><span class="kw">def</span> consumeN[A](r: Reader[A], n: <span class="std">Int</span>)(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
+  <span class="kw">if</span> (n == <span class="num">0</span>) Future(r.discard())
+  <span class="kw">else</span> r.read().flatMap {
+    <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> process(a).before(consumeN(r, n - <span class="num">1</span>)(process))
+    <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> Future.Done <span class="cmt">// reached the end of the stream; no need to discard</span>
+  }</pre></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">
               Known Subclasses
@@ -299,7 +334,7 @@
 
         <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="com.twitter.io.Reader#discard" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.io.Reader#discard" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="discard():Unit"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Reader.html#discard():Unit" title="Permalink">
@@ -311,10 +346,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">discard</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">discard</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p>
+      <p class="shortcomment cmt">Discard this stream as its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this stream as its output is no longer required. This could be used to signal the
+producer of this stream similarly how <span class="extype" name="Future.raise">Future.raise</span> used to propagate interrupts across
+future chains.
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Although unnecessary, it's always safe to discard a fully-consumed stream.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#read" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="read(n:Int):com.twitter.util.Future[Option[A]]"></a><a id="read(Int):Future[Option[A]]"></a>
       <span class="permalink">
@@ -327,13 +365,11 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">read</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.6/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.io.Reader.A">A</span>]]</span>
+        <span class="name">read</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.io.Reader.A">A</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">Asynchronously read at most <code>n</code> bytes from the byte stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read at most <code>n</code> bytes from the byte stream. The
-returned future represents the results of the read request. If
-the read fails, the Reader is considered failed -- future reads
-will also fail.</p><p>A result of None indicates EOF.
+      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <span class="extype" name="Future">Future</span> will resolve into
+<code>Some(e)</code> when the element is available or into <code>None</code> when stream is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed <span class="extype" name="Future">Future</span>s.
 </p></div></div>
     </li></ol>
             </div>
@@ -353,7 +389,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -369,7 +405,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -385,7 +421,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -417,7 +453,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -441,7 +477,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -457,7 +493,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -473,7 +509,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -514,7 +550,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
@@ -533,7 +569,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -549,7 +585,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -565,7 +601,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -584,7 +620,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -635,7 +671,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -657,7 +693,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.6/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -679,7 +715,7 @@ will also fail.</p><p>A result of None indicates EOF.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.6/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.6/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -702,9 +738,9 @@ will also fail.</p><p>A result of None indicates EOF.
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.6/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>
         
         </div>

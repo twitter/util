@@ -266,6 +266,10 @@
                         <a class="class" href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods in terms of integer methods."></a>
                         <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods in terms of integer methods.">AbstractByteWriter</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
+                        <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and Owned APIs, each of which with construction &amp; extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access.">Buf</a>
@@ -311,8 +315,8 @@
                         <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
-                        <a class="trait" href="Reader.html" title="A Reader represents a stream of As."></a>
-                        <a href="Reader.html" title="A Reader represents a stream of As.">Reader</a>
+                        <a class="trait" href="Reader.html" title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements."></a>
+                        <a href="Reader.html" title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.">Reader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Readers.html" title="Java APIs for Reader."></a>
@@ -330,9 +334,13 @@
                         <a class="object" href="TempFile$.html" title=""></a>
                         <a href="TempFile$.html" title="">TempFile</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="TempFolder.html" title="Test mixin that creates a temporary thread-local folder for a block of code to execute in."></a>
+                        <a href="TempFolder.html" title="Test mixin that creates a temporary thread-local folder for a block of code to execute in.">TempFolder</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Writer$.html" title=""></a>
-                        <a class="trait" href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams."></a>
-                        <a href="Writer.html" title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams.">Writer</a>
+                        <a class="trait" href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements."></a>
+                        <a href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements.">Writer</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
@@ -497,6 +505,22 @@
       
       <p class="shortcomment cmt">An abstract implementation that implements the floating point methods
 in terms of integer methods.</p>
+    </li><li name="com.twitter.io.AbstractWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="AbstractWriter[-A]extendsWriter[A]"></a><a id="AbstractWriter[-A]:AbstractWriter[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#AbstractWriter[-A]extendsWriter[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="Abstract Writer class for Java compatibility." href="AbstractWriter.html"><span class="name">AbstractWriter</span></a><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.AbstractWriter.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Abstract <code>Writer</code> class for Java compatibility.</p>
     </li><li name="com.twitter.io.Buf" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="BufextendsAnyRef"></a><a id="Buf:Buf"></a>
       <span class="permalink">
@@ -509,7 +533,7 @@ in terms of integer methods.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Buf represents a fixed, immutable byte buffer with efficient positional access." href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Buf represents a fixed, immutable byte buffer with efficient positional access." href="Buf.html"><span class="name">Buf</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Buf represents a fixed, immutable byte buffer with efficient
@@ -564,7 +588,7 @@ and thus be used to implement bytestreams.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html"><span class="name">Bufs</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html"><span class="name">Bufs</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of the <code><a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a></code> companion object.</p>
@@ -601,7 +625,7 @@ to decode and interpret the bytes as a numeric value.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="ByteWriters allow efficient encoding to a buffer." href="ByteWriter.html"><span class="name">ByteWriter</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="ByteWriters allow efficient encoding to a buffer." href="ByteWriter.html"><span class="name">ByteWriter</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer.</p><div class="fullcomment"><div class="comment cmt"><p><a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>s allow efficient encoding to a buffer. Concatenating
@@ -687,11 +711,38 @@ by a consumer (reader).</p><p>The following rules should help reasoning about cl
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Reader represents a stream of As." href="Reader.html"><span class="name">Reader</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements." href="Reader.html"><span class="name">Reader</span></a><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">A Reader represents a stream of <code>A</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A Reader represents a stream of <code>A</code>s.</p><p>Readers permit at most one outstanding read.
-</p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>the type of objects produced by this reader</p></dd></dl></div>
+      <p class="shortcomment cmt">A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.</p><div class="fullcomment"><div class="comment cmt"><p>A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.</p><p>Given the pull-based API, the consumer is responsible for driving the computation. A very
+typical code pattern to consume a reader is to use a read-loop:</p><pre><span class="kw">def</span> consume[A](r: Reader[A]))(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
+  r.read().flatMap {
+    <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> process(a).before(consume(r)(process))
+    <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> Future.Done <span class="cmt">// reached the end of the stream; no need to discard</span>
+  }</pre><p>One way to reason about the read-loop idiom is to view it as a subscription to a publisher
+(reader) in the Pub/Sub terminology. Perhaps the major difference between readers and traditional
+publishers, is readers only allow one subscriber (read-loop). It's generally safer to assume the
+reader is fully consumed (stream is exhausted) once its read-loop is run.</p><h4> Error Handling </h4><p>Given the read-loop above, its returned <span class="extype" name="Future">Future</span> could be used to observe both successful and
+unsuccessful outcomes.</p><pre>consume(stream)(processor).respond {
+  <span class="kw">case</span> Return(()) <span class="kw">=&gt;</span> println(<span class="lit">"Consumed an entire stream successfully."</span>)
+  <span class="kw">case</span> Throw(e) <span class="kw">=&gt;</span> println(s<span class="lit">"Encountered an error while consuming a stream: $e"</span>)
+}</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Once failed, a stream can not be restarted such that all future reads will resolve into a
+      failure. There is no need to discard an already failed stream.</p><h4> Resource Safety </h4><p>One of the important implications of readers, and streams in general, is that they are prone to
+resource leaks unless fully consumed or discarded (failed). Specifically, readers backed by
+network connections MUST be discarded unless already consumed (EOF observed) to prevent
+connection leaks.</p></span>, <span class="cmt"><p>The read-loop above, for example, exhausts the stream (observes EOF) hence does not have to
+      discard it (stream).</p><h4> Back Pressure </h4><p>The pattern above leverages <span class="extype" name="Future">Future</span> recursion to exert back-pressure via allowing only one
+outstanding read. It's usually a good idea to structure consumers this way (i.e., the next read
+isn't issued until the previous read finishes). This would always ensure a finer grained
+back-pressure in network systems allowing the consumers to artificially slow down the producers
+and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple outstanding reads are allowed on a <code>Reader</code> type is an undefined
+      behaviour but could be changed in a refinement.</p><h4> Cancellations </h4><p>If a consumer is no longer interested in the stream, it can discard it. Note a discarded reader
+(or stream) can not be restarted.</p><pre><span class="kw">def</span> consumeN[A](r: Reader[A], n: <span class="std">Int</span>)(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
+  <span class="kw">if</span> (n == <span class="num">0</span>) Future(r.discard())
+  <span class="kw">else</span> r.read().flatMap {
+    <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> process(a).before(consumeN(r, n - <span class="num">1</span>)(process))
+    <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> Future.Done <span class="cmt">// reached the end of the stream; no need to discard</span>
+  }</pre></span></dd></dl></div>
     </li><li name="com.twitter.io.Readers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ReadersextendsObject"></a><a id="Readers:Readers"></a>
       <span class="permalink">
@@ -704,12 +755,31 @@ by a consumer (reader).</p><p>The following rules should help reasoning about cl
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java APIs for Reader." href="Readers.html"><span class="name">Readers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Java APIs for Reader." href="Readers.html"><span class="name">Readers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Reader.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Reader</p></span></dd></dl></div>
-    </li><li name="com.twitter.io.Writer" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.TempFolder" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="TempFolderextendsAnyRef"></a><a id="TempFolder:TempFolder"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/index.html#TempFolderextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="Test mixin that creates a temporary thread-local folder for a block of code to execute in." href="TempFolder.html"><span class="name">TempFolder</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Test mixin that creates a temporary thread-local folder for a block of code to execute in.</p><div class="fullcomment"><div class="comment cmt"><p>Test mixin that creates a temporary thread-local folder for a block of code to execute in.
+The folder is recursively deleted after the test.</p><p>Note that multiple uses of TempFolder cannot be nested, because the temporary directory
+is effectively a thread-local global.
+</p></div></div>
+    </li><li name="com.twitter.io.Writer" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Writer[-A]extendsClosable"></a><a id="Writer[-A]:Writer[A]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/index.html#Writer[-A]extendsClosable" title="Permalink">
@@ -721,11 +791,28 @@ by a consumer (reader).</p><p>The following rules should help reasoning about cl
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Writer represents a sink for a stream of As, providing a convenient interface for the producer of such streams." href="Writer.html"><span class="name">Writer</span></a><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+        <a title="A writer represents a sink for a stream of arbitrary elements." href="Writer.html"><span class="name">Writer</span></a><span class="tparams">[<span name="A">-A</span>]</span><span class="result"> extends <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
       </span>
       
-      <p class="shortcomment cmt">A Writer represents a sink for a stream of <code>A</code>s, providing a convenient interface
-for the producer of such streams.</p>
+      <p class="shortcomment cmt">A writer represents a sink for a stream of arbitrary elements.</p><div class="fullcomment"><div class="comment cmt"><p>A writer represents a sink for a stream of arbitrary elements. While <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> provides an API
+to consume streams, <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> provides an API to produce streams.</p><p>Similar to <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>s, a very typical way to work with <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>s is to model a stream producer
+as a write-loop:</p><pre><span class="kw">def</span> produce[A](w: Writer[A])(generate: () <span class="kw">=&gt;</span> <span class="std">Option</span>[A]): Future[<span class="std">Unit</span>] =
+  generate <span class="kw">match</span> {
+    <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> w.write(a).before(produce(w)(generate))
+    <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> w.close() <span class="cmt">// signal EOF and quit producing</span>
+  }</pre><h4> Closures and Failures </h4><p>Writers are <span class="extype" name="Closable">Closable</span> and the producer MUST <code>close</code> the stream when it finishes or <code>fail</code> the
+stream when it encounters a failure and can no longer continue. Streams backed by network
+connections are particularly prone to resource leaks when they aren't cleaned up properly.</p><p>Observing stream failures in the producer could be done via a <span class="extype" name="Future">Future</span> returned form
+a write-loop:</p><pre>produce(writer)(generator).respond {
+  <span class="kw">case</span> Return(()) <span class="kw">=&gt;</span> println(<span class="lit">"Produced a stream successfully."</span>)
+  <span class="kw">case</span> Throw(e) <span class="kw">=&gt;</span> println(s<span class="lit">"Could not produce a stream because of a failure: $e"</span>)
+}</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Encountering a stream failure would terminate the write-loop given the <span class="extype" name="Future">Future</span>
+      recursion semantics.</p></span>, <span class="cmt"><p>Once failed or closed, a stream can not be restarted such that all future writes will
+      resolve into a failure.</p></span>, <span class="cmt"><p>Closing an already failed stream does not have an effect.</p><h4> Back Pressure </h4><p>By analogy with read-loops (see <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API), write-loops leverage <span class="extype" name="Future">Future</span> recursion to
+exert back-pressure: the next write isn't issued until the previous write finishes. This will
+always ensure a finer grained back-pressure in network systems allowing the producers to
+adjust the flow rate based on consumer's speed and not on IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple pending writes are allowed on a <code>Writer</code> type is an undefined
+      behaviour but could be changed in a refinement.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="WritersextendsObject"></a><a id="Writers:Writers"></a>
       <span class="permalink">
@@ -738,7 +825,7 @@ for the producer of such streams.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java APIs for Writer." href="Writers.html"><span class="name">Writers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.6/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Java APIs for Writer." href="Writers.html"><span class="name">Writers</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Writer.
