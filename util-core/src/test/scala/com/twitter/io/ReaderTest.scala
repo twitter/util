@@ -101,7 +101,7 @@ class ReaderTest
     val p = new Promise[Option[Buf]]
     val head = new Reader[Buf] {
       def read(n: Int): Future[Option[Buf]] = p
-      def discard(): Unit = p.setException(new Reader.ReaderDiscarded)
+      def discard(): Unit = p.setException(new ReaderDiscardedException)
     }
     val reader = Reader.concat(head +:: undefined)
     reader.discard()
@@ -112,7 +112,7 @@ class ReaderTest
     val p = new Promise[Option[Buf]]
     val head = new Reader[Buf] {
       def read(n: Int): Future[Option[Buf]] = p
-      def discard(): Unit = p.setException(new Reader.ReaderDiscarded)
+      def discard(): Unit = p.setException(new ReaderDiscardedException)
     }
     val reader = Reader.concat(head +:: undefined)
     assertReadWhileReading(reader)
@@ -122,7 +122,7 @@ class ReaderTest
     val p = new Promise[Option[Buf]]
     val head = new Reader[Buf] {
       def read(n: Int): Future[Option[Buf]] = p
-      def discard(): Unit = p.setException(new Reader.ReaderDiscarded)
+      def discard(): Unit = p.setException(new ReaderDiscardedException)
     }
     val reader = Reader.concat(head +:: undefined)
     assertFailed(reader, p)

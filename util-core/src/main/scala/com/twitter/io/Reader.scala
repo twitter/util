@@ -95,9 +95,12 @@ trait Reader[+A] {
   def discard(): Unit
 }
 
-object Reader {
+/**
+ * Indicates that a given stream was discarded by the Reader's consumer.
+ */
+class ReaderDiscardedException extends Exception("Reader's consumer has discarded the stream")
 
-  class ReaderDiscarded extends Exception("This writer's reader has been discarded")
+object Reader {
 
   val Null: Reader[Nothing] = new Reader[Nothing] {
     def read(n: Int): Future[Option[Nothing]] = Future.None
@@ -292,7 +295,7 @@ object Reader {
         //
         // The computation r.read(..) will be interupted because we set an
         // interrupt handler in Reader.copy to discard `r`.
-        f.raise(new Reader.ReaderDiscarded())
+        f.raise(new ReaderDiscardedException())
         target.discard()
       }
     }

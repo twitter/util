@@ -130,7 +130,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
     result
   }
 
-  def discard(): Unit = fail(new Reader.ReaderDiscarded())
+  def discard(): Unit = fail(new ReaderDiscardedException())
 
   def write(buf: A): Future[Unit] = {
     val (waiter, value, result) = synchronized {

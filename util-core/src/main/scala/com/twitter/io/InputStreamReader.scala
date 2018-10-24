@@ -37,7 +37,7 @@ class InputStreamReader private[io] (
    */
   def read(n: Int): Future[Option[Buf]] = {
     if (discarded)
-      return Future.exception(new Reader.ReaderDiscarded())
+      return Future.exception(new ReaderDiscardedException())
     if (n == 0)
       return Future.value(Some(Buf.Empty))
 
@@ -45,7 +45,7 @@ class InputStreamReader private[io] (
       pool {
         try {
           if (discarded)
-            throw new Reader.ReaderDiscarded()
+            throw new ReaderDiscardedException()
           val buffer = new Array[Byte](chunkSize)
           val c = inputStream.read(buffer, 0, chunkSize)
           if (c == -1) {

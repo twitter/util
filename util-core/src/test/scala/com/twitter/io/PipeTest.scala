@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import com.twitter.conversions.time._
-import com.twitter.io.Reader.ReaderDiscarded
+import com.twitter.io.ReaderDiscardedException
 import com.twitter.util.{Await, Future, Return}
 import org.scalatest.{FunSuite, Matchers}
 
@@ -144,7 +144,7 @@ class PipeTest extends FunSuite with Matchers {
     val rf = rw.read(10)
     assert(rf.isDefined)
     assert(closed)
-    intercept[Reader.ReaderDiscarded] { await(rf) }
+    intercept[ReaderDiscardedException] { await(rf) }
   }
 
   test("close") {
@@ -303,7 +303,7 @@ class PipeTest extends FunSuite with Matchers {
     val rf = rw.read(1)
     rw.discard()
 
-    intercept[ReaderDiscarded] {
+    intercept[ReaderDiscardedException] {
       await(rf)
     }
   }
@@ -314,7 +314,7 @@ class PipeTest extends FunSuite with Matchers {
     val wf = rw.write(buf(0, 1))
     rw.discard()
 
-    intercept[ReaderDiscarded] {
+    intercept[ReaderDiscardedException] {
       await(wf)
     }
   }

@@ -20,7 +20,7 @@ private[io] final class BufReader(buf: Buf, chunkSize: Int) extends Reader[Buf] 
   }
 
   final def discard(): Unit = synchronized {
-    state = Throw(new Reader.ReaderDiscarded)
+    state = Throw(new ReaderDiscardedException)
   }
 }
 

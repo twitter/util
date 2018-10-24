@@ -98,7 +98,7 @@ class InputStreamReaderTest extends FunSuite {
     r.discard()
 
     val f2 = r.read(10)
-    intercept[Reader.ReaderDiscarded] { Await.result(f2, 5.seconds) }
+    intercept[ReaderDiscardedException] { Await.result(f2, 5.seconds) }
   }
 
   test("discard closes InputStream") {
