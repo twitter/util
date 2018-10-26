@@ -557,7 +557,7 @@ object Buf {
   }
 
   object Composite {
-    def unapply(buf: Composite): Option[IndexedSeq[Buf]] =
+    def unapply(buf: Composite): Some[IndexedSeq[Buf]] =
       Some(buf.bufs)
 
     /**
@@ -776,7 +776,7 @@ object Buf {
       def apply(bytes: Array[Byte]): Buf = apply(bytes, 0, bytes.length)
 
       /** Extract the buffer's underlying offsets and array of bytes. */
-      def unapply(buf: ByteArray): Option[(Array[Byte], Int, Int)] =
+      def unapply(buf: ByteArray): Some[(Array[Byte], Int, Int)] =
         Some((buf.bytes, buf.begin, buf.end))
 
       /**
@@ -815,7 +815,7 @@ object Buf {
       def apply(bytes: Array[Byte]): Buf = apply(bytes, 0, bytes.length)
 
       /** Extract a copy of the buffer's underlying array of bytes. */
-      def unapply(ba: ByteArray): Option[Array[Byte]] = Some(ba.copiedByteArray)
+      def unapply(ba: ByteArray): Some[Array[Byte]] = Some(ba.copiedByteArray)
 
       /** Get a copy of a a Buf's data as an array of bytes. */
       def extract(buf: Buf): Array[Byte] = Buf.ByteArray.coerce(buf).copiedByteArray
@@ -898,7 +898,7 @@ object Buf {
   object ByteBuffer {
 
     /** Extract a read-only view of the underlying [[java.nio.ByteBuffer]]. */
-    def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] =
+    def unapply(buf: ByteBuffer): Some[java.nio.ByteBuffer] =
       Some(buf.underlying.asReadOnlyBuffer)
 
     /** Coerce a generic buffer to a Buf.ByteBuffer, potentially without copying data. */
@@ -928,7 +928,7 @@ object Buf {
         else new ByteBuffer(bb)
 
       /** Extract the buffer's underlying [[java.nio.ByteBuffer]]. */
-      def unapply(buf: ByteBuffer): Option[java.nio.ByteBuffer] = Some(buf.underlying)
+      def unapply(buf: ByteBuffer): Some[java.nio.ByteBuffer] = Some(buf.underlying)
 
       /**
        * Get a reference to a Buf's data as a ByteBuffer.
@@ -1103,7 +1103,7 @@ object Buf {
   /**
    * A [[StringCoder]] for a given [[java.nio.charset.Charset]] provides an
    * [[apply(String) encoder]]: `String` to [[Buf]]
-   * and an [[unapply(Buf) extractor]]: [[Buf]] to `Option[String]`.
+   * and an [[unapply(Buf) extractor]]: [[Buf]] to `Some[String]`.
    *
    * @note Malformed and unmappable input is silently replaced
    *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
@@ -1125,10 +1125,9 @@ object Buf {
      * @note This extractor does *not* return None to indicate a failed
      *       or impossible decoding. Malformed or unmappable bytes will
      *       instead be silently replaced by the replacement character
-     *       ("\uFFFD") in the returned String. This behavior may change
-     *       in the future.
+     *       ("\uFFFD") in the returned String.
      */
-    def unapply(buf: Buf): Option[String] = Some(decodeString(buf, charset))
+    def unapply(buf: Buf): Some[String] = Some(decodeString(buf, charset))
   }
 
   /**
