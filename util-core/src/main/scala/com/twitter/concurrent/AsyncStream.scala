@@ -114,17 +114,19 @@ sealed abstract class AsyncStream[+A] {
     }
 
   /**
-   * Map over this stream with the given concurrency. The items will
-   * likely not be processed in order. `concurrencyLevel` specifies an
-   * "eagerness factor", and that many actions will be started when this
-   * method is called. Forcing the stream will yield the results of
-   * completed actions, and will block if none of the actions has yet
-   * completed.
+   * Map over this stream with the given concurrency. The items will likely be
+   * completed out of order, and if so, the stream of results will also be out
+   * of order.
    *
-   * This method is useful for speeding up calculations over a stream
-   * where executing the actions in order is not important. To implement
-   * a concurrent fold, first call `mapConcurrent` and then fold that
-   * stream. Similarly, concurrent `foreachF` can be achieved by
+   * `concurrencyLevel` specifies an "eagerness factor", and that many actions
+   * will be started when this method is called. Forcing the stream will yield
+   * the results of completed actions, returning the results that finished
+   * first, and will block if none of the actions has yet completed.
+   *
+   * This method is useful for speeding up calculations over a stream where
+   * executing the actions (and processing their results) in order is not
+   * important. To implement a concurrent fold, first call `mapConcurrent` and
+   * then fold that stream. Similarly, concurrent `foreachF` can be achieved by
    * applying `mapConcurrent` and then `foreach`.
    *
    * @param concurrencyLevel: How many actions to execute concurrently. This
