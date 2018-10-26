@@ -1,12 +1,10 @@
 package com.twitter.util
 
 import com.twitter.util.Base64Long.{fromBase64, StandardBase64Alphabet, toBase64}
-import org.junit.runner.RunWith
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 object Base64LongTest {
@@ -54,7 +52,6 @@ object Base64LongTest {
   }
 }
 
-@RunWith(classOf[JUnitRunner])
 class Base64LongTest extends FunSuite with GeneratorDrivenPropertyChecks {
   import Base64LongTest._
 
@@ -116,7 +113,9 @@ class Base64LongTest extends FunSuite with GeneratorDrivenPropertyChecks {
   test("fromBase64 throws an IllegalArgumentException exception for characters out of range") {
     forAll { (s: String, a: Alphabet) =>
       if (s.exists(!a.isDefinedAt(_))) {
-        assertThrows[IllegalArgumentException](fromBase64(s))
+        assertThrows[IllegalArgumentException](
+          fromBase64(s, 0, s.length, Base64Long.invertAlphabet(a))
+        )
       }
     }
   }
