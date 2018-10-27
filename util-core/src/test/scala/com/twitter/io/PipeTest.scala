@@ -14,7 +14,7 @@ class PipeTest extends FunSuite with Matchers {
 
   private def assertRead(r: Reader[Buf], i: Int, j: Int): Unit = {
     val n = j - i
-    val f = r.read(n)
+    val f = r.read()
     assertRead(f, i, j)
   }
 
@@ -51,7 +51,7 @@ class PipeTest extends FunSuite with Matchers {
   }
 
   private def assertReadNone(r: Reader[Buf]): Unit =
-    assert(await(r.read(1)).isEmpty)
+    assert(await(r.read()).isEmpty)
 
   private val failedEx = new RuntimeException("ʕ •ᴥ•ʔ")
 
@@ -66,10 +66,9 @@ class PipeTest extends FunSuite with Matchers {
     val rw = new Pipe[Buf]
     val wf = rw.write(buf(0, 6))
     assert(!wf.isDefined)
-    assertRead(rw, 0, 3)
-    assert(!wf.isDefined)
-    assertRead(rw, 3, 6)
+    assertRead(rw, 0, 6)
     assert(wf.isDefined)
+    assert(await(wf.liftToTry) == Return(()))
   }
 
   test("Reader.readAll") {
@@ -91,33 +90,16 @@ class PipeTest extends FunSuite with Matchers {
     val rw = new Pipe[Buf]
     val wf = rw.write(buf(0, 6))
     assert(!wf.isDefined)
-    val rf = rw.read(6)
+    val rf = rw.read()
     assert(rf.isDefined)
     assert(toSeq(await(rf)) == Seq.range(0, 6))
-  }
-
-  test("partial read, then short read") {
-    val rw = new Pipe[Buf]
-    val wf = rw.write(buf(0, 6))
-    assert(!wf.isDefined)
-    val rf = rw.read(4)
-    assert(rf.isDefined)
-    assert(toSeq(await(rf)) == Seq.range(0, 4))
-
-    assert(!wf.isDefined)
-    val rf2 = rw.read(4)
-    assert(rf2.isDefined)
-    assert(toSeq(await(rf2)) == Seq.range(4, 6))
-
-    assert(wf.isDefined)
-    assert(await(wf.liftToTry) == Return(()))
   }
 
   test("fail while reading") {
     val rw = new Pipe[Buf]
     var closed = false
     rw.onClose.ensure { closed = true }
-    val rf = rw.read(6)
+    val rf = rw.read()
     assert(!rf.isDefined)
     assert(!closed)
     val exc = new Exception
@@ -131,7 +113,7 @@ class PipeTest extends FunSuite with Matchers {
   test("fail before reading") {
     val rw = new Pipe[Buf]
     rw.fail(new Exception)
-    val rf = rw.read(10)
+    val rf = rw.read()
     assert(rf.isDefined)
     intercept[Exception] { await(rf) }
   }
@@ -141,7 +123,7 @@ class PipeTest extends FunSuite with Matchers {
     var closed = false
     rw.onClose.ensure { closed = true }
     rw.discard()
-    val rf = rw.read(10)
+    val rf = rw.read()
     assert(rf.isDefined)
     assert(closed)
     intercept[ReaderDiscardedException] { await(rf) }
@@ -154,7 +136,7 @@ class PipeTest extends FunSuite with Matchers {
     val wf = rw.write(buf(0, 6)) before rw.close()
     assert(!wf.isDefined)
     assert(!closed)
-    assert(await(rw.read(6)) == Some(buf(0, 6)))
+    assert(await(rw.read()).contains(buf(0, 6)))
     assert(!wf.isDefined)
     assertReadEofAndClosed(rw)
     assert(closed)
@@ -165,9 +147,7 @@ class PipeTest extends FunSuite with Matchers {
     val wf = rw.write(buf(0, 6))
 
     assert(!wf.isDone)
-    assertRead(rw, 0, 3)
-    assert(!wf.isDone)
-    assertRead(rw, 3, 6)
+    assertRead(rw, 0, 6)
     assert(wf.isDone)
 
     assert(!rw.close().isDone)
@@ -177,7 +157,7 @@ class PipeTest extends FunSuite with Matchers {
   test("read then write then close") {
     val rw = new Pipe[Buf]
 
-    val rf = rw.read(6)
+    val rf = rw.read()
     assert(!rf.isDefined)
 
     val wf = rw.write(buf(0, 6))
@@ -196,7 +176,7 @@ class PipeTest extends FunSuite with Matchers {
     val cf = rw.close()
     assert(!cf.isDone)
 
-    assertFailedEx(rw.read(1))
+    assertFailedEx(rw.read())
     assertFailedEx(cf)
   }
 
@@ -210,37 +190,6 @@ class PipeTest extends FunSuite with Matchers {
     intercept[IllegalStateException] {
       await(rw.write(buf(0, 1)))
     }
-  }
-
-  test("write smaller buf than read is waiting for") {
-    val rw = new Pipe[Buf]
-    val rf = rw.read(6)
-    assert(!rf.isDefined)
-
-    val wf = rw.write(buf(0, 5))
-    assert(wf.isDone)
-    assertRead(rf, 0, 5)
-
-    assert(!rw.read(1).isDefined) // nothing pending
-    rw.close()
-    assertReadEofAndClosed(rw)
-  }
-
-  test("write larger buf than read is waiting for") {
-    val rw = new Pipe[Buf]
-    val rf = rw.read(3)
-    assert(!rf.isDefined)
-
-    val wf = rw.write(buf(0, 6))
-    assert(!wf.isDone)
-    assertRead(rf, 0, 3)
-    assert(!wf.isDone)
-
-    assertRead(rw.read(5), 3, 6) // read the rest
-    assert(wf.isDone)
-
-    assert(!rw.read(1).isDefined) // nothing pending to read
-    assert(rw.close().isDone)
   }
 
   test("write while write pending") {
@@ -262,7 +211,7 @@ class PipeTest extends FunSuite with Matchers {
   test("read after fail") {
     val rw = new Pipe[Buf]
     rw.fail(failedEx)
-    assertFailedEx(rw.read(1))
+    assertFailedEx(rw.read())
   }
 
   test("read after close with no pending reads") {
@@ -289,9 +238,9 @@ class PipeTest extends FunSuite with Matchers {
     val rw = new Pipe[Buf]
     var closed = false
     rw.onClose.ensure { closed = true }
-    val rf = rw.read(1)
+    val rf = rw.read()
     intercept[IllegalStateException] {
-      await(rw.read(1))
+      await(rw.read())
     }
     assert(!rf.isDefined)
     assert(!closed)
@@ -300,7 +249,7 @@ class PipeTest extends FunSuite with Matchers {
   test("discard with pending read") {
     val rw = new Pipe[Buf]
 
-    val rf = rw.read(1)
+    val rf = rw.read()
     rw.discard()
 
     intercept[ReaderDiscardedException] {
@@ -324,17 +273,14 @@ class PipeTest extends FunSuite with Matchers {
     val cf = rw.write(buf(0, 6)).before(rw.close())
     assert(!cf.isDone)
 
-    assertRead(rw, 0, 3)
-    assert(!cf.isDone)
-
-    assertRead(rw, 3, 6)
+    assertRead(rw, 0, 6)
     assert(!cf.isDone)
     assertReadEofAndClosed(rw)
   }
 
   test("close not satisfied until reads are fulfilled") {
     val rw = new Pipe[Buf]
-    val rf = rw.read(6)
+    val rf = rw.read()
     val cf = rf.flatMap { _ =>
       rw.close()
     }
@@ -350,7 +296,7 @@ class PipeTest extends FunSuite with Matchers {
 
   test("close while read pending") {
     val rw = new Pipe[Buf]
-    val rf = rw.read(6)
+    val rf = rw.read()
     assert(!rf.isDefined)
 
     assert(rw.close().isDone)
@@ -371,7 +317,7 @@ class PipeTest extends FunSuite with Matchers {
     val cf = rw.close()
     assert(!cf.isDone)
 
-    assertFailedEx(rw.read(1))
+    assertFailedEx(rw.read())
     assertFailedEx(cf)
   }
 
@@ -383,7 +329,7 @@ class PipeTest extends FunSuite with Matchers {
     rw.fail(failedEx)
     assert(!cf.isDone)
 
-    assertFailedEx(rw.read(1))
+    assertFailedEx(rw.read())
     assertFailedEx(cf)
   }
 

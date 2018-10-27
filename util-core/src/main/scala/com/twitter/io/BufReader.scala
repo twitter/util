@@ -8,7 +8,7 @@ import com.twitter.util.{Future, Return, Try, Throw}
 private[io] final class BufReader(buf: Buf, chunkSize: Int) extends Reader[Buf] {
   private[this] var state: Try[Buf] = Return(buf)
 
-  final def read(n: Int): Future[Option[Buf]] = synchronized {
+  def read(): Future[Option[Buf]] = synchronized {
     state match {
       case Return(Buf.Empty) => Future.None
       case Return(b) =>
@@ -19,7 +19,7 @@ private[io] final class BufReader(buf: Buf, chunkSize: Int) extends Reader[Buf] 
     }
   }
 
-  final def discard(): Unit = synchronized {
+  def discard(): Unit = synchronized {
     state = Throw(new ReaderDiscardedException)
   }
 }

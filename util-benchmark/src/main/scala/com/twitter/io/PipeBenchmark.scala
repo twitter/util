@@ -15,13 +15,13 @@ class PipeBenchmark extends StdBenchAnnotations {
   def writeAndRead(): Future[Option[Buf]] = {
     val p = new Pipe[Buf]
     p.write(foo)
-    p.read(Int.MaxValue)
+    p.read()
   }
 
   @Benchmark
   def readAndWrite(): Future[Unit] = {
     val p = new Pipe[Buf]
-    p.read(Int.MaxValue)
+    p.read()
     p.write(foo)
   }
 }

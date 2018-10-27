@@ -62,12 +62,12 @@ object MinimumThroughput {
       with Reader[Buf] {
     def discard(): Unit = reader.discard()
 
-    def read(n: Int): Future[Option[Buf]] = {
-      val deadline = nextDeadline(n)
+    def read(): Future[Option[Buf]] = {
+      val deadline = nextDeadline(0)
 
       val start = Time.now
       val read: Future[Option[Buf]] =
-        reader.read(n).raiseWithin(timer, deadline, MinThroughputTimeoutException)
+        reader.read().raiseWithin(timer, deadline, MinThroughputTimeoutException)
 
       read.transform { res =>
         elapsed += Time.now - start

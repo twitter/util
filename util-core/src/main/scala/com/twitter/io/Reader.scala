@@ -83,7 +83,7 @@ trait Reader[+A] {
    *
    * Stream failures are terminal such that all subsequent reads will resolve in failed [[Future]]s.
    */
-  def read(n: Int): Future[Option[A]]
+  def read(): Future[Option[A]]
 
   /**
    * Discard this stream as its output is no longer required. This could be used to signal the
@@ -103,7 +103,7 @@ class ReaderDiscardedException extends Exception("Reader's consumer has discarde
 object Reader {
 
   val Null: Reader[Nothing] = new Reader[Nothing] {
-    def read(n: Int): Future[Option[Nothing]] = Future.None
+    def read(): Future[Option[Nothing]] = Future.None
     def discard(): Unit = ()
   }
 
@@ -141,20 +141,20 @@ object Reader {
       in match {
         case Some(data) =>
           frames = framer(data)
-          read(Int.MaxValue)
+          read()
         case None =>
           Future.None
       }
     }
 
-    def read(n: Int): Future[Option[Buf]] = synchronized {
+    def read(): Future[Option[Buf]] = synchronized {
       frames match {
         case nextFrame :: rst =>
           frames = rst
           Future.value(Some(nextFrame))
         case _ =>
           // flatMap to `this` to prevent allocating
-          r.read(Int.MaxValue).flatMap(this)
+          r.read().flatMap(this)
       }
     }
 
@@ -169,7 +169,7 @@ object Reader {
    */
   def readAll(r: Reader[Buf]): Future[Buf] = {
     def loop(left: Buf): Future[Buf] =
-      r.read(Int.MaxValue).flatMap {
+      r.read().flatMap {
         case Some(right) => loop(left concat right)
         case _ => Future.value(left)
       }
@@ -180,9 +180,6 @@ object Reader {
   /**
    * Chunk the output of a given [[Reader]] by at most `chunkSize` (bytes). This consumes the
    * reader.
-   *
-   * @note The `n` (number of bytes to read) argument on the returned reader is ignored
-   *       (`Int.MaxValue` is used instead).
    */
   def chunked(r: Reader[Buf], chunkSize: Int): Reader[Buf] =
     new Framed(r, new ChunkedFramer(chunkSize))
@@ -190,8 +187,6 @@ object Reader {
   /**
    * Create a new [[Reader]] from a given [[Buf]]. The output of a returned reader is chunked by
    * a least `chunkSize` (bytes).
-   *
-   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    */
   def fromBuf(buf: Buf): Reader[Buf] = fromBuf(buf, Int.MaxValue)
 
@@ -210,7 +205,6 @@ object Reader {
    * The resources held by the returned [[Reader]] are released on reading of EOF and
    * [[Reader.discard()]].
    *
-   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    * @see `Readers.fromFile` for a Java API
    */
   def fromFile(f: File): Reader[Buf] = fromFile(f, InputStreamReader.DefaultMaxBufferSize)
@@ -222,7 +216,6 @@ object Reader {
    * The resources held by the returned [[Reader]] are released on reading of EOF and
    * [[Reader.discard()]].
    *
-   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    * @see `Readers.fromFile` for a Java API
    */
   def fromFile(f: File, chunkSize: Int): Reader[Buf] = fromStream(new FileInputStream(f), chunkSize)
@@ -233,9 +226,6 @@ object Reader {
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
    * [[Reader.discard()]].
-   *
-   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
-   * @see `Readers.fromStream` for a Java API
    */
   def fromStream(s: InputStream): Reader[Buf] =
     fromStream(s, InputStreamReader.DefaultMaxBufferSize)
@@ -247,7 +237,6 @@ object Reader {
    * The resources held by the returned [[Reader]] are released on reading of EOF and
    * [[Reader.discard()]].
    *
-   * @note The `n` (number of bytes to read) argument on the returned reader's `read` is ignored.
    * @see `Readers.fromStream` for a Java API
    */
   def fromStream(s: InputStream, chunkSize: Int): Reader[Buf] = InputStreamReader(s, chunkSize)
@@ -255,8 +244,8 @@ object Reader {
   /**
    * Allow [[AsyncStream]] to be consumed as a [[Reader]]
    */
-  def fromAsyncStream[A <: Buf](as: AsyncStream[A]): Reader[A] = {
-    val pipe = new Pipe[A]()
+  def fromAsyncStream[A](as: AsyncStream[A]): Reader[A] = {
+    val pipe = new Pipe[A]
     // orphan the Future but allow it to clean up
     // the Pipe IF the stream ever finishes or fails
     as.foreachF(pipe.write).respond {
@@ -269,9 +258,9 @@ object Reader {
   /**
    * Transformation (or lift) from [[Reader]] into `AsyncStream`.
    */
-  def toAsyncStream[A <: Buf](r: Reader[A], chunkSize: Int = Int.MaxValue): AsyncStream[A] =
-    AsyncStream.fromFuture(r.read(chunkSize)).flatMap {
-      case Some(buf) => buf +:: Reader.toAsyncStream(r, chunkSize)
+  def toAsyncStream[A](r: Reader[A]): AsyncStream[A] =
+    AsyncStream.fromFuture(r.read()).flatMap {
+      case Some(buf) => buf +:: Reader.toAsyncStream(r)
       case None => AsyncStream.empty[A]
     }
 
@@ -279,14 +268,14 @@ object Reader {
    * Convenient abstraction to read from a stream of Readers as if it were a
    * single Reader.
    */
-  def concat(readers: AsyncStream[Reader[Buf]]): Reader[Buf] = {
-    val target = new Pipe[Buf]()
+  def concat[A](readers: AsyncStream[Reader[A]]): Reader[A] = {
+    val target = new Pipe[A]
     val f = copyMany(readers, target).respond {
       case Throw(exc) => target.fail(exc)
       case _ => target.close()
     }
-    new Reader[Buf] {
-      def read(n: Int): Future[Option[Buf]] = target.read(n)
+    new Reader[A] {
+      def read(): Future[Option[A]] = target.read()
       def discard(): Unit = {
         // We have to do this so that when the the target is discarded we can
         // interrupt the read operation. Consider the following:
@@ -308,22 +297,9 @@ object Reader {
    * {{{
    * Reader.copyMany(readers, writer) ensure writer.close()
    * }}}
-   *
-   * @param bufsize The number of bytes to read each time.
    */
-  def copyMany(readers: AsyncStream[Reader[Buf]], target: Writer[Buf], bufsize: Int): Future[Unit] =
-    readers.foreachF(Reader.copy(_, target, bufsize))
-
-  /**
-   * Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
-   * caller is responsible for finalization and error handling, e.g.:
-   *
-   * {{{
-   * Reader.copyMany(readers, writer) ensure writer.close()
-   * }}}
-   */
-  def copyMany(readers: AsyncStream[Reader[Buf]], target: Writer[Buf]): Future[Unit] =
-    copyMany(readers, target, Writer.BufferSize)
+  def copyMany[A](readers: AsyncStream[Reader[A]], target: Writer[A]): Future[Unit] =
+    readers.foreachF(Reader.copy(_, target))
 
   /**
    * Copy the bytes from a Reader to a Writer in chunks of size `n`. The Writer
@@ -333,12 +309,10 @@ object Reader {
    * {{{
    * Reader.copy(r, w, n) ensure w.close()
    * }}}
-   *
-   * @param n The number of bytes to read on each refill of the Writer.
    */
-  def copy(r: Reader[Buf], w: Writer[Buf], n: Int): Future[Unit] = {
+  def copy[A](r: Reader[A], w: Writer[A]): Future[Unit] = {
     def loop(): Future[Unit] =
-      r.read(n).flatMap {
+      r.read().flatMap {
         case None => Future.Done
         case Some(buf) => w.write(buf) before loop()
       }
@@ -349,17 +323,6 @@ object Reader {
     p.setInterruptHandler { case exc => r.discard() }
     p
   }
-
-  /**
-   * Copy the bytes from a Reader to a Writer in chunks of size
-   * `Writer.BufferSize`. The Writer is unmanaged, the caller is responsible
-   * for finalization and error handling, e.g.:
-   *
-   * {{{
-   * Reader.copy(r, w) ensure w.close()
-   * }}}
-   */
-  def copy(r: Reader[Buf], w: Writer[Buf]): Future[Unit] = copy(r, w, Writer.BufferSize)
 
   /**
    * Wraps a [[ Reader[Buf] ]] and emits frames as decided by `framer`.

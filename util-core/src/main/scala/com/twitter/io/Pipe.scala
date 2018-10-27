@@ -71,7 +71,7 @@ import com.twitter.util.{Future, Promise, Return, Time}
  * - Closing an idle pipe returns a future that will be satisfied when a consumer observes the
  *   closure (EOF) via read
  */
-final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
+final class Pipe[A] extends Reader[A] with Writer[A] {
 
   // Implementation Notes:
   //
@@ -93,7 +93,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
   // satisfied when a `read` observes the EOF (after calling close())
   private[this] val closep: Promise[Unit] = new Promise[Unit]()
 
-  def read(n: Int): Future[Option[A]] = {
+  def read(): Future[Option[A]] = {
     val (waiter, result) = synchronized {
       state match {
         case State.Failed(exc) =>
@@ -108,20 +108,15 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
 
         case State.Idle =>
           val p = new Promise[Option[A]]
-          state = State.Reading(n, p)
+          state = State.Reading(p)
           (null, p)
 
-        case State.Writing(buf, p) if buf.length <= n =>
+        case State.Writing(buf, p) =>
           // pending write can fully fit into this requested read
           state = State.Idle
           (p, Future.value(Some(buf)))
 
-        case State.Writing(buf, p) =>
-          // pending write is larger than the requested read
-          state = State.Writing(buf.slice(n, buf.length).asInstanceOf[A], p)
-          (null, Future.value(Some(buf.slice(0, n).asInstanceOf[A])))
-
-        case State.Reading(_, _) =>
+        case State.Reading(_) =>
           (null, Future.exception(new IllegalStateException("read() while read is pending")))
       }
     }
@@ -146,13 +141,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
           state = State.Writing(buf, p)
           (null, null, p)
 
-        case State.Reading(n, p) if n < buf.length =>
-          // pending reader doesn't have enough space for this write
-          val nextp = new Promise[Unit]
-          state = State.Writing(buf.slice(n, buf.length).asInstanceOf[A], nextp)
-          (p, Some(buf.slice(0, n).asInstanceOf[A]), nextp)
-
-        case State.Reading(n, p) =>
+        case State.Reading(p) =>
           // pending reader has enough space for the full write
           state = State.Idle
           (p, Some(buf), Future.Done)
@@ -180,7 +169,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
         case State.Idle | State.Closing =>
           state = State.Failed(cause)
           (closep, null, null)
-        case State.Reading(_, p) =>
+        case State.Reading(p) =>
           state = State.Failed(cause)
           (closep, p, null)
         case State.Writing(_, p) =>
@@ -205,7 +194,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
           state = State.Closing
           (null, null, null)
 
-        case State.Reading(_, p) =>
+        case State.Reading(p) =>
           state = State.Closed
           (closep, p, null)
 
@@ -232,7 +221,7 @@ final class Pipe[A <: Buf] extends Reader[A] with Writer[A] {
 
 object Pipe {
 
-  private sealed trait State[+A <: Buf]
+  private sealed trait State[+A]
 
   private object State {
 
@@ -242,18 +231,17 @@ object Pipe {
     /**
      * Indicates a read is pending and is awaiting a `write`.
      *
-     * @param n number of bytes to read.
      * @param p when satisfied it indicates that this read has completed.
      */
-    final case class Reading[A <: Buf](n: Int, p: Promise[Option[A]]) extends State[A]
+    final case class Reading[A](p: Promise[Option[A]]) extends State[A]
 
     /**
-     * Indicates a write of `buf` is pending to be `read`.
+     * Indicates a write of `value` is pending to be `read`.
      *
-     * @param buf the [[Buf]] to write.
+     * @param value the value to write.
      * @param p when satisfied it indicates that this write has been fully read.
      */
-    final case class Writing[A <: Buf](buf: A, p: Promise[Unit]) extends State[A]
+    final case class Writing[A](value: A, p: Promise[Unit]) extends State[A]
 
     /** Indicates the pipe was failed. */
     final case class Failed(exc: Throwable) extends State[Nothing]

@@ -55,24 +55,10 @@ public final class Readers {
   }
 
   /**
-   * See {@code com.twitter.io.Reader.copy}.
-   */
-  public static Future<BoxedUnit> copy(Reader<Buf> r, Writer<Buf> w, int readSize) {
-    return Reader$.MODULE$.copy(r, w, readSize);
-  }
-
-  /**
    * See {@code com.twitter.io.Reader.copyMany}.
    */
   public static Future<BoxedUnit> copyMany(AsyncStream<Reader<Buf>> readers, Writer<Buf> w) {
     return Reader$.MODULE$.copyMany(readers, w);
-  }
-
-  /**
-   * See {@code com.twitter.io.Reader.copyMany}.
-   */
-  public static Future<BoxedUnit> copyMany(AsyncStream<Reader<Buf>> readers, Writer<Buf> w, int readSize) {
-    return Reader$.MODULE$.copyMany(readers, w, readSize);
   }
 
   /**

@@ -35,11 +35,9 @@ class InputStreamReader private[io] (
    *
    * @note the underlying `InputStream` is closed on read of EOF.
    */
-  def read(n: Int): Future[Option[Buf]] = {
+  def read(): Future[Option[Buf]] = {
     if (discarded)
       return Future.exception(new ReaderDiscardedException())
-    if (n == 0)
-      return Future.value(Some(Buf.Empty))
 
     mutex.acquire().flatMap { permit =>
       pool {

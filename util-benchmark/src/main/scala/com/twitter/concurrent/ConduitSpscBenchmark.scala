@@ -111,8 +111,8 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
     else source().flatMap(r.write) before feedReader(n - 1)
 
   private[this] def consumeReader(n: Int): Future[Boolean] =
-    if (n <= 1) r.read(Int.MaxValue).flatMap(sink)
-    else r.read(Int.MaxValue).flatMap(sink).flatMap(_ => consumeReader(n - 1))
+    if (n <= 1) r.read().flatMap(sink)
+    else r.read().flatMap(sink).flatMap(_ => consumeReader(n - 1))
 
   @Benchmark
   def reader: Boolean =

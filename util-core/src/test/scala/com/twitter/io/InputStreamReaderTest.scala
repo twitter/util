@@ -18,17 +18,8 @@ class InputStreamReaderTest extends FunSuite {
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 4096)
 
-    val f = r.read(10)
+    val f = r.read()
     assert(Await.result(f, 5.seconds).isEmpty)
-  }
-
-  test("InputStreamReader - read 0 bytes") {
-    val a = arr(0, 25)
-    val s = new ByteArrayInputStream(a)
-    val r = new InputStreamReader(s, 4096)
-
-    val f1 = r.read(0)
-    assert(Await.result(f1, 5.seconds).get.isEmpty)
   }
 
   test("InputStreamReader - read positive bytes") {
@@ -36,16 +27,16 @@ class InputStreamReaderTest extends FunSuite {
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 10)
 
-    val f1 = r.read(10)
+    val f1 = r.read()
     assert(Await.result(f1, 5.seconds) == Some(buf(0, 10)))
 
-    val f2 = r.read(10)
+    val f2 = r.read()
     assert(Await.result(f2, 5.seconds) == Some(buf(10, 20)))
 
-    val f3 = r.read(10)
+    val f3 = r.read()
     assert(Await.result(f3, 5.seconds) == Some(buf(20, 25)))
 
-    val f4 = r.read(10)
+    val f4 = r.read()
     assert(Await.result(f4).isEmpty)
   }
 
@@ -54,16 +45,16 @@ class InputStreamReaderTest extends FunSuite {
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 100)
 
-    val f1 = r.read(1000)
+    val f1 = r.read()
     assert(Await.result(f1, 5.seconds) == Some(buf(0, 100)))
 
-    val f2 = r.read(1000)
+    val f2 = r.read()
     assert(Await.result(f2, 5.seconds) == Some(buf(100, 200)))
 
-    val f3 = r.read(1000)
+    val f3 = r.read()
     assert(Await.result(f3, 5.seconds) == Some(buf(200, 250)))
 
-    val f4 = r.read(1000)
+    val f4 = r.read()
     assert(Await.result(f4, 5.seconds).isEmpty)
   }
 
@@ -92,12 +83,12 @@ class InputStreamReaderTest extends FunSuite {
     val s = new ByteArrayInputStream(a)
     val r = new InputStreamReader(s, 10)
 
-    val f1 = r.read(10)
+    val f1 = r.read()
     assert(Await.result(f1, 5.seconds) == Some(buf(0, 10)))
 
     r.discard()
 
-    val f2 = r.read(10)
+    val f2 = r.read()
     intercept[ReaderDiscardedException] { Await.result(f2, 5.seconds) }
   }
 

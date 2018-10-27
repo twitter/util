@@ -28,7 +28,7 @@ class BufReaderTest extends FunSuite with Checkers {
       n < 0 ||
       bytes.length == 0 ||
       Await
-        .ready(r.read(n), 5.seconds).poll.exists(
+        .ready(r.read(), 5.seconds).poll.exists(
           _.throwable.isInstanceOf[ReaderDiscardedException]
         )
     }

@@ -36,6 +36,9 @@ Breaking API Changes
 * util-core: `c.t.concurrent.AsyncStream.fromReader` has been moved to
   `c.t.io.Reader.toAsyncStream`. ``PHAB_ID=D228277``
 
+* util-core: `c.t.io.Reader.read()` no longer takes `n`, the maximum number of bytes to read off a
+  stream.  ``PHAB_ID=D228385``
+
 New Features
 ~~~~~~~~~~~~
 
