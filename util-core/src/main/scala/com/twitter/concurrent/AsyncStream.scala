@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Return, Throw, Try}
+import com.twitter.util.{Future, Return, Throw}
 import scala.annotation.varargs
 import scala.collection.mutable
 
@@ -134,15 +134,8 @@ sealed abstract class AsyncStream[+A] {
    *   the next item available in the stream.
    */
   def mapConcurrent[B](concurrencyLevel: Int)(f: A => Future[B]): AsyncStream[B] = {
-    if (concurrencyLevel == 1) {
-      mapF(f)
-    } else if (concurrencyLevel < 1) {
-      throw new IllegalArgumentException(
-        s"concurrencyLevel must be at least one. got: $concurrencyLevel"
-      )
-    } else {
-      embed(AsyncStream.mapConcStep(concurrencyLevel, f, Nil, () => this))
-    }
+    require(concurrencyLevel > 0, s"concurrencyLevel must be at least one. got: $concurrencyLevel")
+    merge(fanout(this, concurrencyLevel).map(_.mapF(f)): _*)
   }
 
   /**
@@ -719,65 +712,29 @@ object AsyncStream {
     }
   }
 
-  /**
-   * This must exist here, otherwise scalac will be greedy and hold a reference to the head of the stream
-   */
-  private def mapConcStep[A, B](
-    concurrencyLevel: Int,
-    f: (A => Future[B]),
-    pending: Seq[Future[Option[B]]],
-    inputs: () => AsyncStream[A]
-  ): Future[AsyncStream[B]] = {
-    // We only invoke inputs().uncons if there is space for more work
-    // to be started.
-    val inputReady: Future[Left[Option[(A, () => AsyncStream[A])], Nothing]] =
-      if (pending.size >= concurrencyLevel) Future.never
-      else
-        inputs().uncons.flatMap {
-          case None if pending.nonEmpty => Future.never
-          case other => Future.value(Left(other))
-        }
-
-    // The inputReady.isDefined check is an optimization to avoid the
-    // wasted allocation of calling Future.select when we know that
-    // there is more work that is ready to be started.
-    val workDone: Future[Right[Nothing, (Try[Option[B]], Seq[Future[Option[B]]])]] =
-      if (pending.isEmpty || inputReady.isDefined) Future.never
-      else Future.select(pending).map(Right(_))
-
-    // Wait for either the next input to be ready (Left) or for some pending
-    // work to complete (Right).
-    inputReady.or(workDone).flatMap {
-      case Left(None) =>
-        // There is no work pending and we have exhausted the
-        // inputs, so we are done.
-        Future.value(empty)
-
-      case Left(Some((a, tl))) =>
-        // There is available concurrency and a new input is ready,
-        // so start the work and add it to `pending`.
-        mapConcStep(concurrencyLevel, f, f(a).map(Some(_)) +: pending, tl)
-
-      case Right((Throw(t), _)) =>
-        // Some work finished with failure, so terminate the stream.
-        Future.exception(t)
-
-      case Right((Return(None), newPending)) =>
-        // A cons cell was forced, freeing up a spot in `pending`.
-        mapConcStep(concurrencyLevel, f, newPending, inputs)
-
-      case Right((Return(Some(a)), newPending)) =>
-        // Some work finished. Eagerly start the next step, so
-        // that all available inputs have work started on them. In
-        // the next step, we replace the pending Future for the
-        // work that just completed with a Future that will be
-        // satisfied by forcing the next element of the result
-        // stream. Keeping `pending` full is the mechanism that we
-        // use to bound the evaluation depth at `concurrencyLevel`
-        // until the stream is forced.
-        val cellForced = new Promise[Option[B]]
-        val rest = mapConcStep(concurrencyLevel, f, cellForced +: newPending, inputs)
-        Future.value(mk(a, { cellForced.setValue(None); embed(rest) }))
+  // Oneshot turns an AsyncStream into a resource, where each read depletes the
+  // stream of that item. In other words, each item of the stream is observable
+  // only once.
+  private class Oneshot[A](var as: AsyncStream[A]) {
+    def read(): Future[Option[A]] = synchronized {
+      val head = as.head
+      as = as.drop(1)
+      head
     }
+
+    // Recover the AsyncStream interface. We don't return `as` because we want
+    // to deplete the original stream with each read. With this we can create
+    // multiple AsyncStream views of the same Oneshot resource, thus "fanning
+    // out" the original stream into multiple distinct AsyncStreams.
+    def toAsyncStream: AsyncStream[A] =
+      AsyncStream.fromFuture(read()).flatMap {
+        case None => AsyncStream.empty
+        case Some(a) => a +:: toAsyncStream
+      }
+  }
+
+  private def fanout[A](as: AsyncStream[A], n: Int): Seq[AsyncStream[A]] = {
+    val reader = new Oneshot(as)
+    0.until(n).map(_ => reader.toAsyncStream)
   }
 }

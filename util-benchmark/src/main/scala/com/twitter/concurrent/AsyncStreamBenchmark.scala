@@ -1,7 +1,7 @@
 package com.twitter.concurrent
 
 import com.twitter.conversions.time._
-import com.twitter.util.{Await, StdBenchAnnotations}
+import com.twitter.util.{Await, Future, StdBenchAnnotations}
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Benchmark)
@@ -46,6 +46,13 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
   @Benchmark
   def flatMap(): Seq[Int] =
     Await.result(as.flatMap(FlatMapFn).toSeq())
+
+  private[this] val MapConcurrentFn: Int => Future[Int] =
+    x => Future.value(x + 1)
+
+  @Benchmark
+  def mapConcurrent(): Seq[Int] =
+    Await.result(as.mapConcurrent(2)(MapConcurrentFn).toSeq())
 
   private[this] val FilterFn: Int => Boolean =
     x => x % 2 == 0
