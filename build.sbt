@@ -222,6 +222,9 @@ lazy val utilCore = Project(
   sharedSettings
 ).settings(
   name := "util-core",
+  // Moved some code to 'concurrent-extra' to conform to Pants' 1:1:1 principle (https://www.pantsbuild.org/build_files.html#target-granularity)
+  // so that util-core would work better for Pants projects in IntelliJ.
+  unmanagedSourceDirectories in Compile += baseDirectory.value / "concurrent-extra",
   libraryDependencies ++= Seq(
     caffeineLib % "test",
     scalacheckLib,
