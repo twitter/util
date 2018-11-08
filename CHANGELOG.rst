@@ -18,6 +18,11 @@ Breaking API Changes
 * util-core: Rename `c.t.io.Reader.ReaderDiscarded` to `c.t.io.ReaderDiscardedException`.
   ``PHAB_ID=D231969``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Made Stopwatch.timeNanos monotone. ``PHAB_ID=D236629``
+
 18.10.0
 -------
 

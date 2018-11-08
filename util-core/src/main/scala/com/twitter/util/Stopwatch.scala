@@ -39,11 +39,15 @@ object Stopwatch extends Stopwatch {
    * A function that returns a Long that can be used for measuring elapsed time
    * in nanoseconds, that is `Time` manipulation compatible.
    *
-   * Useful for testing, but should not be used in production, since it uses a
-   * non-monotonic time under the hood, and entails a few allocations.  For
+   * Useful for testing, but should not be used in a tight loop in production,
+   * since it entails a few allocations and does a [[Local]] lookup.  For
    * production, see `systemNanos`.
    */
-  val timeNanos: () => Long = () => Time.now.inNanoseconds
+  val timeNanos: () => Long = () =>
+    Time.localGetTime() match {
+      case Some(local) => local().inNanoseconds
+      case None => systemNanos()
+  }
 
   /**
    * A function that returns a Long that can be used for measuring elapsed time
@@ -59,11 +63,15 @@ object Stopwatch extends Stopwatch {
    * A function that returns a Long that can be used for measuring elapsed time
    * in microseconds, that is `Time` manipulation compatible.
    *
-   * Useful for testing, but should not be used in production, since it uses a
-   * non-monotonic time under the hood, and entails a few allocations.  For
+   * Useful for testing, but should not be used in a tight loop in production,
+   * since it entails a few allocations and does a [[Local]] lookup.  For
    * production, see `systemMicros`.
    */
-  val timeMicros: () => Long = () => Time.now.inMicroseconds
+  val timeMicros: () => Long = () =>
+    Time.localGetTime() match {
+      case Some(local) => local().inMicroseconds
+      case None => systemMicros()
+  }
 
   /**
    * A function that returns a Long that can be used for measuring elapsed time
@@ -79,11 +87,15 @@ object Stopwatch extends Stopwatch {
    * A function that returns a Long that can be used for measuring elapsed time
    * in milliseconds, that is `Time` manipulation compatible.
    *
-   * Useful for testing, but should not be used in production, since it uses a
-   * non-monotonic time under the hood, and entails a few allocations.  For
+   * Useful for testing, but should not be used in a tight loop in production,
+   * since it entails a few allocations and does a [[Local]] lookup.  For
    * production, see `systemMillis`.
    */
-  val timeMillis: () => Long = () => Time.now.inMilliseconds
+  val timeMillis: () => Long = () =>
+    Time.localGetTime() match {
+      case Some(local) => local().inMilliseconds
+      case None => systemMillis()
+  }
 
   def start(): Elapsed = Time.localGetTime() match {
     case Some(local) =>
