@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>User Guide &#8212; Util 18.11.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '18.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +24,6 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 18.11.0 documentation" href="../index.html" />
-    <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
    
@@ -45,7 +41,7 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
@@ -178,9 +174,9 @@ over which metrics are being exported in the application’s steady state.</p>
 <p>Similar to log levels, verbosity levels provide means to mark a given metric as “debug” and
 potentially (assuming supported in implementation) prevent it from being exported under standard
 operations.</p>
-<p>Limiting the number of exported metrics via verbosity levels can reduce applications&#8217; operational
+<p>Limiting the number of exported metrics via verbosity levels can reduce applications’ operational
 cost. However taking this to extremes may drastically affect operability of your service. We
-recommend using your judgment to make sure blacklisting a given metric will not reduce a process&#8217;
+recommend using your judgment to make sure blacklisting a given metric will not reduce a process’
 visibility.</p>
 </div>
 <div class="section" id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">

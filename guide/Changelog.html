@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Changelog &#8212; Util 18.11.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '18.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -26,7 +24,6 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Util 18.11.0 documentation" href="index.html" />
     <link rel="prev" title="Twitter Futures Capture Points" href="util-capturepoints/index.html" />
    
   
@@ -43,7 +40,7 @@
   </script>
 
   </head>
-  <body role="document">
+  <body>
   
   
 
@@ -140,7 +137,7 @@ the stream is closed. <code class="docutils literal"><span class="pre">PHAB_ID=D
 <div class="section" id="bug-fixes">
 <h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>util-slf4j-api: Moved slf4j-simple dependency to be a &#8216;test&#8217; dependency, instead of a
+<li>util-slf4j-api: Moved slf4j-simple dependency to be a ‘test’ dependency, instead of a
 compile dependency, which was inaccurate. <code class="docutils literal"><span class="pre">PHAB_ID=D220718</span></code></li>
 </ul>
 </div>
@@ -246,7 +243,7 @@ resilient against this possibility. Fixes Finagle #695. <code class="docutils li
 <div class="section" id="deprecations">
 <h3>Deprecations<a class="headerlink" href="#deprecations" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>util-reflect: This library has been deprecated since it is legacy code and shouldn&#8217;t
+<li>util-reflect: This library has been deprecated since it is legacy code and shouldn’t
 be used for new services. We no longer think this facility is the right way to do it
 and encourage you to provide your own forwarders. <code class="docutils literal"><span class="pre">PHAB_ID=D174250</span></code></li>
 </ul>
@@ -330,7 +327,7 @@ a <cite>Future.exception</cite> over any NonFatal exception. <code class="docuti
 <ul class="simple">
 <li>util-core: RichU64* APIs are deprecated. Use Java 8 Unsigned Long API instead:
 <code class="docutils literal"><span class="pre">PHAB_ID=D137893</span></code><ul>
-<li><cite>new RichU64String(&#8220;123&#8221;).toU64Long</cite> -&gt; <cite>Long.parseUnsignedInt</cite></li>
+<li><cite>new RichU64String(“123”).toU64Long</cite> -&gt; <cite>Long.parseUnsignedInt</cite></li>
 <li><cite>new RichU64Long(123L).toU64HexString</cite> -&gt; <cite>Long.toHexString</cite> (no leading zeros)</li>
 </ul>
 </li>
@@ -342,7 +339,7 @@ a <cite>Future.exception</cite> over any NonFatal exception. <code class="docuti
 <div class="section" id="id28">
 <h3>New Features<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>util-core: Added implicit conversion for percentage specified as &#8220;x.percent&#8221;
+<li>util-core: Added implicit conversion for percentage specified as “x.percent”
 to a fractional Double in <cite>c.t.conversions.percent</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D128792</span></code></li>
 <li>util-tunable: Add deserializer for <cite>c.t.u.StorageUnit</cite> to JsonTunableMapper
 <code class="docutils literal"><span class="pre">PHAB_ID=D132368</span></code></li>
@@ -384,7 +381,7 @@ Direct usage of Guava is recommended if needed. <code class="docutils literal"><
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Guava has been removed as dependency from all modules except the
-&#8216;util-cache-guava&#8217; module. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
+‘util-cache-guava’ module. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
 </ul>
 </div>
 <div class="section" id="id35">
@@ -406,7 +403,7 @@ explicitly written instead of the full size of the backing array, <cite>size</ci
 <h3>Breaking API Changes<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-cache: The Guava dependency and its associated implementations have been
-moved to a new module, &#8216;util-cache-guava&#8217;. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
+moved to a new module, ‘util-cache-guava’. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
 <li>util-cache: <cite>c.t.cache.EvictingCache.lazily</cite> now takes a <cite>FutureCache</cite>
 instead of an implementation specific cache. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
 </ul>
@@ -497,7 +494,7 @@ for details on how these can be used in Finagle. <code class="docutils literal">
 cursor by the number of bytes consumed via <cite>readBytes(Int)</cite>, not the number specified
 as a method argument. <cite>readString</cite> will now throw an UnderflowException if the number
 of bytes specified exceeds the remaining buffer length instead of silently making due
-with the rest of the buffer&#8217;s contents. <code class="docutils literal"><span class="pre">PHAB_ID=D78301</span></code></li>
+with the rest of the buffer’s contents. <code class="docutils literal"><span class="pre">PHAB_ID=D78301</span></code></li>
 </ul>
 </div>
 <div class="section" id="id48">
@@ -591,9 +588,9 @@ Remove deprecated <cite>flatten</cite> method on <cite>c.t.u.Future</cite>; use 
 <li><p class="first">util-core: Removed deprecated <cite>c.t.u.LongOverflowException</cite>. Use
 <cite>java.lang.ArithmeticException</cite> instead. Removed deprecated
 <cite>c.t.u.LongOverflowArith</cite> and all methods on it:
-- <cite>add</cite>; use Java 8&#8217;s <cite>Math.addExact</cite> instead
-- <cite>sub</cite>; use Java 8&#8217;s <cite>Math.subtractExact</cite> instead
-- <cite>mul</cite>; use Java 8&#8217;s <cite>Math.multiplyExact</cite> instead
+- <cite>add</cite>; use Java 8’s <cite>Math.addExact</cite> instead
+- <cite>sub</cite>; use Java 8’s <cite>Math.subtractExact</cite> instead
+- <cite>mul</cite>; use Java 8’s <cite>Math.multiplyExact</cite> instead
 <code class="docutils literal"><span class="pre">RB_ID=915545</span></code></p>
 </li>
 <li><p class="first">util-core: Removed deprecated <cite>c.t.concurrent.exp.AsyncStream</cite>. Use
@@ -620,7 +617,7 @@ treat them as zeros (i.e., <cite>Time.epoch</cite>, <cite>Duration.Zero</cite>).
 <li>util-core: <cite>Closable.all(..)</cite> will now catch synchronous exceptions thrown
 by any <cite>Closable.close(..)</cite> invocations, and wrap them in a failed Future.
 <code class="docutils literal"><span class="pre">RB_ID=914859</span></code></li>
-<li>util-stats: InMemoryStatsReceiver&#8217;s <cite>gauges</cite> member is now safe for
+<li>util-stats: InMemoryStatsReceiver’s <cite>gauges</cite> member is now safe for
 concurrent iteration but now holds strong references to gauge instances.
 <code class="docutils literal"><span class="pre">RB_ID=911951</span></code></li>
 </ul>
@@ -639,7 +636,7 @@ are now also exposed publicly. <code class="docutils literal"><span class="pre">
 <ul class="simple">
 <li>util: util-zk-commons was removed, since it was only a connector between
 util and commons, which was not widely used.  <code class="docutils literal"><span class="pre">RB_ID=910721</span></code></li>
-<li>util-core: AsyncQueue&#8217;s <cite>size</cite> method is now final while <cite>offer</cite> and <cite>fail</cite>
+<li>util-core: AsyncQueue’s <cite>size</cite> method is now final while <cite>offer</cite> and <cite>fail</cite>
 are no longer final. <code class="docutils literal"><span class="pre">RB_ID=914191</span></code></li>
 </ul>
 </div>
@@ -661,12 +658,12 @@ will require some effort to become compatible. <code class="docutils literal"><s
 via <cite>c.t.app.Flags#add</cite>. <code class="docutils literal"><span class="pre">RB_ID=908804</span></code></li>
 <li>util-core: Remove deprecated <cite>c.t.io.ConcatBuf</cite> which is replaced by
 <cite>c.t.io.Buf.apply(Iterable[Buf])</cite>. <code class="docutils literal"><span class="pre">RB_ID=907180</span></code></li>
-<li>util-core: Remove deprecated <cite>c.t.util.RingBuffer</cite>. Use Guava&#8217;s
+<li>util-core: Remove deprecated <cite>c.t.util.RingBuffer</cite>. Use Guava’s
 <cite>EvictingQueue</cite>. <code class="docutils literal"><span class="pre">RB_ID=907516</span></code></li>
 <li>util-core: Remove deprecated <cite>c.t.concurrent.ConcurrentPool</cite>. Prefer
-Finagle&#8217;s <cite>c.t.f.pool.BufferingPool</cite>. <code class="docutils literal"><span class="pre">RB_ID=907516</span></code></li>
+Finagle’s <cite>c.t.f.pool.BufferingPool</cite>. <code class="docutils literal"><span class="pre">RB_ID=907516</span></code></li>
 <li>util-core: Remove deprecated <cite>c.t.concurrent.ConcurrentMultiMap</cite>. Prefer
-Guava&#8217;s Multimap. <code class="docutils literal"><span class="pre">RB_ID=907516</span></code></li>
+Guava’s Multimap. <code class="docutils literal"><span class="pre">RB_ID=907516</span></code></li>
 </ul>
 </div>
 <div class="section" id="id62">
@@ -695,14 +692,14 @@ the public and make it a part of <cite>Buf</cite> once we are confident in the A
 <li>util-slf4j-api: Introduce slf4j-api support into util. This includes a
 small scala wrapper over the <cite>org.slf4j.Logger</cite> and a scala-friendly
 <cite>Logging</cite> trait. Changes also include the util-slf4j-jul-bridge module which
-is a library that provides a utility to &#8220;smartly&#8221; install the
+is a library that provides a utility to “smartly” install the
 Slf4jBridgeHandler. <code class="docutils literal"><span class="pre">RB_ID=900815</span></code></li>
 </ul>
 </div>
 <div class="section" id="id65">
 <h3>Runtime Behavior Changes<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>util-core: Improved performance and allocation rates of some &#8220;random access&#8221;
+<li>util-core: Improved performance and allocation rates of some “random access”
 <cite>Buf</cite> operations. <code class="docutils literal"><span class="pre">RB_ID=905253</span></code></li>
 <li>util-core: Standardized argument checking in implementations of
 <cite>c.t.io.Buf.write</cite> and <cite>c.t.io.Buf.slice</cite>. <code class="docutils literal"><span class="pre">RB_ID=899935</span></code></li>
@@ -752,7 +749,7 @@ abstract class: <cite>AbstractBuf</cite>. <code class="docutils literal"><span c
 <li>util-app: Java developers can now declare instances of <cite>GlobalFlag</cite>
 from Java. See <cite>c.t.app.JavaGlobalFlag</cite> for details. <code class="docutils literal"><span class="pre">RB_ID=874073</span></code></li>
 <li>util-thrift: We now depend on a fork of libthrift hosted in the Central Repository.
-The new package lives in the &#8216;com.twitter&#8217; organization. This removes the necessity of
+The new package lives in the ‘com.twitter’ organization. This removes the necessity of
 depending on maven.twttr.com. This also means that eviction will not be automatic and
 using a newer libthrift library requires manual eviction if artifacts are being pulled
 in transitively. <code class="docutils literal"><span class="pre">RB_ID=885879</span></code></li>
@@ -826,7 +823,7 @@ decode will now throw an exception when it fails to decode a byte, instead
 of failing silently. <code class="docutils literal"><span class="pre">RB_ID=833478</span></code></li>
 <li>util-collection: LruMap is now backed by jdk LinkedHashMap instead of apache
 collections LRUMap. <code class="docutils literal"><span class="pre">RB_ID=833515</span></code></li>
-<li>util-core: <cite>com.twitter.util.NonFatal</cite> is now implemented by Scala&#8217;s
+<li>util-core: <cite>com.twitter.util.NonFatal</cite> is now implemented by Scala’s
 <cite>scala.util.control.NonFatal</cite>. This changes behavior such that
 <cite>java.lang.StackOverflowError</cite> is considered fatal and
 <cite>java.lang.NoSuchMethodException</cite> is considered non-fatal.
@@ -889,7 +886,7 @@ the number of disbursed tokens, it would discard all of the tokens over
 the disbursal limit.  Changed to instead process tokens in the wait queue
 with leftover tokens.  This improves behavior where the actual period is
 smaller than can actually be simulated with the given timer.  <code class="docutils literal"><span class="pre">RB_ID=836742</span></code></li>
-<li>util-core: Once didn&#8217;t actually provide the guarantee it tried to, because
+<li>util-core: Once didn’t actually provide the guarantee it tried to, because
 of an issue with the scala compiler,
 <a class="reference external" href="https://issues.scala-lang.org/browse/SI-9814">https://issues.scala-lang.org/browse/SI-9814</a>.  It should now actually be
 synchronized. <code class="docutils literal"><span class="pre">RB_ID=842245</span></code></li>
@@ -907,8 +904,8 @@ re-enters with identical input parameters instead of deadlocking.</li>
 <ul class="simple">
 <li>util-core: Add <cite>Throwables.unchecked</cite> to help Java users deal with checked
 exceptions. <code class="docutils literal"><span class="pre">RB_ID=811441</span></code></li>
-<li>util-stats: Can now get from a <cite>com.twitter.finagle.stats.StatsReceiver`</cite> to all &#8220;leaf&#8221;
-StatsReceivers that don&#8217;t delegate to another StatsReceiver with
+<li>util-stats: Can now get from a <cite>com.twitter.finagle.stats.StatsReceiver`</cite> to all “leaf”
+StatsReceivers that don’t delegate to another StatsReceiver with
 <cite>com.twitter.finagle.stats.DelegatingStatsReceiver.all</cite>.  <code class="docutils literal"><span class="pre">RB_ID=819519</span></code></li>
 </ul>
 </div>
@@ -1004,7 +1001,7 @@ users, but Java users will need to update their imports. <code class="docutils l
 <li>util-codec: Add a new encoder <cite>com.twitter.util.Base64UrlSafeStringEncoder</cite>
 which extends from <cite>com.twitter.util.Base64StringEncoder</cite>. Both the url-safe
 and non-url-safe encoders can decode all strings generated by either. <code class="docutils literal"><span class="pre">RB_ID=765189</span></code></li>
-<li>util-core: Remove unnecessary <cite>invalidate</cite> method from util-cache&#8217;s
+<li>util-core: Remove unnecessary <cite>invalidate</cite> method from util-cache’s
 <cite>com.twitter.cache.guava.LoadingFutureCache</cite>, and change the <cite>remove</cite> semantic
 to match the <cite>com.twitter.cache.FutureCache</cite> contract. <code class="docutils literal"><span class="pre">RB_ID=766988</span></code></li>
 <li>util-core: Remove protected <cite>Timer.monitor</cite> (overrides a monitor to use by a
@@ -1090,18 +1087,16 @@ Use <cite>Future.voided</cite> and <cite>Future$.Void</cite> instead. <code clas
 </div>
 <div class="section" id="id109">
 <h3>Runtime Behavior Changes<a class="headerlink" href="#id109" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: <cite>Promise.forwardInterruptsTo(other)</cite> is a no-op if the</dt>
-<dd><p class="first last">other future is fulfilled. <code class="docutils literal"><span class="pre">RB_ID=714420</span></code></p>
-</dd>
+<dd>other future is fulfilled. <code class="docutils literal"><span class="pre">RB_ID=714420</span></code></dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-events: Recording of events is disabled by default and can be updated</dt>
-<dd><p class="first last">at runtime via TwitterServer&#8217;s <cite>/admin/events</cite> page or
-<cite>/admin/events/{recordOn,recordOff}</cite>. <code class="docutils literal"><span class="pre">RB_ID=715712</span></code></p>
-</dd>
+<dd>at runtime via TwitterServer’s <cite>/admin/events</cite> page or
+<cite>/admin/events/{recordOn,recordOff}</cite>. <code class="docutils literal"><span class="pre">RB_ID=715712</span></code></dd>
 </dl>
 </li>
 </ul>
@@ -1126,69 +1121,59 @@ Use <cite>Future.voided</cite> and <cite>Future$.Void</cite> instead. <code clas
 </div>
 <div class="section" id="id114">
 <h3>Breaking API Changes<a class="headerlink" href="#id114" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: <cite>Future.willEqual()</cite> now returns <cite>Future[Boolean]</cite> instead of</dt>
-<dd><p class="first last"><cite>Promise[Boolean]</cite>.</p>
-</dd>
+<dd><cite>Promise[Boolean]</cite>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-core: rename VarSource to ActivitySource. remove</dt>
-<dd><p class="first last">com.twitter.io.exp.VarSource.Result, return Activity[T]
+<dd>com.twitter.io.exp.VarSource.Result, return Activity[T]
 instead of Var[VarSource.Result[T]]. Remove FailoverVarSource in
-favor of ActivitySource.orElse.</p>
-</dd>
+favor of ActivitySource.orElse.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-core: <cite>TimeFormat</cite> now throws IllegalArgumentException if the pattern</dt>
-<dd><p class="first last">uses the week year (&#8216;Y&#8217;) without the week number (&#8216;w&#8217;)</p>
-</dd>
+<dd>uses the week year (‘Y’) without the week number (‘w’)</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-core: <cite>Spool.++</cite> used to force its argument, but now it is evaluated</dt>
-<dd><p class="first last">only if <cite>this</cite> Spool is empty. To revert to existing behavior,
-simply force the argument before passing it to ++.</p>
-</dd>
+<dd>only if <cite>this</cite> Spool is empty. To revert to existing behavior,
+simply force the argument before passing it to ++.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-core: <cite>Reader.writable()</cite> returns a new type, <cite>Reader.Writable</cite>, which</dt>
-<dd><p class="first last">combines <cite>Reader</cite>, <cite>Writer</cite> and <cite>Closable</cite>.</p>
-</dd>
+<dd>combines <cite>Reader</cite>, <cite>Writer</cite> and <cite>Closable</cite>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-core: <cite>Reader.concat</cite> and <cite>Reader.copyMany</cite> now take an AsyncStream</dt>
-<dd><p class="first last">argument instead of Spool.</p>
-</dd>
+<dd>argument instead of Spool.</dd>
 </dl>
 </li>
 </ul>
 </div>
 <div class="section" id="id115">
 <h3>Runtime Behavior Changes<a class="headerlink" href="#id115" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: Futures still rethrow on fatals, but now also Monitor.handle on</dt>
-<dd><p class="first last">them.</p>
-</dd>
+<dd>them.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>util-core: <cite>Future.onFailure</cite> now only applies a <cite>PartialFunction</cite> if</dt>
-<dd><p class="first last"><cite>PartialFunction.isDefinedAt</cite> returns true.</p>
-</dd>
+<dd><cite>PartialFunction.isDefinedAt</cite> returns true.</dd>
 </dl>
 </li>
-<li><p class="first">util-core: <cite>AsyncSemaphore</cite> now requires that <cite>initialPermits</cite> be positive.</p>
-</li>
+<li>util-core: <cite>AsyncSemaphore</cite> now requires that <cite>initialPermits</cite> be positive.</li>
 <li><dl class="first docutils">
 <dt>util-core: The <cite>Reader</cite> and <cite>Writer</cite> from <cite>Reader.Writable.close()</cite> are now</dt>
-<dd><p class="first last">synchronized on <cite>close</cite>.</p>
-</dd>
+<dd>synchronized on <cite>close</cite>.</dd>
 </dl>
 </li>
 </ul>
@@ -1198,31 +1183,27 @@ simply force the argument before passing it to ++.</p>
 <h2>6.23.0 2014-12-12<a class="headerlink" href="#id116" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id117">
 <h3>New Features<a class="headerlink" href="#id117" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: Add method .flushBatch() to batched future returned by Future.batched()</dt>
-<dd><p class="first last">that immediately initiates processing of all remaining queued requests</p>
-</dd>
+<dd>that immediately initiates processing of all remaining queued requests</dd>
 </dl>
 </li>
-<li><p class="first">util-core: Add Future.collect() method that collects over Map&#8217;s values</p>
-</li>
+<li>util-core: Add Future.collect() method that collects over Map’s values</li>
 <li><dl class="first docutils">
 <dt>util-stats: Create a new module, <cite>util-stats</cite> to move <cite>finagle-core</cite></dt>
-<dd><p class="first last">StatsReceivers to.  They retain the <cite>com.twitter.finagle</cite>
-namespace to ease the transition.</p>
-</dd>
+<dd>StatsReceivers to.  They retain the <cite>com.twitter.finagle</cite>
+namespace to ease the transition.</dd>
 </dl>
 </li>
 </ul>
 <p>Deprecation:</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>util-stats: Deprecate <cite>com.twitter.finagle.stats.StatsReceiver#time{,TimeFuture}</cite>.</dt>
-<dd><p class="first last">Instead, please use the <cite>com.twitter.finagle.stats.Stat</cite> helpers
+<dd>Instead, please use the <cite>com.twitter.finagle.stats.Stat</cite> helpers
 from scala, and the <cite>com.twitter.finagle.stats.JStats</cite> helpers
-from java.</p>
-</dd>
+from java.</dd>
 </dl>
 </li>
 </ul>
@@ -1238,17 +1219,14 @@ from java.</p>
 </div>
 <div class="section" id="java-compatibility">
 <h3>Java Compatibility<a class="headerlink" href="#java-compatibility" title="Permalink to this headline">¶</a></h3>
-<ul>
-<li><p class="first">util-app: Flaggable is now an abstract class for Java compatibility</p>
-</li>
+<ul class="simple">
+<li>util-app: Flaggable is now an abstract class for Java compatibility</li>
 <li><dl class="first docutils">
 <dt>util-core: Make Futures an API entry point for Java users</dt>
-<dd><p class="first last">(even for methods that take Scala collections)</p>
-</dd>
+<dd>(even for methods that take Scala collections)</dd>
 </dl>
 </li>
-<li><p class="first">util-core: Add compilation tests to track Java compatibility of new API</p>
-</li>
+<li>util-core: Add compilation tests to track Java compatibility of new API</li>
 </ul>
 </div>
 </div>
@@ -1256,29 +1234,26 @@ from java.</p>
 <h2>6.22.2  2014-10-29<a class="headerlink" href="#id119" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id120">
 <h3>Breaking API Changes<a class="headerlink" href="#id120" title="Permalink to this headline">¶</a></h3>
-<ul>
-<li><p class="first">util-core: Removed <cite>Sieve</cite> example.</p>
-</li>
+<ul class="simple">
+<li>util-core: Removed <cite>Sieve</cite> example.</li>
 <li><dl class="first docutils">
 <dt>util-core: Introduce new constructors and extractors for Buf types to</dt>
-<dd><p class="first last">support more efficient, correct uses.  Buf types now come with
-Copied and Direct management interfaces &#8211; Direct tries to
-provide direct access to the Buf&#8217;s backing byte array, while
-Copied ensures that the caller cannot accidentally mutate a Buf&#8217;s
+<dd>support more efficient, correct uses.  Buf types now come with
+Copied and Direct management interfaces – Direct tries to
+provide direct access to the Buf’s backing byte array, while
+Copied ensures that the caller cannot accidentally mutate a Buf’s
 data. Additionally, helpers to support Buf-type coersion have
-been added.</p>
-</dd>
+been added.</dd>
 </dl>
 </li>
 </ul>
 </div>
 <div class="section" id="id121">
 <h3>New Features<a class="headerlink" href="#id121" title="Permalink to this headline">¶</a></h3>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>util-app: add an option so that we can let apps fail fast if reading</dt>
-<dd><p class="first last">argument before args are parsed.</p>
-</dd>
+<dd>argument before args are parsed.</dd>
 </dl>
 </li>
 </ul>
@@ -1347,7 +1322,7 @@ been added.</p>
 <h3>Runtime Behavior Changes<a class="headerlink" href="#id127" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">util-logging:
-* Logging&#8217;s default handler is now async by default via <cite>com.twitter.logging.QueueingHandler</cite>.
+* Logging’s default handler is now async by default via <cite>com.twitter.logging.QueueingHandler</cite>.
 * Two Flags allowing for customization:</p>
 <blockquote>
 <div><ul class="simple">
@@ -1411,7 +1386,7 @@ been added.</p>
 <div class="section" id="id134">
 <h3>Breaking API Changes<a class="headerlink" href="#id134" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>util-core: Deprecate <cite>RingBuffer</cite> in favor of Guava&#8217;s <cite>com.google.common.collect.EvictingQueue</cite>.</li>
+<li>util-core: Deprecate <cite>RingBuffer</cite> in favor of Guava’s <cite>com.google.common.collect.EvictingQueue</cite>.</li>
 </ul>
 </div>
 </div>
@@ -1478,13 +1453,13 @@ been added.</p>
 <div class="section" id="id141">
 <h2>6.18.0  2014-06-23<a class="headerlink" href="#id141" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>util-app: Don&#8217;t kill the JVM on flag-parsing failure</li>
+<li>util-app: Don’t kill the JVM on flag-parsing failure</li>
 <li>util-app: Improve the Scaladocs for com.twitter.app.Flag and friends</li>
 <li>util-core: Add U(32|64)(BE|LE) to Buf</li>
 <li>util-core: Add com.twitter.util.NilStopwatch</li>
 <li>util-core: Add src/main/java dependency on src/main/scala</li>
 <li>util-core: Catch InterruptedException in Closable collector thread</li>
-<li>util-core: Fix MockTimer#schedule(Duration)(=&gt; Unit)&#8217;s cancel</li>
+<li>util-core: Fix MockTimer#schedule(Duration)(=&gt; Unit)’s cancel</li>
 <li>util-core: Fix update-after-interrupt race condition in AsyncSemaphore</li>
 <li>util-core: Signal the deprecation of com.twitter.util.Bijection.</li>
 <li>util-logging: Add additional handlers to Logging trait</li>
@@ -1558,7 +1533,7 @@ been added.</p>
 <li>util-app: Implement application-level shutdown handling in App.</li>
 <li>util-app: Remove hardcoded ports in FlagTest</li>
 <li>util-app: sort global flags in usage</li>
-<li>util-core/Offer: Don&#8217;t do indexed lookups in prepare()</li>
+<li>util-core/Offer: Don’t do indexed lookups in prepare()</li>
 <li>util-core: Add support for interrupting Future.sleep</li>
 <li>util-core: Check whether JVM supports thread measurement before measuring</li>
 <li>util-core: Create daemon threads in all stock <cite>com.twitter.util.FuturePool</cite>s</li>
@@ -1580,9 +1555,9 @@ been added.</p>
 <h2>6.12.0  2014-02-14<a class="headerlink" href="#id150" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>LocalScheduler: improve concurrency by sampling less</li>
-<li>Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException&#8217;s.</li>
+<li>Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException’s.</li>
 <li>re-write Future.unit in terms of Future.Unit</li>
-<li>Revert &#8220;Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException&#8217;s.&#8221; (It&#8217;s breaking the build on JDK6 machines)</li>
+<li>Revert “Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException’s.” (It’s breaking the build on JDK6 machines)</li>
 <li>twitter-server: Report on deadlock conditions in admin/contentions</li>
 <li>Update 3rdpaty zookeeper client</li>
 <li>Update version of com.twitter.common*</li>
@@ -1678,14 +1653,14 @@ been added.</p>
 <ul class="simple">
 <li>util-app: Properly propagate underlying exceptions.</li>
 <li>util-core: Add a <cite>Var.value</cite> function. (835a043)</li>
-<li>util-core: Augment Var and Local in support of Finagle&#8217;s request context feature. (b2d689a)</li>
+<li>util-core: Augment Var and Local in support of Finagle’s request context feature. (b2d689a)</li>
 <li>util-core: Avoid instantiating TimeoutException until it is needed (CSL-592)</li>
 <li>util-core: Make Future.never a val instead of a def</li>
 <li>util-core: Move Var to core util, add Var.unapply</li>
 <li>util-core: Testing function Time.withTimeAt now uses Locals.</li>
 <li>util-core: Throw AlreadyNackd on nack-ack.</li>
 <li>util-core: raiseWithin, alternative to within, that raise interrupt.</li>
-<li>util-jvm: Add a GlobalFlag for a machine&#8217;s number of logical cores. (dc20fbf1)</li>
+<li>util-jvm: Add a GlobalFlag for a machine’s number of logical cores. (dc20fbf1)</li>
 <li>util-logging: Add a NullLogger object.</li>
 <li>util-logging: makes Logging more flexible for easy extension of twitter-server</li>
 <li>util-zk: Add ShardCoordinator and ZkAsyncSemaphore classes. (c57b2a9)</li>
@@ -1696,10 +1671,10 @@ been added.</p>
 <ul class="simple">
 <li>util-hashing: removed dependency on util-core</li>
 <li>util-core: Introduce swappable schedulers, ThreadPool scheduler.</li>
-<li>util-core: Scheduler - &#8220;productivity&#8221; stats, dispatches.</li>
+<li>util-core: Scheduler - “productivity” stats, dispatches.</li>
 <li>util-core: Add Future.when</li>
 <li>util-core: introduced Var - composable variables</li>
-<li>util-core: adding short note on Future &#8216;within&#8217;</li>
+<li>util-core: adding short note on Future ‘within’</li>
 </ul>
 </div>
 <div class="section" id="id160">
@@ -1718,7 +1693,7 @@ been added.</p>
 <h2>6.3.8  2013-07-22<a class="headerlink" href="#id161" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Add Future.True and Future.False constants</li>
-<li>util-app: Treat &#8216;&#8211;&#8217; as end of flags indicator</li>
+<li>util-app: Treat ‘–’ as end of flags indicator</li>
 <li>util-app: Add support for long flags</li>
 </ul>
 </div>
@@ -1782,7 +1757,7 @@ been added.</p>
 <li>util-core: Spool error propagation</li>
 <li>util-core: Use futures for schema detection to avoid blocking finagle threads</li>
 <li>util-refect: test: use sys.error</li>
-<li>util-zk: ZNode(&#8220;/path&#8221;).parentPath should be &#8220;/&#8221;, not an empty string</li>
+<li>util-zk: ZNode(“/path”).parentPath should be “/”, not an empty string</li>
 </ul>
 </div>
 <div class="section" id="id168">
@@ -1832,10 +1807,10 @@ been added.</p>
 <li>Flag: add Time type</li>
 <li>Spool: encode exceptions</li>
 <li>Closable: use Time.Bottom for close()</li>
-<li>Future.within: bypass timer entirely if we&#8217;re passed Duration.Top</li>
+<li>Future.within: bypass timer entirely if we’re passed Duration.Top</li>
 <li>Awaitable: introduce Await</li>
 <li>util-jvm: GC predictor</li>
-<li>io.Files: don&#8217;t overallocate buffers</li>
+<li>io.Files: don’t overallocate buffers</li>
 <li>Future: use .nonEmpty instead of != Nil</li>
 </ul>
 </div>
@@ -1922,7 +1897,7 @@ exceptions</li>
 <h2>5.3.10  2012-09-06<a class="headerlink" href="#id182" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Improve ZNode.name and ZNode.parentPath to not use Regexes</li>
-<li>Fix ScheduledThreadPoolTimer.schedule(...).cancel()</li>
+<li>Fix ScheduledThreadPoolTimer.schedule(…).cancel()</li>
 <li>Upgrade guava dependency to v13</li>
 <li>Add a ZkClient Connector that dispatches requests across several zookeeper connections</li>
 <li>Support prefix-less sequential nodes in util-zk</li>
@@ -1949,7 +1924,7 @@ exceptions</li>
 <div class="section" id="id185">
 <h2>5.3.0  2012-06-25<a class="headerlink" href="#id185" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>util-jvm: start timer thread in &#8216;daemon&#8217; mode</li>
+<li>util-jvm: start timer thread in ‘daemon’ mode</li>
 </ul>
 </div>
 <div class="section" id="id186">
@@ -1985,7 +1960,7 @@ exception handling, misc fixes</li>
 <li>propagate cancellation exception when Timer.doAt future is cancelled</li>
 <li>KetamaDistributor optionally preserves a floating point truncation</li>
 <li>Timer uses daemon thread by default</li>
-<li>Future.monitor: release reference to promise when it&#8217;s satisfied</li>
+<li>Future.monitor: release reference to promise when it’s satisfied</li>
 <li>Future: misc Java compatibility fixes</li>
 <li>Eval.scala: Allow &#64;deprecated</li>
 <li>util-logging: Add LoggerFactory</li>
@@ -2000,7 +1975,7 @@ exception handling, misc fixes</li>
 <h2>3.0.0  2012-03-14<a class="headerlink" href="#id190" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>AsyncSemaphore: allow parameterizing maximum queue size</li>
-<li>Logging: scribe handlers may now be named &#8220;scribe&#8221;</li>
+<li>Logging: scribe handlers may now be named “scribe”</li>
 <li>Logging: Always make sure Level is initialized before being
 able to refer to Logger.</li>
 <li>Offer/Broker: simpler, more flexible implementation</li>
@@ -2019,7 +1994,7 @@ able to refer to Logger.</li>
 <ul class="simple">
 <li>NetUtil: Add inetAddressToInt, isInetAddressInBlock, isInetAddressInBlocks</li>
 <li>Future tracer: fix bug where double proxied exceptions fail</li>
-<li>add &#8220;ExceptionalFunction0&#8221; for easier use from Java</li>
+<li>add “ExceptionalFunction0” for easier use from Java</li>
 <li>Locals: many optimizations to reduce allocations caused by saving
 and restoring contexts</li>
 </ul>
@@ -2064,8 +2039,8 @@ memoization</li>
 cancelled would not clean up after itself</li>
 <li>Function: Add ExceptionalFunction type to allow Java to throw
 checked exceptions.</li>
-<li>Futures: trace dispatch &#8220;stack&#8221;, supplying it as a stack trace for
-exceptions, implement &#8220;transform&#8221;, &#8220;transformedBy&#8221; to allow for a
+<li>Futures: trace dispatch “stack”, supplying it as a stack trace for
+exceptions, implement “transform”, “transformedBy” to allow for a
 more imperative control flow when used from Java.</li>
 <li>Monitors: composable widgets for handling exceptions</li>
 </ul>
@@ -2107,7 +2082,7 @@ unless you have directly used the Specified class.</li>
 <div class="section" id="id202">
 <h2>1.11.9  2011-10-14<a class="headerlink" href="#id202" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>ivar/future: provide &#8220;TCE&#8221;, per-thread scheduling, and
+<li>ivar/future: provide “TCE”, per-thread scheduling, and
 promise squashing</li>
 <li>logger: restore original logging level after modifying them</li>
 <li>u64: fix</li>
@@ -2128,12 +2103,12 @@ and return as a Future.exception</li>
 <div class="section" id="id204">
 <h2>1.11.7  2011-09-28<a class="headerlink" href="#id204" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>ivar/future: provide &#8220;TCE&#8221;, per-thread scheduling, and
+<li>ivar/future: provide “TCE”, per-thread scheduling, and
 promise squashing</li>
 <li>util-core: add bijection</li>
 <li>util: Time.now is now measured at nanosecond granularity
 instead of millisecond.</li>
-<li>futurepool: don&#8217;t attempt to perform work for Futures
+<li>futurepool: don’t attempt to perform work for Futures
 that are cancelled</li>
 </ul>
 </div>
@@ -2152,7 +2127,7 @@ integer overflow in ObjectOrder</li>
 <li>offer/broker: fixes, simplifications - gets rid of thunked
 values on sends.  removing the infrastructure required to
 support this led to significant simplification.  lock the
-correct objects for broker events.  don&#8217;t try to resolve
+correct objects for broker events.  don’t try to resolve
 identical objects in lock order.</li>
 <li>offer: java support</li>
 <li>hashing: actually return 64bit values from the 64bit hash
