@@ -10,7 +10,7 @@ junit_tests(
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",
-        "util/util-app/src/main/scala/com/twitter/app",
+        "util/util-app/src/main/scala",
         "util/util-core/src/main/scala/com/twitter/util",
         "util/util-jvm/src/main/scala/com/twitter/jvm",
         "util/util-logging/src/main/scala",
