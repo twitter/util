@@ -1,6 +1,6 @@
 scala_library(
     # This target exists only to act as an aggregator jar.
-    sources = ["PantsWorkaround.scala"],
+    sources = ["PantsWorkaroundCore.scala"],
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-core",
