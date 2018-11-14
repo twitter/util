@@ -10,6 +10,11 @@ class AsyncQueueBenchmark extends StdBenchAnnotations {
   private[this] val q = new AsyncQueue[String]
 
   @Benchmark
+  def allocation(): AsyncQueue[String] = {
+    new AsyncQueue[String]
+  }
+
+  @Benchmark
   def offersThenPolls: Future[String] = {
     q.offer("hello")
     q.offer("hello")

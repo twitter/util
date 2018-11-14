@@ -1,15 +1,22 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Promise, Try, Return, Throw}
-import java.util.{Queue => JQueue, ArrayDeque}
+import com.twitter.util.{Future, Promise, Return, Throw, Try}
+import java.util.ArrayDeque
 import scala.collection.immutable.Queue
 
 object AsyncQueue {
 
   private sealed trait State
-  private case object Idle extends State
-  private case object Offering extends State
+
+  // In the `OfferingOrIdle` state we can have 0 or more chunks of data ready for
+  // consumption. If we have 0 data chunks and the queue is `poll`ed we can transition
+  // to the `Polling` state.
+  private case object OfferingOrIdle extends State
+
+  // If we're in a `Polling` state we must have at least one polling `Promise`.
   private case object Polling extends State
+
+  // In the `Excepting` state the queue will only contain offers.
   private case class Excepting(exc: Throwable) extends State
 
   /** Indicates there is no max capacity */
@@ -33,12 +40,10 @@ class AsyncQueue[T](maxPendingOffers: Int) {
 
   require(maxPendingOffers > 0)
 
-  // synchronize all access to state, offers, and pollers
-  private[this] var state: State = Idle
+  // synchronize all access to `state` and `queue`
+  private[this] var state: State = OfferingOrIdle
 
-  // these aren't part of the state machine for performance
-  private[this] val offers: JQueue[T] = new ArrayDeque[T]
-  private[this] val pollers: JQueue[Promise[T]] = new ArrayDeque[Promise[T]]
+  private[this] val queue = new ArrayDeque[Any]
 
   /**
    * An asynchronous, unbounded, FIFO queue. In addition to providing [[offer]]
@@ -51,7 +56,10 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    * Returns the current number of pending elements.
    */
   final def size: Int = synchronized {
-    offers.size
+    state match {
+      case OfferingOrIdle | Excepting(_) => queue.size
+      case Polling => 0 // If we're `Polling` we're empty
+    }
   }
 
   /**
@@ -60,28 +68,26 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    */
   final def poll(): Future[T] = synchronized {
     state match {
-      case Idle =>
+      case OfferingOrIdle if queue.isEmpty =>
         val p = new Promise[T]
         state = Polling
-        pollers.offer(p)
+        queue.offer(p)
         p
+
+      case OfferingOrIdle =>
+        val elem = queue.poll()
+        Future.value(elem.asInstanceOf[T])
 
       case Polling =>
         val p = new Promise[T]
-        pollers.offer(p)
+        queue.offer(p)
         p
 
-      case Offering =>
-        val elem = offers.poll()
-        if (offers.isEmpty)
-          state = Idle
-        Future.value(elem)
-
-      case Excepting(t) if offers.isEmpty =>
+      case Excepting(t) if queue.isEmpty =>
         Future.exception(t)
 
       case Excepting(_) =>
-        Future.value(offers.poll())
+        Future.value(queue.poll().asInstanceOf[T])
     }
   }
 
@@ -94,22 +100,17 @@ class AsyncQueue[T](maxPendingOffers: Int) {
     var waiter: Promise[T] = null
     val result = synchronized {
       state match {
-        case Idle =>
-          state = Offering
-          offers.offer(elem)
-          true
-
-        case Offering if offers.size >= maxPendingOffers =>
+        case OfferingOrIdle if queue.size >= maxPendingOffers =>
           false
 
-        case Offering =>
-          offers.offer(elem)
+        case OfferingOrIdle =>
+          queue.offer(elem)
           true
 
         case Polling =>
-          waiter = pollers.poll()
-          if (pollers.isEmpty)
-            state = Idle
+          waiter = queue.poll().asInstanceOf[Promise[T]]
+          if (queue.isEmpty)
+            state = OfferingOrIdle
           true
 
         case Excepting(_) =>
@@ -132,22 +133,24 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    */
   final def drain(): Try[Queue[T]] = synchronized {
     state match {
-      case Offering =>
-        state = Idle
+      case OfferingOrIdle =>
         var q = Queue.empty[T]
-        while (!offers.isEmpty) {
-          q :+= offers.poll()
+        while (!queue.isEmpty) {
+          q :+= queue.poll().asInstanceOf[T]
         }
         Return(q)
-      case Excepting(e) if !offers.isEmpty =>
+
+      case Excepting(_) if !queue.isEmpty =>
         var q = Queue.empty[T]
-        while (!offers.isEmpty) {
-          q :+= offers.poll()
+        while (!queue.isEmpty) {
+          q :+= queue.poll().asInstanceOf[T]
         }
         Return(q)
+
       case Excepting(e) =>
         Throw(e)
-      case _ =>
+
+      case Polling =>
         Return(Queue.empty)
     }
   }
@@ -166,37 +169,39 @@ class AsyncQueue[T](maxPendingOffers: Int) {
    * No new elements are admitted to the queue after it has been failed.
    */
   def fail(exc: Throwable, discard: Boolean): Unit = {
-    var q: Queue[Promise[T]] = null
-    synchronized {
+    // CAUTION: `q` may be `null`
+    val q: Array[AnyRef] = synchronized {
       state match {
-        case Idle =>
-          state = Excepting(exc)
-
         case Polling =>
           state = Excepting(exc)
-          q = Queue.empty[Promise[T]]
-          while (!pollers.isEmpty) {
-            val waiter = pollers.poll()
-            q :+= waiter
+          if (queue.isEmpty) null
+          else {
+            val data = queue.toArray
+            queue.clear()
+            data
           }
 
-        case Offering =>
+        case OfferingOrIdle =>
           if (discard)
-            offers.clear()
+            queue.clear()
           state = Excepting(exc)
+          null
 
         case Excepting(_) => // Just take the first one.
+          null
       }
     }
     // we do this to avoid satisfaction while synchronized, which could lead to
     // lock contention if closures on the promise are slow or there are a lot of
     // them
     if (q != null) {
-      q.foreach { p =>
-        p.setException(exc)
+      var i = 0
+      while (i < q.length) {
+        q(i).asInstanceOf[Promise[_]].setException(exc)
+        i += 1
       }
     }
   }
 
-  override def toString = "AsyncQueue<%s>".format(synchronized(state))
+  override def toString = s"AsyncQueue<${synchronized(state)}>"
 }

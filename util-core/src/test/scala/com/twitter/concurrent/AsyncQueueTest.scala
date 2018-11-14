@@ -1,13 +1,13 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Await, Return, Throw}
-import org.junit.runner.RunWith
+import com.twitter.util.{Await, Awaitable, Duration, Return, Throw}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import scala.collection.immutable.Queue
 
-@RunWith(classOf[JUnitRunner])
 class AsyncQueueTest extends FunSuite {
+
+  private def await[T](t: Awaitable[T]): T = Await.result(t, Duration.fromSeconds(5))
+
   test("queue pollers") {
     val q = new AsyncQueue[Int]
 
@@ -132,7 +132,7 @@ class AsyncQueueTest extends FunSuite {
     q.offer(2)
     q.offer(3)
 
-    assert(1 == Await.result(q.poll()))
+    assert(1 == await(q.poll()))
     assert(Return(Queue(2, 3)) == q.drain())
     assert(!q.poll().isDefined)
 
@@ -161,4 +161,19 @@ class AsyncQueueTest extends FunSuite {
     assert(0 == q.size)
   }
 
+  test("size") {
+    val q = new AsyncQueue[Int]()
+    assert(q.size == 0)
+    val f1 = q.poll()
+    assert(q.size == 0)
+    q.offer(0)
+    assert(await(f1) == 0)
+    assert(q.size == 0)
+    q.offer(1)
+    assert(q.size == 1)
+    q.fail(new Exception(), false)
+    assert(q.size == 1)
+    assert(await(q.poll()) == 1)
+    assert(q.size == 0)
+  }
 }
