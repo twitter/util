@@ -1,5 +1,4 @@
-// Temporary workaround for https://github.com/pantsbuild/pants/pull/6673
-// will be removed following the next pants release.
+// workaround for https://github.com/pantsbuild/pants/issues/6678
 private final class PantsWorkaround {
-  throw new IllegalStateException("workaround for https://github.com/pantsbuild/pants/pull/6673")
+  throw new IllegalStateException("workaround for https://github.com/pantsbuild/pants/issues/6678")
 }
