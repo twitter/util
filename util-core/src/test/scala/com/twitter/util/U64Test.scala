@@ -1,12 +1,14 @@
 package com.twitter.util
 
 import scala.util.Random
-
 import org.junit.runner.RunWith
+import org.scalacheck.Gen
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+
 @RunWith(classOf[JUnitRunner])
-class U64Test extends WordSpec {
+class U64Test extends WordSpec with GeneratorDrivenPropertyChecks {
   import U64._
 
   "comparable" in {
@@ -150,6 +152,17 @@ class U64Test extends WordSpec {
     "not parse empty string" in {
       // this is what Long.parseLong("") does
       intercept[NumberFormatException] { "".toU64Long }
+    }
+
+    "Java8 migrations" in {
+      forAll { l: Long =>
+        assert(new RichU64Long(l).toU64HexString == "%016x".format(l))
+      }
+
+      forAll { l: Long =>
+        val s = "%016x".format(l)
+        assert(new RichU64String(s).toU64Long == java.lang.Long.parseUnsignedLong(s, 16))
+      }
     }
   }
 }
