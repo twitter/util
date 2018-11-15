@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Bug Fixes
+~~~~~~~~~
+
+* util-core: Fixed a bug where tail would sometimes return Some empty AsyncStream instead of None.
+  ``PHAB_ID=D241513``
+
 18.11.0
 -------
 

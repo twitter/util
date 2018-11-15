@@ -55,7 +55,7 @@ sealed abstract class AsyncStream[+A] {
    */
   def tail: Future[Option[AsyncStream[A]]] = this match {
     case Empty | FromFuture(_) => Future.None
-    case Cons(_, more) => Future.value(Some(more()))
+    case Cons(_, more) => extract(more())
     case Embed(fas) => fas.flatMap(_.tail)
   }
 
@@ -676,6 +676,13 @@ object AsyncStream {
    */
   private[concurrent] def embed[A](fas: Future[AsyncStream[A]]): AsyncStream[A] =
     Embed(fas)
+
+  private def extract[A](as: AsyncStream[A]): Future[Option[AsyncStream[A]]] =
+    as match {
+      case Empty => Future.None
+      case Embed(fas) => fas.flatMap(extract)
+      case _ => Future.value(Some(as))
+    }
 
   /**
    * Java friendly [[AsyncStream.flatten]].
