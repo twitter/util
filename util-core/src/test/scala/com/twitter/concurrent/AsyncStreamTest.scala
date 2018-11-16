@@ -619,10 +619,15 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
           // Make sure that all of the finished items are now
           // available. (As a side-effect, this will force more work to
           // be done if concurrency was the limiting factor.)
-          val completed = toSeq(result.take(workFinished)).sorted
-          val expectedCompleted = items.take(expectedFinished).sorted
-          assert(completed == expectedCompleted)
+          val completed = toSeq(result.take(workFinished))
+          assert(completed.toSet.subsetOf(items.toSet))
       }
+    }
+
+    test(s"$impl: mapConcurrent tail laziness") {
+      val failAfter1 = 1 +:: undefined[AsyncStream[Int]]
+      val justOne = failAfter1.mapConcurrent(1)(Future.value).take(1)
+      assert(await(justOne.toSeq()) == Seq(1))
     }
 
     test(s"$impl: sum") {

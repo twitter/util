@@ -11,6 +11,14 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
   @Param(Array("10"))
   var size: Int = _
 
+  /** Implementation */
+  @Param(Array("cons", "embed"))
+  var impl: String = _
+
+  /** Concurrency Level */
+  @Param(Array("2"))
+  var concurrency: Int = _
+
   private[this] val timeout = 5.seconds
 
   private[this] var as: AsyncStream[Int] = _
@@ -25,7 +33,14 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
 
   @Setup(Level.Iteration)
   def setup(): Unit = {
-    as = AsyncStream.fromSeq(0.until(size))
+    as = impl match {
+      case "cons" =>
+        AsyncStream.fromSeq(0.until(size))
+      case "embed" =>
+        0.until(size).foldRight(AsyncStream.empty[Int]) { (i, tail) =>
+          AsyncStream.embed(Future.value(i +:: tail))
+        }
+    }
     longs = genLongStream(1000)
   }
 
@@ -52,7 +67,7 @@ class AsyncStreamBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def mapConcurrent(): Seq[Int] =
-    Await.result(as.mapConcurrent(2)(MapConcurrentFn).toSeq())
+    Await.result(as.mapConcurrent(concurrency)(MapConcurrentFn).toSeq())
 
   private[this] val FilterFn: Int => Boolean =
     x => x % 2 == 0

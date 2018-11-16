@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.util.{Future, Return, Throw}
+import com.twitter.util.{Future, Return, Throw, Promise}
 import scala.annotation.varargs
 import scala.collection.mutable
 
@@ -722,12 +722,85 @@ object AsyncStream {
   // Oneshot turns an AsyncStream into a resource, where each read depletes the
   // stream of that item. In other words, each item of the stream is observable
   // only once.
-  private class Oneshot[A](var as: AsyncStream[A]) {
-    def read(): Future[Option[A]] = synchronized {
-      val head = as.head
-      as = as.drop(1)
-      head
+  //
+  // more must be guarded by synchronization on this.
+  private final class Oneshot[A](var more: () => AsyncStream[A]) {
+    def read(): Future[Option[A]] = {
+      // References to readEmbed args for the Embed case.
+      var fas: Future[AsyncStream[A]] = null
+      var headp: Promise[Option[A]] = null
+      var tailp: Promise[() => AsyncStream[A]] = null
+
+      // Reference to head for the default case.
+      var headf: Future[Option[A]] = null
+
+      synchronized {
+        more() match {
+          case Embed(embedded) =>
+            // The Embed case is special because
+            //
+            //     val head = as.head
+            //     as = as.drop(1)
+            //
+            // reduces to a chain of maps, which can be very long, as many as the
+            // number of times read is called while waiting for the embedded
+            // AsyncStream.
+            //
+            //     val head = fas.map(_.drop(1)).map(_.drop(1))....flatMap(_.head)
+            //     as = Embed(fas.map(_.drop(1)).map(_.drop(1))...)
+            //
+            // In other words, for AsyncStreams with Embed tails, the naive
+            // implementation multiplies the work of each item by the concurrency
+            // level.
+            //
+            // The optimization here is straight forward: create a head and tail
+            // promise and that wait for the embedded AsyncStream. Subsequent
+            // calls to read will create new head and tail promises that wait on
+            // the previous tail promise.
+            fas = embedded
+            headp = new Promise[Option[A]]
+            tailp = new Promise[() => AsyncStream[A]]
+            more = () => AsyncStream.embed(tailp.map(_()))
+            headp
+
+          case as =>
+            headf = as.head
+            more = () => as.drop(1)
+        }
+      }
+
+      // Non-null fas implies Embed case.
+      if (fas != null) {
+        readEmbed(fas, headp, tailp)
+        headp
+      } else {
+        headf
+      }
     }
+
+    private[this] def readEmbed(
+      fas: Future[AsyncStream[A]],
+      headp: Promise[Option[A]],
+      tailp: Promise[() => AsyncStream[A]]
+    ): Unit =
+      fas.respond {
+        case Throw(e) =>
+          headp.setException(e)
+          tailp.setException(e)
+        case Return(v) => v match {
+          case Empty =>
+            headp.become(Future.None)
+            tailp.setValue(Oneshot.empty)
+          case FromFuture(fa) =>
+            headp.become(fa.map(Some(_)))
+            tailp.setValue(Oneshot.empty)
+          case Cons(fa, more2) =>
+            headp.become(fa.map(Some(_)))
+            tailp.setValue(more2)
+          case Embed(newFas) =>
+            readEmbed(newFas, headp, tailp)
+        }
+      }
 
     // Recover the AsyncStream interface. We don't return `as` because we want
     // to deplete the original stream with each read. With this we can create
@@ -740,8 +813,13 @@ object AsyncStream {
       }
   }
 
+  private object Oneshot {
+    val emptyVal: () => AsyncStream[Nothing] = () => AsyncStream.empty[Nothing]
+    def empty[A]: () => AsyncStream[A] = emptyVal.asInstanceOf[() => AsyncStream[A]]
+  }
+
   private def fanout[A](as: AsyncStream[A], n: Int): Seq[AsyncStream[A]] = {
-    val reader = new Oneshot(as)
+    val reader = new Oneshot(() => as)
     0.until(n).map(_ => reader.toAsyncStream)
   }
 }
