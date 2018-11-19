@@ -13,6 +13,13 @@ Bug Fixes
 * util-core: Fixed a bug where tail would sometimes return Some empty AsyncStream instead of None.
   ``PHAB_ID=D241513``
 
+=======
+
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Experimental `c.t.io.exp.MinThroughput` utilities were removed.  ``PHAB_ID=D240944``
+
 18.11.0
 -------
 
