@@ -40,12 +40,6 @@ object Future {
   /** A successfully satisfied constant `Future` of `false` */
   val False: Future[Boolean] = new ConstFuture(Return.False)
 
-  /**
-   * A failed `Future` analogous to `Predef.???`.
-   */
-  val ??? : Future[Nothing] =
-    Future.exception(new NotImplementedError("an implementation is missing"))
-
   private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
   private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied)
@@ -89,6 +83,12 @@ object Future {
   // Exception used to raise on Futures.
   private[this] val RaiseException = new Exception with NoStackTrace
   @inline private final def raiseException = RaiseException
+
+  /**
+   * A failed `Future` analogous to [[Predef.???]].
+   */
+  def ??? : Future[Nothing] =
+    Future.exception(new NotImplementedError("an implementation is missing"))
 
   /**
    * Creates a satisfied `Future` from a [[Try]].
