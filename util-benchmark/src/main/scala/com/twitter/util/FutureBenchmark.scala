@@ -3,6 +3,7 @@ package com.twitter.util
 import com.twitter.concurrent.Offer
 import org.openjdk.jmh.annotations._
 
+// ./sbt 'project util-benchmark' 'jmh:run FutureBenchmark'
 class FutureBenchmark extends StdBenchAnnotations {
 
   import FutureBenchmark._
@@ -196,6 +197,37 @@ class FutureBenchmark extends StdBenchAnnotations {
     // trigger the callbacks
     p.setValue(5)
     Await.result(p)
+  }
+
+  def buildChain(root: Promise[Int], state: RunqState): Future[Int] = {
+    var next: Future[Int] = root
+    var sum = 0
+    var i = 0
+
+    val fmap = { i: Int =>
+      Future.value(i + 1)
+    }
+    val respond = { _: Try[Int] =>
+      sum += 1
+    }
+
+    while (i < state.depth) {
+      next = i % 2 match {
+        case 0 => next.flatMap(fmap)
+        case 1 => next.respond(respond)
+      }
+      i += 1
+    }
+    next
+  }
+
+  @Benchmark
+  def runChain(state: RunqState): Int = {
+    val p = new Promise[Int]()
+    val f = buildChain(p, state)
+    // trigger the callbacks
+    p.setValue(5)
+    Await.result(f)
   }
 
   @Benchmark

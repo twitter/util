@@ -54,7 +54,7 @@ object Promise {
   /**
    * A persistent queue of continuations (i.e., `K`).
    */
-  private[util] sealed trait WaitQueue[-A] {
+  private[util] sealed abstract class WaitQueue[-A] {
     def first: K[A]
     def rest: WaitQueue[A]
 
@@ -124,9 +124,10 @@ object Promise {
    *       it will make "Linked" and "Waiting" state cases ambiguous. This, however,
    *       may change following the further performance improvements.
    */
-  private[util] trait K[-A] extends (Try[A] => Unit) with WaitQueue[A] {
+  private[util] abstract class K[-A] extends WaitQueue[A] {
     final def first: K[A] = this
     final def rest: WaitQueue[A] = WaitQueue.empty
+    def apply(r: Try[A]): Unit
   }
 
   /**
@@ -192,7 +193,7 @@ object Promise {
    * @param k the closure to invoke in the saved context, with the
    * provided result
    */
-  private class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A] {
+  private final class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A] {
     def apply(result: Try[A]): Unit = {
       val current = Local.save()
       if (current ne saved)
@@ -209,7 +210,7 @@ object Promise {
 
     protected[this] def k(r: Try[A]): Unit
 
-    def apply(result: Try[A]): Unit = {
+    final def apply(result: Try[A]): Unit = {
       val current = Local.save()
       if (current ne saved)
         Local.restore(saved)
