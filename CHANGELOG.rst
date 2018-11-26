@@ -7,18 +7,25 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Provide a way to listen for stream termination to `c.t.util.Reader`, `Reader#onClose`
+  which is satisfied when the stream is discarded or read until the end. ``PHAB_ID=D236311``
+
 Bug Fixes
 ~~~~~~~~~
 
 * util-core: Fixed a bug where tail would sometimes return Some empty AsyncStream instead of None.
   ``PHAB_ID=D241513``
 
-=======
-
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
 * util-core: Experimental `c.t.io.exp.MinThroughput` utilities were removed.  ``PHAB_ID=D240944``
+
+* util-core: Deleted `c.t.io.Reader.Null`, which was incompatible with `Reader#onClose` semantics.
+  `c.t.io.Reader#empty[Nothing]` is a drop-in replacement. ``PHAB_ID=D236311``
 
 18.11.0
 -------

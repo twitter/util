@@ -93,6 +93,15 @@ trait Reader[+A] {
    * @note Although unnecessary, it's always safe to discard a fully-consumed stream.
    */
   def discard(): Unit
+
+  /**
+   * A [[Future]] that resolves once this reader is closed.
+   *
+   * If the result is a failed future, this indicates that it was not closed either by reading
+   * until the end of the stream nor by discarding. This is useful for any extra resource cleanup
+   * that you must do once the stream is no longer being used.
+   */
+  def onClose: Future[StreamTermination]
 }
 
 /**
@@ -102,12 +111,18 @@ class ReaderDiscardedException extends Exception("Reader's consumer has discarde
 
 object Reader {
 
-  val Null: Reader[Nothing] = new Reader[Nothing] {
-    def read(): Future[Option[Nothing]] = Future.None
-    def discard(): Unit = ()
+  def empty[A]: Reader[A] = new Reader[A] {
+    private[this] val closep = Promise[StreamTermination]()
+    def read(): Future[Option[Nothing]] = {
+      closep.updateIfEmpty(StreamTermination.FullyRead.Return)
+      Future.None
+    }
+    def discard(): Unit = {
+      closep.updateIfEmpty(StreamTermination.Discarded.Return)
+      ()
+    }
+    def onClose: Future[StreamTermination] = closep
   }
-
-  def empty[A]: Reader[A] = Null.asInstanceOf[Reader[A]]
 
   // see Reader.chunked
   private final class ChunkedFramer(chunkSize: Int) extends (Buf => Seq[Buf]) {
@@ -162,6 +177,8 @@ object Reader {
       frames = Seq.empty
       r.discard()
     }
+
+    def onClose: Future[StreamTermination] = r.onClose
   }
 
   /**
@@ -287,6 +304,8 @@ object Reader {
         f.raise(new ReaderDiscardedException())
         target.discard()
       }
+
+      def onClose: Future[StreamTermination] = target.onClose
     }
   }
 

@@ -12,11 +12,6 @@ import static org.junit.Assert.assertNotNull;
 public class ReaderCompilationTest {
 
   @Test
-  public void testNull() {
-    assertNotNull(Readers.NULL);
-  }
-
-  @Test
   public void testNewBufReader() {
     Readers.newBufReader(Bufs.EMPTY, 1024);
   }

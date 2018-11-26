@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, FuturePool, Promise, Return, Throw, Time}
+import com.twitter.util.{Future, FuturePool, Promise, Return, Throw, Time, ConstFuture}
 import java.io.OutputStream
 import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
@@ -11,7 +11,7 @@ import scala.annotation.tailrec
 private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Writer[Buf] {
   import com.twitter.io.OutputStreamWriter._
 
-  private[this] val done = new Promise[Unit]
+  private[this] val done = new Promise[StreamTermination]
   private[this] val writeOp = new AtomicReference[Buf => Future[Unit]](doWrite)
 
   // Byte array reused on each write to avoid multiple allocations.
@@ -36,8 +36,12 @@ private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Wr
     buf => FuturePool.interruptibleUnboundedPool { drain(buf) }
 
   def write(buf: Buf): Future[Unit] =
-    if (done.isDefined) done
-    else
+    if (done.isDefined) {
+      done.transform {
+        case Return(StreamTermination.FullyRead) => Future.exception(CloseExc)
+        case t => (new ConstFuture(t)).unit
+      }
+    } else
       (
         done or writeOp.getAndSet(_ => Future.exception(WriteExc))(buf)
       ) transform {
@@ -54,12 +58,15 @@ private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Wr
   def fail(cause: Throwable): Unit =
     done.updateIfEmpty(Throw(cause))
 
-  def close(deadline: Time): Future[Unit] =
-    if (done.updateIfEmpty(Throw(CloseExc))) FuturePool.unboundedPool {
+  def close(deadline: Time): Future[Unit] = {
+    FuturePool.unboundedPool {
       out.close()
-    } else Future.Done
+      done.updateIfEmpty(StreamTermination.FullyRead.Return)
+    }
+    done.unit
+  }
 
-  def onClose: Future[Unit] = done
+  def onClose: Future[StreamTermination] = done
 }
 
 private object OutputStreamWriter {

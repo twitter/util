@@ -113,6 +113,7 @@ class ReaderTest
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = p
       def discard(): Unit = p.setException(new ReaderDiscardedException)
+      def onClose: Future[StreamTermination] = Future.never
     }
     val reader = Reader.concat(head +:: undefined)
     reader.discard()
@@ -124,6 +125,7 @@ class ReaderTest
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = p
       def discard(): Unit = p.setException(new ReaderDiscardedException)
+      def onClose: Future[StreamTermination] = Future.never
     }
     val reader = Reader.concat(head +:: undefined)
     assertReadWhileReading(reader)
@@ -134,6 +136,7 @@ class ReaderTest
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = p
       def discard(): Unit = p.setException(new ReaderDiscardedException)
+      def onClose: Future[StreamTermination] = Future.never
     }
     val reader = Reader.concat(head +:: undefined)
     assertFailed(reader, p)
@@ -144,6 +147,7 @@ class ReaderTest
       def read(): Future[Option[Buf]] = Future.exception(new Exception)
 
       def discard(): Unit = ()
+      def onClose: Future[StreamTermination] = Future.never
     }
     val p = new Promise[Unit]
 

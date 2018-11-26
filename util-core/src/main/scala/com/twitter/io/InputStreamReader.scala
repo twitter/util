@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import com.twitter.concurrent.AsyncMutex
-import com.twitter.util.{Closable, CloseAwaitably, Future, FuturePool, Time}
+import com.twitter.util.{Closable, CloseAwaitably, Future, FuturePool, Time, Promise, Throw}
 import java.io.InputStream
 
 /**
@@ -19,6 +19,7 @@ class InputStreamReader private[io] (
     with CloseAwaitably {
   private[this] val mutex = new AsyncMutex()
   @volatile private[this] var discarded = false
+  private[this] val closep = Promise[StreamTermination]()
 
   /**
    * Constructs an [[InputStreamReader]] out of a given `inputStream`. The resulting [[Reader]]
@@ -48,13 +49,18 @@ class InputStreamReader private[io] (
           val c = inputStream.read(buffer, 0, chunkSize)
           if (c == -1) {
             pool { inputStream.close() }
+            closep.updateIfEmpty(StreamTermination.FullyRead.Return)
             None
           } else {
             Some(Buf.ByteArray.Owned(buffer, 0, c))
           }
         } catch {
           case exc: InterruptedException =>
-            discard()
+            // we use updateIfEmpty because this is potentially racy, if someone
+            // called close and then we were interrupted.
+            if (closep.updateIfEmpty(Throw(exc))) {
+              discard()
+            }
             throw exc
         }
       }.ensure {
@@ -75,8 +81,12 @@ class InputStreamReader private[io] (
    */
   def close(deadline: Time): Future[Unit] = closeAwaitably {
     discarded = true
-    pool { inputStream.close() }
+    pool { inputStream.close() }.ensure {
+      closep.updateIfEmpty(StreamTermination.Discarded.Return)
+    }
   }
+
+  def onClose: Future[StreamTermination] = closep
 }
 
 object InputStreamReader {

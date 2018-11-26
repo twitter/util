@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, Promise, Return, Time}
+import com.twitter.util.{Future, Promise, Return, Time, Throw}
 
 /**
  * A synchronous in-memory pipe that connects [[Reader]] and [[Writer]] in the sense
@@ -91,7 +91,7 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
   private[this] var state: State[A] = State.Idle
 
   // satisfied when a `read` observes the EOF (after calling close())
-  private[this] val closep: Promise[Unit] = new Promise[Unit]()
+  private[this] val closep: Promise[StreamTermination] = new Promise[StreamTermination]()
 
   def read(): Future[Option[A]] = {
     val (waiter, result) = synchronized {
@@ -101,7 +101,7 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
 
         case State.Closing =>
           state = State.Closed
-          (closep, Future.None)
+          (null, Future.None)
 
         case State.Closed =>
           (null, Future.None)
@@ -122,10 +122,13 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
     }
 
     if (waiter != null) waiter.setDone()
+    if (result eq Future.None) closep.updateIfEmpty(StreamTermination.FullyRead.Return)
     result
   }
 
-  def discard(): Unit = fail(new ReaderDiscardedException())
+  def discard(): Unit = {
+    fail(new ReaderDiscardedException(), discard = true)
+  }
 
   def write(buf: A): Future[Unit] = {
     val (waiter, value, result) = synchronized {
@@ -160,7 +163,9 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
     result
   }
 
-  def fail(cause: Throwable): Unit = {
+  def fail(cause: Throwable): Unit = fail(cause, discard = false)
+
+  private[this] def fail(cause: Throwable, discard: Boolean): Unit = {
     val (closer, reader, writer) = synchronized {
       state match {
         case State.Closed | State.Failed(_) =>
@@ -181,7 +186,10 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
     if (reader != null) reader.setException(cause)
     else if (writer != null) writer.setException(cause)
 
-    if (closer != null) closer.setException(cause)
+    if (closer != null) {
+      if (discard) closer.updateIfEmpty(StreamTermination.Discarded.Return)
+      else closer.updateIfEmpty(Throw(cause))
+    }
   }
 
   def close(deadline: Time): Future[Unit] = {
@@ -204,17 +212,19 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
       }
     }
 
-    if (reader != null)
+    if (reader != null) {
       reader.update(Return.None)
-    else if (writer != null)
-      writer.setException(new IllegalStateException("close() while write is pending"))
+      closep.update(StreamTermination.FullyRead.Return)
+    } else if (writer != null) {
+      val exn = new IllegalStateException("close() while write is pending")
+      writer.setException(exn)
+      if (closer != null) closer.updateIfEmpty(Throw(exn))
+    }
 
-    if (closer != null) closer.setDone()
-
-    onClose
+    onClose.unit
   }
 
-  def onClose: Future[Unit] = closep
+  def onClose: Future[StreamTermination] = closep
 
   override def toString: String = synchronized(s"Pipe(state=$state)")
 }

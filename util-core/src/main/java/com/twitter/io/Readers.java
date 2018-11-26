@@ -17,11 +17,6 @@ public final class Readers {
 
   private Readers() { throw new IllegalStateException(); }
 
-  /**
-   * See {@code com.twitter.io.Reader.Null}.
-   */
-  public static final Reader<?> NULL = Reader$.MODULE$.Null();
-
   public static <A> Reader<A> newEmptyReader() {
     return Reader$.MODULE$.<A>empty();
   }
