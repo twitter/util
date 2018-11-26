@@ -11,7 +11,7 @@ class WriterTest extends FunSuite with Matchers {
 
   test("fromOutputStream - close") {
     val w = Writer.fromOutputStream(new ByteArrayOutputStream)
-    w.close()
+    await(w.close())
     intercept[IllegalStateException] { await(w.write(Buf.Empty)) }
   }
 
