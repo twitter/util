@@ -27,6 +27,8 @@ Breaking API Changes
 * util-core: Deleted `c.t.io.Reader.Null`, which was incompatible with `Reader#onClose` semantics.
   `c.t.io.Reader#empty[Nothing]` is a drop-in replacement. ``PHAB_ID=D236311``
 
+* util-core: Removed `c.t.util.U64` bits. Use `c.t.converters.u64._` instead.  ``PHAB_ID=D244723``
+
 18.11.0
 -------
 
