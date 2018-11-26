@@ -9,6 +9,7 @@ junit_tests(
     # At some point later, when we can enable `-Xlint:-warn-missing-interpolator`
     # for this target, we could try enabling this again.
     compiler_option_sets = {},
+    known_to_fail = "CSL-7306",
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",
