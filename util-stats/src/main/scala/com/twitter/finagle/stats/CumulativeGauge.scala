@@ -5,8 +5,8 @@ import com.twitter.util.lint._
 import java.lang.{Boolean => JBoolean}
 import java.util.concurrent.{ConcurrentHashMap, Executor, ForkJoinPool}
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.locks.StampedLock
 import java.util.function.{Function => JFunction}
+import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 
 /**
@@ -127,7 +127,7 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
   }
 
   /**
-   * The StatsReceiver implements these. They provide the cumulated
+   * The StatsReceiver implements these. They provide the cumulative
    * gauges.
    */
   protected[this] def registerGauge(verbosity: Verbosity, name: Seq[String], f: => Float): Unit
@@ -149,46 +149,36 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
       def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
         self.registerGauge(verbosity, key, getValue)
 
-        // we grab the read lock on increment and decrement, which can race each
-        // other.  we only grab the write lock when we tear down the cumulative
-        // gauge, so that we can ensure no more increments happen after death.
-        private[this] val lock = new StampedLock()
+        // The number of registers starts at `0` because every new gauge will cause a
+        // registration, even the one that created the `CumulativeGauge`. Because 0 is
+        // a valid value to increment from, we use `-1` to signal the closed state where
+        // no more registration activity is possible.
         private[this] val registers = new AtomicInteger(0)
 
-        // protected by `lock`
-        private[this] var dead = false
-
-        def register(): Boolean = {
-          val stamp = lock.readLock()
-          try {
-            if (dead) return false
-            registers.incrementAndGet()
-          } finally {
-            lock.unlockRead(stamp)
-          }
-          true
+        @tailrec def register(): Boolean = {
+          val c = registers.get
+          if (c == -1) false
+          else if (!registers.compareAndSet(c, c + 1)) register()
+          else true
         }
 
-        def deregister(): Unit = {
-          val readStamp = lock.readLock()
-          if (registers.decrementAndGet() == 0) {
-            // we could skip a cas by using tryConvertToWriteLock, but it makes
-            // the code much uglier.
-            lock.unlockRead(readStamp)
-            val writeStamp = lock.writeLock()
-
-            try {
-              if (!dead && registers.get == 0) {
-                dead = true
-                gauges.remove(key)
-                self.deregisterGauge(key)
-              }
-            } finally {
-              lock.unlockWrite(writeStamp)
+        @tailrec def deregister(): Unit = registers.get match {
+          case -1 => () // Already closed
+          case 1 =>
+            // Attempt to transition to the closed state
+            if (!registers.compareAndSet(1, -1)) {
+              deregister() // lost a race so try again
+            } else {
+              // Do the cleanup.
+              gauges.remove(key)
+              self.deregisterGauge(key)
             }
-          } else {
-            lock.unlockRead(readStamp)
-          }
+
+          case c =>
+            // Just a normal decrement
+            if (!registers.compareAndSet(c, c - 1)) {
+              deregister() // lost a race so try again
+            }
         }
       }
     }
@@ -215,5 +205,4 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
     if (cumulativeGauge == null) 0
     else cumulativeGauge.size
   }
-
 }
