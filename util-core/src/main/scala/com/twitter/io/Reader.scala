@@ -287,26 +287,25 @@ object Reader {
    */
   def concat[A](readers: AsyncStream[Reader[A]]): Reader[A] = {
     val target = new Pipe[A]
-    val f = copyMany(readers, target).respond {
+    val copied = copyMany(readers, target).respond {
       case Throw(exc) => target.fail(exc)
       case _ => target.close()
     }
-    new Reader[A] {
-      def read(): Future[Option[A]] = target.read()
-      def discard(): Unit = {
+
+    target.onClose.respond {
+      case Return(StreamTermination.Discarded) =>
         // We have to do this so that when the the target is discarded we can
         // interrupt the read operation. Consider the following:
         //
         //     r.read(..) { case Some(b) => target.write(b) }
         //
-        // The computation r.read(..) will be interupted because we set an
+        // The computation r.read(..) will be interrupted because we set an
         // interrupt handler in Reader.copy to discard `r`.
-        f.raise(new ReaderDiscardedException())
-        target.discard()
-      }
-
-      def onClose: Future[StreamTermination] = target.onClose
+        copied.raise(new ReaderDiscardedException())
+      case _ => ()
     }
+
+    target
   }
 
   /**
