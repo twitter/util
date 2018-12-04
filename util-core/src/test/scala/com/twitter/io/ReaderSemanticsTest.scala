@@ -13,20 +13,18 @@ abstract class ReaderSemanticsTest[A] extends FunSuite {
 
   def loopAndCheck(reader: Reader[A], onClose: Future[StreamTermination]): Future[Unit] = {
     reader.read().flatMap {
-      case t @ Some(_) =>
+      case Some(_) =>
         assert(!onClose.isDefined)
         assert(!reader.onClose.isDefined)
         loopAndCheck(reader, onClose)
-      case t @ None =>
-        assert(onClose.poll == Some(StreamTermination.FullyRead.Return))
+      case None =>
         assert(onClose.poll == Some(StreamTermination.FullyRead.Return))
         Future.Done
     }
   }
 
-  def await(f: Future[_]): Unit = {
+  protected def await[T](f: Future[T]): T = {
     Await.result(f, 5.seconds)
-    ()
   }
 
   test("When you read a reader until the end, onClose will be satisfied") {
@@ -40,7 +38,8 @@ abstract class ReaderSemanticsTest[A] extends FunSuite {
     val reader = createReader()
     assert(!reader.onClose.isDefined)
     reader.discard()
-    assert(reader.onClose.poll == Some(StreamTermination.Discarded.Return))
+    val onClose = reader.onClose
+    assert(await(onClose) == StreamTermination.Discarded)
   }
 }
 

@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import com.twitter.concurrent.AsyncMutex
-import com.twitter.util.{Closable, CloseAwaitably, Future, FuturePool, Time, Promise, Throw}
+import com.twitter.util._
 import java.io.InputStream
 
 /**
@@ -72,7 +72,7 @@ class InputStreamReader private[io] (
   /**
    * Discard this reader: its output is no longer required.
    *
-   * This closes the underlying `InputStream`.
+   * This asynchronously closes the underlying `InputStream`.
    */
   def discard(): Unit = close()
 
