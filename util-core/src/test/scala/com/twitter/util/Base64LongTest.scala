@@ -27,7 +27,7 @@ object Base64LongTest {
     go(Nil, 64, 0)
   }
 
-  private implicit val arbAlphabet =
+  private implicit val arbAlphabet: Arbitrary[Alphabet] =
     Arbitrary[Alphabet](
       Gen.oneOf(
         Gen.const(StandardBase64Alphabet),
@@ -65,7 +65,7 @@ class Base64LongTest extends FunSuite with GeneratorDrivenPropertyChecks {
     assert(toBase64(0) == "A")
 
     val b = new StringBuilder
-    forAll { (a: Alphabet) =>
+    forAll { a: Alphabet =>
       b.setLength(0)
       toBase64(b, 0, a)
       assert(b.result == a(0).toString)
@@ -77,7 +77,7 @@ class Base64LongTest extends FunSuite with GeneratorDrivenPropertyChecks {
   }
 
   test("toBase64 uses the expected number of digits") {
-    BoundaryValues.foreach { (n: Long) =>
+    BoundaryValues.foreach { n: Long =>
       assert(toBase64(n).length == expectedLength(n))
     }
     forAll((n: Long) => assert(toBase64(n).length == expectedLength(n)))
@@ -112,9 +112,10 @@ class Base64LongTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("fromBase64 throws an IllegalArgumentException exception for characters out of range") {
     forAll { (s: String, a: Alphabet) =>
-      if (s.exists(!a.isDefinedAt(_))) {
+      val inverted = Base64Long.invertAlphabet(a)
+      if (s.exists(!inverted.isDefinedAt(_))) {
         assertThrows[IllegalArgumentException](
-          fromBase64(s, 0, s.length, Base64Long.invertAlphabet(a))
+          fromBase64(s, 0, s.length, inverted)
         )
       }
     }
