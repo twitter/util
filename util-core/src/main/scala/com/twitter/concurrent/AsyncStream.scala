@@ -583,7 +583,7 @@ sealed abstract class AsyncStream[+A] {
    * values.
    */
   def force: Future[Unit] = foreach { _ =>
-    }
+  }
 }
 
 object AsyncStream {
@@ -601,7 +601,7 @@ object AsyncStream {
       new Cons(fa, next)
 
     def unapply[A](as: Cons[A]): Option[(Future[A], () => AsyncStream[A])] =
-      // note: pattern match returns the memoized value
+    // note: pattern match returns the memoized value
       Some((as.fa, () => as.more()))
   }
 
